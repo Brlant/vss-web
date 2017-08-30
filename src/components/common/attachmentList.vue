@@ -4,7 +4,7 @@
     line-height: 20px;
     padding-top: 3px;
     padding-bottom: 3px;
-    border: 0px;
+    border: 0;
     .download-link {
       display: none;
     }
@@ -20,7 +20,7 @@
       <perm :label="perm">
         <a :href="attachment.attachmentStoragePath "
            class="download-link pull-right" :download="attachment.attachmentFileName" @click.stop="">
-          <i class="oms-font oms-font-download"></i>
+          <i class="c-erp-font c-erp-font-download"></i>
         </a>
       </perm>
     </li>

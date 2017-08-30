@@ -4,6 +4,22 @@
   .page-right-part {
     width: 550px;
     padding: 30px;
+    &.pr-animation {
+      transition: 0.2s transform ease-in-out;
+      transform: translateX(100%);
+    }
+    &.pr-no-animation {
+      display: none;
+    }
+    &.on {
+      &.pr-animation {
+        transform: translateX(0);
+      }
+      &.pr-no-animation {
+        display: block;
+        transform: translateX(0);
+      }
+    }
   }
 
   .right-close-icon {
@@ -25,8 +41,8 @@
 </style>
 <template>
   <div class="page-right-wrap">
-    <div class="page-right-part" :class="{'on':show}" :style="style">
-      <div class="right-close-icon" @click="close"><i class="wms-font wms-font-remove"></i></div>
+    <div class="page-right-part" :class="[{'on':show},partClass]" :style="style">
+      <div class="right-close-icon" @click="close"><i class="c-erp-font c-erp-font-remove"></i></div>
       <slot @right-close="close"></slot>
     </div>
     <div class="page-right-part-bg" @click="close" v-show="show"></div>
@@ -46,6 +62,10 @@
       },
       css: {
         type: Object
+      },
+      partClass: {
+        type: String,
+        default: 'pr-animation'
       }
     },
     watch: {

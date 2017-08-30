@@ -12,7 +12,7 @@ const state = {
   permList: {},
   roleList: {},
   attachmentDialog: {attachmentId: 0, open: false},
-  dev: {}
+  form: {}
 };
 
 const mutations = {
@@ -26,9 +26,6 @@ const mutations = {
 
     }
   },
-  initDev(state, data) {
-    state.dev = data;
-  },
   initDict(state, data) {
     state.dict = data;
   },
@@ -39,7 +36,13 @@ const mutations = {
     state.permList = data;
   },
   changeAttachment(state, data) {
-    state.attachmentDialog.attachmentId = data;
+    if (state.attachmentDialog.attachmentId === data) {
+      state.attachmentDialog.open = true;
+    } else {
+      state.attachmentDialog.attachmentId = data;
+    }
+  },
+  openAttachmentDialog(state) {
     state.attachmentDialog.open = true;
   },
   closeAttachmentDialog(state) {

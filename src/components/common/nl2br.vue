@@ -3,7 +3,6 @@
 </template>
 
 <script>
-
   export default {
     name: 'nl2br',
     props: {

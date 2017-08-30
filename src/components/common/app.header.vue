@@ -1,8 +1,6 @@
 <style lang="less" scoped=''>
   @import "../../assets/mixins.less";
 
-  @menuHoverColor: @activeColor;
-  @menuHoverBg: #f1f1f1;
   .main-header {
     background: #fff;
     position: fixed;
@@ -41,67 +39,23 @@
         display: flex;
         > li {
           margin: 0 10px;
-          position: relative;
-
-          > span {
-            border-top: 4px solid #fff;
-            position: relative;
-            padding: 0 25px;
+          padding: 4px 15px 0;
+          a {
             display: block;
-            z-index: 2;
-            background: #fff;
-            a {
-              display: block;
-              line-height: 65px;
-              font-size: 14px;
-              color: #333;
-              &:hover {
-                color: @menuHoverColor
-              }
+            line-height: 62px;
+            font-size: 14px;
+            color: #333;
+            &:hover {
+              color: @activeColor
             }
           }
-
           &.active, &:hover {
-            > span {
-              border-color: @menuHoverColor;
-            }
+            padding-top: 0;
+            border-top: 4px solid @activeColor;
             a {
-              color: @menuHoverColor
+              color: @activeColor
             }
           }
-          &:hover {
-            > span {
-              background: @menuHoverBg;
-            }
-            .top-sub-menu {
-              transform: translateY(0);
-              box-shadow: 0 3px 3px hsla(0, 0%, 0%, 0.22)
-            }
-            background: @menuHoverBg;
-
-          }
-          .top-sub-menu {
-            padding-top: 65px;
-            z-index: 1;
-            overflow: hidden;
-            transition: 0.2s all ease-in-out;
-            position: absolute;
-            text-align: center;
-            left: 0;
-            right: 0;
-            top: 0;
-            transform: translateY(-100%);
-            background: @menuHoverBg;
-
-            .top-sub-item {
-              line-height: 35px;
-              cursor: pointer;
-              &:hover {
-                background: @menuHoverBg*0.95;
-              }
-            }
-          }
-
         }
       }
     }
@@ -186,21 +140,16 @@
       <div class="top-logo">
         <!--<router-link to='/'><img :src="logo" @click="activeId=''"></router-link>-->
         <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
-          <span class="logo-span">WMS 系统</span>
+          <span class="logo-span">CERP 系统</span>
         </router-link>
       </div>
       <nav class="top-menu">
         <ul>
-          <li v-for="item in menu" :key="menu.path" :class="{active:activeId === item.meta.moduleId}">
-            <perm :label="item.meta.perm">
-              <a href="#" @click.stop.prevent="goTo(item)">
-                <i :class="'wms-font wms-font-'+item.meta.icon" style="font-size: 18px"></i> {{item.meta.title}}</a>
+          <li v-for="item in menu" :class="{'active':activeId==item.id}">
+            <perm :label="item.perm">
+              <a href="#" @click.stop.prevent="goTo(item)"><i
+                :class="'c-erp-font c-erp-font-'+item.icon"></i> {{item.name}}</a>
             </perm>
-            <ul class="top-sub-menu" v-if="item.children.length">
-              <li class="top-sub-item" v-for="child in item.children" :key="child.path"
-                  @click.stop.prevent="checkSubMenu(child)">{{ child.meta.title}}
-              </li>
-            </ul>
           </li>
         </ul>
       </nav>
@@ -238,32 +187,36 @@
 </template>
 
 <script>
+  import {Auth} from '../../resources';
   import logo from '../../assets/img/logo.png';
   import logo_pic from '../../assets/img/logo_pic.png';
   import omsUploadPicture from './upload.user.picture.vue';
-  import { routes } from '../../routers';
-  import { Auth } from '../../resources';
 
   export default {
-    components: {omsUploadPicture},
+    components: {
+      omsUploadPicture
+    },
     props: ['toRoute'],
-    data () {
+    data() {
       return {
-        activeId: '',
+        activeId: this.getGroupId(),
         logo: logo,
         logo_pic: logo_pic
       };
     },
     computed: {
       user: function () {
-        return Object.assign({}, {
-          userName: '上官云',
-          userAccount: 'xxx@qq.com',
-          userLastLoginTime: 0
-        }, this.$store.state.user);
+        return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
-        return routes[0].children.filter(item => item.meta.moduleId);
+        let menus = [];
+        let menuShow = [];
+        menus.forEach(item => {
+          if (this.$store.state.permissions.indexOf(item.perm) !== -1) {
+            menuShow.push(item);
+          }
+        });
+        return menuShow;
       }
     },
     watch: {
@@ -275,12 +228,19 @@
       goTo: function (item) {
         this.$router.push({path: item.path});
       },
-      checkSubMenu (item) {
-
-        this.goTo(item);
-      },
       getGroupId: function () {
-        return this.toRoute.meta.moduleId;
+        let activeMould = '';
+        if (this.toRoute && this.toRoute.path !== undefined) {
+          activeMould = this.toRoute.meta.topMould;
+          if (!activeMould) {
+            activeMould = this.toRoute.path.substr(1);
+            let first = activeMould.indexOf('/');
+            if (first !== -1) {
+              activeMould = activeMould.substr(0, first);
+            }
+          }
+        }
+        return activeMould;
       },
       logout: function () {
         window.localStorage.setItem('lastUrl', window.location.href);

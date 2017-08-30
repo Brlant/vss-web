@@ -21,7 +21,6 @@
 </template>
 
 <script>
-
   export default {
     name: 'omsRow',
     props: {
@@ -36,7 +35,7 @@
       },
       rowClass: {
         type: String,
-        default: ''
+        default: 'oms-row'
       }
     }
   };

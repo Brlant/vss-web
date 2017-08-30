@@ -1,6 +1,7 @@
 import {Notification} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
+
 export const http = axios.create({
   baseURL: process.env.NODE_API,
   timeout: 10000,
@@ -30,8 +31,14 @@ http.interceptors.response.use(response => {
   if (response.status === 401) { //  Unauthorized, redirect to login
     let lastUrl = window.localStorage.getItem('lastUrl');
     if (!lastUrl || lastUrl.indexOf('/base/dict') === -1) {
+      //  Notification.error({
+      //    message: '会话已过期, 请重新登录',
+      //    onClose: function () {
+      //      window.localStorage.removeItem(noticeTipKey);
+      //    }
+      //  });
     }
-    // window.location.href = '#/login';
+    window.location.href = '#/login';
     return Promise.reject(error);
   }
   if (response.status === 403) {
@@ -46,38 +53,6 @@ http.interceptors.response.use(response => {
 });
 
 Vue.prototype.$http = http;
-
-// oms附件对象
-export const OmsAttachment = resource('omsAttachment', http, {
-  queryOneAttachmentList: (objectId, objectType) => {
-    return http.get('/omsAttachment/' + objectType + '/' + objectId, {});
-  }
-});
-
-// 平台用户权限对象
-export const User = resource('', http, {});
-
-export const Auth = {
-  checkLogin: () => {
-    return http.get('/userinfo');
-  },
-  login: (data) => {
-    return http.post('/login', data);
-  },
-  logout: () => {
-    return http.get('/logout');
-  },
-  isLogin() {
-    try {
-      return User.current();
-    } catch (e) {
-      Notification.error('用户信息出错，请重新登录!');
-    }
-  },
-  permission: () => {
-    return http.get('/oms/access/permissions');
-  }
-};
 
 // 数据字典组对象
 export const DictGroup = resource('dictGroup', http, {
@@ -111,6 +86,56 @@ export const DictGroup = resource('dictGroup', http, {
   }
 });
 
+// oms附件对象
+export const OmsAttachment = resource('omsAttachment', http, {
+  queryOneAttachmentList: (objectId, objectType) => {
+    return http.get('/omsAttachment/' + objectType + '/' + objectId, {});
+  }
+
+});
+
+// 平台用户权限对象
+export const User = resource('/oms/user', http, {
+  checkEmail: (email, userId, orgId) => {
+    return http.get('/oms/user/email', {
+      params: {email: email, userId: userId, orgId: orgId}
+    });
+  },
+  checkPhone: (phone, userId, orgId) => {
+    return http.get('/oms/user/phone', {
+      params: {phone: phone, userId: userId, orgId: orgId}
+    });
+  },
+  resetPsw: (Obj) => {
+    return http.put('oms/user/password', Obj);
+  },
+  forget: (obj) => {
+    return http.post('oms/user/password/verifyMail', obj);
+  }
+});
+
+export const Auth = {
+  checkLogin: () => {
+    return http.get('/userinfo');
+  },
+  login: (data) => {
+    return http.post('/login', data);
+  },
+  logout: () => {
+    return http.get('/logout');
+  },
+  isLogin() {
+    try {
+      return User.current();
+    } catch (e) {
+      Notification.error('用户信息出错，请重新登录!');
+    }
+  },
+  permission: () => {
+    return http.get('/oms/access/permissions');
+  }
+};
+
 /**
  * create vue-resource's resource like object
  *
@@ -126,7 +151,7 @@ export const DictGroup = resource('dictGroup', http, {
  * @param actions custom actions
  * @returns the resource object
  */
-function resource (path, http, actions) {
+function resource(path, http, actions) {
   let obj = {
     get: id => http.get(path + '/' + id),
     save: obj => http.post(path, obj),

@@ -31,5 +31,6 @@ module.exports = merge(baseWebpackConfig, {
       inject: true
     }),
     new FriendlyErrorsPlugin()
-  ]
+  ],
+  devtool: 'cheap-module-source-map'
 })

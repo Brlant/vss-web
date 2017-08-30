@@ -53,14 +53,14 @@
 <template>
   <div>
     <el-card class="box-card main-card-box">
-      <div class="logo-part clearfix"><img src="../assets/img/logo_pic.png"> WMS系统</div>
+      <div class="logo-part clearfix"><img src="../assets/img/logo_pic.png"> CERP系统</div>
       <div class="login-menu">
         <div class="login-menu-item" :class="{'active':user.type===0}" @click="user.type=0">
           平台登陆
         </div>
-        <!--<div class="login-menu-item" :class="{'active':user.type===1}" @click="user.type=1">-->
-        <!--货主登陆-->
-        <!--</div>-->
+        <div class="login-menu-item" :class="{'active':user.type===1}" @click="user.type=1">
+          货主登陆
+        </div>
       </div>
       <div style="padding:0 20px">
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
@@ -139,12 +139,6 @@
                   }
                 }
 
-//                let orgId = response.data.userCompanyAddress;
-//                if (orgId) {
-//                  this.$router.push('/supplier/' + orgId + '/base');
-//                } else {
-//                  this.$router.push('/platform');
-//                }
               });
             }, error => {
               let data = error.response.data;

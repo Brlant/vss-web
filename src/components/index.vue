@@ -7,24 +7,6 @@
     min-height: 500px;
   }
 
-  @-webkit-keyframes bouncedelay {
-    0%, 80%, 100% {
-      -webkit-transform: scale(0)
-    }
-    40% {
-      -webkit-transform: scale(1)
-    }
-  }
-
-  @keyframes bouncedelay {
-    0%, 80%, 100% {
-      transform: scale(0)
-    }
-    40% {
-      transform: scale(1)
-    }
-  }
-
   .layer-loading {
     text-align: center;
     background: #f9f9f9;
@@ -96,8 +78,9 @@
 
 </style>
 <template>
-  <div class="app-body">
-    <app-header :to-route="toRoute"></app-header>
+  <div class="app-body" :class="{'app-body-org':userType!=='platform'}">
+    <org-header v-if="userType==='org'"></org-header>
+    <app-header :to-route="toRoute" v-if="userType==='platform'"></app-header>
     <div class="main-body">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
@@ -112,15 +95,17 @@
 
 <script>
   import AppHeader from './common/app.header.vue';
+  import orgHeader from './common/org.app.header.vue';
   import AppFooter from './common/app.footer.vue';
+  import {Auth, DictGroup} from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
-  import { Auth, DictGroup } from '../resources';
+
   export default {
     data: () => ({
       transitionName: 'slide-left',
       toRoute: {},
-      loading: false
+      loading: true
     }),
     computed: {
       userType: function () {
@@ -137,7 +122,7 @@
       this.toRoute = to;
       next();
     },
-    components: {AppHeader, AppFooter, attachmentDialog},
+    components: {AppHeader, orgHeader, AppFooter, attachmentDialog},
     mounted: function () {
       if (!this.$store.state.user || !this.$store.state.user.userId) {
         Auth.checkLogin().then(() => {
