@@ -1,0 +1,200 @@
+import address from './address';
+
+export default {
+  address: address.value,
+  inType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '待入库', state: '0', num: 0},
+    2: {'title': '待确认', state: '1', num: 0},
+    3: {'title': '待上架', state: '2', num: 0},
+    4: {'title': '完成', state: '3', num: 0}
+  },
+  outType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '待出库', state: '0', num: 0},
+    2: {'title': '待下架', state: '1', num: 0},
+    3: {'title': '待包装', state: '2', num: 0},
+    4: {'title': '待绑定', state: '3', num: 0},
+    5: {'title': '待审核', state: '4', num: 0},
+    6: {'title': '出库确认', state: '5', num: 0}
+  },
+  waveType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '分配操作员', state: '0', num: 0},
+    2: {'title': '待下架', state: '1', num: 0},
+    3: {'title': '装箱及复核', state: '2', num: 0},
+    4: {'title': '待包装', state: '3', num: 0},
+    5: {'title': '待运输', state: '4', num: 0},
+    6: {'title': '已完成', state: '5', num: 0}
+  },
+  maintainType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '重点养护', state: '0', num: 0},
+    2: {'title': '一般养护', state: '1', num: 0}
+  },
+  scatterType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '待拆零', state: '0', num: 0},
+    2: {'title': '待确认', state: '1', num: 0},
+    3: {'title': '完成', state: '2', num: 0}
+  },
+  moveType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '待移库', state: '0', num: 0},
+    2: {'title': '待下架', state: '1', num: 0},
+    3: {'title': '待上架', state: '2', num: 0},
+    4: {'title': '已完成', state: '3', num: 0}
+  },
+  /**
+   * 格式化地址，已省/市/区显示
+   * @param province
+   * @param city
+   * @param region
+   * @returns {string}
+   */
+  formatAddress: function (province, city, region) {
+    let _address = '';
+    this.address.forEach(p => {
+      if (province === p.value) {
+        if (!p.children) return;
+        p.children.forEach(c => {
+          if (!c.children) return;
+          if (city === c.value) {
+            if (!c.children) return;
+            c.children.forEach(r => {
+              if (region === r.value) {
+                _address += p.label + '/' + c.label + '/' + r.label;
+              }
+              return false;
+            });
+          }
+          return false;
+        });
+      }
+    });
+    return _address;
+  },
+
+  /**
+   * 实时动态强制更改用户录入
+   * @param th
+   */
+  format2DecimalPoint(val) {
+    let th = val.toString();
+    const regStrs = [
+      ['^0(\\d+)$', '$1'], // 禁止录入整数部分两位以上，但首位为0
+      ['[^\\d\\.]+$', ''], // 禁止录入任何非数字和点
+      ['\\.(\\d?)\\.+', '.$1'], // 禁止录入两个以上的点
+      ['^(\\d+\\.\\d{2}).+', '$1'] // 禁止录入小数点后两位以上
+    ];
+    for (let i = 0; i < regStrs.length; i++) {
+      let reg = new RegExp(regStrs[i][0]);
+      th = th.replace(reg, regStrs[i][1]);
+    }
+    th = parseFloat(th);
+    if (isNaN(th)) {
+      th = '';
+    }
+    return th;
+  },
+  /**
+   * 录入完成后，输入模式失去焦点后对录入进行判断并强制更改，并对小数点进行0补全
+   * @param th
+   */
+  autoCompleteDecimalPoint: function (val) {
+    if (!val) {
+      return 0;
+    }
+    let v = val.toString();
+    v = v.replace(/[^0-9\.]*/g, '');
+    if (v === '') {
+      v = '0.00';
+    } else if (v === '0') {
+      v = '0.00';
+    } else if (v === '0.') {
+      v = '0.00';
+    } else if (/^0+\d+\.?\d*.*$/.test(v)) {
+      v = v.replace(/^0+(\d+\.?\d*).*$/, '$1');
+    } else if (/^0\.\d$/.test(v)) {
+      v = v + '0';
+    } else if (!/^\d+\.\d{2}$/.test(v)) {
+      if (/^\d+\.\d{2}.+/.test(v)) {
+        v = v.replace(/^(\d+\.\d{2}).*$/, '$1');
+      } else if (/^\d+$/.test(v)) {
+        v = v + '.00';
+      } else if (/^\d+\.$/.test(v)) {
+        v = v + '00';
+      } else if (/^\d+\.\d$/.test(v)) {
+        v = v + '0';
+      } else if (/^[^\d]+\d+\.?\d*$/.test(v)) {
+        v = v.replace(/^[^\d]+(\d+\.?\d*)$/, '$1');
+      } else if (/\d+/.test(v)) {
+        v = v.replace(/^[^\d]*(\d+\.?\d*).*$/, '$1');
+      } else if (/^0+\d+\.?\d*$/.test(v)) {
+        v = v.replace(/^0+(\d+\.?\d*)$/, '$1');
+      } else {
+        v = '0.00';
+      }
+    }
+    return parseFloat(v);
+  },
+  /**
+   * 录入完成后，输入模式失去焦点后对录入进行判断并强制更改，并对小数点进行0补全
+   * @param th
+   */
+  autoformatDecimalPoint: function (v) {
+    v = v.replace(/[^0-9\.]*/g, '');
+    if (v === '') {
+      v = '0.00';
+    } else if (v === '0') {
+      v = '0.00';
+    } else if (v === '0.') {
+      v = '0.00';
+    } else if (/^0+\d+\.?\d*.*$/.test(v)) {
+      v = v.replace(/^0+(\d+\.?\d*).*$/, '$1');
+    } else if (/^0\.\d$/.test(v)) {
+      v = v + '0';
+    } else if (!/^\d+\.\d{2}$/.test(v)) {
+      if (/^\d+\.\d{2}.+/.test(v)) {
+        v = v.replace(/^(\d+\.\d{2}).*$/, '$1');
+      } else if (/^\d+$/.test(v)) {
+        v = v + '.00';
+      } else if (/^\d+\.$/.test(v)) {
+        v = v + '00';
+      } else if (/^\d+\.\d$/.test(v)) {
+        v = v + '0';
+      } else if (/^[^\d]+\d+\.?\d*$/.test(v)) {
+        v = v.replace(/^[^\d]+(\d+\.?\d*)$/, '$1');
+      } else if (/\d+/.test(v)) {
+        v = v.replace(/^[^\d]*(\d+\.?\d*).*$/, '$1');
+      } else if (/^0+\d+\.?\d*$/.test(v)) {
+        v = v.replace(/^0+(\d+\.?\d*)$/, '$1');
+      } else {
+        v = '0.00';
+      }
+    }
+    return v;
+  },
+  toDecimal2: function (x) {
+    return Math.floor(x * 1000 + 1) / 1000;
+  },
+  hasClass: function (elem, cls) {
+    cls = cls || '';
+    if (cls.replace(/\s/g, '').length === 0) return false;
+    return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
+  },
+  addClass: function (elem, cls) {
+    if (!this.hasClass(elem, cls)) {
+      elem.className = elem.className === '' ? cls : elem.className + ' ' + cls;
+    }
+  },
+  removeClass: function (elem, cls) {
+    if (this.hasClass(elem, cls)) {
+      let newClass = ' ' + elem.className.replace(/[\t\r\n]/g, '') + ' ';
+      while (newClass.indexOf(' ' + cls + ' ') >= 0) {
+        newClass = newClass.replace(' ' + cls + ' ', ' ');
+      }
+      elem.className = newClass.replace(/^\s+|\s+$/g, '');
+    }
+  }
+};
