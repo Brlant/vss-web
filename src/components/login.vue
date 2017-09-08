@@ -137,6 +137,8 @@
                     window.location.href = lastUrl;
                     return lastUrl;
                   }
+                } else {
+                  this.$router.replace('/');
                 }
 
               });

@@ -87,7 +87,7 @@
         <router-view class="app-content-view"></router-view>
       </transition>
     </div>
-    <app-footer></app-footer>
+    <!--<app-footer></app-footer>-->
     <attachmentDialog></attachmentDialog>
     <a href="#" target="_blank" class="min-div"><span id="fileDownLoadRap"></span></a>
   </div>

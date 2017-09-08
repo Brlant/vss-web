@@ -7,7 +7,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: 70px;
+    height: @topMenuHeight;
     z-index: 800;
     box-shadow: 0 5px 5px rgba(221, 221, 221, 0.22);
     ul, li {
@@ -18,50 +18,20 @@
     a {
       text-decoration: none
     }
-    .container {
-      position: relative;
-    }
+
     .top-logo {
       vertical-align: middle;
-      line-height: 70px;
-      height: 70px;
+      line-height: @topMenuHeight;
+      height: @topMenuHeight;
+      margin-left: 15px;
       img {
         vertical-align: middle;
       }
     }
-    .top-menu {
-      position: absolute;
-      top: 0;
-      left: 200px;
-      z-index: 1;
-      right: 0;
-      > ul {
-        display: flex;
-        > li {
-          margin: 0 10px;
-          padding: 4px 15px 0;
-          a {
-            display: block;
-            line-height: 62px;
-            font-size: 14px;
-            color: #333;
-            &:hover {
-              color: @activeColor
-            }
-          }
-          &.active, &:hover {
-            padding-top: 0;
-            border-top: 4px solid @activeColor;
-            a {
-              color: @activeColor
-            }
-          }
-        }
-      }
-    }
+
     .top-right {
       position: absolute;
-      right: 0;
+      right: 15px;
       width: auto;
       z-index: 3;
       top: 50%;
@@ -132,58 +102,128 @@
     font-size: 22px;
     font-weight: bold;
   }
+
+  .top-menu {
+    position: absolute;
+    top: @topMenuHeight;
+    background: #eee;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    width: 160px;
+    > ul {
+      /*display: flex;*/
+      padding-top: 15px;
+      > li {
+        margin: 0 10px;
+        padding: 4px 15px 0;
+        a {
+          display: block;
+          line-height: 30px;
+          font-size: 14px;
+          color: #333;
+          &:hover {
+            color: @activeColor
+          }
+        }
+        &.active {
+          a {
+            color: @activeColor
+          }
+          > ul {
+            display: block;
+          }
+          /* :after {
+             position: absolute;
+             height: 30px;
+             width: 10px;
+             background: #f00;
+             right: 0;
+             top: 0;
+             display:block;
+           }*/
+        }
+        > ul {
+          padding: 15px;
+          top: 0;
+          bottom: 0;
+          position: absolute;
+          left: 100%;
+          width: 120px;
+          background: #f1f1f1;
+          display: none;
+          line-height: 34px;
+          > li {
+            cursor: pointer;
+            &:hover, &.active {
+              color: @activeColor
+            }
+          }
+        }
+      }
+    }
+  }
 </style>
 
 <template>
-  <header class="main-header">
-    <div class="container">
-      <div class="top-logo">
-        <!--<router-link to='/'><img :src="logo" @click="activeId=''"></router-link>-->
-        <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
-          <span class="logo-span">CERP 系统</span>
-        </router-link>
-      </div>
-      <nav class="top-menu">
-        <ul>
-          <li v-for="item in menu" :class="{'active':activeId==item.id}">
-            <perm :label="item.perm">
-              <a href="#" @click.stop.prevent="goTo(item)"><i
-                :class="'c-erp-font c-erp-font-'+item.icon"></i> {{item.name}}</a>
-            </perm>
-          </li>
-        </ul>
-      </nav>
-      <div class="top-right">
-        <div class="top-user">
-          <el-dropdown trigger="click">
-            <div class="el-dropdown-link top-right-item">
-              <img v-if="user.userIcon" :src="user.userIcon">
-              <img v-else src="/static/img/userpic.png"> {{user.userName}}
-              <i class="el-icon-caret-bottom"></i>
-            </div>
-            <el-dropdown-menu class="top-right-user-dropdown" slot="dropdown">
-              <div class="menu-user">
-                <div class="menu-user-part">
-                  <div>
-                    <oms-upload-picture :photoUrl="user.userIcon" class="user-img"></oms-upload-picture>
-                  </div>
-                  <div>
-                    <div class="menu-usr-part-user">{{user.userName}}</div>
-                    <div class="menu-usr-part-phone">{{user.userAccount}}</div>
-                  </div>
-                </div>
-                <div class="last-login">上次登录时间:{{user.userLastLoginTime | date}}</div>
-                <div class="text-right">
-                  <router-link to="/resetpsw">重置密码</router-link>
-                  <a href="#" @click.stop.pre="logout">退出</a>
-                </div>
+  <div>
+    <header class="main-header">
+      <div class="container">
+        <div class="top-logo">
+          <!--<router-link to='/'><img :src="logo" @click="activeId=''"></router-link>-->
+          <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
+            <span class="logo-span">CERP 系统</span>
+          </router-link>
+        </div>
+        <div class="top-right">
+          <div class="top-user">
+            <el-dropdown trigger="click">
+              <div class="el-dropdown-link top-right-item">
+                <img v-if="user.userIcon" :src="user.userIcon">
+                <img v-else src="/static/img/userpic.png"> {{user.userName}}
+                <i class="el-icon-caret-bottom"></i>
               </div>
-            </el-dropdown-menu>
-          </el-dropdown>
+              <el-dropdown-menu class="top-right-user-dropdown" slot="dropdown">
+                <div class="menu-user">
+                  <div class="menu-user-part">
+                    <div>
+                      <oms-upload-picture :photoUrl="user.userIcon" class="user-img"></oms-upload-picture>
+                    </div>
+                    <div>
+                      <div class="menu-usr-part-user">{{user.userName}}</div>
+                      <div class="menu-usr-part-phone">{{user.userAccount}}</div>
+                    </div>
+                  </div>
+                  <div class="last-login">上次登录时间:{{user.userLastLoginTime | date}}</div>
+                  <div class="text-right">
+                    <router-link to="/resetpsw">重置密码</router-link>
+                    <a href="#" @click.stop.pre="logout">退出</a>
+                  </div>
+                </div>
+              </el-dropdown-menu>
+            </el-dropdown>
+          </div>
         </div>
       </div>
-    </div>
-  </header>
+    </header>
+    <nav class="top-menu">
+      <ul>
+        <li v-for="item in menu" :key="menu.path"
+            :class="{'active':activeId === item.meta.moduleId,'hover':hoverItem===item}" @mouseenter="hoverItem=item"
+            @mouseleave="hoverItem={}">
+          <perm :label="item.meta.perm">
+            <a href="#" @click.stop.prevent="goTo(item)">
+              <i :class="'wms-font wms-font-'+item.meta.icon" style="font-size: 18px"></i> {{item.meta.title}}</a>
+          </perm>
+          <ul class="top-sub-menu" v-if="item.children.length">
+            <li class="top-sub-item" v-for="child in item.children" :key="child.path"
+                @click.stop.prevent="checkSubMenu(child)">{{ child.meta.title}}
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </nav>
+  </div>
 </template>
 
 <script>
@@ -191,6 +231,7 @@
   import logo from '../../assets/img/logo.png';
   import logo_pic from '../../assets/img/logo_pic.png';
   import omsUploadPicture from './upload.user.picture.vue';
+  import route from '../../route.js';
 
   export default {
     components: {
@@ -209,6 +250,7 @@
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
+        /*
         let menus = [];
         let menuShow = [];
         menus.forEach(item => {
@@ -217,6 +259,14 @@
           }
         });
         return menuShow;
+        */
+        let menuArr = route[0].children.filter(item => item.meta.moduleId && item.meta.perm === 'show');
+        menuArr.forEach(item => {
+            item.children = item.children.filter(child => child.meta.perm === 'show');
+          }
+        );
+        return menuArr;
+
       }
     },
     watch: {
