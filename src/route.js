@@ -41,12 +41,12 @@ const route = [
       },
       {
         path: '/warehouse',
-        component: resolve => require(['./components/dashboard.vue'], resolve),
+        component: resolve => require(['./components/warehouse/index.vue'], resolve),
         meta: {moduleId: 'warehouse', title: '仓库管理', icon: 'warehouse', perm: 'show'},
         children: [
           {
             path: '/warehouse/in',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
+            component: resolve => require(['./components/warehouse/in/list.vue'], resolve),
             meta: {moduleId: 'warehouse', title: '入库作业', perm: 'show'}
           },
           {

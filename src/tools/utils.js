@@ -2,57 +2,50 @@ import address from './address';
 
 export default {
   address: address.value,
-  inOrderType: {
+  inType: {
     0: {'title': '所有', state: null, num: 0},
-    1: {'title': '待确认', state: '0', num: 0},
-    2: {'title': '待审单', state: '1', num: 0},
-    3: {'title': '待收货', state: '2', num: 0},
-    4: {'title': '待验收', state: '3', num: 0},
-    5: {'title': '订单挂起', state: '14', num: 0},
-    6: {'title': '已完成', state: '4', num: 0},
-    7: {'title': '已取消', state: '7', num: 0},
-    8: {'title': '拒收待复核', state: '11', num: 0},
-    9: {'title': '拒收已复核', state: '12', num: 0},
-    10: {'title': '已拒收', state: '8', num: 0},
-    11: {'title': '异常', state: '6', num: 0}
+    1: {'title': '待配复核人', state: '0', num: 0},
+    2: {'title': '待扫描复核', state: '1', num: 0},
+    3: {'title': '待分配货位', state: '2', num: 0},
+    4: {'title': '待配上架人', state: '3', num: 0},
+    5: {'title': '待上架', state: '4', num: 0},
+    6: {'title': '入库完成', state: '5', num: 0}
   },
-  inOrderLink: {
-    1: {'title': '订单确认', state: '0', num: 0},
-    2: {'title': '审单', state: '1', num: 0},
-    3: {'title': '收货', state: '2', num: 0},
-    4: {'title': '验收', state: '3', num: 0},
-    5: {'title': '订单挂起', state: '14', num: 0},
-    6: {'title': '已完成', state: '4', num: 0},
-    7: {'title': '已取消', state: '7', num: 0},
-    8: {'title': '拒收待复核', state: '11', num: 0},
-    9: {'title': '拒收已复核', state: '12', num: 0},
-    10: {'title': '已拒收', state: '8', num: 0},
-    11: {'title': '异常', state: '6', num: 0}
+  outType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '待分波', state: '6', num: 0},
+    2: {'title': '待拣货', state: '7', num: 0},
+    3: {'title': '待复核', state: '8', num: 0},
+    4: {'title': '待包装', state: '9', num: 0},
+    5: {'title': '待运输', state: '10', num: 0},
+    6: {'title': '待签收', state: '11', num: 0},
+    7: {'title': '已完成', state: '12', num: 0}
   },
-  outOrderType: {
-    0: {'title': '所有', state: null},
-    1: {'title': '待确认', state: '0'},
-    2: {'title': '待下架', state: '1'},
-    3: {'title': '待打包', state: '2'},
-    4: {'title': '待打出库单', state: '3'},
-    5: {'title': '待出库', state: '4'},
-    6: {'title': '待运输', state: '5'},
-    7: {'title': '待签收', state: '9'},
-    8: {'title': '已完成', state: '6'},
-    9: {'title': '已取消', state: '7'},
-    10: {'title': '异常', state: '10'}
+  waveType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '待分配操作员', state: 0, num: 0},
+    2: {'title': '待拣货', state: 1, num: 0},
+    3: {'title': '待复核', state: 2, num: 0},
+    4: {'title': '待包装', state: 3, num: 0},
+    5: {'title': '波次任务完成', state: 4, num: 0}
   },
-  outOrderLink: {
-    1: {'title': '订单确认', state: '0'},
-    2: {'title': '货品下架', state: '1'},
-    3: {'title': '货品打包', state: '2'},
-    4: {'title': '生成出库单', state: '3'},
-    5: {'title': '出库', state: '4'},
-    6: {'title': '运输途中', state: '5'},
-    7: {'title': '签收', state: '9'},
-    8: {'title': '已完成', state: '6'},
-    9: {'title': '已取消', state: '7'},
-    10: {'title': '异常', state: '10'}
+  maintainType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '重点养护', state: '0', num: 0},
+    2: {'title': '一般养护', state: '1', num: 0}
+  },
+  scatterType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '待拆零', state: '0', num: 0},
+    2: {'title': '待确认', state: '1', num: 0},
+    3: {'title': '完成', state: '2', num: 0}
+  },
+  moveType: {
+    0: {'title': '所有', state: null, num: 0},
+    1: {'title': '待移库', state: '0', num: 0},
+    2: {'title': '待下架', state: '1', num: 0},
+    3: {'title': '待上架', state: '2', num: 0},
+    4: {'title': '已完成', state: '3', num: 0}
   },
   /**
    * 格式化地址，已省/市/区显示
@@ -205,5 +198,16 @@ export default {
       }
       elem.className = newClass.replace(/^\s+|\s+$/g, '');
     }
+  },
+  getSelectLabel: function (key, labelList) {
+    let len = labelList.length;
+    let label = '';
+    for (let i = 0; i < len; i++) {
+      if (labelList[i].key === key) {
+        label = labelList.label;
+        break;
+      }
+    }
+    return label;
   }
 };
