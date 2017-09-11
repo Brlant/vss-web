@@ -104,14 +104,13 @@
   }
 
   .top-menu {
-    position: absolute;
+    position: fixed;
     top: @topMenuHeight;
     background: rgb(238, 243, 246);
     bottom: 0;
     left: 0;
     z-index: 1;
     width: 180px;
-
     li {
       min-width: auto;
     }
@@ -122,6 +121,10 @@
       right: 0;
       text-align: center;
       padding: 5px;
+      cursor: pointer;
+      &:hover {
+        background: #cbdce6;
+      }
     }
     &.el-menu--collapse {
       width: 64px;
@@ -185,13 +188,12 @@
       </div>
     </header>
 
-    <el-menu default-active="$route.path" class="top-menu" :collapse="isCollapse" :router="true">
+    <el-menu :default-active="$route.path" class="top-menu" :collapse="isCollapse" :router="true" :unique-opened="true">
       <template v-for="item in menu">
         <el-submenu :index="item.path" :key="menu.path" v-if="item.children.length>0">
           <template slot="title">
-            <a href="#" @click.stop.prevent="goTo(item)">
               <i :class="'iconfont icon-'+item.meta.icon"></i> <span
-              slot="title">{{item.meta.title}}</span></a>
+            slot="title">{{item.meta.title}}</span>
           </template>
           <el-menu-item :index="child.path" v-for="child in item.children" :key="child.path">
             &bull; {{child.meta.title}}
@@ -202,7 +204,9 @@
           <span slot="title">{{item.meta.title}}</span>
         </el-menu-item>
       </template>
-      <li class="change-collapse" @click="changeMenuCollapse"><i class="iconfont icon-affirm"></i></li>
+      <li class="change-collapse" @click="changeMenuCollapse">
+        <i class="iconfont" :class="{'icon-collapse':isCollapse,'icon-spread':!isCollapse}"></i>
+      </li>
     </el-menu>
     <h4 class="position-nav">
       <div class="container">
