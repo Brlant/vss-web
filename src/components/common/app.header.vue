@@ -106,31 +106,30 @@
   .top-menu {
     position: absolute;
     top: @topMenuHeight;
-    background: #eee;
+    background: rgba(70, 76, 91, 1);
     bottom: 0;
     left: 0;
     z-index: 1;
-    width: 160px;
+    width: 130px;
+    font-size: 12px;
     > ul {
-      /*display: flex;*/
-      padding-top: 15px;
+      padding-top: 5px;
       > li {
-        margin: 0 10px;
-        padding: 4px 15px 0;
+        padding-left: 15px;
         a {
           display: block;
           line-height: 30px;
-          font-size: 14px;
-          color: #333;
+          font-size: 12px;
+          color: #ccc;
           &:hover {
-            color: @activeColor
+            color: @activeColorFont
           }
         }
         &.active {
           a {
-            color: @activeColor
+            color: @activeColorFont
           }
-          > ul {
+          .top-sub-menu {
             display: block;
           }
           /* :after {
@@ -143,17 +142,28 @@
              display:block;
            }*/
         }
-        > ul {
-          padding: 15px;
+        .top-sub-menu {
+          h3 {
+            margin: 0;
+            padding: 10px 15px;
+            background: #fff;
+            color: #999;
+            font-weight: normal;
+            font-size: 14px;
+            border-bottom: 1px solid #ddd;
+          }
           top: 0;
           bottom: 0;
           position: absolute;
           left: 100%;
-          width: 120px;
-          background: #f1f1f1;
+          width: 130px;
+          background: rgba(234, 237, 241, 1);
           display: none;
-          line-height: 34px;
-          > li {
+          line-height: 20px;
+          border-right: 1px solid #ddd;
+          .top-sub-item {
+            padding: 8px 10px;
+            border-bottom: 1px solid #ddd;
             cursor: pointer;
             &:hover, &.active {
               color: @activeColor
@@ -170,7 +180,6 @@
     <header class="main-header">
       <div class="container">
         <div class="top-logo">
-          <!--<router-link to='/'><img :src="logo" @click="activeId=''"></router-link>-->
           <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
             <span class="logo-span">CERP 系统</span>
           </router-link>
@@ -209,17 +218,20 @@
     <nav class="top-menu">
       <ul>
         <li v-for="item in menu" :key="menu.path"
-            :class="{'active':activeId === item.meta.moduleId,'hover':hoverItem===item}" @mouseenter="hoverItem=item"
-            @mouseleave="hoverItem={}">
+            :class="{'active':activeId === item.meta.moduleId}">
           <perm :label="item.meta.perm">
             <a href="#" @click.stop.prevent="goTo(item)">
-              <i :class="'wms-font wms-font-'+item.meta.icon" style="font-size: 18px"></i> {{item.meta.title}}</a>
+              <i :class="'iconfont icon-'+item.meta.icon" style="font-size: 14px"></i> {{item.meta.title}}</a>
           </perm>
-          <ul class="top-sub-menu" v-if="item.children.length">
-            <li class="top-sub-item" v-for="child in item.children" :key="child.path"
-                @click.stop.prevent="checkSubMenu(child)">{{ child.meta.title}}
-            </li>
-          </ul>
+          <div class="top-sub-menu" v-if="item.children.length">
+            <h3>{{item.meta.title}}</h3>
+            <ul>
+              <li class="top-sub-item" v-for="child in item.children" :key="child.path"
+                  @click.stop.prevent="checkSubMenu(child)" :class="{'active':child.path===activePath}">&bull;
+                {{ child.meta.title}}
+              </li>
+            </ul>
+          </div>
         </li>
       </ul>
     </nav>
@@ -228,7 +240,6 @@
 
 <script>
   import {Auth} from '../../resources';
-  import logo from '../../assets/img/logo.png';
   import logo_pic from '../../assets/img/logo_pic.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';
@@ -241,7 +252,6 @@
     data() {
       return {
         activeId: this.getGroupId(),
-        logo: logo,
         logo_pic: logo_pic
       };
     },
@@ -267,11 +277,17 @@
         );
         return menuArr;
 
+      },
+      activePath: function () {
+        return this.$route.path;
       }
     },
     watch: {
       toRoute: function () {
         this.activeId = this.getGroupId();
+      },
+      activeId: function () {
+        this.getPaddingLeft();
       }
     },
     methods: {
@@ -299,10 +315,22 @@
           window.localStorage.removeItem('user');
           return this.$router.replace('/login');
         });
+      },
+      checkSubMenu: function (item) {
+        this.goTo(item);
+      },
+      getPaddingLeft: function () {
+        let paddingLeft = '261px';// this.$store.bodySize.left;
+        this.menu.forEach(item => {
+          if (item.path === '/' + this.activeId && item.children.length === 0) {
+            paddingLeft = '130px';
+          }
+        });
+        this.$store.commit('setBodySize', {left: paddingLeft});
       }
     },
     mounted: function () {
-
+      this.getPaddingLeft();
     }
   };
 </script>

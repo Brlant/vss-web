@@ -12,7 +12,8 @@ const state = {
   permList: {},
   roleList: {},
   attachmentDialog: {attachmentId: 0, open: false},
-  form: {}
+  form: {},
+  bodySize: {left: '261px'}
 };
 
 const mutations = {
@@ -47,6 +48,9 @@ const mutations = {
   },
   closeAttachmentDialog(state) {
     state.attachmentDialog.open = false;
+  },
+  setBodySize(state, data) {
+    Object.assign(state.bodySize, data);
   }
 };
 

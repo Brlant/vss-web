@@ -78,7 +78,7 @@
 
 </style>
 <template>
-  <div class="app-body" :class="{'app-body-org':userType!=='platform'}">
+  <div class="app-body" :class="{'app-body-org':userType!=='platform'}" :style="'padding-left:'+bodyLeft">
     <org-header v-if="userType==='org'"></org-header>
     <app-header :to-route="toRoute" v-if="userType==='platform'"></app-header>
     <div class="main-body">
@@ -110,6 +110,9 @@
     computed: {
       userType: function () {
         return this.$store.state.user['userType'];
+      },
+      bodyLeft: function () {
+        return this.$store.state.bodySize['left'];
       }
     },
     beforeRouteEnter(to, form, next) {
