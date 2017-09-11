@@ -2,7 +2,7 @@
   @import "../../assets/mixins.less";
 
   .main-header {
-    background: #fff;
+    background: #607D8B;
     position: fixed;
     top: 0;
     left: 0;
@@ -101,6 +101,7 @@
   .logo-span {
     font-size: 22px;
     font-weight: bold;
+    color: #fff
   }
 
   .top-menu {
@@ -205,7 +206,7 @@
         </el-menu-item>
       </template>
       <li class="change-collapse" @click="changeMenuCollapse">
-        <i class="iconfont" :class="{'icon-collapse':isCollapse,'icon-spread':!isCollapse}"></i>
+        <i class="iconfont" :class="{'icon-collapse':!isCollapse,'icon-spread':isCollapse}"></i>
       </li>
     </el-menu>
     <h4 class="position-nav">
