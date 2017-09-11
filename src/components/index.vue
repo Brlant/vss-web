@@ -80,8 +80,7 @@
 </style>
 <template>
   <div class="app-body" :class="{'app-body-org':userType!=='platform'}" :style="'padding-left:'+bodyLeft">
-    <org-header v-if="userType==='org'"></org-header>
-    <app-header :to-route="toRoute" v-if="userType==='platform'"></app-header>
+    <app-header :to-route="toRoute"></app-header>
     <div class="main-body">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
@@ -96,7 +95,6 @@
 
 <script>
   import AppHeader from './common/app.header.vue';
-  import orgHeader from './common/org.app.header.vue';
   import AppFooter from './common/app.footer.vue';
   import {Auth, DictGroup} from '../resources';
   import utils from '../tools/utils';
@@ -126,7 +124,7 @@
       this.toRoute = to;
       next();
     },
-    components: {AppHeader, orgHeader, AppFooter, attachmentDialog},
+    components: {AppHeader, AppFooter, attachmentDialog},
     mounted: function () {
       if (!this.$store.state.user || !this.$store.state.user.userId) {
         Auth.checkLogin().then(() => {

@@ -106,79 +106,48 @@
   .top-menu {
     position: absolute;
     top: @topMenuHeight;
-    background: rgba(70, 76, 91, 1);
+    background: rgb(238, 243, 246);
     bottom: 0;
     left: 0;
     z-index: 1;
-    width: 130px;
-    font-size: 12px;
-    > ul {
-      padding-top: 5px;
-      > li {
-        padding-left: 15px;
-        a {
-          display: block;
-          line-height: 30px;
-          font-size: 12px;
-          color: #ccc;
-          &:hover {
-            color: @activeColorFont
-          }
-        }
-        &.active {
-          a {
-            color: @activeColorFont
-          }
-          .top-sub-menu {
-            display: block;
-          }
-          /* :after {
-             position: absolute;
-             height: 30px;
-             width: 10px;
-             background: #f00;
-             right: 0;
-             top: 0;
-             display:block;
-           }*/
-        }
-        .top-sub-menu {
-          h3 {
-            margin: 0;
-            padding: 10px 15px;
-            background: #fff;
-            color: #999;
-            font-weight: normal;
-            font-size: 14px;
-            border-bottom: 1px solid #ddd;
-          }
-          top: 0;
-          bottom: 0;
-          position: absolute;
-          left: 100%;
-          width: 130px;
-          background: rgba(234, 237, 241, 1);
-          display: none;
-          line-height: 20px;
-          border-right: 1px solid #ddd;
-          .top-sub-item {
-            padding: 8px 10px;
-            border-bottom: 1px solid #ddd;
-            cursor: pointer;
-            &:hover, &.active {
-              color: @activeColor
-            }
-          }
-        }
-      }
+    width: 180px;
+
+    li {
+      min-width: auto;
+    }
+    .change-collapse {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      text-align: center;
+      padding: 5px;
+    }
+    &.el-menu--collapse {
+      width: 64px;
     }
   }
+
+  .position-nav {
+    margin: 0;
+    font-size: 16px;
+    font-weight: normal;
+    background: rgba(243, 243, 243, 1);
+    padding: 5px 15px 5px 20px;
+    line-height: 30px;
+    border-bottom: 1px solid #eee;
+    .position-nav-text {
+      border-left: 5px solid #999;
+      padding-left: 15px
+    }
+  }
+
 </style>
 
 <template>
   <div>
     <header class="main-header">
-      <div class="container">
+      <div>
         <div class="top-logo">
           <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
             <span class="logo-span">CERP 系统</span>
@@ -215,26 +184,31 @@
         </div>
       </div>
     </header>
-    <nav class="top-menu">
-      <ul>
-        <li v-for="item in menu" :key="menu.path"
-            :class="{'active':activeId === item.meta.moduleId}">
-          <perm :label="item.meta.perm">
+
+    <el-menu default-active="$route.path" class="top-menu" :collapse="isCollapse" :router="true">
+      <template v-for="item in menu">
+        <el-submenu :index="item.path" :key="menu.path" v-if="item.children.length>0">
+          <template slot="title">
             <a href="#" @click.stop.prevent="goTo(item)">
-              <i :class="'iconfont icon-'+item.meta.icon" style="font-size: 14px"></i> {{item.meta.title}}</a>
-          </perm>
-          <div class="top-sub-menu" v-if="item.children.length">
-            <h3>{{item.meta.title}}</h3>
-            <ul>
-              <li class="top-sub-item" v-for="child in item.children" :key="child.path"
-                  @click.stop.prevent="checkSubMenu(child)" :class="{'active':child.path===activePath}">&bull;
-                {{ child.meta.title}}
-              </li>
-            </ul>
-          </div>
-        </li>
-      </ul>
-    </nav>
+              <i :class="'iconfont icon-'+item.meta.icon"></i> <span
+              slot="title">{{item.meta.title}}</span></a>
+          </template>
+          <el-menu-item :index="child.path" v-for="child in item.children" :key="child.path">
+            &bull; {{child.meta.title}}
+          </el-menu-item>
+        </el-submenu>
+        <el-menu-item :index="item.path" v-else>
+          <i :class="'iconfont icon-'+item.meta.icon"></i>
+          <span slot="title">{{item.meta.title}}</span>
+        </el-menu-item>
+      </template>
+      <li class="change-collapse" @click="changeMenuCollapse"><i class="iconfont icon-affirm"></i></li>
+    </el-menu>
+    <h4 class="position-nav">
+      <div class="container">
+        <span class="position-nav-text">{{$route.meta.title}}</span>
+      </div>
+    </h4>
   </div>
 </template>
 
@@ -252,7 +226,8 @@
     data() {
       return {
         activeId: this.getGroupId(),
-        logo_pic: logo_pic
+        logo_pic: logo_pic,
+        isCollapse: false
       };
     },
     computed: {
@@ -320,6 +295,7 @@
         this.goTo(item);
       },
       getPaddingLeft: function () {
+        /*
         let paddingLeft = '261px';// this.$store.bodySize.left;
         this.menu.forEach(item => {
           if (item.path === '/' + this.activeId && item.children.length === 0) {
@@ -327,6 +303,11 @@
           }
         });
         this.$store.commit('setBodySize', {left: paddingLeft});
+        */
+      },
+      changeMenuCollapse: function () {
+        this.isCollapse = !this.isCollapse;
+        this.$store.commit('changeBodyLeft', this.isCollapse);
       }
     },
     mounted: function () {

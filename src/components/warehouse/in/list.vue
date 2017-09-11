@@ -8,6 +8,8 @@
       width: 100%;
     }
     padding-top: 20px;
+    margin-top: 10px;
+    border: 1px solid #eee;
   }
 
   .i-bg {
@@ -29,14 +31,6 @@
 </style>
 <template>
   <div class="order-page">
-    <h4 class="position-nav">
-      <span class="position-nav-text">{{$route.meta.title}}</span>
-      <span class="pull-right btn-group-right">
-          <a href="#" class="btn-circle" @click.stop.prevent="showSearch = !showSearch">
-              <i class="iconfont icon-search"></i>
-          </a>
-      </span>
-    </h4>
 
     <div class="container">
 
@@ -116,7 +110,11 @@
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
-
+        <span class="btn-group-right pull-right">
+          <a href="#" class="btn-circle" @click.stop.prevent="showSearch = !showSearch">
+              <i class="iconfont icon-search"></i>
+          </a>
+        </span>
       </div>
       <div class="order-list" style="margin-top: 20px">
         <el-row class="order-list-header" :gutter="10">

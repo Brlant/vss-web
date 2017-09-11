@@ -13,7 +13,7 @@ const state = {
   roleList: {},
   attachmentDialog: {attachmentId: 0, open: false},
   form: {},
-  bodySize: {left: '261px'}
+  bodySize: {left: '180px'}
 };
 
 const mutations = {
@@ -51,6 +51,9 @@ const mutations = {
   },
   setBodySize(state, data) {
     Object.assign(state.bodySize, data);
+  },
+  changeBodyLeft(state, isSmall) {
+    state.bodySize.left = isSmall ? '64px' : '180px';
   }
 };
 
