@@ -15,7 +15,10 @@ const state = {
   form: {},
   bodySize: {left: '180px'}
 };
-
+let bodyLeft = window.localStorage.getItem('bodyLeft');
+if (bodyLeft) {
+  state.bodySize.left = bodyLeft;
+}
 const mutations = {
   initUser(state, data) {
     try {
@@ -54,6 +57,7 @@ const mutations = {
   },
   changeBodyLeft(state, isSmall) {
     state.bodySize.left = isSmall ? '64px' : '180px';
+    window.localStorage.setItem('bodyLeft', state.bodySize.left);
   }
 };
 

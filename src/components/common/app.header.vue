@@ -146,19 +146,40 @@
     }
   }
 
+  .skin-item {
+    position: relative;
+    top: 4px;
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    border: 1px solid #eee;
+    margin-right: 5px;
+  }
+
 </style>
 
 <template>
   <div>
-    <header class="main-header">
+    <header class="main-header" :style="'background:'+skin.background">
       <div>
         <div class="top-logo">
           <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
-            <span class="logo-span">CERP 系统</span>
+            <span class="logo-span" :style="'color:'+skin.color">CERP 系统</span>
           </router-link>
         </div>
         <div class="top-right">
           <div class="top-user">
+            <el-dropdown trigger="click" @command="changeSkin">
+              <div class="el-dropdown-link top-right-item">
+                <i class="el-icon-setting"></i>
+              </div>
+              <el-dropdown-menu slot="dropdown">
+                <el-dropdown-item v-for="skin in skinList" :key="" :command="skin">
+                  <span class="skin-item" :style="'background:'+skin.background+';'"></span>
+                  {{skin.name}}
+                </el-dropdown-item>
+              </el-dropdown-menu>
+            </el-dropdown>
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
                 <img v-if="user.userIcon" :src="user.userIcon">
@@ -193,7 +214,7 @@
       <template v-for="item in menu">
         <el-submenu :index="item.path" :key="menu.path" v-if="item.children.length>0">
           <template slot="title">
-              <i :class="'iconfont icon-'+item.meta.icon"></i> <span
+            <i :class="'iconfont icon-'+item.meta.icon"></i> <span
             slot="title">{{item.meta.title}}</span>
           </template>
           <el-menu-item :index="child.path" v-for="child in item.children" :key="child.path">
@@ -232,7 +253,15 @@
       return {
         activeId: this.getGroupId(),
         logo_pic: logo_pic,
-        isCollapse: false
+        isCollapse: false,
+        skinList: [
+          {color: '#fff', background: '#607D8B', name: '天空灰'},
+          {color: '#333', background: '#fff', name: '透明白'},
+          {color: '#fff', background: '#9c27b0', name: '贵族紫'},
+          {color: '#fff', background: '#3f51b5', name: '工业蓝'},
+          {color: '#fff', background: '#ff5722', name: '活跃橙'}
+        ],
+        skin: {}
       };
     },
     computed: {
@@ -265,9 +294,6 @@
     watch: {
       toRoute: function () {
         this.activeId = this.getGroupId();
-      },
-      activeId: function () {
-        this.getPaddingLeft();
       }
     },
     methods: {
@@ -299,24 +325,30 @@
       checkSubMenu: function (item) {
         this.goTo(item);
       },
-      getPaddingLeft: function () {
-        /*
-        let paddingLeft = '261px';// this.$store.bodySize.left;
-        this.menu.forEach(item => {
-          if (item.path === '/' + this.activeId && item.children.length === 0) {
-            paddingLeft = '130px';
-          }
-        });
-        this.$store.commit('setBodySize', {left: paddingLeft});
-        */
-      },
       changeMenuCollapse: function () {
         this.isCollapse = !this.isCollapse;
         this.$store.commit('changeBodyLeft', this.isCollapse);
+        window.localStorage.setItem('collapse', this.isCollapse ? 1 : 0);
+      },
+      changeSkin: function (skin) {
+        this.skin = skin;
+        window.localStorage.setItem('skin', JSON.stringify(skin));
       }
     },
     mounted: function () {
-      this.getPaddingLeft();
+      let skin = window.localStorage.getItem('skin');
+      let isCollapse = window.localStorage.getItem('collapse');
+      if (isCollapse) {
+        isCollapse = parseInt(isCollapse, 10);
+      }
+      this.isCollapse = !!isCollapse;
+      this.$store.commit('changeBodyLeft', this.isCollapse);
+      if (skin) {
+        this.skin = JSON.parse(skin);
+      } else {
+        this.skin = this.skinList[0];
+      }
+
     }
   };
 </script>
