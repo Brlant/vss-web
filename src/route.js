@@ -32,103 +32,210 @@ const route = [
       {
         path: '',
         component: resolve => require(['./components/dashboard.vue'], resolve),
-        meta: {}
+        meta: {moduleId: 'home', title: '首页', icon: 'home', perm: 'show'},
+        children: []
       },
       {
-        path: '/resetpsw',
-        component: () => import('./components/resetpsw.vue'),
-        meta: {}
-      },
-      {
-        path: '/warehouse',
-        component: resolve => require(['./components/warehouse/index.vue'], resolve),
-        meta: {moduleId: 'warehouse', title: '仓库管理', icon: 'warehouse', perm: 'show'},
+        path: '/account',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'account', title: '账户管理', icon: 'user', perm: 'show'},
         children: [
           {
-            path: '/warehouse/in',
-            component: resolve => require(['./components/warehouse/in/list.vue'], resolve),
-            meta: {moduleId: 'warehouse', title: '入库作业', perm: 'show'}
-          },
-          {
-            path: '/warehouse/out',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
-            meta: {moduleId: 'warehouse', title: '出库作业', perm: 'show'}
-          },
-          {
-            path: '/warehouse/wave',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
-            meta: {moduleId: 'warehouse', title: '波次作业', perm: 'show'}
-          },
-          {
-            path: '/warehouse/maintain',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
-            meta: {moduleId: 'warehouse', title: '仓库养护作业', perm: 'show'}
-          },
-
-          {
-            path: '/warehouse/scatter',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
-            meta: {moduleId: 'warehouse', title: '仓库拆零作业', perm: 'show'}
-          },
-          {
-            path: '/warehouse/plan',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
-            meta: {moduleId: 'warehouse', title: '计划管理', perm: 'show'}
-          }
-        ]
-      },
-      {
-        path: '/repertory',
-        component: resolve => require(['./components/dashboard.vue'], resolve),
-        meta: {moduleId: 'repertory', title: '库存管理', icon: 'repertory', perm: 'show'},
-        children: [
-          {
-            path: '/repertory/batch',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
-            meta: {moduleId: 'repertory', title: '库存批次', perm: 'show'}
+            path: '/account/pov',
+            component: resolve => require(['./components/account/pov/list.vue'], resolve),
+            meta: {moduleId: 'account', title: 'POV授权管理', perm: 'show'}
           }, {
-            path: '/repertory/rejectedGoods',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
-            meta: {moduleId: 'repertory', title: '报废货品库存管理', perm: 'show'}
+            path: '/account/user',
+            component: resolve => require(['./components/account/user/list.vue'], resolve),
+            meta: {moduleId: 'account', title: '账户管理', perm: 'show'}
           }
         ]
       },
       {
-        path: '/basic',
-        component: resolve => require(['./components/dashboard.vue'], resolve),
-        meta: {moduleId: 'basic', title: '基础资料管理', icon: 'basic', perm: 'show'},
+        path: '/resource',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'resource', title: '资料管理', icon: 'firm', perm: 'show'},
         children: [
           {
-            path: '/basic/packingScheme',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
-            meta: {moduleId: 'basic', title: '包装方案', perm: 'show'}
+            path: '/resource/firm',
+            component: resolve => require(['./components/resource/firm/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '厂商资料管理', perm: 'show'}
+          }, {
+            path: '/resource/vaccin/list',
+            component: resolve => require(['./components/resource/vaccin/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '疫苗资料管理', perm: 'show'}
           },
           {
-            path: '/basic/logisticsCenter',
-            component: resolve => require(['./components/dashboard.vue'], resolve),
-            meta: {moduleId: 'basic', title: '物流中心档案', perm: 'show'},
-            children: [
-              {
-                path: '/basic/logisticsCenter',
-                component: resolve => require(['./components/dashboard.vue'], resolve),
-                meta: {moduleId: 'basic', title: '物流中心档案', activePath: ''}
-              },
-              {
-                path: '/basic/logisticsCenter/warehouse/:id',
-                component: resolve => require(['./components/dashboard.vue'], resolve),
-                meta: {moduleId: 'basic', title: '物流中心档案', activePath: '/basic/logisticsCenter'}
-              }
-            ]
+            path: '/resource/vaccin/pov',
+            component: resolve => require(['./components/resource/vaccin/pov.vue'], resolve),
+            meta: {moduleId: 'resource', title: '疫苗授权管理', perm: 'show'}
+          },
+          {
+            path: '/resource/store',
+            component: resolve => require(['./components/resource/store/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '仓库管理', perm: 'show'}
           }
         ]
       },
       {
-        path: '/equipmentfiles',
-        component: resolve => require(['./components/dashboard.vue'], resolve),
-        meta: {moduleId: 'equipmentfiles', title: '设备耗材', icon: 'equipment', perm: 'show'},
+        path: '/purchase',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'purchase', title: '采购业务', icon: 'purchase', perm: 'show'},
+        children: [
+          {
+            path: '/purchase/pov',
+            component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
+            meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'}
+          }, {
+            path: '/purchase/order',
+            component: resolve => require(['./components/purchase/order/list.vue'], resolve),
+            meta: {moduleId: 'purchase', title: '采购订单', perm: 'show'}
+          },
+          {
+            path: '/purchase/rejected',
+            component: resolve => require(['./components/purchase/rejected/list.vue'], resolve),
+            meta: {moduleId: 'purchase', title: '退货管理', perm: 'show'}
+          }
+        ]
+      },
+      {
+        path: '/sale',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'sale', title: '销售业务', icon: 'sale', perm: 'show'},
+        children: [
+          {
+            path: '/sale/order',
+            component: resolve => require(['./components/sale/order/list.vue'], resolve),
+            meta: {moduleId: 'sale', title: '销售订单', perm: 'show'}
+          },
+          {
+            path: '/sale/rejected',
+            component: resolve => require(['./components/sale/rejected/list.vue'], resolve),
+            meta: {moduleId: 'sale', title: '销售退货', perm: 'show'}
+          }
+        ]
+      },
+      {
+        path: '/pov',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'pov', title: 'pov业务', icon: 'vaccine', perm: 'show'},
+        children: [
+          {
+            path: '/pov/request',
+            component: resolve => require(['./components/pov/request/list.vue'], resolve),
+            meta: {moduleId: 'pov', title: '疫苗要货申请', perm: 'show'}
+          },
+          {
+            path: '/pov/get',
+            component: resolve => require(['./components/pov/get/list.vue'], resolve),
+            meta: {moduleId: 'pov', title: 'POV收货管理', perm: 'show'}
+          },
+          {
+            path: '/pov/store',
+            component: resolve => require(['./components/pov/store/list.vue'], resolve),
+            meta: {moduleId: 'pov', title: 'POV库存管理', perm: 'show'}
+          },
+          {
+            path: '/pov/scan',
+            component: resolve => require(['./components/pov/scan/list.vue'], resolve),
+            meta: {moduleId: 'pov', title: 'POV注射扫码', perm: 'show'}
+          }
+        ]
+      },
+      {
+        path: '/store',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'store', title: '库存管理', icon: 'store', perm: 'show'},
+        children: [
+          {
+            path: '/store/request',
+            component: resolve => require(['./components/store/list.vue'], resolve),
+            meta: {moduleId: 'store', title: '库存查询', perm: 'show'}
+          },
+          {
+            path: '/store/jxq',
+            component: resolve => require(['./components/store/jxq.vue'], resolve),
+            meta: {moduleId: 'store', title: '库存近效期管理', perm: 'show'}
+          },
+          {
+            path: '/store/bad',
+            component: resolve => require(['./components/store/bad/list.vue'], resolve),
+            meta: {moduleId: 'store', title: '库存报损', perm: 'show'}
+          }
+        ]
+      },
+      {
+        path: '/finance',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'finance', title: '财务管理', icon: 'finance', perm: 'show'},
+        children: [
+          {
+            path: '/finance/get',
+            component: resolve => require(['./components/store/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '应收账款管理', perm: 'show'}
+          },
+          {
+            path: '/finance/pay',
+            component: resolve => require(['./components/store/jxq.vue'], resolve),
+            meta: {moduleId: 'finance', title: '应付账款管理', perm: 'show'}
+          },
+          {
+            path: '/finance/supplier',
+            component: resolve => require(['./components/store/bad/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '疫苗厂商对账', perm: 'show'}
+          },
+          {
+            path: '/finance/org',
+            component: resolve => require(['./components/store/bad/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '物流厂商对账', perm: 'show'}
+          },
+          {
+            path: '/finance/paying',
+            component: resolve => require(['./components/store/bad/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '付款作业', perm: 'show'}
+          },
+          {
+            path: '/finance/sale',
+            component: resolve => require(['./components/store/bad/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '库存货品调价', perm: 'show'}
+          }
+        ]
+      },
+      {
+        path: '/file',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'file', title: '批号文件管理', icon: 'fold', perm: 'show'},
+        children: [
+          {
+            path: '/file/list',
+            component: resolve => require(['./components/files/list.vue'], resolve),
+            meta: {moduleId: 'file', title: '疫苗批号文件管理', perm: 'show'}
+          },
+          {
+            path: '/file/list2',
+            component: resolve => require(['./components/files/list.vue'], resolve),
+            meta: {moduleId: 'file', title: '厂商证照资料查询', perm: 'show'}
+          }
+        ]
+      },
+      {
+        path: '/trace',
+        component: () => import('./components/trace/list.vue'),
+        meta: {moduleId: 'report', title: '追溯管理', icon: 'trace', perm: 'show'},
+        children: []
+      },
+      {
+        path: '/report',
+        component: () => import('./components/report/list.vue'),
+        meta: {moduleId: 'report', title: '报表管理', icon: 'report', perm: 'show'},
         children: []
       }
     ]
+  },
+  {
+    path: '/resetpsw',
+    component: () => import('./components/resetpsw.vue'),
+    meta: {}
   },
   {path: '/404', component: () => import('./components/error_404.vue')},
   {path: '/500', component: () => import('./components/error_500.vue')},

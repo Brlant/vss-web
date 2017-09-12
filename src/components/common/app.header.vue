@@ -104,45 +104,55 @@
     color: #fff
   }
 
-  .top-menu {
+  .main-nav {
     position: fixed;
     top: @topMenuHeight;
     background: rgb(238, 243, 246);
+    border-right: 1px solid #f1f1f1;
     bottom: 0;
     left: 0;
     z-index: 1;
     width: 180px;
-    li {
-      min-width: auto;
+    .menu-wrap {
+      max-height: 100%;
+      > .el-menu > li {
+        border-bottom: 1px solid rgba(255, 255, 255, 0.8);
+
+      }
+    }
+    .el-menu {
+      li {
+        min-width: 40px;
+      }
     }
     .change-collapse {
       position: absolute;
+      right: 0;
       bottom: 0;
       left: 0;
-      right: 0;
       text-align: center;
       padding: 5px;
       cursor: pointer;
+      background: rgb(238, 243, 246, 0.5);
       &:hover {
         background: #cbdce6;
       }
     }
-    &.el-menu--collapse {
-      width: 64px;
-    }
   }
 
   .position-nav {
-    margin: 0;
+    margin: 0 0 8px;
+    padding: 5px 15px 5px 20px;
+    border-bottom: 1px solid #eee;
     font-size: 16px;
     font-weight: normal;
-    background: rgba(243, 243, 243, 1);
-    padding: 5px 15px 5px 20px;
     line-height: 30px;
-    border-bottom: 1px solid #eee;
+    background: rgba(243, 243, 243, 1);
     .position-nav-text {
-      border-left: 5px solid #999;
-      padding-left: 15px
+      position: relative;
+      left: -20px;
+      padding-left: 13px;
+      border-left: 4px solid #999;
     }
   }
 
@@ -156,8 +166,20 @@
     margin-right: 5px;
   }
 
+  .el-submenu .el-menu-item {
+    line-height: 35px;
+    height: 35px;
+    font-size: 13px;
+  }
+
 </style>
 
+<style>
+  .el-menu-item, .el-submenu__title {
+    height: 46px;
+    line-height: 46px;
+  }
+</style>
 <template>
   <div>
     <header class="main-header" :style="'background:'+skin.background">
@@ -209,27 +231,30 @@
         </div>
       </div>
     </header>
-
-    <el-menu :default-active="$route.path" class="top-menu" :collapse="isCollapse" :router="true" :unique-opened="true">
-      <template v-for="item in menu">
-        <el-submenu :index="item.path" :key="menu.path" v-if="item.children.length>0">
-          <template slot="title">
-            <i :class="'iconfont icon-'+item.meta.icon"></i> <span
-            slot="title">{{item.meta.title}}</span>
+    <div class="main-nav" :style="'width:'+menuWidth">
+      <div class="menu-wrap" :style="isCollapse?'':'overflow-y:auto;'">
+        <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="true">
+          <template v-for="item in menu">
+            <el-submenu :index="item.path" :key="menu.path" v-if="item.children.length>0">
+              <template slot="title">
+                <i :class="'iconfont icon-'+item.meta.icon"></i> <span
+                slot="title">{{item.meta.title}}</span>
+              </template>
+              <el-menu-item :index="child.path" v-for="child in item.children" :key="child.path">
+                {{child.meta.title}}
+              </el-menu-item>
+            </el-submenu>
+            <el-menu-item :index="item.path" v-else>
+              <i :class="'iconfont icon-'+item.meta.icon"></i>
+              <span slot="title">{{item.meta.title}}</span>
+            </el-menu-item>
           </template>
-          <el-menu-item :index="child.path" v-for="child in item.children" :key="child.path">
-            &bull; {{child.meta.title}}
-          </el-menu-item>
-        </el-submenu>
-        <el-menu-item :index="item.path" v-else>
-          <i :class="'iconfont icon-'+item.meta.icon"></i>
-          <span slot="title">{{item.meta.title}}</span>
-        </el-menu-item>
-      </template>
-      <li class="change-collapse" @click="changeMenuCollapse">
+        </el-menu>
+      </div>
+      <div class="change-collapse" @click="changeMenuCollapse">
         <i class="iconfont" :class="{'icon-collapse':!isCollapse,'icon-spread':isCollapse}"></i>
-      </li>
-    </el-menu>
+      </div>
+    </div>
     <h4 class="position-nav">
       <div class="container">
         <span class="position-nav-text">{{$route.meta.title}}</span>
@@ -265,6 +290,9 @@
       };
     },
     computed: {
+      menuWidth: function () {
+        return this.$store.state.bodySize.left;
+      },
       user: function () {
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },

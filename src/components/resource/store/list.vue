@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    欢迎进入11
+    欢迎进入b123
   </div>
 
 </template>

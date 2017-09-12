@@ -81,7 +81,7 @@
 <template>
   <div class="app-body" :class="{'app-body-org':userType!=='platform'}" :style="'padding-left:'+bodyLeft">
     <app-header :to-route="toRoute"></app-header>
-    <div class="main-body">
+    <div class="main-body" style="padding:0 8px;">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
         <router-view class="app-content-view"></router-view>
