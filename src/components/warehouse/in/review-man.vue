@@ -56,13 +56,13 @@
         <h2 class="clearfix right-title">指派复核人员</h2>
         <span class="btn-search-toggle open search-btn clearfix">
                   <single-input placeholder="请输入名称搜索" :showFocus="true" v-model="keyWord"></single-input>
-                  <i class="wms-font wms-font-search"></i>
+                  <i class="iconfont icon-search"></i>
         </span>
         <ul class="show-list ul-position">
           <li class="show-item" v-for="item in operators" :key="item.id" :class="{active: activeId === item.id }"
               @click="showTasks(item)">
             <a href="#" class="btn-circle btn-bg-mr" @click.prevent=""><i
-              class="wms-font wms-font-detail" @click.prevent=""></i></a>{{ item.name }}
+              class="iconfont icon-detail" @click.prevent=""></i></a>{{ item.name }}
           </li>
         </ul>
         <div class="opera-btn">

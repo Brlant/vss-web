@@ -130,7 +130,7 @@
           <div v-for="product in productList" @click="changeProduct(product)" class="product-item">
             <div>{{product.name}}</div>
             <div class="no-bg">批号 {{product.batchNumber}}</div>
-            <span class="product-status" v-show="product.checked"><i class="wms-font wms-font-affirm"></i></span>
+            <span class="product-status" v-show="product.checked"><i class="iconfont icon-affirm"></i></span>
           </div>
         </div>
         <basic-info :info="currentProduct" :show="showBaseInfo" :show-close="productList.length>1"
@@ -152,9 +152,9 @@
           <div class="store-list" v-show="showBaseInfo">
             <div class="store-item" v-for="store in storeList">
               <h3><span class="sotre-status"></span>{{store.name}}
-                <!--<span class="wms-font wms-font-lock pull-right  span-title  deblocking-title" v-show="store.exclusiveStatus"-->
+                <!--<span class="iconfont icon-lock pull-right  span-title  deblocking-title" v-show="store.exclusiveStatus"-->
                 <!--@click="isLock(store)"></span>-->
-                <!--<span class="wms-font wms-font-deblocking pull-right span-title lock-title" v-show="!store.exclusiveStatus"-->
+                <!--<span class="iconfont icon-deblocking pull-right span-title lock-title" v-show="!store.exclusiveStatus"-->
                 <!--@click="isLock(store)"></span>-->
               </h3>
               <div class=" store-body">
@@ -171,7 +171,7 @@
                     <div>存放数量:<input type="text" v-model="store.num" @input="changeCount(store)"></div>
                   </el-col>
                   <div class="store-select" :class="{'checked':store.checked}" @click="saveStore(store)"><span
-                    class="wms-font wms-font-affirm"></span></div>
+                    class="iconfont icon-affirm"></span></div>
                 </el-row>
               </div>
             </div>

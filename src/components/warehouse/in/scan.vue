@@ -49,8 +49,8 @@
           <ul class="show-list ui-left">
             <li class="show-item" v-for="s in leftNumberList">
               {{ s.id }}
-              <i class="wms-font wms-font-correct correct-color" v-if="s.status === 1"></i>
-              <i class="wms-font wms-font-error error-color" v-if="s.status === 2"></i>
+              <i class="iconfont icon-correct correct-color" v-if="s.status === 1"></i>
+              <i class="iconfont icon-error error-color" v-if="s.status === 2"></i>
               <span class="delete-remove" @click="removeNumberItem(s)">X</span>
             </li>
           </ul>
@@ -60,8 +60,8 @@
           <ul class="show-list ui-left">
             <li class="show-item" v-for="s in leftSeriesList">
               {{ s.id }}
-              <i class="wms-font wms-font-correct correct-color" v-if="s.status === 1"></i>
-              <i class="wms-font wms-font-error error-color" v-if="s.status === 2"></i>
+              <i class="iconfont icon-correct correct-color" v-if="s.status === 1"></i>
+              <i class="iconfont icon-error error-color" v-if="s.status === 2"></i>
               <span class="delete-remove" @click="removeSeriesItem(s)">X</span>
             </li>
           </ul>

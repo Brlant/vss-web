@@ -48,7 +48,7 @@
 <template>
   <div class="basic-info" v-show="show" :style="'z-index:'+(showClose?2:1)">
     <h3 v-show="showClose"><span class="pull-right btn-close" @click="close"><i
-      class="wms-font wms-font-plus"></i> </span>收货详情</h3>
+      class="iconfont icon-plus"></i> </span>收货详情</h3>
     <div class="basic-info-part">
       <el-row class="title">【货品信息】</el-row>
       <oms-row label="货品" :span="spanNum" class="row-black">{{ info.name }}</oms-row>
