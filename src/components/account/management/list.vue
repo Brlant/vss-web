@@ -7,16 +7,6 @@
 </style>
 <template>
   <div>
-    <div>
-      <div class="order-list-status container">
-        <div class="status-item" :class="{'active':item.status==filters.status}"
-             v-for="(item,key) in orgType"
-             @click="filters.status=item.status">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
-        </div>
-      </div>
-    </div>
     <div class="container d-table">
       <div class="d-table-right">
         <span class="pull-right">
@@ -122,8 +112,7 @@
         showSearch: false,
         dataRows: [],
         filters: {
-          keyWord: '',
-          status: null
+          keyWord: ''
         },
         orgType: {
           0: {'title': '所有', 'num': '', 'status': null},

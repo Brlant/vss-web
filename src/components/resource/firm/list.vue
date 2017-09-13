@@ -71,14 +71,7 @@
 </style>
 <template>
   <div>
-    <div class="order-list-status container">
-      <div class="status-item" :class="{'active':key==activeStatus,'item-right':item.type===0} "
-           v-for="(item,key) in orgType"
-           @click="changeType(key,item)">
-        <div class="status-bg" :class="['b_color_'+key]"></div>
-        <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
-      </div>
-    </div>
+
     <div>
       <div class="container d-table">
         <div class="d-table-left">
@@ -365,8 +358,6 @@
         relationTitle: '全部',
         // 过滤条件
         filters: {
-          status: null,
-          auditedStatus: null,
           keyWord: '',
           relation: '',
           orgId: '',

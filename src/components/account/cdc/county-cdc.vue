@@ -11,13 +11,6 @@
 <template>
   <div>
     <div>
-      <div class="order-list-status container">
-        <div class="status-item" :class="{'active':key==activeStatus,'item-right':item.type===0} "
-             v-for="(item,key) in orgStatus" @click="changeType(key,item)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
-        </div>
-      </div>
       <div class="container d-table">
         <div class="d-table-right">
           <h2>
@@ -157,9 +150,8 @@
         },
         action: '',
         filters: {
-          orgAuditStatus: null,
           keyWord: '',
-          type: this.$route.meta.type,
+          type: '',
           deleteFlag: null
         },
         typePage: this.$route.path.substring(1),
