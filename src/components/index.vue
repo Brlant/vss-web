@@ -77,6 +77,19 @@
     }
   }
 
+  .cdc-shade {
+    position: fixed;
+    z-index: 900;
+    top: 54px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+  }
 </style>
 <template>
   <div class="app-body" :class="{'app-body-org':userType!=='platform'}" :style="'padding-left:'+bodyLeft">
@@ -90,21 +103,32 @@
     <!--<app-footer></app-footer>-->
     <attachmentDialog></attachmentDialog>
     <a href="#" target="_blank" class="min-div"><span id="fileDownLoadRap"></span></a>
+
+    <div class="cdc-shade" v-if="isPermission">
+      <el-button class="btn" type="primary" @click="queryRoles">我是市级CDC</el-button>
+    </div>
   </div>
+
 </template>
 
 <script>
   import AppHeader from './common/app.header.vue';
   import AppFooter from './common/app.footer.vue';
-  import {Auth, DictGroup} from '../resources';
+  import { Auth, DictGroup } from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
 
   export default {
+    components: {
+      AppHeader,
+      AppFooter,
+      attachmentDialog
+    },
     data: () => ({
       transitionName: 'slide-left',
       toRoute: {},
-      loading: true
+      loading: true,
+      isPermission: true
     }),
     computed: {
       userType: function () {
@@ -114,17 +138,16 @@
         return this.$store.state.bodySize['left'];
       }
     },
-    beforeRouteEnter(to, form, next) {
+    beforeRouteEnter (to, form, next) {
       next(vm => {
         vm.toRoute = to;
       });
     },
-    beforeRouteUpdate(to, from, next) {
+    beforeRouteUpdate (to, from, next) {
       utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
       this.toRoute = to;
       next();
     },
-    components: {AppHeader, AppFooter, attachmentDialog},
     mounted: function () {
       if (!this.$store.state.user || !this.$store.state.user.userId) {
         Auth.checkLogin().then(() => {
@@ -144,6 +167,7 @@
       }
 
       Auth.permission().then(res => {
+        this.isPermission = !res.data.length > 0;
         this.$store.commit('initPermissions', res.data);
       }).then(() => {
         DictGroup.getAll().then(data => {
@@ -154,6 +178,11 @@
           }, 1000);
         });
       });
+    },
+    methods: {
+      queryRoles () {
+        this.isPermission = false;
+      }
     }
   };
 </script>
