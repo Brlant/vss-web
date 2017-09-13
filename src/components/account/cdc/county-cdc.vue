@@ -30,11 +30,11 @@
                   <i class="iconfont icon-search"></i>
               </a>
               <!--<a href="#" class="btn-circle"><i class="iconfont icon-filter"></i> </a>-->
-              <perm label="biz-add">
-                 <a href="#" class="btn-circle" @click.stop.prevent="add">
-                    <i class="iconfont icon-plus"></i>
-                </a>
-              </perm>
+              <!--<perm label="biz-add">-->
+                 <!--<a href="#" class="btn-circle" @click.stop.prevent="add">-->
+                    <!--<i class="iconfont icon-plus"></i>-->
+                <!--</a>-->
+              <!--</perm>-->
             </span>
           </h2>
           <div v-if="dataRows.length == 0" class="empty-info">
@@ -93,16 +93,21 @@
         </div>
       </div>
     </div>
+    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'800px','padding':0}">
+      <base-form :formItem="form" :orgTitle="orgTitle" @close="showRight=false" :action="action" @change="onSubmit">
+      </base-form>
+    </page-right>
   </div>
 
 </template>
 <script>
   import { BaseInfo } from '@/resources';
   import Dict from '@/components/common/dict';
-
+  import baseForm from './form/form.vue';
   export default {
     components: {
-      Dict
+      Dict,
+      baseForm
     },
     data: function () {
       return {
