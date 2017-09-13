@@ -247,16 +247,7 @@
             }
           }
           this.typePager.totalPage = res.data.totalPage;
-//           this.showTypeList = res.data.list;
-//           if (this.showTypeList.length > 0) {
-//             this.orgName = this.showTypeList[0].name;
-//           }
-//           this.currentItem = Object.assign({}, {"id": ""}, this.showTypeList[0]);
-//           this.filters.orgId = "";
         });
-//        this.$nextTick(() => {
-//          this.filters.orgId = this.currentItem.id;
-//        });
       },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);

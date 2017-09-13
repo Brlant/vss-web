@@ -80,7 +80,7 @@
   .cdc-shade {
     position: fixed;
     z-index: 900;
-    top: 54px;
+    top: 50px;
     left: 0;
     right: 0;
     bottom: 0;
@@ -92,7 +92,7 @@
   }
 </style>
 <template>
-  <div class="app-body" :class="{'app-body-org':userType!=='platform'}" :style="'padding-left:'+bodyLeft">
+  <div class="app-body"  :style="'padding-left:'+bodyLeft">
     <app-header :to-route="toRoute"></app-header>
     <div class="main-body" style="padding:0 8px;">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
@@ -104,9 +104,9 @@
     <attachmentDialog></attachmentDialog>
     <a href="#" target="_blank" class="min-div"><span id="fileDownLoadRap"></span></a>
 
-    <div class="cdc-shade" v-if="isPermission">
-      <el-button class="btn" type="primary" @click="queryRoles">我是市级CDC</el-button>
-    </div>
+    <!--<div class="cdc-shade" v-if="isPermission">-->
+      <!--<el-button class="btn" type="primary" @click="queryRoles">我是市级CDC</el-button>-->
+    <!--</div>-->
   </div>
 
 </template>
@@ -114,7 +114,7 @@
 <script>
   import AppHeader from './common/app.header.vue';
   import AppFooter from './common/app.footer.vue';
-  import { Auth, DictGroup } from '../resources';
+  import { Auth, DictGroup, cerpAccess, cerpAction } from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
 
@@ -167,7 +167,6 @@
       }
 
       Auth.permission().then(res => {
-        this.isPermission = !res.data.length > 0;
         this.$store.commit('initPermissions', res.data);
       }).then(() => {
         DictGroup.getAll().then(data => {
@@ -178,10 +177,18 @@
           }, 1000);
         });
       });
+
+      cerpAction.queryLevel().then(res => {
+        this.isPermission = res.data.statusCodeValue === 0;
+      });
     },
     methods: {
       queryRoles () {
-        this.isPermission = false;
+        cerpAccess.bindMunicipal().then(() => {
+          this.loading = true;
+        }).catch(() => {
+          this.loading = false;
+        });
       }
     }
   };

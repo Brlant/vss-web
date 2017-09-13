@@ -163,7 +163,7 @@ export const Auth = {
     }
   },
   permission: () => {
-    return http.get('/oms/access/permissions', {params: {objectId: 'oms-system'}}); // TODO 改成wms-system
+    return http.get('/oms/access/permissions', {params: {objectId: 'oms-system'}});
   }
 };
 
@@ -272,6 +272,34 @@ export const Plan = resource('/plan/', http, {
 export const outWork = resource('/outbound/count', http, {
   queryOrderCount(obj) {
     return http.get('/outbound/count', {params: obj});
+  }
+});
+
+/**
+ * 区县
+ *
+ */
+export const cerpAccess = resource('', http, {
+  bindMunicipal () { // 绑定cdc角色
+    return http.put('/erp-access/bind/municipal');
+  },
+  bindDistrict () { // 市级绑定区县CDC
+    return http.put('/erp-access/bind/district');
+  },
+  bindPov (id) { // 绑定pov
+    return http.put(`/erp-access/bind/pov/${id}`);
+  }
+});
+
+export const cerpAction = resource('/outbound/count', http, {
+  queryCount () { // 查询县级cdc
+    return http.get('/erp-org/county');
+  },
+  queryLevel () { // 查询货主权限
+    return http.get('/erp-org/org-level');
+  },
+  queryPov (params) { // 查询pov
+    return http.get('/erp-org/pov', {params});
   }
 });
 
