@@ -215,7 +215,6 @@
 <script>
   //  import order from '../../../tools/orderList';
   import { Batch, BaseInfo, OrgGoods } from '@/resources';
-  import utils from '@/tools/utils';
   export default {
     data () {
       return {
@@ -329,7 +328,7 @@
           });
         }
       },
-      orgChange (orgId) {
+      orgChange () {
         this.filterOrgGoods();
       },
       formatTime (date) {

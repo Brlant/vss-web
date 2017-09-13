@@ -269,7 +269,6 @@ export const Plan = resource('/plan/', http, {
   }
 });
 
-
 export const outWork = resource('/outbound/count', http, {
   queryOrderCount(obj) {
     return http.get('/outbound/count', {params: obj});
