@@ -18,7 +18,7 @@
         <oms-input type="text" v-model="form.email" placeholder="请输入"></oms-input>
       </el-form-item>
       <el-form-item label="用户角色">
-        <el-select placeholder="请选择用户角色" v-model="roleId" filterable :clearable="true">
+        <el-select placeholder="请选择" v-model="roleId">
           <el-option :label="item.title" :value="item.id" :key="item.id" v-for="item in roleSelect"></el-option>
         </el-select>
       </el-form-item>
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import {User, OrgUser, Access} from '../../../../resources';
+  import { User, Access } from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -49,17 +49,22 @@
         type: String,
         default: ''
       },
-      orgId: {
-        type: String,
-        default: ''
-      },
       actionType: {
         type: Boolean,
         default: true
       }
     },
-    mounted() {
-
+    mounted () {
+      this.$nextTick(function () {
+        let param = {
+          usableStatus: 1,
+          objectId: 'wms-system'
+        };
+        let self = this;
+        Access.query(param).then(res => {
+          self.roleSelect = res.data.list;
+        });
+      });
     },
     data: function () {
       let checkEmail = (rule, value, callback) => {
@@ -70,7 +75,7 @@
           if (!re.test(value)) {
             callback(new Error('请输入正确的邮箱'));
           }
-          User.checkEmail(value, this.form.id, this.form.orgId).then(function (res) {
+          User.checkEmail(value, this.form.id).then(function (res) {
             if (res.data.valid) {
               callback();
             } else {
@@ -87,7 +92,7 @@
           if (!re.test(value)) {
             callback(new Error('请输入正确的手机号码'));
           }
-          User.checkPhone(value, this.form.id, this.form.orgId).then(function (res) {
+          User.checkPhone(value, this.form.id).then(function (res) {
             if (res.data.valid) {
               callback();
             } else {
@@ -108,8 +113,8 @@
             {validator: checkPhone, trigger: 'blur'}
           ],
           email: [
-            {required: true, message: '请输入邮箱地址', trigger: 'blur'},
-            {validator: checkEmail, trigger: 'blur'}
+            {required: true, message: '请输入邮箱', trigger: 'blur'},
+            {type: 'email', validator: checkEmail, trigger: 'blur'}
           ],
           roleId: [
             {required: true, message: '请输入用户角色', trigger: 'blur'}
@@ -123,12 +128,11 @@
       formItem: function () {
         this.form = this.formItem;
         this.roleId = '';
-        if (this.formItem.list.length) {
-          this.roleId = this.formItem.list[0]['roleId'];
+        if (this.formItem.list.length > 0) {
+          if (this.formItem.list.length) {
+            this.roleId = this.formItem.list[0]['roleId'];
+          }
         }
-      },
-      'orgId': function () {
-        this.getRoleSelect();
       },
       showRight: function (val) {
         if (!val) {
@@ -139,15 +143,11 @@
     methods: {
       getRoleSelect: function () {
         let param = {
-          usableStatus: 1
+          objectId: 'wms-system'
         };
-        let orgId = this.orgId;
-        if (!orgId) {
-          this.roleSelect = [];
-          return;
-        }
-        Access.getOrgRole(orgId, param).then(res => {
-          this.roleSelect = res.data.list;
+        let self = this;
+        Access.query(param).then(res => {
+          self.roleSelect = res.data.list;
         });
       },
       onSubmit: function (formName) {
@@ -164,36 +164,36 @@
             }
           });
           self.form.list = [{roleId: this.roleId, title: title}];
-
+          self.form.objectId = 'wms-system';
           if (this.action === 'add') {
-            OrgUser.save(self.form).then(() => {
+            User.save(self.form).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '新增货主用户"' + self.form.name + '"成功'
+                message: '新增平台用户"' + self.form.name + '"成功'
               });
               self.$emit('change', self.form);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '新增货主用户"' + self.form.name + '"失败'
+                message: '新增平台用户"' + self.form.name + '"失败'
               });
               this.doing = false;
             });
           } else {
-            OrgUser.update(self.form.id, self.form).then(() => {
+            User.update(self.form.id, self.form).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '修改货主用户"' + self.form.name + '"成功'
+                message: '修改平台用户"' + self.form.name + '"成功'
               });
               self.$emit('change', self.form);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '修改货主用户"' + self.form.name + '"失败'
+                message: '修改平台用户"' + self.form.name + '"失败'
               });
               this.doing = false;
             });

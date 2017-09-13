@@ -102,6 +102,29 @@ export const OmsAttachment = resource('omsAttachment', http, {
   }
 });
 
+// 货主用户权限对象
+export const OrgUser = resource('/oms/user/org', http, {
+  queryOrgInfo: (id, params) => {
+    return http.get('/oms/user/org/' + id, {params});
+  }
+});
+
+// 角色管理对象
+export const Access = resource('/oms/access', http, {
+  getRoleMenus: () => {
+    return http.get('/oms/access/menus', {params: {objectId: 'oms-system'}});
+  },
+  getOrgRoleMenus: (orgId) => {
+    return http.get('/oms/access/org/' + orgId + '/admin/menus');
+  },
+  getOrgRole: (orgId, params) => {
+    return http.get('/oms/access/orgs/' + orgId, {params});
+  },
+  getRoleDetail: (roleId) => {
+    return http.get('/oms/access/' + roleId);
+  }
+});
+
 // 平台用户权限对象
 export const User = resource('/oms/user', http, {
   checkEmail: (email, userId, orgId) => {

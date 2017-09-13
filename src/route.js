@@ -51,9 +51,14 @@ const route = [
             meta: {moduleId: 'account', title: '县级CDC', perm: 'show'}
           },
           {
+            path: '/account/management',
+            component: resolve => require(['./components/account/management/list.vue'], resolve),
+            meta: {moduleId: 'account', title: '账户管理', perm: 'show'}
+          },
+          {
             path: '/account/user',
             component: resolve => require(['./components/account/user/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '账户管理', perm: 'show'}
+            meta: {moduleId: 'account', title: '用户管理', perm: 'show'}
           }
         ]
       },
