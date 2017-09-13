@@ -167,6 +167,19 @@ export const Auth = {
   }
 };
 
+// 业务关系
+export const bizRelation = resource('/bizRelation', http, {
+  queryRelationorg: (id) => {
+    return http.get('/bizRelation/' + id, {});
+  },
+  check: (id, obj) => {
+    return http.put('bizRelation/' + id + '/check', obj);
+  },
+  queryStateNum: (params) => {
+    return http.get('/bizRelation/count', {params});
+  }
+});
+
 // 数据字典组对象
 export const DictGroup = resource('dictGroup', http, {
   checkGroupName: (groupName, groupId) => {

@@ -67,7 +67,7 @@
             </a>
            </perm>
          </span>
-          <h2 class="org-name-h2" v-show="orgName">货主名称:{{orgName}}</h2>
+          <h2 class="org-name-h2" v-show="orgName">CDC名称:{{orgName}}</h2>
           <table class="table " :class="{'table-hover':dataRows.length !== 0}">
             <thead>
             <tr>

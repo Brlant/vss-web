@@ -196,7 +196,7 @@
                 <i class="el-icon-setting"></i>
               </div>
               <el-dropdown-menu slot="dropdown">
-                <el-dropdown-item v-for="skin in skinList" :key="" :command="skin">
+                <el-dropdown-item v-for="skin in skinList" :key="skin.name" :command="skin">
                   <span class="skin-item" :style="'background:'+skin.background+';'"></span>
                   {{skin.name}}
                 </el-dropdown-item>
