@@ -36,7 +36,6 @@
                 </a>
               </perm>
             </span>
-            <h2 class="org-name-h2">{{menuTitle}}</h2>
           </h2>
           <div v-if="dataRows.length == 0" class="empty-info">
             暂无信息
