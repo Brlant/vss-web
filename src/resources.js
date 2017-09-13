@@ -335,6 +335,22 @@ export const OrgGoods = resource('/org/goods', http, {
   }
 });
 
+// 货品管理
+export const Goods = resource('/goods', http, {
+  filterOrg: (orgId, params) => {
+    return http.get('/goods/orgs/' + orgId, {params});
+  },
+  check: (id, obj) => {
+    return http.put('/goods/' + id + '/check', obj);
+  },
+  getGoodsDetail: (id) => {
+    return http.get('/goods/' + id);
+  },
+  queryStateNum: (params) => {
+    return http.get('goods/count', {params});
+  }
+});
+
 // 货主-基本信息
 export const BaseInfo = resource('/orgs', http, {
   // 查询数量

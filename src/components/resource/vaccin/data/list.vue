@@ -115,7 +115,7 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="iconfont icon-search"></i> </a>
                 </span>
-            货品信息
+            疫苗资料
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>

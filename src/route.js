@@ -78,7 +78,7 @@ const route = [
           },
           {
             path: '/resource/vaccin/pov',
-            component: resolve => require(['./components/resource/vaccin/pov.vue'], resolve),
+            component: resolve => require(['./components/resource/vaccin/rights/pov.vue'], resolve),
             meta: {moduleId: 'resource', title: '疫苗授权管理', perm: 'show'}
           },
           {

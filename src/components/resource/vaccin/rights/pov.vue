@@ -1,0 +1,368 @@
+<style lang="less" scoped>
+
+  .el-form .el-select {
+    display: block;
+  }
+
+  .d-table-right {
+    .org-name-h2 {
+      font-size: 16px;
+      font-weight: bold;
+    }
+  }
+
+  .d-table-col-wrap {
+    overflow: auto;
+  }
+  .pov-info {
+   margin-bottom: 30px;
+    .font-bold {
+      font-size: 14px;
+    }
+  }
+
+</style>
+<template>
+  <div>
+    <div class="container d-table">
+      <div class="d-table-left">
+        <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+          <h2 class="header">
+          <span class="pull-right">
+              <a href="#" class="btn-circle" @click.prevent="searchType"><i
+                class="iconfont icon-search"></i> </a>
+          </span>
+            POV列表
+          </h2>
+          <div class="search-left-box" v-show="showTypeSearch">
+            <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+          </div>
+          <div v-if="!currentItem.id" class="empty-info">
+            暂无信息
+          </div>
+          <div v-else>
+            <ul class="show-list">
+              <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
+                  :class="{'active':item.id==currentItem.id}">
+                <div class="id-part">
+                  货主id {{item.id }}
+                </div>
+                <div>
+                  {{item.name }}
+                </div>
+              </li>
+            </ul>
+            <div class="btn-left-list-more" @click.stop="getOrgMore">
+              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="d-table-right">
+        <div class="d-table-col-wrap">
+          <div class="pov-info">
+            <span class="pull-right" style="margin-top: 8px">
+             <perm label="show">
+               <a href="#"  class="margin-left">
+                 <i class="iconfont icon-verify"></i> 审核
+               </a>
+              </perm>
+               <perm label="show" style="margin-left: 10px">
+                  <a href="#" class="margin-left" >
+                    <i class="iconfont icon-delete"></i> 删除
+                  </a>
+               </perm>
+            </span>
+            <el-row class="clearfix font-bold">
+              <el-col :span="2">POV名称:</el-col>
+              <el-col :span="10"> {{ orgName }}</el-col>
+            </el-row>
+            <el-row class="clearfix font-bold">
+              <el-col :span="2">授权时间:</el-col>
+              <el-col :span="10"> {{ '2011.08.09' }}</el-col>
+            </el-row>
+          </div>
+         <span class="pull-right" style="margin-top: 8px">
+           <span class="btn-search-toggle open" v-show="showSearch">
+              <single-input v-model="keyTxt" placeholder="请输入关键字搜索" :showFocus="showSearch"></single-input>
+              <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+           </span>
+           <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
+              <i class="iconfont icon-search"></i>
+           </a>
+           <perm label="org-user-add">
+              <a href="#" class="btn-circle" @click.stop.prevent="add">
+                <i class="iconfont icon-plus"></i>
+            </a>
+           </perm>
+         </span>
+          <h2 class="org-name-h2">【授权疫苗】</h2>
+          <table class="table " :class="{'table-hover':dataRows.length !== 0}">
+            <thead>
+            <tr>
+              <th>姓名</th>
+              <th>角色</th>
+              <th>手机号码</th>
+              <th>邮箱</th>
+              <th>状态</th>
+              <th></th>
+            </tr>
+            </thead>
+            <tbody v-show="dataRows.length === 0">
+            <tr>
+              <td colspan="10" class="text-center">
+                <div class="empty-info">暂无信息</div>
+              </td>
+            </tr>
+            </tbody>
+            <tbody>
+            <tr v-for="row in dataRows">
+              <td>
+                {{row.name}}
+                <el-tag type="success" v-show="row.adminFlag">主账号</el-tag>
+              </td>
+              <td>
+                {{ row.list | formatRole }}
+              </td>
+              <td>
+                {{row.phone}}
+              </td>
+              <td>
+                {{row.email}}
+              </td>
+              <td>
+                <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
+              </td>
+              <td class="list-op">
+                <perm label="org-user-edit">
+                  <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
+                  <forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"' v-show="row.status==1">
+                    <i class="iconfont icon-forbidden"></i>停用
+                  </forbid>
+                  <forbid :item="row" @forbided="useNormal" :tips='"确认启用货主用户 \""+row.name+"\" ?"'
+                              v-show="row.status==2"><i
+                    class="iconfont icon-start"></i>启用
+                  </forbid>
+                </perm>
+              </td>
+            </tr>
+            </tbody>
+          </table>
+          <div class="text-center" v-show="pager.count>pager.pageSize">
+            <el-pagination layout="prev, pager, next"
+                           :total="pager.count"
+                           :pageSize="pager.pageSize"
+                           @current-change="getPageList"
+                           :current-page="pager.currentPage">
+            </el-pagination>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</template>
+<script>
+  import {BaseInfo, OrgUser} from '@/resources';
+  export default {
+    data: function () {
+      return {
+        showRight: false,
+        showTypeSearch: false,
+        showSearch: false,
+        dataRows: [],
+        showTypeList: [],
+        typeTxt: '',
+        keyTxt: '',
+        filters: {
+          orgId: ''
+        },
+        form: {list: [{roleId: ''}]},
+        formTitle: '新增',
+        oldItem: {},
+        action: 'add',
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20,
+          totalPage: 1
+        },
+        typePager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20,
+          totalPage: 1
+        },
+        orgName: '', // 货主名称
+        currentItem: {} //  左边列表点击时，添加样式class
+      };
+    },
+    filters: {
+      formatRole: function (list) {
+        let value = '';
+        if (list.length > 0) {
+          value = list[0].title;
+        }
+        return value;
+      }
+    },
+    computed: {
+      bodyHeight: function () {
+        return this.$store.state.bodyHeight;
+      }
+    },
+    mounted() {
+      // this.getOrgsList(1);
+    },
+    watch: {
+      'typeTxt': function () {
+        this.dataRows = [];
+        this.orgName = '';
+        this.getOrgsList();
+      },
+      'keyTxt': function () {
+        this.getPageList(1);
+      },
+      filters: {
+        handler: function () {
+          this.getPageList(1);
+        },
+        deep: true
+      }
+    },
+    methods: {
+      resetRightBox: function () {
+        this.showRight = false;
+      },
+      addType: function () {
+        this.showTypeRight = true;
+      },
+      searchType: function () {
+        this.showTypeSearch = !this.showTypeSearch;
+      },
+      getOrgsList: function (pageNo, isContinue = false) {
+        this.typePager.currentPage = pageNo;
+        let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize,
+          deleteFlag: false,
+          keyWord: this.typeTxt
+        }, this.filters);
+        BaseInfo.query(params).then(res => {
+          if (isContinue) {
+            this.showTypeList = this.showTypeList.concat(res.data.list);
+          } else {
+            this.showTypeList = res.data.list;
+            if (this.showTypeList.length !== 0) {
+              this.currentItem = res.data.list[0];
+              this.orgName = this.showTypeList[0].name;
+              this.filters.orgId = this.currentItem.id;
+              this.getPageList(1);
+            } else {
+              this.currentItem = Object.assign({'id': ''});
+              this.filters.orgId = '';
+            }
+          }
+          this.typePager.totalPage = res.data.totalPage;
+//           this.showTypeList = res.data.list;
+//           if (this.showTypeList.length > 0) {
+//             this.orgName = this.showTypeList[0].name;
+//           }
+//           this.currentItem = Object.assign({}, {"id": ""}, this.showTypeList[0]);
+//           this.filters.orgId = "";
+        });
+//        this.$nextTick(() => {
+//          this.filters.orgId = this.currentItem.id;
+//        });
+      },
+      getOrgMore: function () {
+        this.getOrgsList(this.typePager.currentPage + 1, true);
+      },
+      getPageList: function (pageNo) {
+        if (!this.filters.orgId) return;
+        this.pager.currentPage = pageNo;
+        let data = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize,
+          keyWord: this.keyTxt
+        });
+        OrgUser.queryOrgInfo(this.filters.orgId, data).then(res => {
+          this.dataRows = res.data.list;
+          this.pager.count = res.data.count;
+        });
+      },
+      add: function () {
+        this.action = 'add';
+        this.formTitle = '新增 ' + this.orgName + '用户';
+        this.form = {
+          list: [{roleId: ''}],
+          orgId: this.filters.orgId
+        };
+        this.showRight = true;
+      },
+      edit: function (item) {
+        this.action = 'edit';
+        this.formTitle = '编辑 ' + this.orgName + '用户';
+        this.oldItem = item;
+        this.form = JSON.parse(JSON.stringify(item));
+        this.showRight = true;
+      },
+      remove: function () {
+
+      },
+      forbid: function (item) {
+        let itemTemp = JSON.parse(JSON.stringify(item));
+        itemTemp.status = 2;
+        OrgUser.update(itemTemp.id, itemTemp).then(() => {
+          item.status = 2;
+          this.$notify.success({
+            title: '成功',
+            message: '已成功停用货主用户"' + itemTemp.name + '"'
+          });
+        });
+      },
+      useNormal: function (item) {
+        let itemTemp = JSON.parse(JSON.stringify(item));
+        itemTemp.status = 1;
+        OrgUser.update(itemTemp.id, itemTemp).then(() => {
+          item.status = 1;
+          this.getPageList(1);
+          this.$notify.success({
+            title: '成功',
+            message: '已成功启用货主用户"' + item.name + '"'
+          });
+        });
+      },
+      removeType: function (item) {
+        BaseInfo.delete(item.id).then(() => {
+          this.getOrgsList();
+          this.$notify.success({
+            title: '成功',
+            message: '已成功删除货主用户"' + item.name + '"'
+          });
+        });
+      },
+      showType: function (item) {
+        this.filters.orgId = item.id;
+        this.orgName = item.name;
+        this.currentItem = item;
+      },
+      itemChange: function (item) {
+        if (this.action === 'add') {
+          this.getPageList(1);
+          this.showRight = false;
+        } else {
+          let index = this.dataRows.indexOf(this.oldItem);
+          if (index !== -1) {
+            this.dataRows.splice(index, 1, item);
+          }
+          this.showRight = false;
+        }
+      },
+      formatStatus: function (value) {
+        if (!value) return '';
+        return value.toString();
+      }
+    }
+  };
+</script>
