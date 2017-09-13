@@ -4,9 +4,6 @@
   .el-form .el-select {
     display: block;
   }
-  .d-table {
-    width: 100%;
-  }
 </style>
 <template>
   <div>

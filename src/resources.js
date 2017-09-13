@@ -122,6 +122,7 @@ export const User = resource('/oms/user', http, {
   }
 });
 
+
 export const Auth = {
   checkLogin: () => {
     return http.get('/userinfo');
