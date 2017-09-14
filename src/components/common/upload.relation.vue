@@ -1,11 +1,12 @@
 <template>
   <div>
+    <upload-list :list-type="type" :files=uploadingFiles v-if="!showFileList"
+                 style="padding-bottom:10px;" @remove="cancelUpload"></upload-list>
     <el-upload
       class="upload-demo"
       ref="upload"
       name="upfile"
-      :data="object"
-      :action="'/omsAttachment' | formatImgUrl"
+      :action="uploadUrl"
       :on-preview="handlePreview"
       :on-remove="handleRemove"
       :file-list="fileLists"
@@ -14,22 +15,23 @@
       :on-error="error"
       :before-upload="beforeAvatarUpload"
       :list-type="type"
-      :with-credentials="true"
       :show-file-list="showFileList"
-      :multiple="multiple">
+      :multiple="multiple"
+      :on-progress="showProgress"
+      :data="uploadData">
       <el-button slot="trigger" size="small" type="primary">{{ uploadName }}</el-button>
       <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
     </el-upload>
-
   </div>
 </template>
 
 <script>
-  import {OmsAttachment} from '../../resources';
+  import {OmsAttachment, http} from '../../resources';
+  import UploadList from '@/components/common/upload.file.list.vue';
 
   export default {
     name: 'omsUploadRelation',
-
+    components: {UploadList},
     props: {
       fileList: {
         type: Array,
@@ -69,7 +71,10 @@
           objectType: this.objectType
         },
         dialogImageUrl: '',
-        dialogVisible: false
+        dialogVisible: false,
+        uploadData: {},
+        uploadUrl: '/omsAttachment',
+        uploadingFiles: []
       };
     },
     watch: {
@@ -125,10 +130,24 @@
             duration: 2000,
             message: '上传附件大小不能超过 10MB!'
           });
+          return false;
         }
-        return isLt10M;
+        let data = {objectId: this.objectId, objectType: this.objectType, fileName: file.name};
+        return http.post('/qingstor/pre', data).then(res => {
+          this.uploadUrl = res.data.apiUrl;
+          this.uploadData = {
+            policy: res.data.policy,
+            access_key_id: res.data.accessKeyId,
+            signature: res.data.signature,
+            key: res.data.key,
+            redirect: res.data.redirect
+          };
+          console.log(file);
+          this.uploadingFiles.push(file);
+        });
       },
-      success(response) {
+      success(response, file, fileList) {
+        this.uploadingFiles = this.uploadingFiles.filter(item => item.uid !== file.uid);
         if (response) {
           this.$notify.success({
             duration: 2000,
@@ -146,6 +165,21 @@
           duration: 2000,
           message: '上传附件失败' + err
         });
+      },
+      showProgress(event, file, fileList) {
+        let index = -1;
+        for (let i = 0, len = this.uploadingFiles.length; i < len; i++) {
+          if (file.uid === this.uploadingFiles[i].uid) {
+            index = i;
+          }
+        }
+        if (index !== -1) {
+          this.uploadingFiles.splice(index, 1, file);
+        }
+      },
+      cancelUpload: function (file) {
+        this.$refs['upload'].abort(file);
+        this.uploadingFiles = this.uploadingFiles.filter(item => item.uid !== file.uid);
       }
     }
 
