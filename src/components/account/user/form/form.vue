@@ -9,13 +9,13 @@
     <el-form ref="accountform" :model="form" label-width="100px" :rules="rules"
              @submit.prevent="onSubmit('accountform')" onsubmit="return false">
       <el-form-item label="姓名" prop="name">
-        <oms-input type="text" v-model="form.name" placeholder="请输入"></oms-input>
+        <oms-input type="text" v-model="form.name" placeholder="请输入姓名"></oms-input>
       </el-form-item>
       <el-form-item label="手机号码" prop="phone">
-        <oms-input type="text" v-model="form.phone" placeholder="请输入"></oms-input>
+        <oms-input type="text" v-model="form.phone" placeholder="请输入手机号码"></oms-input>
       </el-form-item>
       <el-form-item label="Email" prop="email">
-        <oms-input type="text" v-model="form.email" placeholder="请输入"></oms-input>
+        <oms-input type="text" v-model="form.email" placeholder="请输入邮箱"></oms-input>
       </el-form-item>
       <el-form-item label="用户角色">
         <el-select placeholder="请选择用户角色" v-model="roleId" filterable :clearable="true">
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import {User, OrgUser, Access} from '../../../../resources';
+  import {User, Access, OrgUser} from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -49,17 +49,10 @@
         type: String,
         default: ''
       },
-      orgId: {
-        type: String,
-        default: ''
-      },
       actionType: {
         type: Boolean,
         default: true
       }
-    },
-    mounted() {
-
     },
     data: function () {
       let checkEmail = (rule, value, callback) => {
@@ -108,7 +101,7 @@
             {validator: checkPhone, trigger: 'blur'}
           ],
           email: [
-            {required: true, message: '请输入邮箱地址', trigger: 'blur'},
+            {required: true, message: '请输入邮箱', trigger: 'blur'},
             {validator: checkEmail, trigger: 'blur'}
           ],
           roleId: [
@@ -119,33 +112,40 @@
         doing: false
       };
     },
+    computed: {
+      user () {
+        return this.$store.state.user;
+      }
+    },
+    mounted () {
+      this.getRoleSelect();
+    },
     watch: {
       formItem: function () {
-        this.form = this.formItem;
+        this.form = this.formItem;// this.formItem;
         this.roleId = '';
-        if (this.formItem.list.length) {
-          this.roleId = this.formItem.list[0]['roleId'];
+        if (this.formItem.list.length > 0) {
+          if (this.formItem.list.length) {
+            this.roleId = this.formItem.list[0]['roleId'];
+          }
         }
-      },
-      'orgId': function () {
-        this.getRoleSelect();
       },
       showRight: function (val) {
         if (!val) {
           this.$refs['accountform'].resetFields();
         }
+      },
+      user (val) {
+        if (val.userCompanyAddress) {
+          this.getRoleSelect();
+        }
       }
     },
     methods: {
       getRoleSelect: function () {
-        let param = {
-          usableStatus: 1
-        };
-        let orgId = this.orgId;
-        if (!orgId) {
-          this.roleSelect = [];
-          return;
-        }
+        let param = {};
+        let orgId = this.user.userCompanyAddress;
+        if (!orgId) return;
         Access.getOrgRole(orgId, param).then(res => {
           this.roleSelect = res.data.list;
         });
@@ -164,7 +164,7 @@
             }
           });
           self.form.list = [{roleId: this.roleId, title: title}];
-
+          self.form.orgId = this.user.userCompanyAddress;
           if (this.action === 'add') {
             OrgUser.save(self.form).then(() => {
               this.doing = false;

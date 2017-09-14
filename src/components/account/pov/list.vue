@@ -214,7 +214,7 @@
           });
           return;
         }
-        cerpAccess.bindPov(this.orgId, {cdcId: this.cdcItem.orgId}).then(() => {
+        cerpAccess.bindPov(this.cdcItem.orgId, this.orgId).then(() => {
           this.$notify.success({
             message: '绑定POV成功'
           });

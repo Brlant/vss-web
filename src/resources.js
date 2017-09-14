@@ -286,8 +286,8 @@ export const cerpAccess = resource('', http, {
   bindDistrict (id) { // 市级绑定区县CDC
     return http.put(`/erp-access/bind/district/${id}`);
   },
-  bindPov (id, obj) { // 绑定pov
-    return http.put(`/erp-access/bind/pov/${id}`, obj);
+  bindPov (cdcId, id) { // 绑定pov
+    return http.put(`/erp-access/bind/${cdcId}/pov/${id}`);
   }
 });
 

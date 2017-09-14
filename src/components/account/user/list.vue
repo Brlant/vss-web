@@ -3,162 +3,129 @@
   .el-form .el-select {
     display: block;
   }
-
-  .d-table-right {
-    .org-name-h2 {
-      font-size: 16px;
-      font-weight: bold;
+  .tr-bg {
+    :hover {
+       background: #fff;
     }
-  }
-
-  .d-table-col-wrap {
-    overflow: auto;
   }
 </style>
 <template>
   <div>
     <div class="container d-table">
-      <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
-          <h2 class="header">
-          <span class="pull-right">
-              <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                class="iconfont icon-search"></i> </a>
-          </span>
-            CDC用户管理
-          </h2>
-          <div class="search-left-box" v-show="showTypeSearch">
-            <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
-          </div>
-          <div v-if="!currentItem.id" class="empty-info">
-            暂无信息
-          </div>
-          <div v-else>
-            <ul class="show-list">
-              <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
-                  :class="{'active':item.id==currentItem.id}">
-                <div class="id-part">
-                  货主id {{item.id }}
-                </div>
-                <div>
-                  {{item.name }}
-                </div>
-              </li>
-            </ul>
-            <div class="btn-left-list-more" @click.stop="getOrgMore">
-              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
-            </div>
-          </div>
-        </div>
-      </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap">
-         <span class="pull-right" style="margin-top: 8px">
-           <span class="btn-search-toggle open" v-show="showSearch">
-              <single-input v-model="keyTxt" placeholder="请输入关键字搜索" :showFocus="showSearch"></single-input>
-              <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
-           </span>
-           <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
+        <span class="pull-right">
+          <span class="btn-search-toggle open" v-show="showSearch">
+            <single-input v-model="filters.keyWord" placeholder="请输入关键字搜索"
+                          :showFocus="showSearch"></single-input>
+            <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+          </span>
+          <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
               <i class="iconfont icon-search"></i>
-           </a>
-           <perm label="org-user-add">
-              <a href="#" class="btn-circle" @click.stop.prevent="add">
-                <i class="iconfont icon-plus"></i>
-            </a>
-           </perm>
-         </span>
-          <h2 class="org-name-h2" v-show="orgName">CDC名称:{{orgName}}</h2>
-          <table class="table " :class="{'table-hover':dataRows.length !== 0}">
-            <thead>
-            <tr>
-              <th>姓名</th>
-              <th>角色</th>
-              <th>手机号码</th>
-              <th>邮箱</th>
-              <th>状态</th>
-              <th></th>
-            </tr>
-            </thead>
-            <tbody v-show="dataRows.length === 0">
-            <tr>
-              <td colspan="10" class="text-center">
-                <div class="empty-info">暂无信息</div>
-              </td>
-            </tr>
-            </tbody>
-            <tbody>
-            <tr v-for="row in dataRows">
-              <td>
-                {{row.name}}
-                <el-tag type="success" v-show="row.adminFlag">主账号</el-tag>
-              </td>
-              <td>
-                {{ row.list | formatRole }}
-              </td>
-              <td>
-                {{row.phone}}
-              </td>
-              <td>
-                {{row.email}}
-              </td>
-              <td>
-                <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
-              </td>
-              <td class="list-op">
-                <perm label="org-user-edit">
-                  <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
-                  <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"' v-show="row.status==1">
-                    <i class="iconfont icon-forbidden"></i>停用
-                  </oms-forbid>
-                  <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用货主用户 \""+row.name+"\" ?"'
-                              v-show="row.status==2"><i
-                    class="iconfont icon-start"></i>启用
-                  </oms-forbid>
-                </perm>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-          <div class="text-center" v-show="pager.count>pager.pageSize">
-            <el-pagination layout="prev, pager, next"
-                           :total="pager.count"
-                           :pageSize="pager.pageSize"
-                           @current-change="getPageList"
-                           :current-page="pager.currentPage">
-            </el-pagination>
-          </div>
+          </a>
+          <perm label="org-user-add">
+                <a href="#" class="btn-circle" @click.stop.prevent="add">
+                    <i class="iconfont icon-plus"></i>
+                </a>
+          </perm>
+        </span>
+        <table class="table table-hover">
+          <thead>
+          <tr>
+            <th>姓名</th>
+            <th>角色</th>
+            <th>手机号码</th>
+            <th>邮箱</th>
+            <th>状态</th>
+            <th></th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-if="loadingData">
+            <td colspan="6" >
+              <oms-loading :loading="loadingData"></oms-loading>
+            </td>
+          </tr>
+          <tr v-else-if="dataRows.length == 0">
+            <td colspan="6" >
+              <div  class="empty-info" >
+                暂无信息
+              </div>
+            </td>
+          </tr>
+          <tr v-else="" v-for="row in dataRows" :keys="row.id">
+            <td>
+              {{row.name}}
+              <el-tag type="success" v-show="row.adminFlag">主账号</el-tag>
+            </td>
+            <td>
+              {{ row.list | formatRole }}
+            </td>
+            <td>
+              {{row.phone}}
+            </td>
+            <td>
+              {{row.email}}
+            </td>
+
+            <td>
+              <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
+            </td>
+            <td class="list-op">
+              <perm label="org-user-edit">
+                <a href="#" @click.stop.prevent="edit(row)" v-show="!row.adminFlag"><i
+                  class="iconfont icon-edit"></i>编辑</a>
+
+                <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用用户\""+row.name+"\"?"' v-show="row.status==1">
+                  <i class="iconfont icon-forbidden"></i>停用
+                </oms-forbid>
+                <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用用户\""+row.name+"\"?"'
+                            v-show="row.status==2"><i class="iconfont icon-start" v-show="!row.adminFlag"></i>启用
+                </oms-forbid>
+              </perm>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="text-center" v-show="pager.count>pager.pageSize">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
+            :current-page="pager.currentPage">
+          </el-pagination>
         </div>
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox">
-      <edit-form :formItem="form" :title="formTitle" :action="action" :actionType="showRight" :orgId="filters.orgId"
-                 @close="showRight=false"
+      <edit-form :formItem="form" :title="formTitle" :action="action" :actionType="showRight" @close="showRight=false"
                  @change="itemChange"></edit-form>
     </page-right>
   </div>
 
 </template>
 <script>
-  import {BaseInfo, OrgUser} from '../../../resources';
+  import {OrgUser} from '../../../resources';
   import editForm from './form/form.vue';
   import OmsRemove from '../../common/remove.vue';
   import OmsForbid from '../../common/forbid.vue';
 
   export default {
     components: {
-      OmsRemove, editForm, OmsForbid
+      OmsRemove,
+      editForm, OmsForbid
     },
     data: function () {
       return {
         showRight: false,
         showTypeSearch: false,
         showSearch: false,
+        loadingData: false,
         dataRows: [],
+        typeList: [],
         showTypeList: [],
         typeTxt: '',
-        keyTxt: '',
         filters: {
-          orgId: ''
+          keyWord: '',
+          orgId: 0
         },
         form: {list: [{roleId: ''}]},
         formTitle: '新增',
@@ -167,18 +134,17 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20,
-          totalPage: 1
+          pageSize: 20
         },
-        typePager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 20,
-          totalPage: 1
-        },
-        orgName: '', // 货主名称
-        currentItem: {} //  左边列表点击时，添加样式class
+        orgName: '',
+        roleMenu: [],
+        currentItem: {}
       };
+    },
+    computed: {
+      user () {
+        return this.$store.state.user;
+      }
     },
     filters: {
       formatRole: function (list) {
@@ -189,100 +155,56 @@
         return value;
       }
     },
-    computed: {
-      bodyHeight: function () {
-        return this.$store.state.bodyHeight;
-      }
-    },
-    mounted() {
-      this.getOrgsList(1);
+    mounted () {
+      this.getPageList(1);
     },
     watch: {
-      'typeTxt': function () {
-        this.dataRows = [];
-        this.orgName = '';
-        this.getOrgsList();
-      },
-      'keyTxt': function () {
-        this.getPageList(1);
-      },
       filters: {
         handler: function () {
           this.getPageList(1);
         },
         deep: true
+      },
+      user (val) {
+        if (val.userCompanyAddress) {
+          this.getPageList(1);
+        }
       }
     },
     methods: {
       resetRightBox: function () {
         this.showRight = false;
       },
-      addType: function () {
-        this.showTypeRight = true;
-      },
-      searchType: function () {
-        this.showTypeSearch = !this.showTypeSearch;
-      },
-      getOrgsList: function (pageNo, isContinue = false) {
-        this.typePager.currentPage = pageNo;
-        let params = Object.assign({}, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          deleteFlag: false,
-          keyWord: this.typeTxt
-        }, this.filters);
-        BaseInfo.query(params).then(res => {
-          if (isContinue) {
-            this.showTypeList = this.showTypeList.concat(res.data.list);
-          } else {
-            this.showTypeList = res.data.list;
-            if (this.showTypeList.length !== 0) {
-              this.currentItem = res.data.list[0];
-              this.orgName = this.showTypeList[0].name;
-              this.filters.orgId = this.currentItem.id;
-              this.getPageList(1);
-            } else {
-              this.currentItem = Object.assign({'id': ''});
-              this.filters.orgId = '';
-            }
-          }
-          this.typePager.totalPage = res.data.totalPage;
-        });
-      },
-      getOrgMore: function () {
-        this.getOrgsList(this.typePager.currentPage + 1, true);
-      },
       getPageList: function (pageNo) {
-        if (!this.filters.orgId) return;
+        let orgId = this.user.userCompanyAddress;
+        if (!orgId) return;
         this.pager.currentPage = pageNo;
         let data = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          keyWord: this.keyTxt
+          keyWord: this.filters.keyWord
         });
-        OrgUser.queryOrgInfo(this.filters.orgId, data).then(res => {
+        this.loadingData = true;
+        OrgUser.queryOrgInfo(orgId, data).then(res => {
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
+          this.loadingData = false;
         });
       },
       add: function () {
         this.action = 'add';
-        this.formTitle = '新增 ' + this.orgName + '用户';
+        this.formTitle = '新增';
         this.form = {
-          list: [{roleId: ''}],
-          orgId: this.filters.orgId
+          list: [{roleId: ''}]
         };
         this.showRight = true;
       },
       edit: function (item) {
         this.action = 'edit';
-        this.formTitle = '编辑 ' + this.orgName + '用户';
+        this.formTitle = '编辑';
         this.oldItem = item;
         this.form = JSON.parse(JSON.stringify(item));
         this.showRight = true;
-      },
-      remove: function () {
-
       },
       forbid: function (item) {
         let itemTemp = JSON.parse(JSON.stringify(item));
@@ -291,7 +213,7 @@
           item.status = 2;
           this.$notify.success({
             title: '成功',
-            message: '已成功停用货主用户"' + itemTemp.name + '"'
+            message: '已经停用用户"' + itemTemp.name + '"'
           });
         });
       },
@@ -303,23 +225,13 @@
           this.getPageList(1);
           this.$notify.success({
             title: '成功',
-            message: '已成功启用货主用户"' + item.name + '"'
+            message: '已成功启用用户"' + item.name + '"'
           });
         });
       },
-      removeType: function (item) {
-        BaseInfo.delete(item.id).then(() => {
-          this.getOrgsList();
-          this.$notify.success({
-            title: '成功',
-            message: '已成功删除货主用户"' + item.name + '"'
-          });
-        });
-      },
-      showType: function (item) {
-        this.filters.orgId = item.id;
-        this.orgName = item.name;
-        this.currentItem = item;
+      formatStatus: function (value) {
+        if (!value) return '';
+        return value.toString();
       },
       itemChange: function (item) {
         if (this.action === 'add') {
@@ -332,10 +244,6 @@
           }
           this.showRight = false;
         }
-      },
-      formatStatus: function (value) {
-        if (!value) return '';
-        return value.toString();
       }
     }
   };
