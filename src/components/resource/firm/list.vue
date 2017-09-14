@@ -316,7 +316,7 @@
 
 </template>
 <script>
-  import { BaseInfo, bizRelation } from '@/resources';
+  import { BaseInfo, Vendor, bizRelation } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -338,14 +338,6 @@
         currentItem: {}, // 与业务关系单条数据相等，完成一些操作
         currentName: '', // 当前单位的名字
         relationData: {}, // 与业务关系单条数据相等，完成一些操作
-        // 状态分类
-        orgType: {
-          0: {'title': '所有', 'num': '0', 'status': null, 'auditedStatus': null},
-          1: {'title': '正常', 'num': '0', 'status': '0', 'auditedStatus': '1'},
-          2: {'title': '待审核', 'num': '0', 'status': '0', 'auditedStatus': '0'},
-          3: {'title': '审核未通过', 'num': '0', 'status': '0', 'auditedStatus': '2'},
-          4: {'title': '停用', 'num': '0', 'status': '1'}
-        },
         activeStatus: 0,
         // 业务关系分类
         relationMenu: [
@@ -368,11 +360,6 @@
         action: '',
         orgList: [{id: '', nameJc: ''}],
         doing: false,
-        pickerOptions: {
-          disabledDate (time) {
-            return time < Date.now() - 8.64e7;
-          }
-        },
         rules: {
           followOrgId: [
             {required: true, message: '请选择往来单位', trigger: 'blur'}
@@ -386,10 +373,19 @@
         }
       };
     },
-    mounted () {
-      this.filters.orgId = this.$route.params.id;
-      this.getBusinessRelationList();
-      this.queryOtherBusiness();
+    computed: {
+      orgRelationList () {
+        return this.$store.state.dict['orgRelation'];
+      },
+      companyAddress () {
+        let province = this.businessRelationItem.followOrg.orgDto.province;
+        let city = this.businessRelationItem.followOrg.orgDto.city;
+        let region = this.businessRelationItem.followOrg.orgDto.region;
+        return utils.formatAddress(province, city, region);
+      },
+      user () {
+        return this.$store.state.user;
+      }
     },
     watch: {
       filters: {
@@ -402,18 +398,15 @@
         if (!val) {
           this.$refs['relationForm'].resetFields();
         }
+      },
+      user (val) {
+        if (val.userCompanyAddress) {
+          this.filters.orgId = val.userCompanyAddress;
+        }
       }
     },
-    computed: {
-      orgRelationList () {
-        return this.$store.state.dict['orgRelation'];
-      },
-      companyAddress () {
-        let province = this.businessRelationItem.followOrg.orgDto.province;
-        let city = this.businessRelationItem.followOrg.orgDto.city;
-        let region = this.businessRelationItem.followOrg.orgDto.region;
-        return utils.formatAddress(province, city, region);
-      }
+    mounted () {
+      this.getBusinessRelationList();
     },
     methods: {
       isExpirationTime: function (item) {
@@ -433,31 +426,21 @@
         return state;
       },
       getBusinessRelationList () {
+        if (!this.filters.orgId) return;
         let params = Object.assign({}, this.filters);
-        bizRelation.query(params).then(res => {
+        Vendor.query(params).then(res => {
           this.businessRelationList = res.data.list;
           this.currentItem = Object.assign({}, {'id': ''}, this.businessRelationList[0]);
           this.currentName = this.currentItem.followOrgName;
           this.relationData = this.currentItem;
           this.getBusinessRelationItem(this.currentItem.id);
         });
-        this.queryStatusNum(params);
-      },
-      queryStatusNum: function (params) {
-        bizRelation.queryStateNum(params).then(res => {
-          let data = res.data;
-          this.orgType[0].num = data['all'];
-          this.orgType[1].num = data['normal'];
-          this.orgType[2].num = data['audit'];
-          this.orgType[3].num = data['notAudit'];
-          this.orgType[4].num = data['disable'];
-        });
       },
       getBusinessRelationItem: function (id) {
-        if (!id) return false;
-        bizRelation.queryRelationorg(id).then(res => {
-          this.businessRelationItem = res.data;
-        });
+//        if (!id) return false;
+//        bizRelation.queryRelationorg(id).then(res => {
+//          this.businessRelationItem = res.data;
+//        });
       },
       queryOtherBusiness: function (keyWord) {// 后台搜索
         let params = {
@@ -469,7 +452,6 @@
         };
         BaseInfo.query(params).then(res => {
           this.orgList = res.data.list;
-//           this.filterExsitBusiness(list)
         });
       },
       filterExsitBusiness: function (list) {// 过滤已有的单位和自己
@@ -509,11 +491,6 @@
         this.currentItem = item;
         this.currentName = this.currentItem.followOrgName;
         this.getBusinessRelationItem(item.id);
-      },
-      changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
-        this.activeStatus = key;
-        this.filters.status = item.status;
-        this.filters.auditedStatus = item.auditedStatus;
       },
       addType: function () {
         this.action = 'add';

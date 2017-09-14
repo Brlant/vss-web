@@ -180,6 +180,11 @@ export const bizRelation = resource('/bizRelation', http, {
   }
 });
 
+// 厂商资料
+export const Vendor = resource('/vendor-info', http, {
+
+});
+
 // 数据字典组对象
 export const DictGroup = resource('dictGroup', http, {
   checkGroupName: (groupName, groupId) => {
