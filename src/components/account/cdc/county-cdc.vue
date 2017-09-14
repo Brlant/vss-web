@@ -93,7 +93,7 @@
           </div>
           <div class="order-list clearfix " style="margin-top: 10px">
             <el-row class="order-list-header" :gutter="10">
-              <el-col :span="20">名称</el-col>
+              <el-col :span="20">CDC名称</el-col>
               <el-col :span="4">操作</el-col>
             </el-row>
             <el-row v-if="loadingData">
@@ -181,6 +181,7 @@
           this.$notify.success({
             message: '绑定CDC成功'
           });
+          this.orgId = '';
           this.getCDCPage();
         }).catch(error => {
           this.$notify.error({

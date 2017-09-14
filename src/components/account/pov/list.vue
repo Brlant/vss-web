@@ -218,6 +218,7 @@
           this.$notify.success({
             message: '绑定POV成功'
           });
+          this.orgId = '';
           this.getPovPage();
         }).catch(error => {
           this.$notify.error({
@@ -248,13 +249,14 @@
         });
       },
       getPovPage (pageNo) { // 得到POV列表
+        if (!this.cdcItem.orgId) return;
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filterPOVs);
         this.loadingData = true;
-        cerpAction.queryPov(params).then(res => {
+        cerpAction.queryPov(this.cdcItem.orgId, params).then(res => {
           this.povs = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
@@ -269,12 +271,15 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$notify.success({
-            message: '删除成功'
-          });
-        }).catch(error => {
-          this.$notify.error({
-            message: error.response.data && error.response.data.msg || '删除失败'
+          cerpAction.deletePov(item.id).then(() => {
+            this.$notify.success({
+              message: '删除成功'
+            });
+            this.getPovPage();
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '删除失败'
+            });
           });
         });
       }

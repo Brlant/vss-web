@@ -298,8 +298,8 @@ export const cerpAction = resource('/outbound/count', http, {
   queryLevel () { // 查询货主权限
     return http.get('/erp-org/org-level');
   },
-  queryPov (params) { // 查询pov
-    return http.get('/erp-org/pov', {params});
+  queryPov (id, params) { // 查询pov
+    return http.get(`/erp-org/${id}/pov`, {params});
   },
   queryPovList (params) { // 查询还没绑定的pov
     return http.get('/erp-org/pov-list', {params});
