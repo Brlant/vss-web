@@ -283,24 +283,37 @@ export const cerpAccess = resource('', http, {
   bindMunicipal () { // 绑定cdc角色
     return http.put('/erp-access/bind/municipal');
   },
-  bindDistrict () { // 市级绑定区县CDC
-    return http.put('/erp-access/bind/district');
+  bindDistrict (id) { // 市级绑定区县CDC
+    return http.put(`/erp-access/bind/district/${id}`);
   },
-  bindPov (id) { // 绑定pov
-    return http.put(`/erp-access/bind/pov/${id}`);
+  bindPov (id, obj) { // 绑定pov
+    return http.put(`/erp-access/bind/pov/${id}`, obj);
   }
 });
 
 export const cerpAction = resource('/outbound/count', http, {
-  queryCount () { // 查询县级cdc
-    return http.get('/erp-org/county');
+  queryCount (params) { // 查询县级cdc
+    return http.get('/erp-org/county', {params});
   },
   queryLevel () { // 查询货主权限
     return http.get('/erp-org/org-level');
   },
   queryPov (params) { // 查询pov
     return http.get('/erp-org/pov', {params});
+  },
+  queryPovList (params) { // 查询还没绑定的pov
+    return http.get('/erp-org/pov-list', {params});
+  },
+  queryCdcList (params) { // 查询还没绑定的cdc
+    return http.get('/erp-org/cdc-list', {params});
+  },
+  deletePov (id) {
+    return http.delete(`/erp-access/pov/${id}`);
+  },
+  deleteCdc (id) {
+    return http.delete(`/erp-access/cdc/${id}`);
   }
+
 });
 
 /**
