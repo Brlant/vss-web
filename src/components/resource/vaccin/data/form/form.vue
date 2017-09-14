@@ -112,8 +112,8 @@
     <h2 class="clearfix">添加疫苗</h2>
     <el-form ref="goodSForm" :model="form" :rules="rules" label-width="120px" @submit.prevent="onSubmit('goodSForm')"
              onsubmit="return false">
-      <el-form-item label="OMS疫苗" prop="goodsId">
-        <el-select placeholder="请选择OMS疫苗" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
+      <el-form-item label="疫苗种类" prop="goodsId">
+        <el-select placeholder="请选择疫苗种类" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
                    :clearable="true" @change="getGoodsType(form.goodsId)" popper-class="good-selects">
           <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
             <span class="pull-left">{{ item.name }}</span>
@@ -186,7 +186,7 @@
   </div>
 </template>
 <script>
-  import { OrgGoods, Goods } from '@/resources';
+  import { Vaccine, OrgGoods } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -213,7 +213,7 @@
 //         },
         rules: {
           goodsId: [
-            {required: true, message: '请选择OMS疫苗', trigger: 'change'}
+            {required: true, message: '请选择疫苗种类', trigger: 'change'}
           ],
           goodsNo: [
             {required: true, message: '请输入疫苗编号', trigger: 'blur'}
@@ -302,11 +302,10 @@
     },
     methods: {
       getOmsGoods: function (keyWord) {// 得到oms疫苗列表
-        let orgId = this.$route.params.id;
         let params = {
           keyWord: keyWord
         };
-        Goods.filterOrg(orgId, params).then(res => {
+        Vaccine.queryAvaliableVaccine(params).then(res => {
           this.goodsList = res.data.list;
           if (this.action === 'edit') {
             let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);

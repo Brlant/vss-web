@@ -314,6 +314,9 @@ export const cerpAction = resource('/outbound/count', http, {
   queryCdcList (params) { // 查询还没绑定的cdc
     return http.get('/erp-org/cdc-list', {params});
   },
+  querySubordinate (params) {
+    return http.get('/erp-org/subordinate', {params});
+  },
   deletePov (id) {
     return http.delete(`/erp-access/pov/${id}`);
   },
@@ -388,7 +391,7 @@ export const Vaccine = resource('/vaccine-info', http, {
     return http.get('/vaccine-info/' + id, {});
   },
   queryAvaliableVaccine: (params) => {
-    return http.put('/vaccine-info/valid', {params});
+    return http.get('/vaccine-info/valid', {params});
   }
 });
 
