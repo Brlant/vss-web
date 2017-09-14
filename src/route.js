@@ -43,12 +43,12 @@ const route = [
           {
             path: '/account/pov',
             component: resolve => require(['./components/account/pov/list.vue'], resolve),
-            meta: {moduleId: 'account', title: 'POV授权管理', perm: 'show'}
+            meta: {moduleId: 'account', title: '绑定POV', perm: 'show'}
           },
           {
             path: '/account/cdc',
             component: resolve => require(['./components/account/cdc/county-cdc.vue'], resolve),
-            meta: {moduleId: 'account', title: '区县级CDC', perm: 'show'}
+            meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'show'}
           },
           {
             path: '/account/management',
