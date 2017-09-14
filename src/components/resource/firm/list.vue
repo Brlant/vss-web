@@ -436,7 +436,7 @@
           this.getBusinessRelationItem(this.currentItem.id);
         });
       },
-      getBusinessRelationItem: function (id) {
+      getBusinessRelationItem: function () {
 //        if (!id) return false;
 //        bizRelation.queryRelationorg(id).then(res => {
 //          this.businessRelationItem = res.data;

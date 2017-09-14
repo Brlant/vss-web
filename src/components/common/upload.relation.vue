@@ -145,7 +145,7 @@
           this.uploadingFiles.push(file);
         });
       },
-      success(response, file, fileList) {
+      success(response, file) {
         this.uploadingFiles = this.uploadingFiles.filter(item => item.uid !== file.uid);
         if (response) {
           this.$notify.success({
@@ -165,7 +165,7 @@
           message: '上传附件失败' + err
         });
       },
-      showProgress(event, file, fileList) {
+      showProgress(event, file) {
         let index = -1;
         for (let i = 0, len = this.uploadingFiles.length; i < len; i++) {
           if (file.uid === this.uploadingFiles[i].uid) {
