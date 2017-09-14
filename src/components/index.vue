@@ -149,6 +149,7 @@
       next();
     },
     mounted: function () {
+      window.localStorage.removeItem('noticeError');
       if (!this.$store.state.user || !this.$store.state.user.userId) {
         Auth.checkLogin().then(() => {
           let data = window.localStorage.getItem('user');

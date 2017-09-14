@@ -116,7 +116,6 @@
     .menu-wrap {
       max-height: 100%;
       > .el-menu > li {
-        border-bottom: 1px solid rgba(255, 255, 255, 0.8);
 
       }
     }
