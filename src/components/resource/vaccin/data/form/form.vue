@@ -109,11 +109,11 @@
 </style>
 <template>
   <div>
-    <h2 class="clearfix">添加货品</h2>
+    <h2 class="clearfix">添加疫苗</h2>
     <el-form ref="goodSForm" :model="form" :rules="rules" label-width="120px" @submit.prevent="onSubmit('goodSForm')"
              onsubmit="return false">
-      <el-form-item label="OMS货品" prop="goodsId">
-        <el-select placeholder="请选择OMS货品" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
+      <el-form-item label="OMS疫苗" prop="goodsId">
+        <el-select placeholder="请选择OMS疫苗" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
                    :clearable="true" @change="getGoodsType(form.goodsId)" popper-class="good-selects">
           <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
             <span class="pull-left">{{ item.name }}</span>
@@ -123,17 +123,11 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <!--<el-form-item label="货品分类">-->
-      <!--<dict :dict-group="'typeId'" :dict-key="goodsType"></dict>-->
-      <!--&lt;!&ndash;<el-select placeholder="请选择货品分类" v-model="goodsType" disabled>&ndash;&gt;-->
-      <!--&lt;!&ndash;<el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in typeId"></el-option>&ndash;&gt;-->
-      <!--&lt;!&ndash;</el-select>&ndash;&gt;-->
-      <!--</el-form-item>-->
-      <el-form-item label="货主货品编号" prop="goodsNo">
-        <oms-input type="text" v-model="form.goodsNo" placeholder="请输入货主货品编号"></oms-input>
+      <el-form-item label="疫苗编号" prop="goodsNo">
+        <oms-input type="text" v-model="form.goodsNo" placeholder="请输入疫苗编号"></oms-input>
       </el-form-item>
-      <el-form-item label="货主货品名称" prop="name">
-        <oms-input type="text" v-model="form.name" placeholder="请输入货主货品名称"></oms-input>
+      <el-form-item label="疫苗名称" prop="name">
+        <oms-input type="text" v-model="form.name" placeholder="请输入疫苗名称"></oms-input>
       </el-form-item>
       <el-form-item label="储存条件">
         <el-select placeholder="请选择储存条件" v-model="form.storageConditionId">
@@ -161,8 +155,8 @@
       </el-form-item>
       <div v-show="form.goodsIsCombination">
         <!--<el-form ref="otherGoodsForm" :model="form" :rules="otherGoodsRules" label-width="120px">-->
-        <el-form-item label="其他OMS货品">
-          <el-select placeholder="请选择OMS货品" v-model="otherForm.accessory" filterable popper-class="good-selects">
+        <el-form-item label="其他OMS疫苗">
+          <el-select placeholder="请选择OMS疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects">
             <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                        v-for="item in otherGoodsList">
             </el-option>
@@ -175,7 +169,7 @@
         </el-form-item>
         <!--</el-form>-->
         <ul class="show-list">
-          <li class="list-item"><span>其他OMS货品</span> <span style="position: absolute;right: 200px">比例</span></li>
+          <li class="list-item"><span>其他OMS疫苗</span> <span style="position: absolute;right: 200px">比例</span></li>
           <li v-for="item in selectGoodsList" class="list-item">
             <span style="display: inline-block;width: 260px">{{ item.name }}</span>
             <span style="position: absolute;right: 200px;display: inline-block;">{{ item.proportion }}</span>
@@ -211,7 +205,7 @@
         },
 //         otherGoodsRules: {
 //           accessory: [
-//             {required: true, message: '请选择OMS货品', trigger: 'change'}
+//             {required: true, message: '请选择OMS疫苗', trigger: 'change'}
 //           ],
 //           proportion: [
 //             {required: true, message: '请输入', trigger: 'blur'}
@@ -219,22 +213,22 @@
 //         },
         rules: {
           goodsId: [
-            {required: true, message: '请选择OMS货品', trigger: 'change'}
+            {required: true, message: '请选择OMS疫苗', trigger: 'change'}
           ],
           goodsNo: [
-            {required: true, message: '请输入货品编号', trigger: 'blur'}
+            {required: true, message: '请输入疫苗编号', trigger: 'blur'}
           ],
           storageConditionId: [
             {required: true, message: '请选择储存条件', trigger: 'blur'}
           ],
           name: [
-            {required: true, message: '请输入货品名称', trigger: 'blur'}
+            {required: true, message: '请输入疫苗名称', trigger: 'blur'}
           ],
           unitPrice: [
             {required: true, message: '请输入单价', trigger: 'blur'}
           ],
           accessory: [
-            {required: true, message: '请输入其他OMS货品', trigger: 'change'}
+            {required: true, message: '请输入其他OMS疫苗', trigger: 'change'}
           ],
           proportion: [
             {type: 'number', message: '比例必须为数字值'}
@@ -250,10 +244,10 @@
           accessory: '',
           proportion: null
         },
-        goodsList: [], // oms货品列表
-        otherGoodsList: [], // 其他oms组合货品列表
-        invariantOtherGoodslist: [], // 所有的oms组合货品列表
-        selectGoodsList: [], // 已经选择的货品列表
+        goodsList: [], // oms疫苗列表
+        otherGoodsList: [], // 其他oms组合疫苗列表
+        invariantOtherGoodslist: [], // 所有的oms组合疫苗列表
+        selectGoodsList: [], // 已经选择的疫苗列表
         goodsType: '',
         doing: false
       };
@@ -307,7 +301,7 @@
       }
     },
     methods: {
-      getOmsGoods: function (keyWord) {// 得到oms货品列表
+      getOmsGoods: function (keyWord) {// 得到oms疫苗列表
         let orgId = this.$route.params.id;
         let params = {
           keyWord: keyWord
@@ -326,7 +320,7 @@
           this.getGoodsType(this.form.goodsId);
         });
       },
-      getCombinationGoods: function (keyWord) {// 获取其他组合货品列表
+      getCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {
           deleteFlag: false,
           orgId: this.$route.params.id,
@@ -348,7 +342,7 @@
           }
         });
       },
-      filtersCombinationGoods () {// 过滤已有的oms货品和本身
+      filtersCombinationGoods () {// 过滤已有的oms疫苗和本身
         let array = [];
         let isNotSame = false;
         this.invariantOtherGoodslist.forEach(tItem => {
@@ -368,7 +362,7 @@
         this.otherGoodsList = [];
         this.otherGoodsList = array;
       },
-      filterSelectGoodsList: function (data) {// 过滤选择的组合oms货品
+      filterSelectGoodsList: function (data) {// 过滤选择的组合oms疫苗
         this.selectGoodsList = [];
         if (data.length === 0) return;
         data.forEach(item => {
@@ -410,12 +404,12 @@
         this.selectGoodsList.splice(index, 1);
       },
       onSubmit: function (formName) {
-        // 如果选择组合货品，则验证组或货品的表单
+        // 如果选择组合疫苗，则验证组或疫苗的表单
         if (this.form.goodsIsCombination) {
           if (this.selectGoodsList && this.selectGoodsList.length === 0) {
             this.$notify.error({
               duration: 1500,
-              message: '请选择要组合的OMS货品'
+              message: '请选择要组合的OMS疫苗'
             });
             return;
           }
@@ -431,7 +425,6 @@
               'name': val.name
             });
           });
-          this.form.orgId = this.$route.params.id;
           //  转成numer
           let data = {
             'orgGoodsDto': Object.assign({}, this.form),
@@ -443,13 +436,13 @@
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '新增货主货品"' + data.orgGoodsDto.name + '"成功'
+                message: '新增货主疫苗"' + data.orgGoodsDto.name + '"成功'
               });
               this.$emit('change', data);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '新增货主货品"' + data.orgGoodsDto.name + '"失败'
+                message: '新增货主疫苗"' + data.orgGoodsDto.name + '"失败'
               });
               this.doing = false;
             });
@@ -459,13 +452,13 @@
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '修改货主货品"' + data.orgGoodsDto.name + '"成功'
+                message: '修改货主疫苗"' + data.orgGoodsDto.name + '"成功'
               });
               this.$emit('change', data);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '修改货主货品"' + data.orgGoodsDto.name + '"失败'
+                message: '修改货主疫苗"' + data.orgGoodsDto.name + '"失败'
               });
               this.doing = false;
             });

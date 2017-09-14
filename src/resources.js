@@ -182,7 +182,9 @@ export const bizRelation = resource('/bizRelation', http, {
 
 // 厂商资料
 export const Vendor = resource('/vendor-info', http, {
-
+  queryVendorDetail: (orgId) => {
+    return http.get(`/vendor-info/${orgId}`);
+  }
 });
 
 // 数据字典组对象
@@ -377,6 +379,16 @@ export const OrgGoods = resource('/org/goods', http, {
   },
   queryStateNum: (params) => {
     return http.get('/org/goods/count', {params});
+  }
+});
+
+// 货主货品
+export const Vaccine = resource('/vaccine-info', http, {
+  queryVaccineDetail: (id) => {
+    return http.get('/vaccine-info/' + id, {});
+  },
+  queryAvaliableVaccine: (params) => {
+    return http.put('/vaccine-info/valid', {params});
   }
 });
 

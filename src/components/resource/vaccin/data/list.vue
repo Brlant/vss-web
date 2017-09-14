@@ -120,11 +120,11 @@
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                   :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto,'locked':isLocked(item.orgGoodsDto)}">
                 <perm label="org-goods-delete">
-                  <oms-remove :item="item" @removed="removeType" :tips='"确认删除货品\""+item.orgGoodsDto.name +"\"?"'
+                  <oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'
                               class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
                 </perm>
                 <div class="id-part">
-                  <span>货主货品ID{{item.orgGoodsDto.id}}</span>
+                  <span>货主疫苗ID{{item.orgGoodsDto.id}}</span>
                   <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
                   </el-tag>
                   <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">证照过期</el-tag>
@@ -151,14 +151,8 @@
                 <a href="#" @click.stop.prevent="enableRelation()" class="margin-left" v-show="data.status == '0' "><i
                   class="iconfont icon-start"></i>启用</a>
               </perm>
-             <perm label="org-goods-check">
+             <perm label="org-goods-delete">
                <a href="#" @click.prevent="remove()" class="margin-left"><i class="iconfont icon-delete"></i>删除</a>
-                    <a href="#" @click.prevent="audited()" class="margin-left"
-                       v-show="data.status&&data.auditedStatus==='0'"><i
-                      class="iconfont icon-verify"></i>审核通过</a>
-                  <a href="#" @click.prevent="notAudited()" class="margin-left"
-                     v-show="data.status&&data.auditedStatus==='0'"><i
-                    class="iconfont icon-verify"></i>审核不通过</a>
              </perm>
             </span>
             </h2>
@@ -168,7 +162,7 @@
                   [ 产品图片 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
-                  [ 货主货品信息 ]
+                  [ 货主疫苗信息 ]
                 </el-col>
               </el-row>
               <el-row>
@@ -178,13 +172,13 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
-                  <goods-row label="货主货品ID" :span="12">
+                  <goods-row label="货主疫苗ID" :span="12">
                     {{ data.id}}
                   </goods-row>
-                  <goods-row label="货主货品名称" :span="12">
+                  <goods-row label="货主疫苗名称" :span="12">
                     {{ data.name}}
                   </goods-row>
-                  <goods-row label="货品分类" :span="12">
+                  <goods-row label="疫苗分类" :span="12">
                     <dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>
                   </goods-row>
                   <goods-row label="储存条件" :span="12">
@@ -213,7 +207,7 @@
               <div class="border-show"></div>
               <el-row>
                 <el-col :span="3" class="text-right" style="font-size: 12px">
-                  [ OMS货品信息 ]
+                  [ OMS疫苗信息 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
                   [ 包装存储信息 ]
@@ -223,7 +217,7 @@
                 <el-col :span="12">
                   <goods-row label="厂家名称" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
                   <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
-                  <goods-row label="货品名称" :span="12">{{ data.goodsDto.name }}</goods-row>
+                  <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>
                   <goods-row label="剂型" :span="12">
                     <dict :dict-group="'dosageForm'" :dict-key="data.goodsDto.dosageForm"></dict>
                   </goods-row>
@@ -363,12 +357,12 @@
               </el-row>
               <el-row v-for="(item, index) in combinationList" :key="item.id">
                 <el-col :span="12">
-                  <goods-row label="组合货品名称" :span="12">
+                  <goods-row label="组合疫苗名称" :span="12">
                     {{ item.name}}
                   </goods-row>
                 </el-col>
                 <el-col :span="12">
-                  <goods-row label="组合货品比例" :span="12">
+                  <goods-row label="组合疫苗比例" :span="12">
                     {{ item.proportion }}
                   </goods-row>
                 </el-col>
@@ -385,9 +379,8 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
   import goodsPart from './form/form.vue';
-  import { OrgGoods } from '@/resources';
+  import { http, Vaccine } from '@/resources';
   import goodsRow from './goods.row.vue';
 
   export default {
@@ -403,28 +396,15 @@
         typeList: [],
         showTypeList: [],
         typeTxt: '',
-        keyTxt: '',
         form: {},
         action: '',
         currentItem: {},
-        orgType: {
-          0: {'title': '所有', 'num': '0', 'status': null, 'auditedStatus': null},
-          1: {'title': '正常', 'num': '0', 'status': true, 'auditedStatus': '1'},
-          2: {'title': '待审核', 'num': '0', 'status': true, 'auditedStatus': '0'},
-          3: {'title': '审核未通过', 'num': '0', 'status': true, 'auditedStatus': '2'},
-          4: {'title': '停用', 'num': '0', 'status': false}
-        },
         activeStatus: 0,
         filters: {
           status: null,
           auditedStatus: null
         }
       };
-    },
-    filters: {
-      formatIsUse: function (value) {
-        return value ? '是' : '否';
-      }
     },
     mounted () {
       this.$emit('loaded');
@@ -470,51 +450,28 @@
         this.combinationList = [];
         this.$notify.info({
           duration: 20000,
-          message: '添加货品时，只能添加通过审核的、与货主经营范围保持一致的oms货品'
+          message: '添加疫苗时，只能添加通过审核的、与货主经营范围保持一致的oms疫苗'
         });
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
       },
-      pickTypeList: function () {
-        let arr = [];
-        let self = this;
-        this.typeList.forEach(function (value) {
-          if (value.title.indexOf(self.typeTxt) !== -1) {
-            arr.push(value);
-          }
-        });
-        this.showTypeList = arr;
-      },
       getGoodsList: function () {
         let params = Object.assign({}, {
-          deleteFlag: false,
-          orgId: this.$route.params.id,
           keyWord: this.typeTxt
         }, this.filters);
-        OrgGoods.query(params).then(res => {
+        Vaccine.query(params).then(res => {
           this.showTypeList = res.data.list;
           this.typeList = res.data.list;
           this.currentItem = Object.assign({orgGoodsDto: {}, list: []}, this.showTypeList[0]);// , this.showTypeList[0]
           this.data.id = '';
           this.queryOrgGoods();
         });
-        this.queryStatusNum(params);
-      },
-      queryStatusNum: function (params) {
-        OrgGoods.queryStateNum(params).then(res => {
-          let data = res.data;
-          this.orgType[0].num = data['all'];
-          this.orgType[1].num = data['normal'];
-          this.orgType[2].num = data['audit'];
-          this.orgType[3].num = data['notAudit'];
-          this.orgType[4].num = data['disable'];
-        });
       },
       queryOrgGoods () {
         let id = this.currentItem.orgGoodsDto.id;
         if (!id) return;
-        http.get('/org/goods/' + id).then(res => {
+        Vaccine.queryVaccineDetail(id).then(res => {
           this.data = res.data.orgGoodsDto;
           this.combinationList = res.data.list;
         });
@@ -524,53 +481,8 @@
         this.form = JSON.parse(JSON.stringify(this.data));
         this.showRight = true;
       },
-      audited: function () {
-        this.$confirm('确认通过货品"' + this.data.name + '"的审核?', '', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          OrgGoods.check(this.currentItem.orgGoodsDto.id, {status: '1'}).then(() => {
-            this.getGoodsList();
-            this.$notify.success({
-              duration: 2000,
-              title: '成功',
-              message: '审核货品"' + this.data.name + '"成功'
-            });
-          }).catch(() => {
-            this.$notify.error({
-              duration: 2000,
-              message: '审核货品"' + this.data.name + '"失败'
-            });
-          });
-        }).catch(() => {
-        });
-      },
-      notAudited: function () {
-        this.$confirm('确认不通过货品"' + this.data.name + '"的审核?', '', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          OrgGoods.check(this.currentItem.orgGoodsDto.id, {status: '2'}).then(() => {
-            this.getGoodsList();
-            this.$notify.success({
-              duration: 2000,
-              title: '成功',
-              message: '货品"' + this.data.name + '"的审核未通过'
-            });
-          }).catch(() => {
-            this.$notify.error({
-              duration: 2000,
-              message: '货品"' + this.data.name + '"的审核未通过失败'
-            });
-          });
-        }).catch(() => {
-
-        });
-      },
       forbid: function () {
-        this.$confirm('确认停用货品"' + this.data.name + '"?', '', {
+        this.$confirm('确认停用疫苗"' + this.data.name + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -583,17 +495,17 @@
             }
           });
           item.orgGoodsDto.status = false;
-          OrgGoods.update(item.orgGoodsDto.id, item).then(() => {
+          Vaccine.update(item.orgGoodsDto.id, item).then(() => {
             this.getGoodsList();
             this.$notify.success({
               title: '成功',
-              message: '已成功停用货品"' + item.orgGoodsDto.name + '"'
+              message: '已成功停用疫苗"' + item.orgGoodsDto.name + '"'
             });
           });
         });
       },
       enableRelation: function () {
-        this.$confirm('确认启用货品"' + this.data.name + '"?', '', {
+        this.$confirm('确认启用疫苗"' + this.data.name + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -606,23 +518,23 @@
             }
           });
           item.orgGoodsDto.status = true;
-          OrgGoods.update(item.orgGoodsDto.id, item).then(() => {
+          Vaccine.update(item.orgGoodsDto.id, item).then(() => {
             this.getGoodsList();
             this.$notify.success({
               title: '成功',
-              message: '已成功启用货品"' + item.orgGoodsDto.name + '"'
+              message: '已成功启用疫苗"' + item.orgGoodsDto.name + '"'
             });
           });
         });
       },
       remove: function () {
-        this.$confirm('确认删除货品"' + this.data.name + '"?', '', {
+        this.$confirm('确认删除疫苗"' + this.data.name + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           let name = this.data.name;
-          OrgGoods.delete(this.data.id).then(() => {
+          Vaccine.delete(this.data.id).then(() => {
             this.data = {};
             this.getGoodsList();
             this.$notify.success({
@@ -633,12 +545,12 @@
         });
       },
       removeType: function (item) {
-        OrgGoods.delete(item.orgGoodsDto.id).then(() => {
+        Vaccine.delete(item.orgGoodsDto.id).then(() => {
           this.data = {};
           this.getGoodsList();
           this.$notify.success({
             title: '成功',
-            message: '已成功删除货品"' + item.orgGoodsDto.name + '"'
+            message: '已成功删除疫苗"' + item.orgGoodsDto.name + '"'
           });
         });
       },

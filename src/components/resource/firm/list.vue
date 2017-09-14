@@ -75,7 +75,8 @@
     <div>
       <div class="container d-table">
         <div class="d-table-left">
-          <h2 class="header">
+          <h2 class="header" style="overflow: hidden">
+            厂商资料
                 <span class="pull-right">
                    <perm label="org-relation-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType"><i
@@ -84,34 +85,21 @@
                       <a href="#" class="btn-circle" @click.prevent="searchType"><i
                         class="iconfont icon-search"></i> </a>
                 </span>
-            <el-dropdown @command="changeRelation" trigger="click">
-            <span class="el-dropdown-link">
-              {{ relationTitle }}<i class="el-icon-caret-bottom el-icon--right"></i>
-            </span>
-              <el-dropdown-menu slot="dropdown" class="relation-menu">
-                <el-dropdown-item v-for="item in relationMenu" :command="item.key" :key="item.key">{{ item.title }}
-                </el-dropdown-item>
-              </el-dropdown-menu>
-            </el-dropdown>
           </h2>
-          <div class="search-left-box" v-show="showTypeSearch">
+          <div class="search-left-box clearfix" v-show="showTypeSearch">
             <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
-          <div v-if="businessRelationList.length == 0" class="empty-info">
+          <div v-if="loadingListData">
+            <oms-loading :loading="loadingListData"></oms-loading>
+          </div>
+          <div v-else-if="businessRelationList.length == 0" class="empty-info">
             暂无信息
           </div>
           <div v-else>
             <ul class="show-list">
               <li v-for="item in businessRelationList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id==currentItem.id}">
-                <!--<perm label="org-relation-delete">-->
-                <!--<a href="#" class="pull-right hover-show" @click.prevent="removeType(item)"><i-->
-                <!--class="iconfont icondelete"></i> </a>-->
-                <!--</perm>-->
                 <div class="id-part">
-                  <span>
-                    {{ relationMenu[parseInt(item.relation) + 1].title}}
-                  </span>
                   <el-tag type="warning" v-show=" isExpirationTime(item) === '1' ">即将到期</el-tag>
                   <el-tag type="danger" v-show=" isExpirationTime(item) === '2' ">已过期</el-tag>
                 </div>
@@ -123,7 +111,10 @@
           </div>
         </div>
         <div class="d-table-right">
-          <div v-if="businessRelationList.length == 0" class="empty-info">
+          <div v-if="loadingData">
+            <oms-loading :loading="loadingData"></oms-loading>
+          </div>
+          <div v-else-if="!businessRelationItem.followOrg" class="empty-info">
             暂无信息
           </div>
           <div v-else>
@@ -139,18 +130,6 @@
                        v-show="businessRelationItem.status == '1' "><i
                       class="iconfont icon-start"></i>启用</a>
                  </perm>
-                <!--<perm label="org-relation-delete">-->
-                <!--<a href="#" @click.prevent="remove" class="margin-left"><i-->
-                <!--class="iconfont icondelete"></i>删除</a>-->
-                <!--</perm>-->
-                <perm label="org-relation-check">
-                   <a href="#" @click.prevent="audited()" class="margin-left"
-                      v-show="currentItem.status==='0'&&currentItem.auditedStatus==='0'"><i
-                     class="iconfont icon-verify"></i>审核通过</a>
-                    <a href="#" @click.prevent="notAudited()" class="margin-left"
-                       v-show="currentItem.status==='0'&&currentItem.auditedStatus==='0'"><i
-                      class="iconfont icon-verify"></i>审核不通过</a>
-                </perm>
               </span>
             </h2>
             <div class="page-main-body">
@@ -287,19 +266,14 @@
     <page-right :show="showRight" @right-close="resetRightBox">
       <el-form ref="relationForm" :rules="rules" :model="form" label-width="100px" class="demo-ruleForm"
                @submit.prevent="onSubmit('relationForm')" onsubmit="return false">
-        <h2 class="clearfix">添加往来单位</h2>
+        <h2 class="clearfix">添加厂商</h2>
         <el-form-item label="往来单位" prop="followOrgId">
-          <el-select placeholder="请输入关键字搜索往来单位" remote :remote-method="queryOtherBusiness" :clearable="true"
+          <el-select placeholder="请输入关键字搜索厂商" remote :remote-method="queryOtherBusiness" :clearable="true"
                      v-model="form.followOrgId"
                      filterable>
             <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in orgList"
-                       v-show="item.auditedStatus ==1"/>
+                       v-show="item.auditedStatus ==1"></el-option>
           </el-select>
-        </el-form-item>
-        <el-form-item label="往来关系" prop="relation">
-          <el-radio-group v-model="form.relation">
-            <el-radio :label="item.key" v-for="item in orgRelationList" :key="item.key">{{ item.label }}</el-radio>
-          </el-radio-group>
         </el-form-item>
         <el-form-item label="有效期" prop="expirationDate">
           <el-date-picker v-model="form.expirationDate" format="yyyy-MM-dd" placeholder="选择日期"
@@ -316,7 +290,7 @@
 
 </template>
 <script>
-  import { BaseInfo, Vendor, bizRelation } from '@/resources';
+  import { BaseInfo, Vendor} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -324,36 +298,16 @@
       return {
         showRight: false,
         showTypeSearch: false,
-        businessRelationList: [], // 业务关系列表
-        businessRelationItem: { // 业务关系单条数据
-          expirationDate: '',
-          status: null,
-          followOrg: {
-            orgDto: {},
-            scopes: [],
-            legislations: [],
-            licenses: []
-          }
-        },
-        currentItem: {}, // 与业务关系单条数据相等，完成一些操作
+        loadingData: false,
+        loadingListData: false,
+        businessRelationList: [], // 厂商列表
+        businessRelationItem: {}, // 厂商单条数据
+        currentItem: {}, // 与厂商单条数据相等，完成一些操作
         currentName: '', // 当前单位的名字
-        relationData: {}, // 与业务关系单条数据相等，完成一些操作
-        activeStatus: 0,
-        // 业务关系分类
-        relationMenu: [
-          {title: '全部', key: ''},
-          {title: '客户', key: '0'},
-          {title: '供应商', key: '1'},
-          {title: '下属机构', key: '2'},
-          {title: '物流商', key: '3'}
-        ],
-        relationTitle: '全部',
+        relationData: {}, // 与厂商单条数据相等，完成一些操作
         // 过滤条件
         filters: {
-          keyWord: '',
-          relation: '',
-          orgId: '',
-          deleteFlag: false
+          keyWord: ''
         },
         // 表单操作
         form: {},
@@ -362,10 +316,7 @@
         doing: false,
         rules: {
           followOrgId: [
-            {required: true, message: '请选择往来单位', trigger: 'blur'}
-          ],
-          relation: [
-            {required: true, message: '请选择往来关系', trigger: 'change'}
+            {required: true, message: '请选择厂商', trigger: 'blur'}
           ],
           expirationDate: [
             {required: true, message: '请选择有效期', trigger: 'change'}
@@ -382,9 +333,6 @@
         let city = this.businessRelationItem.followOrg.orgDto.city;
         let region = this.businessRelationItem.followOrg.orgDto.region;
         return utils.formatAddress(province, city, region);
-      },
-      user () {
-        return this.$store.state.user;
       }
     },
     watch: {
@@ -397,11 +345,6 @@
       showRight: function (val) {
         if (!val) {
           this.$refs['relationForm'].resetFields();
-        }
-      },
-      user (val) {
-        if (val.userCompanyAddress) {
-          this.filters.orgId = val.userCompanyAddress;
         }
       }
     },
@@ -426,21 +369,24 @@
         return state;
       },
       getBusinessRelationList () {
-        if (!this.filters.orgId) return;
         let params = Object.assign({}, this.filters);
+        this.loadingListData = true;
         Vendor.query(params).then(res => {
           this.businessRelationList = res.data.list;
           this.currentItem = Object.assign({}, {'id': ''}, this.businessRelationList[0]);
           this.currentName = this.currentItem.followOrgName;
           this.relationData = this.currentItem;
+          this.loadingListData = false;
           this.getBusinessRelationItem(this.currentItem.id);
         });
       },
-      getBusinessRelationItem: function () {
-//        if (!id) return false;
-//        bizRelation.queryRelationorg(id).then(res => {
-//          this.businessRelationItem = res.data;
-//        });
+      getBusinessRelationItem: function (id) {
+        if (!id) return false;
+        this.loadingData = true;
+        Vendor.queryVendorDetail(id).then(res => {
+          this.businessRelationItem = res.data;
+          this.loadingData = false;
+        });
       },
       queryOtherBusiness: function (keyWord) {// 后台搜索
         let params = {
@@ -452,35 +398,6 @@
         };
         BaseInfo.query(params).then(res => {
           this.orgList = res.data.list;
-        });
-      },
-      filterExsitBusiness: function (list) {// 过滤已有的单位和自己
-        this.orgList = [];
-        if (list.length === 0) return false;
-        let id = this.$route.params.id;
-        let visible = false;
-        list.forEach(item => {
-          visible = true;
-          this.businessRelationList.forEach(org => {
-            if (item.id === org.followOrgId) {
-              visible = false;
-              return false;
-            }
-          });
-          if (item.id === id) {
-            visible = false;
-          }
-          if (visible) {
-            this.orgList.push(item);
-          }
-        });
-      },
-      changeRelation (val) {
-        this.filters.relation = val;
-        this.relationMenu.forEach(item => {
-          if (val === item.key) {
-            this.relationTitle = item.title;
-          }
         });
       },
       resetRightBox: function () {
@@ -496,7 +413,6 @@
         this.action = 'add';
         this.form = {
           followOrgId: '',
-          relation: '0',
           expirationDate: ''
         };
         this.showRight = true;
@@ -530,7 +446,7 @@
         }).then(() => {
           let data = this.relationData;
           data.status = '1';
-          bizRelation.update(data.id, data).then(() => {
+          Vendor.update(data.id, data).then(() => {
             this.getBusinessRelationList();
             this.$notify.success({
               title: '成功',
@@ -547,86 +463,11 @@
         }).then(() => {
           let data = this.relationData;
           data.status = '0';
-          bizRelation.update(data.id, data).then(() => {
+          Vendor.update(data.id, data).then(() => {
             this.getBusinessRelationList();
             this.$notify.success({
               title: '成功',
               message: '已成功启用"' + this.currentName + '"'
-            });
-          });
-        });
-      },
-      audited: function () {
-        this.$confirm('确认审核通过"' + this.currentName + '"信息?', '', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          bizRelation.check(this.currentItem.id, {status: '1'}).then(() => {
-            this.getBusinessRelationList();
-            this.$notify.success({
-              duration: 2000,
-              title: '成功',
-              message: '审核"' + this.currentName + '"信息成功'
-            });
-          }).catch(() => {
-            this.$notify.error({
-              duration: 2000,
-              message: '审核"' + this.currentName + '"信息失败'
-            });
-          });
-        }).catch(() => {
-        });
-      },
-      notAudited: function () {
-        this.$confirm('确认不通过"' + this.currentName + '"的审核?', '', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          bizRelation.check(this.currentItem.id, {status: '2'}).then(() => {
-            this.getBusinessRelationList();
-            this.$notify.success({
-              duration: 2000,
-              title: '成功',
-              message: '"' + this.currentName + '"信息的审核未通过'
-            });
-          }).catch(() => {
-            this.$notify.error({
-              duration: 2000,
-              message: '"' + this.currentName + '"信息的审核未通过失败'
-            });
-          });
-        }).catch(() => {
-
-        });
-      },
-      remove: function () {
-        this.$confirm('确认删除"' + this.currentName + '"?', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          bizRelation.delete(this.relationData.id).then(() => {
-            this.getBusinessRelationList();
-            this.$notify.success({
-              title: '成功',
-              message: '已成功删除"' + this.currentName + '"'
-            });
-          });
-        });
-      },
-      removeType: function (item) {
-        this.$confirm('确认删除该"' + this.currentName + '"?', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          bizRelation.delete(item.id).then(() => {
-            this.getBusinessRelationList();
-            this.$notify.success({
-              title: '成功',
-              message: '已成功删除"' + this.currentName + '"'
             });
           });
         });
@@ -637,39 +478,38 @@
             return;
           }
           this.doing = true;
-          this.form.orgId = this.$route.params.id;
           this.changeExpirationDate(this.form.expirationDate);
           if (this.action === 'add') {
-            bizRelation.save(this.form).then(() => {
+            Vendor.save(this.form).then(() => {
               this.doing = false;
               this.showRight = false;
               this.getBusinessRelationList();
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '新增业务关系成功'
+                message: '新增厂商成功'
               });
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '新增业务关系失败'
+                message: '新增厂商失败'
               });
               this.doing = false;
             });
           } else {
-            bizRelation.update(this.form.id, this.form).then(() => {
+            Vendor.update(this.form.id, this.form).then(() => {
               this.doing = false;
               this.showRight = false;
               this.getBusinessRelationList();
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '编辑业务关系成功'
+                message: '编辑厂商成功'
               });
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '编辑业务关系失败'
+                message: '编辑厂商失败'
               });
               this.doing = false;
             });
