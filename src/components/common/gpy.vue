@@ -60,12 +60,6 @@
         this.$emit('close');
       },
       OpenVideo: function () {
-
-        console.log('sssss', this.option.dev, '222');
-        // this.CloseVideo();
-
-        // var nResolution = sResolution.selectedIndex;
-
         this.Video = this.plugin.Device_CreateVideo(this.option.dev, this.option.nResolution, this.option.SelectType);
         console.log(this.option.dev, this.option.nResolution, this.option.SelectType);
         if (this.Video) {

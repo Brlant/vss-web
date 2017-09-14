@@ -142,7 +142,6 @@
             key: res.data.key,
             redirect: res.data.redirect
           };
-          console.log(file);
           this.uploadingFiles.push(file);
         });
       },
