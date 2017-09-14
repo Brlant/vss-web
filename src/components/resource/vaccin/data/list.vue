@@ -194,13 +194,13 @@
                     {{ data.inventoryLowerLimit }}
                   </goods-row>
                   <goods-row label="是否组合" :span="12" v-show="data.goodsIsCombination">
-                    {{ data.goodsIsCombination | formatIsUse}}
+                    {{ data.goodsIsCombination | formatStatus}}
                   </goods-row>
                   <goods-row label="是否可用" :span="12" v-show="data.status">
-                    {{ data.status | formatIsUse}}
+                    {{ data.status | formatStatus}}
                   </goods-row>
                   <goods-row label="是否计价" :span="12" v-show="data.valuationFlag">
-                    {{ data.valuationFlag | formatIsUse}}
+                    {{ data.valuationFlag | formatStatus}}
                   </goods-row>
                 </el-col>
               </el-row>
@@ -380,7 +380,7 @@
 </template>
 <script>
   import goodsPart from './form/form.vue';
-  import { http, Vaccine } from '@/resources';
+  import { Vaccine } from '@/resources';
   import goodsRow from './goods.row.vue';
 
   export default {
@@ -450,7 +450,7 @@
         this.combinationList = [];
         this.$notify.info({
           duration: 20000,
-          message: '添加疫苗时，只能添加通过审核的、与货主经营范围保持一致的oms疫苗'
+          message: '添加疫苗时，只能添加通过审核的、与经营范围保持一致的疫苗'
         });
       },
       searchType: function () {

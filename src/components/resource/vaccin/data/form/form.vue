@@ -186,7 +186,7 @@
   </div>
 </template>
 <script>
-  import { Vaccine, OrgGoods } from '@/resources';
+  import { Vaccine } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -203,14 +203,6 @@
           valuationFlag: false,
           storageConditionId: ''
         },
-//         otherGoodsRules: {
-//           accessory: [
-//             {required: true, message: '请选择OMS疫苗', trigger: 'change'}
-//           ],
-//           proportion: [
-//             {required: true, message: '请输入', trigger: 'blur'}
-//           ],
-//         },
         rules: {
           goodsId: [
             {required: true, message: '请选择疫苗种类', trigger: 'change'}
@@ -321,11 +313,9 @@
       },
       getCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {
-          deleteFlag: false,
-          orgId: this.$route.params.id,
           keyWord: keyWord
         });
-        OrgGoods.query(params).then(res => {
+        Vaccine.query(params).then(res => {
           this.invariantOtherGoodslist = JSON.parse(JSON.stringify(res.data.list));
           this.filterSelectGoodsList(res.data.list);
         });
@@ -430,7 +420,7 @@
             'list': list
           };
           if (this.action === 'add') {
-            OrgGoods.save(data).then(() => {
+            Vaccine.save(data).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
@@ -446,7 +436,7 @@
               this.doing = false;
             });
           } else {
-            OrgGoods.update(data.orgGoodsDto.id, data).then(() => {
+            Vaccine.update(data.orgGoodsDto.id, data).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,

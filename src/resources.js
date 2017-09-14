@@ -282,8 +282,18 @@ export const outWork = resource('/outbound/count', http, {
   }
 });
 
+// 疫苗
+export const Vaccine = resource('/vaccine-info', http, {
+  queryVaccineDetail: (id) => {
+    return http.get('/vaccine-info/' + id, {});
+  },
+  queryAvaliableVaccine: (params) => {
+    return http.get('/vaccine-info/page', {params});
+  }
+});
+
 /**
- * 区县
+ * 绑定操作
  *
  */
 export const cerpAccess = resource('', http, {
@@ -307,6 +317,9 @@ export const cerpAction = resource('/outbound/count', http, {
   },
   queryPov (id, params) { // 查询pov
     return http.get(`/erp-org/${id}/pov`, {params});
+  },
+  queryAllPov() {
+    return http.get('/erp-org/pov');
   },
   queryPovList (params) { // 查询还没绑定的pov
     return http.get('/erp-org/pov-list', {params});
@@ -382,16 +395,6 @@ export const OrgGoods = resource('/org/goods', http, {
   },
   queryStateNum: (params) => {
     return http.get('/org/goods/count', {params});
-  }
-});
-
-// 货主货品
-export const Vaccine = resource('/vaccine-info', http, {
-  queryVaccineDetail: (id) => {
-    return http.get('/vaccine-info/' + id, {});
-  },
-  queryAvaliableVaccine: (params) => {
-    return http.get('/vaccine-info/valid', {params});
   }
 });
 
