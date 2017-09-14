@@ -2,13 +2,15 @@
   <div>
     <el-upload
       class="avatar-user-uploader"
-      :action="'/omsAttachment' | formatImgUrl"
+      :action="uploadUrl"
       :show-file-list="false"
       name="upfile"
       :on-success="handleAvatarSuccess"
       :on-error="error"
       :before-upload="beforeAvatarUpload"
-      :on-change="changePhoto">
+      :on-change="changePhoto"
+      :data="uploadData"
+    >
       <img v-if="imageUrl" :src="imageUrl" class="avatar-user">
       <img v-else src="/static/img/userpic.png" class="avatar-user">
     </el-upload>
@@ -44,7 +46,9 @@
     name: 'omsPhotoUpload',
     data() {
       return {
-        imageUrl: this.photoUrl
+        imageUrl: this.photoUrl,
+        uploadData: {},
+        uploadUrl: '/omsAttachment'
       };
     },
     watch: {
@@ -70,19 +74,25 @@
         this.changPhoto(file);
       },
       beforeAvatarUpload(file) {
-        const isJPG = file.type === 'image/jpeg';
-
-        const isPng = file.type === 'image/png';
-
-        if (!isJPG && !isPng) {
-          this.$message.error('头像只能是JPG或者PNG格式!');
-        }
         const isLt10M = file.size / 1024 / 1024 < 10;
-
         if (!isLt10M) {
-          this.$message.error('头像大小不能超过 10MB!');
+          this.$notify.error({
+            duration: 2000,
+            message: '上传附件大小不能超过 10MB!'
+          });
+          return false;
         }
-        return isPng || isJPG && isLt10M;
+        let data = {objectId: '', objectType: '', fileName: file.name};
+        return http.post('/qingstor/pre', data).then(res => {
+          this.uploadUrl = res.data.apiUrl;
+          this.uploadData = {
+            policy: res.data.policy,
+            access_key_id: res.data.accessKeyId,
+            signature: res.data.signature,
+            key: res.data.key,
+            redirect: res.data.redirect
+          };
+        });
       },
       error(err) {
         this.$notify.error({
