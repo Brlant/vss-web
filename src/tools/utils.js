@@ -11,7 +11,6 @@ export default {
     5: {'title': '已取消', status: 4, num: 0}
   },
   assignType: {
-    0: {'title': '所有', status: null, num: 0},
     1: {'title': '待分配', status: 2, num: 0},
     2: {'title': '已完成分配', status: 3, num: 0}
   },
