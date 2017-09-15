@@ -95,9 +95,22 @@ const route = [
         children: [
           {
             path: '/purchase/pov',
-            component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'}
-          }, {
+            component: resolve => require(['./components/common/parent-route.vue'], resolve),
+            meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'},
+            children: [
+              {
+                path: '',
+                component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
+                meta: {moduleId: 'purchase', title: '', perm: 'show'}
+              },
+              {
+                path: '/purchase/pov/allocation',
+                component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
+                meta: {moduleId: 'purchase', title: '', perm: 'show'}
+              }
+            ]
+          },
+          {
             path: '/purchase/order',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '采购订单', perm: 'show'}

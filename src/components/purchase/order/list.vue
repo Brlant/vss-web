@@ -267,7 +267,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filters);
-        this.loadingData = true;
+        this.loadingData = false;
         Batch.query(params).then(res => {
           this.batches = res.data.list;
           this.pager.count = res.data.count;

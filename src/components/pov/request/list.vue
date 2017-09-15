@@ -241,7 +241,7 @@
     watch: {
       filters: {
         handler: function () {
-          this.dataRows = [];
+          this.currentOrder = {};
           this.getOrgsList(1);
         },
         deep: true

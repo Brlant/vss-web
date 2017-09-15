@@ -1,0 +1,166 @@
+<style lang="less" scoped="">
+  .advanced-query-form {
+    .el-select {
+      display: block;
+      position: relative;
+    }
+    .el-date-editor.el-input {
+      width: 100%;
+    }
+    padding-top: 20px;
+  }
+
+  .R {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+
+  .pt {
+    padding-top: 8px;
+  }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      font-size: 14px;
+      padding: 8px 10px;
+      position: relative;
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: rgb(72, 94, 106);
+      height: auto;
+      width: 300px;
+      line-height: 1.5;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+  }
+
+  .align-word {
+    letter-spacing: 1em;
+    margin-right: -1em;
+  }
+
+  .color-blue {
+    color: #00ff00;
+  }
+
+  .color-red {
+    color: red;
+  }
+</style>
+<template>
+  <div class="order-page">
+    <div class="container">
+      <div class="order-list clearfix ">
+        <el-row class="order-list-header" :gutter="10">
+          <el-col :span="5">疫苗</el-col>
+          <el-col :span="3">需求数</el-col>
+          <el-col :span="3">库存数</el-col>
+          <el-col :span="4">库存差额</el-col>
+          <el-col :span="4">调配后剩余库存</el-col>
+          <el-col :span="2">状态</el-col>
+          <el-col :span="3">操作</el-col>
+        </el-row>
+        <el-row v-if="loadingData">
+          <el-col :span="24">
+            <oms-loading :loading="loadingData"></oms-loading>
+          </el-col>
+        </el-row>
+        <el-row v-else-if="allocationList.length == 0">
+          <el-col :span="24">
+            <div class="empty-info">
+              暂无信息
+            </div>
+          </el-col>
+        </el-row>
+        <div v-else="" class="order-list-body">
+          <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
+               :class="[{'active':currentItemId==item.id}]"
+               @click.prevent="showDetail(item)">
+            <el-row>
+              <el-col :span="5" class="R pt">
+                <span>{{ item.goodsName }}</span>
+              </el-col>
+              <el-col :span="3" class="pt">
+                <span>{{ item.requiredQuantity }}</span>
+              </el-col>
+              <el-col :span="3" class="pt">
+                <span>{{ item.inventoryQuantity }}</span>
+              </el-col>
+              <el-col :span="4" class="pt">
+                <span>{{ item.balanceAmount }}</span>
+              </el-col>
+              <el-col :span="4" class="pt">
+                <span>{{ item.resultAmount }}</span>
+              </el-col>
+              <el-col :span="2" class="pt">
+                <span v-show="item.resultAmount>-1">
+                  <i class="iconfont icon-correct color-blue"></i>
+                  正常
+                </span>
+                <span v-show="item.resultAmount<0">
+                  <i class="iconfont icon-warning color-color"></i>
+                  库存不足
+                </span>
+              </el-col>
+              <el-col :span="3">
+                <span v-show="item.resultAmount>-1">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="iconfont icon-detail"></i></a>
+                  查看详情
+                </span>
+                <span v-show="item.resultAmount<0">
+                   <a href="#" class="btn-circle" @click.prevent=""><i
+                     class="iconfont icon-affirm"></i></a>
+                  手动分配
+                </span>
+              </el-col>
+            </el-row>
+          </div>
+        </div>
+      </div>
+      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="queryAllocationList"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  import { demandAssignment } from '@/resources';
+
+  export default {
+    data () {
+      return {
+        loadingData: false,
+        allocationList: [],
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 15
+        },
+        currentItemId: ''
+      };
+    },
+    mounted () {
+      this.queryAllocationList();
+    },
+    methods: {
+      queryAllocationList (pageNo) { // 得到需求分配列表
+        this.allocationList = [];
+        if (!this.$route.query.id) return;
+        this.pager.currentPage = pageNo;
+        this.loadingData = false;
+        demandAssignment.queryDetailList(this.$route.query.id).then(res => {
+          this.allocationList = res.data.list;
+          this.pager.count = res.data.count;
+          this.loadingData = false;
+        });
+      }
+    }
+  };
+</script>

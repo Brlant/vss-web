@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui';
+import { Notification } from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 
@@ -308,6 +308,13 @@ export const Plan = resource('/plan/', http, {
 export const outWork = resource('/outbound/count', http, {
   queryOrderCount(obj) {
     return http.get('/outbound/count', {params: obj});
+  }
+});
+
+// 要货需求分配
+export const demandAssignment = resource('/demand-assignment', http, {
+  queryDetailList (key) {
+    return http.get(`/demand-assignment/${key}/goods`);
   }
 });
 
