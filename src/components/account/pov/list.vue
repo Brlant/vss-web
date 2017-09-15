@@ -214,7 +214,7 @@
           });
           return;
         }
-        cerpAccess.bindPov(this.cdcItem.orgId, this.orgId).then(() => {
+        cerpAccess.bindPov(this.cdcItem.subordinateId, this.orgId).then(() => {
           this.$notify.success({
             message: '绑定POV成功'
           });
@@ -249,14 +249,14 @@
         });
       },
       getPovPage (pageNo) { // 得到POV列表
-        if (!this.cdcItem.orgId) return;
+        if (!this.cdcItem.subordinateId) return;
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filterPOVs);
         this.loadingData = true;
-        cerpAction.queryPov(this.cdcItem.orgId, params).then(res => {
+        cerpAction.queryPov(this.cdcItem.subordinateId, params).then(res => {
           this.povs = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
@@ -264,6 +264,7 @@
       },
       showType (item) {
         this.cdcItem = item;
+        this.getPovPage();
       },
       deleteItem (item) {
         this.$confirm('是否删除POV "' + item.subordinateName + '"?', '', {
