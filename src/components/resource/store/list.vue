@@ -1,339 +1,335 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
+<style lang="less" scoped>
+
+
+  .margin-left {
+    margin-left: 15px;
   }
 
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
+  .margin-left-right {
+    margin-left: 38px;
+    margin-right: 38px;
   }
 
-  .pt {
-    padding-top: 15px;
+  .power-style-part {
+    margin: 12px 0;
+    background-color: rgb(238, 238, 238);
+    padding: 12px 10px 10px 10px;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 300px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
+  .el-form .el-checkbox__label {
+    font-size: 12px;
+    padding-left: 5px;
   }
 
-  .align-word {
-    letter-spacing: 1em;
-    margin-right: -1em;
-  }
-
-  .opera-btn-group {
-
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
+  .el-form .el-checkbox__inner {
+    width: 14px;
+    height: 14px;
   }
 </style>
 <template>
-  <div class="order-page">
-    <div class="container">
-      <div class="opera-btn-group" :class="{up:!showSearch}">
-        <div class="opera-icon">
-          <span class="">
-            <i class="iconfont icon-search"></i> 筛选查询
+  <div>
+    <div class="container d-table">
+      <div class="d-table-left">
+        <h2 class="header">
+          <span class="pull-right">
+            <perm label="show">
+              <a href="#" class="btn-circle" @click.stop.prevent="addType">
+                <i class="iconfont icon-plus"></i>
+              </a>
+            </perm>
+              <perm label="show">
+                <a href="#" class="btn-circle" @click.prevent="searchType">
+                  <i class="iconfont icon-search"></i>
+                </a>
+              </perm>
           </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
-            <i class="el-icon-arrow-up"></i>
-            <span v-show="showSearch">收起筛选</span>
-            <span v-show="!showSearch">展开筛选</span>
-          </span>
+          仓库地址
+        </h2>
+        <div class="search-left-box" v-show="showTypeSearch">
+          <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
         </div>
-        <el-form class="advanced-query-form">
-          <el-row>
-            <el-col :span="8">
-              <oms-form-row label="选择货主" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索货主信息" :remote-method="filterOrg"
-                           :clearable="true"
-                           v-model="searchWord.orgId" @change="orgChange">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="选择厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
-                           v-model="searchWord.factoryId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="批号" :span="6">
-                <el-input v-model="searchWord.batchNumber" placeholder="请输入批号"></el-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="货主货品" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索货主货品" :remote-method="filterOrgGoods"
-                           :clearable="true"
-                           v-model="searchWord.orgGoodsId" popper-class="good-selects" @click.native="isSelectOrg">
-                  <el-option :value="org.orgGoodsDto.id" :key="org.orgGoodsDto.id" :label="org.orgGoodsDto.name"
-                             v-for="org in orgGoods"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="近效期天数" :span="7">
-                <oms-input type="number" v-model.number="searchWord.nearTermDays" :min="0" placeholder="请输入近效期天数">
-                  <template slot="append">天</template>
-                </oms-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="6">
-                <el-button type="primary" @click="searchInOrder">查询</el-button>
-                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-              </oms-form-row>
-            </el-col>
-          </el-row>
-        </el-form>
+        <div v-if="showTypeList.length == 0" class="empty-info">
+          暂无信息
+        </div>
+        <div v-else>
+          <ul class="show-list">
+            <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
+                :class="{'active':item.id==currentItem.id}">
+              <div>
+                {{item.name }}
+                <span v-show="item.default"
+                      style="position: absolute;right:60px;font-size: 12px; color: #888;">默认</span>
+                <el-tag type="danger" v-show="item.status==='3'">停用</el-tag>
+                <el-tag type="success" v-show=" item.status==='0'">正常</el-tag>
+              </div>
+            </li>
+          </ul>
+        </div>
       </div>
+      <div class="d-table-right">
+        <div v-if="showTypeList.length == 0" class="empty-info">
+          暂无信息
+        </div>
+        <div v-else>
+          <h2 class="clearfix">
+                <span class="pull-right">
+                    <!--  <a href="#" class="btn-circle"><i class="iconfont icon-filter"></i> </a>-->
+                  <perm label="show">
+                    <a href="#" @click.stop.prevent="edit()" v-show="data.status==='0'">
+                      <i class="iconfont icon-edit"></i>编辑</a>
+                  </perm>
+                  <perm label="show">
+                    <a href="#" @click.prevent="remove()" class="margin-left"
+                       v-show="data.status==='0'||data.status==='1'"><i
+                      class="iconfont icon-forbidden"></i>停用</a>
+                  </perm>
+                  <perm label="show">
+                      <a href="#" @click.prevent="start()" class="margin-left"
+                         v-show="data.status==='2'||data.status==='3'"><i
+                        class=" iconfont icon-start"></i>启用</a>
+                  </perm>
 
-
-      <div class="order-list clearfix ">
-        <el-row class="order-list-header" :gutter="10">
-          <el-col :span="3">流水号</el-col>
-          <el-col :span="3">货主</el-col>
-          <el-col :span="3">生产厂商</el-col>
-          <el-col :span="3">批号</el-col>
-          <el-col :span="3">货主货品名称</el-col>
-          <el-col :span="2">可用数量</el-col>
-          <el-col :span="3">实际库存数量</el-col>
-          <el-col :span="2">在途库存</el-col>
-          <el-col :span="2">有效期</el-col>
-        </el-row>
-        <el-row v-if="loadingData">
-          <el-col :span="24">
-            <oms-loading :loading="loadingData"></oms-loading>
-          </el-col>
-        </el-row>
-        <el-row v-else-if="batches.length == 0">
-          <el-col :span="24">
-            <div class="empty-info">
-              暂无信息
-            </div>
-          </el-col>
-        </el-row>
-        <div v-else="" class="order-list-body">
-          <div class="order-list-item order-list-item-bg" v-for="item in batches"
-               :class="[{'active':currentItemId==item.id}]"
-               @click.prevent="showDetail(item)">
-            <el-row>
-              <el-col :span="3" class="R pt10">
-                <span>
-                  {{ item.stockNo }}
                 </span>
+          </h2>
+          <div class="page-main-body">
+            <el-row>
+              <el-col :span="3" class="text-right">
+                仓库名称：
               </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.orgName }}</span>
+              <el-col :span="20">
+                {{ data.name }}
               </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.factoryName }}</span>
+            </el-row>
+            <el-row style="margin-top: 20px">
+              <el-col :span="3" class="text-right">
+                仓库地址类型：
               </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.batchNumber }}</span>
+              <el-col :span="21">
+                <dict :dict-group="'orgAddress'" :dict-key="formatAddress"></dict>
               </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.goodsName }}</span>
+            </el-row>
+            <el-row style="margin-top: 20px">
+              <el-col :span="3" class="text-right">
+                所在地区：
               </el-col>
-              <el-col :span="2" class="pt" align="center">
-                <span>{{ item.availableCount }}</span>
+              <el-col :span="21">
+                {{ storeAddress }}
               </el-col>
-              <el-col :span="3">
-                <div><span class="align-word">合格</span>：{{ item.qualifiedCount }}</div>
-                <div><span class="align-word">待定</span>：{{ item.undeterminedCount }}</div>
-                <div><span>不合格</span>：{{ item.unqualifiedCount }}</div>
+            </el-row>
+            <el-row style="margin-top: 20px">
+              <el-col :span="3" class="text-right">
+                详细地址：
               </el-col>
-              <el-col :span="2" class="pt" align="center">
-                <span>{{ item.transitCount }}</span>
+              <el-col :span="21">
+                {{ data.detail }}
               </el-col>
-              <el-col :span="2" class="pt" align="center">
-                <span>{{ item.expiryDate | date }}</span>
+            </el-row>
+            <el-row>
+              <el-col :span="3" class="text-right">
+                联系人：
+              </el-col>
+              <el-col :span="20">
+                {{ data.contact }}
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="3" class="text-right">
+                联系电话：
+              </el-col>
+              <el-col :span="20">
+                {{ data.telephone }}
               </el-col>
             </el-row>
           </div>
         </div>
-
-      </div>
-
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
-          :current-page="pager.currentPage">
-        </el-pagination>
       </div>
     </div>
+    <page-right :show="showRight" @right-close="resetRightBox">
+      <store-part :formItem="formItem" :formType="formType" :actionType="showRight" @change="onSubmit"></store-part>
+    </page-right>
   </div>
 </template>
 <script>
-  //  import order from '../../../tools/orderList';
-  import { Batch, BaseInfo, OrgGoods } from '@/resources';
+  import storePart from './form/form.vue';
+  import {Address, Audit} from '../../../resources';
+  import utils from '../../../tools/utils';
+
   export default {
-    data () {
+    components: {storePart},
+    data: function () {
       return {
-        loadingData: true,
+        formType: 'add',
+        showRight: false,
+        showTypeRight: false,
+        showTypeSearch: false,
         showSearch: false,
-        showDetailPart: false,
-        batches: [],
-        filters: {
+        data: {
+          id: '',
+          name: '',
           orgId: '',
-          factoryId: '',
-          batchNumber: '',
-          orgGoodsId: '',
-          nearTermDays: ''
+          contact: '',
+          telephone: '',
+          default: false,
+          type: '',
+          detail: ''
         },
-        searchWord: {
-          orgId: '',
-          factoryId: '',
-          batchNumber: '',
-          orgGoodsId: '',
-          nearTermDays: ''
-        },
-        factories: [], // 厂商列表
-        orgList: [], // 货主列表,
-        orgGoods: [],
-        pager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 15
-        },
-        currentItemId: ''
+        typeList: [],
+        showTypeList: [],
+        typeTxt: '',
+        keyTxt: '',
+        action: '',
+        currentItem: '',
+        formItem: {},
+        doing: false,
+        auditDto: {}
       };
     },
+    computed: {
+      formatAddress: function () {
+        let value = this.data.type;
+        return value.toString();
+      },
+      storeAddress() {
+        let province = this.data.province;
+        let city = this.data.city;
+        let region = this.data.region;
+        return utils.formatAddress(province, city, region);
+      }
+    },
     mounted () {
-      this.getBatches(1);
-      this.filterOrg();
-      this.filterFactory();
+      this.getPageList();
+      this.queryAuditStatus();
     },
     watch: {
-      filters: {
-        handler: function () {
-          this.getBatches(1);
-        },
-        deep: true
+      'typeTxt': function () {
+        this.getPageList();
       }
     },
     methods: {
-      getBatches (pageNo) { // 得到波次列表
-        this.pager.currentPage = pageNo;
-        let params = Object.assign({
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize
-        }, this.filters);
-        this.loadingData = true;
-        Batch.query(params).then(res => {
-          this.batches = res.data.list;
-          this.pager.count = res.data.count;
-          this.loadingData = false;
+      queryAuditStatus() {
+        Audit.queryAuditStatus(this.$route.params.id).then(res => {
+          this.auditDto = res.data;
         });
       },
-      showDetail (item) {
-        this.currentItemId = item.id;
-        this.showDetailPart = true;
+      resetRightBox: function () {
+        this.showRight = false;
       },
-      resetRightBox () {
-        this.showDetailPart = false;
+      addType: function () {
+        this.formType = 'add';
+        this.formItem = {};
+        this.showRight = true;
       },
-      searchInOrder: function () {// 搜索
-        Object.assign(this.filters, this.searchWord);
+      searchType: function () {
+        this.showTypeSearch = !this.showTypeSearch;
       },
-      resetSearchForm: function () {// 重置表单
-        let temp = {
-          orgId: '',
-          factoryId: '',
-          batchNumber: '',
-          orgGoodsId: '',
-          nearTermDays: ''
-        };
-        Object.assign(this.searchWord, temp);
-        Object.assign(this.filters, temp);
-      },
-      filterFactory (query) { // 查询厂商
-        let params = {
+      getPageList: function () {
+        let param = Object.assign({}, {
           deleteFlag: false,
-          keyWord: query
-        };
-        BaseInfo.query(params).then(res => {
-          this.factories = res.data.list;
+          keyword: this.typeTxt,
+          orgId: this.$route.params.id
+        });
+        Address.queryAddress(param).then(res => {
+          this.showTypeList = res.data;
+          this.typeList = res.data;
+          this.data = Object.assign({}, {'id': ''}, this.showTypeList[0]);
+          this.currentItem = this.data;
         });
       },
-      filterOrg (query) { // 查询货主
-        BaseInfo.query({keyWord: query, type: 0}).then(res => {
-          this.orgList = res.data.list;
-        });
+      edit: function () {
+        this.formType = 'edit';
+        this.formItem = JSON.parse(JSON.stringify(this.data));
+        this.oldItem = this.formItem;
+        this.formItem.type = this.data.type.toString();
+        this.showRight = true;
       },
-      filterOrgGoods (query) {
-        this.orgGoods = [];
-        if (!this.searchWord.orgId) return;
-        let params = Object.assign({}, {
-          deleteFlag: false,
-          orgId: this.searchWord.orgId,
-          keyWord: query
-        });
-        OrgGoods.query(params).then(res => {
-          this.orgGoods = res.data.list;
-        });
-      },
-      isSelectOrg () {
-        if (!this.searchWord.orgId) {
-          this.$notify.info({
-            message: '请选择货主'
+      remove: function () {
+        this.$confirm('确认停用仓库"' + this.data.name + '"?', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          Address.forbid(this.data.id).then(() => {
+            this.getPageList();
+            this.$notify.success({
+              title: '成功',
+              message: '已成功停用仓库"' + this.data.name + '"'
+            });
           });
+        });
+      },
+      start: function () {
+        this.$confirm('确认启用仓库"' + this.data.name + '"?', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          Address.start(this.data.id).then(() => {
+            this.getPageList();
+            this.$notify.success({
+              title: '成功',
+              message: '已成功启用仓库"' + this.data.name + '"'
+            });
+          });
+        });
+      },
+      removeType: function () {
+        Address.forbid(this.data.id).then(() => {
+          this.getPageList();
+          this.$notify.success({
+            title: '成功',
+            message: '已成功停用仓库"' + this.data.name + '"'
+          });
+        });
+      },
+      showType: function (item) {
+        this.data = item;
+        this.currentItem = this.data;
+      },
+      changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
+        this.activeStatus = key;
+      },
+      onSubmit: function (item) {
+        if (this.formType === 'add') {
+          if (item) {
+            // 刷新左侧列表的值
+            this.getPageList();
+            // 左侧选中
+            this.showType(item);
+            // 关闭弹出框
+            this.resetRightBox();
+            this.$notify.success({
+              duration: 2000,
+              name: '成功',
+              message: '新增仓库信息成功'
+            });
+          } else {
+            this.$notify.error({
+              duration: 2000,
+              message: '新增仓库信息失败'
+            });
+          }
+        } else {
+          if (item) {
+            // 刷新左侧列表的值
+            this.getPageList();
+            // 左侧选中
+            this.showType(item);
+            // 关闭弹出框
+            this.resetRightBox();
+            this.$notify.success({
+              duration: 2000,
+              name: '成功',
+              message: '修改仓库"' + this.formItem.name + '"信息成功'
+            });
+          } else {
+            this.$notify.error({
+              duration: 2000,
+              message: '修改仓库"' + this.formItem.name + '"信息失败'
+            });
+          }
         }
-      },
-      orgChange () {
-        this.filterOrgGoods();
-      },
-      formatTime (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
+
     }
   };
 </script>

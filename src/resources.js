@@ -76,6 +76,25 @@ export const PackingScheme = resource('packing-scheme', http, {
   }
 });
 
+// 仓库地址
+export const Address = resource('/binding-warehouse', http, {
+  queryAddress: (params) => {
+    return http.get('/binding-warehouse/list', {params});
+  },
+  updateAddress: function (obj) {
+    return http.put('/binding-warehouse', obj);
+  },
+  check: (id, obj) => {
+    return http.put('/binding-warehouse/' + id + '/check', obj);
+  },
+  forbid: function (id) {
+    return http.put('/binding-warehouse/' + id + '/forbid', {});
+  },
+  start: function (id) {
+    return http.put('/binding-warehouse/' + id + '/start', {});
+  }
+});
+
 // dev设备对象
 export const Dev = resource('dev', http, {});
 
