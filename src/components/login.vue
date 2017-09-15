@@ -140,7 +140,7 @@
                 } else {
                   this.$router.replace('/');
                 }
-
+                this.$router.replace('/');
               });
             }, error => {
               let data = error.response.data;

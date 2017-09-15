@@ -16,7 +16,7 @@
   }
 
   .pov-info {
-    margin-bottom: 30px;
+    margin-bottom: 20px;
     .font-bold {
       font-size: 14px;
     }
@@ -68,20 +68,8 @@
       <div class="d-table-right">
         <div class="d-table-col-wrap">
           <div class="pov-info">
-            <span class="pull-right" style="margin-top: 8px">
-             <perm label="show">
-               <a href="#" class="margin-left">
-                 <i class="iconfont icon-verify"></i> 审核
-               </a>
-              </perm>
-               <perm label="show" style="margin-left: 10px">
-                  <a href="#" class="margin-left">
-                    <i class="iconfont icon-delete"></i> 删除
-                  </a>
-               </perm>
-            </span>
-            <el-row class="clearfix font-bold">
-              <el-col :span="2">POV名称:</el-col>
+            <el-row class="clearfix font-bold" style="font-weight: 500;font-size: 14px">
+              <el-col :span="2" >POV名称:</el-col>
               <el-col :span="10"> {{ orgName }}</el-col>
             </el-row>
           </div>
@@ -91,25 +79,26 @@
                 <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="queryVaccines"
                            :clearable="true"
                            v-model="vaccineId">
-                  <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
+                  <el-option :value="item.orgGoodsDto.goodsId" :key="item.orgGoodsDto.goodsId" :label="item.orgGoodsDto.name"
                              v-for="item in vaccines"></el-option>
                 </el-select>
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
-                <el-button type="primary">授权疫苗</el-button>
+                <el-button type="primary" @click="bindVaccine">授权疫苗</el-button>
               </el-col>
               <el-col :span="11" class="text-right">
-                <span>
-                  <span style="margin-top: 8px">
-                     <span class="btn-search-toggle open" v-show="showSearch">
-                        <single-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showSearch"></single-input>
-                        <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
-                     </span>
-                     <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                        <i class="iconfont icon-search"></i>
-                     </a>
-                  </span>
-                </span>
+                <!--<span>-->
+                  <!--<span style="margin-top: 8px">-->
+                     <!--<span class="btn-search-toggle open" v-show="showSearch">-->
+                        <!--<single-input v-model="keyWord" placeholder="请输入关键字搜索"-->
+                                      <!--:showFocus="showSearch"></single-input>-->
+                        <!--<i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>-->
+                     <!--</span>-->
+                     <!--<a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">-->
+                        <!--<i class="iconfont icon-search"></i>-->
+                     <!--</a>-->
+                  <!--</span>-->
+                <!--</span>-->
               </el-col>
             </el-row>
           </div>
@@ -132,30 +121,22 @@
             <tbody>
             <tr v-for="row in dataRows">
               <td>
-                {{row.name}}
+                {{row.goodsName}}
               </td>
               <td>
-                <dict :dict-group="'orgUserStatus'" :dict-key="row.status"></dict>
+                <dict :dict-group="'vaccineSign'" :dict-key="row.goodsTypeId"></dict>
               </td>
               <td>
-                {{ row.list | formatRole }}
+                {{ row.time | date }}
               </td>
-              <td class="list-op">
+              <td>
                 <perm label="show">
-                  <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-delete"></i>删除</a>
+                  <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="iconfont icon-delete"></i>删除</a>
                 </perm>
               </td>
             </tr>
             </tbody>
           </table>
-          <div class="text-center" v-show="pager.count>pager.pageSize">
-            <el-pagination layout="prev, pager, next"
-                           :total="pager.count"
-                           :pageSize="pager.pageSize"
-                           @current-change="getPageList"
-                           :current-page="pager.currentPage">
-            </el-pagination>
-          </div>
         </div>
       </div>
     </div>
@@ -163,11 +144,8 @@
 
 </template>
 <script>
-  import { BaseInfo, cerpAction, Vaccine } from '@/resources';
-  import ElCol from 'element-ui/packages/col/src/col';
-
+  import {cerpAction, Vaccine, VaccineRights } from '@/resources';
   export default {
-    components: {ElCol},
     data: function () {
       return {
         showRight: false,
@@ -178,9 +156,9 @@
         typeTxt: '',
         keyTxt: '',
         filters: {
-          orgId: '',
-          keyWord: ''
+          povId: ''
         },
+        keyWord: '',
         form: {list: [{roleId: ''}]},
         formTitle: '新增',
         oldItem: {},
@@ -203,15 +181,6 @@
         vaccineId: ''
       };
     },
-    filters: {
-      formatRole: function (list) {
-        let value = '';
-        if (list.length > 0) {
-          value = list[0].title;
-        }
-        return value;
-      }
-    },
     computed: {
       bodyHeight: function () {
         return this.$store.state.bodyHeight;
@@ -226,11 +195,8 @@
         this.orgName = '';
         this.getOrgsList();
       },
-      filters: {
-        handler: function () {
-          this.getPageList(1);
-        },
-        deep: true
+      keyWord () {
+        this.pickTypeList();
       }
     },
     methods: {
@@ -255,10 +221,9 @@
             if (this.showTypeList.length !== 0) {
               this.currentItem = res.data.list[0];
               this.orgName = this.showTypeList[0].subordinateName;
-              this.filters.orgId = this.currentItem.orgId;
+              this.getPageList();
             } else {
               this.currentItem = Object.assign({'id': ''});
-              this.filters.orgId = '';
             }
           }
           this.typePager.totalPage = res.data.totalPage;
@@ -275,34 +240,51 @@
           this.vaccines = res.data.list;
         });
       },
-      getPageList: function (pageNo) {
+      getPageList: function () {
         this.dataRows = [];
-        if (!this.filters.orgId) return;
-        this.pager.currentPage = pageNo;
-//        let data = Object.assign({}, {
-//          pageNo: pageNo,
-//          pageSize: this.pager.pageSize
-//        }, this.filters);
-//        OrgUser.queryOrgInfo(this.filters.orgId, data).then(res => {
-//          this.dataRows = res.data.list;
-//          this.pager.count = res.data.count;
-//        });
+        if (!this.currentItem.id) return;
+        VaccineRights.queryVaccineByPov(this.currentItem.id).then(res => {
+          this.dataRows = res.data;
+        });
       },
-      removeType: function (item) {
-        BaseInfo.delete(item.id).then(() => {
-          this.getOrgsList();
-          this.$notify.success({
-            title: '成功',
-            message: '已成功删除货主用户"' + item.name + '"'
+      removeVaccine: function (item) {
+        this.$confirm('是否删除疫苗"' + item.goodsName + '"?', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          VaccineRights.deleteVaccine(item.id).then(() => {
+            this.getPageList();
+            this.$notify.success({
+              message: '已成功删除疫苗'
+            });
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '删除疫苗失败'
+            });
           });
         });
       },
       bindVaccine () {
+        let form = {
+          'goodsId': this.vaccineId,
+          'povId': this.currentItem.id
+        };
+        VaccineRights.save(form).then(() => {
+          this.$notify.success({
+            message: '授权疫苗成功'
+          });
+          this.getPageList();
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '授权疫苗失败'
+          });
+        });
       },
       showType: function (item) {
-        this.filters.orgId = item.id;
         this.orgName = item.subordinateName;
         this.currentItem = item;
+        this.getPageList();
       }
     }
   };
