@@ -230,6 +230,9 @@
     computed: {
       bodyHeight: function () {
         return this.$store.state.bodyHeight;
+      },
+      user () {
+        return this.$store.state.user;
       }
     },
     mounted () {
@@ -242,6 +245,11 @@
           this.getOrgsList(1);
         },
         deep: true
+      },
+      user (val) {
+        if (val.userCompanyAddress) {
+          this.getOrgsList(1);
+        }
       }
     },
     methods: {
@@ -252,10 +260,13 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
+        let orgId = this.user.userCompanyAddress;
+        if (!orgId) return;
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.pager.pageSize,
+          povId: orgId
         }, this.filters);
         pullSignal.query(params).then(res => {
           if (isContinue) {
@@ -274,7 +285,9 @@
         });
       },
       queryCount () {
-        let params = this.filters;
+        let params = Object.assign({}, {
+          povId: this.user.userCompanyAddress
+        }, this.filters);
         pullSignal.queryCount(params).then(res => {
           this.requestType[0].num = res.data['all'];
           this.requestType[1].num = res.data['pending-audit'];
