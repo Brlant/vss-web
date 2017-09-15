@@ -2,50 +2,13 @@ import address from './address';
 
 export default {
   address: address.value,
-  inType: {
-    0: {'title': '所有', state: null, num: 0},
-    1: {'title': '待配复核人', state: '0', num: 0},
-    2: {'title': '待扫描复核', state: '1', num: 0},
-    3: {'title': '待分配货位', state: '2', num: 0},
-    4: {'title': '待配上架人', state: '3', num: 0},
-    5: {'title': '待上架', state: '4', num: 0},
-    6: {'title': '入库完成', state: '5', num: 0}
-  },
-  outType: {
-    0: {'title': '所有', state: null, num: 0},
-    1: {'title': '待分波', state: '6', num: 0},
-    2: {'title': '待拣货', state: '7', num: 0},
-    3: {'title': '待复核', state: '8', num: 0},
-    4: {'title': '待包装', state: '9', num: 0},
-    5: {'title': '待运输', state: '10', num: 0},
-    6: {'title': '待签收', state: '11', num: 0},
-    7: {'title': '已完成', state: '12', num: 0}
-  },
-  waveType: {
-    0: {'title': '所有', state: null, num: 0},
-    1: {'title': '待分配操作员', state: 0, num: 0},
-    2: {'title': '待拣货', state: 1, num: 0},
-    3: {'title': '待复核', state: 2, num: 0},
-    4: {'title': '待包装', state: 3, num: 0},
-    5: {'title': '波次任务完成', state: 4, num: 0}
-  },
-  maintainType: {
-    0: {'title': '所有', state: null, num: 0},
-    1: {'title': '重点养护', state: '0', num: 0},
-    2: {'title': '一般养护', state: '1', num: 0}
-  },
-  scatterType: {
-    0: {'title': '所有', state: null, num: 0},
-    1: {'title': '待拆零', state: '0', num: 0},
-    2: {'title': '待确认', state: '1', num: 0},
-    3: {'title': '完成', state: '2', num: 0}
-  },
-  moveType: {
-    0: {'title': '所有', state: null, num: 0},
-    1: {'title': '待移库', state: '0', num: 0},
-    2: {'title': '待下架', state: '1', num: 0},
-    3: {'title': '待上架', state: '2', num: 0},
-    4: {'title': '已完成', state: '3', num: 0}
+  requestType: {
+    0: {'title': '所有', status: null, num: 0},
+    1: {'title': '待审批', status: 0, num: 0},
+    2: {'title': '待生成分配信息', status: 1, num: 0},
+    3: {'title': '待分配', status: 2, num: 0},
+    4: {'title': '已分配', status: 3, num: 0},
+    5: {'title': '已取消', status: 4, num: 0}
   },
   /**
    * 格式化地址，已省/市/区显示
