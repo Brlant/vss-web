@@ -207,7 +207,7 @@
         activeStatus: '',
         demandList: [],
         filters: {
-          status: '',
+          status: 2,
           povId: '',
           demandStartTime: '',
           demandEndTime: ''
@@ -267,6 +267,16 @@
           this.demandList = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+          this.queryCount();
+        });
+      },
+      queryCount () {
+        let params = Object.assign({}, {
+          povId: this.user.userCompanyAddress
+        }, this.filters);
+        pullSignal.queryCount(params).then(res => {
+          this.assignType[1].num = res.data['pending-assign'];
+          this.assignType[2].num = res.data['assigned'];
         });
       },
       showDetail (item) {
