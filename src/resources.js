@@ -76,25 +76,6 @@ export const PackingScheme = resource('packing-scheme', http, {
   }
 });
 
-// 仓库地址
-export const Address = resource('/binding-warehouse', http, {
-  queryAddress: (params) => {
-    return http.get('/binding-warehouse/list', {params});
-  },
-  updateAddress: function (obj) {
-    return http.put('/binding-warehouse', obj);
-  },
-  check: (id, obj) => {
-    return http.put('/binding-warehouse/' + id + '/check', obj);
-  },
-  forbid: function (id) {
-    return http.put('/binding-warehouse/' + id + '/forbid', {});
-  },
-  start: function (id) {
-    return http.put('/binding-warehouse/' + id + '/start', {});
-  }
-});
-
 // dev设备对象
 export const Dev = resource('dev', http, {});
 
@@ -291,6 +272,35 @@ export const Wave = resource('/wave-task', http, {
     return http.put(`/wave-task/${waveId}/packing`);
   }
 });
+
+// 仓库地址
+export const Address = resource('/orgAddressInfo', http, {
+  queryAddress: (id, params) => {
+    return http.get('/orgAddressInfo/' + id, {params});
+  },
+  updateAddress: function (obj) {
+    return http.put('/orgAddressInfo', obj);
+  },
+  check: (id, obj) => {
+    return http.put('/orgAddressInfo/' + id + '/check', obj);
+  },
+  forbid: function (id) {
+    return http.put('/orgAddressInfo/' + id + '/forbid', {});
+  },
+  bizForbid: function (id) {
+    return http.put('/orgAddressInfo/' + id + '/bizForbid', {});
+  },
+  start: function (id) {
+    return http.put('/orgAddressInfo/' + id + '/start', {});
+  },
+  auditInfo: (id, obj) => {
+    return http.put('/orgAddressInfo/orgs/' + id + '/check', obj);
+  },
+  queryStateNum: (params) => {
+    return http.get('/orgAddressInfo/count', {params});
+  }
+});
+
 export const Plan = resource('/plan/', http, {
   queryOrderCount: (params) => {
     return http.get('/plan', {
@@ -307,6 +317,19 @@ export const outWork = resource('/outbound/count', http, {
   }
 });
 
+// 要货申请
+export const pullSignal = resource('/pull-signal', http, {
+  audit (key) {
+    return http.put(`/pull-signal/audit/${key}`);
+  },
+  cancel (key) {
+    return http.put(`/pull-signal/cancel/${key}`);
+  },
+  queryCount (params) {
+    return http.get('/pull-signal/count', {params});
+  }
+});
+
 // 疫苗
 export const Vaccine = resource('/vaccine-info', http, {
   queryVaccineDetail: (id) => {
@@ -314,6 +337,9 @@ export const Vaccine = resource('/vaccine-info', http, {
   },
   queryAvaliableVaccine: (params) => {
     return http.get('/vaccine-info/page', {params});
+  },
+  queryAllVaccine: (params) => {
+    return http.get('/vaccine-info/valid', {params});
   }
 });
 
