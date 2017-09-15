@@ -42,9 +42,9 @@
   }
 
   .opera-btn-group {
-
     border: 2px solid #eeeeee;
     margin: 10px -5px;
+    background: #f1f1f1;
     .opera-icon {
       line-height: 50px;
       height: 50px;
@@ -250,7 +250,7 @@
       }
     },
     methods: {
-      getDemandList (pageNo) { // 得到波次列表
+      getDemandList (pageNo) { // 得到需求列表
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
         this.pager.currentPage = pageNo;
