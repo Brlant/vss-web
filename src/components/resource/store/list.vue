@@ -285,7 +285,7 @@
         this.data = item;
         this.currentItem = this.data;
       },
-      changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
+      changeType: function (key) {// 根据当前选中的标签，重置状态等相关参数。
         this.activeStatus = key;
       },
       onSubmit: function (item) {

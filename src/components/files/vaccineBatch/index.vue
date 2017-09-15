@@ -191,7 +191,6 @@
 <script>
   //  import order from '../../../tools/orderList';
   import {BatchNumber, BaseInfo, Vaccine} from '../../../resources';
-  import utils from '../../../tools/utils';
   import detail from './detail.vue';
 
   export default {
