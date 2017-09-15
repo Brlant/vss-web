@@ -245,6 +245,12 @@ export const DictGroup = resource('dictGroup', http, {
 export const Batch = resource('/stock-batch', http, {});
 
 /**
+ * 批号对象
+ * @type {the}
+ */
+export const BatchNumber = resource('/batch-number', http, {});
+
+/**
  * 波次作业
  */
 export const Wave = resource('/wave-task', http, {

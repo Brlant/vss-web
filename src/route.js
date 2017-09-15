@@ -219,7 +219,7 @@ const route = [
         children: [
           {
             path: '/file/list',
-            component: resolve => require(['./components/files/list.vue'], resolve),
+            component: resolve => require(['./components/files/vaccineBatch/index.vue'], resolve),
             meta: {moduleId: 'file', title: '疫苗批号文件管理', perm: 'show'}
           },
           {
