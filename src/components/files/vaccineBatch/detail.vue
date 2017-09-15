@@ -17,7 +17,7 @@
   .qp-box {
     margin-bottom: 40px;
     padding: 20px;
-    box-shadow: 0 20px 10px 0 #ddd;
+    box-shadow: 4px 4px 2px 0 #ddd;
   }
 </style>
 <template>
@@ -29,7 +29,7 @@
           <oms-loading :loading="loadingData"></oms-loading>
         </div>
         <div v-else="">
-          <div class="qp-box" style="margin-bottom: 15px">
+          <div class="qp-box">
             <el-row>
               <h2>
                 药检报告
@@ -41,7 +41,7 @@
               </div>
             </el-row>
           </div>
-          <div class="qp-box" style="margin-bottom: 15px">
+          <div class="qp-box">
             <el-row>
               <h2>
                 批签发
@@ -53,7 +53,7 @@
               </div>
             </el-row>
           </div>
-          <div class="qp-box" style="margin-bottom: 15px">
+          <div class="qp-box">
             <el-row>
               <h2>
                 进口注册证
@@ -65,7 +65,7 @@
               </div>
             </el-row>
           </div>
-          <div class="qp-box" style="margin-bottom: 15px">
+          <div class="qp-box">
             <el-row>
               <h2>
                 通关单
