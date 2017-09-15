@@ -151,7 +151,7 @@
 </template>
 <script>
   import storePart from './form/form.vue';
-  import {Address, Audit} from '../../../resources';
+  import {Address} from '../../../resources';
   import utils from '../../../tools/utils';
 
   export default {
@@ -180,8 +180,7 @@
         action: '',
         currentItem: '',
         formItem: {},
-        doing: false,
-        auditDto: {}
+        doing: false
       };
     },
     computed: {
@@ -198,7 +197,6 @@
     },
     mounted () {
       this.getPageList();
-      this.queryAuditStatus();
     },
     watch: {
       'typeTxt': function () {
@@ -206,11 +204,6 @@
       }
     },
     methods: {
-      queryAuditStatus() {
-        Audit.queryAuditStatus(this.$route.params.id).then(res => {
-          this.auditDto = res.data;
-        });
-      },
       resetRightBox: function () {
         this.showRight = false;
       },
