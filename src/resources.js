@@ -311,6 +311,16 @@ export const Vaccine = resource('/vaccine-info', http, {
   }
 });
 
+// 疫苗授权
+export const VaccineRights = resource('/vaccine-authorization', http, {
+  queryVaccineByPov (povId) {
+    return http.get(`/vaccine-authorization/${povId}`);
+  },
+  deleteVaccine (id) {
+    return http.put(`/vaccine-authorization/detail/${id}`);
+  }
+});
+
 /**
  * 绑定操作
  *
