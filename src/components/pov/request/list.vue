@@ -138,11 +138,6 @@
                   </oms-row>
                 </el-col>
               </el-row>
-              <el-row>
-                <oms-row label="备注" :span="5">
-                  {{currentOrder.remark}}
-                </oms-row>
-              </el-row>
             </div>
             <span style="font-size: 14px">【要货明细】</span>
             <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}" style="margin-top: 10px">
@@ -292,9 +287,8 @@
           this.requestType[0].num = res.data['all'];
           this.requestType[1].num = res.data['pending-audit'];
           this.requestType[2].num = res.data['audited'];
-          this.requestType[3].num = res.data['pending-assign'];
-          this.requestType[4].num = res.data['assigned'];
-          this.requestType[5].num = res.data['canceled'];
+          this.requestType[3].num = res.data['assigned'];
+          this.requestType[4].num = res.data['canceled'];
         });
       },
       getDetail: function () {

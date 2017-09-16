@@ -12,7 +12,6 @@
 
   .height20 {
     .el-col {
-      height: 20px;
       line-height: 20px;
     }
   }

@@ -259,6 +259,7 @@
           pageSize: this.pager.pageSize,
           povId: orgId
         }, this.filters);
+        if (!this.filters.povId) params.povId = orgId;
         this.loadingData = false;
         pullSignal.query(params).then(res => {
           res.data.list.forEach(item => {
@@ -274,10 +275,10 @@
         let params = Object.assign({}, {
           povId: this.user.userCompanyAddress
         }, this.filters);
+        if (!this.filters.povId) params.povId = this.user.userCompanyAddress;
         pullSignal.queryCount(params).then(res => {
           this.assignType[0].num = res.data['audited'];
-          this.assignType[1].num = res.data['pending-assign'];
-          this.assignType[2].num = res.data['assigned'];
+          this.assignType[1].num = res.data['assigned'];
         });
       },
       showDetail (item) {
