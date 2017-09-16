@@ -143,17 +143,16 @@
           <div v-else>
             <h2 class="clearfix">
             <span class="pull-right">
-                <!--  <a href="#" class="btn-circle"><i class="iconfont icon-filter"></i> </a>-->
-              <perm label="org-goods-edit">
-                   <a href="#" @click.stop.prevent="edit()"><i class="iconfont icon-edit"></i>编辑</a>
-                <a href="#" @click.stop.prevent="forbid()" class="margin-left" v-show="data.status == '1' "><i
-                  class="iconfont icon-forbidden"></i>停用</a>
-                <a href="#" @click.stop.prevent="enableRelation()" class="margin-left" v-show="data.status == '0' "><i
-                  class="iconfont icon-start"></i>启用</a>
-              </perm>
-             <perm label="org-goods-delete">
-               <a href="#" @click.prevent="remove()" class="margin-left"><i class="iconfont icon-delete"></i>删除</a>
-             </perm>
+                 <el-button-group>
+                  <perm label="org-relation-edit">
+                    <el-button type="primary" @click="edit">编辑</el-button>
+                    <el-button type="primary" @click="enableRelation" v-show="data.status == '0'">启用</el-button>
+                    <el-button type="primary" @click="forbid" v-show="data.status == '1' ">停用</el-button>
+                    <perm label="org-goods-delete">
+                       <el-button type="primary" @click="remove">删除</el-button>
+                    </perm>
+                  </perm>
+                </el-button-group>
             </span>
             </h2>
             <div class="page-main-body min-row">

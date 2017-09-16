@@ -123,7 +123,7 @@
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
-        <span class="pull-right" style="margin-top: 8px">
+        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1">
           <perm label="show" class="opera-btn">
             <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
               class="iconfont icon-wave"></i></a><span class="wave-title"> 需求分配</span></span>
