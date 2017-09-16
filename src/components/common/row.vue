@@ -9,9 +9,16 @@
       color: #333;
     }
   }
+
+  .height20 {
+    .el-col {
+      height: 20px;
+      line-height: 20px;
+    }
+  }
 </style>
 <template>
-  <el-row :class="rowClass">
+  <el-row :class="rowClass" class="height20">
     <el-col :span="span" class="text-right col-label"><span style="padding-right:10px;" v-show="label">{{label}}:</span>
     </el-col>
     <el-col :span="24-span">

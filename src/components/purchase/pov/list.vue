@@ -204,10 +204,10 @@
         showSearch: false,
         showDetailPart: false,
         assignType: utils.assignType,
-        activeStatus: '',
+        activeStatus: 0,
         demandList: [],
         filters: {
-          status: 2,
+          status: 1,
           povId: '',
           demandStartTime: '',
           demandEndTime: ''
@@ -275,6 +275,7 @@
           povId: this.user.userCompanyAddress
         }, this.filters);
         pullSignal.queryCount(params).then(res => {
+          this.assignType[0].num = res.data['audited'];
           this.assignType[1].num = res.data['pending-assign'];
           this.assignType[2].num = res.data['assigned'];
         });

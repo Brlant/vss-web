@@ -1,6 +1,7 @@
 import { Notification } from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
+import qs from 'qs';
 
 export const http = axios.create({
   baseURL: process.env.NODE_API,
@@ -321,6 +322,19 @@ export const outWork = resource('/outbound/count', http, {
 export const demandAssignment = resource('/demand-assignment', http, {
   queryDetailList (key) {
     return http.get(`/demand-assignment/${key}/goods`);
+  },
+  assignmentGoods (params) {
+    // return http.get('/demand-assignment/goods', {params});
+    return http({
+      url: '/demand-assignment/goods',
+      params,
+      paramsSerializer (params) {
+        return qs.stringify(params).replace('%5B0%5D', '');
+      }
+    });
+  },
+  allotVaccine (ary) {
+    return http.put('/demand-assignment/assign/vaccine', ary);
   }
 });
 
