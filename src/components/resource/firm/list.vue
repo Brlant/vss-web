@@ -164,16 +164,23 @@
           <div v-else>
             <h2 class="clearfix">
               <span class="pull-right">
-                 <perm label="org-relation-edit">
-                   <a href="#" @click.prevent="edit" class="margin-left"><i
-                     class="iconfont icon-edit"></i>编辑</a>
-                    <a href="#" @click.prevent="forbid" class="margin-left"
-                       v-show="businessRelationItem.status  == '0' "><i
-                      class="iconfont icon-forbidden"></i>停用</a>
-                    <a href="#" @click.prevent="enableRelation" class="margin-left"
-                       v-show="businessRelationItem.status == '1' "><i
-                      class="iconfont icon-start"></i>启用</a>
-                 </perm>
+                 <!--<perm label="org-relation-edit">-->
+                   <!--<a href="#" @click.prevent="edit" class="margin-left"><i-->
+                     <!--class="iconfont icon-edit"></i>编辑</a>-->
+                    <!--<a href="#" @click.prevent="forbid" class="margin-left"-->
+                       <!--v-show="businessRelationItem.status  == '0' "><i-->
+                      <!--class="iconfont icon-forbidden"></i>停用</a>-->
+                    <!--<a href="#" @click.prevent="enableRelation" class="margin-left"-->
+                       <!--v-show="businessRelationItem.status == '1' "><i-->
+                      <!--class="iconfont icon-start"></i>启用</a>-->
+                 <!--</perm>-->
+                <el-button-group>
+                  <perm label="org-relation-edit">
+                    <el-button type="primary" @click="edit">编辑</el-button>
+                    <el-button type="primary" @click="forbid"  v-show="businessRelationItem.status  == '0' ">停用</el-button>
+                    <el-button type="primary" @click="enableRelation" v-show="businessRelationItem.status == '1' ">启用</el-button>
+                  </perm>
+                </el-button-group>
               </span>
             </h2>
             <div class="page-main-body">
