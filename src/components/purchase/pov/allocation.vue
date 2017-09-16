@@ -76,8 +76,7 @@
         </el-row>
         <div v-else="" class="order-list-body">
           <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
-               :class="[{'active':currentItemId==item.id}]"
-               @click.prevent="showDetail(item)">
+               :class="[{'active':currentItemId==item.id}]">
             <el-row>
               <el-col :span="5" class="R pt">
                 <span>{{ item.goodsName }}</span>
@@ -100,19 +99,14 @@
                   正常
                 </span>
                 <span v-show="item.resultAmount<0">
-                  <i class="iconfont icon-warning color-color"></i>
+                  <i class="iconfont icon-warning color-red"></i>
                   库存不足
                 </span>
               </el-col>
               <el-col :span="3">
-                <span v-show="item.resultAmount>-1">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
+                <span>
+                    <a href="#" class="btn-circle" @click.prevent="showPart(item)"><i
                       class="iconfont icon-detail"></i></a>
-                  查看详情
-                </span>
-                <span v-show="item.resultAmount<0">
-                   <a href="#" class="btn-circle" @click.prevent=""><i
-                     class="iconfont icon-affirm"></i></a>
                   手动分配
                 </span>
               </el-col>
@@ -128,22 +122,30 @@
         </el-pagination>
       </div>
     </div>
+
+    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
+      <allot-form :currentItem="currentItem" @change="change" @close="resetRightBox"></allot-form>
+    </page-right>
   </div>
 </template>
 <script>
   import { demandAssignment } from '@/resources';
+  import allotForm from './form.vue';
 
   export default {
+    components: {allotForm},
     data () {
       return {
         loadingData: false,
         allocationList: [],
+        showRight: false,
         pager: {
           currentPage: 1,
           count: 0,
           pageSize: 15
         },
-        currentItemId: ''
+        currentItemId: '',
+        currentItem: {}
       };
     },
     mounted () {
@@ -160,7 +162,22 @@
           this.pager.count = res.data.count;
           this.loadingData = false;
         });
+      },
+      resetRightBox () {
+        this.showRight = false;
+      },
+      showPart (item) {
+        this.currentItem = item;
+        this.showRight = true;
+      },
+      change (item, count) {
+        this.allocationList.forEach(i => {
+          if (i.orgGoodsId === item.orgGoodsId) {
+            i.resultAmount = i.inventoryQuantity - count;
+          }
+        });
       }
     }
+
   };
 </script>

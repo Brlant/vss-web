@@ -5,12 +5,13 @@ export default {
   requestType: {
     0: {'title': '所有', status: null, num: 0},
     1: {'title': '待审批', status: 0, num: 0},
-    2: {'title': '待生成分配信息', status: 1, num: 0},
+    2: {'title': '待生成需求分配', status: 1, num: 0},
     3: {'title': '待分配', status: 2, num: 0},
     4: {'title': '已分配', status: 3, num: 0},
     5: {'title': '已取消', status: 4, num: 0}
   },
   assignType: {
+    0: {'title': '待生成需求分配', status: 1, num: 0},
     1: {'title': '待分配', status: 2, num: 0},
     2: {'title': '已完成分配', status: 3, num: 0}
   },
