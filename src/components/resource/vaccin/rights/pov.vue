@@ -79,7 +79,7 @@
                 <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="queryVaccines"
                            :clearable="true"
                            v-model="vaccineId">
-                  <el-option :value="item.orgGoodsDto.goodsId" :key="item.orgGoodsDto.goodsId" :label="item.orgGoodsDto.name"
+                  <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                              v-for="item in vaccines"></el-option>
                 </el-select>
               </el-col>
@@ -236,14 +236,14 @@
         let params = Object.assign({}, {
           keyWord: query
         });
-        Vaccine.query(params).then(res => {
+        Vaccine.queryLevelVaccine(params).then(res => {
           this.vaccines = res.data.list;
         });
       },
       getPageList: function () {
         this.dataRows = [];
-        if (!this.currentItem.id) return;
-        VaccineRights.queryVaccineByPov(this.currentItem.id).then(res => {
+        if (!this.currentItem.subordinateId) return;
+        VaccineRights.queryVaccineByPov(this.currentItem.subordinateId).then(res => {
           this.dataRows = res.data;
         });
       },
@@ -267,8 +267,8 @@
       },
       bindVaccine () {
         let form = {
-          'goodsId': this.vaccineId,
-          'povId': this.currentItem.id
+          'orgGoodsId': this.vaccineId,
+          'povId': this.currentItem.subordinateId
         };
         VaccineRights.save(form).then(() => {
           this.$notify.success({
