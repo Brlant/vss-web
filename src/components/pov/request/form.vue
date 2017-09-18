@@ -236,6 +236,19 @@
         <div class="hide-content show-content">
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
+            <el-form-item label="订单类型" prop="type">
+              <el-radio-group v-model.number="form.type" @change="changeType">
+                <el-radio :label="1">一类疫苗</el-radio>
+                <el-radio :label="2">二类疫苗</el-radio>
+              </el-radio-group>
+            </el-form-item>
+            <el-form-item label="选择CDC" prop="cdcId">
+              <el-select placeholder="请选择CDC" v-model="form.cdcId" filterable clearable>
+                <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in cdcs"
+                           v-show="item.level === form.type">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="POV仓库" prop="warehouseId">
               <el-select placeholder="请选择POV仓库" v-model="form.warehouseId" filterable clearable>
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
@@ -250,27 +263,29 @@
                 @change="changeTime">
               </el-date-picker>
             </el-form-item>
+
           </el-form>
+
           <el-form ref="orderGoodsForm" :rules="goodsRules" :model="product" @submit.prevent="onSubmit"
                    onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="选择疫苗" prop="orgGoodsId">
-              <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
-                         :remote-method="searchProduct" :clearable="true" :loading="loading"
+              <el-select v-model="product.orgGoodsId" filterable placeholder="请输入关键字搜索产品" :clearable="true"
+                         :loading="loading"
                          popper-class="order-good-selects"
                          @change="getGoodDetail">
 
-                <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
-                           :label="item.orgGoodsDto.name"
-                           :value="item.orgGoodsDto.id">
+                <el-option v-for="item in filterProductList" :key="item.id"
+                           :label="item.goodsName"
+                           :value="item.orgGoodsId">
                   <div>
-                    <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                    <span class="select-other-info pull-left">{{item.orgGoodsDto.goodsNo}}</span>
-                    <span class="select-other-info pull-right">{{ item.orgGoodsDto.goodsDto.factoryName }}</span>
-                    <el-tag type="success" v-show="item.list.length"
-                            style="line-height: 22px;margin-left: 20px;height: 20px">
-                      组合
-                    </el-tag>
+                    <span class="pull-left">{{item.goodsName}}</span>
+                    <span class="select-other-info pull-left">{{item.goodsNo}}</span>
+                    <span class="select-other-info pull-right">{{ item.factoryName }}</span>
+                    <!--<el-tag type="success" v-show="item.list.length"-->
+                    <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->
+                    <!--组合-->
+                    <!--</el-tag>-->
                   </div>
                 </el-option>
               </el-select>
@@ -364,7 +379,7 @@
 </template>
 
 <script>
-  import { pullSignal, Vaccine, Address } from '@/resources';
+  import { pullSignal, cerpAction, Address, VaccineRights, http } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -391,17 +406,27 @@
         accessoryList: [], // 组合疫苗列表
         searchProductList: [],
         filterProductList: [],
+        currentList: [],
         warehouses: [],
+        cdcs: [],
         form: {
           detailDtoList: [],
           remark: '',
           warehouseId: '',
           povId: '',
-          demandTime: ''
+          demandTime: '',
+          cdcId: '',
+          type: 1
         },
         rules: {
           warehouseId: [
-            {required: true, message: '请选择POV 仓库', trigger: 'change'}
+            {required: true, message: '请选择POV仓库', trigger: 'change'}
+          ],
+          type: [
+            {required: true, type: 'number', message: '请选择疫苗标志', trigger: 'change'}
+          ],
+          cdcId: [
+            {required: true, message: '请选择CDC', trigger: 'change'}
           ],
           demandTime: [
             {required: true, message: '请选择需求时间', trigger: 'change'}
@@ -414,6 +439,7 @@
           amount: [
             {required: true, type: 'number', message: '请输入数量', trigger: 'blur'}
           ]
+
         }
       };
     },
@@ -431,27 +457,42 @@
       index (val) {
         if (!val) return;
         this.searchWarehouses();
+        this.queryOnCDCs();
       }
     },
     methods: {
       changeTime: function (date) {// 格式化时间
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      searchProduct: function (query) {
-        let params = {
-          keyWord: query
-        };
-        Vaccine.queryAllVaccine(params).then(res => {
-          this.searchProductList = res.data.list;
+      changeType () {
+        this.$refs['orderGoodsForm'].resetFields();
+        this.accessoryList = [];
+        this.filterProducts();
+        this.form.cdcId = this.cdcs.filter(f => f.level === this.form.type)[0] && this.cdcs.filter(f => f.level === this.form.type)[0].orgId || '';
+        this.searchProduct();
+      },
+      searchProduct: function () {
+        this.searchProductList = [];
+        if (!this.form.cdcId) return;
+        VaccineRights.queryVaccineByPov(this.$store.state.user.userCompanyAddress, {cdcId: this.form.cdcId}).then(res => {
+          this.searchProductList = res.data;
           this.$nextTick(function () {
             this.filterProducts();
           });
         });
       },
+      queryOnCDCs () {
+        cerpAction.queryOnCDCs().then(res => {
+          this.cdcs = res.data;
+          this.form.cdcId = res.data.filter(f => f.level === this.form.type)[0].orgId;
+          this.searchProduct();
+        });
+      },
       searchWarehouses () {
         let user = this.$store.state.user;
         Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress}).then(res => {
-          this.warehouses = res.data;
+          this.warehouses = res.data || [];
+          this.form.warehouseId = this.warehouses.filter(i => i.default)[0].id;
         });
       },
       filterProducts: function () {
@@ -460,7 +501,7 @@
         this.searchProductList.forEach(item => {
           isIn = false;
           this.form.detailDtoList.forEach(product => {
-            if (product.orgGoodsId === item.orgGoodsDto.id) {
+            if (product.orgGoodsId === item.orgGoodsId) {
               if (!product.isCombination) {
                 isIn = true;
                 return false;
@@ -471,7 +512,7 @@
             arr.push(item);
           }
         });
-        this.filterProductList = arr;
+        this.filterProductList = arr.filter(f => f.goodsTypeId === this.form.type.toString());
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
         if (!OrgGoodsId) {
@@ -490,19 +531,25 @@
           this.accessoryList = [];
           return;
         }
-        this.searchProductList.forEach(item => {
-          if (item.orgGoodsDto.id === OrgGoodsId) {
-            this.product.fixInfo = item.orgGoodsDto;
-            this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.unitPrice.toString());
-            this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
-            this.accessoryList = item.list;
-            this.form.detailDtoList.forEach((detailItem) => {
-              if (detailItem.orgGoodsId === OrgGoodsId) {
-                detailItem.fixInfo = item.orgGoodsDto;
-                return false;
-              }
-            });
-          }
+        http.get('/org/goods/' + OrgGoodsId).then(res => {
+          this.currentList.push(res.data);
+          this.$nextTick(function () {
+            this.filterProducts();
+          });
+          this.currentList.forEach(item => {
+            if (item.orgGoodsDto.id === OrgGoodsId) {
+              this.product.fixInfo = item.orgGoodsDto;
+              this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.unitPrice.toString());
+              this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
+              this.accessoryList = item.list;
+              this.form.detailDtoList.forEach((detailItem) => {
+                if (detailItem.orgGoodsId === OrgGoodsId) {
+                  detailItem.fixInfo = item.orgGoodsDto;
+                  return false;
+                }
+              });
+            }
+          });
         });
       },
       addProduct: function () {// 疫苗加入到订单
@@ -510,7 +557,7 @@
           if (!valid) {
             return false;
           }
-          this.searchProductList.forEach((item) => {
+          this.currentList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
               this.product.orgGoodsName = item.orgGoodsDto.name;
               this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
@@ -561,20 +608,19 @@
           let saveData = JSON.parse(JSON.stringify(self.form));
           if (saveData.detailDtoList.length === 0) {
             this.$notify({
-              duration: 20000,
+              duration: 2000,
               message: '请添加疫苗',
               type: 'warning'
             });
             return false;
           }
+          delete saveData.type;
           saveData.detailDtoList.forEach(item => {
-            item.goodsId = item.orgGoodsId;
             item.price = item.unitPrice;
             item.applyCount = item.amount;
             delete item.fixInfo;
             delete item.mainOrgId;
             delete item.isCombination;
-            delete item.orgGoodsId;
             delete item.unitPrice;
             delete item.specificationsId;
             delete item.packingCount;
@@ -586,7 +632,7 @@
           pullSignal.save(saveData).then(res => {
             this.resetForm();
             this.$notify({
-              duration: 20000,
+              duration: 2000,
               message: '新增要货申请单成功',
               type: 'success'
             });
@@ -599,7 +645,7 @@
           }).catch(error => {
             this.doing = false;
             this.$notify({
-              duration: 20000,
+              duration: 2000,
               title: '新增要货申请单失败',
               message: error.response.data.msg,
               type: 'error'

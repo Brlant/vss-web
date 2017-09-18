@@ -76,6 +76,9 @@
               <ul class="show-list">
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
+                  <div class="id-part">
+                    要货申请ID {{item.id }}
+                  </div>
                   <div>
                     {{item.povName }}
                   </div>

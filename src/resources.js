@@ -47,7 +47,7 @@ http.interceptors.response.use(response => {
 
   if (response.status === 502) {
     Notification.error({
-      message: '系统请求失败',
+      message: '网络异常',
       onClose: function () {
         window.localStorage.removeItem(noticeTipKey);
       }
@@ -329,7 +329,7 @@ export const demandAssignment = resource('/demand-assignment', http, {
       url: '/demand-assignment/goods',
       params,
       paramsSerializer (params) {
-        return qs.stringify(params).replace('%5B0%5D', '');
+        return qs.stringify(params, {indices: false});
       }
     });
   },
@@ -361,13 +361,16 @@ export const Vaccine = resource('/vaccine-info', http, {
   },
   queryAllVaccine: (params) => {
     return http.get('/vaccine-info/valid', {params});
+  },
+  queryLevelVaccine () {
+    return http.get('/vaccine-info/filter');
   }
 });
 
 // 疫苗授权
 export const VaccineRights = resource('/vaccine-authorization', http, {
-  queryVaccineByPov (povId) {
-    return http.get(`/vaccine-authorization/${povId}`);
+  queryVaccineByPov (povId, params) {
+    return http.get(`/vaccine-authorization/${povId}`, {params});
   },
   deleteVaccine (id) {
     return http.put(`/vaccine-authorization/detail/${id}`);
@@ -417,8 +420,10 @@ export const cerpAction = resource('/outbound/count', http, {
   },
   deleteCdc (id) {
     return http.delete(`/erp-access/cdc/${id}`);
+  },
+  queryOnCDCs () {
+    return http.get(`/erp-org/superior`);
   }
-
 });
 
 /**
