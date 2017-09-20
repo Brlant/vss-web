@@ -7,6 +7,7 @@
       name="upfile"
       :on-success="handleAvatarSuccess"
       :on-error="error"
+      :on-remove="handleRemove"
       :before-upload="beforeAvatarUpload"
       :on-change="changePhoto"
       :data="uploadData"
@@ -39,7 +40,7 @@
 </style>
 
 <script>
-  import {http} from '../../resources';
+  import {http, OmsAttachment} from '../../resources';
 
   export default {
     props: ['photoUrl'],
@@ -66,6 +67,20 @@
       }
     },
     methods: {
+      handleRemove(file) {
+        OmsAttachment.delete(file.attachmentId).then(() => {
+          this.$notify.success({
+            duration: 2000,
+            title: '成功',
+            message: '已成功删除附件' + file.attachmentFileName + '"'
+          });
+        }).catch(() => {
+          this.$notify.error({
+            duration: 2000,
+            message: '删除失败'
+          });
+        });
+      },
       changePhoto: function (photo) {
         this.$emit('change', photo.response);
       },

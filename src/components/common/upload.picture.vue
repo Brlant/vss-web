@@ -9,6 +9,7 @@
       :on-error="error"
       :before-upload="beforeAvatarUpload"
       :on-change="changePhoto"
+      :on-remove="handleRemove"
       :data="uploadData">
       <img v-if="imageUrl" :src="imageUrl" class="avatar">
       <i v-else="" class="el-icon-plus avatar-uploader-icon"></i>
@@ -46,7 +47,7 @@
 </style>
 
 <script>
-  import {http} from '../../resources';
+  import {http, OmsAttachment} from '../../resources';
 
   export default {
     props: ['photoUrl'],
@@ -68,6 +69,20 @@
       }
     },
     methods: {
+      handleRemove(file) {
+        OmsAttachment.delete(file.attachmentId).then(() => {
+          this.$notify.success({
+            duration: 2000,
+            title: '成功',
+            message: '已成功删除附件' + file.attachmentFileName + '"'
+          });
+        }).catch(() => {
+          this.$notify.error({
+            duration: 2000,
+            message: '删除失败'
+          });
+        });
+      },
       changePhoto: function (photo) {
         this.$emit('change', photo.response);
       },
