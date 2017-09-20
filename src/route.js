@@ -142,7 +142,7 @@ const route = [
       {
         path: '/pov',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'pov', title: 'pov业务', icon: 'vaccine', perm: 'show'},
+        meta: {moduleId: 'pov', title: 'POV业务', icon: 'vaccine', perm: 'show'},
         children: [
           {
             path: '/pov/request',
