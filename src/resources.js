@@ -410,8 +410,8 @@ export const cerpAction = resource('/outbound/count', http, {
   queryPov (id, params) { // 查询pov
     return http.get(`/erp-org/${id}/pov`, {params});
   },
-  queryAllPov() {
-    return http.get('/erp-org/pov');
+  queryAllPov (params) {
+    return http.get('/erp-org/pov', {params});
   },
   queryPovList (params) { // 查询还没绑定的pov
     return http.get('/erp-org/pov-list', {params});

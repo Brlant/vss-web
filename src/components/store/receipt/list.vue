@@ -62,13 +62,20 @@
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
             <h2 class="header">
-          <span class="pull-right">
-              <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                class="iconfont icon-search"></i> </a>
-          </span>
+            <span class="pull-right">
+                <a href="#" class="btn-circle" @click.prevent="searchType"><i
+                  class="iconfont icon-search"></i> </a>
+            </span>
+              <span class="pull-right" style="margin-right: 8px">
+             <perm label="show">
+               <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
+                  <i class="iconfont icon-plus"></i>
+              </a>
+             </perm>
+            </span>
               所有应收款
             </h2>
-            <div class="search-left-box" v-show="showTypeSearch">
+            <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!currentItem.id" class="empty-info">
@@ -143,19 +150,23 @@
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form @change="onSubmit" :index="index" @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showLeft" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <left-form @change="onSubmit" :index="index" @close="resetRightBox"></left-form>
+    </page-right>
   </div>
 
 </template>
 <script>
   import utils from '../../../tools/utils';
   import { pullSignal } from '@/resources';
-  import addForm from './form.vue';
-
+  import addForm from './right-form.vue';
+  import leftForm from './letf-form.vue';
   export default {
-    components: {addForm},
+    components: {addForm, leftForm},
     data: function () {
       return {
         showRight: false,
+        showLeft: false,
         showTypeSearch: false,
         showSearch: false,
         dataRows: [],
@@ -217,6 +228,7 @@
     methods: {
       resetRightBox: function () {
         this.showRight = false;
+        this.showLeft = false;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
@@ -278,10 +290,9 @@
       },
       add () {
         this.showRight = true;
-        this.index = 0;
-        this.$nextTick(() => {
-          this.index = 1;
-        });
+      },
+      addDetail () {
+        this.showLeft = true;
       },
       onSubmit () {
         this.getOrgsList();
