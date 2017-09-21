@@ -44,20 +44,6 @@
 <template>
   <div>
     <div class="container">
-      <div class="order-list-status container">
-        <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
-             v-for="(item,key) in receiptType" @click="checkStatus(item, key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
-        </div>
-        <span class="pull-right" style="margin-top: 8px">
-           <perm label="show">
-             <a href="#" class="btn-circle" @click.stop.prevent="add">
-                <i class="iconfont icon-plus"></i>
-            </a>
-           </perm>
-       </span>
-      </div>
       <div class="d-table clearfix" style="margin-top: 20px">
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
@@ -66,7 +52,7 @@
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
                 class="iconfont icon-search"></i> </a>
           </span>
-              所有应收款
+              所有应付款
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
@@ -99,7 +85,7 @@
           </div>
           <div v-else="" class="d-table-col-wrap">
             <div class="content-body clearfix">
-              <span style="font-size: 14px">【应收款详情】</span>
+              <span style="font-size: 14px">【应付款详情】</span>
               <el-row>
                 <oms-row label="货主" :span="5">
                   {{currentOrder.orgName}}
@@ -112,7 +98,7 @@
                 </oms-row>
               </el-row>
             </div>
-            <span style="font-size: 14px">【应收款明细】</span>
+            <span style="font-size: 14px">【应付款明细】</span>
             <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}"
                    style="margin-top: 10px">
               <thead>

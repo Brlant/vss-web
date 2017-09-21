@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">新增应收账单</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">新增应付账单</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -236,7 +236,7 @@
         <div class="hide-content show-content">
           <el-form ref="orderAddForm" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <span style="font-size: 14px">【应收款详情】</span>
+            <span style="font-size: 14px">【应付款详情】</span>
             <el-form-item label="选择货主" prop="orgId">
               <el-select placeholder="请选择货主" v-model="form.orgId" filterable remote clearable
                          @click.native="queryOrgs('')"
@@ -258,7 +258,7 @@
             <el-form-item label="应付款总额" prop="orgId">
               <span>{{ form.totalMoney }}</span>
             </el-form-item>
-            <span style="font-size: 14px">【应收款明细】</span>
+            <span style="font-size: 14px">【应付款明细】</span>
             <el-form-item label="选择订单" prop="orgId">
               <el-select placeholder="请选择订单" v-model="form.order" filterable remote clearable
                          @click.native="queryOrders('')"
@@ -271,21 +271,21 @@
             <el-form-item label="单据金额" prop="orgId" style="margin-bottom: 0">
               <span>{{ form.bill }}</span>
             </el-form-item>
-            <el-form-item label="剩余应收金额" prop="orgId">
+            <el-form-item label="剩余应付金额" prop="orgId">
               <span>{{form.surplusMoney}}</span>
             </el-form-item>
             <el-form-item>
-              <el-button type="success">添加应收款明细</el-button>
+              <el-button type="success">添加应付款明细</el-button>
             </el-form-item>
           </el-form>
           <div class="product-list-detail">
-            <h3 style="background: #13ce66;color: #fff">已选订单应收款明细</h3>
+            <h3 style="background: #13ce66;color: #fff">已选订单应付款明细</h3>
             <table class="table">
               <thead>
               <tr>
                 <th>货主订单号</th>
                 <th>单据金额</th>
-                <th>剩余应收金额</th>
+                <th>剩余应付金额</th>
                 <th>操作</th>
               </tr>
               </thead>

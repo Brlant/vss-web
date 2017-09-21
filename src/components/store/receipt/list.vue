@@ -44,20 +44,6 @@
 <template>
   <div>
     <div class="container">
-      <div class="order-list-status container">
-        <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
-             v-for="(item,key) in receiptType" @click="checkStatus(item, key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
-        </div>
-        <span class="pull-right" style="margin-top: 8px">
-           <perm label="show">
-             <a href="#" class="btn-circle" @click.stop.prevent="add">
-                <i class="iconfont icon-plus"></i>
-            </a>
-           </perm>
-       </span>
-      </div>
       <div class="d-table clearfix" style="margin-top: 20px">
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
