@@ -185,7 +185,11 @@ export const bizRelation = resource('/bizRelation', http, {
 export const Vendor = resource('/vendor-info', http, {
   queryVendorDetail: (orgId) => {
     return http.get(`/vendor-info/${orgId}`);
-  }
+  },
+  save: obj => http.post('/vendor-info', obj),
+  update: (id, obj) => {
+    return http.put('/vendor-info', obj);
+  },
 });
 
 // 数据字典组对象

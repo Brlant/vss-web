@@ -457,7 +457,8 @@
       },
       getGoodsList: function () {
         let params = Object.assign({}, {
-          keyWord: this.typeTxt
+          keyWord: this.typeTxt,
+          deleteFlag: false
         }, this.filters);
         Vaccine.query(params).then(res => {
           this.showTypeList = res.data.list;
