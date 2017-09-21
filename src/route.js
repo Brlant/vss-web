@@ -195,12 +195,12 @@ const route = [
         children: [
           {
             path: '/finance/get',
-            component: resolve => require(['./components/store/list.vue'], resolve),
+            component: resolve => require(['./components/store/receipt/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '应收账款管理', perm: 'show'}
           },
           {
             path: '/finance/pay',
-            component: resolve => require(['./components/store/jxq.vue'], resolve),
+            component: resolve => require(['./components/store/pay/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '应付账款管理', perm: 'show'}
           },
           {

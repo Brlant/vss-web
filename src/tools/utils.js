@@ -13,6 +13,11 @@ export default {
     0: {'title': '待分配', status: 1, num: 0},
     1: {'title': '已完成分配', status: 2, num: 0}
   },
+  receiptType: {
+    0: {'title': '所有', status: null, num: 0},
+    1: {'title': '未收', status: 0, num: 0},
+    2: {'title': '已收', status: 1, num: 0}
+  },
   /**
    * 格式化地址，已省/市/区显示
    * @param province

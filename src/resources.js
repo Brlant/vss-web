@@ -223,6 +223,9 @@ export const DictGroup = resource('dictGroup', http, {
     });
   }
 });
+// 订单
+export const Order = resource('/order', http, {});
+
 
 /**
  * 库存波次
