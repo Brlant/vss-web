@@ -325,6 +325,20 @@ export const outWork = resource('/outbound/count', http, {
   }
 });
 
+export const receipt = resource('accounts-receivable', http, {
+  modifyDetail (id, obj) {
+    return http.put(`/accounts-receivable/detail/${id}`, obj);
+  },
+  queryDetail (id, params) {
+    return http.get(`/accounts-receivable/${id}/detail`, {params});
+  },
+  addDetail (id, obj) {
+    return http.post(`/accounts-receivable/${id}/detail`, obj);
+  }
+});
+
+
+
 // 要货需求分配
 export const demandAssignment = resource('/demand-assignment', http, {
   queryDetailList (key) {

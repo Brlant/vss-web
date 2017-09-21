@@ -244,11 +244,11 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="单据金额" prop="billCount">
-              <el-input v-model="form.billCount" placeholder="请输入单据金额"></el-input>
+            <el-form-item label="单据金额" prop="billAmount">
+              <el-input v-model="form.billAmount" placeholder="请输入单据金额"></el-input>
             </el-form-item>
-            <el-form-item label="剩余金额" prop="money">
-              <el-input v-model="form.money" placeholder="请输入剩余金额"></el-input>
+            <el-form-item label="剩余金额" prop="unpaidAmount">
+              <el-input v-model="form.unpaidAmount" placeholder="请输入剩余金额"></el-input>
             </el-form-item>
           </el-form>
         </div>
@@ -257,41 +257,54 @@
   </div>
 </template>
 <script>
-
+  import { receipt, Order } from '@/resources';
   export default {
+    props: {
+      currentItem: Object
+    },
     data () {
       return {
         form: {
           orderId: '',
-          billCount: '',
-          money: ''
+          billAmount: '',
+          unpaidAmount: '',
+          accountsPayableId: this.currentItem.id
         },
         rules: {
           orderId: {required: true, message: '请选择订单', trigger: 'change'},
-          billCount: {required: true, message: '请输入单据金额', trigger: 'blur'},
-          money: {required: true, message: '请输入剩余金额', trigger: 'blur'}
+          billAmount: {required: true, message: '请输入单据金额', trigger: 'blur'},
+          unpaidAmount: {required: true, message: '请输入剩余金额', trigger: 'blur'}
         },
         orders: [], // 订单列表
       };
     },
     methods: {
-      queryOrders () {
-        if (!this.form.orgId && !this.form.dealerId) {
-          this.orders = [];
-        }
-        this.orders = [
-          {id: '1', no: '001', totalAmount: 1000},
-          {id: '2', no: '002', totalAmount: 2000},
-          {id: '3', no: '003', totalAmount: 3000},
-          {id: '4', no: '004', totalAmount: 4000},
-          {id: '5', no: '005', totalAmount: 5000},
-        ];
+      queryOrders (query) {
+        let params = {
+          keyWord: query,
+          orgId: this.$store.state.user.userCompanyAddress,
+          supplierId: this.currentItem.id
+        };
+        Order.query(params).then(res => {
+          this.orders = res.data.list;
+        });
       },
       onSubmit () {
         this.$refs['form'].validate((valid) => {
           if (!valid) {
             return false;
           }
+          receipt.addDetail(this.form).then(() => {
+            this.$notify.success({
+              message: '应收款详情添加成功'
+            });
+            this.$refs['form'].resetFields();
+            this.$emit('refreshDetails');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '应收款详情添加失败'
+            });
+          });
         });
       }
     }

@@ -237,7 +237,7 @@
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="选择POV" prop="povId">
-              <el-select placeholder="请选择POV" v-model="form.povId" filterable remote clearable
+              <el-select placeholder="请选择POV" v-model="form.payerId" filterable remote clearable
                          @click.native="queryPOVs('')"
                          :remote-method="queryPOVs">
                 <el-option :label="item.subordinateName" :value="item.id" :key="item.id" v-for="item in povs">
@@ -251,16 +251,16 @@
   </div>
 </template>
 <script>
-  import { cerpAction } from '@/resources';
+  import { cerpAction, receipt } from '@/resources';
 
   export default {
     data () {
       return {
         form: {
-          povId: '',
+          payerId: '',
         },
         rules: {
-          povId: {required: true, message: '请选择POV', trigger: 'change'},
+          payerId: {required: true, message: '请选择POV', trigger: 'change'},
         },
         povs: [], // 订单列表
       };
@@ -280,6 +280,17 @@
           if (!valid) {
             return false;
           }
+          receipt.save(this.form).then(() => {
+            this.$notify.success({
+              message: '应付款方添加成功'
+            });
+            this.$refs['d-form'].resetFields();
+            this.$emit('refresh');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '应付款方添加失败'
+            });
+          });
         });
       }
     }
