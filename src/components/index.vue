@@ -186,9 +186,12 @@
     methods: {
       queryRoles () {
         cerpAccess.bindMunicipal().then(() => {
-          this.loading = true;
-        }).catch(() => {
           this.loading = false;
+        }).catch((error) => {
+          this.loading = true;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '绑定市级CDC出错'
+          });
         });
       }
     }
