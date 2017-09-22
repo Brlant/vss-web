@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui';
+import {Notification} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -284,7 +284,7 @@ export const Wave = resource('/wave-task', http, {
 // 仓库地址
 export const Address = resource('/binding-warehouse', http, {
   queryAddress: (id, params) => {
-    return http.get('/binding-warehouse/' + id, {params});
+    return http.get('/binding-warehouse/list', {params});
   },
   check: (id, obj) => {
     return http.put('/binding-warehouse/' + id + '/check', obj);

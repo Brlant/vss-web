@@ -37,17 +37,17 @@
                 <i class="iconfont icon-plus"></i>
               </a>
             </perm>
-              <perm label="show">
-                <a href="#" class="btn-circle" @click.prevent="searchType">
-                  <i class="iconfont icon-search"></i>
-                </a>
-              </perm>
+              <!--<perm label="show">-->
+                <!--<a href="#" class="btn-circle" @click.prevent="searchType">-->
+                  <!--<i class="iconfont icon-search"></i>-->
+                <!--</a>-->
+              <!--</perm>-->
           </span>
           仓库地址
         </h2>
-        <div class="search-left-box" v-show="showTypeSearch">
-          <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
-        </div>
+        <!--<div class="search-left-box" v-show="showTypeSearch">-->
+          <!--<oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>-->
+        <!--</div>-->
         <div v-if="showTypeList.length == 0" class="empty-info">
           暂无信息
         </div>
@@ -230,8 +230,7 @@
       getPageList: function () {
         let param = Object.assign({}, {
           deleteFlag: false,
-          keyword: this.typeTxt,
-          orgId: this.$route.params.id
+          keyword: this.typeTxt
         });
         Address.queryAddress(param).then(res => {
           this.showTypeList = res.data;
