@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui';
+import { Notification } from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -423,7 +423,7 @@ export const cerpAccess = resource('', http, {
     return http.put(`/erp-access/bind/district/${id}`);
   },
   bindPov (cdcId, id) { // 绑定pov
-    return http.put(`/erp-access/bind/${cdcId}/pov/${id}`);
+    return http.put(`/erp-access/bind/pov/${id}`, {params: {cdcId}});
   }
 });
 
