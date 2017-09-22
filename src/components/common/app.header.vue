@@ -184,7 +184,7 @@
     <header class="main-header" :style="'background:'+skin.background">
       <div>
         <div class="top-logo">
-          <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
+          <router-link to='/' class="a-link">
             <span class="logo-span" :style="'color:'+skin.color">CERP 系统</span>
           </router-link>
         </div>
