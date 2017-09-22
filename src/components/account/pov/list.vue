@@ -10,7 +10,6 @@
     padding-top: 20px;
   }
 
-
   .search-input {
     .el-select {
       display: block;
@@ -20,6 +19,7 @@
       width: 100%;
     }
   }
+
   .R {
     word-wrap: break-word;
     word-break: break-all;
@@ -62,7 +62,7 @@
   <div class="order-page">
     <div class="container">
       <div class="d-table">
-        <div class="d-table-left">
+        <div class="d-table-left" v-show="isShowLeft">
           <div class="d-table-col-wrap">
             <h2 class="header">
           <span class="pull-right">
@@ -105,7 +105,8 @@
               <el-col :span="11" class="text-right">
                 <span>
                   <span class="btn-search-toggle open" v-show="showSearch">
-                    <single-input v-model="filterPOVs.keyWord" placeholder="请输入关键字搜索" :showFocus="showSearch"></single-input>
+                    <single-input v-model="filterPOVs.keyWord" placeholder="请输入关键字搜索"
+                                  :showFocus="showSearch"></single-input>
                     <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
                   </span>
                   <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
@@ -163,7 +164,7 @@
   </div>
 </template>
 <script>
-  import { cerpAction, cerpAccess} from '@/resources';
+  import { cerpAction, cerpAccess } from '@/resources';
 
   export default {
     data () {
@@ -178,6 +179,7 @@
         filterCDCs: {
           keyWord: ''
         },
+        isShowLeft: true,
         cdcs: [],
         cdcItem: {},
         orgList: [], // 货主列表,
@@ -187,10 +189,12 @@
           currentPage: 1,
           count: 0,
           pageSize: 15
-        }
+        },
+        level: window.localStorage.getItem('logLevel')
       };
     },
     mounted () {
+      if (this.level === '2') this.isShowLeft = false;
       this.getCDCPage();
     },
     watch: {
@@ -215,7 +219,9 @@
           });
           return;
         }
-        cerpAccess.bindPov(this.cdcItem.subordinateId, this.orgId).then(() => {
+        let cdcId = this.cdcItem.subordinateId;
+        if (this.level === '2') cdcId = this.$store.state.user.userCompanyAddress;
+        cerpAccess.bindPov(cdcId, this.orgId).then(() => {
           this.$notify.success({
             message: '绑定POV成功'
           });
