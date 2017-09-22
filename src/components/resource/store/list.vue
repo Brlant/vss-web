@@ -74,21 +74,33 @@
           <h2 class="clearfix">
                 <span class="pull-right">
                     <!--  <a href="#" class="btn-circle"><i class="iconfont icon-filter"></i> </a>-->
+                  <!--<perm label="show">-->
+                    <!--<a href="#" @click.stop.prevent="edit()" v-show="data.status==='0'">-->
+                      <!--<i class="iconfont icon-edit"></i>编辑</a>-->
+                  <!--</perm>-->
+                  <!--<perm label="show">-->
+                    <!--<a href="#" @click.prevent="remove()" class="margin-left"-->
+                       <!--v-show="data.status==='0'||data.status==='1'"><i-->
+                      <!--class="iconfont icon-forbidden"></i>停用</a>-->
+                  <!--</perm>-->
+                  <!--<perm label="show">-->
+                      <!--<a href="#" @click.prevent="start()" class="margin-left"-->
+                         <!--v-show="data.status==='2'||data.status==='3'"><i-->
+                        <!--class=" iconfont icon-start"></i>启用</a>-->
+                  <!--</perm>-->
+                <el-button-group>
                   <perm label="show">
-                    <a href="#" @click.stop.prevent="edit()" v-show="data.status==='0'">
-                      <i class="iconfont icon-edit"></i>编辑</a>
+                    <el-button type="primary" @click="edit()" v-show="data.status==='0'">编辑</el-button>
                   </perm>
                   <perm label="show">
-                    <a href="#" @click.prevent="remove()" class="margin-left"
-                       v-show="data.status==='0'||data.status==='1'"><i
-                      class="iconfont icon-forbidden"></i>停用</a>
+                    <el-button type="primary" @click="remove()"
+                               v-show="data.status==='0'||data.status==='1'">停用</el-button>
                   </perm>
                   <perm label="show">
-                      <a href="#" @click.prevent="start()" class="margin-left"
-                         v-show="data.status==='2'||data.status==='3'"><i
-                        class=" iconfont icon-start"></i>启用</a>
+                    <el-button type="primary" @click="start()"
+                               v-show="data.status==='2'||data.status==='3'">启用</el-button>
                   </perm>
-
+                </el-button-group>
                 </span>
           </h2>
           <div class="page-main-body">
