@@ -72,7 +72,7 @@
                 <el-select filterable remote placeholder="请输入名称搜索CDC" :remote-method="filterOrgs"
                            :clearable="true"
                            v-model="orgId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList"></el-option>
                 </el-select>
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
@@ -150,6 +150,7 @@
           keyWord: ''
         },
         orgList: [], // 货主列表,
+        showOrgList: [],
         orgId: '',
         pager: {
           currentPage: 1,
@@ -196,7 +197,11 @@
         };
         cerpAction.queryCdcList(param).then(res => {
           this.orgList = res.data.list;
+          this.filterAvaliableCDCs();
         });
+      },
+      filterAvaliableCDCs () {
+        this.showOrgList = this.orgList.filter(f => !this.CDCs.some(s => f.id === s.subordinateId));
       },
       getCDCPage (pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
@@ -209,6 +214,7 @@
           this.CDCs = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+          this.filterAvaliableCDCs();
         });
       },
       deleteItem (item) {
