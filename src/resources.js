@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui';
+import {Notification} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -282,30 +282,21 @@ export const Wave = resource('/wave-task', http, {
 });
 
 // 仓库地址
-export const Address = resource('/orgAddressInfo', http, {
+export const Address = resource('/binding-warehouse', http, {
   queryAddress: (id, params) => {
-    return http.get('/orgAddressInfo/' + id, {params});
-  },
-  updateAddress: function (obj) {
-    return http.put('/orgAddressInfo', obj);
+    return http.get('/binding-warehouse/list', {params});
   },
   check: (id, obj) => {
-    return http.put('/orgAddressInfo/' + id + '/check', obj);
+    return http.put('/binding-warehouse/' + id + '/check', obj);
   },
   forbid: function (id) {
-    return http.put('/orgAddressInfo/' + id + '/forbid', {});
-  },
-  bizForbid: function (id) {
-    return http.put('/orgAddressInfo/' + id + '/bizForbid', {});
+    return http.put('/binding-warehouse/' + id + '/forbid', {});
   },
   start: function (id) {
-    return http.put('/orgAddressInfo/' + id + '/start', {});
-  },
-  auditInfo: (id, obj) => {
-    return http.put('/orgAddressInfo/orgs/' + id + '/check', obj);
+    return http.put('/binding-warehouse/' + id + '/start', {});
   },
   queryStateNum: (params) => {
-    return http.get('/orgAddressInfo/count', {params});
+    return http.get('/binding-warehouse/count', {params});
   }
 });
 

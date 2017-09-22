@@ -37,17 +37,17 @@
                 <i class="iconfont icon-plus"></i>
               </a>
             </perm>
-              <perm label="show">
-                <a href="#" class="btn-circle" @click.prevent="searchType">
-                  <i class="iconfont icon-search"></i>
-                </a>
-              </perm>
+              <!--<perm label="show">-->
+                <!--<a href="#" class="btn-circle" @click.prevent="searchType">-->
+                  <!--<i class="iconfont icon-search"></i>-->
+                <!--</a>-->
+              <!--</perm>-->
           </span>
           仓库地址
         </h2>
-        <div class="search-left-box" v-show="showTypeSearch">
-          <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
-        </div>
+        <!--<div class="search-left-box" v-show="showTypeSearch">-->
+          <!--<oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>-->
+        <!--</div>-->
         <div v-if="showTypeList.length == 0" class="empty-info">
           暂无信息
         </div>
@@ -74,21 +74,33 @@
           <h2 class="clearfix">
                 <span class="pull-right">
                     <!--  <a href="#" class="btn-circle"><i class="iconfont icon-filter"></i> </a>-->
+                  <!--<perm label="show">-->
+                    <!--<a href="#" @click.stop.prevent="edit()" v-show="data.status==='0'">-->
+                      <!--<i class="iconfont icon-edit"></i>编辑</a>-->
+                  <!--</perm>-->
+                  <!--<perm label="show">-->
+                    <!--<a href="#" @click.prevent="remove()" class="margin-left"-->
+                       <!--v-show="data.status==='0'||data.status==='1'"><i-->
+                      <!--class="iconfont icon-forbidden"></i>停用</a>-->
+                  <!--</perm>-->
+                  <!--<perm label="show">-->
+                      <!--<a href="#" @click.prevent="start()" class="margin-left"-->
+                         <!--v-show="data.status==='2'||data.status==='3'"><i-->
+                        <!--class=" iconfont icon-start"></i>启用</a>-->
+                  <!--</perm>-->
+                <el-button-group>
                   <perm label="show">
-                    <a href="#" @click.stop.prevent="edit()" v-show="data.status==='0'">
-                      <i class="iconfont icon-edit"></i>编辑</a>
+                    <el-button type="primary" @click="edit()" v-show="data.status==='0'">编辑</el-button>
                   </perm>
                   <perm label="show">
-                    <a href="#" @click.prevent="remove()" class="margin-left"
-                       v-show="data.status==='0'||data.status==='1'"><i
-                      class="iconfont icon-forbidden"></i>停用</a>
+                    <el-button type="primary" @click="remove()"
+                               v-show="data.status==='0'||data.status==='1'">停用</el-button>
                   </perm>
                   <perm label="show">
-                      <a href="#" @click.prevent="start()" class="margin-left"
-                         v-show="data.status==='2'||data.status==='3'"><i
-                        class=" iconfont icon-start"></i>启用</a>
+                    <el-button type="primary" @click="start()"
+                               v-show="data.status==='2'||data.status==='3'">启用</el-button>
                   </perm>
-
+                </el-button-group>
                 </span>
           </h2>
           <div class="page-main-body">
@@ -218,8 +230,7 @@
       getPageList: function () {
         let param = Object.assign({}, {
           deleteFlag: false,
-          keyword: this.typeTxt,
-          orgId: this.$route.params.id
+          keyword: this.typeTxt
         });
         Address.queryAddress(param).then(res => {
           this.showTypeList = res.data;
