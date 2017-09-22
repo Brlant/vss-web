@@ -16,7 +16,7 @@
   }
 
   .pt {
-    padding-top: 15px;
+
   }
 
   .good-selects {
@@ -42,9 +42,9 @@
   }
 
   .opera-btn-group {
-
     border: 2px solid #eeeeee;
     margin: 10px -5px;
+    background: #f1f1f1;
     .opera-icon {
       line-height: 50px;
       height: 50px;
@@ -68,6 +68,9 @@
         transform: rotate(180deg);
       }
     }
+    .el-checkbox-warp {
+      padding: 10px;
+    }
   }
 </style>
 <template>
@@ -87,42 +90,21 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="选择货主" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索货主信息" :remote-method="filterOrg"
-                           :clearable="true"
-                           v-model="searchWord.orgId" @change="orgChange">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+              <oms-form-row label="POV" :span="6">
+                <el-select placeholder="请选择POV" v-model="searchWord.povId" filterable clearable>
+                  <el-option :label="item.povName" :value="item.povId" :key="item.povId" v-for="item in demandList">
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="选择厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
-                           v-model="searchWord.factoryId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="批号" :span="6">
-                <el-input v-model="searchWord.batchNumber" placeholder="请输入批号"></el-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="货主货品" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索货主货品" :remote-method="filterOrgGoods"
-                           :clearable="true"
-                           v-model="searchWord.orgGoodsId" popper-class="good-selects" @click.native="isSelectOrg">
-                  <el-option :value="org.orgGoodsDto.id" :key="org.orgGoodsDto.id" :label="org.orgGoodsDto.name"
-                             v-for="org in orgGoods"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="近效期天数" :span="7">
-                <oms-input type="number" v-model.number="searchWord.nearTermDays" :min="0" placeholder="请输入近效期天数">
-                  <template slot="append">天</template>
-                </oms-input>
+              <oms-form-row label="需求时间" :span="6">
+                <el-date-picker
+                  type="daterange"
+                  v-model="demandTime"
+                  placeholder="请选择需求时间" format="yyyy-MM-dd"
+                  @change="changeTime">
+                </el-date-picker>
               </oms-form-row>
             </el-col>
             <el-col :span="6">
@@ -135,25 +117,35 @@
         </el-form>
       </div>
 
-
-      <div class="order-list clearfix ">
+      <div class="order-list-status container clearfix">
+        <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
+             v-for="(item,key) in assignType" @click="checkStatus(item, key)">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+        </div>
+        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1">
+          <perm label="show" class="opera-btn">
+            <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
+              class="iconfont icon-wave"></i></a><span class="wave-title"> 需求分配</span></span>
+          </perm>
+       </span>
+      </div>
+      <div class="order-list clearfix " style="margin-top: 20px">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="3">流水号</el-col>
-          <el-col :span="3">货主</el-col>
-          <el-col :span="3">生产厂商</el-col>
-          <el-col :span="3">批号</el-col>
-          <el-col :span="3">货主货品名称</el-col>
-          <el-col :span="2">可用数量</el-col>
-          <el-col :span="3">实际库存数量</el-col>
-          <el-col :span="2">在途库存</el-col>
-          <el-col :span="2">有效期</el-col>
+          <el-col :span="1">
+            <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
+          </el-col>
+          <el-col :span="6">POV要货申请ID</el-col>
+          <el-col :span="7">POV</el-col>
+          <el-col :span="5">需求产生时间</el-col>
+          <el-col :span="5">需求时间</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
             <oms-loading :loading="loadingData"></oms-loading>
           </el-col>
         </el-row>
-        <el-row v-else-if="batches.length == 0">
+        <el-row v-else-if="demandList.length == 0">
           <el-col :span="24">
             <div class="empty-info">
               暂无信息
@@ -161,40 +153,28 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body">
-          <div class="order-list-item order-list-item-bg" v-for="item in batches"
+          <div class="order-list-item order-list-item-bg" v-for="item in demandList"
                :class="[{'active':currentItemId==item.id}]"
                @click.prevent="showDetail(item)">
             <el-row>
-              <el-col :span="3" class="R pt10">
+              <el-col :span="1">
+                <div class="el-checkbox-warp" @click.stop.prevent="checkItem(item)">
+                  <el-checkbox v-model="item.isChecked"></el-checkbox>
+                </div>
+              </el-col>
+              <el-col :span="6" class="R pt10">
                 <span>
-                  {{ item.stockNo }}
+                  {{ item.applyMan }}
                 </span>
               </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.orgName }}</span>
+              <el-col :span="7" class="pt">
+                <span>{{ item.povName }}</span>
               </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.factoryName }}</span>
+              <el-col :span="5" class="pt">
+                <span>{{ item.applyTime | date }}</span>
               </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.batchNumber }}</span>
-              </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.goodsName }}</span>
-              </el-col>
-              <el-col :span="2" class="pt" align="center">
-                <span>{{ item.availableCount }}</span>
-              </el-col>
-              <el-col :span="3">
-                <div><span class="align-word">合格</span>：{{ item.qualifiedCount }}</div>
-                <div><span class="align-word">待定</span>：{{ item.undeterminedCount }}</div>
-                <div><span>不合格</span>：{{ item.unqualifiedCount }}</div>
-              </el-col>
-              <el-col :span="2" class="pt" align="center">
-                <span>{{ item.transitCount }}</span>
-              </el-col>
-              <el-col :span="2" class="pt" align="center">
-                <span>{{ item.expiryDate | date }}</span>
+              <el-col :span="5" class="pt">
+                <span>{{ item.demandTime | date }}</span>
               </el-col>
             </el-row>
           </div>
@@ -205,7 +185,7 @@
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
           layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="getDemandList"
           :current-page="pager.currentPage">
         </el-pagination>
       </div>
@@ -213,65 +193,92 @@
   </div>
 </template>
 <script>
-  //  import order from '../../../tools/orderList';
-  import { Batch, BaseInfo, OrgGoods } from '@/resources';
+  //  import order from '../../../tools/demandList';
+  import { demandAssignment, pullSignal } from '@/resources';
+  import utils from '../../../tools/utils';
+
   export default {
     data () {
       return {
         loadingData: true,
         showSearch: false,
         showDetailPart: false,
-        batches: [],
+        assignType: utils.assignType,
+        activeStatus: 0,
+        demandList: [],
         filters: {
-          orgId: '',
-          factoryId: '',
-          batchNumber: '',
-          orgGoodsId: '',
-          nearTermDays: ''
+          status: 1,
+          povId: '',
+          demandStartTime: '',
+          demandEndTime: ''
         },
         searchWord: {
-          orgId: '',
-          factoryId: '',
-          batchNumber: '',
-          orgGoodsId: '',
-          nearTermDays: ''
+          povId: '',
+          demandStartTime: '',
+          demandEndTime: ''
         },
-        factories: [], // 厂商列表
-        orgList: [], // 货主列表,
-        orgGoods: [],
+        demandTime: '',
         pager: {
           currentPage: 1,
           count: 0,
           pageSize: 15
         },
-        currentItemId: ''
+        currentItemId: '',
+        checkList: [], // 选中的订单列表
+        isCheckAll: false
       };
     },
+    computed: {
+      user () {
+        return this.$store.state.user;
+      }
+    },
     mounted () {
-      this.getBatches(1);
-      this.filterOrg();
-      this.filterFactory();
+      this.getDemandList(1);
     },
     watch: {
       filters: {
         handler: function () {
-          this.getBatches(1);
+          this.getDemandList(1);
         },
         deep: true
+      },
+      user (val) {
+        if (val.userCompanyAddress) {
+          this.getDemandList(1);
+        }
       }
     },
     methods: {
-      getBatches (pageNo) { // 得到波次列表
+      getDemandList (pageNo) { // 得到需求列表
+        let orgId = this.user.userCompanyAddress;
+        if (!orgId) return;
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.pager.pageSize,
+          povId: orgId
         }, this.filters);
-        this.loadingData = true;
-        Batch.query(params).then(res => {
-          this.batches = res.data.list;
+        if (!this.filters.povId) params.povId = orgId;
+        this.loadingData = false;
+        pullSignal.query(params).then(res => {
+          res.data.list.forEach(item => {
+            item.isChecked = false;
+          });
+          this.demandList = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+          this.queryCount();
+        });
+      },
+      queryCount () {
+        let params = Object.assign({}, {
+          povId: this.user.userCompanyAddress
+        }, this.filters);
+        if (!this.filters.povId) params.povId = this.user.userCompanyAddress;
+        pullSignal.queryCount(params).then(res => {
+          this.assignType[0].num = res.data['audited'];
+          this.assignType[1].num = res.data['assigned'];
         });
       },
       showDetail (item) {
@@ -281,57 +288,72 @@
       resetRightBox () {
         this.showDetailPart = false;
       },
+      checkStatus (item, key) {
+        this.activeStatus = key;
+        this.filters.status = item.status;
+      },
       searchInOrder: function () {// 搜索
+        this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
+        this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
         Object.assign(this.filters, this.searchWord);
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          orgId: '',
-          factoryId: '',
-          batchNumber: '',
-          orgGoodsId: '',
-          nearTermDays: ''
+          povId: '',
+          demandStartTime: '',
+          demandEndTime: ''
         };
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
       },
-      filterFactory (query) { // 查询厂商
-        let params = {
-          deleteFlag: false,
-          keyWord: query
-        };
-        BaseInfo.query(params).then(res => {
-          this.factories = res.data.list;
-        });
-      },
-      filterOrg (query) { // 查询货主
-        BaseInfo.query({keyWord: query, type: 0}).then(res => {
-          this.orgList = res.data.list;
-        });
-      },
-      filterOrgGoods (query) {
-        this.orgGoods = [];
-        if (!this.searchWord.orgId) return;
-        let params = Object.assign({}, {
-          deleteFlag: false,
-          orgId: this.searchWord.orgId,
-          keyWord: query
-        });
-        OrgGoods.query(params).then(res => {
-          this.orgGoods = res.data.list;
-        });
-      },
-      isSelectOrg () {
-        if (!this.searchWord.orgId) {
-          this.$notify.info({
-            message: '请选择货主'
+      checkAll () { // 全选
+        if (this.isCheckAll) {
+          this.demandList.forEach(item => {
+            item.isChecked = true;
+            let index = this.checkList.indexOf(item);
+            if (index === -1) {
+              this.checkList.push(item);
+            }
           });
+        } else {
+          this.demandList.forEach(item => {
+            item.isChecked = false;
+          });
+          this.checkList = [];
         }
       },
-      orgChange () {
-        this.filterOrgGoods();
+      checkItem (item) { // 单选
+        item.isChecked = !item.isChecked;
+        let index = this.checkList.indexOf(item);
+        if (item.isChecked) {
+          if (index === -1) {
+            this.checkList.push(item);
+          }
+        } else {
+          this.checkList.splice(index, 1);
+        }
       },
-      formatTime (date) {
+      createDemand () {
+        if (!this.checkList.length) {
+          this.$notify.info({
+            message: '请选择申请单'
+          });
+          return;
+        }
+        let list = [];
+        this.checkList.forEach(i => list.push(i.id));
+        demandAssignment.save({list}).then(res => {
+          this.$notify.success({
+            message: '需求分配成功'
+          });
+          this.$router.push({path: '/purchase/pov/allocation', query: {id: res.data.id}});
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '需求分配失败'
+          });
+        });
+      },
+      changeTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

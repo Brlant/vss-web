@@ -11,7 +11,7 @@
     text-align: center;
     background: #f9f9f9;
     padding-top: 15rem;
-    position: absolute;
+    position: fixed;
     top: 50px;
     left: 0;
     right: 0;
@@ -104,9 +104,9 @@
     <attachmentDialog></attachmentDialog>
     <a href="#" target="_blank" class="min-div"><span id="fileDownLoadRap"></span></a>
 
-    <!--<div class="cdc-shade" v-if="isPermission">-->
-      <!--<el-button class="btn" type="primary" @click="queryRoles">我是市级CDC</el-button>-->
-    <!--</div>-->
+    <div class="cdc-shade" v-if="isPermission">
+      <el-button class="btn" type="primary" @click="queryRoles">我是市级CDC</el-button>
+    </div>
   </div>
 
 </template>
@@ -180,15 +180,18 @@
       });
 
       cerpAction.queryLevel().then(res => {
-        this.isPermission = res.data.statusCodeValue === 0;
+        this.isPermission = res.data === 0;
       });
     },
     methods: {
       queryRoles () {
         cerpAccess.bindMunicipal().then(() => {
-          this.loading = true;
-        }).catch(() => {
           this.loading = false;
+        }).catch((error) => {
+          this.loading = true;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '绑定市级CDC出错'
+          });
         });
       }
     }

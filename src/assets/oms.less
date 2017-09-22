@@ -470,7 +470,6 @@
   .order-list-body {
     .order-list-item {
       position: relative;
-      cursor: pointer;
       background: #fff;
       margin-left: -5px;
       margin-right: -5px;
@@ -498,9 +497,6 @@
         }
         .el-col {
           padding-right: 10px;
-          a:hover {
-            color:@activeColor
-          }
         }
         .vertical-center {
 
@@ -659,5 +655,14 @@
     right: 0;
     width: auto;
     bottom: 0;
+  }
+}
+
+.opera-btn span:hover {
+  color: @activeColor;
+  cursor: pointer;
+  a {
+    background: @activeColor;
+    color: #fff;
   }
 }

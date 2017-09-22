@@ -41,14 +41,14 @@ const route = [
         meta: {moduleId: 'account', title: '账户管理', icon: 'user', perm: 'show'},
         children: [
           {
-            path: '/account/pov',
-            component: resolve => require(['./components/account/pov/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定POV', perm: 'show'}
-          },
-          {
             path: '/account/cdc',
             component: resolve => require(['./components/account/cdc/county-cdc.vue'], resolve),
             meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'show'}
+          },
+          {
+            path: '/account/pov',
+            component: resolve => require(['./components/account/pov/list.vue'], resolve),
+            meta: {moduleId: 'account', title: '绑定POV', perm: 'show'}
           },
           {
             path: '/account/user',
@@ -95,9 +95,22 @@ const route = [
         children: [
           {
             path: '/purchase/pov',
-            component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'}
-          }, {
+            component: resolve => require(['./components/common/parent-route.vue'], resolve),
+            meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'},
+            children: [
+              {
+                path: '',
+                component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
+                meta: {moduleId: 'purchase', title: '', perm: 'show'}
+              },
+              {
+                path: '/purchase/pov/allocation',
+                component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
+                meta: {moduleId: 'purchase', title: '', perm: 'show'}
+              }
+            ]
+          },
+          {
             path: '/purchase/order',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '采购订单', perm: 'show'}
@@ -129,7 +142,7 @@ const route = [
       {
         path: '/pov',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'pov', title: 'pov业务', icon: 'vaccine', perm: 'show'},
+        meta: {moduleId: 'pov', title: 'POV业务', icon: 'vaccine', perm: 'show'},
         children: [
           {
             path: '/pov/request',
@@ -182,12 +195,12 @@ const route = [
         children: [
           {
             path: '/finance/get',
-            component: resolve => require(['./components/store/list.vue'], resolve),
+            component: resolve => require(['./components/store/receipt/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '应收账款管理', perm: 'show'}
           },
           {
             path: '/finance/pay',
-            component: resolve => require(['./components/store/jxq.vue'], resolve),
+            component: resolve => require(['./components/store/pay/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '应付账款管理', perm: 'show'}
           },
           {
@@ -214,19 +227,19 @@ const route = [
       },
       {
         path: '/file',
-        component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'file', title: '批号文件管理', icon: 'fold', perm: 'show'},
+        component: resolve => require(['./components/files/vaccineBatch/index.vue'], resolve),
+        meta: {moduleId: 'file', title: '疫苗批号文件管理', icon: 'fold', perm: 'show'},
         children: [
-          {
-            path: '/file/list',
-            component: resolve => require(['./components/files/list.vue'], resolve),
-            meta: {moduleId: 'file', title: '疫苗批号文件管理', perm: 'show'}
-          },
-          {
-            path: '/file/list2',
-            component: resolve => require(['./components/files/list.vue'], resolve),
-            meta: {moduleId: 'file', title: '厂商证照资料查询', perm: 'show'}
-          }
+          // {
+          //   path: '/file/list',
+          //   component: resolve => require(['./components/files/vaccineBatch/index.vue'], resolve),
+          //   meta: {moduleId: 'file', title: '疫苗批号文件管理', perm: 'show'}
+          // },
+          // {
+          //   path: '/file/list2',
+          //   component: resolve => require(['./components/files/list.vue'], resolve),
+          //   meta: {moduleId: 'file', title: '厂商证照资料查询', perm: 'show'}
+          // }
         ]
       },
       {

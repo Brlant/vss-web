@@ -54,18 +54,10 @@
   <div>
     <el-card class="box-card main-card-box">
       <div class="logo-part clearfix"><img src="../assets/img/logo_pic.png"> CERP系统</div>
-      <div class="login-menu">
-        <div class="login-menu-item" :class="{'active':user.type===0}" @click="user.type=0">
-          平台登陆
-        </div>
-        <div class="login-menu-item" :class="{'active':user.type===1}" @click="user.type=1">
-          货主登陆
-        </div>
-      </div>
       <div style="padding:0 20px">
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                  @submit.prevent="done" onsubmit="return false">
-          <el-form-item label="货主编号" prop="orgCode" v-show="user.type===1">
+          <el-form-item label="组织编号" prop="orgCode" v-show="user.type===1">
             <oms-input v-model="user.orgCode"></oms-input>
           </el-form-item>
           <el-form-item label="用户名" prop="username">
@@ -140,7 +132,7 @@
                 } else {
                   this.$router.replace('/');
                 }
-
+                this.$router.replace('/');
               });
             }, error => {
               let data = error.response.data;

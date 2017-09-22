@@ -1,6 +1,7 @@
 import {Notification} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
+import qs from 'qs';
 
 export const http = axios.create({
   baseURL: process.env.NODE_API,
@@ -46,7 +47,7 @@ http.interceptors.response.use(response => {
 
   if (response.status === 502) {
     Notification.error({
-      message: '系统请求失败',
+      message: '网络异常',
       onClose: function () {
         window.localStorage.removeItem(noticeTipKey);
       }
@@ -184,7 +185,11 @@ export const bizRelation = resource('/bizRelation', http, {
 export const Vendor = resource('/vendor-info', http, {
   queryVendorDetail: (orgId) => {
     return http.get(`/vendor-info/${orgId}`);
-  }
+  },
+  save: obj => http.post('/vendor-info', obj),
+  update: (id, obj) => {
+    return http.put('/vendor-info', obj);
+  },
 });
 
 // 数据字典组对象
@@ -218,12 +223,21 @@ export const DictGroup = resource('dictGroup', http, {
     });
   }
 });
+// 订单
+export const Order = resource('/order', http, {});
+
 
 /**
  * 库存波次
  * @type {the}
  */
 export const Batch = resource('/stock-batch', http, {});
+
+/**
+ * 批号对象
+ * @type {the}
+ */
+export const BatchNumber = resource('/batch-number', http, {});
 
 /**
  * 波次作业
@@ -266,6 +280,26 @@ export const Wave = resource('/wave-task', http, {
     return http.put(`/wave-task/${waveId}/packing`);
   }
 });
+
+// 仓库地址
+export const Address = resource('/binding-warehouse', http, {
+  queryAddress: (id, params) => {
+    return http.get('/binding-warehouse/list', {params});
+  },
+  check: (id, obj) => {
+    return http.put('/binding-warehouse/' + id + '/check', obj);
+  },
+  forbid: function (id) {
+    return http.put('/binding-warehouse/' + id + '/forbid', {});
+  },
+  start: function (id) {
+    return http.put('/binding-warehouse/' + id + '/start', {});
+  },
+  queryStateNum: (params) => {
+    return http.get('/binding-warehouse/count', {params});
+  }
+});
+
 export const Plan = resource('/plan/', http, {
   queryOrderCount: (params) => {
     return http.get('/plan', {
@@ -282,6 +316,75 @@ export const outWork = resource('/outbound/count', http, {
   }
 });
 
+
+/**
+ * 应收款项
+ * @type {the}
+ */
+export const pay = resource('/accounts-payable', http, {
+  modifyDetail (id, obj) {
+    return http.put(`/accounts-payable/${id}`, obj);
+  },
+  queryDetail (id, params) {
+    return http.get(`/accounts-payable/${id}/detail`, {params});
+  },
+  addDetail (id, obj) {
+    return http.post(`/accounts-payable/${id}/detail`, obj);
+  }
+});
+
+
+/**
+ * 应收款项
+ * @type {the}
+ */
+export const receipt = resource('accounts-receivable', http, {
+  modifyDetail (id, obj) {
+    return http.put(`/accounts-receivable/detail/${id}`, obj);
+  },
+  queryDetail (id, params) {
+    return http.get(`/accounts-receivable/${id}/detail`, {params});
+  },
+  addDetail (id, obj) {
+    return http.post(`/accounts-receivable/${id}/detail`, obj);
+  }
+});
+
+
+
+// 要货需求分配
+export const demandAssignment = resource('/demand-assignment', http, {
+  queryDetailList (key) {
+    return http.get(`/demand-assignment/${key}/goods`);
+  },
+  assignmentGoods (params) {
+    // return http.get('/demand-assignment/goods', {params});
+    return http({
+      url: '/demand-assignment/goods',
+      params,
+      paramsSerializer (params) {
+        return qs.stringify(params, {indices: false});
+      }
+    });
+  },
+  allotVaccine (ary) {
+    return http.put('/demand-assignment/assign/vaccine', ary);
+  }
+});
+
+// 要货申请
+export const pullSignal = resource('/pull-signal', http, {
+  audit (key) {
+    return http.put(`/pull-signal/audit/${key}`);
+  },
+  cancel (key) {
+    return http.put(`/pull-signal/cancel/${key}`);
+  },
+  queryCount (params) {
+    return http.get('/pull-signal/count', {params});
+  }
+});
+
 // 疫苗
 export const Vaccine = resource('/vaccine-info', http, {
   queryVaccineDetail: (id) => {
@@ -289,6 +392,22 @@ export const Vaccine = resource('/vaccine-info', http, {
   },
   queryAvaliableVaccine: (params) => {
     return http.get('/vaccine-info/page', {params});
+  },
+  queryAllVaccine: (params) => {
+    return http.get('/vaccine-info/valid', {params});
+  },
+  queryLevelVaccine () {
+    return http.get('/vaccine-info/filter');
+  }
+});
+
+// 疫苗授权
+export const VaccineRights = resource('/vaccine-authorization', http, {
+  queryVaccineByPov (povId, params) {
+    return http.get(`/vaccine-authorization/${povId}`, {params});
+  },
+  deleteVaccine (id) {
+    return http.put(`/vaccine-authorization/detail/${id}`);
   }
 });
 
@@ -318,8 +437,8 @@ export const cerpAction = resource('/outbound/count', http, {
   queryPov (id, params) { // 查询pov
     return http.get(`/erp-org/${id}/pov`, {params});
   },
-  queryAllPov() {
-    return http.get('/erp-org/pov');
+  queryAllPov (params) {
+    return http.get('/erp-org/pov', {params});
   },
   queryPovList (params) { // 查询还没绑定的pov
     return http.get('/erp-org/pov-list', {params});
@@ -335,8 +454,10 @@ export const cerpAction = resource('/outbound/count', http, {
   },
   deleteCdc (id) {
     return http.delete(`/erp-access/cdc/${id}`);
+  },
+  queryOnCDCs () {
+    return http.get(`/erp-org/superior`);
   }
-
 });
 
 /**

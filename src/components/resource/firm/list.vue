@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-
+  @import "../../../assets/mixins.less";
 
   .margin-left {
     margin-left: 15px;
@@ -68,6 +68,50 @@
       margin-left: 10px;
     }
   }
+
+  .base-pic-list {
+    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    .base-pic-item {
+      border: 1px solid #eee;
+      position: relative;
+      cursor: pointer;
+      width: 180px;
+      margin: 5px;
+      padding: 10px;
+      font-size: 12px;
+      h3 {
+        margin: 0;
+        font-size: 14px;
+        font-weight: bold;
+        position: relative;
+      }
+      img {
+        width: 180px;
+        height: 180px;
+        display: block;
+        background: #ccc;
+
+      }
+      .opera-tools {
+        font-weight: normal;
+        position: absolute;
+        right: 5px;
+        top: 0;
+        color: #333;
+        cursor: pointer;
+
+        span {
+          margin-left: 8px;;
+          font-size: 14px;
+          &:hover {
+            color: @activeColor;
+          }
+        }
+      }
+    }
+  }
 </style>
 <template>
   <div>
@@ -120,16 +164,23 @@
           <div v-else>
             <h2 class="clearfix">
               <span class="pull-right">
-                 <perm label="org-relation-edit">
-                   <a href="#" @click.prevent="edit" class="margin-left"><i
-                     class="iconfont icon-edit"></i>编辑</a>
-                    <a href="#" @click.prevent="forbid" class="margin-left"
-                       v-show="businessRelationItem.status  == '0' "><i
-                      class="iconfont icon-forbidden"></i>停用</a>
-                    <a href="#" @click.prevent="enableRelation" class="margin-left"
-                       v-show="businessRelationItem.status == '1' "><i
-                      class="iconfont icon-start"></i>启用</a>
-                 </perm>
+                 <!--<perm label="org-relation-edit">-->
+                   <!--<a href="#" @click.prevent="edit" class="margin-left"><i-->
+                     <!--class="iconfont icon-edit"></i>编辑</a>-->
+                    <!--<a href="#" @click.prevent="forbid" class="margin-left"-->
+                       <!--v-show="businessRelationItem.status  == '0' "><i-->
+                      <!--class="iconfont icon-forbidden"></i>停用</a>-->
+                    <!--<a href="#" @click.prevent="enableRelation" class="margin-left"-->
+                       <!--v-show="businessRelationItem.status == '1' "><i-->
+                      <!--class="iconfont icon-start"></i>启用</a>-->
+                 <!--</perm>-->
+                <el-button-group>
+                  <perm label="org-relation-edit">
+                    <el-button type="primary" @click="edit">编辑</el-button>
+                    <el-button type="primary" @click="forbid"  v-show="businessRelationItem.status  == '0' ">停用</el-button>
+                    <el-button type="primary" @click="enableRelation" v-show="businessRelationItem.status == '1' ">启用</el-button>
+                  </perm>
+                </el-button-group>
               </span>
             </h2>
             <div class="page-main-body">
@@ -256,7 +307,20 @@
                     <h3>客户证照</h3>
                   </el-col>
                 </el-row>
-                <!--todo 照片-->
+                <div class="base-pic-list">
+                  <div v-for=" licence in businessRelationItem.followOrg.licenses" class="base-pic-item">
+                    <div @click="watchPhoto(licence)">
+                      <img :src="licence.photoThumb ">
+                      <h3>{{licence.name}}</h3>
+                      <div>有效期:{{licence.validStartTime | date}}至{{licence.validEndTime | date}}</div>
+                      <div>
+                        <el-tag type="primary" v-show="licence.expireStatus==='0'">正常</el-tag>
+                        <el-tag type="warning" v-show="licence.expireStatus==='1'">即将到期</el-tag>
+                        <el-tag type="danger" v-show="licence.expireStatus==='2'">已过期</el-tag>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
@@ -286,20 +350,25 @@
         </el-form-item>
       </el-form>
     </page-right>
+    <page-right :show="showPhotoRightShow" @right-close="resetPhoto">
+      <photo-show :formItem="photoForm" @close="showPhotoRightShow=false"></photo-show>
+    </page-right>
   </div>
 
 </template>
 <script>
   import { BaseInfo, Vendor} from '@/resources';
   import utils from '@/tools/utils';
-
+  import photoShow from './photo/photo.show.vue';
   export default {
+    components: {photoShow},
     data: function () {
       return {
         showRight: false,
         showTypeSearch: false,
         loadingData: false,
         loadingListData: false,
+        showPhotoRightShow: false,
         businessRelationList: [], // 厂商列表
         businessRelationItem: {}, // 厂商单条数据
         currentItem: {}, // 与厂商单条数据相等，完成一些操作
@@ -314,6 +383,12 @@
         action: '',
         orgList: [{id: '', nameJc: ''}],
         doing: false,
+        photoForm: {
+          name: '',
+          photos: [],
+          validStartTime: '',
+          validEndTime: ''
+        },
         rules: {
           followOrgId: [
             {required: true, message: '请选择厂商', trigger: 'blur'}
@@ -352,6 +427,19 @@
       this.getBusinessRelationList();
     },
     methods: {
+      resetPhoto: function () {
+        this.photoForm = {
+          name: '',
+          photos: [],
+          validStartTime: '',
+          validEndTime: ''
+        };
+        this.resetRightBox();
+      },
+      watchPhoto (item) {
+        this.photoForm = item;
+        this.showPhotoRightShow = true;
+      },
       isExpirationTime: function (item) {
         let state = '';
         let d1 = this.$moment(item.expirationDate);
@@ -402,6 +490,7 @@
       },
       resetRightBox: function () {
         this.showRight = false;
+        this.showPhotoRightShow = false;
       },
       showType: function (item) {
         this.relationData = item;

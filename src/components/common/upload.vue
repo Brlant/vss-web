@@ -27,7 +27,7 @@
 </template>
 
 <script>
-  import {http} from '../../resources';
+  import {http, OmsAttachment} from '../../resources';
   import UploadList from '@/components/common/upload.file.list.vue';
 
   export default {
@@ -89,6 +89,18 @@
         // 将附件从列表中移除
         let index = fileList.indexOf(file);
         fileList.splice(index, 0);
+        OmsAttachment.delete(file.attachmentId).then(() => {
+          this.$notify.success({
+            duration: 2000,
+            title: '成功',
+            message: '已成功删除附件' + file.attachmentFileName + '"'
+          });
+        }).catch(() => {
+          this.$notify.error({
+            duration: 2000,
+            message: '删除失败'
+          });
+        });
         this.$emit('change', fileList);
       },
       handlePreview(file) {

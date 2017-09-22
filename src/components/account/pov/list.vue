@@ -96,7 +96,7 @@
                 <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrgs"
                            :clearable="true"
                            v-model="orgId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList"></el-option>
                 </el-select>
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
@@ -181,6 +181,7 @@
         cdcs: [],
         cdcItem: {},
         orgList: [], // 货主列表,
+        showOrgList: [],
         orgId: '',
         pager: {
           currentPage: 1,
@@ -214,7 +215,7 @@
           });
           return;
         }
-        cerpAccess.bindPov(this.cdcItem.orgId, this.orgId).then(() => {
+        cerpAccess.bindPov(this.cdcItem.subordinateId, this.orgId).then(() => {
           this.$notify.success({
             message: '绑定POV成功'
           });
@@ -226,6 +227,9 @@
           });
         });
       },
+      filterAvaliableCDCs () {
+        this.showOrgList = this.orgList.filter(f => !this.povs.some(s => f.id === s.subordinateId));
+      },
       filterOrgs: function (query) {
         // 根据参数，获取单位信息
         let param = {
@@ -233,6 +237,7 @@
         };
         cerpAction.queryPovList(param).then(res => {
           this.orgList = res.data.list;
+          this.filterAvaliableCDCs();
         });
       },
       getCDCPage () { // 得到CDC列表
@@ -249,21 +254,23 @@
         });
       },
       getPovPage (pageNo) { // 得到POV列表
-        if (!this.cdcItem.orgId) return;
+        if (!this.cdcItem.subordinateId) return;
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filterPOVs);
         this.loadingData = true;
-        cerpAction.queryPov(this.cdcItem.orgId, params).then(res => {
+        cerpAction.queryPov(this.cdcItem.subordinateId, params).then(res => {
           this.povs = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+          this.filterAvaliableCDCs();
         });
       },
       showType (item) {
         this.cdcItem = item;
+        this.getPovPage();
       },
       deleteItem (item) {
         this.$confirm('是否删除POV "' + item.subordinateName + '"?', '', {
