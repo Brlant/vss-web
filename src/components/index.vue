@@ -11,7 +11,7 @@
     text-align: center;
     background: #f9f9f9;
     padding-top: 15rem;
-    position: absolute;
+    position: fixed;
     top: 50px;
     left: 0;
     right: 0;
