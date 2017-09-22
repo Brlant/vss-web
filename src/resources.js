@@ -325,6 +325,28 @@ export const outWork = resource('/outbound/count', http, {
   }
 });
 
+
+/**
+ * 应收款项
+ * @type {the}
+ */
+export const pay = resource('/accounts-payable', http, {
+  modifyDetail (id, obj) {
+    return http.put(`/accounts-payable/${id}`, obj);
+  },
+  queryDetail (id, params) {
+    return http.get(`/accounts-payable/${id}/detail`, {params});
+  },
+  addDetail (id, obj) {
+    return http.post(`/accounts-payable/${id}/detail`, obj);
+  }
+});
+
+
+/**
+ * 应收款项
+ * @type {the}
+ */
 export const receipt = resource('accounts-receivable', http, {
   modifyDetail (id, obj) {
     return http.put(`/accounts-receivable/detail/${id}`, obj);

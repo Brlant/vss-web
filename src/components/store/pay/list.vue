@@ -48,13 +48,20 @@
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
             <h2 class="header">
-          <span class="pull-right">
-              <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                class="iconfont icon-search"></i> </a>
-          </span>
+            <span class="pull-right">
+                <a href="#" class="btn-circle" @click.prevent="searchType"><i
+                  class="iconfont icon-search"></i> </a>
+            </span>
+              <span class="pull-right" style="margin-right: 8px">
+             <perm label="show">
+               <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
+                  <i class="iconfont icon-plus"></i>
+              </a>
+             </perm>
+            </span>
               所有应付款
             </h2>
-            <div class="search-left-box" v-show="showTypeSearch">
+            <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!currentItem.id" class="empty-info">
@@ -65,10 +72,10 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    应付款总额 {{item.id }}
+                    应付款总额 ￥{{item.payableTotal }}
                   </div>
                   <div>
-                    {{item.povName }}
+                    {{item.remitteeName }}
                   </div>
                 </li>
               </ul>
@@ -79,45 +86,64 @@
           </div>
         </div>
         <div class="d-table-right">
-
-          <div v-if="!currentOrder.id">
+            <span class="pull-right" style="margin-right: 8px">
+               <perm label="show">
+                 <a href="#" class="btn-circle" @click.stop.prevent="add">
+                    <i class="iconfont icon-plus"></i>
+                </a>
+               </perm>
+            </span>
+          <div v-if="!currentItem.id">
             <div class="empty-info">暂无信息</div>
           </div>
           <div v-else="" class="d-table-col-wrap">
             <div class="content-body clearfix">
               <span style="font-size: 14px">【应付款详情】</span>
               <el-row>
-                <oms-row label="货主" :span="5">
-                  {{currentOrder.orgName}}
-                </oms-row>
-                <oms-row label="厂商" :span="5">
-                  {{currentOrder.factoryName}}
+                <oms-row label="收款方" :span="5">
+                  {{currentItem.remitteeName}}
                 </oms-row>
                 <oms-row label="应付款总额" :span="5">
-                  {{currentOrder.amount}}
+                  ￥{{currentItem.payableTotal}}
                 </oms-row>
               </el-row>
             </div>
             <span style="font-size: 14px">【应付款明细】</span>
-            <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}"
+            <table class="table "
                    style="margin-top: 10px">
               <thead>
               <tr>
-                <th>货主订单号</th>
+                <th>订单号ID</th>
                 <th>单据金额</th>
                 <th>剩余应付金额</th>
+                <th>创建时间</th>
               </tr>
               </thead>
               <tbody>
-              <tr v-for="row in currentOrder.detailDtoList">
+              <tr v-if="loadingData">
+                <td colspan="3">
+                  <oms-loading :loading="loadingData"></oms-loading>
+                </td>
+              </tr>
+              <tr v-else-if="!payDetails.length">
+                <td colspan="3">
+                  <div class="empty-info">
+                    暂无信息
+                  </div>
+                </td>
+              </tr>
+              <tr v-else="" v-for="row in payDetails">
                 <td>
-                  {{row.id}}
+                  {{row.orderId}}
                 </td>
                 <td>
-                  {{row.amount}}
+                  ￥{{row.billAmount}}
                 </td>
                 <td>
-                  {{row.price}}
+                  ￥{{row.unpaidAmount}}
+                </td>
+                <td>
+                  {{row.createTime | date }}
                 </td>
               </tr>
               </tbody>
@@ -127,34 +153,32 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form @change="onSubmit" :index="index" @close="resetRightBox"></add-form>
+      <add-form @change="onSubmit" :currentItem="currentItem" :index="index" @refreshDetails="refreshDetails"
+                @close="resetRightBox"></add-form>
+    </page-right>
+    <page-right :show="showLeft" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <left-form @change="onSubmit" :index="index" @close="resetRightBox" @refresh="refresh"></left-form>
     </page-right>
   </div>
 
 </template>
 <script>
-  import utils from '../../../tools/utils';
-  import { pullSignal } from '@/resources';
-  import addForm from './form.vue';
+  import { pay } from '@/resources';
+  import addForm from './right-form.vue';
+  import leftForm from './letf-form.vue';
 
   export default {
-    components: {addForm},
+    components: {addForm, leftForm},
     data: function () {
       return {
+        loadingData: false,
         showRight: false,
+        showLeft: false,
         showTypeSearch: false,
-        showSearch: false,
-        dataRows: [],
         showTypeList: [],
-        receiptType: utils.receiptType,
-        activeStatus: 0,
         filters: {
-          status: '',
           keyWord: ''
         },
-        form: {list: [{roleId: ''}]},
-        formTitle: '新增',
-        oldItem: {},
         action: 'add',
         pager: {
           currentPage: 1,
@@ -169,9 +193,7 @@
           totalPage: 1
         },
         currentItem: {}, //  左边列表点击时，添加样式class
-        receipt: [], // 疫苗列表
-        receiptId: '',
-        currentOrder: {},
+        payDetails: [], // 疫苗列表
         index: 0
       };
     },
@@ -189,7 +211,6 @@
     watch: {
       filters: {
         handler: function () {
-          this.currentOrder = {};
           this.getOrgsList(1);
         },
         deep: true
@@ -203,6 +224,7 @@
     methods: {
       resetRightBox: function () {
         this.showRight = false;
+        this.showLeft = false;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
@@ -214,9 +236,8 @@
         let params = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          povId: orgId
         }, this.filters);
-        pullSignal.query(params).then(res => {
+        pay.query(params).then(res => {
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
@@ -229,26 +250,23 @@
             }
           }
           this.typePager.totalPage = res.data.totalPage;
-          this.queryCount();
+
         });
       },
-      queryCount () {
-//        let params = Object.assign({}, {
-//          povId: this.user.userCompanyAddress
-//        }, this.filters);
-//        pullSignal.queryCount(params).then(res => {
-//          this.receiptType[0].num = res.data['all'];
-//          this.receiptType[1].num = res.data['pending-audit'];
-//          this.receiptType[2].num = res.data['audited'];
-//          this.receiptType[3].num = res.data['assigned'];
-//          this.receiptType[4].num = res.data['canceled'];
-//        });
+      refresh () {
+        this.getOrgsList();
+        this.resetRightBox();
+      },
+      refreshDetails () {
+        this.getDetail();
       },
       getDetail: function () {
-        this.currentOrder = {};
+        this.payDetails = {};
         if (!this.currentItem.id) return;
-        pullSignal.get(this.currentItem.id).then(res => {
-          this.currentOrder = res.data;
+        this.loadingData = true;
+        pay.queryDetail(this.currentItem.id).then(res => {
+          this.loadingData = false;
+          this.payDetails = res.data.list;
         });
       },
       getOrgMore: function () {
@@ -258,16 +276,17 @@
         this.currentItem = item;
         this.getDetail();
       },
-      checkStatus (item, key) {
-        this.activeStatus = key;
-        this.filters.status = item.status;
-      },
       add () {
+        if (!this.currentItem.id) {
+          this.$notify.info({
+            message: '请先添加付款方'
+          });
+          return;
+        }
         this.showRight = true;
-        this.index = 0;
-        this.$nextTick(() => {
-          this.index = 1;
-        });
+      },
+      addDetail () {
+        this.showLeft = true;
       },
       onSubmit () {
         this.getOrgsList();

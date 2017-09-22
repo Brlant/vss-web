@@ -234,150 +234,81 @@
       </div>
       <div class="content-right min-gutter">
         <div class="hide-content show-content">
-          <el-form ref="orderAddForm" :rules="rules" :model="form"
+          <el-form ref="form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <span style="font-size: 14px">【应付款详情】</span>
-            <el-form-item label="选择货主" prop="orgId">
-              <el-select placeholder="请选择货主" v-model="form.orgId" filterable remote clearable
-                         @click.native="queryOrgs('')"
-                         @change="changeOrg"
-                         :remote-method="queryOrgs">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in orgs">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="选择厂商" prop="orgId">
-              <el-select placeholder="请选择厂商" v-model="form.dealerId" filterable remote clearable
-                         @click.native="queryDealers('')"
-                         @change="changeDealer"
-                         :remote-method="queryDealers">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in dealers">
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="应付款总额" prop="orgId">
-              <span>{{ form.totalMoney }}</span>
-            </el-form-item>
-            <span style="font-size: 14px">【应付款明细】</span>
-            <el-form-item label="选择订单" prop="orgId">
-              <el-select placeholder="请选择订单" v-model="form.order" filterable remote clearable
+            <el-form-item label="选择订单" prop="orderId">
+              <el-select placeholder="请选择订单" v-model="form.orderId" filterable remote clearable
                          @click.native="queryOrders('')"
-                         @change="changeOrder"
                          :remote-method="queryOrders">
-                <el-option :label="item.no" :value="item" :key="item.id" v-for="item in orders">
+                <el-option :label="item.orderNo" :value="item.id" :key="item.id" v-for="item in orders">
+                  <span class="pull-left">订单号{{ item.orderNo }}</span>
+                  <span class="pull-right">合计 ￥{{ item.totalAmount }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="单据金额" prop="orgId" style="margin-bottom: 0">
-              <span>{{ form.bill }}</span>
+            <el-form-item label="单据金额" prop="billAmount">
+              <el-input v-model="form.billAmount" placeholder="请输入单据金额"></el-input>
             </el-form-item>
-            <el-form-item label="剩余应付金额" prop="orgId">
-              <span>{{form.surplusMoney}}</span>
-            </el-form-item>
-            <el-form-item>
-              <el-button type="success">添加应付款明细</el-button>
+            <el-form-item label="剩余金额" prop="unpaidAmount">
+              <el-input v-model="form.unpaidAmount" placeholder="请输入剩余金额"></el-input>
             </el-form-item>
           </el-form>
-          <div class="product-list-detail">
-            <h3 style="background: #13ce66;color: #fff">已选订单应付款明细</h3>
-            <table class="table">
-              <thead>
-              <tr>
-                <th>货主订单号</th>
-                <th>单据金额</th>
-                <th>剩余应付金额</th>
-                <th>操作</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="d in details">
-                <td>
-
-                </td>
-              </tr>
-              </tbody>
-            </table>
-          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import { BaseInfo, Order } from '@/resources';
-
+  import { receipt, Order } from '@/resources';
   export default {
+    props: {
+      currentItem: Object
+    },
     data () {
       return {
         form: {
-          orgId: '',
-          dealerId: '',
-          order: {},
-          totalMoney: 100000,
-          bill: '',
-          surplusMoney: ''
+          orderId: '',
+          billAmount: '',
+          unpaidAmount: '',
+          accountsPayableId: this.currentItem.id
         },
-        details: [],
-        orgs: [], // 货主
-        dealers: [], //销售商
+        rules: {
+          orderId: {required: true, message: '请选择订单', trigger: 'change'},
+          billAmount: {required: true, message: '请输入单据金额', trigger: 'blur'},
+          unpaidAmount: {required: true, message: '请输入剩余金额', trigger: 'blur'}
+        },
         orders: [], // 订单列表
-        rules: {}
       };
     },
     methods: {
-      queryOrgs (query) {
-        BaseInfo.query({keyWord: query, deleteFlag: false, type: 0, orgAuditStatus: '1'}).then(res => {
-          this.orgs = res.data.list;
-        });
-      },
-      queryDealers (query) {
-        if (!this.form.orgId) {
-          this.dealers = [];
-        }
+      queryOrders (query) {
         let params = {
           keyWord: query,
-          relation: ''
+          type: 0,
+          bizType: '0',
+          supplierId: this.currentItem.remitteeId
         };
-        BaseInfo.queryOrgByValidReation(this.form.orgId, params).then(res => {
-          this.dealers = res.data;
+        Order.query(params).then(res => {
+          this.orders = res.data.list;
         });
       },
-      queryOrders (query) {
-        if (!this.form.orgId && !this.form.dealerId) {
-          this.orders = [];
-        }
-        this.orders = [
-          {id: 1, no: '001', totalAmount: 1000},
-          {id: 2, no: '002', totalAmount: 2000},
-          {id: 3, no: '003', totalAmount: 3000},
-          {id: 4, no: '004', totalAmount: 4000},
-          {id: 5, no: '005', totalAmount: 5000},
-        ];
-//        let params = {
-//          keyWord: query,
-//          orgId: this.form.orgId,
-//          supplierId: this.form.dealerId
-//        };
-//        Order.query(params).then(res => {
-//          this.orders = res.data.list;
-//        });
-      },
-      changeOrg (val) {
-        if (!val) this.form.dealerId = '';
-      },
-      changeDealer (val) {
-        if (!val) this.form.order = {};
-      },
-      changeOrder (order) {
-        if (!order.id) {
-          this.form.bill = '';
-          this.form.surplusMoney = '';
-        }
-        this.form.bill = order.totalAmount;
-        this.form.surplusMoney = order.totalAmount;
-      },
       onSubmit () {
-
+        this.$refs['form'].validate((valid) => {
+          if (!valid) {
+            return false;
+          }
+          receipt.addDetail(this.currentItem.id, this.form).then(() => {
+            this.$notify.success({
+              message: '应付款详情添加成功'
+            });
+            this.$refs['form'].resetFields();
+            this.$emit('refreshDetails');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '应付款详情添加失败'
+            });
+          });
+        });
       }
     }
   };

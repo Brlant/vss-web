@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">新增应收账单</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">新增应付账单</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -236,12 +236,12 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="选择POV" prop="povId">
-              <el-select placeholder="请选择POV" v-model="form.payerId" filterable remote clearable
-                         @click.native="queryPOVs('')"
-                         :remote-method="queryPOVs">
-                <el-option :label="item.subordinateName" :value="item.subordinateId" :key="item.id"
-                           v-for="item in povs">
+            <el-form-item label="选择收款方" prop="povId">
+              <el-select placeholder="请选择收款方" v-model="form.remitteeId" filterable remote clearable
+                         @click.native="queryOrgs('')"
+                         :remote-method="queryOrgs">
+                <el-option :label="item.name" :value="item.id" :key="item.id"
+                           v-for="item in orgs">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -252,28 +252,29 @@
   </div>
 </template>
 <script>
-  import { cerpAction, receipt } from '@/resources';
+  import { BaseInfo, pay } from '@/resources';
 
   export default {
     data () {
       return {
         form: {
-          payerId: '',
+          remitteeId: '',
         },
         rules: {
-          payerId: {required: true, message: '请选择POV', trigger: 'change'},
+          remitteeId: {required: true, message: '请选择收款方', trigger: 'change'},
         },
-        povs: [], // 订单列表
+        orgs: [], // 订单列表
       };
     },
     methods: {
-      queryPOVs (query) {
-        this.povs = [];
+      queryOrgs (query) {
+        this.orgs = [];
         let params = {
-          keyWord: query
+          keyWord: query,
+          relation: '1'
         };
-        cerpAction.queryAllPov(params).then(res => {
-          this.povs = res.data.list;
+        BaseInfo.queryOrgByValidReation(this.$store.state.user.userCompanyAddress, params).then(res => {
+          this.orgs = res.data;
         });
       },
       onSubmit () {
@@ -281,15 +282,15 @@
           if (!valid) {
             return false;
           }
-          receipt.save(this.form).then(() => {
+          pay.save(this.form).then(() => {
             this.$notify.success({
-              message: '付款方添加成功'
+              message: '收款方添加成功'
             });
             this.$refs['d-form'].resetFields();
             this.$emit('refresh');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '付款方添加失败'
+              message: error.response.data && error.response.data.msg || '收款方添加失败'
             });
           });
         });

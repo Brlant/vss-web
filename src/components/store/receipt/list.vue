@@ -72,7 +72,7 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    应付款总额 {{item.payableTotal }}
+                    应收款总额 ￥{{item.payableTotal }}
                   </div>
                   <div>
                     {{item.payerName }}
@@ -100,11 +100,11 @@
             <div class="content-body clearfix">
               <span style="font-size: 14px">【应收款详情】</span>
               <el-row>
-                <oms-row label="厂商" :span="5">
+                <oms-row label="POV" :span="5">
                   {{currentItem.payerName}}
                 </oms-row>
-                <oms-row label="应付款总额" :span="5">
-                  {{currentItem.payableTotal}}
+                <oms-row label="应收款总额" :span="5">
+                  ￥{{currentItem.payableTotal}}
                 </oms-row>
               </el-row>
             </div>
@@ -113,9 +113,9 @@
                    style="margin-top: 10px">
               <thead>
               <tr>
-                <th>货主订单号</th>
+                <th>订单号ID</th>
                 <th>单据金额</th>
-                <th>剩余应付金额</th>
+                <th>剩余应收金额</th>
                 <th>创建时间</th>
               </tr>
               </thead>
@@ -137,10 +137,10 @@
                   {{row.orderId}}
                 </td>
                 <td>
-                  {{row.billAmount}}
+                  ￥{{row.billAmount}}
                 </td>
                 <td>
-                  {{row.unpaidAmount}}
+                  ￥{{row.unpaidAmount}}
                 </td>
                 <td>
                   {{row.createTime | date }}
@@ -163,7 +163,6 @@
 
 </template>
 <script>
-  import utils from '../../../tools/utils';
   import { receipt } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
@@ -177,7 +176,6 @@
         showLeft: false,
         showTypeSearch: false,
         showTypeList: [],
-        receiptType: utils.receiptType,
         filters: {
           keyWord: ''
         },
