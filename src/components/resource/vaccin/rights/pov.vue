@@ -270,7 +270,13 @@
           'orgGoodsId': this.vaccineId,
           'povId': this.currentItem.subordinateId
         };
-        if (!this.form.povId) {
+        if (!form.povId) {
+          this.$notify.info({
+            message: '没有pov,无法绑定疫苗'
+          });
+          return;
+        }
+        if (!form.orgGoodsId) {
           this.$notify.info({
             message: '请选择疫苗'
           });

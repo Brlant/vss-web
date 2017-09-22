@@ -99,7 +99,7 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <perm label="org-goods-add">
+                  <perm label="show">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
                         <i class="iconfont icon-plus"></i>
                       </a>
