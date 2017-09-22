@@ -423,7 +423,17 @@ export const cerpAccess = resource('', http, {
     return http.put(`/erp-access/bind/district/${id}`);
   },
   bindPov (cdcId, id) { // 绑定pov
-    return http.put(`/erp-access/bind/pov/${id}`, {params: {cdcId}});
+    // return http.put(`/erp-access/bind/pov/${id}`, {params: {cdcId}});
+    return http({
+      url: `/erp-access/bind/pov/${id}`,
+      method: 'put',
+      params: {
+        cdcId
+      },
+      paramsSerializer: function (params) {
+        return qs.stringify(params);
+      },
+    });
   }
 });
 
