@@ -279,7 +279,6 @@
         });
       },
       getPovPage (pageNo) { // 得到POV列表
-        console.log(1);
         if (!this.cdcItem.subordinateId) return;
         this.pager.currentPage = pageNo;
         let params = Object.assign({
@@ -287,9 +286,7 @@
           pageSize: this.pager.pageSize
         }, this.filterPOVs);
         this.loadingData = true;
-        console.log(1);
         cerpAction.queryPov(this.cdcItem.subordinateId, params).then(res => {
-          console.log(2);
           this.povs = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
