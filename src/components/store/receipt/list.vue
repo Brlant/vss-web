@@ -116,6 +116,7 @@
                 <th>货主订单号</th>
                 <th>单据金额</th>
                 <th>剩余应付金额</th>
+                <th>创建时间</th>
               </tr>
               </thead>
               <tbody>
@@ -133,13 +134,16 @@
               </tr>
               <tr v-else="" v-for="row in receiptDetails">
                 <td>
-                  {{row.id}}
+                  {{row.orderId}}
                 </td>
                 <td>
-                  {{row.amount}}
+                  {{row.billAmount}}
                 </td>
                 <td>
-                  {{row.price}}
+                  {{row.unpaidAmount}}
+                </td>
+                <td>
+                  {{row.createTime | date }}
                 </td>
               </tr>
               </tbody>

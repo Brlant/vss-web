@@ -240,7 +240,9 @@
               <el-select placeholder="请选择订单" v-model="form.orderId" filterable remote clearable
                          @click.native="queryOrders('')"
                          :remote-method="queryOrders">
-                <el-option :label="item.no" :value="item.id" :key="item.id" v-for="item in orders">
+                <el-option :label="item.orderNo" :value="item.id" :key="item.id" v-for="item in orders">
+                  <span class="pull-left">订单号{{ item.orderNo }}</span>
+                  <span class="pull-right">合计 ￥{{ item.totalAmount }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -282,8 +284,9 @@
       queryOrders (query) {
         let params = {
           keyWord: query,
-          orgId: this.$store.state.user.userCompanyAddress,
-          supplierId: this.currentItem.id
+          type: 1,
+          bizType: '0',
+          customerId: this.currentItem.payerId
         };
         Order.query(params).then(res => {
           this.orders = res.data.list;
@@ -294,7 +297,7 @@
           if (!valid) {
             return false;
           }
-          receipt.addDetail(this.form).then(() => {
+          receipt.addDetail(this.currentItem.id, this.form).then(() => {
             this.$notify.success({
               message: '应收款详情添加成功'
             });

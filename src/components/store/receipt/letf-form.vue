@@ -240,7 +240,8 @@
               <el-select placeholder="请选择POV" v-model="form.payerId" filterable remote clearable
                          @click.native="queryPOVs('')"
                          :remote-method="queryPOVs">
-                <el-option :label="item.subordinateName" :value="item.id" :key="item.id" v-for="item in povs">
+                <el-option :label="item.subordinateName" :value="item.subordinateId" :key="item.id"
+                           v-for="item in povs">
                 </el-option>
               </el-select>
             </el-form-item>
