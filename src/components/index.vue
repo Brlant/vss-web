@@ -104,9 +104,9 @@
     <attachmentDialog></attachmentDialog>
     <a href="#" target="_blank" class="min-div"><span id="fileDownLoadRap"></span></a>
 
-    <!--<div class="cdc-shade" v-if="isPermission">-->
-      <!--<el-button class="btn" type="primary" @click="queryRoles">我是市级CDC</el-button>-->
-    <!--</div>-->
+    <div class="cdc-shade" v-if="isPermission">
+      <el-button class="btn" type="primary" @click="queryRoles">我是市级CDC</el-button>
+    </div>
   </div>
 
 </template>
@@ -180,7 +180,7 @@
       });
 
       cerpAction.queryLevel().then(res => {
-        this.isPermission = res.data.statusCodeValue === 0;
+        this.isPermission = res.data === 0;
       });
     },
     methods: {
