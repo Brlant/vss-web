@@ -193,9 +193,22 @@
         level: window.localStorage.getItem('logLevel')
       };
     },
+    computed: {
+      user () {
+        return this.$store.state.user;
+      }
+    },
     mounted () {
-      if (this.level === '2') this.isShowLeft = false;
-      this.getCDCPage();
+      if (this.level === '2') {
+        this.isShowLeft = false;
+        if (!this.$store.state.user.userCompanyAddress) return;
+        this.cdcItem = {
+          subordinateId: this.$store.state.user.userCompanyAddress
+        };
+        this.getPovPage(1);
+      } else {
+        this.getCDCPage();
+      }
     },
     watch: {
       filterPOVs: {
@@ -209,6 +222,13 @@
           this.getCDCPage();
         },
         deep: true
+      },
+      user (val) {
+        if (!val.userCompanyAddress) return;
+        this.cdcItem = {
+          subordinateId: this.$store.state.user.userCompanyAddress
+        };
+        this.getPovPage(1);
       }
     },
     methods: {
@@ -220,13 +240,12 @@
           return;
         }
         let cdcId = this.cdcItem.subordinateId;
-        if (this.level === '2') cdcId = this.$store.state.user.userCompanyAddress;
         cerpAccess.bindPov(cdcId, this.orgId).then(() => {
           this.$notify.success({
             message: '绑定POV成功'
           });
           this.orgId = '';
-          this.getPovPage();
+          this.getPovPage(1);
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '绑定POV失败'
@@ -260,6 +279,7 @@
         });
       },
       getPovPage (pageNo) { // 得到POV列表
+        console.log(1);
         if (!this.cdcItem.subordinateId) return;
         this.pager.currentPage = pageNo;
         let params = Object.assign({
@@ -267,7 +287,9 @@
           pageSize: this.pager.pageSize
         }, this.filterPOVs);
         this.loadingData = true;
+        console.log(1);
         cerpAction.queryPov(this.cdcItem.subordinateId, params).then(res => {
+          console.log(2);
           this.povs = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;

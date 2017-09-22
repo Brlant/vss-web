@@ -270,6 +270,12 @@
           'orgGoodsId': this.vaccineId,
           'povId': this.currentItem.subordinateId
         };
+        if (!this.form.povId) {
+          this.$notify.info({
+            message: '请选择疫苗'
+          });
+          return;
+        }
         VaccineRights.save(form).then(() => {
           this.$notify.success({
             message: '授权疫苗成功'
