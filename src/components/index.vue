@@ -178,8 +178,8 @@
           }, 1000);
         });
       });
-
       cerpAction.queryLevel().then(res => {
+        window.localStorage.setItem('logLevel', res.data);
         this.isPermission = res.data === 0;
       });
     },

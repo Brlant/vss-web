@@ -56,6 +56,11 @@ const route = [
             meta: {moduleId: 'account', title: '用户管理', perm: 'show'}
           },
           {
+            path: '/account/role',
+            component: resolve => require(['./components/account/role/role.vue'], resolve),
+            meta: {moduleId: 'account', title: '角色管理', perm: 'show'}
+          },
+          {
             path: '/account/management',
             component: resolve => require(['./components/account/management/list.vue'], resolve),
             meta: {moduleId: 'account', title: '账号分配', perm: 'show'}

@@ -80,7 +80,7 @@
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
           <span class="">
-            <i class="wms-font wms-font-search"></i> 筛选查询
+            <i class="iconfont icon-search"></i> 筛选查询
           </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
