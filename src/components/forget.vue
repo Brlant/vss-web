@@ -94,7 +94,7 @@
   export default {
     name: 'forget',
     data: () => ({
-      user: {account: '', code: '', type: 0, orgCode: '', email: ''},
+      user: {account: '', code: '', type: 1, orgCode: '', email: ''},
       loading: false,
       showInfo: false,
       codeUrl: '',
