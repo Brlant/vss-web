@@ -53,7 +53,9 @@
   <div class="order-page">
     <div class="container">
       <div class="mb-15" style="overflow: hidden">
-        <el-button class="pull-right" type="primary" @click="submit">提交分配方案</el-button>
+        <perm label="demand-assignment-create">
+          <el-button class="pull-right" type="primary" @click="submit">提交分配方案</el-button>
+        </perm>
       </div>
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">

@@ -306,11 +306,12 @@
         });
         return menuShow;
         */
-        let menuArr = route[0].children.filter(item => item.meta.moduleId && item.meta.perm === 'show');
-        menuArr.forEach(item => {
-            item.children = item.children.filter(child => child.meta.perm === 'show');
-          }
-        );
+//        let menuArr = route[0].children.filter(item => item.meta.moduleId && item.meta.perm === 'show');
+//        menuArr.forEach(item => {
+//            item.children = item.children.filter(child => child.meta.perm === 'show');
+//          }
+//        );
+        let menuArr = route[0].children.filter(item => item.meta.moduleId);
         return menuArr;
 
       },

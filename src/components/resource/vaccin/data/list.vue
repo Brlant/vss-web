@@ -99,7 +99,7 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <perm label="show">
+                  <perm label="新增疫苗资料">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
                         <i class="iconfont icon-plus"></i>
                       </a>
@@ -119,7 +119,7 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                   :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto,'locked':isLocked(item.orgGoodsDto)}">
-                <perm label="org-goods-delete">
+                <perm label="vaccine-info-delete">
                   <oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'
                               class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
                 </perm>
@@ -144,11 +144,11 @@
             <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
-                  <perm label="org-relation-edit">
+                  <perm label="vaccine-info-update">
                     <el-button type="primary" @click="edit">编辑</el-button>
                     <el-button type="primary" @click="enableRelation" v-show="data.status == '0'">启用</el-button>
                     <el-button type="primary" @click="forbid" v-show="data.status == '1' ">停用</el-button>
-                    <perm label="org-goods-delete">
+                    <perm label="vaccine-info-delete">
                        <el-button type="primary" @click="remove">删除</el-button>
                     </perm>
                   </perm>

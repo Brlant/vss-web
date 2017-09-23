@@ -43,7 +43,7 @@ const route = [
           {
             path: '/account/cdc',
             component: resolve => require(['./components/account/cdc/county-cdc.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'show'}
+            meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'er'}
           },
           {
             path: '/account/pov',
@@ -79,17 +79,17 @@ const route = [
           }, {
             path: '/resource/vaccin/list',
             component: resolve => require(['./components/resource/vaccin/data/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗资料管理', perm: 'show'}
+            meta: {moduleId: 'resource', title: '疫苗资料管理', perm: 'vaccine-info'}
           },
           {
             path: '/resource/vaccin/pov',
             component: resolve => require(['./components/resource/vaccin/rights/pov.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗授权管理', perm: 'show'}
+            meta: {moduleId: 'resource', title: '疫苗授权管理', perm: 'vaccine-authorization'}
           },
           {
             path: '/resource/store',
             component: resolve => require(['./components/resource/store/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '仓库管理', perm: 'show'}
+            meta: {moduleId: 'resource', title: '仓库管理', perm: 'binding-warehouse'}
           }
         ]
       },
@@ -101,7 +101,7 @@ const route = [
           {
             path: '/purchase/pov',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
-            meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'},
+            meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'demand-assignment'},
             children: [
               {
                 path: '',
@@ -152,7 +152,7 @@ const route = [
           {
             path: '/pov/request',
             component: resolve => require(['./components/pov/request/list.vue'], resolve),
-            meta: {moduleId: 'pov', title: '疫苗要货申请', perm: 'show'}
+            meta: {moduleId: 'pov', title: '疫苗要货申请', perm: 'pull-signal'}
           },
           {
             path: '/pov/get',
@@ -201,12 +201,12 @@ const route = [
           {
             path: '/finance/get',
             component: resolve => require(['./components/store/receipt/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '应收账款管理', perm: 'show'}
+            meta: {moduleId: 'finance', title: '应收账款管理', perm: 'accounts-receivable'}
           },
           {
             path: '/finance/pay',
             component: resolve => require(['./components/store/pay/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '应付账款管理', perm: 'show'}
+            meta: {moduleId: 'finance', title: '应付账款管理', perm: 'accounts-payable'}
           },
           {
             path: '/finance/supplier',

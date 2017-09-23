@@ -32,7 +32,7 @@
       <div class="d-table-left">
         <h2 class="header">
           <span class="pull-right">
-            <perm label="show">
+            <perm label="binding-warehouse-add">
               <a href="#" class="btn-circle" @click.stop.prevent="addType">
                 <i class="iconfont icon-plus"></i>
               </a>
@@ -89,14 +89,14 @@
                         <!--class=" iconfont icon-start"></i>启用</a>-->
                   <!--</perm>-->
                 <el-button-group>
-                  <perm label="show">
+                  <perm label="binding-warehouse-update">
                     <el-button type="primary" @click="edit()" v-show="data.status==='0'">编辑</el-button>
                   </perm>
-                  <perm label="show">
+                  <perm label="binding-warehouse-forbid">
                     <el-button type="primary" @click="remove()"
                                v-show="data.status==='0'||data.status==='1'">停用</el-button>
                   </perm>
-                  <perm label="show">
+                  <perm label="binding-warehouse-start">
                     <el-button type="primary" @click="start()"
                                v-show="data.status==='2'||data.status==='3'">启用</el-button>
                   </perm>

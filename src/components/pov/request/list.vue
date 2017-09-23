@@ -49,7 +49,7 @@
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
         <span class="pull-right" style="margin-top: 8px">
-           <perm label="show">
+           <perm label="pull-signal-add">
              <a href="#" class="btn-circle" @click.stop.prevent="add">
                 <i class="iconfont icon-plus"></i>
             </a>
@@ -98,12 +98,12 @@
           <div v-else="" class="d-table-col-wrap">
             <h2 class="clearfix">
               <span class="pull-right">
-                <perm label="show" v-show="currentOrder.status === 0">
+                <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
                     <a href="#" @click.prevent="audited()" class="margin-left">
                     <i class="iconfont icon-verify"></i> 审核
                   </a>
                 </perm>
-                <perm label="show" style="margin-left: 10px" v-show="currentOrder.status !== 4">
+                <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status !== 4">
                   <a href="#" @click.stop.prevent="cancel()">
                     <i class="iconfont icon-stop"></i>取消
                   </a>
