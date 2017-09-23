@@ -164,7 +164,7 @@
   </div>
 </template>
 <script>
-  import { cerpAction, cerpAccess } from '@/resources';
+  import { cerpAction, cerpAccess, BaseInfo } from '@/resources';
 
   export default {
     data () {
@@ -257,11 +257,12 @@
       },
       filterOrgs: function (query) {
         // 根据参数，获取单位信息
-        let param = {
-          keyWord: query
+        let params = {
+          keyWord: query,
+          relation: '2'
         };
-        cerpAction.queryPovList(param).then(res => {
-          this.orgList = res.data.list;
+        BaseInfo.queryOrgByValidReation(this.cdcItem.subordinateId, params).then(res => {
+          this.orgList = res.data;
           this.filterAvaliableCDCs();
         });
       },
