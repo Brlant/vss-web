@@ -57,7 +57,7 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <perm label="access-role-add">
+                  <perm label="show">
                     <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="iconfont icon-plus"></i> </a>
                   </perm>
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -97,18 +97,18 @@
           <div v-else>
             <h2 class="clearfix">
               <span class="pull-right">
-                 <perm label="access-role-edit">
+                 <perm label="show">
                       <a href="#" @click.stop.prevent="edit()"><i class="iconfont icon-edit"></i>编辑</a>
                  </perm>
-                <perm label="access-role-stop">
+                <perm label="show">
                         <a href="#" @click.prevent="forbid()" class="margin-left" v-show="resData.usableStatus == 1"><i
                           class="iconfont icon-forbidden"></i>停用</a>
                 </perm>
-                 <perm label="access-role-stop">
+                 <perm label="show">
                  <a href="#" @click.prevent="useNormal()" class="margin-left" v-show="resData.usableStatus == 0"><i
                    class="iconfont icon-start"></i>启用</a>
                  </perm>
-                <perm label="access-role-delete">
+                <perm label="show">
                   <a href="#" @click.prevent="remove()" class="margin-left"><i
                     class="iconfont icon-delete"></i>删除</a>
                 </perm>

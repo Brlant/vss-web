@@ -32,7 +32,7 @@
       <div class="d-table-left">
         <h2 class="header">
           <span class="pull-right">
-            <perm label="show">
+            <perm label="binding-warehouse-add">
               <a href="#" class="btn-circle" @click.stop.prevent="addType">
                 <i class="iconfont icon-plus"></i>
               </a>

@@ -99,7 +99,7 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <perm label="show">
+                  <perm label="新增疫苗资料">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
                         <i class="iconfont icon-plus"></i>
                       </a>
@@ -119,7 +119,7 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                   :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto,'locked':isLocked(item.orgGoodsDto)}">
-                <perm label="org-goods-delete">
+                <perm label="vaccine-info-delete">
                   <oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'
                               class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
                 </perm>

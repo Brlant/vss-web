@@ -53,7 +53,7 @@
                   class="iconfont icon-search"></i> </a>
             </span>
               <span class="pull-right" style="margin-right: 8px">
-             <perm label="show">
+             <perm label="accounts-receivable-add">
                <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
                   <i class="iconfont icon-plus"></i>
               </a>
@@ -87,7 +87,7 @@
         </div>
         <div class="d-table-right">
             <span class="pull-right" style="margin-right: 8px">
-               <perm label="show">
+               <perm label="accounts-receivable-detail-add">
                  <a href="#" class="btn-circle" @click.stop.prevent="add">
                     <i class="iconfont icon-plus"></i>
                 </a>

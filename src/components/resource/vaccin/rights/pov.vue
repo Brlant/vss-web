@@ -84,7 +84,9 @@
                 </el-select>
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
-                <el-button type="primary" @click="bindVaccine">授权疫苗</el-button>
+                <perm label="vaccine-authorization-add">
+                  <el-button type="primary" @click="bindVaccine">授权疫苗</el-button>
+                </perm>
               </el-col>
               <el-col :span="11" class="text-right">
                 <!--<span>-->
@@ -130,7 +132,7 @@
                 {{ row.time | date }}
               </td>
               <td>
-                <perm label="show">
+                <perm label="vaccine-info-delete">
                   <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="iconfont icon-delete"></i>删除</a>
                 </perm>
               </td>
