@@ -468,7 +468,7 @@
         this.$refs['orderGoodsForm'].resetFields();
         this.accessoryList = [];
         this.filterProducts();
-        this.form.cdcId = this.cdcs.filter(f => f.level === this.form.type)[0] && this.cdcs.filter(f => f.level === this.form.type)[0].orgId || '';
+        // this.form.cdcId = this.cdcs.filter(f => f.level === this.form.type)[0] && this.cdcs.filter(f => f.level === this.form.type)[0].orgId || '';
         this.searchProduct();
       },
       searchProduct: function () {
@@ -484,7 +484,7 @@
       queryOnCDCs () {
         cerpAction.queryOnCDCs().then(res => {
           this.cdcs = res.data;
-          this.form.cdcId = res.data.filter(f => f.level === this.form.type)[0].orgId;
+          this.form.cdcId = res.data.filter(f => f.level === this.form.type)[0] && res.data.filter(f => f.level === this.form.type)[0].orgId;
           this.searchProduct();
         });
       },
