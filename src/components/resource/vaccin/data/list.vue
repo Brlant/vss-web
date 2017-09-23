@@ -149,7 +149,7 @@
                     <el-button @click="enableRelation" v-show="data.status == '0'">启用</el-button>
                     <el-button @click="forbid" v-show="data.status == '1' ">停用</el-button>
                     <perm label="org-goods-delete">
-                       <el-button type="primary" @click="remove">删除</el-button>
+                       <el-button @click="remove">删除</el-button>
                     </perm>
                   </perm>
                 </el-button-group>
