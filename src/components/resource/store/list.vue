@@ -90,15 +90,13 @@
                   <!--</perm>-->
                 <el-button-group>
                   <perm label="show">
-                    <el-button type="primary" @click="edit()" v-show="data.status==='0'">编辑</el-button>
+                    <el-button @click="edit()" v-show="data.status==='0'">编辑</el-button>
                   </perm>
                   <perm label="show">
-                    <el-button type="primary" @click="remove()"
-                               v-show="data.status==='0'||data.status==='1'">停用</el-button>
+                    <el-button @click="remove()" v-show="data.status==='0'||data.status==='1'">停用</el-button>
                   </perm>
                   <perm label="show">
-                    <el-button type="primary" @click="start()"
-                               v-show="data.status==='2'||data.status==='3'">启用</el-button>
+                    <el-button @click="start()" v-show="data.status==='2'||data.status==='3'">启用</el-button>
                   </perm>
                 </el-button-group>
                 </span>
