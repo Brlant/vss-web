@@ -97,11 +97,11 @@
                 <span>{{ item.resultAmount }}</span>
               </el-col>
               <el-col :span="2" class="pt">
-                <span v-show="item.resultAmount>-1">
+                <span v-show="item.resultAmount>-1 && item.balanceAmount > -1">
                   <i class="iconfont icon-correct color-blue"></i>
                   正常
                 </span>
-                <span v-show="item.resultAmount<0">
+                <span v-show="item.resultAmount<0 || item.balanceAmount < 0">
                   <i class="iconfont icon-warning color-red"></i>
                   库存不足
                 </span>
@@ -183,7 +183,7 @@
         });
       },
       submit () {
-        let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
+        let isNotNormal = this.allocationList.some(s => s.resultAmount < 0 || s.balanceAmount < 0);
         if (isNotNormal) {
           this.$notify.info({
             message: '库存不足，请重新分配'
