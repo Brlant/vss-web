@@ -52,6 +52,9 @@
 <template>
   <div class="order-page">
     <div class="container">
+      <div class="mb-15" style="overflow: hidden">
+        <el-button class="pull-right" type="primary" @click="submit">提交分配方案</el-button>
+      </div>
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="5">疫苗</el-col>
@@ -133,7 +136,9 @@
   import allotForm from './form.vue';
 
   export default {
-    components: {allotForm},
+    components: {
+      allotForm
+    },
     data () {
       return {
         loadingData: false,
@@ -175,6 +180,24 @@
           if (i.orgGoodsId === item.orgGoodsId) {
             i.resultAmount = i.inventoryQuantity - count;
           }
+        });
+      },
+      submit () {
+        let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
+        if (isNotNormal) {
+          this.$notify.info({
+            message: '库存不足，请重新分配'
+          });
+          return;
+        }
+        demandAssignment.createOrder(this.$route.query.id).then(() => {
+          this.$notify.success({
+            message: '提交分配方案成功'
+          });
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '提交分配方案失败'
+          });
         });
       }
     }

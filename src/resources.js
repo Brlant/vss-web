@@ -369,6 +369,9 @@ export const demandAssignment = resource('/demand-assignment', http, {
   },
   allotVaccine (ary) {
     return http.put('/demand-assignment/assign/vaccine', ary);
+  },
+  createOrder (key) {
+    return http.put(`/demand-assignment/${key}/sales-ticket`);
   }
 });
 
