@@ -42,7 +42,7 @@
 </style>
 <template>
   <el-card class="box-card main-card-box">
-    <div class="logo-part clearfix"><img src="../assets/img/logo_pic.png"> CERP</div>
+    <div class="logo-part clearfix">CERP</div>
 
 
     <div style="padding:0 20px">
@@ -54,18 +54,10 @@
         </el-button>
       </div>
       <div v-else>
-        <div class="login-menu">
-          <div class="login-menu-item" :class="{'active':user.type===0}" @click="user.type=0">
-            平台登陆
-          </div>
-          <div class="login-menu-item" :class="{'active':user.type===1}" @click="user.type=1">
-            货主登陆
-          </div>
-        </div>
         <h3 class="text-center">忘记密码</h3>
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                  @submit.prevent="done" onsubmit="return false">
-          <el-form-item label="货主编号" prop="orgCode" v-show="user.type===1">
+          <el-form-item label="组织编号" prop="orgCode">
             <oms-input v-model="user.orgCode"></oms-input>
           </el-form-item>
           <el-form-item label="账号" prop="account">
@@ -83,7 +75,7 @@
 
           <el-form-item label-width="80px">
             <el-button style="display:block;width:40%;float:left;">
-              <router-link to="/login" style="display: block">返回登录</router-link>
+              <router-link to="/login" style="display: block;width:100%;">返回登录</router-link>
             </el-button>
             <el-button type="warning" @click="done" style="display:block;width:40%;float:left;" native-type="submit">
               {{btnString}}
