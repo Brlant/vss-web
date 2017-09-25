@@ -106,12 +106,12 @@ const route = [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
-                meta: {moduleId: 'purchase', title: '', perm: 'show'}
+                meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'}
               },
               {
                 path: '/purchase/pov/allocation',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'purchase', title: '', perm: 'show'}
+                meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'}
               }
             ]
           },
