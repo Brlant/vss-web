@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui';
+import { Notification } from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -110,7 +110,7 @@ export const OrgUser = resource('/oms/user/org', http, {
   },
   queryUsers: (id, params) => {
     return http.get(`/erp-org/${id}/users`, {params});
-  },
+  }
 });
 
 // 角色管理对象
@@ -236,7 +236,6 @@ export const DictGroup = resource('dictGroup', http, {
 // 订单
 export const Order = resource('/order', http, {});
 
-
 /**
  * 库存波次
  * @type {the}
@@ -326,7 +325,6 @@ export const outWork = resource('/outbound/count', http, {
   }
 });
 
-
 /**
  * 应收款项
  * @type {the}
@@ -343,7 +341,6 @@ export const pay = resource('/accounts-payable', http, {
   }
 });
 
-
 /**
  * 应收款项
  * @type {the}
@@ -359,7 +356,6 @@ export const receipt = resource('accounts-receivable', http, {
     return http.post(`/accounts-receivable/${id}/detail`, obj);
   }
 });
-
 
 // 要货需求分配
 export const demandAssignment = resource('/demand-assignment', http, {
