@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui';
+import {Notification} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -199,7 +199,7 @@ export const Vendor = resource('/vendor-info', http, {
   save: obj => http.post('/vendor-info', obj),
   update: (id, obj) => {
     return http.put('/vendor-info', obj);
-  },
+  }
 });
 
 // 数据字典组对象
@@ -332,13 +332,13 @@ export const outWork = resource('/outbound/count', http, {
  * @type {the}
  */
 export const pay = resource('/accounts-payable', http, {
-  modifyDetail (id, obj) {
+  modifyDetail(id, obj) {
     return http.put(`/accounts-payable/${id}`, obj);
   },
-  queryDetail (id, params) {
+  queryDetail(id, params) {
     return http.get(`/accounts-payable/${id}/detail`, {params});
   },
-  addDetail (id, obj) {
+  addDetail(id, obj) {
     return http.post(`/accounts-payable/${id}/detail`, obj);
   }
 });
@@ -349,51 +349,50 @@ export const pay = resource('/accounts-payable', http, {
  * @type {the}
  */
 export const receipt = resource('accounts-receivable', http, {
-  modifyDetail (id, obj) {
+  modifyDetail(id, obj) {
     return http.put(`/accounts-receivable/detail/${id}`, obj);
   },
-  queryDetail (id, params) {
+  queryDetail(id, params) {
     return http.get(`/accounts-receivable/${id}/detail`, {params});
   },
-  addDetail (id, obj) {
+  addDetail(id, obj) {
     return http.post(`/accounts-receivable/${id}/detail`, obj);
   }
 });
 
 
-
 // 要货需求分配
 export const demandAssignment = resource('/demand-assignment', http, {
-  queryDetailList (key) {
+  queryDetailList(key) {
     return http.get(`/demand-assignment/${key}/goods`);
   },
-  assignmentGoods (params) {
+  assignmentGoods(params) {
     // return http.get('/demand-assignment/goods', {params});
     return http({
       url: '/demand-assignment/goods',
       params,
-      paramsSerializer (params) {
+      paramsSerializer(params) {
         return qs.stringify(params, {indices: false});
       }
     });
   },
-  allotVaccine (ary) {
+  allotVaccine(ary) {
     return http.put('/demand-assignment/assign/vaccine', ary);
   },
-  createOrder (key) {
+  createOrder(key) {
     return http.put(`/demand-assignment/${key}/sales-ticket`);
   }
 });
 
 // 要货申请
 export const pullSignal = resource('/pull-signal', http, {
-  audit (key) {
+  audit(key) {
     return http.put(`/pull-signal/audit/${key}`);
   },
-  cancel (key) {
+  cancel(key) {
     return http.put(`/pull-signal/cancel/${key}`);
   },
-  queryCount (params) {
+  queryCount(params) {
     return http.get('/pull-signal/count', {params});
   }
 });
@@ -409,17 +408,17 @@ export const Vaccine = resource('/vaccine-info', http, {
   queryAllVaccine: (params) => {
     return http.get('/vaccine-info/valid', {params});
   },
-  queryLevelVaccine () {
+  queryLevelVaccine() {
     return http.get('/vaccine-info/filter');
   }
 });
 
 // 疫苗授权
 export const VaccineRights = resource('/vaccine-authorization', http, {
-  queryVaccineByPov (povId, params) {
+  queryVaccineByPov(povId, params) {
     return http.get(`/vaccine-authorization/${povId}`, {params});
   },
-  deleteVaccine (id) {
+  deleteVaccine(id) {
     return http.put(`/vaccine-authorization/detail/${id}`);
   }
 });
@@ -429,13 +428,13 @@ export const VaccineRights = resource('/vaccine-authorization', http, {
  *
  */
 export const cerpAccess = resource('', http, {
-  bindMunicipal () { // 绑定cdc角色
+  bindMunicipal() { // 绑定cdc角色
     return http.put('/erp-access/bind/municipal');
   },
-  bindDistrict (id) { // 市级绑定区县CDC
+  bindDistrict(id) { // 市级绑定区县CDC
     return http.put(`/erp-access/bind/district/${id}`);
   },
-  bindPov (cdcId, id) { // 绑定pov
+  bindPov(cdcId, id) { // 绑定pov
     // return http.put(`/erp-access/bind/pov/${id}`, {params: {cdcId}});
     return http({
       url: `/erp-access/bind/pov/${id}`,
@@ -445,41 +444,41 @@ export const cerpAccess = resource('', http, {
       },
       paramsSerializer: function (params) {
         return qs.stringify(params);
-      },
+      }
     });
   }
 });
 
 export const cerpAction = resource('/outbound/count', http, {
-  queryCount (params) { // 查询县级cdc
+  queryCount(params) { // 查询县级cdc
     return http.get('/erp-org/county', {params});
   },
-  queryLevel () { // 查询货主权限
+  queryLevel() { // 查询货主权限
     return http.get('/erp-org/org-level');
   },
-  queryPov (id, params) { // 查询pov
+  queryPov(id, params) { // 查询pov
     return http.get(`/erp-org/${id}/pov`, {params});
   },
-  queryAllPov (params) {
+  queryAllPov(params) {
     return http.get('/erp-org/pov', {params});
   },
-  queryPovList (params) { // 查询还没绑定的pov
+  queryPovList(params) { // 查询还没绑定的pov
     return http.get('/erp-org/pov-list', {params});
   },
-  queryCdcList (params) { // 查询还没绑定的cdc
+  queryCdcList(params) { // 查询还没绑定的cdc
     return http.get('/erp-org/cdc-list', {params});
   },
-  querySubordinate (params) {
+  querySubordinate(params) {
     return http.get('/erp-org/subordinate', {params});
   },
-  deletePov (id) {
-    return http.delete(`/erp-access/pov/${id}`);
+  deletePov(id) {
+    return http.delete('/erp-access/pov/' + id);
   },
-  deleteCdc (id) {
-    return http.delete(`/erp-access/cdc/${id}`);
+  deleteCdc(id) {
+    return http.delete('/erp-access/cdc/' + id);
   },
-  queryOnCDCs () {
-    return http.get(`/erp-org/superior`);
+  queryOnCDCs() {
+    return http.get('/erp-org/superior');
   }
 });
 

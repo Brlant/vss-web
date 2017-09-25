@@ -271,8 +271,7 @@
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="选择疫苗" prop="orgGoodsId">
               <el-select v-model="product.orgGoodsId" filterable placeholder="请输入关键字搜索产品" :clearable="true"
-                         :loading="loading"
-                         popper-class="order-good-selects"
+                         :loading="loading" popper-class="order-good-selects"
                          @change="getGoodDetail">
 
                 <el-option v-for="item in filterProductList" :key="item.id"

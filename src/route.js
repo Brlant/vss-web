@@ -106,12 +106,12 @@ const route = [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
-                meta: {moduleId: 'purchase', title: '', perm: 'show'}
+                meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'}
               },
               {
                 path: '/purchase/pov/allocation',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'purchase', title: '', perm: 'show'}
+                meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'}
               }
             ]
           },
@@ -234,18 +234,7 @@ const route = [
         path: '/file',
         component: resolve => require(['./components/files/vaccineBatch/index.vue'], resolve),
         meta: {moduleId: 'file', title: '疫苗批号文件管理', icon: 'fold', perm: 'show'},
-        children: [
-          // {
-          //   path: '/file/list',
-          //   component: resolve => require(['./components/files/vaccineBatch/index.vue'], resolve),
-          //   meta: {moduleId: 'file', title: '疫苗批号文件管理', perm: 'show'}
-          // },
-          // {
-          //   path: '/file/list2',
-          //   component: resolve => require(['./components/files/list.vue'], resolve),
-          //   meta: {moduleId: 'file', title: '厂商证照资料查询', perm: 'show'}
-          // }
-        ]
+        children: []
       },
       {
         path: '/trace',
