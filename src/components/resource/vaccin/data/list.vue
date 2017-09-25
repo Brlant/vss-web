@@ -124,7 +124,7 @@
                               class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
                 </perm>
                 <div class="id-part">
-                  <span>货主疫苗ID{{item.orgGoodsDto.id}}</span>
+                  <span>组织疫苗ID{{item.orgGoodsDto.id}}</span>
                   <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
                   </el-tag>
                   <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">证照过期</el-tag>
@@ -162,7 +162,7 @@
                   [ 产品图片 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
-                  [ 货主疫苗信息 ]
+                  [ 组织疫苗信息 ]
                 </el-col>
               </el-row>
               <el-row>
@@ -172,14 +172,17 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
-                  <goods-row label="货主疫苗ID" :span="12">
+                  <goods-row label="组织疫苗ID" :span="12">
                     {{ data.id}}
                   </goods-row>
-                  <goods-row label="货主疫苗名称" :span="12">
+                  <goods-row label="组织疫苗名称" :span="12">
                     {{ data.name}}
                   </goods-row>
                   <goods-row label="疫苗分类" :span="12">
                     <dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>
+                  </goods-row>
+                  <goods-row label="疫苗标志" :span="12">
+                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.propertyMap.firstVaccineSign"></dict>
                   </goods-row>
                   <goods-row label="储存条件" :span="12">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
@@ -207,7 +210,7 @@
               <div class="border-show"></div>
               <el-row>
                 <el-col :span="3" class="text-right" style="font-size: 12px">
-                  [ OMS疫苗信息 ]
+                  [ 疫苗基础信息 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
                   [ 包装存储信息 ]

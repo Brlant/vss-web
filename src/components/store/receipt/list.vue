@@ -259,6 +259,7 @@
       },
       refreshDetails () {
         this.getDetail();
+        this.resetRightBox();
       },
       getDetail: function () {
         this.receiptDetails = {};
