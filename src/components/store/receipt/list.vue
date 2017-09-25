@@ -235,7 +235,7 @@
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize,
+          pageSize: this.pager.pageSize
         }, this.filters);
         receipt.query(params).then(res => {
           if (isContinue) {

@@ -234,18 +234,7 @@ const route = [
         path: '/file',
         component: resolve => require(['./components/files/vaccineBatch/index.vue'], resolve),
         meta: {moduleId: 'file', title: '疫苗批号文件管理', icon: 'fold', perm: 'show'},
-        children: [
-          // {
-          //   path: '/file/list',
-          //   component: resolve => require(['./components/files/vaccineBatch/index.vue'], resolve),
-          //   meta: {moduleId: 'file', title: '疫苗批号文件管理', perm: 'show'}
-          // },
-          // {
-          //   path: '/file/list2',
-          //   component: resolve => require(['./components/files/list.vue'], resolve),
-          //   meta: {moduleId: 'file', title: '厂商证照资料查询', perm: 'show'}
-          // }
-        ]
+        children: []
       },
       {
         path: '/trace',

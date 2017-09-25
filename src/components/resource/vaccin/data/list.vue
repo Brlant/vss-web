@@ -145,11 +145,12 @@
             <span class="pull-right">
                  <el-button-group>
                   <perm label="org-relation-edit">
-                    <el-button @click="edit">编辑</el-button>
-                    <el-button @click="enableRelation" v-show="data.status == '0'">启用</el-button>
-                    <el-button @click="forbid" v-show="data.status == '1' ">停用</el-button>
+                    <el-button @click="edit"><i class="iconfont icon-edit"></i> 编辑</el-button>
+                    <el-button @click="enableRelation" v-show="data.status == '0'"><i class="iconfont icon-start"></i> 启用</el-button>
+                    <el-button @click="forbid" v-show="data.status == '1' "><i
+                      class="iconfont icon-stop"></i> 停用</el-button>
                     <perm label="org-goods-delete">
-                       <el-button @click="remove">删除</el-button>
+                       <el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>
                     </perm>
                   </perm>
                 </el-button-group>

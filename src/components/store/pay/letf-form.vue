@@ -252,22 +252,22 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, pay } from '@/resources';
+  import {BaseInfo, pay} from '@/resources';
 
   export default {
-    data () {
+    data() {
       return {
         form: {
-          remitteeId: '',
+          remitteeId: ''
         },
         rules: {
-          remitteeId: {required: true, message: '请选择收款方', trigger: 'change'},
+          remitteeId: {required: true, message: '请选择收款方', trigger: 'change'}
         },
-        orgs: [], // 订单列表
+        orgs: [] // 订单列表
       };
     },
     methods: {
-      queryOrgs (query) {
+      queryOrgs(query) {
         this.orgs = [];
         let params = {
           keyWord: query,
@@ -277,7 +277,7 @@
           this.orgs = res.data;
         });
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;

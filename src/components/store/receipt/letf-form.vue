@@ -258,12 +258,12 @@
     data () {
       return {
         form: {
-          payerId: '',
+          payerId: ''
         },
         rules: {
-          payerId: {required: true, message: '请选择POV', trigger: 'change'},
+          payerId: {required: true, message: '请选择POV', trigger: 'change'}
         },
-        povs: [], // 订单列表
+        povs: [] // 订单列表
       };
     },
     methods: {

@@ -277,7 +277,7 @@
           billAmount: {required: true, message: '请输入单据金额', trigger: 'blur'},
           unpaidAmount: {required: true, message: '请输入剩余金额', trigger: 'blur'}
         },
-        orders: [], // 订单列表
+        orders: [] // 订单列表
       };
     },
     methods: {
