@@ -23,6 +23,13 @@ export default {
     2: {'title': '执行中', state: '1', num: 0},
     3: {'title': '已完成', state: '2', num: 0}
   },
+  outOrderType: {
+    1: {'title': '待确定', state: '0', num: 0},
+    2: {'title': '待审单', state: '1', num: 0},
+    3: {'title': '执行中', state: '2', num: 0},
+    4: {'title': '已完成', state: '3', num: 0}
+
+  },
   /**
    * 格式化地址，已省/市/区显示
    * @param province
