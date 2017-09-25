@@ -18,6 +18,11 @@ export default {
     1: {'title': '未收', status: 0, num: 0},
     2: {'title': '已收', status: 1, num: 0}
   },
+  inOrderType: {
+    1: {'title': '待审单', state: '0', num: 0},
+    2: {'title': '执行中', state: '1', num: 0},
+    3: {'title': '已完成', state: '2', num: 0}
+  },
   /**
    * 格式化地址，已省/市/区显示
    * @param province

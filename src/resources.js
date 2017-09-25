@@ -234,7 +234,74 @@ export const DictGroup = resource('dictGroup', http, {
   }
 });
 // 订单
-export const Order = resource('/order', http, {});
+export const Order = resource('/order', http, {
+  check: (orderId, obj) => {
+    return http.put('order/' + orderId + '/check', obj);
+  },
+
+  confirmOrder: (orderId) => {// 确认订单
+    return http.put('/order-status/' + orderId + '/confirm');
+  },
+  cancelOrder: (orderId, obj) => {// 取消订单
+    return http.put('/order-status/' + orderId + '/cancel', obj);
+  },
+
+  // 订单
+  examineOrder: (orderId, obj) => {// 审单
+    return http.put('/order-status/' + orderId + '/examine', obj);
+  },
+  receiptOrder: (orderId) => {// 确认收货
+    return http.put('/order-status/' + orderId + '/receipt');
+  },
+  acceptanceOrder: (orderId) => {// 验收通过
+    return http.put('/order-status/' + orderId + '/acceptance');
+  },
+  rejectionOrder: (orderId, obj) => {// 拒收
+    return http.put('/order-status/' + orderId + '/rejection', obj);
+  },
+
+  rejectionReviewOrder: (orderId, obj) => {// 确认复核
+    return http.put('/order-status/' + orderId + '/rejection-review/reject', obj);
+  },
+  terminationRejection: (orderId, obj) => {// 中止拒收
+    return http.put('/order-status/' + orderId + '/rejection-review/stop', obj);
+  },
+  agreementReceiptOrder: (orderId, obj) => {// 取消拒收
+    return http.put('/order-status/' + orderId + '/check-receipt', obj);
+  },
+  affirmRejectionOrder: (orderId, obj) => {// 确认拒收
+    return http.put('/order-status/' + orderId + '/check-rejection', obj);
+  },
+  stockOrder: (orderId) => {// 货品上架
+    return http.put('/order-status/' + orderId + '/stock');
+  },
+  // 出库单
+  pickingOutOrder: (orderId) => {// 货品下架
+    return http.put('/order-status/' + orderId + '/picking-out');
+  },
+  generationOrder: (orderId) => {// 生成出库单
+    return http.put('/order-status/' + orderId + '/generation');
+  },
+  packageOrder: (orderId) => {// 出库单打包
+    return http.put('/order-status/' + orderId + '/package');
+  },
+  outgoingCompletedOrder: (orderId) => {// 确认出库
+    return http.put('/order-status/' + orderId + '/outgoing-completed');
+  },
+  distributionOrder: (orderId) => {// 确认配送
+    return http.put('/order-status/' + orderId + '/distribution');
+  },
+  signOrder: (orderId) => {// 客户签收
+    return http.put('/order-status/' + orderId + '/sign');
+  },
+  // 查询异常
+  queryOrderExcepiton: (params) => {
+    return http.get('/order/quality-exception', {params});
+  },
+  queryStateNum: function (params) {
+    return http.get('/order/count/', {params});
+  }
+});
 
 /**
  * 库存波次
