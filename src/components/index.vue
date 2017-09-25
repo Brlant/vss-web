@@ -175,32 +175,38 @@
           });
         });
       }
-
-      Auth.permission().then(res => {
-        this.$store.commit('initPermissions', res.data);
-      }).then(() => {
-        DictGroup.getAll().then(data => {
-          this.$store.commit('initDict', data);
-          setTimeout(() => {
-            utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
-            this.loading = false;
-          }, 1000);
-        });
-      });
-
-      cerpAction.queryLevel().then(res => {
-        window.localStorage.setItem('logLevel', res.data);
-        this.isPermission = res.data === 0;
-      });
+      this.queryPerms();
+      this.queryLevel();
     },
     methods: {
       queryRoles () {
         cerpAccess.bindMunicipal().then(() => {
           this.loading = false;
+          this.queryPerms();
+          this.queryLevel();
         }).catch((error) => {
           this.loading = true;
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '绑定市级CDC出错'
+          });
+        });
+      },
+      queryLevel () {
+        cerpAction.queryLevel().then(res => {
+          window.localStorage.setItem('logLevel', res.data);
+          this.isPermission = res.data === 0;
+        });
+      },
+      queryPerms () {
+        Auth.permission().then(res => {
+          this.$store.commit('initPermissions', res.data);
+        }).then(() => {
+          DictGroup.getAll().then(data => {
+            this.$store.commit('initDict', data);
+            setTimeout(() => {
+              utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
+              this.loading = false;
+            }, 1000);
           });
         });
       }
