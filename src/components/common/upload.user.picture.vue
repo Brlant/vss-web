@@ -13,7 +13,7 @@
       :data="uploadData"
     >
       <img v-if="imageUrl" :src="imageUrl" class="avatar-user">
-      <img v-else src="/static/img/userpic.png" class="avatar-user">
+      <img v-else src="/static/img/logo_user_default.png" class="avatar-user">
     </el-upload>
   </div>
 </template>
@@ -33,8 +33,8 @@
   .avatar-user {
     margin-right: 10px;
     border-radius: 50%;
-    height: 40px;
-    width: 40px;
+    height: 50px;
+    width: 50px;
     border: 1px solid #eee
   }
 </style>
