@@ -211,15 +211,6 @@
       }
     },
     mounted () {
-      Access.getRoleMenus().then(res => {
-        let menuData = res.data;
-        let menuList = {};
-        res.data.menuList.forEach(item => {
-          menuList[item.id] = item.name;
-        });
-        menuData.menuList = menuList;
-        this.$store.commit('initPermList', menuData);
-      });
       this.getPageList();
     },
     watch: {
@@ -235,9 +226,9 @@
         let param = Object.assign({}, {
           keyword: this.typeTxt,
           deleteFlag: false,
-          objectId: 'wms-system'
+          objectId: 'cerp-system'
         }, this.filters);
-        Access.query(param).then(res => {
+        Access.queryERPAccess(param).then(res => {
           this.showTypeList = res.data.list;
           this.typeList = res.data.list;
           this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);

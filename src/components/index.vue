@@ -114,7 +114,7 @@
 <script>
   import AppHeader from './common/app.header.vue';
   import AppFooter from './common/app.footer.vue';
-  import { Auth, DictGroup, cerpAccess, cerpAction } from '../resources';
+  import { Auth, DictGroup, cerpAccess, cerpAction, Access } from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
 
@@ -160,6 +160,15 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
+          Access.getRoleMenus(data.userCompanyAddress).then(res => {
+            let menuData = res.data;
+            let menuList = [];
+            res.data.menuList.forEach(item => {
+              menuList[item.id] = item.name;
+            });
+            menuData.menuList = menuList;
+            this.$store.commit('initPermList', menuData);
+          });
         }).catch(() => {
           Auth.logout().then(() => {
             this.$router.replace('/login');
@@ -178,6 +187,8 @@
           }, 1000);
         });
       });
+
+
       cerpAction.queryLevel().then(res => {
         window.localStorage.setItem('logLevel', res.data);
         this.isPermission = res.data === 0;

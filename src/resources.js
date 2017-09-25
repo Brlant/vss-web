@@ -107,22 +107,32 @@ export const OmsAttachment = resource('omsAttachment', http, {
 export const OrgUser = resource('/oms/user/org', http, {
   queryOrgInfo: (id, params) => {
     return http.get('/oms/user/org/' + id, {params});
-  }
+  },
+  queryUsers: (id, params) => {
+    return http.get(`/erp-org/${id}/users`, {params});
+  },
 });
 
 // 角色管理对象
 export const Access = resource('/oms/access', http, {
-  getRoleMenus: () => {
-    return http.get('/oms/access/menus', {params: {objectId: 'cerp-system'}});
+  getRoleMenus: (orgId) => {
+    return http.get(`/erp-access/org/${orgId}/admin/menus`);
   },
   getOrgRoleMenus: (orgId) => {
     return http.get('/oms/access/org/' + orgId + '/admin/menus');
   },
   getOrgRole: (orgId, params) => {
+    params.objectId = 'cerp-system';
     return http.get('/oms/access/orgs/' + orgId, {params});
   },
   getRoleDetail: (roleId) => {
     return http.get('/oms/access/' + roleId);
+  },
+  queryERPAccess: (params) => {
+    return http.get('/erp-access/orgs/self/', {params});
+  },
+  save: (obj) => {
+    return http.post('/erp-access', obj);
   }
 });
 

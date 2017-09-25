@@ -139,7 +139,7 @@
     methods: {
       getRoleSelect: function () {
         let param = {
-          usableStatus: 1
+          usableStatus: 1,
         };
         let orgId = this.orgId;
         if (!orgId) {

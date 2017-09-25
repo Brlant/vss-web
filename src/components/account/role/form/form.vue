@@ -107,10 +107,13 @@
         }
       };
     },
+    computed: {
+      roleMenu () {
+        return this.$store.state.permList;
+      }
+    },
     mounted: function () {
-      this.$nextTick(() => {
-        this.queryRoleMenu();
-      });
+
     },
     watch: {
       formItem: function (val) {
@@ -131,35 +134,33 @@
         if (!val) {
           this.$refs['roleform'].resetFields();
         }
+      },
+      roleMenu (val) {
+        if (!val) return;
+        const self = this;
+        val.menuList.forEach(function (val) {
+          self.menuData[val.id] = val.name;
+        });
+        val.tree.forEach(function (val) {
+          let temp = {
+            parentId: val.parentId,
+            status: false,
+            isIndeterminate: false,
+            children: [],
+            checkedChildren: []
+          };
+          val.children.forEach(function (val) {
+            let child = {
+              id: val,
+              checked: false
+            };
+            temp.children.push(child);
+          });
+          self.tree.push(temp);
+        });
       }
     },
     methods: {
-      queryRoleMenu () {// 查询权限，组装需要的数据结构
-        const self = this;
-        Access.getRoleMenus().then(res => {
-          let roleMenu = res.data;
-          roleMenu.menuList.forEach(function (val) {
-            self.menuData[val.id] = val.name;
-          });
-          roleMenu.tree.forEach(function (val) {
-            let temp = {
-              parentId: val.parentId,
-              status: false,
-              isIndeterminate: false,
-              children: [],
-              checkedChildren: []
-            };
-            val.children.forEach(function (val) {
-              let child = {
-                id: val,
-                checked: false
-              };
-              temp.children.push(child);
-            });
-            self.tree.push(temp);
-          });
-        });
-      },
       selectExistMenu () {// 选中已有的权限
         let self = this;
 

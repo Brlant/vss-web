@@ -185,7 +185,7 @@
           keyWord: this.filters.keyWord
         });
         this.loadingData = true;
-        OrgUser.queryOrgInfo(orgId, data).then(res => {
+        OrgUser.queryUsers(orgId, data).then(res => {
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
