@@ -467,7 +467,7 @@
         this.$refs['orderGoodsForm'].resetFields();
         this.accessoryList = [];
         this.filterProducts();
-        // this.form.cdcId = this.cdcs.filter(f => f.level === this.form.type)[0] && this.cdcs.filter(f => f.level === this.form.type)[0].orgId || '';
+        this.form.cdcId = this.cdcs.filter(f => f.level === this.form.type)[0] && this.cdcs.filter(f => f.level === this.form.type)[0].orgId || '';
         this.searchProduct();
       },
       searchProduct: function () {
