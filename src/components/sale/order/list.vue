@@ -332,7 +332,7 @@
       }
     },
     methods: {
-      showPartItem (item) {
+      showPartItem () {
         this.showPart = true;
       },
       getOrderStatus: function (order) {

@@ -659,6 +659,7 @@
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
         this.searchProduct();
+        this.filterPOV();
         this.checkLicence(this.form.orgId, '货主');
       },
       form: {

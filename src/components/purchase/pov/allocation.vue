@@ -108,9 +108,9 @@
                   库存不足
                 </span>
               </el-col>
-              <el-col :span="3">
-                <span>
-                    <a href="#" class="btn-circle" @click.prevent="showPart(item)"><i
+              <el-col :span="3" class="opera-btn">
+                <span @click.prevent="showPart(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
                       class="iconfont icon-detail"></i></a>
                   手动分配
                 </span>
