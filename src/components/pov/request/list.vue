@@ -103,7 +103,7 @@
                     <i class="iconfont icon-verify"></i> 审核
                   </a>
                 </perm>
-                <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status !== 4">
+                <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status !== 3">
                   <a href="#" @click.stop.prevent="cancel()">
                     <i class="iconfont icon-stop"></i>取消
                   </a>
