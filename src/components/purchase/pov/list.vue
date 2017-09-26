@@ -41,37 +41,6 @@
     margin-right: -1em;
   }
 
-  .opera-btn-group {
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    background: #f1f1f1;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
-    .el-checkbox-warp {
-      padding: 10px;
-    }
-  }
 </style>
 <template>
   <div class="order-page">

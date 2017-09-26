@@ -233,6 +233,10 @@ export const DictGroup = resource('dictGroup', http, {
     });
   }
 });
+
+// erp订单
+export const erpOrder = resource('/erp-order', http, {});
+
 // 订单
 export const Order = resource('/order', http, {
   check: (orderId, obj) => {

@@ -95,62 +95,79 @@
 <template>
   <div class="order-page">
     <div class="container">
-      <el-form v-show="showSearch" class="advanced-query-form">
-        <el-row>
-          <el-col :span="8">
-            <oms-form-row label="货主订单号" :span="6">
-              <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="8">
-            <oms-form-row label="物流方式" :span="6">
-              <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationMeansList"></el-option>
-              </el-select>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="8">
-            <oms-form-row label="来源单位" :span="6">
-              <el-select filterable remote placeholder="请输入关键字搜索来源单位" :remote-method="filterOrg" :clearable="true"
-                         v-model="searchCondition.supplierId">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
-              </el-select>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="8">
-            <oms-form-row label="来源订单号" :span="6">
-              <oms-input type="text" v-model="searchCondition.thirdPartyNumber" placeholder="请输入来源订单号"></oms-input>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="8">
-            <oms-form-row label="物流商" :span="6">
-              <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
-                         :clearable="true"
-                         v-model="searchCondition.logisticsProviderId">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
-              </el-select>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="10">
-            <oms-form-row label="预计入库/拟退货时间" :span="8">
-              <el-col :span="24">
-                <el-date-picker
-                  v-model="expectedTime"
-                  type="daterange"
-                  placeholder="请选择" format="yyyy-MM-dd">
-                </el-date-picker>
-              </el-col>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="6">
-            <oms-form-row label="" :span="6">
-              <el-button type="primary" @click="searchInOrder">查询</el-button>
-              <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-            </oms-form-row>
-          </el-col>
-        </el-row>
-      </el-form>
+      <div class="opera-btn-group" :class="{up:!showSearch}">
+        <div class="opera-icon">
+          <span class="">
+            <i class="iconfont icon-search"></i> 筛选查询
+          </span>
+          <span class="pull-right" style="margin-left: 10px" @click.prevent="add">
+            <a href="#" class="btn-circle" @click.prevent=""><i
+              class="iconfont icon-plus"></i> </a>添加
+          </span>
+          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+            <i class="el-icon-arrow-up"></i>
+            <span v-show="showSearch">收起筛选</span>
+            <span v-show="!showSearch">展开筛选</span>
+          </span>
+        </div>
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+          <el-row>
+            <el-col :span="8">
+              <oms-form-row label="货主订单号" :span="6">
+                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="物流方式" :span="6">
+                <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
+                  <el-option :value="item.key" :key="item.key" :label="item.label"
+                             v-for="item in transportationMeansList"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="来源单位" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索来源单位" :remote-method="filterOrg" :clearable="true"
+                           v-model="searchCondition.supplierId">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="来源订单号" :span="6">
+                <oms-input type="text" v-model="searchCondition.thirdPartyNumber" placeholder="请输入来源订单号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="物流商" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
+                           :clearable="true"
+                           v-model="searchCondition.logisticsProviderId">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="预计入库时间" :span="8">
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="expectedTime"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="6">
+              <oms-form-row label="" :span="6">
+                <el-button type="primary" @click="searchInOrder">查询</el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+
 
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
@@ -160,20 +177,14 @@
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
-        <span class="pull-right">
-          <a href="#" class="btn-circle" @click.stop.prevent="advancedQuery">
-              <i class="iconfont icon-search"></i>
-          </a>
-        </span>
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="4">货主/订单号</el-col>
-          <el-col :span="2">业务类型</el-col>
+          <el-col :span="7">货主/订单号</el-col>
+          <el-col :span="4">业务类型</el-col>
           <el-col :span="6">来源/订单号</el-col>
-          <el-col :span="6">物流</el-col>
           <el-col :span="4">时间</el-col>
-          <el-col :span="2">状态</el-col>
+          <el-col :span="3">状态</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -191,7 +202,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="4">
+              <el-col :span="7">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -199,7 +210,7 @@
                   {{item.orgName }}
                 </div>
               </el-col>
-              <el-col :span="2">
+              <el-col :span="4">
                 <div class="vertical-center">
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
@@ -207,18 +218,6 @@
               <el-col :span="6">
                 <div class="f-grey" v-show="item.bizType < 2">{{item.thirdPartyNumber }}</div>
                 <div v-show="item.bizType < 2">{{item.supplierName }}</div>
-              </el-col>
-              <el-col :span="6">
-                <div v-show="item.bizType !== '2'">
-                  <div>
-                    物流方式：
-                    <dict :dict-group="'transportationMeans'" :dict-key="item.transportationMeansId"></dict>
-                  </div>
-                </div>
-                <div v-show="item.transportationMeansId === '1'||item.transportationMeansId === '3'  ">
-                  物流商：{{ item.logisticsProviderName}}
-                </div>
-                <div v-show="item.transportationMeansId === '2'">提货地址：{{ item.transportationAddress}}</div>
               </el-col>
               <el-col :span="4">
                 <div>
@@ -231,11 +230,10 @@
                   ：{{ item.expectedTime | date}}
                 </div>
               </el-col>
-              <el-col :span="2">
+              <el-col :span="3">
                 <div class="vertical-center">
                   {{getOrderStatus(item)}}
                   <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
-                  <el-tag type="warning" v-show="isLock(item)">被锁定</el-tag>
                 </div>
               </el-col>
             </el-row>
@@ -257,16 +255,21 @@
                 class="order-detail-info" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" @close="resetRightBox"></show-form>
     </page-right>
+    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
+                @close="resetRightBox"></add-form>
+    </page-right>
   </div>
 </template>
 <script>
   import utils from '@/tools/utils';
   import showForm from './show.order.in.vue';
-  import { Order, BaseInfo } from '@/resources';
+  import addForm from './form/InForm.vue';
+  import { Order, BaseInfo, erpOrder } from '@/resources';
 
   export default {
     components: {
-      showForm
+      showForm, addForm
     },
     data: function () {
       return {
@@ -277,7 +280,7 @@
         orderList: [],
         filters: {
           type: 0,
-          state: '',
+          state: '6',
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
@@ -385,7 +388,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         });
-        Order.query(param).then(res => {
+        erpOrder.query(param).then(res => {
           this.orderList = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
@@ -430,13 +433,13 @@
         this.filterLogistics();
       },
       queryStatusNum: function () {
-//        Order.queryStateNum(params).then(res => {
-//          let data = res.data;
-//          this.orgType[0].num = this.obtionStatusNum(data['all']);
-//          this.orgType[1].num = this.obtionStatusNum(data['pending-confirm']);
-//          this.orgType[2].num = this.obtionStatusNum(data['audited']);
-//          this.orgType[3].num = this.obtionStatusNum(data['be-received']);
-//        });
+        Order.queryStateNum('').then(res => {
+          let data = res.data;
+          this.orgType[0].num = this.obtionStatusNum(data['all']);
+          this.orgType[1].num = this.obtionStatusNum(data['pending-confirm']);
+          this.orgType[2].num = this.obtionStatusNum(data['audited']);
+          this.orgType[3].num = this.obtionStatusNum(data['be-received']);
+        });
       },
       isLock: function (item) { // 判断是不是被锁定
         let isLock = false;

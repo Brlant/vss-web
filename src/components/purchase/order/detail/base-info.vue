@@ -1,3 +1,8 @@
+<style scoped="">
+  .oms-row {
+    margin-bottom: 10px;
+  }
+</style>
 <template>
   <div>
     <div v-if="!currentOrder.id">
