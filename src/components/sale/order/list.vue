@@ -147,7 +147,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="预计入库时间" :span="8">
+              <oms-form-row label="预计出库时间" :span="8">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
@@ -211,21 +211,15 @@
               </el-col>
               <el-col :span="4">
                 <div class="vertical-center">
-                  <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
+                  <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
               <el-col :span="6" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
-                <div>
-                  <span style="letter-spacing:2em;margin-right: -2em">下单</span>
-                  ：{{item.createTime | date }}
-                </div>
-                <div>
-                  <span>预计入库</span>
-                  ：{{ item.expectedTime | date}}
-                </div>
+                <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
+                <div v-show="item.bizType !== '2' ">{{ getTimeTitle(item) }}{{ item.expectedTime | date }}</div>
               </el-col>
               <el-col :span="3">
                 <div class="vertical-center">
@@ -274,7 +268,7 @@
         showSearch: false,
         orderList: [],
         filters: {
-          type: 0,
+          type: 1,
           state: '0',
           orderNo: '',
           logisticsProviderId: '',
@@ -436,6 +430,30 @@
 //          this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
 //          this.orgType[3].num = this.obtionStatusNum(data['in-refuse']);
         });
+      },
+      getTimeTitle: function (item) {
+        let title = '';
+        switch (item.transportationMeansId) {
+          case '0': {
+            title = '预计送货:';
+            if (item.bizType === '1') {
+              title = '预计出库:';
+            }
+            break;
+          }
+          case '1': {
+            title = '预计提货:';
+            break;
+          }
+          case '2': {
+            title = '预计发货:';
+            break;
+          }
+        }
+        if (item.bizType === '2') {
+          title = '';
+        }
+        return title;
       },
       isLock: function (item) { // 判断是不是被锁定
         let isLock = false;

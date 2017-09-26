@@ -228,7 +228,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">增加出库订单</h2>
+        <h2 class="clearfix right-title">增加销售订单</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -252,21 +252,17 @@
                            v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="POV" :prop=" showContent.isShowCustomerId?'customerId':'' "
-                          v-show="showContent.isShowCustomerId">
-              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="POV">
+              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                  <span class="pull-left">{{org.name}}</span>
-                  <span class="pull-right" style="color: #999">
-                     <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
-                    </span>
+                <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                           v-for="org in orgList">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="POV仓库地址" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
+            <el-form-item label="POV仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
                           v-show="showContent.isShowOtherContent">
-              <el-select placeholder="请选择POV仓库地址" v-model="form.transportationAddress" filterable clearable
+              <el-select placeholder="请选择POV仓库" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -472,7 +468,7 @@
 </template>
 
 <script>
-  import {BaseInfo, Order, LogisticsCenter, http, Address} from '@/resources';
+  import { erpOrder, Order, LogisticsCenter, http, Address, cerpAction } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -527,7 +523,7 @@
         form: {
           'orgId': '',
           'customerId': '',
-          'bizType': '',
+          'bizType': '0',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '',
@@ -662,6 +658,8 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
+        this.searchProduct();
+        this.checkLicence(this.form.orgId, '货主');
       },
       form: {
         handler: 'autoSave',
@@ -693,6 +691,10 @@
         this.form.logisticsProviderId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
+        this.form.customerId = '';
+        this.form.transportationAddress = '';
+        this.form.actualConsignee = '';
+        this.form.logisticsCentreId = '';
       },
       formatPrice() {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
@@ -709,36 +711,12 @@
       doClose: function () {
         this.$emit('close');
       },
-      filterOrg: function (query) {// 过滤POV
-        let orgId = this.form.orgId;
-        let bizType = this.form.bizType;
-        if (!orgId || !bizType) {
-          this.orgList = [];
-          this.form.supplierId = '';
-          return;
-        }
-        let relation = '';
-        if (bizType === '0') relation = '0';
-        if (bizType === '1') relation = '1';
-        if (!relation) return;
-        let params = {
-          keyWord: query,
-          relation: relation
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.orgList = res.data;
-        }).then(() => {
-          if (!this.isStorageData) {// 当有缓存时，不做清空操作
-            this.form.transportationAddress = '';
-            this.warehouses = [];
-          }
-          this.orgList.forEach(item => {
-            if (this.form.customerId === item.id) {
-              Address.queryAddress(this.form.customerId, {deleteFlag: false, orgId: this.form.customerId}).then(res => {
-                this.warehouses = res.data;
-              });
-            }
-          });
+      filterPOV: function (query) {// 过滤POV
+        let params = Object.assign({}, {
+          keyWord: query
+        });
+        cerpAction.queryAllPov(params).then(res => {
+          this.orgList = res.data.list;
         });
       },
       filterLogisticsCenter: function () {// 过滤物流中心
@@ -748,15 +726,6 @@
         LogisticsCenter.query(param).then(res => {
           this.LogisticsCenter = res.data;
         });
-      },
-      changeOrg(val) {// 货主改变时
-        if (!this.isStorageData) {// 有缓存时，不清空业务类型
-          this.form.bizType = '';
-          this.filterProductList = [];
-          this.form.detailDtoList = [];
-        }
-        this.searchProduct();
-        this.checkLicence(val, '货主');
       },
       bizTypeChange: function (val) {// 业务类型改变时
         if (!this.isStorageData) {// 有缓存时，不重置表单
@@ -774,7 +743,7 @@
               isShowCustomerId: true, // 是否显示POV
               expectedTimeLabel: '预计出库时间'
             };
-            this.filterOrg();
+            this.filterPOV();
             break;
           }
           case '1' : {
@@ -783,7 +752,7 @@
               isShowCustomerId: true, // 是否显示POV
               expectedTimeLabel: '预计出库时间'
             };
-            this.filterOrg();
+            this.filterPOV();
             break;
           }
           case '2' : {
@@ -831,6 +800,18 @@
       },
       changeCustomerId(val) {// POV改变时
         this.checkLicence(val, 'POV');
+        this.searchWarehouses(val);
+      },
+      searchWarehouses (orgId) {
+        if (!orgId) {
+          this.warehouses = [];
+          this.form.transportationAddress = '';
+          return;
+        }
+        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId}).then(res => {
+          this.warehouses = res.data || [];
+          this.form.transportationAddress = this.warehouses.filter(i => i.default)[0].id;
+        });
       },
       changeWarehouseAdress: function (val) {
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
@@ -1169,11 +1150,11 @@
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.customerId = saveData.orgId;
-          Order.save(saveData).then(res => {
+          erpOrder.save(saveData).then(res => {
             this.resetForm();
             this.$notify({
               duration: 2000,
-              message: '新增订单成功',
+              message: '新增销售订单成功',
               type: 'success'
             });
             window.localStorage.removeItem(this.saveKey);
@@ -1186,7 +1167,7 @@
             this.doing = false;
             this.$notify({
               duration: 2000,
-              title: '新增订单失败',
+              title: '新增销售订单失败',
               message: error.response.data.msg,
               type: 'error'
             });
