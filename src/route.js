@@ -155,11 +155,6 @@ const route = [
             meta: {moduleId: 'pov', title: '疫苗要货申请', perm: 'pull-signal'}
           },
           {
-            path: '/pov/get',
-            component: resolve => require(['./components/pov/get/list.vue'], resolve),
-            meta: {moduleId: 'pov', title: 'POV收货管理', perm: 'show'}
-          },
-          {
             path: '/pov/store',
             component: resolve => require(['./components/pov/store/list.vue'], resolve),
             meta: {moduleId: 'pov', title: 'POV库存管理', perm: 'show'}

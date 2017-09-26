@@ -41,6 +41,9 @@
     margin-right: -1em;
   }
 
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -159,14 +162,19 @@
         </el-pagination>
       </div>
     </div>
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
+                class="order-detail-info" partClass="pr-no-animation">
+      <show-form :currentItem="currentItem" @close="resetRightBox"></show-form>
+    </page-right>
   </div>
 </template>
 <script>
   //  import order from '../../../tools/demandList';
   import { demandAssignment, pullSignal } from '@/resources';
   import utils from '../../../tools/utils';
-
+  import showForm from './detail/index.vue';
   export default {
+    components: {showForm},
     data () {
       return {
         loadingData: true,
@@ -193,6 +201,7 @@
           pageSize: 15
         },
         currentItemId: '',
+        currentItem: {},
         checkList: [], // 选中的订单列表
         isCheckAll: false
       };
@@ -250,6 +259,7 @@
       },
       showDetail (item) {
         this.currentItemId = item.id;
+        this.currentItem = item;
         this.showDetailPart = true;
       },
       resetRightBox () {
