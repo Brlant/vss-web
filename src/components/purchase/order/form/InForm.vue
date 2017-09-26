@@ -249,8 +249,8 @@
                            v-for="item in currentTransportationMeans"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="供应商">
-              <el-select filterable remote placeholder="请输入关键字搜索供应商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="销售厂商">
+              <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -510,7 +510,7 @@
             {validator: checkOrderNumber}
           ],
           supplierId: [
-            {required: true, message: '请选择来源单位', trigger: 'change'}
+            {required: true, message: '请选择销售厂商', trigger: 'change'}
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
@@ -641,8 +641,10 @@
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
         this.$refs['orderGoodsAddForm'].resetFields();
+        this.form.supplierId = '';
         this.form.actualConsignee = '';
         this.form.logisticsProviderId = '';
+        this.form.logisticsCentreId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
       },

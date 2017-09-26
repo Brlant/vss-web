@@ -91,6 +91,10 @@
   .order-list-item {
     cursor: pointer;
   }
+
+  .pt10 {
+    padding-top: 10px;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -126,16 +130,11 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="来源单位" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索来源单位" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row label="销售厂商" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
                 </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="来源订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.thirdPartyNumber" placeholder="请输入来源订单号"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
@@ -182,7 +181,7 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="7">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">来源/订单号</el-col>
+          <el-col :span="6">销售厂商</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
         </el-row>
@@ -215,18 +214,16 @@
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="6">
-                <div class="f-grey" v-show="item.bizType < 2">{{item.thirdPartyNumber }}</div>
-                <div v-show="item.bizType < 2">{{item.supplierName }}</div>
+              <el-col :span="6" class="pt10">
+                <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
                 <div>
                   <span style="letter-spacing:2em;margin-right: -2em">下单</span>
                   ：{{item.createTime | date }}
                 </div>
-                <div v-show="item.bizType !== '2' ">
-                  <span v-show="item.bizType === '1'" style="letter-spacing:0.5em;margin-right: -0.5em">拟退货</span>
-                  <span v-show="item.bizType !== '1'">预计入库</span>
+                <div>
+                  <span>预计入库</span>
                   ：{{ item.expectedTime | date}}
                 </div>
               </el-col>
@@ -393,7 +390,7 @@
           this.pager.count = res.data.count;
           this.loadingData = false;
         });
-        // this.queryStatusNum(param);
+        this.queryStatusNum(param);
       },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.searchCondition.orgId;
@@ -432,13 +429,14 @@
         this.filterOrg();
         this.filterLogistics();
       },
-      queryStatusNum: function () {
-        Order.queryStateNum('').then(res => {
+      queryStatusNum: function (params) {
+        erpOrder.queryStateNum(params).then(res => {
           let data = res.data;
-          this.orgType[0].num = this.obtionStatusNum(data['all']);
-          this.orgType[1].num = this.obtionStatusNum(data['pending-confirm']);
-          this.orgType[2].num = this.obtionStatusNum(data['audited']);
-          this.orgType[3].num = this.obtionStatusNum(data['be-received']);
+          this.orgType[0].num = this.obtionStatusNum(data['in-pend-check']);
+          this.orgType[1].num = this.obtionStatusNum(data['in-pend-execute']);
+          this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
+          this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
+          this.orgType[3].num = this.obtionStatusNum(data['in-refuse']);
         });
       },
       isLock: function (item) { // 判断是不是被锁定

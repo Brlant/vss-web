@@ -13,16 +13,13 @@
       <el-row style="margin-bottom: 0">
         <oms-row label="货主订单号" :span="5">{{ currentOrder.orderNo }}</oms-row>
       </el-row>
-      <el-row style="margin-bottom:0" v-show=" currentOrder.bizType !== '2' ">
+      <el-row style="margin-bottom:0">
         <el-col :span="12">
           <oms-row label="货主">
             {{currentOrder.orgName}}
           </oms-row>
-          <oms-row label="来源单位" v-show=" currentOrder.bizType !== '3' ">
+          <oms-row label="销售厂商">
             {{currentOrder.supplierName}}
-          </oms-row>
-          <oms-row label="物流方式">
-            <dict :dict-group="'transportationMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
           </oms-row>
           <oms-row label="物流商"
                    v-show="currentOrder.transportationMeansId === '1' || currentOrder.transportationMeansId === '3'  ">
@@ -34,6 +31,9 @@
           <oms-row label="运输条件">
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
           </oms-row>
+          <oms-row label="订单状态">
+            {{ getCurrentOrderStatus(currentOrder.state) }}
+          </oms-row>
         </el-col>
         <el-col :span="12">
           <oms-row label="业务类型">
@@ -42,36 +42,16 @@
           <oms-row label="下单时间">
             <span class="goods-span">{{currentOrder.createTime | date}}</span>
           </oms-row>
-          <oms-row :label=" currentOrder.bizType === '1'?'拟退货时间':'预计入库时间' ">
+          <oms-row label="物流方式">
+            <dict :dict-group="'transportationMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
+          </oms-row>
+          <oms-row label="物流中心">
+            <span class="goods-span">{{currentOrder.centreName}}</span>
+          </oms-row>
+          <oms-row label="预计入库时间">
             <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
           </oms-row>
-          <oms-row label="订单状态">
-            {{ getCurrentOrderStatus(currentOrder.state) }}
-          </oms-row>
         </el-col>
-      </el-row>
-      <el-row style="margin-bottom:0" v-show=" currentOrder.bizType === '2' ">
-        <el-col :span="12">
-          <oms-row label="货主">
-            {{currentOrder.orgName}}
-          </oms-row>
-          <oms-row label="业务类型">
-            <dict :dict-group="'bizInType'" :dict-key="currentOrder.bizType"></dict>
-          </oms-row>
-        </el-col>
-        <el-col :span="12">
-          <oms-row label="下单时间">
-            <span class="goods-span">{{currentOrder.createTime | date}}</span>
-          </oms-row>
-          <oms-row label="订单状态">
-            {{ getCurrentOrderStatus(currentOrder.state) }}
-          </oms-row>
-        </el-col>
-      </el-row>
-      <el-row style="margin-bottom:0">
-        <oms-row label="物流中心" :span="5">
-          <span class="goods-span">{{currentOrder.centreName}}</span>
-        </oms-row>
       </el-row>
       <el-row v-show="currentOrder.remark">
         <oms-row label="备注" :span="5">{{ currentOrder.remark }}</oms-row>
