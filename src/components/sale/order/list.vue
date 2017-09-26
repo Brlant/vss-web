@@ -130,8 +130,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="销售厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row label="POV" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
                 </el-select>
@@ -181,7 +181,7 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="7">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">销售厂商</el-col>
+          <el-col :span="6">POV</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
         </el-row>
@@ -238,8 +238,6 @@
           </div>
         </div>
       </div>
-
-
     </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
@@ -253,15 +251,15 @@
       <show-form :orderId="currentOrderId" @close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
+      <add-form type="1" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
   </div>
 </template>
 <script>
   import utils from '@/tools/utils';
-  import showForm from './show.order.in.vue';
-  import addForm from './form/InForm.vue';
+  import showForm from './show.order.out.vue';
+  import addForm from './form/outForm.vue';
   import { Order, BaseInfo, erpOrder } from '@/resources';
 
   export default {
@@ -318,10 +316,10 @@
     },
     computed: {
       transportationMeansList: function () {
-        return this.$store.state.dict['transportationMeans'];
+        return this.$store.state.dict['outTransportMeans'];
       },
       bizInTypes: function () {
-        return this.$store.state.dict['bizInType'];
+        return this.$store.state.dict['bizOutType'];
       }
     },
     watch: {
@@ -432,11 +430,11 @@
       queryStatusNum: function (params) {
         erpOrder.queryStateNum(params).then(res => {
           let data = res.data;
-          this.orgType[0].num = this.obtionStatusNum(data['in-pend-check']);
-          this.orgType[1].num = this.obtionStatusNum(data['in-pend-execute']);
-          this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
-          this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
-          this.orgType[3].num = this.obtionStatusNum(data['in-refuse']);
+//          this.orgType[0].num = this.obtionStatusNum(data['in-pend-check']);
+//          this.orgType[1].num = this.obtionStatusNum(data['in-pend-execute']);
+//          this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
+//          this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
+//          this.orgType[3].num = this.obtionStatusNum(data['in-refuse']);
         });
       },
       isLock: function (item) { // 判断是不是被锁定
