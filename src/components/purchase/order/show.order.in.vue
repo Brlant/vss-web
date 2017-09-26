@@ -23,6 +23,11 @@
           <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
+          <li class="text-center order-btn" style="margin-top: 40px">
+            <perm label="show" v-show="currentOrder.state === '5' ">
+              <el-button type="primary" @click="review" style="width: 80px;">审单</el-button>
+            </perm>
+          </li>
         </ul>
       </div>
       <div class="content-right content-padding">
@@ -38,10 +43,12 @@
   import basicInfo from './detail/base-info.vue';
   import receiptDetail from './detail/receipt-detail.vue';
   import log from './detail/log.vue';
-  import { InWork } from '@/resources';
+  import { InWork, http } from '@/resources';
 
   export default {
-    components: {basicInfo, receiptDetail, log},
+    components: {
+      basicInfo, receiptDetail, log
+    },
     props: {
       orderId: {
         type: String
@@ -72,6 +79,23 @@
         if (!this.orderId) return false;
         InWork.queryOrderDetail(this.orderId).then(res => {
           this.currentOrder = res.data;
+        });
+      },
+      review () {
+        this.$confirm('是否确认审单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          http.put(`/erp-order/${this.orderId}/check`).then(() => {
+            this.$notify.success({
+              message: '确认审单成功'
+            });
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '确认审单失败'
+            });
+          });
         });
       },
       showPart (item) {

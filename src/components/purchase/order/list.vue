@@ -468,11 +468,11 @@
           return;
         }
         this.showDetail = true;
-        let urlPre = '/platform/in/';
-        if (this.$route.meta.type === 1) {
-          urlPre = '/org/' + this.$route.params.id + '/inOrder/';
-        }
-        utils.pushHistory('oms-order|No:' + order.id, urlPre + order.id);
+//        let urlPre = '/platform/in/';
+//        if (this.$route.meta.type === 1) {
+//          urlPre = '/org/' + this.$route.params.id + '/inOrder/';
+//        }
+//        utils.pushHistory('oms-order|No:' + order.id, urlPre + order.id);
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;
