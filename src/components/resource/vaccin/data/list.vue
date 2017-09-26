@@ -172,37 +172,37 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
-                  <goods-row label="组织疫苗ID" :span="12">
+                  <goods-row label="组织疫苗ID" :span="8">
                     {{ data.id}}
                   </goods-row>
-                  <goods-row label="组织疫苗名称" :span="12">
+                  <goods-row label="组织疫苗名称" :span="8">
                     {{ data.name}}
                   </goods-row>
-                  <goods-row label="疫苗分类" :span="12">
+                  <goods-row label="疫苗分类" :span="8">
                     <dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>
                   </goods-row>
-                  <goods-row label="疫苗标志" :span="12">
+                  <goods-row label="疫苗标志" :span="8">
                     <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.propertyMap.firstVaccineSign"></dict>
                   </goods-row>
-                  <goods-row label="储存条件" :span="12">
+                  <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
-                  <goods-row label="单价" :span="12">
+                  <goods-row label="单价" :span="8">
                     ¥ {{ data.unitPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="库存上限" :span="12">
+                  <goods-row label="库存上限" :span="8">
                     {{ data.inventoryUpperLimit }}
                   </goods-row>
-                  <goods-row label="库存下限" :span="12">
+                  <goods-row label="库存下限" :span="8">
                     {{ data.inventoryLowerLimit }}
                   </goods-row>
-                  <goods-row label="是否组合" :span="12" v-show="data.goodsIsCombination">
+                  <goods-row label="是否组合" :span="8" v-show="data.goodsIsCombination">
                     {{ data.goodsIsCombination | formatStatus}}
                   </goods-row>
-                  <goods-row label="是否可用" :span="12" v-show="data.status">
+                  <goods-row label="是否可用" :span="8" v-show="data.status">
                     {{ data.status | formatStatus}}
                   </goods-row>
-                  <goods-row label="是否计价" :span="12" v-show="data.valuationFlag">
+                  <goods-row label="是否计价" :span="8" v-show="data.valuationFlag">
                     {{ data.valuationFlag | formatStatus}}
                   </goods-row>
                 </el-col>
@@ -230,40 +230,40 @@
                   <goods-row label="批准文号" :span="12">{{ data.goodsDto.approvalNumber }}</goods-row>
                 </el-col>
                 <el-col :span="12">
-                  <goods-row label="存储类别" :span="12">
+                  <goods-row label="存储类别" :span="8">
                     <dict :dict-group="'storageType'" :dict-key="data.goodsDto.storageType"></dict>
                   </goods-row>
-                  <goods-row label="储存条件" :span="12">
+                  <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.goodsDto.storageConditionId"></dict>
                   </goods-row>
-                  <goods-row label="运输温度" :span="12">
+                  <goods-row label="运输温度" :span="8">
                     <span
                       v-show="data.goodsDto.transportStartTemperature">{{ data.goodsDto.transportStartTemperature}} ℃ - {{ data.goodsDto.transportEndTemperature
                       }} ℃</span>
                   </goods-row>
-                  <goods-row label="冷藏存储温度" :span="12">
+                  <goods-row label="冷藏存储温度" :span="8">
                     <span
                       v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ - {{ data.goodsDto.storageEndTemperature}} ℃
                     </span>
                   </goods-row>
-                  <goods-row label="最小发货单位" :span="12">
+                  <goods-row label="最小发货单位" :span="8">
                     <dict :dict-group="'shipmentPackingUnit'" :dict-key="data.goodsDto.shipmentPackingUnit"
                           v-show="data.goodsDto.packageSize"></dict>
                     = {{ data.goodsDto.packageSize }}
                     <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
                           v-show="data.goodsDto.largePacking"></dict>
                   </goods-row>
-                  <goods-row label="大包装" :span="12" v-show="data.goodsDto.largePacking">
+                  <goods-row label="大包装" :span="8" v-show="data.goodsDto.largePacking">
                     {{ data.goodsDto.largePacking }}
                     <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
                           v-show="data.goodsDto.largePacking"></dict>
                   </goods-row>
-                  <goods-row label="中包装" :span="12" v-show="data.goodsDto.measurementUnit">
+                  <goods-row label="中包装" :span="8" v-show="data.goodsDto.measurementUnit">
                     {{ data.goodsDto.mediumPacking }}
                     <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
                           v-show="data.goodsDto.mediumPacking"></dict>
                   </goods-row>
-                  <goods-row label="小包装" :span="12" v-show="data.goodsDto.smallPacking">
+                  <goods-row label="小包装" :span="8" v-show="data.goodsDto.smallPacking">
                     {{ data.goodsDto.smallPacking }}
                     <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
                           v-show="data.goodsDto.smallPacking"></dict>

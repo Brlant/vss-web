@@ -11,7 +11,7 @@
 
     &-item {
       margin: 0 !important;
-      padding: 0 0 12px 0;
+      padding: 0 0 5px 0;
       list-style: none;
       position: relative;
 
@@ -28,13 +28,18 @@
       }
 
       &-head {
-        width: 13px;
-        height: 13px;
+        width: 6px;
+        height: 6px;
+        left: 3px;
+        top: 6px;
         background-color: #fff;
         border-radius: 50%;
         border: 1px solid transparent;
         position: absolute;
-
+        &-grey {
+          border-color: @border-color-split;
+          color: @border-color-split;
+        }
         &-blue {
           border-color: @primary-color;
           color: @primary-color;
@@ -50,25 +55,49 @@
       }
 
       &-head-custom {
-        width: 40px;
-        height: auto;
-        margin-top: 6px;
-        padding: 3px 0;
+        min-width: 13px;
+        min-height: 13px;
+        margin-top: 4px;
         text-align: center;
         line-height: 1;
-        border: 0;
-        border-radius: 0;
+        border-radius: 50%;
         font-size: @font-size-base;
         position: absolute;
-        left: -13px;
+        left: 0;
         transform: translateY(-50%);
+        .date-info {
+          padding-top: 8px;
+          font-size: 12px;
+          span {
+            display: block;
+            font-size: 12px;
+            transform: scale(0.6);
+            font-style: italic;
+          }
+        }
+        i {
+          font-size: 10px;
+          font-style: normal;
+          line-height: 30px;
+          &.iconfont {
+            font-size: 20px;
+          }
+        }
       }
 
       &-content {
-        padding: 1px 1px 10px 24px;
+        padding: 1px 1px 10px 34px;
         font-size: @font-size-small;
         position: relative;
         top: -3px;
+        h3 {
+          padding: 0;
+          margin: 0;
+        }
+        p {
+          padding: 0;
+          margin: 10px 0 0;
+        }
       }
 
       &:last-child {
@@ -85,6 +114,7 @@
       }
       .@{timeline-prefix-cls}-item-content {
         min-height: 48px;
+
       }
     }
   }
