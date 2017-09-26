@@ -1,5 +1,5 @@
 <template>
-  <span v-if="isShow" class="perm">
+  <span class="perm">
     <slot></slot>
   </span>
 </template>
