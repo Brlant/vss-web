@@ -50,22 +50,24 @@
       }
 
       &-head-custom {
-        width: 40px;
-        height: auto;
-        margin-top: 6px;
-        padding: 3px 0;
+        width: 30px;
+        height: 30px;
+        margin-top: 10px;
         text-align: center;
         line-height: 1;
-        border: 0;
-        border-radius: 0;
+        border-radius: 50%;
         font-size: @font-size-base;
         position: absolute;
-        left: -13px;
+        left: -9px;
         transform: translateY(-50%);
+        i.iconfont {
+          font-size: 20px;
+          line-height: 30px;
+        }
       }
 
       &-content {
-        padding: 1px 1px 10px 24px;
+        padding: 1px 1px 10px 34px;
         font-size: @font-size-small;
         position: relative;
         top: -3px;
