@@ -50,29 +50,6 @@
           </oms-row>
         </el-col>
       </el-row>
-      <div v-show=" currentOrder.bizType === '2' ">
-        <el-row style="margin-bottom: 0">
-          <oms-row label="货主订单号" :span="5">{{ currentOrder.orderNo }}</oms-row>
-        </el-row>
-        <el-row style="margin-bottom:0">
-          <el-col :span="12">
-            <oms-row label="货主">
-              {{currentOrder.orgName}}
-            </oms-row>
-            <oms-row label="业务类型">
-              <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
-            </oms-row>
-          </el-col>
-          <el-col :span="12">
-            <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | date}}</span>
-            </oms-row>
-            <oms-row label="订单状态">
-              {{ getOrderStatus(currentOrder) }}
-            </oms-row>
-          </el-col>
-        </el-row>
-      </div>
       <el-row style="margin-bottom:0">
         <oms-row label="物流中心" :span="5">
           <span class="goods-span">{{currentOrder.centreName}}</span>
@@ -168,9 +145,9 @@
       },
       getOrderStatus: function (order) { // 获取订单状态
         let state = '';
-        for (let key in utils.outType) {
-          if (order.wmsStatus === utils.outType[key].state) {
-            state = utils.outType[key].title;
+        for (let key in utils.outOrderType) {
+          if (order.state === utils.outOrderType[key].state) {
+            state = utils.outOrderType[key].title;
           }
         }
         return state;

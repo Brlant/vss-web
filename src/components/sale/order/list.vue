@@ -116,12 +116,7 @@
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
-            <el-col :span="8">
-              <oms-form-row label="货主订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="5">
               <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
@@ -129,7 +124,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="7">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">
@@ -137,16 +132,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="物流商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
-                           :clearable="true"
-                           v-model="searchCondition.logisticsProviderId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="7">
               <oms-form-row label="预计出库时间" :span="8">
                 <el-col :span="24">
                   <el-date-picker
@@ -157,7 +143,7 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="5">
               <oms-form-row label="" :span="6">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -242,7 +228,8 @@
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
-      <show-form :orderId="currentOrderId" @close="resetRightBox"></show-form>
+      <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
+                 @close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form type="1" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
@@ -302,7 +289,8 @@
         },
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
-        user: {}
+        user: {},
+        state: ''
       };
     },
     mounted () {
@@ -384,6 +372,9 @@
         });
         this.queryStatusNum(param);
       },
+      refreshOrder () {
+        this.getOrderList(1);
+      },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.searchCondition.orgId;
         if (!orgId) {
@@ -435,18 +426,18 @@
         let title = '';
         switch (item.transportationMeansId) {
           case '0': {
-            title = '预计送货:';
+            title = '预计送货：';
             if (item.bizType === '1') {
-              title = '预计出库:';
+              title = '预计出库：';
             }
             break;
           }
           case '1': {
-            title = '预计提货:';
+            title = '预计提货：';
             break;
           }
           case '2': {
-            title = '预计发货:';
+            title = '预计发货：';
             break;
           }
         }
@@ -475,6 +466,7 @@
       },
       showItem: function (order) {
         this.currentOrderId = order.id;
+        this.state = order.state;
         if (this.isLock(order)) {
           this.$notify.warning({
             duration: 2000,
@@ -484,11 +476,11 @@
           return;
         }
         this.showDetail = true;
-        let urlPre = '/platform/in/';
-        if (this.$route.meta.type === 1) {
-          urlPre = '/org/' + this.$route.params.id + '/inOrder/';
-        }
-        utils.pushHistory('oms-order|No:' + order.id, urlPre + order.id);
+//        let urlPre = '/platform/in/';
+//        if (this.$route.meta.type === 1) {
+//          urlPre = '/org/' + this.$route.params.id + '/inOrder/';
+//        }
+//        utils.pushHistory('oms-order|No:' + order.id, urlPre + order.id);
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

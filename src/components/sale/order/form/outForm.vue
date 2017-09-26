@@ -468,7 +468,7 @@
 </template>
 
 <script>
-  import { erpOrder, Order, LogisticsCenter, http, Address, cerpAction } from '@/resources';
+  import { erpOrder, LogisticsCenter, http, Address, cerpAction } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -645,7 +645,7 @@
       }
     },
     watch: {
-      index: function (val) {
+      index: function () {
         this.productListSet.forEach((item) => {
           if (item.key === this.index) {
             this.currentPartName = item.name;
@@ -664,9 +664,6 @@
       form: {
         handler: 'autoSave',
         deep: true
-      },
-      action(val) {
-
       }
     },
 

@@ -117,11 +117,6 @@
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="货主订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
               <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
@@ -250,7 +245,8 @@
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
-      <show-form :orderId="currentOrderId" @close="resetRightBox"></show-form>
+      <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
+                 @close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
@@ -310,7 +306,8 @@
         },
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
-        user: {}
+        user: {},
+        state: ''
       };
     },
     mounted () {
@@ -373,9 +370,8 @@
         this.defaultIndex = 1;
         this.action = 'add';
       },
-      onSubmit: function (order) {
-        this.orderList.splice(0, 0, order);
-        this.currentOrderId = order.id;
+      onSubmit: function () {
+        this.getOrderList();
       },
       getOrderList: function (pageNo) {
         this.pager.currentPage = pageNo;
@@ -391,6 +387,9 @@
           this.loadingData = false;
         });
         this.queryStatusNum(param);
+      },
+      refreshOrder () {
+        this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.searchCondition.orgId;
@@ -459,6 +458,7 @@
       },
       showItem: function (order) {
         this.currentOrderId = order.id;
+        this.state = order.state;
         if (this.isLock(order)) {
           this.$notify.warning({
             duration: 2000,
