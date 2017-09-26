@@ -436,7 +436,7 @@
           this.orgType[1].num = this.obtionStatusNum(data['in-pend-execute']);
           this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
           this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
-          this.orgType[3].num = this.obtionStatusNum(data['in-refuse']);
+          this.orgType[4].num = this.obtionStatusNum(data['in-refuse']);
         });
       },
       isLock: function (item) { // 判断是不是被锁定

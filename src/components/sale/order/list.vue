@@ -424,11 +424,11 @@
       queryStatusNum: function (params) {
         erpOrder.queryStateNum(params).then(res => {
           let data = res.data;
-//          this.orgType[0].num = this.obtionStatusNum(data['in-pend-check']);
-//          this.orgType[1].num = this.obtionStatusNum(data['in-pend-execute']);
-//          this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
-//          this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
-//          this.orgType[3].num = this.obtionStatusNum(data['in-refuse']);
+          this.orgType[0].num = this.obtionStatusNum(data['out-pend-confirm']);
+          this.orgType[1].num = this.obtionStatusNum(data['out-pend-check']);
+          this.orgType[2].num = this.obtionStatusNum(data['out-pend-execute']);
+          this.orgType[3].num = this.obtionStatusNum(data['out-complete']);
+          this.orgType[4].num = this.obtionStatusNum(data['out-cancel']);
         });
       },
       getTimeTitle: function (item) {
