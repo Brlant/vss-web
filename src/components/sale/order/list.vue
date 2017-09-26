@@ -169,11 +169,12 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="7">货主/订单号</el-col>
+          <el-col :span="6">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">POV</el-col>
+          <el-col :span="5">POV</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
+          <el-col :span="2">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -191,7 +192,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="7">
+              <el-col :span="6">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -204,7 +205,7 @@
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="6" class="pt10">
+              <el-col :span="5" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
@@ -216,6 +217,15 @@
                   {{getOrderStatus(item)}}
                   <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
                 </div>
+              </el-col>
+              <el-col :span="2" class="opera-btn pt10">
+                <perm label="wave-task-review-code">
+                  <span @click.stop="showPartItem(item)" v-show="item.state === -1">
+                    <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
+                      class="iconfont icon-allot"></i></a>
+                    收货
+                  </span>
+                </perm>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -239,22 +249,27 @@
       <add-form type="1" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <receipt @close="resetRightBox"></receipt>
+    </page-right>
   </div>
 </template>
 <script>
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
+  import receipt from './receipt.vue';
   import { Order, BaseInfo, erpOrder } from '@/resources';
 
   export default {
     components: {
-      showForm, addForm
+      showForm, addForm, receipt
     },
     data: function () {
       return {
         loadingData: true,
         showItemRight: false,
+        showPart: false,
         showDetail: false,
         showSearch: false,
         orderList: [],
@@ -317,6 +332,9 @@
       }
     },
     methods: {
+      showPartItem (item) {
+        this.showPart = true;
+      },
       getOrderStatus: function (order) {
         let state = '';
         for (let key in this.orgType) {
@@ -350,6 +368,7 @@
         this.showItemRight = false;
         this.defaultIndex = 0;
         this.action = '';
+        this.showPart = false;
         // this.getOrderList(this.pager.currentPage);
       },
       add: function () {
@@ -422,8 +441,9 @@
           this.orgType[0].num = this.obtionStatusNum(data['out-pend-confirm']);
           this.orgType[1].num = this.obtionStatusNum(data['out-pend-check']);
           this.orgType[2].num = this.obtionStatusNum(data['out-pend-execute']);
-          this.orgType[3].num = this.obtionStatusNum(data['out-complete']);
-          this.orgType[4].num = this.obtionStatusNum(data['out-cancel']);
+          this.orgType[3].num = this.obtionStatusNum(data['out-pov-receipt']);
+          this.orgType[4].num = this.obtionStatusNum(data['out-complete']);
+          this.orgType[5].num = this.obtionStatusNum(data['out-cancel']);
         });
       },
       getTimeTitle: function (item) {
