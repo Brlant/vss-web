@@ -258,6 +258,9 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
+        this.showTypeList = [];
+        this.currentItem = {};
+        this.currentOrder = {};
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
         this.typePager.currentPage = pageNo;

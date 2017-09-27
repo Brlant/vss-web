@@ -133,7 +133,7 @@
         });
         if (this.doing) return;
         this.doing = true;
-        povReceipt.save(obj).then(res => {
+        povReceipt.save(obj).then(() => {
           this.$notify.success({
             message: '添加收货信息成功'
           });
