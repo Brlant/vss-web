@@ -401,6 +401,12 @@ export const outWork = resource('/outbound/count', http, {
 });
 
 /**
+ * pov收货
+ * @type {the}
+ */
+export const povReceipt = resource('/erp-receipt', http, {});
+
+/**
  * 应收款项
  * @type {the}
  */
