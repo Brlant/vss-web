@@ -162,11 +162,11 @@
           this.$store.commit('initUser', data);
           Access.getRoleMenus(data.userCompanyAddress).then(res => {
             let menuData = res.data;
-            let menuList = [];
-            res.data.menuList.forEach(item => {
-              menuList[item.id] = item.name;
-            });
-            menuData.menuList = menuList;
+//            let menuList = [];
+//            res.data.menuList.forEach(item => {
+//              menuList[item.id] = item.name;
+//            });
+//            menuData.menuList = menuList;
             this.$store.commit('initPermList', menuData);
           });
         }).catch(() => {
