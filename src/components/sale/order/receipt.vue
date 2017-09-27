@@ -108,7 +108,8 @@
         ],
         productList: [],
         currentItem: {},
-        types: []
+        types: [],
+        doing: false
       };
     },
     watch: {
@@ -130,13 +131,17 @@
             scheme: f.scheme
           });
         });
+        if (this.doing) return;
+        this.doing = true;
         povReceipt.save(obj).then(res => {
           this.$notify.success({
             message: '添加收货信息成功'
           });
+          this.doing = false;
           this.$emit('close');
           this.$emit('refreshOrder');
         }).catch(error => {
+          this.doing = false;
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '添加收货信息失败'
           });

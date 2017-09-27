@@ -220,7 +220,7 @@
               </el-col>
               <el-col :span="2" class="opera-btn pt10">
                 <perm label="show">
-                  <span @click.stop="showPartItem(item)">
+                  <span @click.stop="showPartItem(item)" v-show="item.state === '-1' ">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
                       class="iconfont icon-allot"></i></a>
                     收货
