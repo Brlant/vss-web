@@ -38,7 +38,7 @@ const route = [
       {
         path: '/account',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'account', title: '账户管理', icon: 'user', perm: 'erp-user-manager'},
+        meta: {moduleId: 'account', title: '账户管理', icon: 'user', perm: 'show'},
         children: [
           {
             path: '/account/cdc',
