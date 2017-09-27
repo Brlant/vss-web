@@ -54,7 +54,7 @@
         </el-button>
       </div>
       <div v-else>
-        <h3 class="text-center">忘记密码</h3>
+        <h3 class="text-center">激活账号/忘记密码</h3>
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                  @submit.prevent="done" onsubmit="return false">
           <el-form-item label="组织编号" prop="orgCode">
