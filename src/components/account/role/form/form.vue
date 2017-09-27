@@ -138,9 +138,7 @@
       roleMenu (val) {
         if (!val) return;
         const self = this;
-        val.menuList.forEach(function (val) {
-          self.menuData[val.id] = val.name;
-        });
+        this.menuData = val.menuList;
         val.tree.forEach(function (val) {
           let temp = {
             parentId: val.parentId,
