@@ -35,6 +35,9 @@
       <tr>
         <td colspan="2" width="120px" class="t-head">货品</td>
         <td colspan="2" width="120px" class="t-head">生产厂商</td>
+        <td colspan="2" width="120px" class="t-head">批号</td>
+        <td colspan="2" width="120px" class="t-head">生产日期</td>
+        <td colspan="2" width="120px" class="t-head">有效期</td>
         <td colspan="2" width="120px" class="t-head">包装类型</td>
         <td colspan="2" width="120px" class="t-head">整件数</td>
         <td colspan="2" width="120px" class="t-head">散件数</td>
@@ -57,6 +60,9 @@
         <td colspan="2">
           {{item.orgGoodsDto.goodsDto.factoryName}}
         </td>
+        <td colspan="2">{{ item.batchNumber || '无' }}</td>
+        <td colspan="2">{{ item.productionDate | date }}</td>
+        <td colspan="2">{{ item.expiryDate | date }}</td>
         <td colspan="2">
           <div v-show="item.receiptDetail.scheme">
             {{ packageType[item.receiptDetail.scheme] }}
@@ -74,13 +80,14 @@
           </span>
         </td>
         <td colspan="2">
-          <span v-show="item.receiptDetail.amount">
-             {{ item.receiptDetail.amount }}
+          <span v-show="item.amount">
+             {{ item.amount }}
+            <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </span>
         </td>
         <td colspan="2">
           <span v-show="getTotal(item)"
-                :class="{'color-red':!getTotal(item) || getTotal(item) !== item.receiptDetail.amount}">
+                :class="{'color-red':!getTotal(item) || getTotal(item) !== item.amount}">
             {{ getTotal(item) }}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </span>
