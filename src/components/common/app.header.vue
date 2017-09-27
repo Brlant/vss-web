@@ -239,7 +239,7 @@
                 <i :class="'iconfont icon-'+item.meta.icon"></i> <span
                 slot="title">{{item.meta.title}}</span>
               </template>
-              <el-menu-item :index="child.path" v-for="child in item.children" :key="child.path">
+              <el-menu-item :index="child.path" v-for="child in item.subMenu" :key="child.path">
                 {{child.meta.title}}
               </el-menu-item>
             </el-submenu>
