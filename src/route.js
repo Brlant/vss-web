@@ -43,7 +43,7 @@ const route = [
           {
             path: '/account/cdc',
             component: resolve => require(['./components/account/cdc/county-cdc.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'erp-bind-cd'}
+            meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'erp-bind-cdc'}
           },
           {
             path: '/account/pov',
