@@ -234,7 +234,7 @@
       <div class="menu-wrap" :style="isCollapse?'':'overflow-y:auto;'">
         <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="true">
           <template v-for="item in menu">
-            <el-submenu :index="item.path" :key="menu.path" v-if="item.children.length>0">
+            <el-submenu :index="item.path" :key="menu.path" v-if="item.subMenu.length>0">
               <template slot="title">
                 <i :class="'iconfont icon-'+item.meta.icon"></i> <span
                 slot="title">{{item.meta.title}}</span>
@@ -311,9 +311,15 @@
 //            item.children = item.children.filter(child => child.meta.perm === 'show');
 //          }
 //        );
-        let menuArr = route[0].children.filter(item => item.meta.moduleId);
-        return menuArr;
+//        let menuArr = route[0].children.filter(item => item.meta.moduleId);
+//        return menuArr;
 
+        let menuArr = route[0].children.filter(item => item.meta.moduleId && item.meta.perm === 'show');
+        menuArr.forEach(item => {
+            item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
+          }
+        );
+        return menuArr;
       },
       activePath: function () {
         return this.$route.path;
