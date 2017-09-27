@@ -125,8 +125,8 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body">
-          <div class="order-list-item order-list-item-bg" v-for="item in demandList"
-               :class="[{'active':currentItemId==item.id}]"
+          <div class="order-list-item" v-for="item in demandList"
+               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]"
                @click.prevent="showDetail(item)">
             <el-row>
               <el-col :span="1">
@@ -149,6 +149,7 @@
                 <span>{{ item.demandTime | date }}</span>
               </el-col>
             </el-row>
+            <div class="order-list-item-bg"></div>
           </div>
         </div>
 
@@ -269,6 +270,15 @@
         this.activeStatus = key;
         this.filters.status = item.status;
       },
+      filterListColor: function (index) {// 过滤左边列表边角颜色
+        let status = -1;
+        for (let key in this.assignType) {
+          if (this.assignType[key].status === index) {
+            status = key;
+          }
+        }
+        return status;
+      },
       searchInOrder: function () {// 搜索
         this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
         this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
@@ -323,7 +333,7 @@
           this.$notify.success({
             message: '需求分配成功'
           });
-          this.$router.push({path: '/purchase/pov/allocation', query: {id: res.data.id}});
+          this.$router.push({path: '/purchase/pov/allocation', query: {id: res.data.id, status: res.data.status}});
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '需求分配失败'

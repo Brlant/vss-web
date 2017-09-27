@@ -13,6 +13,10 @@ export default {
     0: {'title': '待分配', status: 1, num: 0},
     1: {'title': '已完成分配', status: 2, num: 0}
   },
+  waveType: {
+    0: {'title': '未完成', status: 0, num: 0},
+    1: {'title': '已完成', status: 1, num: 0}
+  },
   receiptType: {
     0: {'title': '所有', status: null, num: 0},
     1: {'title': '未收', status: 0, num: 0},

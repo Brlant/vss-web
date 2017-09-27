@@ -116,6 +116,11 @@ const route = [
             ]
           },
           {
+            path: '/purchase/wave',
+            component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
+            meta: {moduleId: 'purchase', title: '生成波次', perm: 'show'}
+          },
+          {
             path: '/purchase/order',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '采购订单', perm: 'show'}

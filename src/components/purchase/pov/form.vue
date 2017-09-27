@@ -73,7 +73,6 @@
 
   .order-page {
     padding: 0 20px;
-    margin-top: 70px;
   }
 
   .colorRed {
@@ -117,7 +116,9 @@
                       <span>{{ item.applyCount }}</span>
                     </el-col>
                     <el-col :span="7" class="pt">
-                      <el-input v-model.number="item.actualCount" @blur="submit(item)"></el-input>
+                      <span v-show="status === 1 ">{{item.actualCount}}</span>
+                      <el-input v-show="status === 0 " v-model.number="item.actualCount"
+                                @blur="submit(item)"></el-input>
                     </el-col>
                   </el-row>
                 </div>
@@ -152,7 +153,8 @@
 
   export default {
     props: {
-      currentItem: Object
+      currentItem: Object,
+      status: Number
     },
     data () {
       return {
