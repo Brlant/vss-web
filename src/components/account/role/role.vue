@@ -97,21 +97,28 @@
           <div v-else>
             <h2 class="clearfix">
               <span class="pull-right">
+               <el-button-group>
                  <perm label="show">
-                      <a href="#" @click.stop.prevent="edit()"><i class="iconfont icon-edit"></i>编辑</a>
+                   <el-button @click="edit()">
+                     <i class="iconfont icon-edit"></i>
+                     编辑
+                   </el-button>
                  </perm>
                 <perm label="show">
-                        <a href="#" @click.prevent="forbid()" class="margin-left" v-show="resData.usableStatus == 1"><i
-                          class="iconfont icon-forbidden"></i>停用</a>
+                  <el-button @click="forbid()" v-show="resData.usableStatus == 1">
+                    <i class="iconfont icon-forbidden"></i>
+                    停用
+                  </el-button>
                 </perm>
                  <perm label="show">
-                 <a href="#" @click.prevent="useNormal()" class="margin-left" v-show="resData.usableStatus == 0"><i
-                   class="iconfont icon-start"></i>启用</a>
+                   <el-button @click="useNormal()" v-show="resData.usableStatus == 0">
+                     <i class="iconfont icon-start"></i>启用
+                   </el-button>
                  </perm>
                 <perm label="show">
-                  <a href="#" @click.prevent="remove()" class="margin-left"><i
-                    class="iconfont icon-delete"></i>删除</a>
+                   <el-button @click="remove()"><i class="iconfont icon-delete"></i>删除</el-button>
                 </perm>
+                </el-button-group>
               </span>
             </h2>
             <div class="page-main-body">
