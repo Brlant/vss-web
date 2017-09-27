@@ -296,10 +296,9 @@
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
-
         let menuArr = route[0].children.filter(item => item.meta.moduleId && item.meta.perm === 'show');
         menuArr.forEach(item => {
-          item.subMenu = item.children.filter(child => this.$store.state.permissions.includes(child.meta.perm));
+          item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
           }
         );
         return menuArr;
