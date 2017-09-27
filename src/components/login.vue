@@ -65,7 +65,7 @@
           </el-form-item>
           <el-form-item label="密码" style="position:relative" prop="password">
             <oms-input v-model="user.password" type="password"></oms-input>
-            <router-link style="position: absolute;top:-35px;right:0;" to="/forget">忘记密码?</router-link>
+            <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>
           </el-form-item>
           <el-form-item label="验证码" v-show="showCode">
             <div style="display:flex">
