@@ -35,14 +35,14 @@
       <div v-for="(menu,index) in tree">
         <el-checkbox :indeterminate="menu.isIndeterminate" v-model="menu.status"
                      @change="handleCheckAllChange(menu)">
-          {{ menuData[menu.parentId] }}
+          {{ roleMenu.menuList[menu.parentId] }}
         </el-checkbox>
         <el-checkbox-group style="margin-left: 12px" v-model="menu.checkedChildren"
                            @change="handleCheckedItemChange(menu)">
           <div class="power-style-part" v-show="menu.children.length>0">
             <div style="margin:10px 3px">
               <el-checkbox v-for="child in menu.children" :label="child.id" :key="child.id" v-model="child.checked">
-                {{ menuData[child.id] }}
+                {{ roleMenu.menuList[child.id] }}
               </el-checkbox>
             </div>
           </div>
@@ -138,7 +138,6 @@
       roleMenu (val) {
         if (!val) return;
         const self = this;
-        this.menuData = val.menuList;
         val.tree.forEach(function (val) {
           let temp = {
             parentId: val.parentId,
@@ -161,11 +160,9 @@
     methods: {
       selectExistMenu () {// 选中已有的权限
         let self = this;
-
         self.tree.forEach(item => {// 清空已经选中的角色
           item.checkedChildren = [];
         });
-        this.menuData = this.roleMenu.menuList;
         this.roleMenu.tree.forEach(function (val) {
           let temp = {
             parentId: val.parentId,

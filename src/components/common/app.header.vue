@@ -296,27 +296,10 @@
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
-        /*
-        let menus = [];
-        let menuShow = [];
-        menus.forEach(item => {
-          if (this.$store.state.permissions.indexOf(item.perm) !== -1) {
-            menuShow.push(item);
-          }
-        });
-        return menuShow;
-        */
-//        let menuArr = route[0].children.filter(item => item.meta.moduleId && item.meta.perm === 'show');
-//        menuArr.forEach(item => {
-//            item.children = item.children.filter(child => child.meta.perm === 'show');
-//          }
-//        );
-//        let menuArr = route[0].children.filter(item => item.meta.moduleId);
-//        return menuArr;
 
         let menuArr = route[0].children.filter(item => item.meta.moduleId && item.meta.perm === 'show');
         menuArr.forEach(item => {
-            item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
+          item.subMenu = item.children.filter(child => this.$store.state.permissions.includes(child.meta.perm));
           }
         );
         return menuArr;
