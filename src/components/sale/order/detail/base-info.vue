@@ -98,7 +98,7 @@
         </el-row>
         <el-row>
           <el-col :span="3" class="text-right" style="line-height: 36px">
-            物流方式：
+            物流中心：
           </el-col>
           <el-col :span="21">
             <el-select placeholder="请选择物流中心" v-model="currentOrder.logisticsCentreId" filterable>
