@@ -219,8 +219,8 @@
                 </div>
               </el-col>
               <el-col :span="2" class="opera-btn pt10">
-                <perm label="wave-task-review-code">
-                  <span @click.stop="showPartItem(item)" v-show="item.state === -1">
+                <perm label="show">
+                  <span @click.stop="showPartItem(item)" v-show="item.state === '-1' ">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
                       class="iconfont icon-allot"></i></a>
                     收货
@@ -250,7 +250,7 @@
                 @close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <receipt @close="resetRightBox"></receipt>
+      <receipt @close="resetRightBox" :orderId="currentOrderId"></receipt>
     </page-right>
   </div>
 </template>
@@ -332,7 +332,8 @@
       }
     },
     methods: {
-      showPartItem () {
+      showPartItem (item) {
+        this.currentOrderId = item.id;
         this.showPart = true;
       },
       getOrderStatus: function (order) {
