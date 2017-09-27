@@ -93,7 +93,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          http.put(`/erp-order/${this.orderId}/confirm`).then(() => {
+          http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
             this.$notify.success({
               message: '确认订单成功'
             });

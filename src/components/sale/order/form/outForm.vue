@@ -292,7 +292,7 @@
               <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
                          v-model="form.importedFlag"></el-switch>
             </el-form-item>
-            <el-form-item :label="showContent.expectedTimeLabel"
+            <el-form-item :label="'预计送货时间'"
                           :prop=" showContent.isShowOtherContent?'expectedTime':'' "
                           v-show="showContent.isShowOtherContent">
               <el-date-picker

@@ -210,7 +210,7 @@
               </el-col>
               <el-col :span="4">
                 <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
-                <div v-show="item.bizType !== '2' ">{{ getTimeTitle(item) }}{{ item.expectedTime | date }}</div>
+                <div v-show="item.bizType !== '2' ">预计送货时间：{{ item.expectedTime | date }}</div>
               </el-col>
               <el-col :span="3">
                 <div class="vertical-center">
