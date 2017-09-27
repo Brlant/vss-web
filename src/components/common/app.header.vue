@@ -263,7 +263,7 @@
 </template>
 
 <script>
-  import {Auth} from '../../resources';
+  import { Auth } from '../../resources';
   import logo_pic from '../../assets/img/logo_pic.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';
@@ -273,7 +273,7 @@
       omsUploadPicture
     },
     props: ['toRoute'],
-    data() {
+    data () {
       return {
         activeId: this.getGroupId(),
         logo_pic: logo_pic,
@@ -296,7 +296,8 @@
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
-        let menuArr = route[0].children.filter(item => item.meta.moduleId && item.meta.perm === 'show');
+        let menuArr = route[0].children.filter(item => item.meta.moduleId && (item.meta.perm === 'show' ||
+          this.$store.state.permissions.includes(item.meta.perm)));
         menuArr.forEach(item => {
           item.subMenu = item.children.filter(child => this.$store.state.permissions.includes(child.meta.perm));
           }
