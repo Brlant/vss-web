@@ -98,21 +98,21 @@
           <div v-else="" class="d-table-col-wrap">
             <h2 class="clearfix">
               <span class="pull-right">
-                <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
-                    <a href="#" @click.prevent="audited()" class="margin-left">
-                    <i class="iconfont icon-verify"></i> 审核
-                  </a>
-                </perm>
-                <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status !== 4">
-                  <a href="#" @click.stop.prevent="cancel()">
-                    <i class="iconfont icon-stop"></i>取消
-                  </a>
-                </perm>
+                <el-button-group>
+                    <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
+                      <el-button @click="audited()"><i
+                        class="iconfont icon-verify"></i>审核</el-button>
+                    </perm>
+                    <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status !== 4">
+                      <el-button @click="cancel()"><i
+                        class="iconfont icon-verify"></i>取消</el-button>
+                    </perm>
+                </el-button-group>
               </span>
             </h2>
             <div class="content-body clearfix">
               <el-row>
-                <el-col :span="12">
+                <el-col :span="8">
                   <oms-row label="要货申请ID">
                     {{currentOrder.id }}
                   </oms-row>
@@ -126,7 +126,7 @@
                     {{currentOrder.warehouseName}}
                   </oms-row>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="16">
                   <oms-row label="申请人">
                     {{currentOrder.applyManName}}
                   </oms-row>

@@ -48,24 +48,28 @@
   .color-red {
     color: red;
   }
+
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
     <div class="container">
-      <div class="mb-15" style="overflow: hidden">
-        <perm label="demand-assignment-create">
-          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 ">提交分配方案</el-button>
-        </perm>
+      <div class="order-list-status container" style="margin-bottom:20px">
+        <div class="status-item"
+             :class="{'active':key==activeStatus,'exceptionPosition':key == 11}"
+             v-for="(item,key) in waveType"
+             @click="changeStatus(item,key)">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+        </div>
       </div>
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="5">疫苗</el-col>
-          <el-col :span="3">需求数</el-col>
-          <el-col :span="3">库存数</el-col>
-          <el-col :span="4">库存差额</el-col>
-          <el-col :span="4">调配后剩余库存</el-col>
-          <el-col :span="2">状态</el-col>
-          <el-col :span="3">操作</el-col>
+          <el-col :span="8">创建人</el-col>
+          <el-col :span="8">创建时间</el-col>
+          <el-col :span="4">状态</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -81,44 +85,16 @@
         </el-row>
         <div v-else="" class="order-list-body">
           <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
-               :class="[{'active':currentItemId==item.id}]">
+               :class="[{'active':currentItemId==item.id}]" @click="showDetail(item)">
             <el-row>
-              <el-col :span="5" class="R pt">
-                <span>{{ item.goodsName }}</span>
+              <el-col :span="8" class="R pt">
+                <span>{{ item.createName }}</span>
               </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.requiredQuantity }}</span>
-              </el-col>
-              <el-col :span="3" class="pt">
-                <span>{{ item.inventoryQuantity }}</span>
+              <el-col :span="8" class="pt">
+                <span>{{ item.createTime | date}}</span>
               </el-col>
               <el-col :span="4" class="pt">
-                <span>{{ item.balanceAmount }}</span>
-              </el-col>
-              <el-col :span="4" class="pt">
-                <span>{{ item.resultAmount }}</span>
-              </el-col>
-              <el-col :span="2" class="pt">
-                <span v-show="item.resultAmount>-1 ">
-                  <i class="iconfont icon-correct color-blue"></i>
-                  正常
-                </span>
-                <span v-show="item.resultAmount<0 ">
-                  <i class="iconfont icon-warning color-red"></i>
-                  库存不足
-                </span>
-              </el-col>
-              <el-col :span="3" class="opera-btn">
-                <span @click.prevent="showPart(item)" v-show="status === 0 ">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="iconfont icon-detail"></i></a>
-                  手动分配
-                </span>
-                <span @click.prevent="showPart(item)" v-show="status === 1 ">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="iconfont icon-detail"></i></a>
-                  查看详情
-                </span>
+                <span>{{ item.status === 0 ? '未完成' : '已完成' }}</span>
               </el-col>
             </el-row>
           </div>
@@ -132,49 +108,52 @@
         </el-pagination>
       </div>
     </div>
-
-    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
-      <allot-form :currentItem="currentItem" @change="change" :status="status" @close="resetRightBox"></allot-form>
-    </page-right>
   </div>
 </template>
 <script>
   import { demandAssignment } from '@/resources';
-  import allotForm from './form.vue';
+  import utils from '@/tools/utils';
 
   export default {
-    components: {
-      allotForm
-    },
+
     data () {
       return {
         loadingData: false,
         allocationList: [],
         showRight: false,
+        showDetailPart: false,
+        waveType: utils.waveType,
         pager: {
           currentPage: 1,
           count: 0,
           pageSize: 15
         },
+        filters: {
+          status: ''
+        },
+        activeStatus: 0,
         currentItemId: '',
         currentItem: {}
       };
     },
-    computed: {
-      status () {
-        return this.$route.query.status;
-      }
-    },
     mounted () {
       this.queryAllocationList();
+    },
+    watch: {
+      filters: {
+        handler: function () {
+          this.queryAllocationList(1);
+        },
+        deep: true
+      }
     },
     methods: {
       queryAllocationList (pageNo) { // 得到需求分配列表
         this.allocationList = [];
-        if (!this.$route.query.id) return;
         this.pager.currentPage = pageNo;
         this.loadingData = false;
-        demandAssignment.queryDetailList(this.$route.query.id).then(res => {
+        let params = Object.assign({}, this.filters);
+        demandAssignment.query(params).then(res => {
           this.allocationList = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
@@ -193,6 +172,13 @@
             i.resultAmount = i.inventoryQuantity - count;
           }
         });
+      },
+      showDetail (item) {
+        this.$router.push({path: '/purchase/pov/allocation', query: {id: item.id, status: 1}});
+      },
+      changeStatus: function (item, key) {// 订单分类改变
+        this.activeStatus = key;
+        this.filters.status = item.status;
       },
       submit () {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);

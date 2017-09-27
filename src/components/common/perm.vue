@@ -1,5 +1,5 @@
 <template>
-  <span v-if="isShow" class="perm">
+  <span class="perm" v-if="isShow">
     <slot></slot>
   </span>
 </template>
@@ -15,8 +15,8 @@
     },
     computed: {
       isShow: function () {
-        return true;
-        // return this.$store.state.permissions.indexOf(this.label) !== -1;
+        if (this.label === 'show') return true;
+        return this.$store.state.permissions.indexOf(this.label) !== -1;
       }
     }
   };

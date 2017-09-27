@@ -41,36 +41,8 @@
     margin-right: -1em;
   }
 
-  .opera-btn-group {
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    background: #f1f1f1;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
-    .el-checkbox-warp {
-      padding: 10px;
-    }
+  .order-list-item {
+    cursor: pointer;
   }
 </style>
 <template>
@@ -153,8 +125,8 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body">
-          <div class="order-list-item order-list-item-bg" v-for="item in demandList"
-               :class="[{'active':currentItemId==item.id}]"
+          <div class="order-list-item" v-for="item in demandList"
+               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]"
                @click.prevent="showDetail(item)">
             <el-row>
               <el-col :span="1">
@@ -177,6 +149,7 @@
                 <span>{{ item.demandTime | date }}</span>
               </el-col>
             </el-row>
+            <div class="order-list-item-bg"></div>
           </div>
         </div>
 
@@ -190,14 +163,19 @@
         </el-pagination>
       </div>
     </div>
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
+                class="order-detail-info" partClass="pr-no-animation">
+      <show-form :currentItem="currentItem" @close="resetRightBox"></show-form>
+    </page-right>
   </div>
 </template>
 <script>
   //  import order from '../../../tools/demandList';
   import { demandAssignment, pullSignal } from '@/resources';
   import utils from '../../../tools/utils';
-
+  import showForm from './detail/index.vue';
   export default {
+    components: {showForm},
     data () {
       return {
         loadingData: true,
@@ -224,6 +202,7 @@
           pageSize: 15
         },
         currentItemId: '',
+        currentItem: {},
         checkList: [], // 选中的订单列表
         isCheckAll: false
       };
@@ -281,6 +260,7 @@
       },
       showDetail (item) {
         this.currentItemId = item.id;
+        this.currentItem = item;
         this.showDetailPart = true;
       },
       resetRightBox () {
@@ -289,6 +269,15 @@
       checkStatus (item, key) {
         this.activeStatus = key;
         this.filters.status = item.status;
+      },
+      filterListColor: function (index) {// 过滤左边列表边角颜色
+        let status = -1;
+        for (let key in this.assignType) {
+          if (this.assignType[key].status === index) {
+            status = key;
+          }
+        }
+        return status;
       },
       searchInOrder: function () {// 搜索
         this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
@@ -344,7 +333,7 @@
           this.$notify.success({
             message: '需求分配成功'
           });
-          this.$router.push({path: '/purchase/pov/allocation', query: {id: res.data.id}});
+          this.$router.push({path: '/purchase/pov/allocation', query: {id: res.data.id, status: res.data.status}});
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '需求分配失败'

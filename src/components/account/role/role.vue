@@ -57,7 +57,7 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <perm label="show">
+                  <perm label="erp-access-add">
                     <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="iconfont icon-plus"></i> </a>
                   </perm>
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -75,7 +75,7 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id===currentItem.id}">
-                <perm label="access-role-delete">
+                <perm label="erp-access-delete">
                   <oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'
                               class="hover-show"><i
                     class="iconfont icon-delete"></i></oms-remove>
@@ -97,21 +97,28 @@
           <div v-else>
             <h2 class="clearfix">
               <span class="pull-right">
-                 <perm label="show">
-                      <a href="#" @click.stop.prevent="edit()"><i class="iconfont icon-edit"></i>编辑</a>
+               <el-button-group>
+                 <perm label="erp-access-edit">
+                   <el-button @click="edit()">
+                     <i class="iconfont icon-edit"></i>
+                     编辑
+                   </el-button>
                  </perm>
-                <perm label="show">
-                        <a href="#" @click.prevent="forbid()" class="margin-left" v-show="resData.usableStatus == 1"><i
-                          class="iconfont icon-forbidden"></i>停用</a>
+                <perm label="erp-access-edit">
+                  <el-button @click="forbid()" v-show="resData.usableStatus == 1">
+                    <i class="iconfont icon-forbidden"></i>
+                    停用
+                  </el-button>
                 </perm>
-                 <perm label="show">
-                 <a href="#" @click.prevent="useNormal()" class="margin-left" v-show="resData.usableStatus == 0"><i
-                   class="iconfont icon-start"></i>启用</a>
+                 <perm label="erp-access-edit">
+                   <el-button @click="useNormal()" v-show="resData.usableStatus == 0">
+                     <i class="iconfont icon-start"></i>启用
+                   </el-button>
                  </perm>
-                <perm label="show">
-                  <a href="#" @click.prevent="remove()" class="margin-left"><i
-                    class="iconfont icon-delete"></i>删除</a>
+                <perm label="erp-access-delete">
+                   <el-button @click="remove()"><i class="iconfont icon-delete"></i>删除</el-button>
                 </perm>
+                </el-button-group>
               </span>
             </h2>
             <div class="page-main-body">

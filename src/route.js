@@ -116,6 +116,11 @@ const route = [
             ]
           },
           {
+            path: '/purchase/wave',
+            component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
+            meta: {moduleId: 'purchase', title: '生成波次', perm: 'show'}
+          },
+          {
             path: '/purchase/order',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '采购订单', perm: 'order-business-query'}
@@ -153,11 +158,6 @@ const route = [
             path: '/pov/request',
             component: resolve => require(['./components/pov/request/list.vue'], resolve),
             meta: {moduleId: 'pov', title: '疫苗要货申请', perm: 'pull-signal'}
-          },
-          {
-            path: '/pov/get',
-            component: resolve => require(['./components/pov/get/list.vue'], resolve),
-            meta: {moduleId: 'pov', title: 'POV收货管理', perm: 'show'}
           },
           {
             path: '/pov/store',
