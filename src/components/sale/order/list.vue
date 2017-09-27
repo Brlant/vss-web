@@ -95,6 +95,10 @@
   .pt10 {
     padding-top: 10px;
   }
+
+  .cursor-span {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -104,7 +108,7 @@
           <span class="">
             <i class="iconfont icon-search"></i> 筛选查询
           </span>
-          <span class="pull-right" style="margin-left: 10px" @click.prevent="add">
+          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <a href="#" class="btn-circle" @click.prevent=""><i
               class="iconfont icon-plus"></i> </a>添加
           </span>
@@ -116,12 +120,7 @@
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
-            <el-col :span="8">
-              <oms-form-row label="货主订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="5">
               <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
@@ -129,7 +128,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="7">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">
@@ -137,16 +136,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="物流商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
-                           :clearable="true"
-                           v-model="searchCondition.logisticsProviderId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
+            <el-col :span="7">
               <oms-form-row label="预计出库时间" :span="8">
                 <el-col :span="24">
                   <el-date-picker
@@ -157,7 +147,7 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="5">
               <oms-form-row label="" :span="6">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -179,11 +169,12 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="7">货主/订单号</el-col>
+          <el-col :span="6">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">POV</el-col>
+          <el-col :span="5">POV</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
+          <el-col :span="2">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -201,7 +192,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="7">
+              <el-col :span="6">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -214,7 +205,7 @@
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="6" class="pt10">
+              <el-col :span="5" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
@@ -226,6 +217,15 @@
                   {{getOrderStatus(item)}}
                   <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
                 </div>
+              </el-col>
+              <el-col :span="2" class="opera-btn pt10">
+                <perm label="wave-task-review-code">
+                  <span @click.stop="showPartItem(item)" v-show="item.state === -1">
+                    <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
+                      class="iconfont icon-allot"></i></a>
+                    收货
+                  </span>
+                </perm>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -242,11 +242,15 @@
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
-      <show-form :orderId="currentOrderId" @close="resetRightBox"></show-form>
+      <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
+                 @close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form type="1" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
+    </page-right>
+    <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <receipt @close="resetRightBox"></receipt>
     </page-right>
   </div>
 </template>
@@ -254,16 +258,18 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
+  import receipt from './receipt.vue';
   import { Order, BaseInfo, erpOrder } from '@/resources';
 
   export default {
     components: {
-      showForm, addForm
+      showForm, addForm, receipt
     },
     data: function () {
       return {
         loadingData: true,
         showItemRight: false,
+        showPart: false,
         showDetail: false,
         showSearch: false,
         orderList: [],
@@ -302,7 +308,8 @@
         },
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
-        user: {}
+        user: {},
+        state: ''
       };
     },
     mounted () {
@@ -325,6 +332,9 @@
       }
     },
     methods: {
+      showPartItem () {
+        this.showPart = true;
+      },
       getOrderStatus: function (order) {
         let state = '';
         for (let key in this.orgType) {
@@ -358,6 +368,7 @@
         this.showItemRight = false;
         this.defaultIndex = 0;
         this.action = '';
+        this.showPart = false;
         // this.getOrderList(this.pager.currentPage);
       },
       add: function () {
@@ -383,6 +394,9 @@
           this.loadingData = false;
         });
         this.queryStatusNum(param);
+      },
+      refreshOrder () {
+        this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.searchCondition.orgId;
@@ -427,26 +441,27 @@
           this.orgType[0].num = this.obtionStatusNum(data['out-pend-confirm']);
           this.orgType[1].num = this.obtionStatusNum(data['out-pend-check']);
           this.orgType[2].num = this.obtionStatusNum(data['out-pend-execute']);
-          this.orgType[3].num = this.obtionStatusNum(data['out-complete']);
-          this.orgType[4].num = this.obtionStatusNum(data['out-cancel']);
+          this.orgType[3].num = this.obtionStatusNum(data['out-pov-receipt']);
+          this.orgType[4].num = this.obtionStatusNum(data['out-complete']);
+          this.orgType[5].num = this.obtionStatusNum(data['out-cancel']);
         });
       },
       getTimeTitle: function (item) {
         let title = '';
         switch (item.transportationMeansId) {
           case '0': {
-            title = '预计送货:';
+            title = '预计送货：';
             if (item.bizType === '1') {
-              title = '预计出库:';
+              title = '预计出库：';
             }
             break;
           }
           case '1': {
-            title = '预计提货:';
+            title = '预计提货：';
             break;
           }
           case '2': {
-            title = '预计发货:';
+            title = '预计发货：';
             break;
           }
         }
@@ -475,6 +490,7 @@
       },
       showItem: function (order) {
         this.currentOrderId = order.id;
+        this.state = order.state;
         if (this.isLock(order)) {
           this.$notify.warning({
             duration: 2000,
@@ -484,11 +500,11 @@
           return;
         }
         this.showDetail = true;
-        let urlPre = '/platform/in/';
-        if (this.$route.meta.type === 1) {
-          urlPre = '/org/' + this.$route.params.id + '/inOrder/';
-        }
-        utils.pushHistory('oms-order|No:' + order.id, urlPre + order.id);
+//        let urlPre = '/platform/in/';
+//        if (this.$route.meta.type === 1) {
+//          urlPre = '/org/' + this.$route.params.id + '/inOrder/';
+//        }
+//        utils.pushHistory('oms-order|No:' + order.id, urlPre + order.id);
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

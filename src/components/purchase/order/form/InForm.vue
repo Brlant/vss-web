@@ -246,7 +246,7 @@
               <el-select type="text" v-model="form.transportationMeansId" @change="changeTransportationMeans"
                          placeholder="请选择物流方式">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in currentTransportationMeans"></el-option>
+                           v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="销售厂商">
