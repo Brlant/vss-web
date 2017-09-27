@@ -38,32 +38,32 @@ const route = [
       {
         path: '/account',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'account', title: '账户管理', icon: 'user', perm: 'show'},
+        meta: {moduleId: 'account', title: '账户管理', icon: 'user', perm: 'erp-user-manager'},
         children: [
           {
             path: '/account/cdc',
             component: resolve => require(['./components/account/cdc/county-cdc.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'er'}
+            meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'erp-bind-cd'}
           },
           {
             path: '/account/pov',
             component: resolve => require(['./components/account/pov/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定POV', perm: 'show'}
+            meta: {moduleId: 'account', title: '绑定POV', perm: 'erp-bind-pov'}
           },
           {
             path: '/account/user',
             component: resolve => require(['./components/account/user/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '用户管理', perm: 'show'}
+            meta: {moduleId: 'account', title: '用户管理', perm: 'erp-user-manager'}
           },
           {
             path: '/account/role',
             component: resolve => require(['./components/account/role/role.vue'], resolve),
-            meta: {moduleId: 'account', title: '角色管理', perm: 'show'}
+            meta: {moduleId: 'account', title: '角色管理', perm: 'erp-access-manage'}
           },
           {
             path: '/account/management',
             component: resolve => require(['./components/account/management/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '账号分配', perm: 'show'}
+            meta: {moduleId: 'account', title: '账号分配', perm: 'erp-account-manager'}
           }
         ]
       },
@@ -75,7 +75,7 @@ const route = [
           {
             path: '/resource/firm',
             component: resolve => require(['./components/resource/firm/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '厂商资料管理', perm: 'show'}
+            meta: {moduleId: 'resource', title: '厂商资料管理', perm: 'purchasing-requisition'}
           }, {
             path: '/resource/vaccin/list',
             component: resolve => require(['./components/resource/vaccin/data/list.vue'], resolve),
@@ -96,7 +96,7 @@ const route = [
       {
         path: '/purchase',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'purchase', title: '采购业务', icon: 'purchase', perm: 'show'},
+        meta: {moduleId: 'purchase', title: '采购业务', icon: 'purchase', perm: 'order-business'},
         children: [
           {
             path: '/purchase/pov',
@@ -106,19 +106,19 @@ const route = [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
-                meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'}
+                meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'demand-assignment-query'}
               },
               {
                 path: '/purchase/pov/allocation',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'show'}
+                meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'demand-assignment-update'}
               }
             ]
           },
           {
             path: '/purchase/order',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '采购订单', perm: 'show'}
+            meta: {moduleId: 'purchase', title: '采购订单', perm: 'order-business-query'}
           },
           {
             path: '/purchase/rejected',
@@ -130,12 +130,12 @@ const route = [
       {
         path: '/sale',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'sale', title: '销售业务', icon: 'sale', perm: 'show'},
+        meta: {moduleId: 'sale', title: '销售业务', icon: 'sale', perm: 'order-business'},
         children: [
           {
             path: '/sale/order',
             component: resolve => require(['./components/sale/order/list.vue'], resolve),
-            meta: {moduleId: 'sale', title: '销售订单', perm: 'show'}
+            meta: {moduleId: 'sale', title: '销售订单', perm: 'order-business-query'}
           },
           {
             path: '/sale/rejected',
@@ -147,7 +147,7 @@ const route = [
       {
         path: '/pov',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'pov', title: 'POV业务', icon: 'vaccine', perm: 'show'},
+        meta: {moduleId: 'pov', title: 'POV业务', icon: 'vaccine', perm: 'pull-signal'},
         children: [
           {
             path: '/pov/request',
