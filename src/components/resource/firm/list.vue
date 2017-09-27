@@ -176,9 +176,9 @@
                  <!--</perm>-->
                 <el-button-group>
                   <perm label="org-relation-edit">
-                    <el-button @click="edit">编辑</el-button>
-                    <el-button @click="forbid"  v-show="businessRelationItem.status  == '0' ">停用</el-button>
-                    <el-button @click="enableRelation" v-show="businessRelationItem.status == '1' ">启用</el-button>
+                    <el-button @click="edit"><i class="iconfont icon-edit"></i>编辑</el-button>
+                    <el-button @click="forbid"  v-show="businessRelationItem.status  == '0' "><i class="iconfont icon-stop"></i>停用</el-button>
+                    <el-button @click="enableRelation" v-show="businessRelationItem.status == '1' "><i class="iconfont icon-start"></i>启用</el-button>
                   </perm>
                 </el-button-group>
               </span>
