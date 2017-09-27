@@ -25,12 +25,12 @@
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
             <perm label="show" v-show="currentOrder.state === '0' ">
-              <el-button type="primary" @click="confirm" style="width: 80px;">确认订单</el-button>
+              <el-button type="primary" @click="confirm">确认订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="show" v-show="currentOrder.state === '1' ">
-              <el-button type="primary" @click="review" style="width: 80px;">审单</el-button>
+              <el-button type="primary" @click="review">确认审单</el-button>
             </perm>
           </li>
         </ul>

@@ -108,14 +108,6 @@
         </el-pagination>
       </div>
     </div>
-
-    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
-      <allot-form :currentItem="currentItem" @change="change" @close="resetRightBox"></allot-form>
-    </page-right>
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
-                class="order-detail-info" partClass="pr-no-animation">
-      <show-form :currentItem="currentItem" @close="resetRightBox"></show-form>
-    </page-right>
   </div>
 </template>
 <script>

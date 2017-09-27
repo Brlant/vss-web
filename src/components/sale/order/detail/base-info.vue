@@ -16,19 +16,19 @@
     <div v-else="" class="page-main-body padding">
       <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2' ">
         <el-col :span="12">
-          <oms-row label="货主订单号">
+          <oms-row label="货主订单号" :span="span">
             {{currentOrder.orderNo}}
           </oms-row>
-          <oms-row label="货主">
+          <oms-row label="货主" :span="span">
             {{currentOrder.orgName}}
           </oms-row>
-          <oms-row label="POV" v-show=" currentOrder.bizType !== '3' ">
+          <oms-row label="POV" :span="span">
             {{currentOrder.customerName}}
           </oms-row>
-          <oms-row label="POV仓库">
+          <oms-row label="POV仓库" :span="span">
             {{currentOrder.warehouseAddress}}
           </oms-row>
-          <oms-row label="运输条件">
+          <oms-row label="运输条件" :span="span">
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
           </oms-row>
         </el-col>
@@ -51,12 +51,12 @@
         </el-col>
       </el-row>
       <el-row style="margin-bottom:0">
-        <oms-row label="物流中心" :span="5">
+        <oms-row label="物流中心" :span="4">
           <span class="goods-span">{{currentOrder.centreName}}</span>
         </oms-row>
       </el-row>
       <el-row v-show="currentOrder.remark">
-        <oms-row label="备注" :span="5">{{ currentOrder.remark }}</oms-row>
+        <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
       </el-row>
 
       <hr class="hr"/>
@@ -136,6 +136,11 @@
           return {};
         }
       }
+    },
+    data () {
+      return {
+        span: 8
+      };
     },
     methods: {
       getTimeTitle: function (item) {

@@ -457,6 +457,7 @@
         if (!val) return;
         this.searchWarehouses();
         this.queryOnCDCs();
+        this.currentList = [];
       }
     },
     methods: {
@@ -590,6 +591,7 @@
             };
             this.$refs['orderGoodsForm'].resetFields();
             this.accessoryList = [];
+            this.currentList = [];
           });
         });
       },
@@ -636,7 +638,6 @@
               type: 'success'
             });
             self.$emit('change', res.data);
-            this.resetForm();
             this.$nextTick(() => {
               this.doing = false;
               this.$emit('close');
@@ -656,6 +657,7 @@
         this.$refs['orderGoodsForm'].resetFields();
         this.$refs['orderAddForm'].resetFields();
         this.form.detailDtoList = [];
+        this.currentList = [];
       }
     }
   };
