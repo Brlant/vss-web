@@ -636,6 +636,8 @@
         let oldForm = window.localStorage.getItem(this.saveKey);
         if (oldForm) {
           this.form = Object.assign({}, this.form, JSON.parse(oldForm));
+          this.form.logisticsCentreId = this.form.logisticsCentreId
+            ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
       },
       resetForm: function () {// 重置表单

@@ -92,7 +92,7 @@
   }
 </style>
 <template>
-  <div class="app-body"  :style="'padding-left:'+bodyLeft">
+  <div class="app-body" :style="'padding-left:'+bodyLeft">
     <app-header :to-route="toRoute"></app-header>
     <div class="main-body" style="padding:0 8px;">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
@@ -114,7 +114,7 @@
 <script>
   import AppHeader from './common/app.header.vue';
   import AppFooter from './common/app.footer.vue';
-  import { Auth, DictGroup, cerpAccess, cerpAction, Access } from '../resources';
+  import { Auth, DictGroup, cerpAccess, cerpAction, Access, BaseInfo } from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
 
@@ -160,6 +160,7 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
+          this.queryBaseInfo(data);
           Access.getRoleMenus(data.userCompanyAddress).then(res => {
             let menuData = res.data;
             let menuList = [];
@@ -208,6 +209,11 @@
               this.loading = false;
             }, 1000);
           });
+        });
+      },
+      queryBaseInfo (data) {
+        BaseInfo.queryBaseInfo(data.userCompanyAddress).then(res => {
+          window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');
         });
       }
     }
