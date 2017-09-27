@@ -15,7 +15,7 @@
     },
     computed: {
       isShow: function () {
-        // return true;
+        if (this.label === 'show') return;
         return this.$store.state.permissions.indexOf(this.label) !== -1;
       }
     }

@@ -98,6 +98,7 @@
               message: '确认订单成功'
             });
             this.transformState('1');
+            this.queryOrderDetail();
           }).catch(error => {
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '确认订单失败'
