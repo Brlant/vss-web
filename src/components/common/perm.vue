@@ -15,8 +15,8 @@
     },
     computed: {
       isShow: function () {
-        return true;
-        // return this.$store.state.permissions.indexOf(this.label) !== -1;
+        // return true;
+        return this.$store.state.permissions.indexOf(this.label) !== -1;
       }
     }
   };
