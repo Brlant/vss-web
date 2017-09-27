@@ -134,6 +134,8 @@
           this.$notify.success({
             message: '添加收货信息成功'
           });
+          this.$emit('close');
+          this.$emit('refreshOrder');
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '添加收货信息失败'

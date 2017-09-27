@@ -84,8 +84,9 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body">
-          <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
-               :class="[{'active':currentItemId==item.id}]" @click="showDetail(item)">
+          <div class="order-list-item" v-for="item in allocationList"
+               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]"
+               @click="showDetail(item)">
             <el-row>
               <el-col :span="8" class="R pt">
                 <span>{{ item.createName }}</span>
@@ -97,6 +98,7 @@
                 <span>{{ item.status === 0 ? '未完成' : '已完成' }}</span>
               </el-col>
             </el-row>
+            <div class="order-list-item-bg"></div>
           </div>
         </div>
       </div>
@@ -179,6 +181,15 @@
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;
         this.filters.status = item.status;
+      },
+      filterListColor: function (index) {// 过滤左边列表边角颜色
+        let status = -1;
+        for (let key in this.waveType) {
+          if (this.waveType[key].status === index) {
+            status = key;
+          }
+        }
+        return status;
       },
       submit () {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);

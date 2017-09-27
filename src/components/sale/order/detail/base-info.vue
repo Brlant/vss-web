@@ -49,10 +49,10 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="4" class="text-right" style="line-height: 36px">
+          <el-col :span="3" class="text-right" style="line-height: 36px">
             物流方式：
           </el-col>
-          <el-col :span="20">
+          <el-col :span="21">
             <el-select type="text" v-model="currentOrder.transportationMeansId" placeholder="请选择物流方式">
               <el-option :value="item.key" :key="item.key" :label="item.label"
                          v-for="item in transportationMeansList"></el-option>
@@ -60,10 +60,10 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="4" class="text-right" style="line-height: 36px">
+          <el-col :span="3" class="text-right" style="line-height: 36px">
             POV仓库：
           </el-col>
-          <el-col :span="20">
+          <el-col :span="21">
             <el-select placeholder="请选择POV仓库" v-model="currentOrder.transportationAddress" filterable clearable>
               <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
                 <span class="pull-left">{{ item.name }}</span>
@@ -73,10 +73,10 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="4" class="text-right" style="line-height: 36px">
+          <el-col :span="3" class="text-right" style="line-height: 36px">
             运输条件：
           </el-col>
-          <el-col :span="20">
+          <el-col :span="21">
             <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
               <el-option :value="item.key" :key="item.key" :label="item.label"
                          v-for="item in transportationConditionList"></el-option>
@@ -84,10 +84,10 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="4" class="text-right" style="line-height: 36px">
+          <el-col :span="3" class="text-right" style="line-height: 36px">
             预计送货时间：
           </el-col>
-          <el-col :span="20">
+          <el-col :span="21">
             <el-date-picker
               v-model="currentOrder.expectedTime"
               type="date"
@@ -97,20 +97,20 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="4" class="text-right" style="line-height: 36px">
+          <el-col :span="3" class="text-right" style="line-height: 36px">
             物流方式：
           </el-col>
-          <el-col :span="20">
+          <el-col :span="21">
             <el-select placeholder="请选择物流中心" v-model="currentOrder.logisticsCentreId" filterable>
               <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"></el-option>
             </el-select>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="4" class="text-right" style="line-height: 36px">
+          <el-col :span="3" class="text-right" style="line-height: 36px">
             备注：
           </el-col>
-          <el-col :span="20">
+          <el-col :span="21">
             <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </el-col>
@@ -154,12 +154,12 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <oms-row label="物流中心" :span="4">
+          <oms-row label="物流中心" :span="3">
             <span class="goods-span">{{currentOrder.centreName}}</span>
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
-          <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
+          <oms-row label="备注" :span="3">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 
@@ -245,7 +245,7 @@
     },
     data () {
       return {
-        span: 8,
+        span: 6,
         warehouses: [],
         LogisticsCenter: []
       };
