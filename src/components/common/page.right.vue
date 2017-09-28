@@ -43,7 +43,7 @@
   <div class="page-right-wrap">
     <div class="page-right-part" :class="[{'on':show},partClass]" :style="style">
       <div class="right-close-icon" @click="close"><i class="iconfont icon-remove"></i></div>
-      <slot @right-close="close"></slot>
+      <slot @right-close="close" v-if="show"></slot>
     </div>
     <div class="page-right-part-bg" @click="close" v-show="show"></div>
   </div>
