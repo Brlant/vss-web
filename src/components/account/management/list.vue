@@ -257,7 +257,7 @@
           pageSize: this.pager.pageSize,
           keyWord: this.keyTxt
         });
-        OrgUser.queryOrgInfo(this.filters.orgId, data).then(res => {
+        OrgUser.queryUsers(this.filters.orgId, data).then(res => {
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
         });
