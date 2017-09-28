@@ -35,14 +35,14 @@
       <div v-for="(menu,index) in tree">
         <el-checkbox :indeterminate="menu.isIndeterminate" v-model="menu.status"
                      @change="handleCheckAllChange(menu)">
-          {{ roleMenu.menuList[menu.parentId] }} {{ menu.parentId }}
+          {{ roleMenu.menuList[menu.parentId] }}
         </el-checkbox>
         <el-checkbox-group style="margin-left: 12px" v-model="menu.checkedChildren"
                            @change="handleCheckedItemChange(menu)">
           <div class="power-style-part" v-show="menu.children.length>0">
             <div style="margin:10px 3px">
               <el-checkbox v-for="child in menu.children" :label="child.id" :key="child.id" v-model="child.checked">
-                {{ roleMenu.menuList[child.id] }} {{ child.id }}
+                {{ roleMenu.menuList[child.id] }}
               </el-checkbox>
             </div>
           </div>
