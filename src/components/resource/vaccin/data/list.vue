@@ -452,7 +452,6 @@
         this.showRight = true;
         this.combinationList = [];
         this.$notify.info({
-          duration: 20000,
           message: '添加疫苗时，只能添加通过审核的、与经营范围保持一致的疫苗'
         });
       },

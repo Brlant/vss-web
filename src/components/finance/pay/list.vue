@@ -108,7 +108,19 @@
                 </oms-row>
               </el-row>
             </div>
-            <span style="font-size: 14px">【应付款明细】</span>
+            <div style="overflow: hidden">
+              <span style="font-size: 14px" class="pull-left">【应付款明细】</span>
+              <span class="pull-right" style="margin-top: 8px">
+               <span class="btn-search-toggle open" v-show="showSearch">
+                  <single-input v-model="filterRights.keyWord" placeholder="请输入关键字搜索"
+                                :showFocus="showSearch"></single-input>
+                  <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+               </span>
+               <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
+                  <i class="iconfont icon-search"></i>
+               </a>
+            </span>
+            </div>
             <table class="table "
                    style="margin-top: 10px">
               <thead>
@@ -117,6 +129,7 @@
                 <th>单据金额</th>
                 <th>剩余应付金额</th>
                 <th>创建时间</th>
+                <th>操作</th>
               </tr>
               </thead>
               <tbody>
@@ -145,15 +158,28 @@
                 <td>
                   {{row.createTime | date }}
                 </td>
+                <td>
+                  <perm label="show">
+                    <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
+                  </perm>
+                </td>
               </tr>
               </tbody>
             </table>
+            <div class="text-center" v-show="pager.count>pager.pageSize">
+              <el-pagination layout="prev, pager, next"
+                             :total="pager.count"
+                             :pageSize="pager.pageSize"
+                             @current-change="getDetail"
+                             :current-page="pager.currentPage">
+              </el-pagination>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form @change="onSubmit" :currentItem="currentItem" :index="index" @refreshDetails="refreshDetails"
+      <add-form @change="onSubmit" :formItem="form" :index="index" @refreshDetails="refreshDetails"
                 @close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showLeft" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
@@ -175,8 +201,12 @@
         showRight: false,
         showLeft: false,
         showTypeSearch: false,
+        showSearch: false,
         showTypeList: [],
         filters: {
+          keyWord: ''
+        },
+        filterRights: {
           keyWord: ''
         },
         action: 'add',
@@ -192,6 +222,7 @@
           pageSize: 20,
           totalPage: 1
         },
+        form: {},
         currentItem: {}, //  左边列表点击时，添加样式class
         payDetails: [], // 疫苗列表
         index: 0
@@ -212,6 +243,12 @@
       filters: {
         handler: function () {
           this.getOrgsList(1);
+        },
+        deep: true
+      },
+      filterRights: {
+        handler: function () {
+          this.getDetail(1);
         },
         deep: true
       },
@@ -244,7 +281,7 @@
             this.showTypeList = res.data.list;
             if (this.showTypeList.length !== 0) {
               this.currentItem = res.data.list[0];
-              this.getDetail();
+              this.getDetail(1);
             } else {
               this.currentItem = Object.assign({'id': ''});
             }
@@ -258,14 +295,17 @@
         this.resetRightBox();
       },
       refreshDetails () {
-        this.getDetail();
         this.resetRightBox();
       },
-      getDetail: function () {
+      getDetail: function (pageNo) {
         this.payDetails = {};
         if (!this.currentItem.id) return;
         this.loadingData = true;
-        pay.queryDetail(this.currentItem.id).then(res => {
+        let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        }, this.filterRights);
+        pay.queryDetail(this.currentItem.id, params).then(res => {
           this.loadingData = false;
           this.payDetails = res.data.list;
         });
@@ -275,15 +315,10 @@
       },
       showType: function (item) {
         this.currentItem = item;
-        this.getDetail();
+        this.getDetail(1);
       },
-      add () {
-        if (!this.currentItem.id) {
-          this.$notify.info({
-            message: '请先添加付款方'
-          });
-          return;
-        }
+      edit (row) {
+        this.form = row;
         this.showRight = true;
       },
       addDetail () {
