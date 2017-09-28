@@ -151,6 +151,7 @@
         loadingData: false,
         allocationList: [],
         showRight: false,
+        status: '',
         pager: {
           currentPage: 1,
           count: 0,
@@ -160,23 +161,20 @@
         currentItem: {}
       };
     },
-    computed: {
-      status () {
-        return this.$route.query.status;
-      }
-    },
     mounted () {
       this.queryAllocationList();
     },
     methods: {
       queryAllocationList (pageNo) { // 得到需求分配列表
         this.allocationList = [];
+        this.status = '';
         if (!this.$route.query.id) return;
         this.pager.currentPage = pageNo;
         this.loadingData = false;
         demandAssignment.queryDetailList(this.$route.query.id).then(res => {
           this.allocationList = res.data.list;
           this.pager.count = res.data.count;
+          this.status = res.data.status;
           this.loadingData = false;
         });
       },

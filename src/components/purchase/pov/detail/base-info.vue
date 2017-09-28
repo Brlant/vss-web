@@ -89,6 +89,7 @@
         <th>单件</th>
         <th>申请数量</th>
         <th>申请金额</th>
+        <th>分配数量</th>
       </tr>
       </thead>
       <tbody>
@@ -107,6 +108,9 @@
         </td>
         <td>
           {{row.applyMoney}}
+        </td>
+        <td>
+          {{row.actualCount}}
         </td>
       </tr>
       </tbody>
