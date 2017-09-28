@@ -41,9 +41,9 @@
     margin-right: -1em;
   }
 
-  .order-list-item {
-    cursor: pointer;
-  }
+  /*.order-list-item {*/
+  /*cursor: pointer;*/
+  /*}*/
 </style>
 <template>
   <div class="order-page">
@@ -51,7 +51,7 @@
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
           <span class="">
-            <i class="wms-font wms-font-search"></i> 筛选查询
+            <i class="iconfont icon-search"></i> 筛选查询
           </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
@@ -186,18 +186,16 @@
       </div>
     </div>
 
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
-      <detail :id="currentItemId" @close="resetRightBox"></detail>
-    </page-right>
+    <!--<page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">-->
+    <!--<detail :id="currentItemId" @close="resetRightBox"></detail>-->
+    <!--</page-right>-->
   </div>
 </template>
 <script>
   //  import order from '../../../tools/orderList';
-  import { Batch, BaseInfo, OrgGoods, erpStock } from '@/resources';
-  import detail from './detail.vue';
+  import { BaseInfo, OrgGoods, erpStock } from '@/resources';
 
   export default {
-    components: {detail},
     data () {
       return {
         loadingData: true,
@@ -308,7 +306,7 @@
           });
         }
       },
-      orgChange (orgId) {
+      orgChange () {
         this.filterOrgGoods();
       },
       formatTime (date) {
