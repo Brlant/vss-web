@@ -62,7 +62,7 @@
               所有应收款
             </h2>
             <div class="search-left-box clearfix" v-show="showTypeSearch">
-              <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+              <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!currentItem.id" class="empty-info">
               暂无信息
@@ -108,7 +108,19 @@
                 </oms-row>
               </el-row>
             </div>
-            <span style="font-size: 14px">【应收款明细】</span>
+            <div style="overflow: hidden">
+              <span style="font-size: 14px" class="pull-left">【应收款明细】</span>
+              <span class="pull-right" style="margin-top: 8px">
+               <span class="btn-search-toggle open" v-show="showSearch">
+                  <single-input v-model="filterRights.keyWord" placeholder="请输入订单号搜索"
+                                :showFocus="showSearch"></single-input>
+                  <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+               </span>
+               <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
+                  <i class="iconfont icon-search"></i>
+               </a>
+            </span>
+            </div>
             <table class="table "
                    style="margin-top: 10px">
               <thead>
@@ -148,6 +160,14 @@
               </tr>
               </tbody>
             </table>
+            <div class="text-center" v-show="pager.count>pager.pageSize">
+              <el-pagination layout="prev, pager, next"
+                             :total="pager.count"
+                             :pageSize="pager.pageSize"
+                             @current-change="getDetail"
+                             :current-page="pager.currentPage">
+              </el-pagination>
+            </div>
           </div>
         </div>
       </div>
@@ -175,8 +195,12 @@
         showRight: false,
         showLeft: false,
         showTypeSearch: false,
+        showSearch: false,
         showTypeList: [],
         filters: {
+          keyWord: ''
+        },
+        filterRights: {
           keyWord: ''
         },
         action: 'add',
@@ -215,6 +239,12 @@
         },
         deep: true
       },
+      filterRights: {
+        handler: function () {
+          this.getDetail(1);
+        },
+        deep: true
+      },
       user (val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
@@ -244,7 +274,7 @@
             this.showTypeList = res.data.list;
             if (this.showTypeList.length !== 0) {
               this.currentItem = res.data.list[0];
-              this.getDetail();
+              this.getDetail(1);
             } else {
               this.currentItem = Object.assign({'id': ''});
             }
@@ -258,14 +288,17 @@
         this.resetRightBox();
       },
       refreshDetails () {
-        this.getDetail();
         this.resetRightBox();
       },
-      getDetail: function () {
+      getDetail: function (pageNo) {
         this.receiptDetails = {};
         if (!this.currentItem.id) return;
         this.loadingData = true;
-        receipt.queryDetail(this.currentItem.id).then(res => {
+        let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        }, this.filterRights);
+        receipt.queryDetail(this.currentItem.id, params).then(res => {
           this.loadingData = false;
           this.receiptDetails = res.data.list;
         });
@@ -275,7 +308,7 @@
       },
       showType: function (item) {
         this.currentItem = item;
-        this.getDetail();
+        this.getDetail(1);
       },
       add () {
         if (!this.currentItem.id) {

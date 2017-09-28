@@ -237,7 +237,10 @@
           <el-form ref="form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="未付款金额" prop="money">
-              <el-input v-model="form.money" placeholder="请输入未付款金额"></el-input>
+              <oms-input type="text" placeholder="请输入未付款金额" v-model="form.money" :min="0"
+                         @blur="formatPrice">
+                <template slot="prepend">¥</template>
+              </oms-input>
             </el-form-item>
           </el-form>
         </div>
@@ -246,6 +249,7 @@
   </div>
 </template>
 <script>
+  import utils from '@/tools/utils';
   import { receipt } from '@/resources';
   export default {
     props: {
@@ -263,6 +267,9 @@
       };
     },
     methods: {
+      formatPrice: function () {// 格式化单价，保留两位小数
+        this.form.price = utils.autoformatDecimalPoint(this.form.price);
+      },
       onSubmit () {
         this.$refs['form'].validate((valid) => {
           if (!valid) {
