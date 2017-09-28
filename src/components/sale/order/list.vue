@@ -173,10 +173,10 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="6">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="5">POV</el-col>
-          <el-col :span="4">时间</el-col>
+          <el-col :span="filters.state === '-1' ? 5 : 6">POV</el-col>
+          <el-col :span="filters.state === '-1' ? 4 : 5">时间</el-col>
           <el-col :span="3">状态</el-col>
-          <el-col :span="2">操作</el-col>
+          <el-col :span="2" v-show="filters.state === '-1' ">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -207,12 +207,12 @@
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="5" class="pt10">
+              <el-col :span="filters.state === '-1' ? 5 : 6" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="filters.state === '-1' ? 4 : 5">
                 <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
-                <div v-show="item.bizType !== '2' ">预计送货时间：{{ item.expectedTime | date }}</div>
+                <div>预计送货时间：{{ item.expectedTime | date }}</div>
               </el-col>
               <el-col :span="3">
                 <div class="vertical-center">
@@ -220,9 +220,9 @@
                   <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
                 </div>
               </el-col>
-              <el-col :span="2" class="opera-btn pt10">
+              <el-col :span="2" class="opera-btn pt10" v-show="filters.state === '-1' ">
                 <perm label="show">
-                  <span @click.stop="showPartItem(item)" v-show="item.state === '-1' ">
+                  <span @click.stop="showPartItem(item)">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
                       class="iconfont icon-allot"></i></a>
                     收货
