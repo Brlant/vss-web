@@ -401,6 +401,12 @@ export const outWork = resource('/outbound/count', http, {
 });
 
 /**
+ * erp库存批次
+ * @type {the}
+ */
+export const erpStock = resource('/erp-stock', http, {});
+
+/**
  * 物流费用
  * @type {the}
  */

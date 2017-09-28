@@ -205,32 +205,32 @@ const route = [
         children: [
           {
             path: '/finance/get',
-            component: resolve => require(['./components/store/receipt/list.vue'], resolve),
+            component: resolve => require(['./components/finance/receipt/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '应收账款管理', perm: 'accounts-receivable'}
           },
           {
             path: '/finance/pay',
-            component: resolve => require(['./components/store/pay/list.vue'], resolve),
+            component: resolve => require(['./components/finance/pay/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '应付账款管理', perm: 'accounts-payable'}
           },
           {
             path: '/finance/supplier',
-            component: resolve => require(['./components/store/bad/list.vue'], resolve),
+            component: resolve => require(['./components/finance/bad/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '疫苗厂商对账', perm: 'show'}
           },
           {
             path: '/finance/org',
-            component: resolve => require(['./components/store/bad/list.vue'], resolve),
+            component: resolve => require(['./components/finance/bad/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '物流厂商对账', perm: 'show'}
           },
           {
             path: '/finance/paying',
-            component: resolve => require(['./components/store/bad/list.vue'], resolve),
+            component: resolve => require(['./components/finance/bad/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '付款作业', perm: 'show'}
           },
           {
             path: '/finance/sale',
-            component: resolve => require(['./components/store/bad/list.vue'], resolve),
+            component: resolve => require(['./components/finance/bad/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '库存货品调价', perm: 'show'}
           }
         ]
