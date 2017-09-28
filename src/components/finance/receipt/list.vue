@@ -52,13 +52,13 @@
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
                   class="iconfont icon-search"></i> </a>
             </span>
-              <span class="pull-right" style="margin-right: 8px">
-             <perm label="accounts-receivable-add">
-               <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
-                  <i class="iconfont icon-plus"></i>
-              </a>
-             </perm>
-            </span>
+              <!--<span class="pull-right" style="margin-right: 8px">-->
+              <!--<perm label="accounts-receivable-add">-->
+              <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
+              <!--<i class="iconfont icon-plus"></i>-->
+              <!--</a>-->
+              <!--</perm>-->
+              <!--</span>-->
               所有应收款
             </h2>
             <div class="search-left-box clearfix" v-show="showTypeSearch">
@@ -125,20 +125,21 @@
                    style="margin-top: 10px">
               <thead>
               <tr>
-                <th>订单号ID</th>
+                <th>订单号</th>
                 <th>单据金额</th>
-                <th>剩余应收金额</th>
+                <th>实收金额</th>
                 <th>创建时间</th>
+                <th>操作</th>
               </tr>
               </thead>
               <tbody>
               <tr v-if="loadingData">
-                <td colspan="3">
+                <td colspan="5">
                   <oms-loading :loading="loadingData"></oms-loading>
                 </td>
               </tr>
               <tr v-else-if="!receiptDetails.length">
-                <td colspan="3">
+                <td colspan="5">
                   <div class="empty-info">
                     暂无信息
                   </div>
@@ -146,7 +147,7 @@
               </tr>
               <tr v-else="" v-for="row in receiptDetails">
                 <td>
-                  {{row.orderId}}
+                  {{row.orderNo}}
                 </td>
                 <td>
                   ￥{{row.billAmount}}
@@ -156,6 +157,11 @@
                 </td>
                 <td>
                   {{row.createTime | date }}
+                </td>
+                <td>
+                  <perm label="show">
+                    <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>修改</a>
+                  </perm>
                 </td>
               </tr>
               </tbody>
@@ -173,7 +179,7 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form @change="onSubmit" :currentItem="currentItem" :index="index" @refreshDetails="refreshDetails"
+      <add-form @change="onSubmit" :formItem="form" :index="index" @refreshDetails="refreshDetails"
                 @close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showLeft" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
@@ -216,6 +222,7 @@
           pageSize: 20,
           totalPage: 1
         },
+        form: {},
         currentItem: {}, //  左边列表点击时，添加样式class
         receiptDetails: [], // 疫苗列表
         index: 0
@@ -321,6 +328,10 @@
       },
       addDetail () {
         this.showLeft = true;
+      },
+      edit (row) {
+        this.form = row;
+        this.showRight = true;
       },
       onSubmit () {
         this.getOrgsList();

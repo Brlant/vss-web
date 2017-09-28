@@ -52,13 +52,13 @@
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
                   class="iconfont icon-search"></i> </a>
             </span>
-              <span class="pull-right" style="margin-right: 8px">
-             <perm label="accounts-payable-add">
-               <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
-                  <i class="iconfont icon-plus"></i>
-              </a>
-             </perm>
-            </span>
+              <!--<span class="pull-right" style="margin-right: 8px">-->
+              <!--<perm label="accounts-payable-add">-->
+              <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
+              <!--<i class="iconfont icon-plus"></i>-->
+              <!--</a>-->
+              <!--</perm>-->
+              <!--</span>-->
               所有应付款
             </h2>
             <div class="search-left-box clearfix" v-show="showTypeSearch">
@@ -125,21 +125,21 @@
                    style="margin-top: 10px">
               <thead>
               <tr>
-                <th>订单号ID</th>
+                <th>订单号</th>
                 <th>单据金额</th>
-                <th>剩余应付金额</th>
+                <th>实付金额</th>
                 <th>创建时间</th>
                 <th>操作</th>
               </tr>
               </thead>
               <tbody>
               <tr v-if="loadingData">
-                <td colspan="3">
+                <td colspan="5">
                   <oms-loading :loading="loadingData"></oms-loading>
                 </td>
               </tr>
               <tr v-else-if="!payDetails.length">
-                <td colspan="3">
+                <td colspan="5">
                   <div class="empty-info">
                     暂无信息
                   </div>
@@ -147,7 +147,7 @@
               </tr>
               <tr v-else="" v-for="row in payDetails">
                 <td>
-                  {{row.orderId}}
+                  {{row.orderNo}}
                 </td>
                 <td>
                   ￥{{row.billAmount}}

@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">修改未付款金额</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">修改实付金额</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -236,8 +236,8 @@
         <div class="hide-content show-content">
           <el-form ref="form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="未付款金额" prop="money">
-              <oms-input type="text" placeholder="请输入未付款金额" v-model="form.money" :min="0"
+            <el-form-item label="实付金额" prop="money">
+              <oms-input type="text" placeholder="请输入实付金额" v-model="form.money" :min="0"
                          @blur="formatPrice">
                 <template slot="prepend">¥</template>
               </oms-input>
@@ -262,7 +262,7 @@
           money: ''
         },
         rules: {
-          money: {required: true, message: '请输入未付款金额', trigger: 'blur'}
+          money: {required: true, message: '请输入实付金额', trigger: 'blur'}
         }
       };
     },
@@ -278,13 +278,13 @@
           this.form.id = this.formItem.id;
           receipt.modifyDetail(this.currentItem.id, this.form).then(() => {
             this.$notify.success({
-              message: '修改未付款金额成功'
+              message: '修改实付金额成功'
             });
             this.$refs['form'].resetFields();
             this.$emit('refreshDetails');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '修改未付款金额失败'
+              message: error.response.data && error.response.data.msg || '修改实付金额失败'
             });
           });
         });
