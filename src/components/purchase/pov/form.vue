@@ -133,9 +133,7 @@
                       <span style="font-size: 16px">库存数量 {{ currentItem.inventoryQuantity }}</span>
                     </el-col>
                     <el-col :span="3">
-                      <span style="font-size: 16px">差额  <span
-                        :class="{'colorRed': currentItem.resultAmount !== 0}">{{ currentItem.resultAmount
-                        }}</span></span>
+                      <span style="font-size: 16px">差额  <span>{{ currentItem.resultAmount}}</span></span>
                     </el-col>
                   </el-row>
                 </div>
