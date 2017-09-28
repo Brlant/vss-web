@@ -235,19 +235,19 @@ const route = [
         component: resolve => require(['./components/files/vaccineBatch/index.vue'], resolve),
         meta: {moduleId: 'file', title: '疫苗批号文件管理', icon: 'fold', perm: 'show'},
         children: []
-      },
-      {
-        path: '/trace',
-        component: () => import('./components/trace/list.vue'),
-        meta: {moduleId: 'report', title: '追溯管理', icon: 'trace', perm: 'show'},
-        children: []
-      },
-      {
-        path: '/report',
-        component: () => import('./components/report/list.vue'),
-        meta: {moduleId: 'report', title: '报表管理', icon: 'report', perm: 'show'},
-        children: []
       }
+      // {
+      //   path: '/trace',
+      //   component: () => import('./components/trace/list.vue'),
+      //   meta: {moduleId: 'report', title: '追溯管理', icon: 'trace', perm: 'show'},
+      //   children: []
+      // },
+      // {
+      //   path: '/report',
+      //   component: () => import('./components/report/list.vue'),
+      //   meta: {moduleId: 'report', title: '报表管理', icon: 'report', perm: 'show'},
+      //   children: []
+      // }
     ]
   },
   {
