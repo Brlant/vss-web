@@ -58,10 +58,10 @@
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
               <i class="iconfont icon-search"></i>
            </a>
-           <perm label="org-user-add">
-              <a href="#" class="btn-circle" @click.stop.prevent="add">
+           <perm label="erp-account-add">
+                <a href="#" class="btn-circle" @click.stop.prevent="add">
                 <i class="iconfont icon-plus"></i>
-            </a>
+                </a>
            </perm>
          </span>
           <!--<h2 class="org-name-h2" v-show="orgName">货主名称:{{orgName}}</h2>-->
@@ -102,7 +102,7 @@
                 <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
               </td>
               <td class="list-op">
-                <perm label="org-user-edit">
+                <perm label="erp-account-edit">
                   <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
                   <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"' v-show="row.status==1">
                     <i class="iconfont icon-forbidden"></i>停用

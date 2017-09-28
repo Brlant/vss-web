@@ -122,7 +122,7 @@
           <h2 class="header" style="overflow: hidden">
             厂商资料
                 <span class="pull-right">
-                   <perm label="org-relation-add">
+                   <perm label="purchasing-requisition-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType"><i
                         class="iconfont icon-plus"></i> </a>
                    </perm>
@@ -175,7 +175,7 @@
                       <!--class="iconfont icon-start"></i>启用</a>-->
                  <!--</perm>-->
                 <el-button-group>
-                  <perm label="org-relation-edit">
+                  <perm label="purchasing-requisition-update">
                     <el-button @click="edit"><i class="iconfont icon-edit"></i>编辑</el-button>
                     <el-button @click="forbid"  v-show="businessRelationItem.status  == '0' "><i class="iconfont icon-stop"></i>停用</el-button>
                     <el-button @click="enableRelation" v-show="businessRelationItem.status == '1' "><i class="iconfont icon-start"></i>启用</el-button>

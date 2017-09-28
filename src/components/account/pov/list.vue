@@ -100,7 +100,9 @@
                 </el-select>
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
-                <el-button type="primary" @click="bindDistrict">绑定POV</el-button>
+                <perm label="erp-bind-pov">
+                  <el-button type="primary" @click="bindDistrict">绑定POV</el-button>
+                </perm>
               </el-col>
               <el-col :span="11" class="text-right">
                 <span>
@@ -142,7 +144,7 @@
                       </span>
                   </el-col>
                   <el-col :span="4" class="R pt10">
-                    <perm label="show">
+                    <perm label="erp-delete-pov">
                       <a href="#" @click.prevent="deleteItem(item)"><i
                         class="iconfont icon-delete"></i> 删除</a>
                     </perm>

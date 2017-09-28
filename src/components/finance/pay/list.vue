@@ -86,13 +86,13 @@
           </div>
         </div>
         <div class="d-table-right">
-            <span class="pull-right" style="margin-right: 8px">
-               <perm label="accounts-payable-detail-add">
-                 <a href="#" class="btn-circle" @click.stop.prevent="add">
-                    <i class="iconfont icon-plus"></i>
-                </a>
-               </perm>
-            </span>
+          <!--<span class="pull-right" style="margin-right: 8px">-->
+          <!--<perm label="accounts-payable-detail-add">-->
+          <!--<a href="#" class="btn-circle" @click.stop.prevent="add">-->
+          <!--<i class="iconfont icon-plus"></i>-->
+          <!--</a>-->
+          <!--</perm>-->
+          <!--</span>-->
           <div v-if="!currentItem.id">
             <div class="empty-info">暂无信息</div>
           </div>

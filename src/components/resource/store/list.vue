@@ -89,15 +89,15 @@
                         <!--class=" iconfont icon-start"></i>启用</a>-->
                   <!--</perm>-->
                   <el-button-group>
-                    <perm label="show">
+                    <perm label="binding-warehouse-update">
                       <el-button @click="edit()" v-show="data.status==='0'"><i
                         class="iconfont icon-edit"></i>编辑</el-button>
                     </perm>
-                    <perm label="show">
+                    <perm label="binding-warehouse-forbid">
                       <el-button @click="remove()" v-show="data.status==='0'||data.status==='1'"><i
                         class="iconfont icon-stop"></i>停用</el-button>
                     </perm>
-                    <perm label="show">
+                    <perm label="binding-warehouse-start">
                       <el-button @click="start()" v-show="data.status==='2'||data.status==='3'"><i
                         class="iconfont icon-start"></i>启用</el-button>
                     </perm>

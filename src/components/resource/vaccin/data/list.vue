@@ -99,7 +99,7 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <perm label="新增疫苗资料">
+                  <perm label="vaccine-info-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
                         <i class="iconfont icon-plus"></i>
                       </a>
@@ -144,12 +144,12 @@
             <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
-                  <perm label="org-relation-edit">
+                  <perm label="vaccine-info-update">
                     <el-button @click="edit"><i class="iconfont icon-edit"></i> 编辑</el-button>
                     <el-button @click="enableRelation" v-show="data.status == '0'"><i class="iconfont icon-start"></i> 启用</el-button>
                     <el-button @click="forbid" v-show="data.status == '1' "><i
                       class="iconfont icon-stop"></i> 停用</el-button>
-                    <perm label="org-goods-delete">
+                    <perm label="vaccine-info-delete">
                        <el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>
                     </perm>
                   </perm>
