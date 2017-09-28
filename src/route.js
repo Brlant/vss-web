@@ -187,11 +187,6 @@ const route = [
             meta: {moduleId: 'store', title: '库存查询', perm: 'show'}
           },
           {
-            path: '/store/jxq',
-            component: resolve => require(['./components/store/jxq.vue'], resolve),
-            meta: {moduleId: 'store', title: '库存近效期管理', perm: 'show'}
-          },
-          {
             path: '/store/bad',
             component: resolve => require(['./components/store/bad/list.vue'], resolve),
             meta: {moduleId: 'store', title: '库存报损', perm: 'show'}
