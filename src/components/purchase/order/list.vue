@@ -316,6 +316,11 @@
     },
     mounted () {
       this.getOrderList(1);
+      let orderId = this.$route.params.id;
+      if (orderId && orderId !== ':id') {
+        this.currentOrderId = orderId;
+        this.showDetail = true;
+      }
     },
     computed: {
       transportationMeansList: function () {
@@ -368,6 +373,7 @@
         this.defaultIndex = 0;
         this.action = '';
         // this.getOrderList(this.pager.currentPage);
+        this.$router.push('/purchase/order/:id');
       },
       add: function () {
         this.showItemRight = true;
@@ -472,11 +478,7 @@
           return;
         }
         this.showDetail = true;
-//        let urlPre = '/platform/in/';
-//        if (this.$route.meta.type === 1) {
-//          urlPre = '/org/' + this.$route.params.id + '/inOrder/';
-//        }
-//        utils.pushHistory('oms-order|No:' + order.id, urlPre + order.id);
+        this.$router.push(`/purchase/order/${order.id}`);
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

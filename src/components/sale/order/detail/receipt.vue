@@ -86,9 +86,9 @@
           </span>
         </td>
         <td colspan="2">
-          <span v-show="getTotal(item)"
-                :class="{'color-red':!getTotal(item) || getTotal(item) !== item.amount}">
-            {{ getTotal(item) }}
+          <span v-show="item.receiptDetail.aggregateQuantity"
+                :class="{'color-red': item.receiptDetail.aggregateQuantity !== item.amount}">
+            {{ item.receiptDetail.aggregateQuantity }}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </span>
         </td>
@@ -141,7 +141,6 @@
               }
             });
           });
-
         });
       },
       getPackageUint (item) {
@@ -150,9 +149,6 @@
           ? item.orgGoodsDto.goodsDto.largePacking : item.receiptDetail.scheme === 1
             ? item.orgGoodsDto.goodsDto.mediumPacking : item.receiptDetail.scheme === 2
               ? item.orgGoodsDto.goodsDto.smallPacking : '';
-      },
-      getTotal (item) {
-        return item.receiptDetail.basicPackingCount + this.getPackageUint(item) * item.receiptDetail.packageCount;
       }
     }
   };

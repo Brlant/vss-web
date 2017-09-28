@@ -125,7 +125,7 @@
         };
         this.productList.forEach(f => {
           obj.list.push({
-            id: f.id,
+            orderDetailId: f.id,
             packageCount: f.packageCount,
             basicPackingCount: f.basicPackingCount,
             scheme: f.scheme
