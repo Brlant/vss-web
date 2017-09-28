@@ -96,7 +96,7 @@ const route = [
       {
         path: '/purchase',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'purchase', title: '采购业务', icon: 'purchase', perm: 'order-business'},
+        meta: {moduleId: 'purchase', title: '采购业务', icon: 'purchase', perm: 'purchasing-order'},
         children: [
           {
             path: '/purchase/pov',
@@ -123,7 +123,7 @@ const route = [
           {
             path: '/purchase/order/:id',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '采购订单', perm: 'purchasing-order'}
+            meta: {moduleId: 'purchase', title: '采购订单', perm: 'purchasing-order-query'}
           },
           {
             path: '/purchase/rejected',
