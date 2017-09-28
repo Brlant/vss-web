@@ -184,7 +184,7 @@ const route = [
           {
             path: '/store/request',
             component: resolve => require(['./components/store/list.vue'], resolve),
-            meta: {moduleId: 'store', title: '库存查询', perm: 'show'}
+            meta: {moduleId: 'store', title: '当前用户库存', perm: 'show'}
           },
           {
             path: '/store/bad',
@@ -217,17 +217,17 @@ const route = [
             path: '/finance/org',
             component: resolve => require(['./components/finance/bad/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '物流厂商对账', perm: 'show'}
-          },
-          {
-            path: '/finance/paying',
-            component: resolve => require(['./components/finance/bad/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '付款作业', perm: 'show'}
-          },
-          {
-            path: '/finance/sale',
-            component: resolve => require(['./components/finance/bad/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '库存货品调价', perm: 'show'}
           }
+          // {
+          //   path: '/finance/paying',
+          //   component: resolve => require(['./components/finance/bad/list.vue'], resolve),
+          //   meta: {moduleId: 'finance', title: '付款作业', perm: 'show'}
+          // },
+          // {
+          //   path: '/finance/sale',
+          //   component: resolve => require(['./components/finance/bad/list.vue'], resolve),
+          //   meta: {moduleId: 'finance', title: '库存货品调价', perm: 'show'}
+          // }
         ]
       },
       {
