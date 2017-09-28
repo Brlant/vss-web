@@ -73,9 +73,11 @@
 
         <div class="d-table-right">
           <div style="overflow: hidden">
-          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <a href="#" class="btn-circle" @click.prevent=""><i
-              class="iconfont icon-plus"></i> </a>
+          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add" v-if="!cost">
+            <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>
+          </span>
+            <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="edit" v-if="cost">
+            <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-edit"></i> </a>
           </span>
           </div>
           <div class=" costs clearfix " style="margin-top: 10px">
@@ -93,13 +95,13 @@
       </div>
     </div>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form @close="resetRightBox"></add-form>
+      <add-form :formItem="form" :formType="action" @close="resetRightBox"></add-form>
     </page-right>
   </div>
 </template>
 <script>
   import addForm from './form.vue';
-  import { http } from '@/resources';
+  import {http} from '../../../resources';
 
   export default {
     components: {
@@ -109,7 +111,9 @@
       return {
         loadingData: true,
         cost: {},
-        showItemRight: false
+        showItemRight: false,
+        form: {},
+        action: ''
       };
     },
     mounted () {
@@ -123,6 +127,11 @@
           this.cost = res.data;
           this.loadingData = false;
         });
+      },
+      edit: function () {
+        this.action = 'edit';
+        this.form = JSON.parse(JSON.stringify(this.cost));
+        this.showItemRight = true;
       },
       resetRightBox () {
         this.showItemRight = false;

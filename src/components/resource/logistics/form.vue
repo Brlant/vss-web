@@ -249,8 +249,8 @@
   </div>
 </template>
 <script>
-  import { logisticsCost } from '@/resources';
-  import utils from '@/tools/utils';
+  import {logisticsCost} from '../../../resources';
+  import utils from '../../../tools/utils';
 
   export default {
     data () {
@@ -264,6 +264,12 @@
         }
       };
     },
+    props: ['formItem', 'action'],
+    watch: {
+      formItem: function () {
+        this.form = Object.assign({}, this.formItem);
+      }
+    },
     methods: {
       formatPrice: function () {// 格式化单价，保留两位小数
         this.form.price = utils.autoformatDecimalPoint(this.form.price);
@@ -274,17 +280,31 @@
             return false;
           }
           this.form.orgId = this.$store.state.user.userCompanyAddress;
-          logisticsCost.save(this.form).then(() => {
-            this.$notify.success({
-              message: '添加物流费用成功'
+          if (this.formType === 'add') {
+            logisticsCost.save(this.form).then(() => {
+              this.$notify.success({
+                message: '添加物流费用成功'
+              });
+              this.$refs['d-form'].resetFields();
+              this.$emit('close');
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '添加物流费用失败'
+              });
             });
-            this.$refs['d-form'].resetFields();
-            this.$emit('close');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '添加物流费用失败'
+          } else {
+            logisticsCost.update(this.form.id, this.form).then(() => {
+              this.$notify.success({
+                message: '修改物流费用成功'
+              });
+              this.$refs['d-form'].resetFields();
+              this.$emit('close');
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '修改物流费用失败'
+              });
             });
-          });
+          }
         });
       }
     }
