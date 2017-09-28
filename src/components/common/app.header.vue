@@ -299,7 +299,7 @@
         let menuArr = route[0].children.filter(item => item.meta.moduleId && (item.meta.perm === 'show' ||
           this.$store.state.permissions.includes(item.meta.perm)));
         menuArr.forEach(item => {
-          item.subMenu = item.children.filter(child => item.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
+          item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
           }
         );
         return menuArr;
