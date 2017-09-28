@@ -103,7 +103,7 @@
                       <el-button @click="audited()"><i
                         class="iconfont icon-verify"></i>审核</el-button>
                     </perm>
-                    <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 1">
+                    <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
                       <el-button @click="cancel()"><i
                         class="iconfont icon-verify"></i>取消</el-button>
                     </perm>
