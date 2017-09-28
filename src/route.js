@@ -123,7 +123,7 @@ const route = [
           {
             path: '/purchase/wave',
             component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '生成波次', perm: 'show'}
+            meta: {moduleId: 'purchase', title: '生成波次', perm: 'cerp-create-wave'}
           },
           {
             path: '/purchase/order/:id',

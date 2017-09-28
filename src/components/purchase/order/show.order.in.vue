@@ -24,7 +24,7 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
-            <perm label="show" v-show="currentOrder.state === '6' ">
+            <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
               <el-button type="primary" @click="review" style="width: 80px;">审单</el-button>
             </perm>
           </li>
