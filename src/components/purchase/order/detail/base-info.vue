@@ -11,27 +11,27 @@
     <div v-else="" class="page-main-body padding">
 
       <el-row style="margin-bottom: 0">
-        <oms-row label="货主订单号" :span="5">{{ currentOrder.orderNo }}</oms-row>
+        <oms-row label="货主订单号" :span="4">{{ currentOrder.orderNo }}</oms-row>
       </el-row>
       <el-row style="margin-bottom:0">
         <el-col :span="12">
-          <oms-row label="货主">
+          <oms-row label="货主" :span="span">
             {{currentOrder.orgName}}
           </oms-row>
-          <oms-row label="销售厂商">
+          <oms-row label="销售厂商" :span="span">
             {{currentOrder.supplierName}}
           </oms-row>
-          <oms-row label="物流商"
+          <oms-row label="物流商" :span="span"
                    v-show="currentOrder.transportationMeansId === '1' || currentOrder.transportationMeansId === '3'  ">
             {{currentOrder.logisticsProviderName}}
           </oms-row>
-          <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'">
+          <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
             {{currentOrder.transportationAddress}}
           </oms-row>
-          <oms-row label="运输条件">
+          <oms-row label="运输条件" :span="span">
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
           </oms-row>
-          <oms-row label="订单状态">
+          <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
           </oms-row>
         </el-col>
@@ -54,7 +54,7 @@
         </el-col>
       </el-row>
       <el-row v-show="currentOrder.remark">
-        <oms-row label="备注" :span="5">{{ currentOrder.remark }}</oms-row>
+        <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
       </el-row>
       <hr class="hr"/>
       <table class="table no-border table-product-list" v-show="currentOrder.detailDtoList">
@@ -126,6 +126,11 @@
           return {};
         }
       }
+    },
+    data () {
+      return {
+        span: 8
+      };
     },
     methods: {
       getCurrentOrderStatus: function (state) {// 获取订单状态

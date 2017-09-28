@@ -37,7 +37,7 @@
     },
     watch: {
       index (val) {
-        if (val === 1) {
+        if (val === 2) {
           this.getOrderLoglist();
         }
       }

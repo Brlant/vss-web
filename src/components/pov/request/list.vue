@@ -103,7 +103,7 @@
                       <el-button @click="audited()"><i
                         class="iconfont icon-verify"></i>审核</el-button>
                     </perm>
-                    <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status !== 4">
+                    <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 1">
                       <el-button @click="cancel()"><i
                         class="iconfont icon-verify"></i>取消</el-button>
                     </perm>
@@ -258,6 +258,9 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
+        this.showTypeList = [];
+        this.currentItem = {};
+        this.currentOrder = {};
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
         this.typePager.currentPage = pageNo;

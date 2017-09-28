@@ -38,7 +38,8 @@
       <div class="content-right content-padding">
         <h3>{{ title }}</h3>
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
-        <log :currentOrder="currentOrder" v-show="index === 1" :index="index"></log>
+        <receipt :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt>
+        <log :currentOrder="currentOrder" v-show="index === 2" :index="index"></log>
       </div>
     </div>
   </div>
@@ -46,10 +47,11 @@
 <script>
   import basicInfo from './detail/base-info.vue';
   import log from './detail/log.vue';
+  import receipt from './detail/receipt.vue';
   import { InWork, http } from '@/resources';
 
   export default {
-    components: {basicInfo, log},
+    components: {basicInfo, log, receipt},
     props: {
       orderId: {
         type: String
@@ -62,7 +64,8 @@
         index: 0,
         pageSets: [
           {name: '订单详情', key: 0},
-          {name: '操作日志', key: 1}
+          {name: '收货详情', key: 1},
+          {name: '操作日志', key: 2}
         ],
         title: ''
       };
@@ -98,7 +101,7 @@
               message: '确认订单成功'
             });
             this.transformState('1');
-            this.queryOrderDetail();
+            this.$emit('close');
           }).catch(error => {
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '确认订单失败'

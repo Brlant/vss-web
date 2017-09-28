@@ -143,7 +143,6 @@
     },
     methods: {
       getGoodsDetails () {
-
         http.get(`/receipt/order/${this.currentOrder.id}`).then(res => {
           this.goodsDetails = this.currentOrder.detailDtoList.slice();
           this.goodsDetails.forEach(i => {

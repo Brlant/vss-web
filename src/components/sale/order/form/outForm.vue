@@ -531,7 +531,7 @@
           transportationAddress: '',
           importedFlag: false,
           orgRelation: '',
-          logisticsCentreId: '',
+          logisticsCentreId: window.localStorage.getItem('logisticsCentreId'),
           sameBatchNumber: false,
           actualConsignee: '',
           'thirdPartyNumber': '',
@@ -674,6 +674,8 @@
       let oldForm = window.localStorage.getItem(this.saveKey);
       if (oldForm) {
         this.form = Object.assign({}, this.form, JSON.parse(oldForm));
+        this.form.logisticsCentreId = this.form.logisticsCentreId
+          ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
       }
     },
     methods: {

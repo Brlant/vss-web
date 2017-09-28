@@ -41,9 +41,6 @@
     margin-right: -1em;
   }
 
-  .order-list-item {
-    cursor: pointer;
-  }
 </style>
 <template>
   <div class="order-page">
@@ -104,13 +101,14 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 20px">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="1">
+          <el-col :span="1" v-show="filters.status === 1">
             <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
           </el-col>
-          <el-col :span="6">POV要货申请ID</el-col>
+          <el-col :span="filters.status === 1 ? 6: 7">POV要货申请ID</el-col>
           <el-col :span="7">POV</el-col>
-          <el-col :span="5">需求产生时间</el-col>
-          <el-col :span="5">需求时间</el-col>
+          <el-col :span="3">需求产生时间</el-col>
+          <el-col :span="3">需求时间</el-col>
+          <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -126,15 +124,14 @@
         </el-row>
         <div v-else="" class="order-list-body">
           <div class="order-list-item" v-for="item in demandList"
-               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]"
-               @click.prevent="showDetail(item)">
+               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]">
             <el-row>
-              <el-col :span="1">
+              <el-col :span="1" v-show="filters.status === 1">
                 <div class="el-checkbox-warp" @click.stop.prevent="checkItem(item)">
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
               </el-col>
-              <el-col :span="6" class="R pt10">
+              <el-col :span="filters.status === 1 ? 6: 7" class="R pt10">
                 <span>
                   {{ item.applyMan }}
                 </span>
@@ -142,11 +139,18 @@
               <el-col :span="7" class="pt">
                 <span>{{ item.povName }}</span>
               </el-col>
-              <el-col :span="5" class="pt">
+              <el-col :span="3" class="pt">
                 <span>{{ item.applyTime | date }}</span>
               </el-col>
-              <el-col :span="5" class="pt">
+              <el-col :span="3" class="pt">
                 <span>{{ item.demandTime | date }}</span>
+              </el-col>
+              <el-col :span="4" class="opera-btn">
+                <span @click.prevent="showDetail(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="iconfont icon-detail"></i></a>
+                  查看详情
+                </span>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>

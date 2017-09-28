@@ -81,7 +81,7 @@
             </el-form-item>
             <el-form-item label="包装规格">
               <el-select placeholder="请选择包装规格" v-model="item.scheme" filterable>
-                <el-option :label="item.name" :value="item.count" :key="item.name" v-for="item in types">
+                <el-option :label="item.name" :value="item.id" :key="item.name" v-for="item in types">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right">{{ item.count }}</span>
                 </el-option>
@@ -108,7 +108,8 @@
         ],
         productList: [],
         currentItem: {},
-        types: []
+        types: [],
+        doing: false
       };
     },
     watch: {
@@ -124,17 +125,23 @@
         };
         this.productList.forEach(f => {
           obj.list.push({
-            id: f.id,
+            orderDetailId: f.id,
             packageCount: f.packageCount,
             basicPackingCount: f.basicPackingCount,
             scheme: f.scheme
           });
         });
-        povReceipt.save(obj).then(res => {
+        if (this.doing) return;
+        this.doing = true;
+        povReceipt.save(obj).then(() => {
           this.$notify.success({
             message: '添加收货信息成功'
           });
+          this.doing = false;
+          this.$emit('close');
+          this.$emit('refreshOrder');
         }).catch(error => {
+          this.doing = false;
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '添加收货信息失败'
           });
@@ -161,9 +168,9 @@
       },
       changeTypes (item) {
         let ary = [];
-        ary.push({name: '大包装', count: item.orgGoodsDto.goodsDto.largePacking});
-        ary.push({name: '中包装', count: item.orgGoodsDto.goodsDto.mediumPacking});
-        ary.push({name: '小包装', count: item.orgGoodsDto.goodsDto.smallPacking});
+        ary.push({name: '大包装', id: '0', count: item.orgGoodsDto.goodsDto.largePacking});
+        ary.push({name: '中包装', id: '1', count: item.orgGoodsDto.goodsDto.mediumPacking});
+        ary.push({name: '小包装', id: '2', count: item.orgGoodsDto.goodsDto.smallPacking});
         this.types = [].concat(ary);
       }
     }
