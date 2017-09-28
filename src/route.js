@@ -90,6 +90,11 @@ const route = [
             path: '/resource/store',
             component: resolve => require(['./components/resource/store/list.vue'], resolve),
             meta: {moduleId: 'resource', title: '仓库管理', perm: 'binding-warehouse'}
+          },
+          {
+            path: '/logistics/cost',
+            component: resolve => require(['./components/resource/logistics/cost.vue'], resolve),
+            meta: {moduleId: 'resource', title: '物流费用', perm: 'binding-warehouse'}
           }
         ]
       },

@@ -401,6 +401,12 @@ export const outWork = resource('/outbound/count', http, {
 });
 
 /**
+ * 物流费用
+ * @type {the}
+ */
+export const logisticsCost = resource('/logistics-cost', http, {});
+
+/**
  * pov收货
  * @type {the}
  */
