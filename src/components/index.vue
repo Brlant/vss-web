@@ -163,7 +163,7 @@
           this.queryBaseInfo(data);
           Access.getRoleMenus(data.userCompanyAddress).then(res => {
             let menuData = res.data;
-            let menuList = [];
+            let menuList = {};
             res.data.menuList.forEach(item => {
               menuList[item.id] = item.name;
             });

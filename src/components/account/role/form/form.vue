@@ -113,7 +113,24 @@
       }
     },
     mounted: function () {
-
+      const self = this;
+      this.roleMenu.tree.forEach(function (val) {
+        let temp = {
+          parentId: val.parentId,
+          status: false,
+          isIndeterminate: false,
+          children: [],
+          checkedChildren: []
+        };
+        val.children.forEach(function (val) {
+          let child = {
+            id: val,
+            checked: false
+          };
+          temp.children.push(child);
+        });
+        self.tree.push(temp);
+      });
     },
     watch: {
       formItem: function (val) {
@@ -163,23 +180,7 @@
         self.tree.forEach(item => {// 清空已经选中的角色
           item.checkedChildren = [];
         });
-        this.roleMenu.tree.forEach(function (val) {
-          let temp = {
-            parentId: val.parentId,
-            status: false,
-            isIndeterminate: false,
-            children: [],
-            checkedChildren: []
-          };
-          val.children.forEach(function (val) {
-            let child = {
-              id: val,
-              checked: false
-            };
-            temp.children.push(child);
-          });
-          self.tree.push(temp);
-        });
+
         this.form.permissionList.forEach(function (obj) {// 遍历数据库返回已经选中的权限
           let val = obj.name;
           self.tree.forEach(function (m) {
