@@ -139,6 +139,9 @@
                   <oms-row label="关联CDC销售订单">
                     {{currentOrder.orderId}}
                   </oms-row>
+                  <oms-row label="需求单状态">
+                    {{ formatStatus(currentOrder.status)}}
+                  </oms-row>
                 </el-col>
               </el-row>
             </div>
@@ -293,8 +296,9 @@
           this.requestType[0].num = res.data['all'];
           this.requestType[1].num = res.data['pending-audit'];
           this.requestType[2].num = res.data['audited'];
-          this.requestType[3].num = res.data['assigned'];
-          this.requestType[4].num = res.data['canceled'];
+          this.requestType[3].num = res.data['create-wave'];
+          this.requestType[4].num = res.data['assigned'];
+          this.requestType[5].num = res.data['canceled'];
         });
       },
       getDetail: function () {
@@ -314,6 +318,15 @@
       checkStatus (item, key) {
         this.activeStatus = key;
         this.filters.status = item.status;
+      },
+      formatStatus (index) {
+        let status = -1;
+        for (let key in this.requestType) {
+          if (this.requestType[key].status === index) {
+            status = this.requestType[key].title;
+          }
+        }
+        return status;
       },
       cancel () {
         this.$confirm('是否取消"' + this.currentOrder.id + '" 申请单?', '', {

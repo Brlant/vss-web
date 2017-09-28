@@ -131,7 +131,7 @@
           pageSize: 15
         },
         filters: {
-          status: ''
+          status: 0
         },
         activeStatus: 0,
         currentItemId: '',
