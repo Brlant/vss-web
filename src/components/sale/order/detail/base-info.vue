@@ -295,11 +295,14 @@
         return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
       },
       searchWarehouses () {
-        if (!this.currentOrder.orgId) {
+        if (!this.currentOrder.customerId) {
           this.warehouses = [];
           return;
         }
-        Address.queryAddress(this.currentOrder.orgId, {deleteFlag: false, orgId: this.currentOrder.orgId}).then(res => {
+        Address.queryAddress(this.currentOrder.customerId, {
+          deleteFlag: false,
+          orgId: this.currentOrder.customerId
+        }).then(res => {
           this.warehouses = res.data || [];
         });
       },
