@@ -121,7 +121,7 @@ const route = [
             meta: {moduleId: 'purchase', title: '生成波次', perm: 'show'}
           },
           {
-            path: '/purchase/order',
+            path: '/purchase/order/:id',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '采购订单', perm: 'order-business-query'}
           },
@@ -138,7 +138,7 @@ const route = [
         meta: {moduleId: 'sale', title: '销售业务', icon: 'sale', perm: 'order-business'},
         children: [
           {
-            path: '/sale/order',
+            path: '/sale/order/:id',
             component: resolve => require(['./components/sale/order/list.vue'], resolve),
             meta: {moduleId: 'sale', title: '销售订单', perm: 'order-business-query'}
           },
