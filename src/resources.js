@@ -424,7 +424,7 @@ export const povReceipt = resource('/erp-receipt', http, {});
  */
 export const pay = resource('/accounts-payable', http, {
   modifyDetail (id, obj) {
-    return http.put(`/accounts-payable/${id}`, obj);
+    return http.post(`/accounts-payable/detail/${id}/log`, obj);
   },
   queryDetail (id, params) {
     return http.get(`/accounts-payable/${id}/detail`, {params});
@@ -440,7 +440,7 @@ export const pay = resource('/accounts-payable', http, {
  */
 export const receipt = resource('accounts-receivable', http, {
   modifyDetail (id, obj) {
-    return http.put(`/accounts-receivable/detail/${id}`, obj);
+    return http.post(`/accounts-receivable/detail/${id}/log`, obj);
   },
   queryDetail (id, params) {
     return http.get(`/accounts-receivable/${id}/detail`, {params});
