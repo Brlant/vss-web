@@ -97,7 +97,7 @@
     name: 'login',
     data: () => {
       return ({
-        user: {username: '798804880@qq.com', password: '123456', validateCode: '', type: 1, orgCode: 'GKSW'},
+        user: {username: '', password: '', validateCode: '', type: 1, orgCode: ''},
         loading: false,
         codeUrl: '',
         showCode: false,
