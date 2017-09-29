@@ -97,7 +97,13 @@
     name: 'login',
     data: () => {
       return ({
-        user: {username: '', password: '', validateCode: '', type: 1, orgCode: ''},
+        user: {
+          username: '',
+          password: '',
+          validateCode: '',
+          type: 1,
+          orgCode: ''
+        },
         loading: false,
         codeUrl: '',
         showCode: false,
