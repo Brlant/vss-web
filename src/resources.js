@@ -334,7 +334,7 @@ export const Wave = resource('/wave-task', http, {
     return http.get('/wave-task/count', {params: obj});
   },
   queryOrderDetail (orderId) {
-    return http.get(`/order/${orderId}`);
+    return http.get(`/order/${orderId}`, {params: {lockFlag: false}});
   },
   queryOperator (params) {
     return http.get('/wave-task/operator', {params});
@@ -586,7 +586,7 @@ export const InWork = resource('/stock-in', http, {
     return http.get('/stock-in/count', {params: obj});
   },
   queryOrderDetail (id) { // 查询订单详细
-    return http.get(`/order/${id}`);
+    return http.get(`/order/${id}`, {params: {lockFlag: false}});
   },
   allotPlace (obj) { // 分配货位
     return http.post('/stock-in/batch/allot', obj);
