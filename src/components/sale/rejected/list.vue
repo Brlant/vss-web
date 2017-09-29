@@ -131,8 +131,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="销售厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row label="POV" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
                 </el-select>
@@ -182,7 +182,7 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="7">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">销售厂商</el-col>
+          <el-col :span="6">POV</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
         </el-row>
@@ -264,7 +264,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
-  import { Order, BaseInfo, erpOrder } from '@/resources';
+  import { Order, BaseInfo, erpOrder, cerpAction } from '@/resources';
 
   export default {
     components: {
@@ -404,14 +404,11 @@
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
-        let orgId = this.searchCondition.orgId;
-        if (!orgId) {
-          this.searchCondition.supplierId = '';
-          this.orgList = [];
-          return;
-        }
-        BaseInfo.queryOrgByReation(orgId, {keyWord: query}).then(res => {
-          this.orgList = res.data;
+        let params = Object.assign({}, {
+          keyWord: query
+        });
+        cerpAction.queryAllPov(params).then(res => {
+          this.orgList = res.data.list;
         });
       },
       filterLogistics: function (query) {// 过滤物流提供方

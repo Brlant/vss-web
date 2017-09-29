@@ -132,7 +132,7 @@ const route = [
             meta: {moduleId: 'purchase', title: '采购订单', perm: 'purchasing-order'}
           },
           {
-            path: '/purchase/rejected',
+            path: '/purchase/rejected/:id',
             component: resolve => require(['./components/purchase/rejected/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '退货管理', perm: 'return-manager'}
           }

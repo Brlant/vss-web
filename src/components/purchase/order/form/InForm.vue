@@ -674,8 +674,8 @@
           return;
         }
         let relation = '';
-        if (bizType === '0') relation = '1';
-        if (bizType === '1') relation = '0';
+        if (bizType === '0') relation = '0';
+        if (bizType === '1') relation = '1';
         if (!relation) return;
         let params = {
           keyWord: query,

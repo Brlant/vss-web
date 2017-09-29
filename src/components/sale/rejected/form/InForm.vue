@@ -249,14 +249,11 @@
                            v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商">
-              <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="POV">
+              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                  <span class="pull-left" style="clear: right">{{org.name}}</span>
-                  <span class="pull-right" style="color: #999">
-                     <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
-                    </span>
+                <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                           v-for="org in orgList">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -428,7 +425,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo } from '@/resources';
+  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, cerpAction } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -510,7 +507,7 @@
             {validator: checkOrderNumber}
           ],
           supplierId: [
-            {required: true, message: '请选择销售厂商', trigger: 'change'}
+            {required: true, message: '请选择POV', trigger: 'change'}
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
@@ -666,23 +663,11 @@
         this.$emit('close');
       },
       filterOrg: function (query) {// 过滤来源单位
-        let orgId = this.form.orgId;
-        let bizType = this.form.bizType;
-        if (!orgId || !bizType) {
-          this.orgList = [];
-          this.form.supplierId = '';
-          return;
-        }
-        let relation = '';
-        if (bizType === '0') relation = '1';
-        if (bizType === '1') relation = '0';
-        if (!relation) return;
-        let params = {
-          keyWord: query,
-          relation: relation
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.orgList = res.data;
+        let params = Object.assign({}, {
+          keyWord: query
+        });
+        cerpAction.queryAllPov(params).then(res => {
+          this.orgList = res.data.list;
         });
       },
       filterLogistics: function (query) {// 过滤物流商
