@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+  @import "../../../assets/mixins";
 
   .el-form .el-select {
     display: block;
@@ -39,6 +40,13 @@
 
   .content-body {
     margin: 20px 0;
+  }
+
+  .tr-right {
+    cursor: pointer;
+    &:hover, &.active {
+      background: @dialog-left-bg;
+    }
   }
 </style>
 <template>
@@ -121,7 +129,7 @@
                </a>
             </span>
             </div>
-            <table class="table "
+            <table class="table"
                    style="margin-top: 10px">
               <thead>
               <tr>
@@ -145,7 +153,8 @@
                   </div>
                 </td>
               </tr>
-              <tr v-else="" v-for="row in receiptDetails">
+              <tr v-else="" v-for="row in receiptDetails" @click="showDetail(item)" class="tr-right"
+                  :class="{active:orderId === item.orderId}">
                 <td>
                   {{row.orderNo}}
                 </td>
@@ -185,6 +194,12 @@
     <page-right :show="showLeft" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <left-form @change="onSubmit" :index="index" @close="resetRightBox" @refresh="refresh"></left-form>
     </page-right>
+
+    <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
+                partClass="pr-no-animation">
+      <show-detail @change="onSubmit" :orderId="orderId" :index="index" @close="resetRightBox"
+                   @refresh="refresh"></show-detail>
+    </page-right>
   </div>
 
 </template>
@@ -192,14 +207,15 @@
   import { receipt } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
-
+  import showDetail from './show.order.out.vue';
   export default {
-    components: {addForm, leftForm},
+    components: {addForm, leftForm, showDetail},
     data: function () {
       return {
         loadingData: false,
         showRight: false,
         showLeft: false,
+        showPart: false,
         showTypeSearch: false,
         showSearch: false,
         showTypeList: [],
@@ -225,7 +241,8 @@
         form: {},
         currentItem: {}, //  左边列表点击时，添加样式class
         receiptDetails: [], // 疫苗列表
-        index: 0
+        index: 0,
+        orderId: ''
       };
     },
     computed: {
@@ -262,6 +279,7 @@
       resetRightBox: function () {
         this.showRight = false;
         this.showLeft = false;
+        this.showPart = false;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
@@ -316,6 +334,10 @@
       showType: function (item) {
         this.currentItem = item;
         this.getDetail(1);
+      },
+      showDetail (item) {
+        this.orderId = item.orderId;
+        this.showPart = true;
       },
       add () {
         if (!this.currentItem.id) {
