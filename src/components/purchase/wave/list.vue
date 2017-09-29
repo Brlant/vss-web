@@ -160,6 +160,20 @@
           this.pager.count = res.data.count;
           this.loadingData = false;
         });
+        this.params(params);
+      },
+      queryStatusNum: function (params) {
+        demandAssignment.queryStateNum(params).then(res => {
+          let data = res.data;
+          this.waveType[0].num = this.obtionStatusNum(data['unfinished']);
+          this.waveType[1].num = this.obtionStatusNum(data['complete']);
+        });
+      },
+      obtionStatusNum: function (num) {
+        if (typeof num !== 'number') {
+          return 0;
+        }
+        return num;
       },
       resetRightBox () {
         this.showRight = false;

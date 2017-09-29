@@ -164,7 +164,7 @@
             }
           });
           self.form.list = [{roleId: this.roleId, title: title}];
-
+          self.form.objectId = 'cerp-system';
           if (this.action === 'add') {
             OrgUser.save(self.form).then(() => {
               this.doing = false;

@@ -117,8 +117,10 @@
                     </el-col>
                     <el-col :span="7" class="pt">
                       <span v-show="status === 1 ">{{item.actualCount}}</span>
-                      <el-input v-show="status === 0 " v-model.number="item.actualCount"
-                                @blur="submit(item)"></el-input>
+                      <perm label="demand-assignment-update">
+                        <el-input v-show="status === 0 " v-model.number="item.actualCount"
+                                  @blur="submit(item)"></el-input>
+                      </perm>
                     </el-col>
                   </el-row>
                 </div>

@@ -470,6 +470,9 @@ export const demandAssignment = resource('/demand-assignment', http, {
   },
   createOrder (key) {
     return http.put(`/demand-assignment/${key}/sales-ticket`);
+  },
+  queryStateNum (params) {
+    return http.get('/demand-assignment/count', {params});
   }
 });
 
