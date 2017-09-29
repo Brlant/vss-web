@@ -75,8 +75,9 @@ const route = [
           {
             path: '/resource/firm',
             component: resolve => require(['./components/resource/firm/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '厂商资料管理', perm: 'purchasing-requisition'}
-          }, {
+            meta: {moduleId: 'resource', title: '厂商资料管理', perm: 'manufacturer-manage'}
+          },
+          {
             path: '/resource/vaccin/list',
             component: resolve => require(['./components/resource/vaccin/data/list.vue'], resolve),
             meta: {moduleId: 'resource', title: '疫苗资料管理', perm: 'vaccine-info'}
