@@ -98,7 +98,7 @@
     data: () => {
       return ({
         user: {
-          username: JSON.parse(window.localStorage.getItem('user')).userAccount,
+          username: '',
           password: '',
           validateCode: '',
           type: 1,
