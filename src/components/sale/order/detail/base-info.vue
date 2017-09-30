@@ -232,9 +232,8 @@
 <script>
   import utils from '@/tools/utils';
   import { Address, LogisticsCenter } from '@/resources';
-  import ElCol from 'element-ui/packages/col/src/col';
   export default {
-    components: {ElCol},
+    components: {},
     props: {
       currentOrder: {
         type: Object,
