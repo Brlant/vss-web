@@ -283,6 +283,7 @@
       resetRightBox: function () {
         this.showRight = false;
         this.showLeft = false;
+        this.showPart = false;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
