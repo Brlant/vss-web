@@ -22,49 +22,44 @@
   <div>
     <div class="content-part">
       <div class="content-right content-padding">
-        <h3>库存批次货位详情</h3>
+        <h3>货品所在仓库详情</h3>
         <table class="table clearfix">
           <thead>
           <tr class="tr-bg">
-            <td width="150px">物流中心</td>
-            <td width="100px">仓库</td>
-            <td width="100px">库区</td>
-            <td width="100px">库位</td>
-            <td width="150px">包装类型</td>
-            <td width="100px">包装数</td>
-            <td width="100px">库存数量</td>
+            <td width="300px">仓库名称/地址</td>
+            <td width="150px">包装数量</td>
+            <td width="150px">数量</td>
           </tr>
           </thead>
           <tbody>
           <tr v-if="loadingData">
-            <td colspan="7" style="border: 0">
+            <td colspan="3" style="border: 0">
               <oms-loading :loading="loadingData"></oms-loading>
             </td>
           </tr>
           <tr v-else-if="storeDetails.length == 0">
-            <td colspan="7" style="border: 0">
+            <td colspan="3" style="border: 0">
               <div class="empty-info">
                 暂无信息
               </div>
             </td>
           </tr>
           <tr v-else="" v-for="i in storeDetails" :key="i.id">
-            <td>{{ i.centerName }}</td>
-            <td>{{ i.warehouseName }}</td>
-            <td>{{ i.areaName }}</td>
-            <td>{{ i.storeName }}</td>
             <td>
-              {{ formatSize(i.packageSize)}} ({{ i.packageUnitCount }}
-              <dict :dict-group="'measurementUnit'" :dict-key="i.saleUnit"></dict>
-              /
-              <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.goodsUnit"></dict>
-              )
+              <div>
+                {{ i.warehouseName }}
+              </div>
+              <div>
+                {{ i.warehouseAddress }}
+              </div>
             </td>
-            <td>{{ i.packageAmount }}
-              <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.goodsUnit"></dict>
+            <td>
+              <span v-show="i.packageSize">
+                 {{ i.packageAmount }}  个  {{ packSizeTyps[i.packageSize] }}
+              </span>
             </td>
-            <td>{{ i.count }}
-              <dict :dict-group="'measurementUnit'" :dict-key="i.saleUnit"></dict>
+            <td>
+              {{ i.realCount }}
             </td>
           </tr>
           </tbody>
@@ -81,7 +76,13 @@
     data () {
       return {
         loadingData: true,
-        storeDetails: []
+        storeDetails: [],
+        packSizeTyps: [
+          '大包装',
+          '中包装',
+          '小包装',
+          '散件'
+        ]
       };
     },
     watch: {
@@ -91,10 +92,12 @@
     },
     methods: {
       queryStoreDetails () {
+        this.storeDetails = [];
+        if (!this.id) return;
         this.loadingData = true;
-        http.get(`/stock-batch/${this.id}`).then(res => {
-          this.storeDetails = res.data.locationDtoList;
+        http.get(`/erp-stock/${this.id}/detail`).then(res => {
           this.loadingData = false;
+          this.storeDetails = res.data.list;
         });
       },
       formatSize (size) {

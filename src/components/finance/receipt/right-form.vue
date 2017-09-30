@@ -237,7 +237,7 @@
           <el-form ref="form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="实收金额" prop="money">
-              <oms-input type="text" placeholder="请输入实收金额" v-model="form.money" :min="0"
+              <oms-input type="text" placeholder="请输入实收金额" v-model="form.paymentAmount" :min="0"
                          @blur="formatPrice">
                 <template slot="prepend">¥</template>
               </oms-input>
@@ -258,33 +258,34 @@
     data () {
       return {
         form: {
-          id: '',
-          money: ''
+          detailId: '',
+          paymentAmount: ''
         },
         rules: {
-          money: {required: true, message: '请输入实收金额', trigger: 'blur'}
+          paymentAmount: {required: true, message: '请输入实收金额', trigger: 'blur'}
         }
       };
     },
     methods: {
       formatPrice: function () {// 格式化单价，保留两位小数
-        this.form.price = utils.autoformatDecimalPoint(this.form.price);
+        this.form.paymentAmount = utils.autoformatDecimalPoint(this.form.paymentAmount);
       },
       onSubmit () {
         this.$refs['form'].validate((valid) => {
           if (!valid) {
             return false;
           }
-          this.form.id = this.formItem.id;
-          receipt.modifyDetail(this.currentItem.id, this.form).then(() => {
+          this.form.detailId = this.formItem.id;
+          this.form.paymentAmount = parseFloat(this.form.paymentAmount);
+          receipt.modifyDetail(this.formItem.id, this.form).then(() => {
             this.$notify.success({
-              message: '修改实收金额成功'
+              message: '增加实收金额成功'
             });
             this.$refs['form'].resetFields();
             this.$emit('refreshDetails');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '修改实收金额失败'
+              message: error.response.data && error.response.data.msg || '增加实收金额失败'
             });
           });
         });

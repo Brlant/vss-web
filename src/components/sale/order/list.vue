@@ -134,7 +134,9 @@
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                             v-for="org in orgList">
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -261,7 +263,7 @@
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
   import receipt from './receipt.vue';
-  import { Order, BaseInfo, erpOrder } from '@/resources';
+  import { Order, BaseInfo, erpOrder, cerpAction } from '@/resources';
 
   export default {
     components: {
@@ -408,14 +410,11 @@
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
-        let orgId = this.searchCondition.orgId;
-        if (!orgId) {
-          this.searchCondition.supplierId = '';
-          this.orgList = [];
-          return;
-        }
-        BaseInfo.queryOrgByReation(orgId, {keyWord: query}).then(res => {
-          this.orgList = res.data;
+        let params = Object.assign({}, {
+          keyWord: query
+        });
+        cerpAction.queryAllPov(params).then(res => {
+          this.orgList = res.data.list;
         });
       },
       filterLogistics: function (query) {// 过滤物流提供方

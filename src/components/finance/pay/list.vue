@@ -79,7 +79,7 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    应付款总额 ￥{{item.payableTotal }}
+                    应付款总额 <span v-show="item.payableTotal"> ￥{{item.payableTotal }}</span>
                   </div>
                   <div>
                     {{item.remitteeName }}
@@ -111,7 +111,7 @@
                   {{currentItem.remitteeName}}
                 </oms-row>
                 <oms-row label="应付款总额" :span="5">
-                  ￥{{currentItem.payableTotal}}
+                  <span v-show="currentItem.payableTotal">￥{{currentItem.payableTotal}}</span>
                 </oms-row>
               </el-row>
             </div>
@@ -158,10 +158,14 @@
                   {{row.orderNo}}
                 </td>
                 <td>
-                  ￥{{row.billAmount}}
+                  <span v-show="row.billAmount">
+                    ￥{{row.billAmount}}
+                  </span>
                 </td>
                 <td>
-                  ￥{{row.unpaidAmount}}
+                  <span v-show="row.prepaidAccounts">
+                    ￥{{row.prepaidAccounts}}
+                  </span>
                 </td>
                 <td>
                   {{row.createTime | date }}
@@ -310,6 +314,7 @@
         this.resetRightBox();
       },
       refreshDetails () {
+        this.getDetail();
         this.resetRightBox();
       },
       getDetail: function (pageNo) {

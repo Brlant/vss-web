@@ -41,9 +41,9 @@
     margin-right: -1em;
   }
 
-  /*.order-list-item {*/
-  /*cursor: pointer;*/
-  /*}*/
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -180,16 +180,17 @@
       </div>
     </div>
 
-    <!--<page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">-->
-    <!--<detail :id="currentItemId" @close="resetRightBox"></detail>-->
-    <!--</page-right>-->
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
+      <detail :id="currentItemId" @close="resetRightBox"></detail>
+    </page-right>
   </div>
 </template>
 <script>
   //  import order from '../../../tools/orderList';
   import { BaseInfo, OrgGoods, erpStock } from '@/resources';
-
+  import detail from './detail.vue';
   export default {
+    components: {detail},
     data () {
       return {
         loadingData: true,
