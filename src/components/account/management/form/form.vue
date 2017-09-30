@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import {User, OrgUser, Access} from '../../../../resources';
+  import { User, OrgUser, Access, http } from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -146,7 +146,7 @@
           this.roleSelect = [];
           return;
         }
-        Access.getOrgRole(orgId, param).then(res => {
+        http.get(`oms/access/orgs/${orgId}/self`).then(res => {
           this.roleSelect = res.data.list;
         });
       },
