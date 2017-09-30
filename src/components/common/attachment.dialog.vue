@@ -119,7 +119,7 @@
     methods: {
       getAttachment: function () {
         if (this.currentId) {
-          http.get('omsAttachment/' + this.currentId).then(res => {
+          http.get('/omsAttachment/' + this.currentId).then(res => {
             this.Attachment = res.data;
             this.$nextTick(function () {
               this.showAttachment();

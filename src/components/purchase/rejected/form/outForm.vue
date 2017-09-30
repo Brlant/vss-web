@@ -839,7 +839,7 @@
       },
       checkLicence: function (val, name) {// 检查货主/单位证照是否过期
         if (!val || !this.action) return;
-        http.get('order-licence/org/' + val + '/overdue').then(res => {
+        http.get('/order-licence/org/' + val + '/overdue').then(res => {
           if (!res.data.length) return;
           let msg = '';
           res.data.forEach(item => {
@@ -859,7 +859,7 @@
           orgId: this.form.orgId,
           keyWord: query
         };
-        http.get('org/goods/valid', {params: params}).then(res => {
+        http.get('/org/goods/valid', {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();

@@ -59,13 +59,13 @@ http.interceptors.response.use(response => {
 Vue.prototype.$http = http;
 
 // logisticsCenter物流中心对象
-export const LogisticsCenter = resource('logisticsCenter', http, {});
+export const LogisticsCenter = resource('/logisticsCenter', http, {});
 
 // store存储位对象
-export const Store = resource('store', http, {});
+export const Store = resource('/store', http, {});
 
 // packingScheme包装方案对象
-export const PackingScheme = resource('packing-scheme', http, {
+export const PackingScheme = resource('/packing-scheme', http, {
   start: (id) => {
     return http.put('/packing-scheme/' + id + '/enable', {});
   },
@@ -78,10 +78,10 @@ export const PackingScheme = resource('packing-scheme', http, {
 });
 
 // dev设备对象
-export const Dev = resource('dev', http, {});
+export const Dev = resource('/dev', http, {});
 
 // devDetail设备详情对象
-export const DevDetail = resource('dev-detail', http, {
+export const DevDetail = resource('/dev-detail', http, {
   checkDevNo: (devNo, id, devId) => {
     return http.get('/dev-detail/devNo', {
       params: {devNo: devNo, id: id, devId: devId}
@@ -90,14 +90,14 @@ export const DevDetail = resource('dev-detail', http, {
 });
 
 // devStore设备存储对象
-export const DevStore = resource('dev-store', http, {
+export const DevStore = resource('/dev-store', http, {
   queryDevPager: (id, params) => {
     return http.get('/dev-store/dev/' + id, {params});
   }
 });
 
 // oms附件对象
-export const OmsAttachment = resource('omsAttachment', http, {
+export const OmsAttachment = resource('/omsAttachment', http, {
   queryOneAttachmentList: (objectId, objectType) => {
     return http.get('/omsAttachment/' + objectType + '/' + objectId, {});
   }
@@ -149,10 +149,10 @@ export const User = resource('/oms/user', http, {
     });
   },
   resetPsw: (Obj) => {
-    return http.put('oms/user/password', Obj);
+    return http.put('/oms/user/password', Obj);
   },
   forget: (obj) => {
-    return http.post('oms/user/password/verifyMail', obj);
+    return http.post('/oms/user/password/verifyMail', obj);
   }
 });
 
@@ -184,7 +184,7 @@ export const bizRelation = resource('/bizRelation', http, {
     return http.get('/bizRelation/' + id, {});
   },
   check: (id, obj) => {
-    return http.put('bizRelation/' + id + '/check', obj);
+    return http.put('/bizRelation/' + id + '/check', obj);
   },
   queryStateNum: (params) => {
     return http.get('/bizRelation/count', {params});
@@ -203,7 +203,7 @@ export const Vendor = resource('/vendor-info', http, {
 });
 
 // 数据字典组对象
-export const DictGroup = resource('dictGroup', http, {
+export const DictGroup = resource('/dictGroup', http, {
   checkGroupName: (groupName, groupId) => {
     return http.get('/dictGroup/name', {
       params: {groupName: groupName, groupId: groupId}
@@ -247,7 +247,7 @@ export const erpOrder = resource('/erp-order', http, {
 // 订单
 export const Order = resource('/order', http, {
   check: (orderId, obj) => {
-    return http.put('order/' + orderId + '/check', obj);
+    return http.put('/order/' + orderId + '/check', obj);
   },
 
   confirmOrder: (orderId) => {// 确认订单
@@ -648,7 +648,7 @@ export const Goods = resource('/goods', http, {
     return http.get('/goods/' + id);
   },
   queryStateNum: (params) => {
-    return http.get('goods/count', {params});
+    return http.get('/goods/count', {params});
   }
 });
 
@@ -694,7 +694,7 @@ export const BaseInfo = resource('/orgs', http, {
   },
   // 校验oms代码唯一性
   checkManufacturerCode: (code, orgId) => {
-    return http.get('orgs/manufacturerCode', {
+    return http.get('/orgs/manufacturerCode', {
       params: {code, orgId}
     });
   },

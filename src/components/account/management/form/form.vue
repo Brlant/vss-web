@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import { User, OrgUser, Access, http } from '../../../../resources';
+  import { User, OrgUser, http } from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -138,15 +138,12 @@
     },
     methods: {
       getRoleSelect: function () {
-        let param = {
-          usableStatus: 1
-        };
         let orgId = this.orgId;
         if (!orgId) {
           this.roleSelect = [];
           return;
         }
-        http.get(`oms/access/orgs/${orgId}/self`).then(res => {
+        http.get(`/oms/access/orgs/${orgId}/self`).then(res => {
           this.roleSelect = res.data.list;
         });
       },
