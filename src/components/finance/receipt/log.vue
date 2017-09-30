@@ -6,8 +6,8 @@
     <div v-else-if="orderLogList.length === 0" class="empty-info">
       暂无操作日志信息
     </div>
-    <bg-box v-else="" :title="log.actionTitle" v-for="log in orderLogList" :key="log.id">
-      <p>操作人:{{log.operatorName}}  <span class="ml-15">操作时间:{{log.operateTime | time}} </span></p>
+    <bg-box v-else="" :title=" '金额 ￥'+log.paymentAmount" v-for="log in orderLogList" :key="log.id">
+      <p>操作人:{{log.createdBy}}  <span class="ml-15">操作时间:{{log.createTime | time}} </span></p>
     </bg-box>
   </div>
 </template>
@@ -18,7 +18,7 @@
   export default {
     components: {bgBox},
     props: {
-      currentOrder: {
+      currentDetail: {
         type: Object,
         default: function () {
           return {};
@@ -45,9 +45,9 @@
     methods: {
       getOrderLoglist () {// 获取操作日志
         this.orderLogList = [];
-        if (!this.currentOrder.id) return;
+        if (!this.currentDetail.id) return;
         this.loadingLog = true;
-        http.get('/order-log/orders/' + this.currentOrder.id).then(res => {
+        http.get(`/accounts-receivable/detail/${this.currentDetail.id}/log`).then(res => {
           this.orderLogList = res.data;
           this.loadingLog = false;
         });

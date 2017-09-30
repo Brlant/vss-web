@@ -159,7 +159,9 @@
                   {{row.orderNo}}
                 </td>
                 <td>
-                  ￥{{row.billAmount}}
+                    <span v-show="row.billAmount">
+                    ￥{{row.billAmount}}
+                  </span>
                 </td>
                 <td>
                   <span v-show="row.prepaidAccounts">
@@ -170,7 +172,7 @@
                   {{row.createTime | date }}
                 </td>
                 <td>
-                  <!--<perm label="show">-->
+                  <!--<perm label="accounts-receivable-update">-->
                   <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实收金额</a>
                   <!--</perm>-->
                 </td>
@@ -199,7 +201,8 @@
 
     <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 partClass="pr-no-animation">
-      <show-detail @change="onSubmit" :orderId="orderId" :index="index" @close="resetRightBox"
+      <show-detail @change="onSubmit" :orderId="orderId" :currentDetail="currentDetail" :index="index"
+                   @close="resetRightBox"
                    @refresh="refresh"></show-detail>
     </page-right>
   </div>
@@ -244,7 +247,8 @@
         currentItem: {}, //  左边列表点击时，添加样式class
         receiptDetails: [], // 疫苗列表
         index: 0,
-        orderId: ''
+        orderId: '',
+        currentDetail: {}
       };
     },
     computed: {
@@ -341,6 +345,7 @@
       showDetail (item) {
         this.orderId = item.orderId;
         this.showPart = true;
+        this.currentDetail = item;
       },
       add () {
         if (!this.currentItem.id) {

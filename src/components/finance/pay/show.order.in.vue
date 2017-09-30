@@ -28,7 +28,7 @@
       <div class="content-right content-padding">
         <h3>{{ title }}</h3>
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
-        <log :currentOrder="currentOrder" v-show="index === 2" :index="index"></log>
+        <log :currentDetail="currentDetail" v-show="index === 1" :index="index"></log>
       </div>
     </div>
   </div>
@@ -44,6 +44,7 @@
       orderId: {
         type: String
       },
+      currentDetail: Object,
       state: String
     },
     data () {
@@ -52,7 +53,7 @@
         index: 0,
         pageSets: [
           {name: '订单详情', key: 0},
-          {name: '修改实付记录', key: 1}
+          {name: '实付记录', key: 1}
         ],
         title: ''
       };

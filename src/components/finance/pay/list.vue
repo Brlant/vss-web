@@ -152,8 +152,8 @@
                   </div>
                 </td>
               </tr>
-              <tr v-else="" v-for="row in payDetails" @click="showDetail(item)" class="tr-right"
-                  :class="{active:orderId === item.orderId}">
+              <tr v-else="" v-for="row in payDetails" @click="showDetail(row)" class="tr-right"
+                  :class="{active:orderId === row.orderId}">
                 <td>
                   {{row.orderNo}}
                 </td>
@@ -171,8 +171,8 @@
                   {{row.createTime | date }}
                 </td>
                 <td>
-                  <perm label="show">
-                    <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
+                  <perm label="accounts-payable-detail-update">
+                    <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实收金额</a>
                   </perm>
                 </td>
               </tr>
@@ -199,7 +199,8 @@
     </page-right>
     <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 partClass="pr-no-animation">
-      <show-detail @change="onSubmit" :orderId="orderId" :index="index" @close="resetRightBox"
+      <show-detail @change="onSubmit" :orderId="orderId" :currentDetail="currentDetail" :index="index"
+                   @close="resetRightBox"
                    @refresh="refresh"></show-detail>
     </page-right>
   </div>
@@ -244,7 +245,8 @@
         currentItem: {}, //  左边列表点击时，添加样式class
         payDetails: [], // 疫苗列表
         index: 0,
-        orderId: ''
+        orderId: '',
+        currentDetail: {}
       };
     },
     computed: {
@@ -339,6 +341,7 @@
       },
       showDetail (item) {
         this.orderId = item.orderId;
+        this.currentDetail = item;
         this.showPart = true;
       },
       edit (row) {
