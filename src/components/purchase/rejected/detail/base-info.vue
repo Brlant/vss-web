@@ -176,6 +176,7 @@
           <td>生产日期</td>
           <td>有效期</td>
           <td class="text-center">数量</td>
+          <td class="text-center">单价</td>
           <td class="text-center">金额</td>
         </tr>
         </thead>
@@ -212,6 +213,9 @@
           <td width="100px" class="text-center">
             {{item.amount}}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
+          </td>
+          <td width="80px" class="text-center">
+            <span v-show="item.unitPrice">￥{{item.unitPrice}}</span>
           </td>
           <td class="text-center">
             <span v-show="item.unitPrice">¥</span>{{ item.amount * item.unitPrice | formatMoney }}
