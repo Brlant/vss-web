@@ -58,7 +58,7 @@ const route = [
           {
             path: '/account/role',
             component: resolve => require(['./components/account/role/role.vue'], resolve),
-            meta: {moduleId: 'account', title: '角色管理', perm: 'erp-access-manager'}
+            meta: {moduleId: 'account', title: '角色管理', perm: 'access-role-manager'}
           },
           {
             path: '/account/management',

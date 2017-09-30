@@ -57,7 +57,7 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <perm label="erp-access-add">
+                  <perm label="access-role-add">
                     <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="iconfont icon-plus"></i> </a>
                   </perm>
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -75,7 +75,7 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id===currentItem.id}">
-                <perm label="erp-access-delete">
+                <perm label="access-role-stop">
                   <oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'
                               class="hover-show"><i
                     class="iconfont icon-delete"></i></oms-remove>
@@ -98,24 +98,24 @@
             <h2 class="clearfix">
               <span class="pull-right">
                <el-button-group>
-                 <perm label="erp-access-edit">
+                 <perm label="access-role-edit">
                    <el-button @click="edit()">
                      <i class="iconfont icon-edit"></i>
                      编辑
                    </el-button>
                  </perm>
-                <perm label="erp-access-edit">
+                <perm label="access-role-stop">
                   <el-button @click="forbid()" v-show="resData.usableStatus == 1">
                     <i class="iconfont icon-forbidden"></i>
                     停用
                   </el-button>
                 </perm>
-                 <perm label="erp-access-edit">
+                 <perm label="access-role-stop">
                    <el-button @click="useNormal()" v-show="resData.usableStatus == 0">
                      <i class="iconfont icon-start"></i>启用
                    </el-button>
                  </perm>
-                <perm label="erp-access-delete">
+                <perm label="access-role-delete">
                    <el-button @click="remove()"><i class="iconfont icon-delete"></i>删除</el-button>
                 </perm>
                 </el-button-group>

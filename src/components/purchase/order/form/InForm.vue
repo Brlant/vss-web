@@ -673,13 +673,13 @@
           this.form.supplierId = '';
           return;
         }
-        let relation = '';
-        if (bizType === '0') relation = '0';
-        if (bizType === '1') relation = '1';
-        if (!relation) return;
+//        let relation = '';
+//        if (bizType === '0') relation = '0';
+//        if (bizType === '1') relation = '1';
+//        if (!relation) return;
         let params = {
           keyWord: query,
-          relation: relation
+          relation: '1'
         };
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;

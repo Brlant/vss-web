@@ -160,7 +160,7 @@
           this.pager.count = res.data.count;
           this.loadingData = false;
         });
-        this.params(params);
+        this.queryStatusNum(params);
       },
       queryStatusNum: function (params) {
         demandAssignment.queryStateNum(params).then(res => {
