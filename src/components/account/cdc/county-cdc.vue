@@ -76,7 +76,7 @@
                 </el-select>
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
-                <perm label="erp-access-add">
+                <perm label="erp-bind-cdc-add">
                   <el-button type="primary" @click="bindDistrict">绑定CDC</el-button>
                 </perm>
               </el-col>
@@ -119,7 +119,7 @@
                     </span>
                   </el-col>
                   <el-col :span="4" class="R pt10">
-                    <perm label="erp-access-delete">
+                    <perm label="erp-bind-cdc-delete">
                       <a href="#" @click.prevent="deleteItem(item)"><i
                         class="iconfont icon-delete"></i> 删除</a>
                     </perm>
