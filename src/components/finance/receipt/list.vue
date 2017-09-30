@@ -172,9 +172,9 @@
                   {{row.createTime | date }}
                 </td>
                 <td>
-                  <!--<perm label="accounts-receivable-update">-->
+                  <perm label="accounts-receivable-update">
                   <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实收金额</a>
-                  <!--</perm>-->
+                  </perm>
                 </td>
               </tr>
               </tbody>
