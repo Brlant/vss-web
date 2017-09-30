@@ -7,7 +7,7 @@
       暂无操作日志信息
     </div>
     <bg-box v-else="" :title=" '金额 ￥'+log.paymentAmount" v-for="log in orderLogList" :key="log.id">
-      <p>操作人:{{log.createdBy}}  <span class="ml-15">操作时间:{{log.createTime | time}} </span></p>
+      <p>操作人：{{log.creatorName}}  <span class="ml-15">操作时间：{{log.createTime | time}} </span></p>
     </bg-box>
   </div>
 </template>

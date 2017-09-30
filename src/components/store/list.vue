@@ -62,15 +62,6 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="选择货主" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索货主信息" :remote-method="filterOrg"
-                           :clearable="true"
-                           v-model="searchWord.orgId" @change="orgChange">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
               <oms-form-row label="选择厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
                            v-model="searchWord.factoryId">
@@ -80,14 +71,14 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="批号" :span="6">
-                <el-input v-model="searchWord.batchNumber" placeholder="请输入批号"></el-input>
+                <el-input v-model="searchWord.keyWord" placeholder="请输入批号"></el-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row label="货主货品" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索货主货品" :remote-method="filterOrgGoods"
                            :clearable="true"
-                           v-model="searchWord.orgGoodsId" popper-class="good-selects" @click.native="isSelectOrg">
+                           v-model="searchWord.orgGoodsId" popper-class="good-selects">
                   <el-option :value="org.orgGoodsDto.id" :key="org.orgGoodsDto.id" :label="org.orgGoodsDto.name"
                              v-for="org in orgGoods"></el-option>
                 </el-select>
@@ -198,16 +189,14 @@
         showDetailPart: false,
         batches: [],
         filters: {
-          orgId: '',
           factoryId: '',
-          batchNumber: '',
+          keyWord: '',
           orgGoodsId: '',
           nearTermDays: ''
         },
         searchWord: {
-          orgId: '',
           factoryId: '',
-          batchNumber: '',
+          keyWord: '',
           orgGoodsId: '',
           nearTermDays: ''
         },
@@ -259,9 +248,8 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          orgId: '',
           factoryId: '',
-          batchNumber: '',
+          keyWord: '',
           orgGoodsId: '',
           nearTermDays: ''
         };
@@ -269,40 +257,25 @@
         Object.assign(this.filters, temp);
       },
       filterFactory (query) { // 查询厂商
+        let orgId = this.$store.state.user.userCompanyAddress;
         let params = {
-          deleteFlag: false,
-          keyWord: query
+          keyWord: query,
+          relation: '1'
         };
-        BaseInfo.query(params).then(res => {
-          this.factories = res.data.list;
-        });
-      },
-      filterOrg (query) { // 查询货主
-        BaseInfo.query({keyWord: query, type: 0}).then(res => {
-          this.orgList = res.data.list;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.factories = res.data;
         });
       },
       filterOrgGoods (query) {
-        this.orgGoods = [];
-        if (!this.searchWord.orgId) return;
+        let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           deleteFlag: false,
-          orgId: this.searchWord.orgId,
+          orgId: orgId,
           keyWord: query
         });
         OrgGoods.query(params).then(res => {
           this.orgGoods = res.data.list;
         });
-      },
-      isSelectOrg () {
-        if (!this.searchWord.orgId) {
-          this.$notify.info({
-            message: '请选择货主'
-          });
-        }
-      },
-      orgChange () {
-        this.filterOrgGoods();
       },
       formatTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';

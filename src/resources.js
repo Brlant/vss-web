@@ -235,6 +235,9 @@ export const DictGroup = resource('dictGroup', http, {
 });
 
 // erp订单
+export const vaccineBills = resource('/factory-reconciliation', http, {});
+
+// erp订单
 export const erpOrder = resource('/erp-order', http, {
   queryStateNum (params) {
     return http.get('/erp-order/count', {params});

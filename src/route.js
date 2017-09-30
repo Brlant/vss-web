@@ -211,7 +211,7 @@ const route = [
           },
           {
             path: '/finance/supplier',
-            component: resolve => require(['./components/finance/bad/list.vue'], resolve),
+            component: resolve => require(['./components/finance/vaccine/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '疫苗厂商对账', perm: 'vaccine-vendor-reconciliation'}
           },
           {
