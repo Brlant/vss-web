@@ -98,7 +98,7 @@
         return this.Attachment.attachmentStoragePath;
       },
       docViewUrl: function () {
-        return 'http://docview.tinyapp.top:81/view/url?url=' + encodeURIComponent(this.Attachment.attachmentStoragePath);
+        return 'http://doc-view.tinyapp.top/view/url?url=' + encodeURIComponent(this.Attachment.attachmentStoragePath);
       },
       stateDialogVisible: function () {
         return this.$store.state.attachmentDialog.open;
