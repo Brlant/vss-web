@@ -74,12 +74,21 @@
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
-            <el-col :span="6">
+            <el-col :span="8">
               <oms-form-row label="订单号" :span="6">
                 <el-input v-model="filters.orderNo"></el-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="8">
+              <oms-form-row label="CDC货品" :span="6">
+                <el-select filterable remote placeholder="请输入关键字CDC货品" :remote-method="getGoodsList" :clearable="true"
+                           v-model="filters.orgGoodsId">
+                  <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
+                             v-for="item in goodses"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="销售厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
                            v-model="filters.factoryId">
@@ -87,8 +96,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="7">
-              <oms-form-row label="到货时间" :span="8">
+            <el-col :span="8">
+              <oms-form-row label="到货时间" :span="6">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="aryTime"
@@ -98,7 +107,7 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="8">
               <el-row class="text-right">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -164,7 +173,7 @@
   </div>
 </template>
 <script>
-  import { vaccineBills, BaseInfo } from '@/resources';
+  import { vaccineBills, BaseInfo, Vaccine } from '@/resources';
 
   export default {
     data () {
@@ -175,6 +184,7 @@
         filters: {
           orderNo: '',
           factoryId: '',
+          orgGoodsId: '',
           arriveStartTime: '',
           arriveEndTime: ''
         },
@@ -185,7 +195,8 @@
           currentPage: 1,
           count: 0,
           pageSize: 15
-        }
+        },
+        goodses: []
       };
     },
     mounted () {
@@ -216,6 +227,15 @@
           this.factories = res.data;
         });
       },
+      getGoodsList: function (query) {
+        let params = Object.assign({}, {
+          keyWord: query,
+          deleteFlag: false
+        });
+        Vaccine.query(params).then(res => {
+          this.goodses = res.data.list;
+        });
+      },
       searchInOrder: function () {// 搜索
         this.filters.arriveStartTime = this.formatTime(this.aryTime[0]);
         this.filters.arriveEndTime = this.formatTime(this.aryTime[1]);
@@ -226,6 +246,7 @@
         Object.assign(this.filters, {
           orderNo: '',
           factoryId: '',
+          orgGoodsId: '',
           arriveStartTime: '',
           arriveEndTime: ''
         });
