@@ -72,7 +72,7 @@
               <div style="width:300px;margin-right:50px">
                 <oms-input v-model="user.validateCode"></oms-input>
               </div>
-              <div style="margin-top:-20px"><img :src="codeUrl" @click="getCode" style="cursor:pointer"></div>
+              <div><img :src="codeUrl" @click="getCode" style="cursor:pointer;height: 36px"></div>
             </div>
 
           </el-form-item>
@@ -145,7 +145,7 @@
               this.$notify.error({
                 message: data.msg
               });
-              if (data.code === 101) {
+              if (data.code === 101 || data.code === 100) {
                 this.getCode();
               }
               this.btnString = '登陆';
