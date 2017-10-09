@@ -178,7 +178,7 @@
           arriveStartTime: '',
           arriveEndTime: ''
         },
-        aryTime: [],
+        aryTime: '',
         factories: [], // 货主列表,
         orgId: '',
         pager: {
@@ -222,7 +222,7 @@
         this.queryBillPage(1);
       },
       resetSearchForm: function () {// 重置表单
-        this.aryTime = [];
+        this.aryTime = '';
         Object.assign(this.filters, {
           orderNo: '',
           factoryId: '',

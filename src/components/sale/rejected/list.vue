@@ -299,7 +299,7 @@
           supplierId: '',
           thirdPartyNumber: ''
         },
-        expectedTime: [],
+        expectedTime: '',
         orgType: utils.inOrderType,
         activeStatus: 0,
         currentOrderId: '',
@@ -365,7 +365,7 @@
           supplierId: '',
           thirdPartyNumber: ''
         };
-        this.expectedTime = [];
+        this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
       },

@@ -71,8 +71,7 @@
                 <el-date-picker
                   type="daterange"
                   v-model="demandTime"
-                  placeholder="请选择需求时间" format="yyyy-MM-dd"
-                  @change="changeTime">
+                  placeholder="请选择需求时间" format="yyyy-MM-dd">
                 </el-date-picker>
               </oms-form-row>
             </el-col>

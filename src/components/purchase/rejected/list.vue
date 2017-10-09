@@ -144,7 +144,7 @@
                   <el-date-picker
                     v-model="expectedTime"
                     type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
+                    placeholder="请选择">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
@@ -297,7 +297,7 @@
           supplierId: '',
           thirdPartyNumber: ''
         },
-        expectedTime: [],
+        expectedTime: '',
         orgType: utils.outOrderType,
         activeStatus: 0,
         currentOrderId: '',
@@ -367,7 +367,7 @@
           supplierId: '',
           thirdPartyNumber: ''
         };
-        this.expectedTime = [];
+        this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
       },

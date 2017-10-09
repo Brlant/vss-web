@@ -172,7 +172,7 @@
                 </td>
                 <td>
                   <perm label="accounts-payable-detail-update">
-                    <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实收金额</a>
+                    <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实付金额</a>
                   </perm>
                 </td>
               </tr>
