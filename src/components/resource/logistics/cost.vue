@@ -73,12 +73,16 @@
 
         <div class="d-table-right">
           <div style="overflow: hidden">
-          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add" v-if="!cost">
-            <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>
-          </span>
-            <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="edit" v-if="cost">
-            <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-edit"></i> </a>
-          </span>
+            <perm label="cerp-logistics-cost-add">
+                <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add" v-if="!cost">
+              <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>
+            </span>
+            </perm>
+            <perm label="cerp-logistics-cost-update">
+                <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="edit" v-if="cost">
+              <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-edit"></i> </a>
+            </span>
+            </perm>
           </div>
           <div class=" costs clearfix " style="margin-top: 10px">
             <el-row v-if="loadingData">
