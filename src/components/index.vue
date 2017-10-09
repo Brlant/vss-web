@@ -161,20 +161,16 @@
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
           this.queryBaseInfo(data);
-          Access.getRoleMenus(data.userCompanyAddress).then(res => {
-            let menuData = res.data;
-            let menuList = {};
-            res.data.menuList.forEach(item => {
-              menuList[item.id] = item.name;
-            });
-            menuData.menuList = menuList;
-            this.$store.commit('initPermList', menuData);
-          });
+          this.getRoleMenus(data);
         }).catch(() => {
           Auth.logout().then(() => {
             this.$router.replace('/login');
           });
         });
+      } else {
+        let data = window.localStorage.getItem('user');
+        data = JSON.parse(data);
+        this.getRoleMenus(data);
       }
       this.queryPerms();
       this.queryLevel();
@@ -209,6 +205,17 @@
               this.loading = false;
             }, 1000);
           });
+        });
+      },
+      getRoleMenus (data) {
+        Access.getRoleMenus(data.userCompanyAddress).then(res => {
+          let menuData = res.data;
+          let menuList = {};
+          res.data.menuList.forEach(item => {
+            menuList[item.id] = item.name;
+          });
+          menuData.menuList = menuList;
+          this.$store.commit('initPermList', menuData);
         });
       },
       queryBaseInfo (data) {

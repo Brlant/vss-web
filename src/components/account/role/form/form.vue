@@ -114,6 +114,7 @@
     },
     mounted: function () {
       const self = this;
+      if (!this.roleMenu.tree) return;
       this.roleMenu.tree.forEach(function (val) {
         let temp = {
           parentId: val.parentId,
