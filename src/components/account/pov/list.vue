@@ -261,7 +261,7 @@
         // 根据参数，获取单位信息
         let params = {
           keyWord: query,
-          relation: '2'
+          relation: '0'
         };
         BaseInfo.queryOrgByValidReation(this.cdcItem.subordinateId, params).then(res => {
           this.orgList = res.data;
