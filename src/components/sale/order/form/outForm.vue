@@ -880,7 +880,7 @@
         this.searchProductList.forEach(item => {
           if (item.orgGoodsDto.id === OrgGoodsId) {
             this.product.fixInfo = item.orgGoodsDto;
-            this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.unitPrice.toString());
+            this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.sellPrice.toString());
             this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
             this.accessoryList = item.list;
             this.form.detailDtoList.forEach((detailItem) => {

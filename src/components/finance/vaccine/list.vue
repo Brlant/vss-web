@@ -140,13 +140,13 @@
               <el-col :span="5" class="R pt10">
                 {{ item.factoryName }}
               </el-col>
-              <el-col :span="3" class="R pt10 text-right">
+              <el-col :span="3" class="R pt10">
                 {{ item.purchaseCount }}
               </el-col>
-              <el-col :span="3" class="R pt10 text-right">
+              <el-col :span="3" class="R pt10">
                 {{ item.receiptCount }}
               </el-col>
-              <el-col :span="4" class="R pt10 text-right">
+              <el-col :span="4" class="R pt10">
                 {{ item.arriveTime | date }}
               </el-col>
             </el-row>
