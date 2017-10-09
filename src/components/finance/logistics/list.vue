@@ -80,7 +80,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="7">
-              <oms-form-row label="销售厂商" :span="6">
+              <oms-form-row label="物流厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
                            v-model="filters.factoryId">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>
@@ -110,11 +110,12 @@
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="5">货品</el-col>
+          <el-col :span="3">疫苗类型</el-col>
           <el-col :span="4">采购订单号</el-col>
-          <el-col :span="5">疫苗厂商</el-col>
-          <el-col :span="3">采购数量</el-col>
-          <el-col :span="3">到货数量</el-col>
-          <el-col :span="4">到货时间</el-col>
+          <el-col :span="5">物流厂商</el-col>
+          <el-col :span="2">采购数量</el-col>
+          <el-col :span="2">物流费用</el-col>
+          <el-col :span="3">到货时间</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -134,19 +135,22 @@
               <el-col :span="5" class="R pt10">
                 {{ item.goodsName }}
               </el-col>
+              <el-col :span="3" class="R pt10">
+                <dict :dict-group="'vaccineSign'" :dict-key="item.vaccineType"></dict>
+              </el-col>
               <el-col :span="4" class="R pt10">
                 {{ item.orderNo }}
               </el-col>
               <el-col :span="5" class="R pt10">
                 {{ item.factoryName }}
               </el-col>
-              <el-col :span="3" class="R pt10">
-                {{ item.receiptCount }}
-              </el-col>
-              <el-col :span="3" class="R pt10">
+              <el-col :span="2" class="R pt10 text-right">
                 {{ item.purchaseCount }}
               </el-col>
-              <el-col :span="4" class="R pt10">
+              <el-col :span="2" class="R pt10 text-right">
+                <span v-show="item.price">￥</span>{{ item.price }}
+              </el-col>
+              <el-col :span="3" class="R pt10 text-right">
                 {{ item.arriveTime | date }}
               </el-col>
             </el-row>
@@ -164,7 +168,7 @@
   </div>
 </template>
 <script>
-  import { vaccineBills, BaseInfo } from '@/resources';
+  import { BaseInfo, http } from '@/resources';
 
   export default {
     data () {
@@ -200,7 +204,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         });
-        vaccineBills.query(params).then(res => {
+        http.get('/factory-reconciliation/providers', {params}).then(res => {
           this.bills = res.data.list || [];
           this.pager.count = res.data.count;
           this.loadingData = false;
@@ -210,7 +214,7 @@
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = {
           keyWord: query,
-          relation: '1'
+          relation: '3'
         };
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.factories = res.data;
