@@ -187,8 +187,14 @@
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
-                  <goods-row label="单价" :span="8">
-                    ¥ {{ data.unitPrice | formatMoney}}
+                  <goods-row label="中标价格" :span="8">
+                    ¥ {{ data.bidPrice | formatMoney}}
+                  </goods-row>
+                  <goods-row label="采购价格" :span="12">
+                    ¥ {{ data.procurementPrice | formatMoney}}
+                  </goods-row>
+                  <goods-row label="销售价格" :span="12">
+                    ¥ {{ data.sellPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="库存上限" :span="8">
                     {{ data.inventoryUpperLimit }}
@@ -443,7 +449,9 @@
           goodsId: '',
           goodsIsCombination: false,
           goodsNo: '',
-          unitPrice: '',
+          bidPrice: '',
+          procurementPrice: '',
+          sellPrice: '',
           valuationFlag: false,
           storageConditionId: '',
           inventoryLowerLimit: null,
