@@ -660,7 +660,7 @@
         this.form.orgId = user.userCompanyAddress;
         this.searchProduct();
         this.filterPOV();
-        this.checkLicence(this.form.orgId, '货主');
+        this.checkLicence(this.form.orgId);
       },
       form: {
         handler: 'autoSave',
@@ -799,7 +799,7 @@
         }
       },
       changeCustomerId(val) {// POV改变时
-        this.checkLicence(val, 'POV');
+        this.checkLicence(val);
         this.searchWarehouses(val);
       },
       searchWarehouses (orgId) {
@@ -827,7 +827,7 @@
       getWarehouseAdress: function (item) { // 得到仓库地址
         return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
       },
-      checkLicence: function (val, name) {// 检查货主/单位证照是否过期
+      checkLicence: function (val) {// 检查货主/单位证照是否过期
         if (!val || !this.action) return;
         http.get('/order-licence/org/' + val + '/overdue').then(res => {
           if (!res.data.length) return;
@@ -839,7 +839,7 @@
           this.$notify({
             duration: 2000,
             title: '证照信息过期',
-            message: name + msg + '证照信息已过期,无法创建订单',
+            message: msg + '证照信息已过期,无法创建订单',
             type: 'error'
           });
         });

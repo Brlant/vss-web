@@ -610,8 +610,7 @@
         this.form.orgId = user.userCompanyAddress;
         this.filterOrg();
         this.filterLogistics();
-        this.searchProduct();
-        this.checkLicence(this.form.orgId, '货主');
+        this.checkLicence(this.form.orgId);
       },
       form: {
         handler: 'autoSave',
@@ -775,7 +774,8 @@
             }
           });
         }
-        this.checkLicence(val, '来源单位');
+        this.searchProduct();
+        this.checkLicence(val);
       },
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
@@ -784,7 +784,7 @@
           this.form.supplierId = '';
         }
       },
-      checkLicence: function (val, name) {// 校验单位和货主证照是否过期
+      checkLicence: function (val) {// 校验单位和货主证照是否过期
         if (!val || !this.action) return;
         http.get('/order-licence/org/' + val + '/overdue').then(res => {
           if (!res.data.length) return;
@@ -796,15 +796,20 @@
           this.$notify({
             duration: 2000,
             title: '证照信息过期',
-            message: name + msg + '证照信息已过期,无法创建订单',
+            message: msg + '证照信息已过期,无法创建订单',
             type: 'error'
           });
         });
       },
       searchProduct: function (query) {
+        if (!this.form.orgId || !this.form.supplierId) {
+          this.searchProductList = [];
+          return;
+        }
         let params = {
           orgId: this.form.orgId,
-          keyWord: query
+          keyWord: query,
+          factoryId: this.form.supplierId
         };
         http.get('/org/goods/valid', {params: params}).then(res => {
           this.searchProductList = res.data.list;
