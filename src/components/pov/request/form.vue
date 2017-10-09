@@ -492,7 +492,8 @@
         let user = this.$store.state.user;
         Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress}).then(res => {
           this.warehouses = res.data || [];
-          this.form.warehouseId = this.warehouses.filter(i => i.default)[0].id;
+          let fs = this.warehouses.filter(i => i.default)[0];
+          this.form.transportationAddress = fs && fs.id || '';
         });
       },
       filterProducts: function () {

@@ -810,7 +810,8 @@
         }
         Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId}).then(res => {
           this.warehouses = res.data || [];
-          this.form.transportationAddress = this.warehouses.filter(i => i.default)[0].id;
+          let fs = this.warehouses.filter(i => i.default)[0];
+          this.form.transportationAddress = fs && fs.id || '';
         });
       },
       changeWarehouseAdress: function (val) {
