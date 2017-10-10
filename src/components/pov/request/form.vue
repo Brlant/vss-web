@@ -278,9 +278,15 @@
                            :label="item.goodsName"
                            :value="item.orgGoodsId">
                   <div>
-                    <span class="pull-left">{{item.goodsName}}</span>
-                    <span class="select-other-info pull-left">{{item.goodsNo}}</span>
-                    <span class="select-other-info pull-right">{{ item.factoryName }}</span>
+                    <div>
+                      <span class="pull-left">{{item.goodsName}}</span>
+                    </div>
+                    <div class="clearfix">
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
+                      <span class="select-other-info pull-right"><span
+                        v-show="item.factoryName">销售厂商</span>  {{ item.factoryName }}</span>
+                    </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->
                     <!--组合-->
@@ -540,7 +546,7 @@
           this.currentList.forEach(item => {
             if (item.orgGoodsDto.id === OrgGoodsId) {
               this.product.fixInfo = item.orgGoodsDto;
-              this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.unitPrice.toString());
+              this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.sellPrice.toString());
               this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
               this.accessoryList = item.list;
               this.form.detailDtoList.forEach((detailItem) => {
