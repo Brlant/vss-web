@@ -79,7 +79,7 @@
                 <perm label="erp-bind-cdc-add">
                   <el-button type="primary" @click="bindDistrict">绑定CDC</el-button>
                 </perm>
-                <perm label="erp-bind-cdc-add" style="margin-left: 20px">
+                <perm label="erp-bind-cdc-batch-add" style="margin-left: 20px">
                   <el-button type="primary" @click="bindAll">一键绑定区县级CDC和POV</el-button>
                 </perm>
               </el-col>
