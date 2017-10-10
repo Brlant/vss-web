@@ -151,7 +151,7 @@
         loadingData: false,
         allocationList: [],
         showRight: false,
-        status: '',
+        status: -1,
         pager: {
           currentPage: 1,
           count: 0,
@@ -167,7 +167,7 @@
     methods: {
       queryAllocationList (pageNo) { // 得到需求分配列表
         this.allocationList = [];
-        this.status = '';
+        this.status = -1;
         if (!this.$route.query.id) return;
         this.pager.currentPage = pageNo;
         this.loadingData = false;

@@ -84,19 +84,19 @@
         });
       },
       review () {
-        this.$confirm('是否确认审单', '', {
+        this.$confirm('是否订单审核', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           http.put(`/erp-order/${this.orderId}/check`).then(() => {
             this.$notify.success({
-              message: '确认审单成功'
+              message: '订单审核成功'
             });
             this.transformState('7');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '确认审单失败'
+              message: error.response.data && error.response.data.msg || '订单审核失败'
             });
           });
         });

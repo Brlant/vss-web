@@ -129,13 +129,15 @@
                     style="height: 64px;background: #f1f1f1;margin-left: -5px;margin-right: -5px;padding-top: 20px">
                     <el-col :span="15"></el-col>
                     <el-col :span="3">
-                      <span style="font-size: 16px">总计 {{ currentItem.requiredQuantity }}</span>
+                      <span style="font-size: 16px">需求总计 {{ currentItem.requiredQuantity }}</span>
                     </el-col>
                     <el-col :span="3">
                       <span style="font-size: 16px">库存数量 {{ currentItem.inventoryQuantity }}</span>
                     </el-col>
                     <el-col :span="3">
-                      <span style="font-size: 16px">差额  <span>{{ currentItem.resultAmount}}</span></span>
+                      <el-tooltip class="item" effect="dark" content="库存数量减去已经分配的数量" placement="right">
+                        <span style="font-size: 16px">剩余差额 <span>{{ currentItem.resultAmount}}</span></span>
+                      </el-tooltip>
                     </el-col>
                   </el-row>
                 </div>
