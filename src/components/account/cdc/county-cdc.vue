@@ -75,12 +75,15 @@
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList"></el-option>
                 </el-select>
               </el-col>
-              <el-col :span="3" style="padding-left: 10px">
+              <el-col :span="10" style="padding-left: 10px">
                 <perm label="erp-bind-cdc-add">
                   <el-button type="primary" @click="bindDistrict">绑定CDC</el-button>
                 </perm>
+                <perm label="erp-bind-cdc-add" style="margin-left: 20px">
+                  <el-button type="primary" @click="bindAll">一键绑定区县级CDC和POV</el-button>
+                </perm>
               </el-col>
-              <el-col :span="13" class="text-right">
+              <el-col :span="6" class="text-right">
                   <span >
                     <span class="btn-search-toggle open" v-show="showSearch">
                         <single-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showSearch"></single-input>
@@ -189,6 +192,24 @@
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '绑定CDC失败'
+          });
+        });
+      },
+      bindAll () {
+        this.$confirm('是否一键绑定区县级CDC和POV', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          cerpAccess.bindAllCdcAndPov().then(() => {
+            this.$notify.success({
+              message: '一键绑定成功'
+            });
+            this.getCDCPage();
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '一键绑定失败'
+            });
           });
         });
       },

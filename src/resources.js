@@ -541,6 +541,9 @@ export const cerpAccess = resource('', http, {
         return qs.stringify(params);
       }
     });
+  },
+  bindAllCdcAndPov () { // 一键绑定cdc和pov
+    return http.put('/erp-access/bind');
   }
 });
 

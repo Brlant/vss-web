@@ -187,6 +187,7 @@
         });
       },
       submit (item) {
+        if (typeof item.actualCount !== 'number') return;
         let list = [];
         list.push(item);
         demandAssignment.allotVaccine(list).then(() => {
