@@ -281,7 +281,6 @@
           }
           this.form.orgId = this.$store.state.user.userCompanyAddress;
           if (this.formType === 'add') {
-            console.log(1);
             logisticsCost.save(this.form).then(() => {
               this.$notify.success({
                 message: '添加物流费用成功'
@@ -294,7 +293,6 @@
               });
             });
           } else {
-            console.log(2);
             logisticsCost.update(this.form.id, this.form).then(() => {
               this.$notify.success({
                 message: '修改物流费用成功'
