@@ -30,6 +30,16 @@ const mutations = {
 
     }
   },
+  initCode(state, orgCode) {
+    try {
+      if (orgCode) {
+        window.localStorage.setItem('orgCode', JSON.stringify(orgCode));
+        state.orgCode = orgCode;
+      }
+    } catch (e) {
+
+    }
+  },
   initDict(state, data) {
     state.dict = data;
   },

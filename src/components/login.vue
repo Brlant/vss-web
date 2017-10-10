@@ -98,11 +98,11 @@
     data: () => {
       return ({
         user: {
-          username: '',
+          username: window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')).userAccount : '',
           password: '',
           validateCode: '',
           type: 1,
-          orgCode: ''
+          orgCode: window.localStorage.getItem('orgCode') ? JSON.parse(window.localStorage.getItem('orgCode')) : ''
         },
         loading: false,
         codeUrl: '',
@@ -127,6 +127,7 @@
             Auth.login(this.user).then(response => {
               let userId = window.localStorage.getItem('userId');
               this.$store.commit('initUser', response.data);
+              this.$store.commit('initCode', this.user.orgCode);
               this.$nextTick(function () {
                 if (userId === response.data.userId) {
                   let lastUrl = window.localStorage.getItem('lastUrl');
