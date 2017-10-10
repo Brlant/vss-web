@@ -1,9 +1,9 @@
 <style lang="less" scoped="">
   @import "../assets/mixins.less";
 
-  body {
-    background: #f5f5f5
-  }
+  /*body {*/
+  /*background: #f5f5f5*/
+  /*}*/
 
   .main-card-box {
     width: 550px;
@@ -86,14 +86,19 @@
       </div>
     </el-card>
     <canvas id="backgroundCanvas"></canvas>
+    <app-footer></app-footer>
   </div>
 
 </template>
 
 <script>
   import {Auth} from '../resources';
+  import AppFooter from './common/app.footer.vue';
 
   export default {
+    components: {
+      AppFooter
+    },
     name: 'login',
     data: () => {
       return ({
