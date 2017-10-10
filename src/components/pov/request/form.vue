@@ -209,7 +209,7 @@
       text-overflow: ellipsis;
       color: rgb(72, 94, 106);
       height: auto;
-      width: 680px;
+      width: 530px;
       line-height: 1.5;
       box-sizing: border-box;
       cursor: pointer;
@@ -284,7 +284,7 @@
                     <div class="clearfix">
                       <span class="select-other-info pull-left"><span
                         v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
-                      <span class="select-other-info pull-right"><span
+                      <span class="select-other-info pull-left"><span
                         v-show="item.factoryName">销售厂商</span>  {{ item.factoryName }}</span>
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
@@ -311,8 +311,8 @@
                   <oms-row label="疫苗编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
-                  <oms-row label="生产厂商" :span="8">
-                    {{product.fixInfo.goodsDto.factoryName}}
+                  <oms-row label="销售厂商" :span="8">
+                    {{product.fixInfo.salesFirmName}}
                   </oms-row>
                   <oms-row label="批准文号" :span="8">
                     {{product.fixInfo.goodsDto.approvalNumber}}
@@ -327,7 +327,7 @@
                        <span style="margin-right: 10px">{{acce.name}}</span>
                        <span style="margin-right: 10px" v-show="acce.unitPrice">¥ {{ acce.unitPrice }}</span>
                        <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
-                       <span style="margin-right: 10px">{{ acce.accessoryGoods.factoryName }}</span>
+                       <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
                 </el-col>
               </el-row>
@@ -473,7 +473,6 @@
       changeType () {
         this.$refs['orderGoodsForm'].resetFields();
         this.accessoryList = [];
-        this.filterProducts();
         this.form.cdcId = this.cdcs.filter(f => f.level === this.form.type)[0] && this.cdcs.filter(f => f.level === this.form.type)[0].orgId || '';
         this.searchProduct();
       },
@@ -540,13 +539,11 @@
         }
         http.get('/org/goods/' + OrgGoodsId).then(res => {
           this.currentList.push(res.data);
-          this.$nextTick(function () {
-            this.filterProducts();
-          });
           this.currentList.forEach(item => {
             if (item.orgGoodsDto.id === OrgGoodsId) {
               this.product.fixInfo = item.orgGoodsDto;
-              this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.sellPrice.toString());
+              let sellPrice = item.orgGoodsDto.sellPrice;
+              this.product.unitPrice = utils.autoformatDecimalPoint(sellPrice ? sellPrice.toString() : '');
               this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
               this.accessoryList = item.list;
               this.form.detailDtoList.forEach((detailItem) => {
@@ -584,6 +581,7 @@
               });
             }
           });
+          this.searchProduct();
           this.$nextTick(function () {
             this.product = {
               'amount': null,
