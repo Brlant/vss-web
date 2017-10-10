@@ -142,6 +142,7 @@
         this.queryCosts();
       },
       add () {
+        this.action = 'add';
         this.showItemRight = true;
       }
     }
