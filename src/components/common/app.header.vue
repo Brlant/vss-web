@@ -353,18 +353,21 @@
       }
     },
     mounted: function () {
-      let skin = window.localStorage.getItem('skin');
+      this.skin = this.skinList[0];
+      // let skin = window.localStorage.getItem('skin');
       let isCollapse = window.localStorage.getItem('collapse');
       if (isCollapse) {
         isCollapse = parseInt(isCollapse, 10);
       }
       this.isCollapse = !!isCollapse;
       this.$store.commit('changeBodyLeft', this.isCollapse);
+      /*
       if (skin) {
         this.skin = JSON.parse(skin);
       } else {
         this.skin = this.skinList[0];
       }
+      */
 
     }
   };
