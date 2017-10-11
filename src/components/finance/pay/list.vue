@@ -170,7 +170,7 @@
                   {{row.createTime | date }}
                 </td>
                 <td>
-                  <perm label="accounts-payable-detail-update">
+                  <perm label="accounts-payable-detail-add">
                     <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实付金额</a>
                   </perm>
                 </td>
