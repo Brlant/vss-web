@@ -296,8 +296,8 @@
           this.requestType[0].num = res.data['all'];
           this.requestType[1].num = res.data['pending-audit'];
           this.requestType[2].num = res.data['audited'];
-          this.requestType[3].num = res.data['create-wave'];
-          this.requestType[4].num = res.data['assigned'];
+          this.requestType[3].num = res.data['assigned'];
+          this.requestType[4].num = res.data['create-wave'];
           this.requestType[5].num = res.data['canceled'];
         });
       },
