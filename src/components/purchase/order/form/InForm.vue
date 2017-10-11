@@ -760,6 +760,7 @@
       changeSupplier: function (val) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.transportationAddress = '';
+          this.product.orgGoodsId = '';
         }
         if (this.form.transportationMeansId === '2') {
           this.orgList.forEach(item => {

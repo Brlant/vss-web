@@ -2,7 +2,6 @@ import Vue from 'vue';
 import router from './routers';
 import ElementUI from 'element-ui';
 import moment from 'moment';
-import dev from '../config/dev.env';
 import 'moment/locale/zh-cn';
 import '../static/theme/index.css';
 import '../static/css/oms.css';
@@ -76,9 +75,6 @@ Vue.filter('formatMoney', function (val) {
   } else if (typeof val === 'number') {
     return val.toFixed(2);
   }
-});
-Vue.filter('formatImgUrl', function (val) {
-  return dev.NODE_API.split('"')[1] + val;
 });
 new Vue({
   template: '<router-view id="app"></router-view>',
