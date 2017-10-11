@@ -190,7 +190,7 @@
         </div>
         <div class="top-right">
           <div class="top-user">
-            <el-dropdown trigger="click" @command="changeSkin">
+            <!--<el-dropdown trigger="click" @command="changeSkin">
               <div class="el-dropdown-link top-right-item">
                 <i class="el-icon-setting"></i>
               </div>
@@ -200,7 +200,7 @@
                   {{skin.name}}
                 </el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown>-->
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
                 <img v-if="user.userIcon" :src="user.userIcon">
