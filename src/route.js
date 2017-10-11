@@ -35,75 +35,7 @@ const route = [
         meta: {moduleId: 'home', title: '首页', icon: 'home', perm: 'show'},
         children: []
       },
-      {
-        path: '/account',
-        component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'account', title: '账户管理', icon: 'user', perm: 'erp-bind-account-manager'},
-        children: [
-          {
-            path: '/account/cdc',
-            component: resolve => require(['./components/account/cdc/county-cdc.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'erp-bind-cdc'}
-          },
-          {
-            path: '/account/citypov',
-            component: resolve => require(['./components/account/pov/city-pov.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定市级POV', perm: 'erp-bind-city-cdc'}
-          },
-          {
-            path: '/account/pov',
-            component: resolve => require(['./components/account/pov/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定区县级POV', perm: 'erp-bind-pov-manager'}
-          },
-          {
-            path: '/account/user',
-            component: resolve => require(['./components/account/user/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '用户管理', perm: 'erp-user-manager'}
-          },
-          {
-            path: '/account/role',
-            component: resolve => require(['./components/account/role/role.vue'], resolve),
-            meta: {moduleId: 'account', title: '角色管理', perm: 'access-role-manager'}
-          },
-          {
-            path: '/account/management',
-            component: resolve => require(['./components/account/management/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '账号分配', perm: 'erp-account-manager'}
-          }
-        ]
-      },
-      {
-        path: '/resource',
-        component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'resource', title: '资料管理', icon: 'firm', perm: 'material-manager'},
-        children: [
-          {
-            path: '/resource/firm',
-            component: resolve => require(['./components/resource/firm/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '厂商资料管理', perm: 'manufacturer-manager'}
-          },
-          {
-            path: '/resource/vaccin/list',
-            component: resolve => require(['./components/resource/vaccin/data/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗资料管理', perm: 'vaccine-info'}
-          },
-          {
-            path: '/resource/vaccin/pov',
-            component: resolve => require(['./components/resource/vaccin/rights/pov.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗授权管理', perm: 'vaccine-authorization'}
-          },
-          {
-            path: '/resource/store',
-            component: resolve => require(['./components/resource/store/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '仓库管理', perm: 'binding-warehouse'}
-          },
-          {
-            path: '/logistics/cost',
-            component: resolve => require(['./components/resource/logistics/cost.vue'], resolve),
-            meta: {moduleId: 'resource', title: '物流费用', perm: 'cerp-logistics-cost'}
-          }
-        ]
-      },
+
       {
         path: '/purchase',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
@@ -129,7 +61,7 @@ const route = [
           {
             path: '/purchase/wave',
             component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '生成波次', perm: 'cerp-create-wave'}
+            meta: {moduleId: 'purchase', title: '需求分配波次', perm: 'cerp-create-wave'}
           },
           {
             path: '/purchase/order/:id',
@@ -241,6 +173,75 @@ const route = [
         component: resolve => require(['./components/files/vaccineBatch/index.vue'], resolve),
         meta: {moduleId: 'file', title: '疫苗批号文件管理', icon: 'fold', perm: 'vaccine-batch-process'},
         children: []
+      },
+      {
+        path: '/account',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'account', title: '账户管理', icon: 'user', perm: 'erp-bind-account-manager'},
+        children: [
+          {
+            path: '/account/cdc',
+            component: resolve => require(['./components/account/cdc/county-cdc.vue'], resolve),
+            meta: {moduleId: 'account', title: '绑定区县级CDC', perm: 'erp-bind-cdc'}
+          },
+          {
+            path: '/account/citypov',
+            component: resolve => require(['./components/account/pov/city-pov.vue'], resolve),
+            meta: {moduleId: 'account', title: '绑定市级POV', perm: 'erp-bind-city-cdc'}
+          },
+          {
+            path: '/account/pov',
+            component: resolve => require(['./components/account/pov/list.vue'], resolve),
+            meta: {moduleId: 'account', title: '绑定区县级POV', perm: 'erp-bind-pov-manager'}
+          },
+          {
+            path: '/account/user',
+            component: resolve => require(['./components/account/user/list.vue'], resolve),
+            meta: {moduleId: 'account', title: '用户管理', perm: 'erp-user-manager'}
+          },
+          {
+            path: '/account/role',
+            component: resolve => require(['./components/account/role/role.vue'], resolve),
+            meta: {moduleId: 'account', title: '角色管理', perm: 'access-role-manager'}
+          },
+          {
+            path: '/account/management',
+            component: resolve => require(['./components/account/management/list.vue'], resolve),
+            meta: {moduleId: 'account', title: '账号分配', perm: 'erp-account-manager'}
+          }
+        ]
+      },
+      {
+        path: '/resource',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'resource', title: '资料管理', icon: 'firm', perm: 'material-manager'},
+        children: [
+          {
+            path: '/resource/firm',
+            component: resolve => require(['./components/resource/firm/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '厂商资料管理', perm: 'manufacturer-manager'}
+          },
+          {
+            path: '/resource/vaccin/list',
+            component: resolve => require(['./components/resource/vaccin/data/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '疫苗资料管理', perm: 'vaccine-info'}
+          },
+          {
+            path: '/resource/vaccin/pov',
+            component: resolve => require(['./components/resource/vaccin/rights/pov.vue'], resolve),
+            meta: {moduleId: 'resource', title: '疫苗授权管理', perm: 'vaccine-authorization'}
+          },
+          {
+            path: '/resource/store',
+            component: resolve => require(['./components/resource/store/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '仓库管理', perm: 'binding-warehouse'}
+          },
+          {
+            path: '/logistics/cost',
+            component: resolve => require(['./components/resource/logistics/cost.vue'], resolve),
+            meta: {moduleId: 'resource', title: '物流费用', perm: 'cerp-logistics-cost'}
+          }
+        ]
       }
       // {
       //   path: '/trace',
