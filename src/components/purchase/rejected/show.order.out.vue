@@ -62,11 +62,6 @@
       return {
         currentOrder: {},
         index: 0,
-        pageSets: [
-          {name: '订单详情', key: 0},
-          {name: '收货详情', key: 1},
-          {name: '操作日志', key: 2}
-        ],
         title: ''
       };
     },
@@ -75,6 +70,17 @@
         this.index = 0;
         this.title = '订单详情';
         this.queryOrderDetail();
+      }
+    },
+    computed: {
+      pageSets () {
+        let menu = [];
+        menu.push({name: '订单详情', key: 0});
+        if (this.state === '3') {
+          menu.push({name: '收货详情', key: 1});
+        }
+        menu.push({name: '操作日志', key: 2});
+        return menu;
       }
     },
     methods: {
