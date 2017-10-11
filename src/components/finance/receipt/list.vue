@@ -106,7 +106,6 @@
           </div>
           <div v-else="" class="d-table-col-wrap">
             <div class="content-body clearfix">
-              <span style="font-size: 14px">【应收款详情】</span>
               <el-row>
                 <oms-row label="POV" :span="5">
                   {{currentItem.payerName}}
