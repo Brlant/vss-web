@@ -976,6 +976,23 @@
           });
           return false;
         }
+        if (!this.batchNumbers.length && this.form.bizType === '0') {
+          this.$notify.info({
+            duration: 2000,
+            message: '无库存批次，无法加入订单'
+          });
+          return false;
+        }
+        if (this.batchNumbers.length && this.form.bizType === '0') {
+          let isHave = this.batchNumbers.some(item => item.lots.some(s => s.count > 0));
+          if (!isHave) {
+            this.$notify.info({
+              duration: 2000,
+              message: '无库存，无法加入订单'
+            });
+            return false;
+          }
+        }
         if (this.batchNumbers.length) {
           let isChecked = this.batchNumbers.every(item => item.lots.some(l => l.isChecked));
           if (!isChecked) {
