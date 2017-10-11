@@ -263,7 +263,7 @@
 </template>
 
 <script>
-  import { Auth } from '../../resources';
+  import {Auth} from '../../resources';
   import logo_pic from '../../assets/img/logo_pic.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';
@@ -273,7 +273,7 @@
       omsUploadPicture
     },
     props: ['toRoute'],
-    data () {
+    data() {
       return {
         activeId: this.getGroupId(),
         logo_pic: logo_pic,
