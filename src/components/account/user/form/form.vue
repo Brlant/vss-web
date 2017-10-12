@@ -134,19 +134,11 @@
         if (!val) {
           this.$refs['accountform'].resetFields();
         }
-      },
-      user (val) {
-        if (val.userCompanyAddress) {
-          this.getRoleSelect();
-        }
       }
     },
     methods: {
       getRoleSelect: function () {
-        let param = {};
-        let orgId = this.user.userCompanyAddress;
-        if (!orgId) return;
-        Access.getOrgRole(orgId, param).then(res => {
+        Access.queryERPAccess().then(res => {
           this.roleSelect = res.data.list;
         });
       },
@@ -165,6 +157,7 @@
           });
           self.form.list = [{roleId: this.roleId, title: title}];
           self.form.orgId = this.user.userCompanyAddress;
+          self.form.objectId = 'cerp-system';
           if (this.action === 'add') {
             OrgUser.save(self.form).then(() => {
               this.doing = false;

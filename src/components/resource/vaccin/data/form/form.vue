@@ -134,8 +134,18 @@
           <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in storageCondition"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="单价" prop="unitPrice">
-        <oms-input type="text" v-model="form.unitPrice" placeholder="请输入单价" @blur="formatPrice">
+      <el-form-item label="中标价格" prop="bidPrice">
+        <oms-input type="text" v-model="form.bidPrice" placeholder="请输入中标价格" @blur="formatPrice" @change="setPrice">
+          <template slot="prepend">￥</template>
+        </oms-input>
+      </el-form-item>
+      <el-form-item label="采购价格" prop="procurementPrice">
+        <oms-input type="text" v-model="form.procurementPrice" placeholder="请输入采购价格" @blur="formatPrice">
+          <template slot="prepend">￥</template>
+        </oms-input>
+      </el-form-item>
+      <el-form-item label="销售价格" prop="sellPrice">
+        <oms-input type="text" v-model="form.sellPrice" placeholder="请输入销售价格" @blur="formatPrice">
           <template slot="prepend">￥</template>
         </oms-input>
       </el-form-item>
@@ -199,7 +209,7 @@
           goodsId: '',
           goodsIsCombination: false,
           goodsNo: '',
-          unitPrice: null,
+          bidPrice: null,
           valuationFlag: false,
           storageConditionId: ''
         },
@@ -216,8 +226,14 @@
           name: [
             {required: true, message: '请输入疫苗名称', trigger: 'blur'}
           ],
-          unitPrice: [
-            {required: true, message: '请输入单价', trigger: 'blur'}
+          bidPrice: [
+            {required: true, message: '请输入中标价格', trigger: 'blur'}
+          ],
+          procurementPrice: [
+            {required: true, message: '请输入采购价格', trigger: 'blur'}
+          ],
+          sellPrice: [
+            {required: true, message: '请输入销售价格', trigger: 'blur'}
           ],
           accessory: [
             {required: true, message: '请输入其他组织疫苗', trigger: 'change'}
@@ -260,7 +276,9 @@
         this.goodsType = '';
         if (typeof val.id === 'string') {
           this.form = this.formItem;
-          this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice.toString());
+          this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
+          this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice.toString());
+          this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
         } else {
           this.form = {
             name: '',
@@ -269,7 +287,9 @@
             goodsId: '',
             goodsIsCombination: false,
             goodsNo: '',
-            unitPrice: '',
+            bidPrice: '',
+            sellPrice: '',
+            procurementPrice: '',
             valuationFlag: false,
             storageConditionId: '',
             inventoryLowerLimit: null,
@@ -293,6 +313,12 @@
       }
     },
     methods: {
+      setPrice: function () {
+        if (this.form.bidPrice) {
+          this.form.procurementPrice = this.form.bidPrice;
+          this.form.sellPrice = this.form.bidPrice;
+        }
+      },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
         let params = {
           keyWord: keyWord
@@ -362,7 +388,9 @@
         });
       },
       formatPrice () {// 格式化单价，保留两位小数
-        this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
+        this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice);
+        this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice);
+        this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice);
       },
       remove () {
         this.$confirm('确认删除该信息?', '', {

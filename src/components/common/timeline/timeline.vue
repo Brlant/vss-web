@@ -31,7 +31,7 @@
         width: 6px;
         height: 6px;
         left: 3px;
-        top: 6px;
+        top: 0;
         background-color: #fff;
         border-radius: 50%;
         border: 1px solid transparent;
@@ -89,7 +89,7 @@
         padding: 1px 1px 10px 34px;
         font-size: @font-size-small;
         position: relative;
-        top: -3px;
+        top: -8px;
         h3 {
           padding: 0;
           margin: 0;

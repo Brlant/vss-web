@@ -5,13 +5,18 @@ export default {
   requestType: {
     0: {'title': '所有', status: null, num: 0},
     1: {'title': '待审批', status: 0, num: 0},
-    2: {'title': '待分配', status: 1, num: 0},
-    3: {'title': '已分配', status: 2, num: 0},
-    4: {'title': '已取消', status: 3, num: 0}
+    2: {'title': '待生成波次', status: 1, num: 0},
+    3: {'title': '待分配', status: 2, num: 0},
+    4: {'title': '已分配', status: 4, num: 0},
+    5: {'title': '已取消', status: 3, num: 0}
   },
   assignType: {
     0: {'title': '待分配', status: 1, num: 0},
     1: {'title': '已完成分配', status: 2, num: 0}
+  },
+  waveType: {
+    0: {'title': '未完成', status: 0, num: 0},
+    1: {'title': '已完成', status: 1, num: 0}
   },
   receiptType: {
     0: {'title': '所有', status: null, num: 0},
@@ -26,9 +31,10 @@ export default {
     4: {'title': '已拒收', state: '5', num: 0}
   },
   outOrderType: {
-    1: {'title': '待确认', state: '0', num: 0},
-    2: {'title': '待审单', state: '1', num: 0},
-    3: {'title': '执行中', state: '2', num: 0},
+    0: {'title': '待确认', state: '0', num: 0},
+    1: {'title': '待审单', state: '1', num: 0},
+    2: {'title': '执行中', state: '2', num: 0},
+    3: {'title': '待收货', state: '-1', num: 0},
     4: {'title': '已完成', state: '3', num: 0},
     5: {'title': '取消订单', state: '4', num: 0}
   },

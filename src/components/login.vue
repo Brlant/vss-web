@@ -1,9 +1,9 @@
 <style lang="less" scoped="">
   @import "../assets/mixins.less";
 
-  body {
-    background: #f5f5f5
-  }
+  /*body {*/
+  /*background: #f5f5f5*/
+  /*}*/
 
   .main-card-box {
     width: 550px;
@@ -65,14 +65,14 @@
           </el-form-item>
           <el-form-item label="密码" style="position:relative" prop="password">
             <oms-input v-model="user.password" type="password"></oms-input>
-            <router-link style="position: absolute;top:-35px;right:0;" to="/forget">忘记密码?</router-link>
+            <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>
           </el-form-item>
           <el-form-item label="验证码" v-show="showCode">
             <div style="display:flex">
               <div style="width:300px;margin-right:50px">
                 <oms-input v-model="user.validateCode"></oms-input>
               </div>
-              <div style="margin-top:-20px"><img :src="codeUrl" @click="getCode" style="cursor:pointer"></div>
+              <div><img :src="codeUrl" @click="getCode" style="cursor:pointer;height: 36px"></div>
             </div>
 
           </el-form-item>
@@ -86,18 +86,29 @@
       </div>
     </el-card>
     <canvas id="backgroundCanvas"></canvas>
+    <app-footer></app-footer>
   </div>
 
 </template>
 
 <script>
   import {Auth} from '../resources';
+  import AppFooter from './common/app.footer.vue';
 
   export default {
+    components: {
+      AppFooter
+    },
     name: 'login',
     data: () => {
       return ({
-        user: {username: '798804880@qq.com', password: '123456', validateCode: '', type: 1, orgCode: 'GKSW'},
+        user: {
+          username: window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')).userAccount : '',
+          password: '',
+          validateCode: '',
+          type: 1,
+          orgCode: window.localStorage.getItem('orgCode') ? JSON.parse(window.localStorage.getItem('orgCode')) : ''
+        },
         loading: false,
         codeUrl: '',
         showCode: false,
@@ -121,6 +132,7 @@
             Auth.login(this.user).then(response => {
               let userId = window.localStorage.getItem('userId');
               this.$store.commit('initUser', response.data);
+              this.$store.commit('initCode', this.user.orgCode);
               this.$nextTick(function () {
                 if (userId === response.data.userId) {
                   let lastUrl = window.localStorage.getItem('lastUrl');
@@ -139,7 +151,7 @@
               this.$notify.error({
                 message: data.msg
               });
-              if (data.code === 101) {
+              if (data.code === 101 || data.code === 100) {
                 this.getCode();
               }
               this.btnString = '登陆';

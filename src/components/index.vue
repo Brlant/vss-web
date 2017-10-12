@@ -92,8 +92,8 @@
   }
 </style>
 <template>
-  <div class="app-body"  :style="'padding-left:'+bodyLeft">
-    <app-header :to-route="toRoute"></app-header>
+  <div class="app-body" :style="'padding-left:'+bodyLeft">
+    <app-header :to-route="toRoute" v-if="userType"></app-header>
     <div class="main-body" style="padding:0 8px;">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
@@ -114,7 +114,7 @@
 <script>
   import AppHeader from './common/app.header.vue';
   import AppFooter from './common/app.footer.vue';
-  import { Auth, DictGroup, cerpAccess, cerpAction, Access } from '../resources';
+  import { Auth, DictGroup, cerpAccess, cerpAction, Access, BaseInfo } from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
 
@@ -160,20 +160,17 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
-          Access.getRoleMenus(data.userCompanyAddress).then(res => {
-            let menuData = res.data;
-            let menuList = [];
-            res.data.menuList.forEach(item => {
-              menuList[item.id] = item.name;
-            });
-            menuData.menuList = menuList;
-            this.$store.commit('initPermList', menuData);
-          });
+          this.queryBaseInfo(data);
+          this.getRoleMenus(data);
         }).catch(() => {
           Auth.logout().then(() => {
             this.$router.replace('/login');
           });
         });
+      } else {
+        let data = window.localStorage.getItem('user');
+        data = JSON.parse(data);
+        this.getRoleMenus(data);
       }
       this.queryPerms();
       this.queryLevel();
@@ -208,6 +205,22 @@
               this.loading = false;
             }, 1000);
           });
+        });
+      },
+      getRoleMenus (data) {
+        Access.getRoleMenus(data.userCompanyAddress).then(res => {
+          let menuData = res.data;
+          let menuList = {};
+          res.data.menuList.forEach(item => {
+            menuList[item.id] = item.name;
+          });
+          menuData.menuList = menuList;
+          this.$store.commit('initPermList', menuData);
+        });
+      },
+      queryBaseInfo (data) {
+        BaseInfo.queryBaseInfo(data.userCompanyAddress).then(res => {
+          window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');
         });
       }
     }

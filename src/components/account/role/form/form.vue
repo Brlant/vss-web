@@ -35,14 +35,14 @@
       <div v-for="(menu,index) in tree">
         <el-checkbox :indeterminate="menu.isIndeterminate" v-model="menu.status"
                      @change="handleCheckAllChange(menu)">
-          {{ menuData[menu.parentId] }}
+          {{ roleMenu.menuList[menu.parentId] }}
         </el-checkbox>
         <el-checkbox-group style="margin-left: 12px" v-model="menu.checkedChildren"
                            @change="handleCheckedItemChange(menu)">
           <div class="power-style-part" v-show="menu.children.length>0">
             <div style="margin:10px 3px">
               <el-checkbox v-for="child in menu.children" :label="child.id" :key="child.id" v-model="child.checked">
-                {{ menuData[child.id] }}
+                {{ roleMenu.menuList[child.id] }}
               </el-checkbox>
             </div>
           </div>
@@ -113,7 +113,25 @@
       }
     },
     mounted: function () {
-
+      const self = this;
+      if (!this.roleMenu.tree) return;
+      this.roleMenu.tree.forEach(function (val) {
+        let temp = {
+          parentId: val.parentId,
+          status: false,
+          isIndeterminate: false,
+          children: [],
+          checkedChildren: []
+        };
+        val.children.forEach(function (val) {
+          let child = {
+            id: val,
+            checked: false
+          };
+          temp.children.push(child);
+        });
+        self.tree.push(temp);
+      });
     },
     watch: {
       formItem: function (val) {
@@ -138,9 +156,6 @@
       roleMenu (val) {
         if (!val) return;
         const self = this;
-        val.menuList.forEach(function (val) {
-          self.menuData[val.id] = val.name;
-        });
         val.tree.forEach(function (val) {
           let temp = {
             parentId: val.parentId,
@@ -163,7 +178,6 @@
     methods: {
       selectExistMenu () {// 选中已有的权限
         let self = this;
-
         self.tree.forEach(item => {// 清空已经选中的角色
           item.checkedChildren = [];
         });

@@ -11,11 +11,11 @@
       color: #bcbcbc;
     }
 
-    padding: 5px;
+    padding: 6.5px;
     .container {
       display: flex;
       align-items: center;
-      justify-content: space-between;
+      justify-content: center;
     }
     p {
       padding: 0;
@@ -39,13 +39,22 @@
       }
     }
   }
+
+  .img-police {
+    vertical-align: middle;
+    margin-left: 10px;
+  }
 </style>
 
 
 <template>
   <footer class="main-footer">
     <div class="container">
-      <p>国药控股上海生物医药有限公司版权所有</p>
+      <div class="col-xs-12 col-md-7 pl-0 pr-0 police-part">
+        <a class="mr-10" href="http://www.beianbeian.com/search/tinygroup.org" target="_blank">沪ICP备10213462号-2</a>
+        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=33010902001437" target="_blank">
+          <img src="/static/img/police_logo.png" class="img-police"> 公安部备案号 31011502006135号</a>
+      </div>
     </div>
   </footer>
 </template>

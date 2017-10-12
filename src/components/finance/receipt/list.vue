@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+  @import "../../../assets/mixins";
 
   .el-form .el-select {
     display: block;
@@ -40,6 +41,13 @@
   .content-body {
     margin: 20px 0;
   }
+
+  .tr-right {
+    cursor: pointer;
+    &:hover, &.active {
+      background: @dialog-left-bg;
+    }
+  }
 </style>
 <template>
   <div>
@@ -52,17 +60,17 @@
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
                   class="iconfont icon-search"></i> </a>
             </span>
-              <span class="pull-right" style="margin-right: 8px">
-             <perm label="accounts-receivable-add">
-               <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
-                  <i class="iconfont icon-plus"></i>
-              </a>
-             </perm>
-            </span>
+              <!--<span class="pull-right" style="margin-right: 8px">-->
+              <!--<perm label="accounts-receivable-add">-->
+              <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
+              <!--<i class="iconfont icon-plus"></i>-->
+              <!--</a>-->
+              <!--</perm>-->
+              <!--</span>-->
               所有应收款
             </h2>
             <div class="search-left-box clearfix" v-show="showTypeSearch">
-              <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+              <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!currentItem.id" class="empty-info">
               暂无信息
@@ -72,7 +80,7 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    应收款总额 ￥{{item.payableTotal }}
+                    应收款总额 <span v-show="item.payableTotal"> ￥{{item.payableTotal }}</span>
                   </div>
                   <div>
                     {{item.payerName }}
@@ -86,78 +94,115 @@
           </div>
         </div>
         <div class="d-table-right">
-            <span class="pull-right" style="margin-right: 8px">
-               <perm label="accounts-receivable-detail-add">
-                 <a href="#" class="btn-circle" @click.stop.prevent="add">
-                    <i class="iconfont icon-plus"></i>
-                </a>
-               </perm>
-            </span>
+          <!--<span class="pull-right" style="margin-right: 8px">-->
+          <!--<perm label="accounts-receivable-detail-add">-->
+          <!--<a href="#" class="btn-circle" @click.stop.prevent="add">-->
+          <!--<i class="iconfont icon-plus"></i>-->
+          <!--</a>-->
+          <!--</perm>-->
+          <!--</span>-->
           <div v-if="!currentItem.id">
             <div class="empty-info">暂无信息</div>
           </div>
           <div v-else="" class="d-table-col-wrap">
             <div class="content-body clearfix">
-              <span style="font-size: 14px">【应收款详情】</span>
               <el-row>
                 <oms-row label="POV" :span="5">
                   {{currentItem.payerName}}
                 </oms-row>
                 <oms-row label="应收款总额" :span="5">
-                  ￥{{currentItem.payableTotal}}
+                  <span v-show="currentItem.payableTotal">￥{{currentItem.payableTotal}}</span>
                 </oms-row>
               </el-row>
             </div>
-            <span style="font-size: 14px">【应收款明细】</span>
-            <table class="table "
+            <div style="overflow: hidden">
+              <span style="font-size: 14px" class="pull-left">【应收款明细】</span>
+              <span class="pull-right" style="margin-top: 8px">
+               <span class="btn-search-toggle open" v-show="showSearch">
+                  <single-input v-model="filterRights.keyWord" placeholder="请输入订单号搜索"
+                                :showFocus="showSearch"></single-input>
+                  <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+               </span>
+               <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
+                  <i class="iconfont icon-search"></i>
+               </a>
+            </span>
+            </div>
+            <table class="table"
                    style="margin-top: 10px">
               <thead>
               <tr>
-                <th>订单号ID</th>
+                <th>订单号</th>
                 <th>单据金额</th>
-                <th>剩余应收金额</th>
+                <th>实收金额</th>
                 <th>创建时间</th>
+                <th>操作</th>
               </tr>
               </thead>
               <tbody>
               <tr v-if="loadingData">
-                <td colspan="3">
+                <td colspan="5">
                   <oms-loading :loading="loadingData"></oms-loading>
                 </td>
               </tr>
               <tr v-else-if="!receiptDetails.length">
-                <td colspan="3">
+                <td colspan="5">
                   <div class="empty-info">
                     暂无信息
                   </div>
                 </td>
               </tr>
-              <tr v-else="" v-for="row in receiptDetails">
+              <tr v-else="" v-for="row in receiptDetails" @click="showDetail(row)" class="tr-right"
+                  :class="{active:orderId === row.orderId}">
                 <td>
-                  {{row.orderId}}
+                  {{row.orderNo}}
                 </td>
                 <td>
-                  ￥{{row.billAmount}}
+                    <span v-show="row.billAmount">
+                    ￥{{row.billAmount}}
+                  </span>
                 </td>
                 <td>
-                  ￥{{row.unpaidAmount}}
+                  <span v-show="row.prepaidAccounts">
+                    <span v-show="row.prepaidAccounts"> ￥{{row.prepaidAccounts}}</span>
+                  </span>
                 </td>
                 <td>
                   {{row.createTime | date }}
                 </td>
+                <td>
+                  <perm label="accounts-receivable-add">
+                  <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实收金额</a>
+                  </perm>
+                </td>
               </tr>
               </tbody>
             </table>
+            <div class="text-center" v-show="pager.count>pager.pageSize">
+              <el-pagination layout="prev, pager, next"
+                             :total="pager.count"
+                             :pageSize="pager.pageSize"
+                             @current-change="getDetail"
+                             :current-page="pager.currentPage">
+              </el-pagination>
+            </div>
           </div>
         </div>
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form @change="onSubmit" :currentItem="currentItem" :index="index" @refreshDetails="refreshDetails"
+      <add-form @change="onSubmit" :formItem="form" :index="index" @refreshDetails="refreshDetails"
                 @close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showLeft" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <left-form @change="onSubmit" :index="index" @close="resetRightBox" @refresh="refresh"></left-form>
+    </page-right>
+
+    <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
+                partClass="pr-no-animation">
+      <show-detail @change="onSubmit" :orderId="orderId" :currentDetail="currentDetail" :index="index"
+                   @close="resetRightBox"
+                   @refresh="refresh"></show-detail>
     </page-right>
   </div>
 
@@ -166,17 +211,22 @@
   import { receipt } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
-
+  import showDetail from './show.order.out.vue';
   export default {
-    components: {addForm, leftForm},
+    components: {addForm, leftForm, showDetail},
     data: function () {
       return {
         loadingData: false,
         showRight: false,
         showLeft: false,
+        showPart: false,
         showTypeSearch: false,
+        showSearch: false,
         showTypeList: [],
         filters: {
+          keyWord: ''
+        },
+        filterRights: {
           keyWord: ''
         },
         action: 'add',
@@ -192,9 +242,12 @@
           pageSize: 20,
           totalPage: 1
         },
+        form: {},
         currentItem: {}, //  左边列表点击时，添加样式class
         receiptDetails: [], // 疫苗列表
-        index: 0
+        index: 0,
+        orderId: '',
+        currentDetail: {}
       };
     },
     computed: {
@@ -215,6 +268,12 @@
         },
         deep: true
       },
+      filterRights: {
+        handler: function () {
+          this.getDetail(1);
+        },
+        deep: true
+      },
       user (val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
@@ -225,6 +284,7 @@
       resetRightBox: function () {
         this.showRight = false;
         this.showLeft = false;
+        this.showPart = false;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
@@ -244,7 +304,7 @@
             this.showTypeList = res.data.list;
             if (this.showTypeList.length !== 0) {
               this.currentItem = res.data.list[0];
-              this.getDetail();
+              this.getDetail(1);
             } else {
               this.currentItem = Object.assign({'id': ''});
             }
@@ -261,11 +321,15 @@
         this.getDetail();
         this.resetRightBox();
       },
-      getDetail: function () {
+      getDetail: function (pageNo) {
         this.receiptDetails = {};
         if (!this.currentItem.id) return;
         this.loadingData = true;
-        receipt.queryDetail(this.currentItem.id).then(res => {
+        let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        }, this.filterRights);
+        receipt.queryDetail(this.currentItem.id, params).then(res => {
           this.loadingData = false;
           this.receiptDetails = res.data.list;
         });
@@ -275,7 +339,12 @@
       },
       showType: function (item) {
         this.currentItem = item;
-        this.getDetail();
+        this.getDetail(1);
+      },
+      showDetail (item) {
+        this.orderId = item.orderId;
+        this.showPart = true;
+        this.currentDetail = item;
       },
       add () {
         if (!this.currentItem.id) {
@@ -288,6 +357,10 @@
       },
       addDetail () {
         this.showLeft = true;
+      },
+      edit (row) {
+        this.form = row;
+        this.showRight = true;
       },
       onSubmit () {
         this.getOrgsList();

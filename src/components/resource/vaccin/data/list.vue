@@ -99,7 +99,7 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <perm label="新增疫苗资料">
+                  <perm label="vaccine-info-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
                         <i class="iconfont icon-plus"></i>
                       </a>
@@ -144,12 +144,12 @@
             <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
-                  <perm label="org-relation-edit">
+                  <perm label="vaccine-info-update">
                     <el-button @click="edit"><i class="iconfont icon-edit"></i> 编辑</el-button>
                     <el-button @click="enableRelation" v-show="data.status == '0'"><i class="iconfont icon-start"></i> 启用</el-button>
                     <el-button @click="forbid" v-show="data.status == '1' "><i
                       class="iconfont icon-stop"></i> 停用</el-button>
-                    <perm label="org-goods-delete">
+                    <perm label="vaccine-info-delete">
                        <el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>
                     </perm>
                   </perm>
@@ -187,8 +187,14 @@
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
-                  <goods-row label="单价" :span="8">
-                    ¥ {{ data.unitPrice | formatMoney}}
+                  <goods-row label="中标价格" :span="8">
+                    ¥ {{ data.bidPrice | formatMoney}}
+                  </goods-row>
+                  <goods-row label="采购价格" :span="12">
+                    ¥ {{ data.procurementPrice | formatMoney}}
+                  </goods-row>
+                  <goods-row label="销售价格" :span="12">
+                    ¥ {{ data.sellPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="库存上限" :span="8">
                     {{ data.inventoryUpperLimit }}
@@ -443,7 +449,9 @@
           goodsId: '',
           goodsIsCombination: false,
           goodsNo: '',
-          unitPrice: '',
+          bidPrice: '',
+          procurementPrice: '',
+          sellPrice: '',
           valuationFlag: false,
           storageConditionId: '',
           inventoryLowerLimit: null,
@@ -452,7 +460,6 @@
         this.showRight = true;
         this.combinationList = [];
         this.$notify.info({
-          duration: 20000,
           message: '添加疫苗时，只能添加通过审核的、与经营范围保持一致的疫苗'
         });
       },

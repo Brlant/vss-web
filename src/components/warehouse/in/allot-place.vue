@@ -185,11 +185,9 @@
   import basicInfo from './basic-info.vue';
   import echartPie from '@/components/common/echart.pie.vue';
   import {InWork, http} from '@/resources';
-  import ElCol from 'element-ui/packages/col/src/col';
 
   export default {
     components: {
-      ElCol,
       basicInfo, echartPie
     },
     props: {

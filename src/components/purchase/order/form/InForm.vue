@@ -246,7 +246,7 @@
               <el-select type="text" v-model="form.transportationMeansId" @change="changeTransportationMeans"
                          placeholder="请选择物流方式">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in currentTransportationMeans"></el-option>
+                           v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="销售厂商">
@@ -610,8 +610,7 @@
         this.form.orgId = user.userCompanyAddress;
         this.filterOrg();
         this.filterLogistics();
-        this.searchProduct();
-        this.checkLicence(this.form.orgId, '货主');
+        this.checkLicence(this.form.orgId);
       },
       form: {
         handler: 'autoSave',
@@ -636,6 +635,8 @@
         let oldForm = window.localStorage.getItem(this.saveKey);
         if (oldForm) {
           this.form = Object.assign({}, this.form, JSON.parse(oldForm));
+          this.form.logisticsCentreId = this.form.logisticsCentreId
+            ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
       },
       resetForm: function () {// 重置表单
@@ -671,13 +672,13 @@
           this.form.supplierId = '';
           return;
         }
-        let relation = '';
-        if (bizType === '0') relation = '1';
-        if (bizType === '1') relation = '0';
-        if (!relation) return;
+//        let relation = '';
+//        if (bizType === '0') relation = '0';
+//        if (bizType === '1') relation = '1';
+//        if (!relation) return;
         let params = {
           keyWord: query,
-          relation: relation
+          relation: '1'
         };
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
@@ -759,6 +760,7 @@
       changeSupplier: function (val) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.transportationAddress = '';
+          this.product.orgGoodsId = '';
         }
         if (this.form.transportationMeansId === '2') {
           this.orgList.forEach(item => {
@@ -773,7 +775,8 @@
             }
           });
         }
-        this.checkLicence(val, '来源单位');
+        this.searchProduct();
+        this.checkLicence(val);
       },
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
@@ -782,9 +785,9 @@
           this.form.supplierId = '';
         }
       },
-      checkLicence: function (val, name) {// 校验单位和货主证照是否过期
+      checkLicence: function (val) {// 校验单位和货主证照是否过期
         if (!val || !this.action) return;
-        http.get('order-licence/org/' + val + '/overdue').then(res => {
+        http.get('/order-licence/org/' + val + '/overdue').then(res => {
           if (!res.data.length) return;
           let msg = '';
           res.data.forEach(item => {
@@ -794,17 +797,22 @@
           this.$notify({
             duration: 2000,
             title: '证照信息过期',
-            message: name + msg + '证照信息已过期,无法创建订单',
+            message: msg + '证照信息已过期,无法创建订单',
             type: 'error'
           });
         });
       },
       searchProduct: function (query) {
+        if (!this.form.orgId || !this.form.supplierId) {
+          this.searchProductList = [];
+          return;
+        }
         let params = {
           orgId: this.form.orgId,
-          keyWord: query
+          keyWord: query,
+          factoryId: this.form.supplierId
         };
-        http.get('org/goods/valid', {params: params}).then(res => {
+        http.get('/org/goods/valid', {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
@@ -851,7 +859,7 @@
         this.searchProductList.forEach(item => {
           if (item.orgGoodsDto.id === OrgGoodsId) {
             this.product.fixInfo = item.orgGoodsDto;
-            this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.unitPrice.toString());
+            this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.procurementPrice.toString());
             this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
             this.accessoryList = item.list;
             this.form.detailDtoList.forEach((detailItem) => {

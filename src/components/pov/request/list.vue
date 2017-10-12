@@ -98,21 +98,21 @@
           <div v-else="" class="d-table-col-wrap">
             <h2 class="clearfix">
               <span class="pull-right">
-                <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
-                    <a href="#" @click.prevent="audited()" class="margin-left">
-                    <i class="iconfont icon-verify"></i> 审核
-                  </a>
-                </perm>
-                <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status !== 4">
-                  <a href="#" @click.stop.prevent="cancel()">
-                    <i class="iconfont icon-stop"></i>取消
-                  </a>
-                </perm>
+                <el-button-group>
+                    <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
+                      <el-button @click="audited()"><i
+                        class="iconfont icon-verify"></i>审核</el-button>
+                    </perm>
+                    <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
+                      <el-button @click="cancel()"><i
+                        class="iconfont icon-verify"></i>取消</el-button>
+                    </perm>
+                </el-button-group>
               </span>
             </h2>
             <div class="content-body clearfix">
               <el-row>
-                <el-col :span="12">
+                <el-col :span="8">
                   <oms-row label="要货申请ID">
                     {{currentOrder.id }}
                   </oms-row>
@@ -126,7 +126,7 @@
                     {{currentOrder.warehouseName}}
                   </oms-row>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="16">
                   <oms-row label="申请人">
                     {{currentOrder.applyManName}}
                   </oms-row>
@@ -139,6 +139,9 @@
                   <oms-row label="关联CDC销售订单">
                     {{currentOrder.orderId}}
                   </oms-row>
+                  <oms-row label="需求单状态">
+                    {{ formatStatus(currentOrder.status)}}
+                  </oms-row>
                 </el-col>
               </el-row>
             </div>
@@ -147,7 +150,7 @@
               <thead>
               <tr>
                 <th>要货申请ID</th>
-                <th>货品ID</th>
+                <th>货品名称</th>
                 <th>单件</th>
                 <th>申请数量</th>
                 <th>申请金额</th>
@@ -159,7 +162,7 @@
                   {{row.id}}
                 </td>
                 <td>
-                  {{row.goodsId}}
+                  {{row.goodsName}}
                 </td>
                 <td>
                   {{row.price}}
@@ -258,6 +261,9 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
+        this.showTypeList = [];
+        this.currentItem = {};
+        this.currentOrder = {};
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
         this.typePager.currentPage = pageNo;
@@ -291,7 +297,8 @@
           this.requestType[1].num = res.data['pending-audit'];
           this.requestType[2].num = res.data['audited'];
           this.requestType[3].num = res.data['assigned'];
-          this.requestType[4].num = res.data['canceled'];
+          this.requestType[4].num = res.data['create-wave'];
+          this.requestType[5].num = res.data['canceled'];
         });
       },
       getDetail: function () {
@@ -311,6 +318,15 @@
       checkStatus (item, key) {
         this.activeStatus = key;
         this.filters.status = item.status;
+      },
+      formatStatus (index) {
+        let status = -1;
+        for (let key in this.requestType) {
+          if (this.requestType[key].status === index) {
+            status = this.requestType[key].title;
+          }
+        }
+        return status;
       },
       cancel () {
         this.$confirm('是否取消"' + this.currentOrder.id + '" 申请单?', '', {

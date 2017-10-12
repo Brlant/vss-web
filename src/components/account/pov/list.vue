@@ -100,7 +100,9 @@
                 </el-select>
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
-                <el-button type="primary" @click="bindDistrict">绑定POV</el-button>
+                <perm label="erp-bind-pov-add">
+                  <el-button type="primary" @click="bindDistrict">绑定区县级POV</el-button>
+                </perm>
               </el-col>
               <el-col :span="11" class="text-right">
                 <span>
@@ -142,7 +144,7 @@
                       </span>
                   </el-col>
                   <el-col :span="4" class="R pt10">
-                    <perm label="show">
+                    <perm label="erp-bind-pov-delete">
                       <a href="#" @click.prevent="deleteItem(item)"><i
                         class="iconfont icon-delete"></i> 删除</a>
                     </perm>
@@ -259,7 +261,7 @@
         // 根据参数，获取单位信息
         let params = {
           keyWord: query,
-          relation: '2'
+          relation: '0'
         };
         BaseInfo.queryOrgByValidReation(this.cdcItem.subordinateId, params).then(res => {
           this.orgList = res.data;

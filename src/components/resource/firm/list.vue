@@ -121,8 +121,8 @@
         <div class="d-table-left">
           <h2 class="header" style="overflow: hidden">
             厂商资料
-                <span class="pull-right">
-                   <perm label="org-relation-add">
+            <span class="pull-right">
+                   <perm label="manufacturer-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType"><i
                         class="iconfont icon-plus"></i> </a>
                    </perm>
@@ -165,20 +165,26 @@
             <h2 class="clearfix">
               <span class="pull-right">
                  <!--<perm label="org-relation-edit">-->
-                   <!--<a href="#" @click.prevent="edit" class="margin-left"><i-->
-                     <!--class="iconfont icon-edit"></i>编辑</a>-->
-                    <!--<a href="#" @click.prevent="forbid" class="margin-left"-->
-                       <!--v-show="businessRelationItem.status  == '0' "><i-->
-                      <!--class="iconfont icon-forbidden"></i>停用</a>-->
-                    <!--<a href="#" @click.prevent="enableRelation" class="margin-left"-->
-                       <!--v-show="businessRelationItem.status == '1' "><i-->
-                      <!--class="iconfont icon-start"></i>启用</a>-->
-                 <!--</perm>-->
+                <!--<a href="#" @click.prevent="edit" class="margin-left"><i-->
+                <!--class="iconfont icon-edit"></i>编辑</a>-->
+                <!--<a href="#" @click.prevent="forbid" class="margin-left"-->
+                <!--v-show="businessRelationItem.status  == '0' "><i-->
+                <!--class="iconfont icon-forbidden"></i>停用</a>-->
+                <!--<a href="#" @click.prevent="enableRelation" class="margin-left"-->
+                <!--v-show="businessRelationItem.status == '1' "><i-->
+                <!--class="iconfont icon-start"></i>启用</a>-->
+                <!--</perm>-->
                 <el-button-group>
-                  <perm label="org-relation-edit">
-                    <el-button @click="edit">编辑</el-button>
-                    <el-button @click="forbid"  v-show="businessRelationItem.status  == '0' ">停用</el-button>
-                    <el-button @click="enableRelation" v-show="businessRelationItem.status == '1' ">启用</el-button>
+                  <perm label="manufacturer-update">
+                    <el-button @click="edit"><i class="iconfont icon-edit"></i>编辑</el-button>
+                  </perm>
+                  <perm label="manufacturer-stop">
+                      <el-button @click="forbid" v-show="businessRelationItem.status  == '0' "><i
+                        class="iconfont icon-stop"></i>停用</el-button>
+                  </perm>
+                  <perm label="manufacturer-start">
+                        <el-button @click="enableRelation" v-show="businessRelationItem.status == '1' "><i
+                          class="iconfont icon-start"></i>启用</el-button>
                   </perm>
                 </el-button-group>
               </span>
@@ -357,9 +363,10 @@
 
 </template>
 <script>
-  import { BaseInfo, Vendor} from '@/resources';
+  import { BaseInfo, Vendor } from '@/resources';
   import utils from '@/tools/utils';
   import photoShow from './photo/photo.show.vue';
+
   export default {
     components: {photoShow},
     data: function () {

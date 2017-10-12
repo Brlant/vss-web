@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">新增应付账单</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">新增物流费用</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -234,23 +234,13 @@
       </div>
       <div class="content-right min-gutter">
         <div class="hide-content show-content">
-          <el-form ref="form" :rules="rules" :model="form"
+          <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="选择订单" prop="orderId">
-              <el-select placeholder="请选择订单" v-model="form.orderId" filterable remote clearable
-                         @click.native="queryOrders('')"
-                         :remote-method="queryOrders">
-                <el-option :label="item.orderNo" :value="item.id" :key="item.id" v-for="item in orders">
-                  <span class="pull-left">订单号{{ item.orderNo }}</span>
-                  <span class="pull-right">合计 ￥{{ item.totalAmount }}</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="单据金额" prop="billAmount">
-              <el-input v-model="form.billAmount" placeholder="请输入单据金额"></el-input>
-            </el-form-item>
-            <el-form-item label="剩余金额" prop="unpaidAmount">
-              <el-input v-model="form.unpaidAmount" placeholder="请输入剩余金额"></el-input>
+            <el-form-item label="物流费用" prop="price">
+              <oms-input type="text" placeholder="请输入物流费用" v-model="form.price" :min="0"
+                         @blur="formatPrice">
+                <template slot="prepend">¥</template>
+              </oms-input>
             </el-form-item>
           </el-form>
         </div>
@@ -259,55 +249,62 @@
   </div>
 </template>
 <script>
-  import { receipt, Order } from '@/resources';
+  import {logisticsCost} from '../../../resources';
+  import utils from '../../../tools/utils';
+
   export default {
-    props: {
-      currentItem: Object
-    },
     data () {
       return {
         form: {
-          orderId: '',
-          billAmount: '',
-          unpaidAmount: '',
-          accountsPayableId: this.currentItem.id
+          orgId: '',
+          price: ''
         },
         rules: {
-          orderId: {required: true, message: '请选择订单', trigger: 'change'},
-          billAmount: {required: true, message: '请输入单据金额', trigger: 'blur'},
-          unpaidAmount: {required: true, message: '请输入剩余金额', trigger: 'blur'}
-        },
-        orders: [] // 订单列表
+          price: {required: true, message: '请输入物流费用', trigger: 'blur'}
+        }
       };
     },
+    props: ['formItem', 'formType'],
+    watch: {
+      formItem: function () {
+        this.form = Object.assign({}, this.formItem);
+      }
+    },
     methods: {
-      queryOrders (query) {
-        let params = {
-          keyWord: query,
-          type: 0,
-          bizType: '0',
-          supplierId: this.currentItem.remitteeId
-        };
-        Order.query(params).then(res => {
-          this.orders = res.data.list;
-        });
+      formatPrice: function () {// 格式化单价，保留两位小数
+        this.form.price = utils.autoformatDecimalPoint(this.form.price);
       },
       onSubmit () {
-        this.$refs['form'].validate((valid) => {
+        this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;
           }
-          receipt.addDetail(this.currentItem.id, this.form).then(() => {
-            this.$notify.success({
-              message: '应付款详情添加成功'
+          this.form.orgId = this.$store.state.user.userCompanyAddress;
+          if (this.formType === 'add') {
+            logisticsCost.save(this.form).then(() => {
+              this.$notify.success({
+                message: '添加物流费用成功'
+              });
+              this.$refs['d-form'].resetFields();
+              this.$emit('close');
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '添加物流费用失败'
+              });
             });
-            this.$refs['form'].resetFields();
-            this.$emit('refreshDetails');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '应付款详情添加失败'
+          } else {
+            logisticsCost.update(this.form.id, this.form).then(() => {
+              this.$notify.success({
+                message: '修改物流费用成功'
+              });
+              this.$refs['d-form'].resetFields();
+              this.$emit('close');
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '修改物流费用失败'
+              });
             });
-          });
+          }
         });
       }
     }

@@ -122,7 +122,7 @@
           photoId: photo.attachmentId
         };
         if (user.userId) {
-          http.put('oms/user/' + user.userId + '/icon', obj).then(() => {
+          http.put('/oms/user/' + user.userId + '/icon', obj).then(() => {
             this.user.userIcon = photo.url;
             this.$store.commit('initUser', this.user);
             this.$notify.success({

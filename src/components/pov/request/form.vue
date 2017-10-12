@@ -209,7 +209,7 @@
       text-overflow: ellipsis;
       color: rgb(72, 94, 106);
       height: auto;
-      width: 680px;
+      width: 530px;
       line-height: 1.5;
       box-sizing: border-box;
       cursor: pointer;
@@ -278,9 +278,15 @@
                            :label="item.goodsName"
                            :value="item.orgGoodsId">
                   <div>
-                    <span class="pull-left">{{item.goodsName}}</span>
-                    <span class="select-other-info pull-left">{{item.goodsNo}}</span>
-                    <span class="select-other-info pull-right">{{ item.factoryName }}</span>
+                    <div>
+                      <span class="pull-left">{{item.goodsName}}</span>
+                    </div>
+                    <div class="clearfix">
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.factoryName">销售厂商</span>  {{ item.factoryName }}</span>
+                    </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->
                     <!--组合-->
@@ -305,8 +311,8 @@
                   <oms-row label="疫苗编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
-                  <oms-row label="生产厂商" :span="8">
-                    {{product.fixInfo.goodsDto.factoryName}}
+                  <oms-row label="销售厂商" :span="8">
+                    {{product.fixInfo.salesFirmName}}
                   </oms-row>
                   <oms-row label="批准文号" :span="8">
                     {{product.fixInfo.goodsDto.approvalNumber}}
@@ -321,7 +327,7 @@
                        <span style="margin-right: 10px">{{acce.name}}</span>
                        <span style="margin-right: 10px" v-show="acce.unitPrice">¥ {{ acce.unitPrice }}</span>
                        <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
-                       <span style="margin-right: 10px">{{ acce.accessoryGoods.factoryName }}</span>
+                       <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
                 </el-col>
               </el-row>
@@ -457,6 +463,7 @@
         if (!val) return;
         this.searchWarehouses();
         this.queryOnCDCs();
+        this.currentList = [];
       }
     },
     methods: {
@@ -466,7 +473,6 @@
       changeType () {
         this.$refs['orderGoodsForm'].resetFields();
         this.accessoryList = [];
-        this.filterProducts();
         this.form.cdcId = this.cdcs.filter(f => f.level === this.form.type)[0] && this.cdcs.filter(f => f.level === this.form.type)[0].orgId || '';
         this.searchProduct();
       },
@@ -491,7 +497,8 @@
         let user = this.$store.state.user;
         Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress}).then(res => {
           this.warehouses = res.data || [];
-          this.form.warehouseId = this.warehouses.filter(i => i.default)[0].id;
+          let fs = this.warehouses.filter(i => i.default)[0];
+          this.form.transportationAddress = fs && fs.id || '';
         });
       },
       filterProducts: function () {
@@ -532,13 +539,11 @@
         }
         http.get('/org/goods/' + OrgGoodsId).then(res => {
           this.currentList.push(res.data);
-          this.$nextTick(function () {
-            this.filterProducts();
-          });
           this.currentList.forEach(item => {
             if (item.orgGoodsDto.id === OrgGoodsId) {
               this.product.fixInfo = item.orgGoodsDto;
-              this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.unitPrice.toString());
+              let sellPrice = item.orgGoodsDto.sellPrice;
+              this.product.unitPrice = utils.autoformatDecimalPoint(sellPrice ? sellPrice.toString() : '');
               this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
               this.accessoryList = item.list;
               this.form.detailDtoList.forEach((detailItem) => {
@@ -576,6 +581,7 @@
               });
             }
           });
+          this.searchProduct();
           this.$nextTick(function () {
             this.product = {
               'amount': null,
@@ -590,6 +596,7 @@
             };
             this.$refs['orderGoodsForm'].resetFields();
             this.accessoryList = [];
+            this.currentList = [];
           });
         });
       },
@@ -636,7 +643,6 @@
               type: 'success'
             });
             self.$emit('change', res.data);
-            this.resetForm();
             this.$nextTick(() => {
               this.doing = false;
               this.$emit('close');
@@ -656,6 +662,7 @@
         this.$refs['orderGoodsForm'].resetFields();
         this.$refs['orderAddForm'].resetFields();
         this.form.detailDtoList = [];
+        this.currentList = [];
       }
     }
   };

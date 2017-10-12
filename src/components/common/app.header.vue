@@ -190,7 +190,7 @@
         </div>
         <div class="top-right">
           <div class="top-user">
-            <el-dropdown trigger="click" @command="changeSkin">
+            <!--<el-dropdown trigger="click" @command="changeSkin">
               <div class="el-dropdown-link top-right-item">
                 <i class="el-icon-setting"></i>
               </div>
@@ -200,7 +200,7 @@
                   {{skin.name}}
                 </el-dropdown-item>
               </el-dropdown-menu>
-            </el-dropdown>
+            </el-dropdown>-->
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
                 <img v-if="user.userIcon" :src="user.userIcon">
@@ -234,12 +234,12 @@
       <div class="menu-wrap" :style="isCollapse?'':'overflow-y:auto;'">
         <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="true">
           <template v-for="item in menu">
-            <el-submenu :index="item.path" :key="menu.path" v-if="item.children.length>0">
+            <el-submenu :index="item.path" :key="menu.path" v-if="item.subMenu.length>0">
               <template slot="title">
                 <i :class="'iconfont icon-'+item.meta.icon"></i> <span
                 slot="title">{{item.meta.title}}</span>
               </template>
-              <el-menu-item :index="child.path" v-for="child in item.children" :key="child.path">
+              <el-menu-item :index="child.path" v-for="child in item.subMenu" :key="child.path">
                 {{child.meta.title}}
               </el-menu-item>
             </el-submenu>
@@ -279,7 +279,7 @@
         logo_pic: logo_pic,
         isCollapse: false,
         skinList: [
-          {color: '#fff', background: '#607D8B', name: '天空灰'},
+          {color: '#fff', background: '#3399cc', name: '天空灰'},
           {color: '#333', background: '#fff', name: '透明白'},
           {color: '#fff', background: '#9c27b0', name: '贵族紫'},
           {color: '#fff', background: '#3f51b5', name: '工业蓝'},
@@ -296,24 +296,13 @@
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
-        /*
-        let menus = [];
-        let menuShow = [];
-        menus.forEach(item => {
-          if (this.$store.state.permissions.indexOf(item.perm) !== -1) {
-            menuShow.push(item);
+        let menuArr = route[0].children.filter(item => item.meta.moduleId && (item.meta.perm === 'show' ||
+          this.$store.state.permissions.includes(item.meta.perm)));
+        menuArr.forEach(item => {
+          item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
           }
-        });
-        return menuShow;
-        */
-//        let menuArr = route[0].children.filter(item => item.meta.moduleId && item.meta.perm === 'show');
-//        menuArr.forEach(item => {
-//            item.children = item.children.filter(child => child.meta.perm === 'show');
-//          }
-//        );
-        let menuArr = route[0].children.filter(item => item.meta.moduleId);
+        );
         return menuArr;
-
       },
       activePath: function () {
         return this.$route.path;
@@ -346,7 +335,7 @@
         window.localStorage.setItem('lastUrl', window.location.href);
         Auth.logout().then(() => {
           window.localStorage.setItem('userId', this.$store.state.user.userId);
-          window.localStorage.removeItem('user');
+//          window.localStorage.removeItem('user');
           return this.$router.replace('/login');
         });
       },
@@ -364,18 +353,21 @@
       }
     },
     mounted: function () {
-      let skin = window.localStorage.getItem('skin');
+      this.skin = this.skinList[0];
+      // let skin = window.localStorage.getItem('skin');
       let isCollapse = window.localStorage.getItem('collapse');
       if (isCollapse) {
         isCollapse = parseInt(isCollapse, 10);
       }
       this.isCollapse = !!isCollapse;
       this.$store.commit('changeBodyLeft', this.isCollapse);
+      /*
       if (skin) {
         this.skin = JSON.parse(skin);
       } else {
         this.skin = this.skinList[0];
       }
+      */
 
     }
   };

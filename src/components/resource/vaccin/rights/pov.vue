@@ -39,8 +39,8 @@
         <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
           <h2 class="header">
           <span class="pull-right">
-              <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                class="iconfont icon-search"></i> </a>
+            <a href="#" class="btn-circle" @click.prevent="searchType"><i
+              class="iconfont icon-search"></i> </a>
           </span>
             POV列表
           </h2>
@@ -132,7 +132,7 @@
                 {{ row.time | date }}
               </td>
               <td>
-                <perm label="vaccine-info-delete">
+                <perm label="vaccine-authorization-delete">
                   <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="iconfont icon-delete"></i>删除</a>
                 </perm>
               </td>

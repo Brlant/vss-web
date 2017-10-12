@@ -1,0 +1,260 @@
+<style lang="less" scoped="">
+  .advanced-query-form {
+    .el-select {
+      display: block;
+      position: relative;
+    }
+    .el-date-editor.el-input {
+      width: 100%;
+    }
+    padding-top: 20px;
+  }
+
+  .R {
+    word-wrap: break-word;
+    word-break: break-all;
+  }
+
+  .pt {
+    padding-top: 15px;
+  }
+
+  .opera-btn-group {
+
+    border: 2px solid #eeeeee;
+    margin: 10px -5px;
+    .opera-icon {
+      line-height: 50px;
+      height: 50px;
+      padding: 0 10px;
+      border-bottom: 2px solid #eeeeee;
+    }
+    .switching-icon {
+      cursor: pointer;
+      .el-icon-arrow-up {
+        transition: all .5s ease-in-out;
+      }
+    }
+    &.up {
+      .advanced-query-form {
+        display: none;
+      }
+      .opera-icon {
+        border-bottom: 0;
+      }
+      .el-icon-arrow-up {
+        transform: rotate(180deg);
+      }
+    }
+  }
+
+  .search-input {
+    .el-select {
+      display: block;
+      position: relative;
+    }
+    .el-date-editor.el-input {
+      width: 100%;
+    }
+  }
+</style>
+<template>
+  <div class="order-page">
+    <div class="container">
+      <div class="opera-btn-group" :class="{up:!showSearch}">
+        <div class="opera-icon">
+          <span class="">
+            <i class="iconfont icon-search"></i> 筛选查询
+          </span>
+          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+            <i class="el-icon-arrow-up"></i>
+            <span v-show="showSearch">收起筛选</span>
+            <span v-show="!showSearch">展开筛选</span>
+          </span>
+        </div>
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+          <el-row>
+            <el-col :span="8">
+              <oms-form-row label="订单号" :span="6">
+                <el-input v-model="filters.orderNo"></el-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="CDC货品" :span="6">
+                <el-select filterable remote placeholder="请输入关键字CDC货品" :remote-method="getGoodsList" :clearable="true"
+                           v-model="filters.orgGoodsId">
+                  <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
+                             v-for="item in goodses"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="销售厂商" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
+                           v-model="filters.factoryId">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="到货时间" :span="6">
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="aryTime"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <el-row class="text-right">
+                <el-button type="primary" @click="searchInOrder">查询</el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+              </el-row>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+      <div class="order-list clearfix " style="margin-top: 10px">
+        <el-row class="order-list-header" :gutter="10">
+          <el-col :span="5">货品</el-col>
+          <el-col :span="4">采购订单号</el-col>
+          <el-col :span="5">疫苗厂商</el-col>
+          <el-col :span="3">采购数量</el-col>
+          <el-col :span="3">到货数量</el-col>
+          <el-col :span="4">到货时间</el-col>
+        </el-row>
+        <el-row v-if="loadingData">
+          <el-col :span="24">
+            <oms-loading :loading="loadingData"></oms-loading>
+          </el-col>
+        </el-row>
+        <el-row v-else-if="bills.length == 0">
+          <el-col :span="24">
+            <div class="empty-info">
+              暂无信息
+            </div>
+          </el-col>
+        </el-row>
+        <div v-else="" class="order-list-body">
+          <div class="order-list-item order-list-item-bg" v-for="item in bills" :key="">
+            <el-row>
+              <el-col :span="5" class="R pt10">
+                {{ item.goodsName }}
+              </el-col>
+              <el-col :span="4" class="R pt10">
+                {{ item.orderNo }}
+              </el-col>
+              <el-col :span="5" class="R pt10">
+                {{ item.factoryName }}
+              </el-col>
+              <el-col :span="3" class="R pt10">
+                {{ item.purchaseCount }}
+              </el-col>
+              <el-col :span="3" class="R pt10">
+                {{ item.receiptCount }}
+              </el-col>
+              <el-col :span="4" class="R pt10">
+                {{ item.arriveTime | date }}
+              </el-col>
+            </el-row>
+          </div>
+        </div>
+      </div>
+      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="queryBillPage"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
+    </div>
+  </div>
+</template>
+<script>
+  import { vaccineBills, BaseInfo, Vaccine } from '@/resources';
+
+  export default {
+    data () {
+      return {
+        loadingData: true,
+        showSearch: false,
+        bills: [],
+        filters: {
+          orderNo: '',
+          factoryId: '',
+          orgGoodsId: '',
+          arriveStartTime: '',
+          arriveEndTime: ''
+        },
+        aryTime: '',
+        factories: [], // 货主列表,
+        orgId: '',
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 15
+        },
+        goodses: []
+      };
+    },
+    mounted () {
+      this.queryBillPage(1);
+    },
+    methods: {
+      queryBillPage (pageNo) {
+        this.pager.currentPage = pageNo;
+        let params = {};
+        this.loadingData = true;
+        params = Object.assign({}, this.filters, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        });
+        vaccineBills.query(params).then(res => {
+          this.bills = res.data.list || [];
+          this.pager.count = res.data.count;
+          this.loadingData = false;
+        });
+      },
+      filterFactory (query) { // 查询厂商
+        let orgId = this.$store.state.user.userCompanyAddress;
+        let params = {
+          keyWord: query,
+          relation: '1'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.factories = res.data;
+        });
+      },
+      getGoodsList: function (query) {
+        let params = Object.assign({}, {
+          keyWord: query,
+          deleteFlag: false
+        });
+        Vaccine.query(params).then(res => {
+          this.goodses = res.data.list;
+        });
+      },
+      searchInOrder: function () {// 搜索
+        this.filters.arriveStartTime = this.formatTime(this.aryTime[0]);
+        this.filters.arriveEndTime = this.formatTime(this.aryTime[1]);
+        this.queryBillPage(1);
+      },
+      resetSearchForm: function () {// 重置表单
+        this.aryTime = '';
+        Object.assign(this.filters, {
+          orderNo: '',
+          factoryId: '',
+          orgGoodsId: '',
+          arriveStartTime: '',
+          arriveEndTime: ''
+        });
+        this.queryBillPage(1);
+      },
+      formatTime (date) {
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      }
+    }
+  };
+</script>

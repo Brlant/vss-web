@@ -71,8 +71,7 @@
                 <el-date-picker
                   type="daterange"
                   v-model="demandTime"
-                  placeholder="请选择需求时间" format="yyyy-MM-dd"
-                  @change="changeTime">
+                  placeholder="请选择需求时间" format="yyyy-MM-dd">
                 </el-date-picker>
               </oms-form-row>
             </el-col>
@@ -101,13 +100,14 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 20px">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="1">
+          <el-col :span="1" v-show="filters.status === 1">
             <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
           </el-col>
-          <el-col :span="6">POV要货申请ID</el-col>
+          <el-col :span="filters.status === 1 ? 6: 7">POV要货申请ID</el-col>
           <el-col :span="7">POV</el-col>
-          <el-col :span="5">需求产生时间</el-col>
-          <el-col :span="5">需求时间</el-col>
+          <el-col :span="3">需求产生时间</el-col>
+          <el-col :span="3">需求时间</el-col>
+          <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -122,16 +122,15 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body">
-          <div class="order-list-item order-list-item-bg" v-for="item in demandList"
-               :class="[{'active':currentItemId==item.id}]"
-               @click.prevent="showDetail(item)">
+          <div class="order-list-item" v-for="item in demandList"
+               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]">
             <el-row>
-              <el-col :span="1">
+              <el-col :span="1" v-show="filters.status === 1">
                 <div class="el-checkbox-warp" @click.stop.prevent="checkItem(item)">
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
               </el-col>
-              <el-col :span="6" class="R pt10">
+              <el-col :span="filters.status === 1 ? 6: 7" class="R pt10">
                 <span>
                   {{ item.applyMan }}
                 </span>
@@ -139,13 +138,21 @@
               <el-col :span="7" class="pt">
                 <span>{{ item.povName }}</span>
               </el-col>
-              <el-col :span="5" class="pt">
+              <el-col :span="3" class="pt">
                 <span>{{ item.applyTime | date }}</span>
               </el-col>
-              <el-col :span="5" class="pt">
+              <el-col :span="3" class="pt">
                 <span>{{ item.demandTime | date }}</span>
               </el-col>
+              <el-col :span="4" class="opera-btn">
+                <span @click.prevent="showDetail(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="iconfont icon-detail"></i></a>
+                  查看详情
+                </span>
+              </el-col>
             </el-row>
+            <div class="order-list-item-bg"></div>
           </div>
         </div>
 
@@ -159,14 +166,19 @@
         </el-pagination>
       </div>
     </div>
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
+                class="order-detail-info" partClass="pr-no-animation">
+      <show-form :currentItem="currentItem" @close="resetRightBox"></show-form>
+    </page-right>
   </div>
 </template>
 <script>
   //  import order from '../../../tools/demandList';
   import { demandAssignment, pullSignal } from '@/resources';
   import utils from '../../../tools/utils';
-
+  import showForm from './detail/index.vue';
   export default {
+    components: {showForm},
     data () {
       return {
         loadingData: true,
@@ -193,6 +205,7 @@
           pageSize: 15
         },
         currentItemId: '',
+        currentItem: {},
         checkList: [], // 选中的订单列表
         isCheckAll: false
       };
@@ -250,6 +263,7 @@
       },
       showDetail (item) {
         this.currentItemId = item.id;
+        this.currentItem = item;
         this.showDetailPart = true;
       },
       resetRightBox () {
@@ -258,6 +272,15 @@
       checkStatus (item, key) {
         this.activeStatus = key;
         this.filters.status = item.status;
+      },
+      filterListColor: function (index) {// 过滤左边列表边角颜色
+        let status = -1;
+        for (let key in this.assignType) {
+          if (this.assignType[key].status === index) {
+            status = key;
+          }
+        }
+        return status;
       },
       searchInOrder: function () {// 搜索
         this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);

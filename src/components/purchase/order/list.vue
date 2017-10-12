@@ -95,6 +95,10 @@
   .pt10 {
     padding-top: 10px;
   }
+
+  .cursor-span {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -104,9 +108,11 @@
           <span class="">
             <i class="iconfont icon-search"></i> 筛选查询
           </span>
-          <span class="pull-right" style="margin-left: 10px" @click.prevent="add">
-            <a href="#" class="btn-circle" @click.prevent=""><i
-              class="iconfont icon-plus"></i> </a>添加
+          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
+            <perm label="purchasing-order-add">
+                  <a href="#" class="btn-circle" @click.prevent=""><i
+                    class="iconfont icon-plus"></i> </a>添加
+            </perm>
           </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
@@ -116,11 +122,6 @@
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
-            <el-col :span="8">
-              <oms-form-row label="货主订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
-              </oms-form-row>
-            </el-col>
             <el-col :span="8">
               <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
@@ -250,7 +251,8 @@
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
-      <show-form :orderId="currentOrderId" @close="resetRightBox"></show-form>
+      <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
+                 @close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
@@ -297,7 +299,7 @@
           supplierId: '',
           thirdPartyNumber: ''
         },
-        expectedTime: [],
+        expectedTime: '',
         orgType: utils.inOrderType,
         activeStatus: 0,
         currentOrderId: '',
@@ -310,11 +312,17 @@
         },
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
-        user: {}
+        user: {},
+        state: ''
       };
     },
     mounted () {
       this.getOrderList(1);
+      let orderId = this.$route.params.id;
+      if (orderId && orderId !== ':id') {
+        this.currentOrderId = orderId;
+        this.showDetail = true;
+      }
     },
     computed: {
       transportationMeansList: function () {
@@ -357,7 +365,7 @@
           supplierId: '',
           thirdPartyNumber: ''
         };
-        this.expectedTime = [];
+        this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
       },
@@ -367,15 +375,15 @@
         this.defaultIndex = 0;
         this.action = '';
         // this.getOrderList(this.pager.currentPage);
+        this.$router.push('/purchase/order/:id');
       },
       add: function () {
         this.showItemRight = true;
         this.defaultIndex = 1;
         this.action = 'add';
       },
-      onSubmit: function (order) {
-        this.orderList.splice(0, 0, order);
-        this.currentOrderId = order.id;
+      onSubmit: function () {
+        this.getOrderList();
       },
       getOrderList: function (pageNo) {
         this.pager.currentPage = pageNo;
@@ -391,6 +399,9 @@
           this.loadingData = false;
         });
         this.queryStatusNum(param);
+      },
+      refreshOrder () {
+        this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.searchCondition.orgId;
@@ -436,7 +447,7 @@
           this.orgType[1].num = this.obtionStatusNum(data['in-pend-execute']);
           this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
           this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
-          this.orgType[3].num = this.obtionStatusNum(data['in-refuse']);
+          this.orgType[4].num = this.obtionStatusNum(data['in-refuse']);
         });
       },
       isLock: function (item) { // 判断是不是被锁定
@@ -459,6 +470,7 @@
       },
       showItem: function (order) {
         this.currentOrderId = order.id;
+        this.state = order.state;
         if (this.isLock(order)) {
           this.$notify.warning({
             duration: 2000,
@@ -468,11 +480,7 @@
           return;
         }
         this.showDetail = true;
-//        let urlPre = '/platform/in/';
-//        if (this.$route.meta.type === 1) {
-//          urlPre = '/org/' + this.$route.params.id + '/inOrder/';
-//        }
-//        utils.pushHistory('oms-order|No:' + order.id, urlPre + order.id);
+        this.$router.push(`/purchase/order/${order.id}`);
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

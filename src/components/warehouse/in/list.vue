@@ -304,7 +304,7 @@
           supplierId: '',
           thirdPartyNumber: ''
         },
-        expectedTime: [],
+        expectedTime: '',
         orgList: [], // 查询 货主列表
         customerList: [], // 来源单位列表
         logisticsList: [] // 物流商列表
@@ -453,7 +453,7 @@
           supplierId: '',
           thirdPartyNumber: ''
         };
-        this.expectedTime = [];
+        this.expectedTime = '';
         if (this.isSupplierOrOrg) {
           temp.orgId = this.$route.params.id;
         }

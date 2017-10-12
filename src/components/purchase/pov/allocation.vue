@@ -53,8 +53,8 @@
   <div class="order-page">
     <div class="container">
       <div class="mb-15" style="overflow: hidden">
-        <perm label="demand-assignment-create">
-          <el-button class="pull-right" type="primary" @click="submit">提交分配方案</el-button>
+        <perm label="submit-allocation-plan">
+          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 ">提交分配方案</el-button>
         </perm>
       </div>
       <div class="order-list clearfix ">
@@ -99,20 +99,25 @@
                 <span>{{ item.resultAmount }}</span>
               </el-col>
               <el-col :span="2" class="pt">
-                <span v-show="item.resultAmount>-1 && item.balanceAmount > -1">
+                <span v-show="item.resultAmount>-1 ">
                   <i class="iconfont icon-correct color-blue"></i>
                   正常
                 </span>
-                <span v-show="item.resultAmount<0 || item.balanceAmount < 0">
+                <span v-show="item.resultAmount<0 ">
                   <i class="iconfont icon-warning color-red"></i>
                   库存不足
                 </span>
               </el-col>
-              <el-col :span="3">
-                <span>
-                    <a href="#" class="btn-circle" @click.prevent="showPart(item)"><i
+              <el-col :span="3" class="opera-btn">
+                <span @click.prevent="showPart(item)" v-show="status === 0 ">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
                       class="iconfont icon-detail"></i></a>
                   手动分配
+                </span>
+                <span @click.prevent="showPart(item)" v-show="status === 1 ">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="iconfont icon-detail"></i></a>
+                  查看详情
                 </span>
               </el-col>
             </el-row>
@@ -129,7 +134,7 @@
     </div>
 
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
-      <allot-form :currentItem="currentItem" @change="change" @close="resetRightBox"></allot-form>
+      <allot-form :currentItem="currentItem" @change="change" :status="status" @close="resetRightBox"></allot-form>
     </page-right>
   </div>
 </template>
@@ -146,6 +151,7 @@
         loadingData: false,
         allocationList: [],
         showRight: false,
+        status: -1,
         pager: {
           currentPage: 1,
           count: 0,
@@ -161,12 +167,14 @@
     methods: {
       queryAllocationList (pageNo) { // 得到需求分配列表
         this.allocationList = [];
+        this.status = -1;
         if (!this.$route.query.id) return;
         this.pager.currentPage = pageNo;
         this.loadingData = false;
         demandAssignment.queryDetailList(this.$route.query.id).then(res => {
           this.allocationList = res.data.list;
           this.pager.count = res.data.count;
+          this.status = res.data.status;
           this.loadingData = false;
         });
       },
@@ -185,7 +193,7 @@
         });
       },
       submit () {
-        let isNotNormal = this.allocationList.some(s => s.resultAmount < 0 || s.balanceAmount < 0);
+        let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
         if (isNotNormal) {
           this.$notify.info({
             message: '库存不足，请重新分配'
@@ -194,8 +202,9 @@
         }
         demandAssignment.createOrder(this.$route.query.id).then(() => {
           this.$notify.success({
-            message: '提交分配方案成功'
+            message: '提交分配方案成功,将跳转到采购订单'
           });
+          this.$router.push('/sale/order/:id');
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '提交分配方案失败'

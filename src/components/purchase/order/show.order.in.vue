@@ -24,7 +24,7 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
-            <perm label="show" v-show="currentOrder.state === '5' ">
+            <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
               <el-button type="primary" @click="review" style="width: 80px;">审单</el-button>
             </perm>
           </li>
@@ -52,19 +52,26 @@
     props: {
       orderId: {
         type: String
-      }
+      },
+      state: String
     },
     data () {
       return {
         currentOrder: {},
         index: 0,
-        pageSets: [
-          {name: '订单详情', key: 0},
-          {name: '收货详情', key: 1},
-          {name: '操作日志', key: 2}
-        ],
         title: ''
       };
+    },
+    computed: {
+      pageSets () {
+        let menu = [];
+        menu.push({name: '订单详情', key: 0});
+        if (this.state === '8') {
+          menu.push({name: '收货详情', key: 1});
+        }
+        menu.push({name: '操作日志', key: 2});
+        return menu;
+      }
     },
     watch: {
       orderId () {
@@ -78,22 +85,24 @@
         this.currentOrder = {};
         if (!this.orderId) return false;
         InWork.queryOrderDetail(this.orderId).then(res => {
+          res.data.state = this.state;
           this.currentOrder = res.data;
         });
       },
       review () {
-        this.$confirm('是否确认审单', '', {
+        this.$confirm('是否订单审核', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           http.put(`/erp-order/${this.orderId}/check`).then(() => {
             this.$notify.success({
-              message: '确认审单成功'
+              message: '订单审核成功'
             });
+            this.transformState('7');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '确认审单失败'
+              message: error.response.data && error.response.data.msg || '订单审核失败'
             });
           });
         });
@@ -101,6 +110,10 @@
       showPart (item) {
         this.index = item.key;
         this.title = item.name;
+      },
+      transformState (state) {
+        this.currentOrder.state = state;
+        this.$emit('refreshOrder');
       }
     }
   };

@@ -22,7 +22,7 @@
           <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
               <i class="iconfont icon-search"></i>
           </a>
-          <perm label="org-user-add">
+          <perm label="erp-user-add">
                 <a href="#" class="btn-circle" @click.stop.prevent="add">
                     <i class="iconfont icon-plus"></i>
                 </a>
@@ -71,7 +71,7 @@
               <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
             </td>
             <td class="list-op">
-              <perm label="org-user-edit">
+              <perm label="erp-user-edit">
                 <a href="#" @click.stop.prevent="edit(row)" v-show="!row.adminFlag"><i
                   class="iconfont icon-edit"></i>编辑</a>
 

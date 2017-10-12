@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">新增应收账单</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">增加实付金额</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -236,21 +236,11 @@
         <div class="hide-content show-content">
           <el-form ref="form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="选择订单" prop="orderId">
-              <el-select placeholder="请选择订单" v-model="form.orderId" filterable remote clearable
-                         @click.native="queryOrders('')"
-                         :remote-method="queryOrders">
-                <el-option :label="item.orderNo" :value="item.id" :key="item.id" v-for="item in orders">
-                  <span class="pull-left">订单号{{ item.orderNo }}</span>
-                  <span class="pull-right">合计 ￥{{ item.totalAmount }}</span>
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="单据金额" prop="billAmount">
-              <el-input v-model="form.billAmount" placeholder="请输入单据金额"></el-input>
-            </el-form-item>
-            <el-form-item label="剩余金额" prop="unpaidAmount">
-              <el-input v-model="form.unpaidAmount" placeholder="请输入剩余金额"></el-input>
+            <el-form-item label="实付金额" prop="paymentAmount">
+              <oms-input type="text" placeholder="请输入实付金额" v-model="form.paymentAmount" :min="0"
+                         @blur="formatPrice">
+                <template slot="prepend">¥</template>
+              </oms-input>
             </el-form-item>
           </el-form>
         </div>
@@ -259,53 +249,43 @@
   </div>
 </template>
 <script>
-  import { receipt, Order } from '@/resources';
+  import utils from '@/tools/utils';
+  import { receipt } from '@/resources';
   export default {
     props: {
-      currentItem: Object
+      formItem: Object
     },
     data () {
       return {
         form: {
-          orderId: '',
-          billAmount: '',
-          unpaidAmount: '',
-          accountsPayableId: this.currentItem.id
+          detailId: '',
+          paymentAmount: ''
         },
         rules: {
-          orderId: {required: true, message: '请选择订单', trigger: 'change'},
-          billAmount: {required: true, message: '请输入单据金额', trigger: 'blur'},
-          unpaidAmount: {required: true, message: '请输入剩余金额', trigger: 'blur'}
-        },
-        orders: [] // 订单列表
+          paymentAmount: {required: true, message: '请输入实付金额', trigger: 'blur'}
+        }
       };
     },
     methods: {
-      queryOrders (query) {
-        let params = {
-          keyWord: query,
-          type: 1,
-          bizType: '0',
-          customerId: this.currentItem.payerId
-        };
-        Order.query(params).then(res => {
-          this.orders = res.data.list;
-        });
+      formatPrice: function () {// 格式化单价，保留两位小数
+        this.form.paymentAmount = utils.autoformatDecimalPoint(this.form.paymentAmount);
       },
       onSubmit () {
         this.$refs['form'].validate((valid) => {
           if (!valid) {
             return false;
           }
-          receipt.addDetail(this.currentItem.id, this.form).then(() => {
+          this.form.detailId = this.formItem.id;
+          this.form.paymentAmount = parseFloat(this.form.paymentAmount);
+          receipt.modifyDetail(this.formItem.id, this.form).then(() => {
             this.$notify.success({
-              message: '应收款详情添加成功'
+              message: '增加实付金额成功'
             });
             this.$refs['form'].resetFields();
             this.$emit('refreshDetails');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '应收款详情添加失败'
+              message: error.response.data && error.response.data.msg || '增加实付金额失败'
             });
           });
         });
