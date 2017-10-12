@@ -113,7 +113,10 @@
                       <span>{{ item.povName }}</span>
                     </el-col>
                     <el-col :span="7" class="pt">
-                      <span>{{ item.applyCount }}</span>
+                      <span>
+                        {{ item.applyCount }}
+                        <dict :dict-group="'shipmentPackingUnit'" :dict-key="currentItem.mixUnit"></dict>
+                      </span>
                     </el-col>
                     <el-col :span="7" class="pt">
                       <span v-show="status === 1 ">{{item.actualCount}}</span>
