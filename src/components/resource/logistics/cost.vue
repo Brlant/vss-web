@@ -64,6 +64,15 @@
       margin-bottom: 10px;
     }
   }
+
+  .border-show {
+    height: 20px;
+    border-bottom: 1px solid #777777;
+    opacity: 0.2;
+    margin-left: 40px;
+    margin-right: 40px;
+    margin-bottom: 20px;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -72,18 +81,6 @@
       <div class="d-table">
 
         <div class="d-table-right">
-          <div style="overflow: hidden">
-            <perm label="cerp-logistics-cost-add">
-                <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add" v-if="!cost">
-              <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>
-            </span>
-            </perm>
-            <perm label="cerp-logistics-cost-update">
-                <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="edit" v-if="cost">
-              <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-edit"></i> </a>
-            </span>
-            </perm>
-          </div>
           <div class=" costs clearfix " style="margin-top: 10px">
             <el-row v-if="loadingData">
               <el-col :span="24">
@@ -92,7 +89,48 @@
             </el-row>
             <div v-else="">
               <oms-row label="市级CDC名称" :span="5">{{ cost.orgName }}</oms-row>
-              <oms-row label="物流费用" :span="5"><span v-show="cost.price">￥</span>{{ cost.price }}</oms-row>
+              <div class="border-show"></div>
+              <div style="overflow: hidden">
+                <perm label="cerp-logistics-cost-add">
+                  <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add"
+                        v-if="cost.id===''">
+                    <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>
+                    </span>
+                </perm>
+                <perm label="cerp-logistics-cost-update">
+                      <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="edit"
+                            v-if="cost.id!==''">
+                    <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-edit"></i> </a>
+                  </span>
+                </perm>
+              </div>
+              <oms-row label="费用模式" :span="5" v-if="cost.model">{{ setModel}}</oms-row>
+              <oms-row label="一类疫苗物流费用" :span="5" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{ cost.price
+                }}
+              </oms-row>
+              <oms-row label="一类疫苗物流费用比例" :span="5" v-if="cost.model==='1'">{{ cost.price }}
+              </oms-row>
+              <div class="border-show"></div>
+              <div style="overflow: hidden">
+                <perm label="cerp-logistics-cost-add">
+                  <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addSecond"
+                        v-if="secondCost.id===''">
+                    <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>
+                  </span>
+                </perm>
+                <perm label="cerp-logistics-cost-update">
+                  <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="editSecond"
+                        v-if="secondCost.id!==''">
+                    <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-edit"></i> </a>
+                  </span>
+                </perm>
+              </div>
+              <oms-row label="费用模式" :span="5" v-if="secondCost.model">{{ setSecondModel}}</oms-row>
+              <oms-row label="二类疫苗物流费用" :span="5" v-if="secondCost.model==='0'"><span v-if="secondCost.price">￥</span>{{ secondCost.price
+                }}
+              </oms-row>
+              <oms-row label="二类疫苗物流费用比例" :span="5" v-if="secondCost.model==='1'">{{ secondCost.price }}
+              </oms-row>
             </div>
           </div>
         </div>
@@ -101,34 +139,73 @@
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form :formItem="form" :formType="action" @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showSecondItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <second-form :formItem="secondform" :formType="action" @close="resetRightBox"></second-form>
+    </page-right>
   </div>
 </template>
 <script>
   import addForm from './form.vue';
+  import secondForm from './secondForm.vue';
   import {http} from '../../../resources';
 
   export default {
     components: {
-      addForm
+      addForm,
+      secondForm
     },
     data () {
       return {
         loadingData: true,
-        cost: {},
+        cost: {
+          id: ''
+        },
+        secondCost: {
+          id: ''
+        },
         showItemRight: false,
+        showSecondItemRight: false,
         form: {},
-        action: ''
+        secondform: {},
+        action: '',
+        model: '',
+        secondModel: ''
       };
     },
     mounted () {
       this.queryCosts();
+    },
+    computed: {
+      setModel: function () {
+        let title = '单支';
+        if (this.cost.model === '1') {
+          title = '比例';
+        }
+        return title;
+      },
+      setSecondModel: function () {
+        let title = '单支';
+        if (this.secondCost.model === '1') {
+          title = '比例';
+        }
+        return title;
+      }
     },
     methods: {
       queryCosts () {
         this.cost = {};
         this.loadingData = true;
         http.get('/logistics-cost/municipal').then(res => {
-          this.cost = res.data;
+          if (res.data) {
+            res.data.forEach(val => {
+              if (val.vaccineType === '1') {
+                this.cost = val;
+              }
+              if (val.vaccineType === '2') {
+                this.secondCost = val;
+              }
+            });
+          }
           this.loadingData = false;
         });
       },
@@ -137,13 +214,23 @@
         this.form = JSON.parse(JSON.stringify(this.cost));
         this.showItemRight = true;
       },
+      editSecond: function () {
+        this.action = 'edit';
+        this.secondform = JSON.parse(JSON.stringify(this.secondCost));
+        this.showSecondItemRight = true;
+      },
       resetRightBox () {
         this.showItemRight = false;
+        this.showSecondItemRight = false;
         this.queryCosts();
       },
       add () {
         this.action = 'add';
         this.showItemRight = true;
+      },
+      addSecond() {
+        this.action = 'add';
+        this.showSecondItemRight = true;
       }
     }
   };

@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">{{setTitle}}一类疫苗物流费用</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">{{setTitle}}二类疫苗物流费用</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -235,18 +235,18 @@
       <div class="content-right min-gutter">
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form" label-width="160px" style="padding-right: 20px">
-            <el-form-item label="一类疫苗物流费用模式" prop="model">
+            <el-form-item label="二类疫苗物流费用模式" prop="model">
               <el-radio class="radio" v-model="form.model" label="0">单支</el-radio>
               <el-radio class="radio" v-model="form.model" label="1">比例</el-radio>
             </el-form-item>
-            <el-form-item label="一类疫苗物流费用" prop="price" v-if="form.model==='0'">
-              <oms-input type="text" placeholder="请输入一类疫苗物流费用" v-model="form.price" :min="0"
+            <el-form-item label="二类疫苗物流费用" prop="price" v-if="form.model==='0'">
+              <oms-input type="text" placeholder="请输入二类疫苗物流费用" v-model="form.price" :min="0"
                          @blur="formatPrice">
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
-            <el-form-item label="一类疫苗物流费用比例" prop="proportion" v-if="form.model==='1'">
-              <oms-input type="text" placeholder="请输入一类疫苗物流费用比例" v-model="form.proportion" :min="0">
+            <el-form-item label="二类疫苗物流费用比例" prop="proportion" v-if="form.model==='1'">
+              <oms-input type="text" placeholder="请输入二类疫苗物流费用比例" v-model="form.proportion" :min="0">
                 <template slot="append">%</template>
               </oms-input>
             </el-form-item>
@@ -261,19 +261,19 @@
   import utils from '../../../tools/utils';
 
   export default {
-    data () {
+    data() {
       return {
         form: {
           orgId: '',
           price: '',
-          proportion: '',
           model: '',
-          vaccineType: '1'
+          proportion: '',
+          vaccineType: '2'
         },
         rules: {
           model: {required: true, message: '请选择物流费用模式', trigger: 'blur'},
-          price: {required: true, message: '请输入一类疫苗物流费用', trigger: 'blur'},
-          proportion: {required: true, message: '请输入一类疫苗物流费用比例', trigger: 'blur'}
+          price: {required: true, message: '请输入二类疫苗物流费用', trigger: 'blur'},
+          proportion: {required: true, message: '请输入二类疫苗物流费用比例', trigger: 'blur'}
         }
       };
     },
@@ -311,13 +311,13 @@
           title = '修改';
         }
         return title;
-      },
+      }
     },
     methods: {
       formatPrice: function () {// 格式化单价，保留两位小数
         this.form.price = utils.autoformatDecimalPoint(this.form.price);
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;
@@ -331,25 +331,25 @@
           if (this.formType === 'add') {
             logisticsCost.save(this.form).then(() => {
               this.$notify.success({
-                message: '添加一类疫苗物流费用成功'
+                message: '添加二类疫苗物流费用成功'
               });
               this.$refs['d-form'].resetFields();
               this.$emit('close');
             }).catch(error => {
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '添加一类疫苗物流费用失败'
+                message: error.response.data && error.response.data.msg || '添加二类疫苗物流费用失败'
               });
             });
           } else {
             logisticsCost.update(this.form.id, this.form).then(() => {
               this.$notify.success({
-                message: '修改一类疫苗物流费用成功'
+                message: '修改二类疫苗物流费用成功'
               });
               this.$refs['d-form'].resetFields();
               this.$emit('close');
             }).catch(error => {
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '修改一类疫苗物流费用失败'
+                message: error.response.data && error.response.data.msg || '修改二类疫苗物流费用失败'
               });
             });
           }
