@@ -17,6 +17,8 @@
       margin-right: 10px;
       vertical-align: middle;
       margin-top: -20px;
+      width: 60px;
+      height: 60px;
     }
     color: #189aca
   }
@@ -42,7 +44,7 @@
 </style>
 <template>
   <el-card class="box-card main-card-box">
-    <div class="logo-part clearfix">CERP</div>
+    <div class="logo-part clearfix"><img src="../assets/img/erp-logo.png">CERP</div>
     <div style="padding:0 20px">
       <h3 class="text-center">重置密码</h3>
       <div class="login-menu">
