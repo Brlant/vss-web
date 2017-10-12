@@ -125,7 +125,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body">
+        <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in batches"
                :class="[{'active':currentItemId==item.id}]"
                @click.prevent="showDetail(item)">

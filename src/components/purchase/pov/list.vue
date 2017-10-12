@@ -121,7 +121,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body">
+        <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in demandList"
                :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]">
             <el-row>

@@ -192,7 +192,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body">
+        <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
