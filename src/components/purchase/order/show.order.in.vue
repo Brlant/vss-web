@@ -71,12 +71,17 @@
     computed: {
       pageSets () {
         let menu = [];
+        let perms = this.$store.state.permissions || [];
         menu.push({name: '订单详情', key: 0});
         if (this.state === '8') {
           menu.push({name: '收货详情', key: 1});
         }
-        menu.push({name: '异常信息', key: 3});
-        menu.push({name: '批号相关', key: 4});
+        if (perms.includes('quality-exception-manager')) {
+          menu.push({name: '异常信息', key: 3});
+        }
+        if (perms.includes('batch-number-manager')) {
+          menu.push({name: '批号相关', key: 4});
+        }
         menu.push({name: '操作日志', key: 2});
         return menu;
       }
