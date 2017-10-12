@@ -6,17 +6,33 @@
     <div v-else-if="orderLogList.length === 0" class="empty-info">
       暂无操作日志信息
     </div>
-    <bg-box v-else="" :title=" '金额 ￥'+log.paymentAmount" v-for="log in orderLogList" :key="log.id">
-      <p>操作人：{{log.creatorName}}  <span class="ml-15">操作时间：{{log.createTime | time}} </span></p>
-    </bg-box>
+    <Timeline v-else>
+      <template v-for="(log,index) in orderLogList">
+        <TimelineItem color="green" v-if="log.showDate">
+          <i class="iconfont icon-home1" slot="dot"></i>
+          <h3><span>{{log.dateWeek}}</span></h3>
+        </TimelineItem>
+        <TimelineItem color="grey">
+          <el-row>
+            <el-col :span="4">
+              <div>{{log.createTime | time}}</div>
+            </el-col>
+            <el-col :span="18"><strong>￥{{log.paymentAmount}}</strong> <span
+              class="font-gray"> [{{log.creatorName}}]</span>
+            </el-col>
+          </el-row>
+        </TimelineItem>
+      </template>
+
+    </Timeline>
   </div>
 </template>
 <script>
   import { http } from '@/resources';
-  import bgBox from '@/components/common/bgbox.vue';
+  import { TimelineItem, Timeline } from '../../../components/common/timeline/index.js';
 
   export default {
-    components: {bgBox},
+    components: {TimelineItem, Timeline},
     props: {
       currentDetail: {
         type: Object,
@@ -38,16 +54,28 @@
     watch: {
       index (val) {
         if (val === 1) {
-          this.getOrderLoglist();
+          this.getPayLogs();
         }
       }
     },
     methods: {
-      getOrderLoglist () {// 获取操作日志
+      getPayLogs () {// 获取操作日志
         this.orderLogList = [];
         if (!this.currentDetail.id) return;
         this.loadingLog = true;
         http.get(`/accounts-receivable/detail/${this.currentDetail.id}/log`).then(res => {
+          let dateArr = [];
+          res.data.forEach(item => {
+            let time = this.$moment(item.createTime);// .format('YYYY年MM月DD日/dddd');
+            item.dateWeek = time.format('YYYY年MM月DD日 dddd');
+            item.time = time.format('HH:mm:ss');
+            if (dateArr.includes(item.dateWeek)) {
+              item.showDate = false;
+            } else {
+              dateArr.push(item.dateWeek);
+              item.showDate = true;
+            }
+          });
           this.orderLogList = res.data;
           this.loadingLog = false;
         });

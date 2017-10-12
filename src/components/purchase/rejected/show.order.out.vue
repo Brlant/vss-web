@@ -39,14 +39,14 @@
         <h3>{{ title }}</h3>
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
         <receipt :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt>
-        <log :currentOrder="currentOrder" v-show="index === 2" :index="index"></log>
+        <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
       </div>
     </div>
   </div>
 </template>
 <script>
   import basicInfo from './detail/base-info.vue';
-  import log from './detail/log.vue';
+  import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
   import { InWork, http } from '@/resources';
 

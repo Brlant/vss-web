@@ -34,7 +34,7 @@
         <h3>{{ title }}</h3>
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
         <receipt-detail :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt-detail>
-        <log :currentOrder="currentOrder" v-show="index === 2" :index="index"></log>
+        <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <exception-info :currentOrder="currentOrder" v-show="index === 3" :orderId="orderId"
                         :index="index"></exception-info>
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
@@ -48,7 +48,7 @@
   import batchNumbers from './detail/batch.number.vue';
   import exceptionInfo from './detail/exception.info.vue';
 
-  import log from './detail/log.vue';
+  import log from '@/components/common/order.log.vue';
   import { InWork, http } from '@/resources';
 
   export default {
