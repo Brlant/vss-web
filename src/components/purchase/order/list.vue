@@ -383,7 +383,7 @@
         this.action = 'add';
       },
       onSubmit: function () {
-        this.getOrderList();
+        this.getOrderList(1);
       },
       getOrderList: function (pageNo) {
         this.pager.currentPage = pageNo;

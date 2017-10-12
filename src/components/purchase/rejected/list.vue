@@ -385,9 +385,8 @@
         this.defaultIndex = 1;
         this.action = 'add';
       },
-      onSubmit: function (order) {
-        this.orderList.splice(0, 0, order);
-        this.currentOrderId = order.id;
+      onSubmit: function () {
+        this.getOrderList(1);
       },
       getOrderList: function (pageNo) {
         this.pager.currentPage = pageNo;

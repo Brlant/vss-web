@@ -91,7 +91,7 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="选择生产厂商" :span="6">
+              <oms-form-row label="生产厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
                            v-model="searchWord.orgId">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>
