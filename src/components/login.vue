@@ -17,6 +17,8 @@
       margin-right: 10px;
       vertical-align: middle;
       margin-top: -20px;
+      width: 60px;
+      height: 60px;
     }
     color: #189aca
   }
@@ -53,7 +55,7 @@
 <template>
   <div>
     <el-card class="box-card main-card-box">
-      <div class="logo-part clearfix"> CERP系统</div>
+      <div class="logo-part clearfix"><img src="../assets/img/erp-logo.png">CERP系统</div>
       <div style="padding:0 20px">
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                  @submit.prevent="done" onsubmit="return false">
