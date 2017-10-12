@@ -320,15 +320,24 @@
                   <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
                              :label="item.orgGoodsDto.name"
                              :value="item.orgGoodsDto.id">
-                    <div>
+                    <div style="overflow: hidden">
                       <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                      <span class="select-other-info pull-left">{{item.orgGoodsDto.goodsNo}}</span>
-                      <span class="select-other-info pull-right">{{ item.orgGoodsDto.goodsDto.factoryName }}</span>
-                      <!--<span class="select-other-info" style="color:#00bff3" >组合</span>-->
                       <el-tag type="success" v-show="item.list.length"
                               style="line-height: 22px;margin-left: 20px;height: 20px">
                         组合
                       </el-tag>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥</span>{{ item.orgGoodsDto.procurementPrice
+                        }}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                      </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -353,8 +362,8 @@
                   <oms-row label="货品编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
-                  <oms-row label="生产厂商" :span="8">
-                    {{product.fixInfo.goodsDto.factoryName}}
+                  <oms-row label="销售厂商" :span="8">
+                    {{product.fixInfo.salesFirmName}}
                   </oms-row>
                   <oms-row label="批准文号" :span="8">
                     {{product.fixInfo.goodsDto.approvalNumber}}
@@ -367,9 +376,10 @@
                   <span v-show="accessoryList.length">【组合货品】</span>
                   <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
-                       <span style="margin-right: 10px" v-show="acce.unitPrice">¥ {{ acce.unitPrice }}</span>
+                      <span style="margin-right: 10px"
+                            v-show="acce.procurementPrice">¥ {{ acce.procurementPrice | formatMoney }}</span>
                        <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
-                       <span style="margin-right: 10px">{{ acce.accessoryGoods.factoryName }}</span>
+                       <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
                 </el-col>
               </el-row>
@@ -859,7 +869,8 @@
         this.searchProductList.forEach(item => {
           if (item.orgGoodsDto.id === OrgGoodsId) {
             this.product.fixInfo = item.orgGoodsDto;
-            this.product.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.procurementPrice.toString());
+            let price = item.orgGoodsDto.procurementPrice;
+            this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
             this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
             this.accessoryList = item.list;
             this.form.detailDtoList.forEach((detailItem) => {
@@ -894,7 +905,7 @@
                   isCombination: true,
                   orgGoodsId: m.accessory,
                   orgGoodsName: m.name,
-                  unitPrice: m.unitPrice,
+                  unitPrice: m.procurementPrice ? m.procurementPrice : 0,
                   amount: amount,
                   measurementUnit: m.accessoryGoods.measurementUnit,
                   packingCount: null,

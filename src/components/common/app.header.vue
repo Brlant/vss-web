@@ -92,8 +92,8 @@
   }
 
   .logo_pic {
-    height: 32px;
-    width: 32px;
+    height: 40px;
+    width: 40px;
     margin-right: 10px;
     margin-top: -8px;
   }
@@ -185,7 +185,7 @@
       <div>
         <div class="top-logo">
           <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
-            <span class="logo-span" :style="'color:'+skin.color">CERP 系统</span>
+            <span class="logo-span" :style="'color:'+skin.color">疾病预防控制中心疫苗管理系统</span>
           </router-link>
         </div>
         <div class="top-right">

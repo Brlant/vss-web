@@ -171,7 +171,7 @@
         <tr>
           <td></td>
           <td>名称</td>
-          <td class="text-center">生产厂商</td>
+          <td class="text-center">销售厂商</td>
           <td>批号</td>
           <td>生产日期</td>
           <td>有效期</td>
@@ -205,7 +205,7 @@
             </div>
           </td>
           <td class="text-center" width="140px">
-            {{item.orgGoodsDto.goodsDto.factoryName}}
+            {{item.orgGoodsDto.goodsDto.salesFirmName}}
           </td>
           <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
           <td>{{ item.productionDate | date }}</td>
