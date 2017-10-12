@@ -249,7 +249,7 @@
                            v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商">
+            <el-form-item label="销售厂商" prop="supplierId">
               <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -410,7 +410,7 @@
                   <span>{{product.orgGoodsName}}</span>
                 </td>
                 <td class="ar">
-                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice}}
+                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice | formatMoney}}
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"

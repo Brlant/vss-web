@@ -252,7 +252,7 @@
                            v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商">
+            <el-form-item label="销售厂商" prop="customerId">
               <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -456,7 +456,7 @@
                     <span v-show="isShowName(product)">{{product.orgGoodsName}}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
-                  <td class="ar"><span v-show="product.unitPrice">¥</span> {{product.unitPrice}} </td>
+                  <td class="ar"><span v-show="product.unitPrice">¥</span> {{product.unitPrice | formatMoney}} </td>
                   <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>

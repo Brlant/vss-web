@@ -101,13 +101,13 @@
           {{row.goodsName}}
         </td>
         <td>
-          {{row.price}}
+          {{row.price | formatMoney}}
         </td>
         <td>
           {{row.applyCount}}
         </td>
         <td>
-          {{row.applyMoney}}
+          {{row.applyMoney | formatMoney}}
         </td>
         <td>
           {{row.actualCount}}
