@@ -51,7 +51,7 @@
   <footer class="main-footer">
     <div class="container">
       <div class="col-xs-12 col-md-7 pl-0 pr-0 police-part">
-        <a class="mr-10" href="http://www.beianbeian.com/search/sinopharm-bio" target="_blank">沪ICP备10213462号-2</a>
+        <a class="mr-10" href="http://www.beianbeian.com/search/sinopharm-bio.com" target="_blank">沪ICP备10213462号-2</a>
         <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011502006135" target="_blank">
           <img src="/static/img/police_logo.png" class="img-police"> 公安部备案号 31011502006135号</a>
       </div>
