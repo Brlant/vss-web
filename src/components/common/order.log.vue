@@ -15,10 +15,10 @@
         <TimelineItem color="grey">
           <el-row>
             <el-col :span="4">
-              <div>{{log.createTime | time}}</div>
+              <div>{{log.time}}</div>
             </el-col>
-            <el-col :span="18"><strong>￥{{log.paymentAmount}}</strong> <span
-              class="font-gray"> [{{log.creatorName}}]</span>
+            <el-col :span="18"><strong>{{log.actionTitle}}</strong> <span
+              class="font-gray"> [{{log.operatorName}}]</span>
             </el-col>
           </el-row>
         </TimelineItem>
@@ -29,12 +29,12 @@
 </template>
 <script>
   import { http } from '@/resources';
-  import { TimelineItem, Timeline } from '../../../components/common/timeline/index.js';
+  import { TimelineItem, Timeline } from './timeline/index.js';
 
   export default {
     components: {TimelineItem, Timeline},
     props: {
-      currentDetail: {
+      currentOrder: {
         type: Object,
         default: function () {
           return {};
@@ -43,6 +43,10 @@
       index: {
         type: Number,
         default: -1
+      },
+      defaultIndex: {
+        type: Number,
+        default: -2
       }
     },
     data () {
@@ -53,20 +57,20 @@
     },
     watch: {
       index (val) {
-        if (val === 1) {
-          this.getPayLogs();
+        if (val === this.defaultIndex) {
+          this.getOrderLoglist();
         }
       }
     },
     methods: {
-      getPayLogs () {// 获取操作日志
+      getOrderLoglist () {// 获取操作日志
         this.orderLogList = [];
-        if (!this.currentDetail.id) return;
+        if (!this.currentOrder.id) return;
         this.loadingLog = true;
-        http.get(`/accounts-payable/detail/${this.currentDetail.id}/log`).then(res => {
+        http.get('/erp-order/log/' + this.currentOrder.id).then(res => {
           let dateArr = [];
           res.data.forEach(item => {
-            let time = this.$moment(item.createTime);// .format('YYYY年MM月DD日/dddd');
+            let time = this.$moment(item.operateTime);// .format('YYYY年MM月DD日/dddd');
             item.dateWeek = time.format('YYYY年MM月DD日 dddd');
             item.time = time.format('HH:mm:ss');
             if (dateArr.includes(item.dateWeek)) {

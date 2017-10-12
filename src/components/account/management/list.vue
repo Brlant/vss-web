@@ -73,7 +73,7 @@
               <th>手机号码</th>
               <th>邮箱</th>
               <th>状态</th>
-              <th></th>
+              <th>操作</th>
             </tr>
             </thead>
             <tbody v-show="dataRows.length === 0">
@@ -98,18 +98,22 @@
               <td>
                 {{row.email}}
               </td>
-              <td>
+              <td style="width: 50px">
                 <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
               </td>
-              <td class="list-op">
+              <td class="list-op" style="width: 120px">
                 <perm label="erp-account-edit">
                   <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
-                  <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"' v-show="row.status==1">
-                    <i class="iconfont icon-forbidden"></i>停用
-                  </oms-forbid>
+                </perm>
+                <perm label="erp-account-start">
                   <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用货主用户 \""+row.name+"\" ?"'
                               v-show="row.status==2"><i
                     class="iconfont icon-start"></i>启用
+                  </oms-forbid>
+                </perm>
+                <perm label="erp-account-stop">
+                  <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"' v-show="row.status==1">
+                    <i class="iconfont icon-forbidden"></i>停用
                   </oms-forbid>
                 </perm>
               </td>

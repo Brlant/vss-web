@@ -11,14 +11,21 @@
 
   .logo-part {
     text-align: center;
-    line-height: 80px;
-    font-size: 40px;
+    line-height: 24px;
+    font-size: 20px;
+    display: flex;
+    justify-content: center;
     img {
       margin-right: 10px;
       vertical-align: middle;
-      margin-top: -20px;
+      margin-top: -10px;
+      width: 60px;
+      height: 60px;
     }
-    color: #189aca
+    color: #189aca;
+    .e-logo {
+      font-size: 16px;
+    }
   }
 
   .login-menu {
@@ -38,6 +45,7 @@
         color: @activeColor;
       }
     }
+
   }
 
   #backgroundCanvas {
@@ -53,11 +61,17 @@
 <template>
   <div>
     <el-card class="box-card main-card-box">
-      <div class="logo-part clearfix"> CERP系统</div>
+      <div class="logo-part clearfix">
+        <img src="../assets/img/erp-logo.png">
+        <div>
+          <div class="m-logo">疾病预防控制中心疫苗管理系统</div>
+          <div class="e-logo">CDC Vaccine Management System</div>
+        </div>
+      </div>
       <div style="padding:0 20px">
         <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                  @submit.prevent="done" onsubmit="return false">
-          <el-form-item label="组织编号" prop="orgCode" v-show="user.type===1">
+          <el-form-item label="组织编号" prop="orgCode">
             <oms-input v-model="user.orgCode"></oms-input>
           </el-form-item>
           <el-form-item label="用户名" prop="username">
@@ -114,6 +128,9 @@
         showCode: false,
         btnString: '登录',
         rules: {
+          orgCode: [
+            {required: true, message: '请输入组织编号', trigger: 'blur'}
+          ],
           username: [
             {required: true, message: '请输入用户名', trigger: 'blur'}
           ],

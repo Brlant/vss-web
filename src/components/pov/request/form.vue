@@ -285,6 +285,10 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
                       <span class="select-other-info pull-left"><span
+                        v-show="item.sellPrice">销售价格 ￥</span>{{ item.sellPrice
+                        }}
+                        </span>
+                      <span class="select-other-info pull-left"><span
                         v-show="item.factoryName">销售厂商</span>  {{ item.factoryName }}</span>
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
@@ -325,7 +329,8 @@
                   <span v-show="accessoryList.length">【组合疫苗】</span>
                   <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
-                       <span style="margin-right: 10px" v-show="acce.unitPrice">¥ {{ acce.unitPrice }}</span>
+                       <span style="margin-right: 10px"
+                             v-show="acce.sellPrice">¥ {{ acce.sellPrice | formatMoney}}</span>
                        <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
@@ -357,7 +362,7 @@
                   <span>{{product.orgGoodsName}}</span>
                 </td>
                 <td class="ar">
-                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice}}
+                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice | formatMoney}}
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"

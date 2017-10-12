@@ -79,7 +79,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body">
+        <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
                :class="[{'active':currentItemId==item.id}]">
             <el-row>
@@ -87,16 +87,28 @@
                 <span>{{ item.goodsName }}</span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span>{{ item.requiredQuantity }}</span>
+                <span>
+                  {{ item.requiredQuantity }}
+                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
+                </span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span>{{ item.inventoryQuantity }}</span>
+                <span>
+                  {{ item.inventoryQuantity }}
+                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
+                </span>
               </el-col>
               <el-col :span="4" class="pt">
-                <span>{{ item.balanceAmount }}</span>
+                <span>
+                  {{ item.balanceAmount }}
+                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
+                </span>
               </el-col>
               <el-col :span="4" class="pt">
-                <span>{{ item.resultAmount }}</span>
+                <span>
+                  {{ item.resultAmount }}
+                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
+                </span>
               </el-col>
               <el-col :span="2" class="pt">
                 <span v-show="item.resultAmount>-1 ">

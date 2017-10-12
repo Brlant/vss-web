@@ -30,7 +30,7 @@
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="sales-order-audit" v-show="currentOrder.state === '1' ">
-              <el-button type="primary" @click="review">确认审单</el-button>
+              <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
         </ul>
@@ -39,14 +39,14 @@
         <h3>{{ title }}</h3>
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
         <receipt :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt>
-        <log :currentOrder="currentOrder" v-show="index === 2" :index="index"></log>
+        <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
       </div>
     </div>
   </div>
 </template>
 <script>
   import basicInfo from './detail/base-info.vue';
-  import log from './detail/log.vue';
+  import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
   import { InWork, http } from '@/resources';
 
@@ -116,19 +116,19 @@
         });
       },
       review () {
-        this.$confirm('是否确认审单', '', {
+        this.$confirm('是否审单通过', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           http.put(`/erp-order/${this.orderId}/check`).then(() => {
             this.$notify.success({
-              message: '确认审单成功'
+              message: '审单通过成功'
             });
             this.transformState('2');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '确认审单失败'
+              message: error.response.data && error.response.data.msg || '审单通过失败'
             });
           });
         });

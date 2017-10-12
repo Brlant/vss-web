@@ -92,8 +92,8 @@
   }
 
   .logo_pic {
-    height: 26px;
-    width: 32px;
+    height: 40px;
+    width: 40px;
     margin-right: 10px;
     margin-top: -8px;
   }
@@ -184,8 +184,8 @@
     <header class="main-header" :style="'background:'+skin.background">
       <div>
         <div class="top-logo">
-          <router-link to='/' class="a-link">
-            <span class="logo-span" :style="'color:'+skin.color">CERP 系统</span>
+          <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
+            <span class="logo-span" :style="'color:'+skin.color">疾病预防控制中心疫苗管理系统</span>
           </router-link>
         </div>
         <div class="top-right">
@@ -264,7 +264,7 @@
 
 <script>
   import {Auth} from '../../resources';
-  import logo_pic from '../../assets/img/logo_pic.png';
+  import logo_pic from '../../assets/img/erp-logo.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';
 

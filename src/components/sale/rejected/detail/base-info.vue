@@ -62,7 +62,7 @@
         <tr>
           <td></td>
           <td>货品</td>
-          <td class="text-center">生产厂商</td>
+          <td class="text-center">销售厂商</td>
           <td class="text-center">数量</td>
           <td class="text-center">单价</td>
           <td class="text-center">金额</td>
@@ -93,7 +93,7 @@
             </div>
           </td>
           <td class="text-center" width="180px">
-            {{item.orgGoodsDto.goodsDto.factoryName}}
+            {{item.orgGoodsDto.goodsDto.salesFirmName}}
           </td>
           <td width="100px" class="text-center">
             {{item.amount}}

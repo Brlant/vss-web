@@ -192,7 +192,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body">
+        <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
@@ -387,9 +387,8 @@
         this.defaultIndex = 1;
         this.action = 'add';
       },
-      onSubmit: function (order) {
-        this.orderList.splice(0, 0, order);
-        this.currentOrderId = order.id;
+      onSubmit: function () {
+        this.getOrderList(1);
       },
       getOrderList: function (pageNo) {
         this.pager.currentPage = pageNo;

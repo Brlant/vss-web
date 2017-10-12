@@ -138,7 +138,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body">
+        <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in orderList"
                :class="['status-'+(parseInt(item.wmsStatus, 10)+1) ,{'active':currentOrderId==item.id}]">
             <el-row>

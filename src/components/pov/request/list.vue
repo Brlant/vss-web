@@ -151,7 +151,7 @@
               <tr>
                 <th>要货申请ID</th>
                 <th>货品名称</th>
-                <th>单件</th>
+                <th>单价</th>
                 <th>申请数量</th>
                 <th>申请金额</th>
               </tr>
@@ -165,13 +165,13 @@
                   {{row.goodsName}}
                 </td>
                 <td>
-                  {{row.price}}
+                  {{row.price | formatMoney}}
                 </td>
                 <td>
                   {{row.applyCount}}
                 </td>
                 <td>
-                  {{row.applyMoney}}
+                  {{row.applyMoney | formatMoney}}
                 </td>
               </tr>
               </tbody>

@@ -135,7 +135,7 @@
                 </div>
               </el-col>
             </el-row>
-            <div v-else="" class="order-list-body">
+            <div v-else="" class="order-list-body flex-list-dom">
               <div class="order-list-item order-list-item-bg" v-for="item in povs" :key="">
                 <el-row>
                   <el-col :span="20" class="R pt10">
