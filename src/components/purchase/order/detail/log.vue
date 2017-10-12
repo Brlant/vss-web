@@ -6,17 +6,33 @@
     <div v-else-if="orderLogList.length === 0" class="empty-info">
       暂无操作日志信息
     </div>
-    <bg-box v-else="" :title="log.actionTitle" v-for="log in orderLogList" :key="log.id">
-      <p>操作人:{{log.operatorName}}  <span class="ml-15">操作时间:{{log.operateTime | time}} </span></p>
-    </bg-box>
+    <Timeline v-else>
+      <template v-for="(log,index) in orderLogList">
+        <TimelineItem color="green" v-if="log.showDate">
+          <i class="iconfont icon-home1" slot="dot"></i>
+          <h3><span>{{log.dateWeek}}</span></h3>
+        </TimelineItem>
+        <TimelineItem color="grey">
+          <el-row>
+            <el-col :span="4">
+              <div>{{log.time}}</div>
+            </el-col>
+            <el-col :span="18"><strong>{{log.actionTitle}}</strong> <span
+              class="font-gray"> [{{log.operatorName}}]</span>
+            </el-col>
+          </el-row>
+        </TimelineItem>
+      </template>
+
+    </Timeline>
   </div>
 </template>
 <script>
   import { http } from '@/resources';
-  import bgBox from '@/components/common/bgbox.vue';
+  import { TimelineItem, Timeline } from '../../../../components/common/timeline/index.js';
 
   export default {
-    components: {bgBox},
+    components: {TimelineItem, Timeline},
     props: {
       currentOrder: {
         type: Object,
@@ -47,7 +63,19 @@
         this.orderLogList = [];
         if (!this.currentOrder.id) return;
         this.loadingLog = true;
-        http.get('/order-log/orders/' + this.currentOrder.id).then(res => {
+        http.get('/erp-order/log/' + this.currentOrder.id).then(res => {
+          let dateArr = [];
+          res.data.forEach(item => {
+            let time = this.$moment(item.operateTime);// .format('YYYY年MM月DD日/dddd');
+            item.dateWeek = time.format('YYYY年MM月DD日 dddd');
+            item.time = time.format('HH:mm:ss');
+            if (dateArr.includes(item.dateWeek)) {
+              item.showDate = false;
+            } else {
+              dateArr.push(item.dateWeek);
+              item.showDate = true;
+            }
+          });
           this.orderLogList = res.data;
           this.loadingLog = false;
         });

@@ -15,7 +15,7 @@
 
     <Timeline>
       <TimelineItem color="blue">
-        <i class="iconfont icon-home" slot="dot"></i>
+        <i class="iconfont icon-home1" slot="dot"></i>
         <div class="date-line">
           <h3>2017-06-17 <span>12:12:12</span></h3>
           <p><span>发布里程碑版本</span></p>
