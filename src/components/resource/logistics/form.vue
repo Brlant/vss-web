@@ -311,7 +311,7 @@
           title = '修改';
         }
         return title;
-      },
+      }
     },
     methods: {
       formatPrice: function () {// 格式化单价，保留两位小数
