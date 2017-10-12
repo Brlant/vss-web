@@ -324,6 +324,7 @@
       getDetail: function (pageNo) {
         this.receiptDetails = {};
         if (!this.currentItem.id) return;
+        this.pager.currentPage = pageNo;
         this.loadingData = true;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -332,6 +333,7 @@
         receipt.queryDetail(this.currentItem.id, params).then(res => {
           this.loadingData = false;
           this.receiptDetails = res.data.list;
+          this.pager.count = res.data.count;
         });
       },
       getOrgMore: function () {

@@ -322,6 +322,7 @@
       getDetail: function (pageNo) {
         this.payDetails = {};
         if (!this.currentItem.id) return;
+        this.pager.currentPage = pageNo;
         this.loadingData = true;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -330,6 +331,7 @@
         pay.queryDetail(this.currentItem.id, params).then(res => {
           this.loadingData = false;
           this.payDetails = res.data.list;
+          this.pager.count = res.data.count;
         });
       },
       getOrgMore: function () {
