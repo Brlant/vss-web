@@ -53,7 +53,9 @@
             </el-row>
           </el-col>
           <el-col :span="2" v-show="!isShow(item)">
-            <el-button type="primary" size="small" @click.prevent="onSubmit(item)">确认绑定</el-button>
+            <perm label="batch-number-edit">
+              <el-button type="primary" size="small" @click.prevent="onSubmit(item)">确认绑定</el-button>
+            </perm>
           </el-col>
         </el-row>
         <div v-show="isShow(item)">
