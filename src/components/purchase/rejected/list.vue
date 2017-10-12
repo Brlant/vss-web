@@ -122,7 +122,7 @@
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
-            <el-col :span="5">
+            <el-col :span="6">
               <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
@@ -130,7 +130,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="6">
               <oms-form-row label="销售厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">

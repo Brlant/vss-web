@@ -30,7 +30,7 @@
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="sales-order-audit" v-show="currentOrder.state === '1' ">
-              <el-button type="primary" @click="review">确认审单</el-button>
+              <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
         </ul>
@@ -116,19 +116,19 @@
         });
       },
       review () {
-        this.$confirm('是否确认审单', '', {
+        this.$confirm('是否审单通过', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           http.put(`/erp-order/${this.orderId}/check`).then(() => {
             this.$notify.success({
-              message: '确认审单成功'
+              message: '审单通过成功'
             });
             this.transformState('2');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '确认审单失败'
+              message: error.response.data && error.response.data.msg || '审单通过失败'
             });
           });
         });
