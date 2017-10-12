@@ -825,6 +825,7 @@
       changeCustomerId (val) {// POV改变时
         this.checkLicence(val);
         this.searchWarehouses(val);
+        this.searchProduct();
       },
       searchWarehouses (orgId) {
         if (!orgId) {
@@ -869,9 +870,14 @@
         });
       },
       searchProduct: function (query) {
+        if (!this.form.orgId || !this.form.customerId) {
+          this.searchProductList = [];
+          return;
+        }
         let params = {
           orgId: this.form.orgId,
-          keyWord: query
+          keyWord: query,
+          factoryId: this.form.customerId
         };
         http.get('/org/goods/valid', {params: params}).then(res => {
           this.searchProductList = res.data.list;
