@@ -151,7 +151,7 @@
                       <el-tooltip class="item" effect="dark" content="库存数量减去已经分配的数量" placement="right">
                         <span style="font-size: 16px">剩余差额 <span>
                           {{ currentItem.resultAmount}}
-                         <dict :dict-group="'shipmentPackingUnit'" :dict-key="currentItem.shipmentPackingUnit"></dict>
+                         <dict :dict-group="'shipmentPackingUnit'" :dict-key="currentItem.mixUnit"></dict>
                         </span></span>
                       </el-tooltip>
                     </el-col>
