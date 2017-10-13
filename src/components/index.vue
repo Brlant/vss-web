@@ -220,6 +220,7 @@
       },
       queryBaseInfo (data) {
         BaseInfo.queryBaseInfo(data.userCompanyAddress).then(res => {
+          this.$store.commit('initOrgName', res.data.orgDto.name);
           window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');
         });
       }

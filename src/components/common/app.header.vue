@@ -171,6 +171,10 @@
     font-size: 13px;
   }
 
+  .org-title {
+    color: #ffffff;
+    margin-right: 10px;
+  }
 </style>
 
 <style>
@@ -201,6 +205,7 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>-->
+            <span class="org-title">{{orgName}}</span>
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
                 <img v-if="user.userIcon" :src="user.userIcon">
@@ -306,6 +311,9 @@
       },
       activePath: function () {
         return this.$route.path;
+      },
+      orgName () {
+        return this.$store.state.orgName;
       }
     },
     watch: {
