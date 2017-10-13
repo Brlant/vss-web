@@ -233,13 +233,13 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 1,
+          pageSize: 20,
           totalPage: 1
         },
         typePager: {
           currentPage: 1,
           count: 0,
-          pageSize: 1,
+          pageSize: 20,
           totalPage: 1
         },
         form: {},
