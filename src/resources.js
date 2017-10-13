@@ -307,7 +307,7 @@ export const Order = resource('/order', http, {
   },
   // 查询异常
   queryOrderExcepiton: (params) => {
-    return http.get('/order/quality-exception', {params});
+    return http.get('/erp-order/quality-exception', {params});
   },
   queryStateNum: function (params) {
     return http.get('/order/count/', {params});

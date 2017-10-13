@@ -35,6 +35,9 @@
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
         <receipt-detail :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt-detail>
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
+        <exception-info :currentOrder="currentOrder" v-show="index === 3" :orderId="orderId"
+                        :index="index"></exception-info>
+        <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
       </div>
     </div>
   </div>
@@ -43,11 +46,13 @@
   import basicInfo from './detail/base-info.vue';
   import receiptDetail from './detail/receipt-detail.vue';
   import log from '@/components/common/order.log.vue';
+  import batchNumbers from '../../purchase/order/detail/batch.number.vue';
+  import exceptionInfo from '../../purchase/order/detail/exception.info.vue';
   import { InWork, http } from '@/resources';
 
   export default {
     components: {
-      basicInfo, receiptDetail, log
+      basicInfo, receiptDetail, log, batchNumbers, exceptionInfo
     },
     props: {
       orderId: {
@@ -72,9 +77,16 @@
     computed: {
       pageSets () {
         let menu = [];
+        let perms = this.$store.state.permissions || [];
         menu.push({name: '订单详情', key: 0});
         if (this.state === '8') {
           menu.push({name: '收货详情', key: 1});
+        }
+        if (perms.includes('quality-exception-manager')) {
+          menu.push({name: '异常信息', key: 3});
+        }
+        if (perms.includes('batch-number-manager')) {
+          menu.push({name: '批号相关', key: 4});
         }
         menu.push({name: '操作日志', key: 2});
         return menu;
