@@ -66,10 +66,13 @@
       showCode: false,
       btnString: '提交',
       rules: {
+        orgCode: [
+          {required: true, message: '组织编号', trigger: 'blur'}
+        ],
         account: [
           {required: true, message: '请输入账号', trigger: 'blur'}
         ],
-        validateCode: [
+        code: [
           {required: true, message: '请输入验证码', trigger: 'blur'}
         ]
       }
