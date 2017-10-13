@@ -11,23 +11,25 @@
 
   .logo-part {
     text-align: center;
-    line-height: 24px;
-    font-size: 20px;
-    display: flex;
-    justify-content: center;
-    img {
-      margin-right: 10px;
-      vertical-align: middle;
-      margin-top: -10px;
-      width: 60px;
-      height: 60px;
-    }
-    color: #189aca;
+    line-height: 30px;
+    font-size: 28px;
+    position: absolute;
+    left: 15%;
+    top: 70px;
+    color: #ffffff;
     .e-logo {
       font-size: 16px;
     }
   }
 
+  .img-logo {
+    width: 120px;
+    height: 120px;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(-50%, -50%);
+  }
   .login-menu {
     cursor: pointer;
     display: flex;
@@ -45,7 +47,6 @@
         color: @activeColor;
       }
     }
-
   }
 
   #backgroundCanvas {
@@ -57,48 +58,58 @@
     height: 100%;
     pointer-events: none;
   }
+
+  .bg-logo {
+    width: 549px;
+    height: 160px;
+  }
+
+  .box-card {
+    margin-top: -5px;
+  }
 </style>
 <template>
   <div>
-    <el-card class="box-card main-card-box">
+    <div class="main-card-box">
+      <img class="bg-logo" src="../assets/img/bg.png">
+      <img class="img-logo" src="../assets/img/cerp-logo.png">
       <div class="logo-part clearfix">
-        <img src="../assets/img/erp-logo.png">
-        <div>
-          <div class="m-logo">疾病预防控制中心疫苗管理系统</div>
-          <div class="e-logo">CDC Vaccine Management System</div>
-        </div>
+        <div class="m-logo">疾病预防控制中心疫苗管理系统</div>
+        <div class="e-logo">CDC Vaccine Management System</div>
       </div>
-      <div style="padding:0 20px">
-        <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
-                 @submit.prevent="done" onsubmit="return false">
-          <el-form-item label="组织编号" prop="orgCode">
-            <oms-input v-model="user.orgCode"></oms-input>
-          </el-form-item>
-          <el-form-item label="用户名" prop="username">
-            <oms-input v-model="user.username"></oms-input>
-          </el-form-item>
-          <el-form-item label="密码" style="position:relative" prop="password">
-            <oms-input v-model="user.password" type="password"></oms-input>
-            <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>
-          </el-form-item>
-          <el-form-item label="验证码" v-show="showCode">
-            <div style="display:flex">
-              <div style="width:300px;margin-right:50px">
-                <oms-input v-model="user.validateCode"></oms-input>
+      <el-card class="box-card ">
+        <div style="padding:0 20px">
+          <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
+                   @submit.prevent="done" onsubmit="return false">
+            <el-form-item label="组织编号" prop="orgCode">
+              <oms-input v-model="user.orgCode"></oms-input>
+            </el-form-item>
+            <el-form-item label="用户名" prop="username">
+              <oms-input v-model="user.username"></oms-input>
+            </el-form-item>
+            <el-form-item label="密码" style="position:relative" prop="password">
+              <oms-input v-model="user.password" type="password"></oms-input>
+              <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>
+            </el-form-item>
+            <el-form-item label="验证码" v-show="showCode">
+              <div style="display:flex">
+                <div style="width:300px;margin-right:50px">
+                  <oms-input v-model="user.validateCode"></oms-input>
+                </div>
+                <div><img :src="codeUrl" @click="getCode" style="cursor:pointer;height: 36px"></div>
               </div>
-              <div><img :src="codeUrl" @click="getCode" style="cursor:pointer;height: 36px"></div>
-            </div>
 
-          </el-form-item>
+            </el-form-item>
 
-          <el-form-item label-width="80px">
-            <el-button type="primary" @click="done" style="display:block;width:100%;" native-type="submit">
-              {{btnString}} <i class="el-icon-loading" v-show="loading"></i></el-button>
+            <el-form-item label-width="80px">
+              <el-button type="primary" @click="done" style="display:block;width:100%;" native-type="submit">
+                {{btnString}} <i class="el-icon-loading" v-show="loading"></i></el-button>
 
-          </el-form-item>
-        </el-form>
-      </div>
-    </el-card>
+            </el-form-item>
+          </el-form>
+        </div>
+      </el-card>
+    </div>
     <canvas id="backgroundCanvas"></canvas>
     <app-footer></app-footer>
   </div>
