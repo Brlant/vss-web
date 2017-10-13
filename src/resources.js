@@ -404,6 +404,11 @@ export const Address = resource('/binding-warehouse', http, {
   }
 });
 
+// 疫苗采购协议对象
+export const PurchaseAgreement = resource('/purchase-agreement', http, {
+
+});
+
 export const Plan = resource('/plan/', http, {
   queryOrderCount: (params) => {
     return http.get('/plan', {

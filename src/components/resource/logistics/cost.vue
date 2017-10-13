@@ -104,7 +104,7 @@
                   </span>
                 </perm>
               </div>
-              <oms-row label="费用模式" :span="5" v-if="cost.model">{{ setModel}}</oms-row>
+              <oms-row label="费用模式" :span="5">{{ setModel}}</oms-row>
               <oms-row label="一类疫苗物流费用" :span="5" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{ cost.price
                 }}
               </oms-row>
@@ -125,7 +125,7 @@
                   </span>
                 </perm>
               </div>
-              <oms-row label="费用模式" :span="5" v-if="secondCost.model">{{ setSecondModel}}</oms-row>
+              <oms-row label="费用模式" :span="5">{{ setSecondModel}}</oms-row>
               <oms-row label="二类疫苗物流费用" :span="5" v-if="secondCost.model==='0'"><span v-if="secondCost.price">￥</span>{{ secondCost.price
                 }}
               </oms-row>

@@ -236,8 +236,10 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form" label-width="200px" style="padding-right: 20px">
             <el-form-item label="二类疫苗物流费用模式" prop="model">
-              <el-radio class="radio" v-model="form.model" label="0">单支</el-radio>
-              <el-radio class="radio" v-model="form.model" label="1">比例</el-radio>
+              <el-select v-model="form.model" placeholder="请选择二类疫苗物流费用模式">
+                <el-option label="单支" value="0"></el-option>
+                <el-option label="比例" value="1"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="二类疫苗物流费用" prop="price" v-if="form.model==='0'">
               <oms-input type="text" placeholder="请输入二类疫苗物流费用" v-model="form.price" :min="0"
@@ -270,6 +272,7 @@
           proportion: '',
           vaccineType: '2'
         },
+        model: '',
         rules: {
           model: {required: true, message: '请选择物流费用模式', trigger: 'blur'},
           price: {required: true, message: '请输入二类疫苗物流费用', trigger: 'blur'},
@@ -282,8 +285,10 @@
       formItem: function (val) {
         if (val.id) {
           this.form = Object.assign({}, this.formItem);
-          if (this.form.model === '1') {
+          if (this.form.model === '1' && this.formType === 'add') {
             this.form.proportion = this.form.price;
+          } else {
+            this.form.proportion = this.form.price * 100;
           }
         } else {
           this.form = {
