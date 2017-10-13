@@ -28,7 +28,8 @@ export default {
     1: {'title': '执行中', state: '7', num: 0},
     2: {'title': '已完成', state: '8', num: 0},
     3: {'title': '已取消', state: '9', num: 0},
-    4: {'title': '已拒收', state: '5', num: 0}
+    4: {'title': '已拒收', state: '5', num: 0},
+    5: {'title': '异常', state: '10', num: 0}
   },
   outOrderType: {
     0: {'title': '待确认', state: '0', num: 0},

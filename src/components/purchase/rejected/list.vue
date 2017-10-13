@@ -217,7 +217,6 @@
               <el-col :span="3">
                 <div class="vertical-center">
                   {{getOrderStatus(item)}}
-                  <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
                 </div>
               </el-col>
               <el-col :span="2" class="opera-btn pt10" v-show="filters.state === '-1' ">
@@ -499,14 +498,6 @@
       showItem: function (order) {
         this.currentOrderId = order.id;
         this.state = order.state;
-        if (this.isLock(order)) {
-          this.$notify.warning({
-            duration: 2000,
-            title: '被锁定',
-            message: '该订单信息已被' + order.lockManName + '锁定'
-          });
-          return;
-        }
         this.showDetail = true;
         this.$router.push(`/purchase/rejected/${order.id}`);
       },

@@ -112,10 +112,10 @@
         loadingData: true,
         batchNumbers: [],
         attachmentRight: {// 附件管理权限
-          watch: 'show',
+          watch: 'batch-number-manager',
           download: 'batch-number-download',
           upload: '',
-          remove: ''
+          remove: 'batch-number-upload'
         },
         drugControlReport: {
           id: '',

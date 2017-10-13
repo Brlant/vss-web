@@ -171,7 +171,7 @@
 
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4' }"
+             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
@@ -393,11 +393,19 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         });
-        erpOrder.query(param).then(res => {
-          this.orderList = res.data.list;
-          this.pager.count = res.data.count;
-          this.loadingData = false;
-        });
+        if (this.filters.state !== '10') {
+          erpOrder.query(param).then(res => {
+            this.orderList = res.data.list;
+            this.pager.count = res.data.count;
+            this.loadingData = false;
+          });
+        } else {
+          Order.queryOrderExcepiton(param).then(res => {
+            this.orderList = res.data.list;
+            this.pager.count = res.data.count;
+            this.loadingData = false;
+          });
+        }
         this.queryStatusNum(param);
       },
       refreshOrder () {
@@ -448,6 +456,7 @@
           this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
           this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
           this.orgType[4].num = this.obtionStatusNum(data['in-refuse']);
+          this.orgType[5].num = this.obtionStatusNum(data['exception']);
         });
       },
       isLock: function (item) { // 判断是不是被锁定
@@ -471,14 +480,6 @@
       showItem: function (order) {
         this.currentOrderId = order.id;
         this.state = order.state;
-        if (this.isLock(order)) {
-          this.$notify.warning({
-            duration: 2000,
-            title: '被锁定',
-            message: '该订单信息已被' + order.lockManName + '锁定'
-          });
-          return;
-        }
         this.showDetail = true;
         this.$router.push(`/purchase/order/${order.id}`);
       },

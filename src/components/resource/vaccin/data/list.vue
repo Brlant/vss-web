@@ -190,10 +190,10 @@
                   <goods-row label="中标价格" :span="8">
                     ¥ {{ data.bidPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="采购价格" :span="12">
+                  <goods-row label="采购价格" :span="8">
                     ¥ {{ data.procurementPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="销售价格" :span="12">
+                  <goods-row label="销售价格" :span="8">
                     ¥ {{ data.sellPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="库存上限" :span="8">

@@ -32,7 +32,7 @@
         margin: 0;
       }
       > h2 {
-        padding: 0 45px;
+        padding: 0 30px;
         margin: 0;
         font-size: 18px;
         font-weight: bold;
@@ -234,7 +234,7 @@
       </div>
       <div class="content-right min-gutter">
         <div class="hide-content show-content">
-          <el-form ref="d-form" :rules="rules" :model="form" label-width="160px" style="padding-right: 20px">
+          <el-form ref="d-form" :rules="rules" :model="form" label-width="200px" style="padding-right: 20px">
             <el-form-item label="一类疫苗物流费用模式" prop="model">
               <el-radio class="radio" v-model="form.model" label="0">单支</el-radio>
               <el-radio class="radio" v-model="form.model" label="1">比例</el-radio>
