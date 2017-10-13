@@ -232,6 +232,11 @@ const route = [
             meta: {moduleId: 'resource', title: '疫苗授权管理', perm: 'vaccine-authorization'}
           },
           {
+            path: '/resource/vaccin/price',
+            component: resolve => require(['./components/resource/price/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '疫苗价格管理', perm: 'vaccine-info'}
+          },
+          {
             path: '/resource/store',
             component: resolve => require(['./components/resource/store/list.vue'], resolve),
             meta: {moduleId: 'resource', title: '仓库管理', perm: 'binding-warehouse'}

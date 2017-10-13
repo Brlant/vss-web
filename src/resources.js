@@ -314,6 +314,23 @@ export const Order = resource('/order', http, {
   }
 });
 
+
+/**
+ *
+ * @type {the}
+ */
+export const BriceGroupPov = resource('/pov-sale-group/', http, {});
+
+/**
+ *
+ * @type {the}
+ */
+export const BriceGroup = resource('/sale-price-group/', http, {
+  querySum (params) {
+    return http.get('sale-price-group/count', {params});
+  }
+});
+
 /**
  * 库存波次
  * @type {the}
