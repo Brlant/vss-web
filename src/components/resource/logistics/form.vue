@@ -236,8 +236,10 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form" label-width="200px" style="padding-right: 20px">
             <el-form-item label="一类疫苗物流费用模式" prop="model">
-              <el-radio class="radio" v-model="form.model" label="0">单支</el-radio>
-              <el-radio class="radio" v-model="form.model" label="1">比例</el-radio>
+              <el-radio-group v-model="form.model">
+                <el-radio :label="'0'">单支</el-radio>
+                <el-radio :label="'1'">比例</el-radio>
+              </el-radio-group>
             </el-form-item>
             <el-form-item label="一类疫苗物流费用" prop="price" v-if="form.model==='0'">
               <oms-input type="text" placeholder="请输入一类疫苗物流费用" v-model="form.price" :min="0"

@@ -227,6 +227,11 @@ const route = [
             meta: {moduleId: 'resource', title: '疫苗资料管理', perm: 'vaccine-info'}
           },
           {
+            path: '/resource/vaccin/purchaseAgreement',
+            component: resolve => require(['./components/resource/vaccin/purchaseAgreement/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '疫苗采购协议', perm: 'vaccine-info'}
+          },
+          {
             path: '/resource/vaccin/pov',
             component: resolve => require(['./components/resource/vaccin/rights/pov.vue'], resolve),
             meta: {moduleId: 'resource', title: '疫苗授权管理', perm: 'vaccine-authorization'}
