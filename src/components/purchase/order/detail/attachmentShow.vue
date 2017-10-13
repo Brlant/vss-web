@@ -73,14 +73,14 @@
                 <perm :label="currentAttachmentRight.remove">
                    <span class="attachment-delete" @click.stop="deleteAttachMentManageItem(item)"
                          v-show="isShowDeleteButton">
-                     <i class="oms-font oms-font-delete"></i>
+                     <i class="iconfont icon-delete"></i>
                     </span>
                 </perm>
                 <perm :label="currentAttachmentRight.download">
               <span class="attachment-delete">
                 <a class="download-link" :href="item.attachmentStoragePath" @click.stop=""
                    :download="item.attachmentFileName">
-                  <i class="oms-font oms-font-download"></i>
+                  <i class="iconfont icon-download"></i>
                 </a>
               </span>
                 </perm>
@@ -106,13 +106,13 @@
           {{ item.attachmentFileName }}
           <perm :label="currentAttachmentRight.remove">
               <span class="attachment-span" @click.stop="deleteAttachMentManageItem(item)">
-                 <i class="oms-font oms-font-delete"></i>
+                 <i class="iconfont icon-delete"></i>
               </span>
           </perm>
           <span class="attachment-span">
               <a class="download-link" :href="item.attachmentStoragePath "
                  :download="item.attachmentFileName" @click.stop="">
-                <i class="oms-font oms-font-download"></i>
+                <i class="iconfont icon-download"></i>
               </a>
          </span>
         </li>
@@ -170,7 +170,7 @@
       isShowDeleteButton: function () {
         let isShow = false;
         let state = this.currentOrder.state;
-        if (state === '0' || state === '3') isShow = true;
+        if (state === '6' || state === '7') isShow = true;
         return isShow;
       },
       isShowAttachmentUpload: function () {// 是否显示附件上传
