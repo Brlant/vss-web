@@ -6,10 +6,10 @@
   /*}*/
 
   .main-card-box {
-    width: 550px;
+    width: 549px;
   }
 
-  .logo-part {
+  .logo-part-s {
     text-align: center;
     line-height: 30px;
     font-size: 28px;
@@ -21,7 +21,6 @@
       font-size: 16px;
     }
   }
-
   .img-logo {
     width: 120px;
     height: 120px;
@@ -30,6 +29,16 @@
     top: 0;
     transform: translate(-50%, -50%);
   }
+
+  .bg-logo {
+    width: 549px;
+    height: 160px;
+  }
+
+  .box-card {
+    margin-top: -5px;
+  }
+
   .login-menu {
     cursor: pointer;
     display: flex;
@@ -59,21 +68,13 @@
     pointer-events: none;
   }
 
-  .bg-logo {
-    width: 549px;
-    height: 160px;
-  }
-
-  .box-card {
-    margin-top: -5px;
-  }
 </style>
 <template>
   <div>
     <div class="main-card-box">
       <img class="bg-logo" src="../assets/img/bg.png">
       <img class="img-logo" src="../assets/img/cerp-logo.png">
-      <div class="logo-part clearfix">
+      <div class="logo-part-s clearfix">
         <div class="m-logo">疾病预防控制中心疫苗管理系统</div>
         <div class="e-logo">CDC Vaccine Management System</div>
       </div>
