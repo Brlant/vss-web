@@ -314,6 +314,23 @@ export const Order = resource('/order', http, {
   }
 });
 
+
+/**
+ *
+ * @type {the}
+ */
+export const BriceGroupPov = resource('/pov-sale-group/', http, {});
+
+/**
+ *
+ * @type {the}
+ */
+export const BriceGroup = resource('/sale-price-group/', http, {
+  querySum (params) {
+    return http.get('sale-price-group/count', {params});
+  }
+});
+
 /**
  * 库存波次
  * @type {the}
@@ -385,6 +402,11 @@ export const Address = resource('/binding-warehouse', http, {
   queryStateNum: (params) => {
     return http.get('/binding-warehouse/count', {params});
   }
+});
+
+// 疫苗采购协议对象
+export const PurchaseAgreement = resource('/purchase-agreement', http, {
+
 });
 
 export const Plan = resource('/plan/', http, {

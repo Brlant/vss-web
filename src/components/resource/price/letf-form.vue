@@ -32,7 +32,7 @@
         margin: 0;
       }
       > h2 {
-        padding: 0 30px;
+        padding: 0 45px;
         margin: 0;
         font-size: 18px;
         font-weight: bold;
@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">{{setTitle}}一类疫苗物流费用</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">新增价格组</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -234,23 +234,27 @@
       </div>
       <div class="content-right min-gutter">
         <div class="hide-content show-content">
-          <el-form ref="d-form" :rules="rules" :model="form" label-width="200px" style="padding-right: 20px">
-            <el-form-item label="一类疫苗物流费用模式" prop="model">
-              <el-select v-model="form.model" placeholder="请选择一类疫苗物流费用模式">
-                <el-option label="单支" value="0"></el-option>
-                <el-option label="比例" value="1"></el-option>
+          <el-form ref="d-form" :rules="rules" :model="form"
+                   label-width="160px" style="padding-right: 20px">
+            <el-form-item label="价格组名称" prop="name">
+              <oms-input type="text" placeholder="请输入价格组名称" v-model="form.name"></oms-input>
+            </el-form-item>
+            <el-form-item label="选择CDC货品" prop="orgGoodsId">
+              <el-select filterable remote placeholder="请输入关键字搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
+                         v-model="form.orgGoodsId">
+                <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
+                           v-for="item in goodses"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="一类疫苗物流费用" prop="price" v-if="form.model==='0'">
-              <oms-input type="text" placeholder="请输入一类疫苗物流费用" v-model="form.price" :min="0"
+            <el-form-item label="单价" prop="unitPrice">
+              <oms-input type="text" placeholder="请输入单价" v-model="form.unitPrice" :min="0"
                          @blur="formatPrice">
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
-            <el-form-item label="一类疫苗物流费用比例" prop="proportion" v-if="form.model==='1'">
-              <oms-input type="text" placeholder="请输入一类疫苗物流费用比例" v-model="form.proportion" :min="0">
-                <template slot="append">%</template>
-              </oms-input>
+            <el-form-item label="是否可用">
+              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
+                         v-model="form.availabilityStatus"></el-switch>
             </el-form-item>
           </el-form>
         </div>
@@ -259,101 +263,83 @@
   </div>
 </template>
 <script>
-  import {logisticsCost} from '../../../resources';
-  import utils from '../../../tools/utils';
+  import { Vaccine, BriceGroup } from '@/resources';
+  import utils from '@/tools/utils';
 
   export default {
+    props: {
+      formItem: Object
+    },
     data () {
       return {
         form: {
-          orgId: '',
-          price: '',
-          proportion: '',
-          model: '',
-          vaccineType: '1'
+          name: '',
+          orgGoodsId: '',
+          unitPrice: '',
+          availabilityStatus: true
         },
         rules: {
-          model: {required: true, message: '请选择物流费用模式', trigger: 'blur'},
-          price: {required: true, message: '请输入一类疫苗物流费用', trigger: 'blur'},
-          proportion: {required: true, message: '请输入一类疫苗物流费用比例', trigger: 'blur'}
-        }
+          name: {required: true, message: '请输入价格组名称', trigger: 'blur'},
+          unitPrice: {required: true, message: '请输入单价', trigger: 'blur'},
+          orgGoodsId: {required: true, message: '请选择CDC货品', trigger: 'change'}
+        },
+        goodses: [] // 货品列表
       };
     },
-    props: ['formItem', 'formType'],
     watch: {
-      formItem: function (val) {
+      formItem (val) {
         if (val.id) {
-          this.form = Object.assign({}, this.formItem);
-          if (this.form.model === '1' && this.formType === 'add') {
-            this.form.proportion = this.form.price;
-          } else {
-            this.form.proportion = this.form.price * 100;
-          }
+          this.form = val;
         } else {
           this.form = {
-            orgId: '',
-            price: '',
-            model: '0',
-            proportion: '',
-            vaccineType: '1'
+            name: '',
+            orgGoodsId: '',
+            unitPrice: '',
+            availabilityStatus: true
           };
         }
-      },
-      'form.model': function (val) {
-        if (val === '0') {
-          this.form.proportion = '';
-        }
-        if (val === '1') {
-          this.form.price = '';
-        }
-      }
-    },
-    computed: {
-      setTitle: function () {
-        let title = '新增';
-        if (this.form.id) {
-          title = '修改';
-        }
-        return title;
       }
     },
     methods: {
+      getGoodsList: function (query) {
+        let params = Object.assign({}, {
+          keyWord: query,
+          deleteFlag: false
+        });
+        Vaccine.query(params).then(res => {
+          this.goodses = res.data.list;
+        });
+      },
       formatPrice: function () {// 格式化单价，保留两位小数
-        this.form.price = utils.autoformatDecimalPoint(this.form.price);
+        this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;
           }
-          this.form.orgId = this.$store.state.user.userCompanyAddress;
-          // 处理比例
-          if (this.form.model === '1' && this.form.proportion !== '') {
-            let price = this.form.proportion / 100;
-            this.form.price = price;
-          }
-          if (this.formType === 'add') {
-            logisticsCost.save(this.form).then(() => {
+          if (this.form.id) {
+            BriceGroup.update(this.form.id, this.form).then(() => {
               this.$notify.success({
-                message: '添加一类疫苗物流费用成功'
+                message: '编辑价格组成功'
               });
               this.$refs['d-form'].resetFields();
-              this.$emit('close');
+              this.$emit('refresh');
             }).catch(error => {
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '添加一类疫苗物流费用失败'
+                message: error.response.data && error.response.data.msg || '编辑价格组失败'
               });
             });
           } else {
-            logisticsCost.update(this.form.id, this.form).then(() => {
+            BriceGroup.save(this.form).then(() => {
               this.$notify.success({
-                message: '修改一类疫苗物流费用成功'
+                message: '添加价格组成功'
               });
               this.$refs['d-form'].resetFields();
-              this.$emit('close');
+              this.$emit('refresh');
             }).catch(error => {
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '修改一类疫苗物流费用失败'
+                message: error.response.data && error.response.data.msg || '添加价格组失败'
               });
             });
           }
