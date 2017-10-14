@@ -26,7 +26,7 @@
       left: 0;
       top: 0;
       bottom: 0;
-      text-align: left;
+      text-align: center;
       background-color: #eef2f3;
       > ul {
         margin: 0;
