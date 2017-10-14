@@ -275,19 +275,10 @@
       addType: function () {
         this.action = 'add';
         this.form = {
-          name: '',
-          orgId: '',
-          status: true,
-          goodsId: '',
-          goodsIsCombination: false,
-          goodsNo: '',
-          bidPrice: '',
-          procurementPrice: '',
-          sellPrice: '',
-          valuationFlag: false,
-          storageConditionId: '',
-          inventoryLowerLimit: null,
-          inventoryUpperLimit: null
+          id: '',
+          amount: '',
+          unitPrice: '',
+          expireTime: null
         };
         this.showRight = true;
         this.combinationList = [];

@@ -42,7 +42,7 @@
       <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" @change="changeEndTime">
       </el-date-picker>
     </el-form-item>
-    <el-form-item label="是否生效" prop="availabilityStatus">
+    <el-form-item label="是否生效">
       <el-switch v-model="form.availabilityStatus" on-text="是" off-text="否"
                  on-color="#13ce66"
                  off-color="#ff4949">
@@ -181,6 +181,7 @@
                 });
               });
             } else {
+              this.form.unitPrice = parseInt(this.form.unitPrice, 0);
               PurchaseAgreement.update(this.form.id, this.form).then(res => {
                 this.$notify.success({
                   name: '成功',
