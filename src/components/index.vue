@@ -171,6 +171,7 @@
         let data = window.localStorage.getItem('user');
         data = JSON.parse(data);
         this.getRoleMenus(data);
+        this.queryBaseInfo(data);
       }
       this.queryPerms();
       this.queryLevel();

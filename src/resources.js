@@ -314,7 +314,6 @@ export const Order = resource('/order', http, {
   }
 });
 
-
 /**
  *
  * @type {the}
