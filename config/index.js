@@ -29,7 +29,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://erp.tinysoft.cc:88/',
+        target: 'http://localhost:8113/',
         changeOrigin: true
       }
     },
