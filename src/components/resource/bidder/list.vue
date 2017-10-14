@@ -154,7 +154,7 @@
         });
       },
       add: function () {
-        this.row = '';
+
         this.action = 'add';
         this.formTitle = '新增';
         this.showRight = true;
@@ -168,7 +168,6 @@
       formatStatus: function (value) {
         if (value === true) return '生效';
         else return '未生效';
-
       },
       itemChange: function (item) {
         if (this.action === 'add') {
