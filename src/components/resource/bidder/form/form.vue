@@ -11,9 +11,29 @@
       <el-form-item label="疫苗">
         <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterVaccine"
                    :clearable="true"
-                   v-model="form.goodsId">
-          <el-option :value="vaccine.orgGoodsDto.goodsId" :key="vaccine.orgGoodsDto.goodsId"
-                     :label="vaccine.orgGoodsDto.name" v-for="vaccine in vaccineList"></el-option>
+                   v-model="form.goodsId" popper-class="good-selects">
+          <el-option :value="vaccine.id" :key="vaccine.id"
+                     :label="vaccine.name" v-for="vaccine in vaccineList">
+            <div style="overflow: hidden">
+              <span class="pull-left">{{vaccine.name}}</span>
+            </div>
+            <div style="overflow: hidden">
+                <span class="select-other-info pull-left"><span
+                  v-show="vaccine.id">货品ID</span>  {{vaccine.id}}
+                </span>
+              <span class="select-other-info pull-left"><span
+                v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
+                </span>
+              <span class="select-other-info pull-left"><span
+                v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}
+                </span>
+            </div>
+            <div style="overflow: hidden">
+              <span class="select-other-info pull-left"><span
+                v-show="vaccine.factoryName">生产厂商</span>  {{ vaccine.factoryName }}
+              </span>
+            </div>
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="中标年份" prop="phone">
@@ -90,7 +110,7 @@
           goodsId: '',
           expireTime: '',
           year: '',
-          availabilityStatus: ''
+          availabilityStatus: true
         },
         doing: false
       };

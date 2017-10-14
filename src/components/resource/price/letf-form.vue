@@ -243,7 +243,19 @@
               <el-select filterable remote placeholder="请输入关键字搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
                          v-model="form.orgGoodsId">
                 <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
-                           v-for="item in goodses"></el-option>
+                           v-for="item in goodses">
+                  <div style="overflow: hidden">
+                    <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                  </div>
+                  <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                      </span>
+                    <span class="select-other-info pull-left"><span
+                      v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                      </span>
+                  </div>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="单价" prop="unitPrice">
