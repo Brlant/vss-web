@@ -13,6 +13,18 @@
     <el-form-item label="仓库名称" prop="name">
       <oms-input type="text" v-model="form.name" placeholder="请输入仓库名称"></oms-input>
     </el-form-item>
+    <el-form-item label="仓库类型" prop="warehouseType">
+      <el-select v-model="form.warehouseType" placeholder="请选择仓库类型">
+        <el-option label="物流公司仓库" value="0"></el-option>
+        <el-option label="本地仓库" value="1"></el-option>
+      </el-select>
+    </el-form-item>
+    <el-form-item label="所属物流公司" prop="warehouseSourceFirm" v-if="form.warehouseType==='0'">
+      <el-select filterable remote placeholder="请输入关键字搜索物流公司" :remote-method="getOrgs" :clearable="true"
+                 v-model="form.warehouseSourceFirm">
+        <el-option :value="item.id" :key="item.id" :label="item.name" v-for="item in orgList"></el-option>
+      </el-select>
+    </el-form-item>
     <el-form-item label="联系人" prop="contact">
       <oms-input type="text" v-model="form.contact" placeholder="请输入联系人"></oms-input>
     </el-form-item>
@@ -40,7 +52,7 @@
   </el-form>
 </template>
 <script>
-  import {Address} from '../../../../resources';
+  import {Address, BaseInfo} from '../../../../resources';
   import utils from './../../../../tools/utils';
 
   export default {
@@ -62,11 +74,14 @@
           orgId: '',
           name: '',
           contact: '',
+          warehouseType: '',
+          warehouseSourceFirm: '',
           telephone: '',
           default: false,
           detail: '',
           type: ''
         },
+        orgList: [],
         options: utils.address,
         selectOptions: [],
         rules: {
@@ -85,6 +100,12 @@
           ],
           type: [
             {required: true, message: '请选择仓库地址类型', trigger: 'change'}
+          ],
+          warehouseType: [
+            {required: true, message: '请选择仓库类型', trigger: 'blur'}
+          ],
+          warehouseSourceFirm: [
+            {required: true, message: '请选择所属物流公司', trigger: 'blur'}
           ]
         },
         doing: false
@@ -113,6 +134,15 @@
       }
     },
     methods: {
+      getOrgs: function (query) {// 过滤销售商商名称列表
+        let params = {
+          deleteFlag: false,
+          keyWord: query
+        };
+        BaseInfo.query(params).then(res => {
+          this.orgList = res.data.list;
+        });
+      },
       initFormValue: function () {
         this.selectOptions = [];
         if (this.formItem.id) {
@@ -126,6 +156,8 @@
             name: '',
             contact: '',
             telephone: '',
+            warehouseType: '1',
+            warehouseSourceFirm: '',
             default: false,
             detail: '',
             type: ''
