@@ -99,7 +99,12 @@
               <ul class="show-list">
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
-                  {{item.name }}
+                  <div class="id-part">
+                    {{item.goodsName }}
+                  </div>
+                  <div>
+                    {{item.name }}
+                  </div>
                 </li>
               </ul>
               <div class="btn-left-list-more" @click.stop="getOrgMore">
