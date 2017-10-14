@@ -113,6 +113,22 @@
                 {{ data.name }}
               </el-col>
             </el-row>
+            <el-row>
+              <el-col :span="3" class="text-right">
+                仓库类型：
+              </el-col>
+              <el-col :span="20">
+                {{ warehouseType }}
+              </el-col>
+            </el-row>
+            <el-row v-if="data.warehouseType==='0'">
+              <el-col :span="3" class="text-right">
+                所属物流公司：
+              </el-col>
+              <el-col :span="20">
+                {{ data.warehouseSourceFirmName}}
+              </el-col>
+            </el-row>
             <el-row style="margin-top: 20px">
               <el-col :span="3" class="text-right">
                 仓库地址类型：
@@ -206,6 +222,15 @@
         let city = this.data.city;
         let region = this.data.region;
         return utils.formatAddress(province, city, region);
+      },
+      warehouseType() {
+        let warehouseType = '';
+        if (this.data.warehouseType === '0') {
+          warehouseType = '物流公司仓库';
+        } else {
+          warehouseType = '本地仓库';
+        }
+        return warehouseType;
       }
     },
     mounted () {
