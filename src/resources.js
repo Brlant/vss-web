@@ -406,7 +406,7 @@ export const Address = resource('/binding-warehouse', http, {
 // 疫苗采购协议对象
 export const PurchaseAgreement = resource('/purchase-agreement', http, {
   queryValidVaccin (params) {
-    return http.get('/purchase-agreement/valid', {params});
+    return http.get('/purchase-agreement/valid/pager', {params});
   }
 });
 
@@ -533,8 +533,8 @@ export const Vaccine = resource('/vaccine-info', http, {
 
 // 疫苗授权
 export const VaccineRights = resource('/vaccine-authorization', http, {
-  queryVaccineByPov (povId, params) {
-    return http.get(`/vaccine-authorization/${povId}`, {params});
+  queryPovByVaccine (orgGoodsId, params) {
+    return http.get(`/vaccine-authorization/org-goods/${orgGoodsId}/pov`, {params});
   },
   deleteVaccine (id) {
     return http.put(`/vaccine-authorization/detail/${id}`);
