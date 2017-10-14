@@ -340,9 +340,18 @@
         <el-form-item label="往来单位" prop="followOrgId">
           <el-select placeholder="请输入关键字搜索厂商" remote :remote-method="queryOtherBusiness" :clearable="true"
                      v-model="form.followOrgId"
-                     filterable>
+                     filterable popper-class="good-selects">
             <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in orgList"
-                       v-show="item.auditedStatus ==1"></el-option>
+                       v-show="item.auditedStatus ==1">
+              <div style="overflow: hidden">
+                <span class="pull-left">{{item.name}}</span>
+              </div>
+              <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{item.id}}
+                  </span>
+              </div>
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="有效期" prop="expirationDate">

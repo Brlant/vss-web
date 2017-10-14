@@ -13,7 +13,27 @@
                    :clearable="true"
                    v-model="form.goodsId">
           <el-option :value="vaccine.id" :key="vaccine.id"
-                     :label="vaccine.name" v-for="vaccine in vaccineList"></el-option>
+                     :label="vaccine.name" v-for="vaccine in vaccineList" popper-class="good-selects">
+            <div style="overflow: hidden">
+              <span class="pull-left">{{vaccine.name}}</span>
+            </div>
+            <div style="overflow: hidden">
+                <span class="select-other-info pull-left"><span
+                  v-show="vaccine.id">货品ID</span>  {{vaccine.id}}
+                </span>
+              <span class="select-other-info pull-left"><span
+                v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
+                </span>
+              <span class="select-other-info pull-left"><span
+                v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}
+                </span>
+            </div>
+            <div style="overflow: hidden">
+              <span class="select-other-info pull-left"><span
+                v-show="item.orgGoodsDto.salesFirmName">生产</span>  {{ item.orgGoodsDto.salesFirmName }}
+              </span>
+            </div>
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="中标年份" prop="phone">
