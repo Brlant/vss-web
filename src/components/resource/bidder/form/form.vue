@@ -12,8 +12,8 @@
         <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterVaccine"
                    :clearable="true"
                    v-model="form.goodsId">
-          <el-option :value="vaccine.orgGoodsDto.goodsId" :key="vaccine.orgGoodsDto.goodsId"
-                     :label="vaccine.orgGoodsDto.name" v-for="vaccine in vaccineList"></el-option>
+          <el-option :value="vaccine.id" :key="vaccine.id"
+                     :label="vaccine.name" v-for="vaccine in vaccineList"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="中标年份" prop="phone">
@@ -90,7 +90,7 @@
           goodsId: '',
           expireTime: '',
           year: '',
-          availabilityStatus: ''
+          availabilityStatus: true
         },
         doing: false
       };
