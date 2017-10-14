@@ -11,14 +11,14 @@
 
 </style>
 <template>
-  <el-form ref="form" :rules="rules" :model="form" label-width="100px" class="demo-ruleForm">
+  <el-form ref="form" :rules="rules" :model="form" label-width="120px" class="demo-ruleForm">
     <h2 class="clearfix">{{showTitle}}疫苗采购协议</h2>
     <el-form-item label="疫苗" prop="orgGoodsId" class="search-input">
       <el-select placeholder="请选择疫苗" v-model="form.orgGoodsId" filterable remote :remote-method="getOmsGoods"
                  :clearable="true" popper-class="good-selects">
         <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                    v-for="item in goodsList">
-          <span class="pull-left">{{ item.orgGoodsDto.name }}</span class="pull-left">
+          <span class="pull-left">{{ item.orgGoodsDto.name }}</span>
           <span class="pull-right" style="color:#999">
            <span>{{ item.orgGoodsDto.salesFirmName }}</span>
           </span>

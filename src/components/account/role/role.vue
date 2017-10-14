@@ -123,7 +123,7 @@
             </h2>
             <div class="page-main-body">
               <el-row>
-                <el-col :span="3" class="text-right">
+                <el-col :span="4" class="text-right">
                   角色名称：
                 </el-col>
                 <el-col :span="20">
@@ -131,33 +131,35 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="3" class="text-right">
+                <el-col :span="4" class="text-right">
                   角色英文名称：
                 </el-col>
-                <el-col :span="21">
+                <el-col :span="20">
                   {{ resData.name }}
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="3" class="text-right">
+                <el-col :span="4" class="text-right">
                   角色状态：
                 </el-col>
-                <el-col :span="21">
+                <el-col :span="20">
                   {{ resData.usableStatus == 1 ? '可用' : '停用' }}
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="3" class="text-right">
+                <el-col :span="4" class="text-right">
                   角色描述：
                 </el-col>
-                <el-col :span="21">
+                <el-col :span="20">
                   {{resData.remark}}
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="3" class="text-right">
+                <el-col :span="4" class="text-right">
                   角色权限：
                 </el-col>
+              </el-row>
+              <el-row>
                 <el-col :span="24">
                   <div class="role-perm-list">
                     <div class="group-list" v-for="groupItem in permList.tree"
