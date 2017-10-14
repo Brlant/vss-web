@@ -157,7 +157,7 @@
                 {{ item.purchaseCount }}
               </el-col>
               <el-col :span="2" class="R pt10 ">
-                <span v-show="item.price">￥</span>{{ item.price }}
+                <span v-show="item.price">￥</span>{{ item.price | formatMoney}}
               </el-col>
               <el-col :span="3" class="R pt10 ">
                 {{ item.arriveTime | date }}

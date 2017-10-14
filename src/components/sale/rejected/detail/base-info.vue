@@ -100,7 +100,7 @@
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
           <td width="80px" class="text-center">
-            <span v-show="item.unitPrice">￥{{item.unitPrice}}</span>
+            <span v-show="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
           </td>
           <td class="text-center">
             <span v-show="item.unitPrice">¥</span>{{ item.amount * item.unitPrice | formatMoney }}
