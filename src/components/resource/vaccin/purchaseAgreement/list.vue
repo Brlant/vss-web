@@ -182,7 +182,7 @@
                   采购单价：
                 </el-col>
                 <el-col :span="20">
-                  <span v-if="currentItem.amount">￥</span>{{ currentItem.amount}}
+                  <span v-if="currentItem.unitPrice">￥</span>{{ currentItem.unitPrice}}
                 </el-col>
               </el-row>
               <el-row>
