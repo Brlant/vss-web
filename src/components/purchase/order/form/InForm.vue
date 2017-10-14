@@ -26,7 +26,7 @@
       left: 0;
       top: 0;
       bottom: 0;
-      text-align: left;
+      text-align: center;
       background-color: #eef2f3;
       > ul {
         margin: 0;
@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">增加采购订单</h2>
+        <h2 class="clearfix right-title">增加订单</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -374,7 +374,7 @@
                 </el-col>
                 <el-col :span="12">
                   <span v-show="accessoryList.length">【组合货品】</span>
-                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
+                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                       <span style="margin-right: 10px"
                             v-show="acce.procurementPrice">¥ {{ acce.procurementPrice | formatMoney }}</span>

@@ -1,76 +1,9 @@
 <style lang="less" scoped="">
-  @import "../assets/mixins.less";
-
-  /*body {*/
-  /*background: #f5f5f5*/
-  /*}*/
-
-  .main-card-box {
-    width: 549px;
-  }
-
-  .logo-part-s {
-    text-align: center;
-    line-height: 30px;
-    font-size: 28px;
-    position: absolute;
-    left: 15%;
-    top: 70px;
-    color: #ffffff;
-    .e-logo {
-      font-size: 16px;
-    }
-  }
-  .img-logo {
-    width: 120px;
-    height: 120px;
-    position: absolute;
-    left: 50%;
-    top: 0;
-    transform: translate(-50%, -50%);
-  }
-
-  .bg-logo {
-    width: 549px;
-    height: 160px;
-  }
-
-  .box-card {
-    margin-top: -5px;
-  }
-
-  .login-menu {
-    cursor: pointer;
-    display: flex;
-    padding: 20px;
-    > div {
-      text-align: center;
-      line-height: 40px;
-      width: 50%;
-      border-bottom: 3px solid #eee;
-      color: #999;
-      font-weight: bold;
-      font-size: 14px;
-      &.active {
-        border-color: @activeColor;
-        color: @activeColor;
-      }
-    }
-  }
-
-  #backgroundCanvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-  }
+  @import "../assets/login.less";
 
 </style>
 <template>
-  <div>
+  <div class="main-box-rap">
     <div class="main-card-box">
       <img class="bg-logo" src="../assets/img/bg.png">
       <img class="img-logo" src="../assets/img/cerp-logo.png">

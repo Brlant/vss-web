@@ -79,10 +79,10 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    应付款总额 <span v-show="item.payableTotal"> ￥{{item.payableTotal }}</span>
+                    应付款总额 <span v-show="item.payableTotal"> ￥{{item.payableTotal | formatMoney }}</span>
                   </div>
                   <div>
-                    {{item.remitteeName }}
+                    {{item.remitteeName}}
                   </div>
                 </li>
               </ul>
@@ -110,7 +110,7 @@
                   {{currentItem.remitteeName}}
                 </oms-row>
                 <oms-row label="应付款总额" :span="5">
-                  <span v-show="currentItem.payableTotal">￥{{currentItem.payableTotal}}</span>
+                  <span v-show="currentItem.payableTotal">￥{{currentItem.payableTotal | formatMoney}}</span>
                 </oms-row>
               </el-row>
             </div>
@@ -158,12 +158,12 @@
                 </td>
                 <td>
                   <span v-show="row.billAmount">
-                    ￥{{row.billAmount}}
+                    ￥{{row.billAmount | formatMoney}}
                   </span>
                 </td>
                 <td>
                   <span v-show="row.prepaidAccounts">
-                    ￥{{row.prepaidAccounts}}
+                    ￥{{row.prepaidAccounts | formatMoney}}
                   </span>
                 </td>
                 <td>

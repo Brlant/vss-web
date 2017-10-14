@@ -72,7 +72,7 @@
             </td>
             <td class="list-op">
               <perm label="erp-user-edit">
-                <a href="#" @click.stop.prevent="edit(row)" v-show="!row.adminFlag"><i
+                <a href="#" @click.stop.prevent="edit(row)"><i
                   class="iconfont icon-edit"></i>编辑</a>
 
                 <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用用户\""+row.name+"\"?"' v-show="row.status==1">

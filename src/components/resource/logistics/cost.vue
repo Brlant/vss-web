@@ -88,14 +88,12 @@
               </el-col>
             </el-row>
             <div v-else="">
-              <oms-row label="市级CDC名称" :span="5">{{ cost.orgName }}</oms-row>
-              <div class="border-show"></div>
               <div style="overflow: hidden">
                 <perm label="cerp-logistics-cost-add">
                   <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add"
                         v-if="cost.id===''">
                     <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>
-                    </span>
+                  </span>
                 </perm>
                 <perm label="cerp-logistics-cost-update">
                       <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="edit"
@@ -104,13 +102,23 @@
                   </span>
                 </perm>
               </div>
-              <oms-row label="费用模式" :span="5" v-if="cost.model">{{ setModel}}</oms-row>
-              <oms-row label="一类疫苗物流费用" :span="5" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{ cost.price
-                }}
+              <oms-row label="一类疫苗费用模式" :span="8">{{ setModel}}</oms-row>
+              <oms-row label="一类疫苗物流费用" :span="8" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{ cost.price}}
               </oms-row>
-              <oms-row label="一类疫苗物流费用比例" :span="5" v-if="cost.model==='1'">{{ cost.price }}
+              <oms-row label="一类疫苗物流费用比例" :span="8" v-if="cost.model==='1'">{{ cost.price * 100 }}<span
+                v-if="cost.price">%</span>
               </oms-row>
-              <div class="border-show"></div>
+            </div>
+          </div>
+        </div>
+        <div class="d-table-right">
+          <div class=" costs clearfix " style="margin-top: 10px">
+            <el-row v-if="loadingData">
+              <el-col :span="24">
+                <oms-loading :loading="loadingData"></oms-loading>
+              </el-col>
+            </el-row>
+            <div v-else="">
               <div style="overflow: hidden">
                 <perm label="cerp-logistics-cost-add">
                   <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addSecond"
@@ -125,11 +133,12 @@
                   </span>
                 </perm>
               </div>
-              <oms-row label="费用模式" :span="5" v-if="secondCost.model">{{ setSecondModel}}</oms-row>
-              <oms-row label="二类疫苗物流费用" :span="5" v-if="secondCost.model==='0'"><span v-if="secondCost.price">￥</span>{{ secondCost.price
+              <oms-row label="二类疫苗费用模式" :span="10">{{ setSecondModel}}</oms-row>
+              <oms-row label="二类疫苗物流费用" :span="10" v-if="secondCost.model==='0'"><span v-if="secondCost.price">￥</span>{{ secondCost.price
                 }}
               </oms-row>
-              <oms-row label="二类疫苗物流费用比例" :span="5" v-if="secondCost.model==='1'">{{ secondCost.price }}
+              <oms-row label="二类疫苗物流费用比例" :span="10" v-if="secondCost.model==='1'">{{ secondCost.price * 100}}<span
+                v-if="secondCost.price">%</span>
               </oms-row>
             </div>
           </div>
@@ -148,7 +157,7 @@
   import addForm from './form.vue';
   import secondForm from './secondForm.vue';
   import {http} from '../../../resources';
-
+  import utils from '../../../tools/utils';
   export default {
     components: {
       addForm,
@@ -157,12 +166,8 @@
     data () {
       return {
         loadingData: true,
-        cost: {
-          id: ''
-        },
-        secondCost: {
-          id: ''
-        },
+        cost: {},
+        secondCost: {},
         showItemRight: false,
         showSecondItemRight: false,
         form: {},
@@ -177,16 +182,22 @@
     },
     computed: {
       setModel: function () {
-        let title = '单支';
-        if (this.cost.model === '1') {
-          title = '比例';
+        let title = '';
+        if (this.cost.model) {
+          title = '单支';
+          if (this.cost.model === '1') {
+            title = '比例';
+          }
         }
         return title;
       },
       setSecondModel: function () {
-        let title = '单支';
-        if (this.secondCost.model === '1') {
-          title = '比例';
+        let title = '';
+        if (this.secondCost.model) {
+          title = '单支';
+          if (this.secondCost.model === '1') {
+            title = '比例';
+          }
         }
         return title;
       }
@@ -196,7 +207,7 @@
         this.cost = {};
         this.loadingData = true;
         http.get('/logistics-cost/municipal').then(res => {
-          if (res.data) {
+          if (res.data.length !== 0) {
             res.data.forEach(val => {
               if (val.vaccineType === '1') {
                 this.cost = val;
@@ -206,17 +217,25 @@
               }
             });
           }
+          if (JSON.stringify(this.cost) === '{}') {
+            this.cost = {id: ''};
+          }
+          if (JSON.stringify(this.secondCost) === '{}') {
+            this.secondCost = {id: ''};
+          }
           this.loadingData = false;
         });
       },
       edit: function () {
         this.action = 'edit';
         this.form = JSON.parse(JSON.stringify(this.cost));
+        this.form.price = utils.autoformatDecimalPoint(this.form.price.toString());
         this.showItemRight = true;
       },
       editSecond: function () {
         this.action = 'edit';
         this.secondform = JSON.parse(JSON.stringify(this.secondCost));
+        this.secondform.price = utils.autoformatDecimalPoint(this.secondform.price.toString());
         this.showSecondItemRight = true;
       },
       resetRightBox () {

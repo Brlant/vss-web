@@ -81,7 +81,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="CDC货品" :span="6">
-                <el-select filterable remote placeholder="请输入关键字CDC货品" :remote-method="getGoodsList" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
                            v-model="filters.orgGoodsId">
                   <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                              v-for="item in goodses"></el-option>
@@ -157,7 +157,7 @@
                 {{ item.purchaseCount }}
               </el-col>
               <el-col :span="2" class="R pt10 ">
-                <span v-show="item.price">￥</span>{{ item.price }}
+                <span v-show="item.price">￥</span>{{ item.price | formatMoney}}
               </el-col>
               <el-col :span="3" class="R pt10 ">
                 {{ item.arriveTime | date }}
