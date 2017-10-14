@@ -111,9 +111,11 @@
       }
     },
     methods: {
-      filterVaccine: function (keyword) {
-        let params = keyword;
-        http.get('/vaccine-info/valid', params).then(res => {
+      filterVaccine: function (query) {
+        let params = {
+          keyWord: query
+        };
+        http.get('/vaccine-info/valid', {params}).then(res => {
           this.vaccineList = res.data.list;
         });
       },
@@ -142,7 +144,7 @@
         });
       },
       formatDate(param) {
-         this.form.year = this.$moment(param).format('YYYY');
+        this.form.year = this.$moment(param).format('YYYY');
       },
       doClose: function () {
         this.$emit('close');
