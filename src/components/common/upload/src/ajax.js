@@ -72,8 +72,7 @@ export default function upload (option, formData, http) {
       if (xhr.status < 200 || xhr.status >= 300) {
         return option.onError(getError(action, option, xhr));
       }
-      let url = `https://oms-api.sinopharm-bio.com${res.data.redirect}`;
-      http.get(url).then(res1 => {
+      http.get(res.data.redirect).then(res1 => {
         option.onSuccess(res1.data);
       });
       // option.onSuccess(getBody(xhr));
