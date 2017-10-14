@@ -11,9 +11,9 @@
       <el-form-item label="疫苗">
         <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterVaccine"
                    :clearable="true"
-                   v-model="form.goodsId">
+                   v-model="form.goodsId" popper-class="good-selects">
           <el-option :value="vaccine.id" :key="vaccine.id"
-                     :label="vaccine.name" v-for="vaccine in vaccineList" popper-class="good-selects">
+                     :label="vaccine.name" v-for="vaccine in vaccineList">
             <div style="overflow: hidden">
               <span class="pull-left">{{vaccine.name}}</span>
             </div>
@@ -30,7 +30,7 @@
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.salesFirmName">生产</span>  {{ item.orgGoodsDto.salesFirmName }}
+                v-show="vaccine.factoryName">生产厂商</span>  {{ vaccine.factoryName }}
               </span>
             </div>
           </el-option>
