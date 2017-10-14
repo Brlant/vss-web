@@ -10,6 +10,19 @@ export default {
     4: {'title': '已分配', status: 4, num: 0},
     5: {'title': '已取消', status: 3, num: 0}
   },
+  inOrderLink: {
+    1: {'title': '订单确认', state: '0', num: 0},
+    2: {'title': '审单', state: '1', num: 0},
+    3: {'title': '收货', state: '2', num: 0},
+    4: {'title': '验收', state: '3', num: 0},
+    5: {'title': '订单挂起', state: '14', num: 0},
+    6: {'title': '已完成', state: '4', num: 0},
+    7: {'title': '已取消', state: '7', num: 0},
+    8: {'title': '拒收待复核', state: '11', num: 0},
+    9: {'title': '拒收已复核', state: '12', num: 0},
+    10: {'title': '已拒收', state: '8', num: 0},
+    11: {'title': '异常', state: '6', num: 0}
+  },
   assignType: {
     0: {'title': '待分配', status: 1, num: 0},
     1: {'title': '已完成分配', status: 2, num: 0}
