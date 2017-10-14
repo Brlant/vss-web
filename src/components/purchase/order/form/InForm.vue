@@ -374,7 +374,7 @@
                 </el-col>
                 <el-col :span="12">
                   <span v-show="accessoryList.length">【组合货品】</span>
-                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
+                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                       <span style="margin-right: 10px"
                             v-show="acce.procurementPrice">¥ {{ acce.procurementPrice | formatMoney }}</span>
