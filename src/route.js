@@ -123,12 +123,12 @@ const route = [
             path: '/store/request',
             component: resolve => require(['./components/store/list.vue'], resolve),
             meta: {moduleId: 'store', title: '当前用户库存', perm: 'cerp-stock-query'}
-          },
-          {
-            path: '/store/bad',
-            component: resolve => require(['./components/store/bad/list.vue'], resolve),
-            meta: {moduleId: 'store', title: '库存报损', perm: 'cerp-stock-reported-loss'}
           }
+          // {
+          //   path: '/store/bad',
+          //   component: resolve => require(['./components/store/bad/list.vue'], resolve),
+          //   meta: {moduleId: 'store', title: '库存报损', perm: 'cerp-stock-reported-loss'}
+          // }
         ]
       },
       {
@@ -239,7 +239,12 @@ const route = [
           {
             path: '/resource/vaccin/price',
             component: resolve => require(['./components/resource/price/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗价格管理', perm: 'vaccine-info'}
+            meta: {moduleId: 'resource', title: '疫苗价格管理', perm: 'sale-price-group'}
+          },
+          {
+            path: '/resource/bidder',
+            component: resolve => require(['./components/resource/bidder/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '中标疫苗', perm: 'vaccine-authorization'}
           },
           {
             path: '/resource/store',

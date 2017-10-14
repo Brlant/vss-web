@@ -465,7 +465,7 @@
                     v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
                   </td>
                   <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                    class="oms-font oms-font-delete"></i> 删除</a></td>
+                    class="iconfont icon-delete"></i> 删除</a></td>
                 </tr>
                 <tr>
                   <td colspan="4"></td>

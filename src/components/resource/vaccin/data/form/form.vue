@@ -184,7 +184,7 @@
             <span style="display: inline-block;width: 260px">{{ item.name }}</span>
             <span style="position: absolute;right: 200px;display: inline-block;">{{ item.proportion }}</span>
             <a href="#" class="pull-right" @click.prevent="removeGoodList(item)"><i
-              class="oms-font oms-font-delete"></i></a>
+              class="iconfont icon-delete"></i></a>
           </li>
         </ul>
       </div>

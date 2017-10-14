@@ -81,7 +81,7 @@
                   class="iconfont icon-search"></i> </a>
             </span>
               <span class="pull-right" style="margin-right: 8px">
-                <perm label="accounts-receivable-add">
+                <perm label="sale-price-group-add">
                   <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
                   <i class="iconfont icon-plus"></i>
                   </a>
@@ -123,11 +123,11 @@
             <h2 class="clearfix">
                 <span class="pull-right">
                   <el-button-group>
-                    <perm label="binding-warehouse-update">
+                    <perm label="sale-price-group-edit">
                       <el-button @click="edit(currentItem)"><i
                         class="iconfont icon-edit"></i>编辑</el-button>
                     </perm>
-                    <perm label="binding-warehouse-forbid">
+                    <perm label="sale-price-group-delete">
                       <el-button @click="deletePriceGroup(currentItem)"><i
                         class="iconfont icon-stop"></i>删除</el-button>
                     </perm>
@@ -161,7 +161,7 @@
                   </el-select>
                 </el-col>
                 <el-col :span="3">
-                  <perm label="vaccine-authorization-add">
+                  <perm label="sale-price-group-pov-bind">
                     <el-button type="primary" @click="bindPov">绑定POV</el-button>
                   </perm>
                 </el-col>
@@ -173,8 +173,9 @@
                         <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
                      </span>
                      <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                        <i class="iconfont icon-search"></i>
-                     </a>
+                          <i class="iconfont icon-search"></i>
+                       </a>
+
                   </span>
                 </el-col>
               </el-row>
@@ -206,7 +207,7 @@
                   {{ row.povName }}
                 </td>
                 <td>
-                  <perm label="vaccine-authorization-delete">
+                  <perm label="sale-price-group-pov-delete">
                     <a href="#" @click.stop.prevent="removePov(row)"><i class="iconfont icon-delete"></i>删除</a>
                   </perm>
                 </td>
