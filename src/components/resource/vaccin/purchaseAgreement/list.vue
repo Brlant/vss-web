@@ -174,7 +174,7 @@
                   供货厂商：
                 </el-col>
                 <el-col :span="20">
-                  {{currentItem.supplierName }}
+                  {{currentItem.factoryName }}
                 </el-col>
               </el-row>
               <el-row>
