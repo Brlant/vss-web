@@ -80,7 +80,7 @@
                            :clearable="true"
                            v-model="vaccineId">
                   <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
-                             v-for="item in vaccines"></el-option>
+                             v-for="item in showVaccines"></el-option>
                 </el-select>
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
@@ -180,6 +180,7 @@
         orgName: '', // 货主名称
         currentItem: {}, //  左边列表点击时，添加样式class
         vaccines: [], // 疫苗列表
+        showVaccines: [],
         vaccineId: ''
       };
     },
@@ -240,7 +241,11 @@
         });
         Vaccine.queryLevelVaccine(params).then(res => {
           this.vaccines = res.data.list;
+          this.filterPOVs();
         });
+      },
+      filterPOVs () {
+        this.showVaccines = this.vaccines.filter(f => !this.dataRows.some(s => f.orgGoodsDto.id === s.orgGoodsId));
       },
       getPageList: function () {
         this.dataRows = [];

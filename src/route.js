@@ -123,12 +123,12 @@ const route = [
             path: '/store/request',
             component: resolve => require(['./components/store/list.vue'], resolve),
             meta: {moduleId: 'store', title: '当前用户库存', perm: 'cerp-stock-query'}
-          },
-          {
-            path: '/store/bad',
-            component: resolve => require(['./components/store/bad/list.vue'], resolve),
-            meta: {moduleId: 'store', title: '库存报损', perm: 'cerp-stock-reported-loss'}
           }
+          // {
+          //   path: '/store/bad',
+          //   component: resolve => require(['./components/store/bad/list.vue'], resolve),
+          //   meta: {moduleId: 'store', title: '库存报损', perm: 'cerp-stock-reported-loss'}
+          // }
         ]
       },
       {
