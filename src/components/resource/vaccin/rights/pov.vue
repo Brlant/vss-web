@@ -54,6 +54,9 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id==currentItem.id}">
+                <div class="id-part">
+                  货主货品ID {{item.orgGoodsId }}
+                </div>
                 <div>
                   {{item.orgGoodsName }}
                 </div>
@@ -79,7 +82,7 @@
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
                            v-model="povId" @click.native="filterPOV('')">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                             v-for="org in orgList">
+                             v-for="org in showOrgList">
                   </el-option>
                 </el-select>
               </el-col>
@@ -175,6 +178,7 @@
         showVaccines: [],
         vaccineId: '',
         orgList: [],
+        showOrgList: [],
         povId: ''
       };
     },
@@ -239,7 +243,7 @@
         });
       },
       filterPOVs () {
-        this.showVaccines = this.vaccines.filter(f => !this.dataRows.some(s => f.orgGoodsDto.id === s.orgGoodsId));
+        this.showOrgList = this.orgList.filter(f => !this.dataRows.some(s => f.subordinateId === s.povId));
       },
       filterPOV: function (query) {// 过滤POV
         let params = Object.assign({}, {
@@ -247,17 +251,18 @@
         });
         cerpAction.queryAllPov(params).then(res => {
           this.orgList = res.data.list;
+          this.filterPOVs();
         });
       },
       getPageList: function () {
         this.dataRows = [];
-        if (!this.currentItem.subordinateId) return;
-        VaccineRights.queryVaccineByPov(this.currentItem.subordinateId).then(res => {
+        if (!this.currentItem.orgGoodsId) return;
+        VaccineRights.queryPovByVaccine(this.currentItem.orgGoodsId).then(res => {
           this.dataRows = res.data;
         });
       },
       removeVaccine: function (item) {
-        this.$confirm('是否删除疫苗"' + item.goodsName + '"?', '', {
+        this.$confirm('是否删除POV"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -295,6 +300,7 @@
           this.$notify.success({
             message: '授权疫苗成功'
           });
+          this.povId = '';
           this.getPageList();
         }).catch(error => {
           this.$notify.error({
