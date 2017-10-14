@@ -59,32 +59,6 @@
     }
   }
 
-  .list-item {
-    .edit-li {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: none;
-    }
-    &.active {
-      .edit-li {
-        display: block;
-      }
-    }
-    .edit-a {
-      &:hover {
-        color: @activeColor;
-      }
-      margin-right: 10px;
-    }
-    .delete-a {
-      &:hover {
-        color: @activeColor;
-      }
-    }
-    padding-right: 70px;
-  }
 </style>
 <template>
   <div>
@@ -126,10 +100,6 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   {{item.name }}
-                  <div class="edit-li">
-                    <a class="edit-a" @click.prevent="edit(item)"><i class="iconfont icon-edit"></i></a>
-                    <a class="delete-a" @click.prevent="deletePriceGroup(item)"><i class="iconfont icon-delete"></i></a>
-                  </div>
                 </li>
               </ul>
               <div class="btn-left-list-more" @click.stop="getOrgMore">
@@ -150,7 +120,21 @@
             <div class="empty-info">暂无信息</div>
           </div>
           <div v-else="" class="d-table-col-wrap">
-            <div class="content-body clearfix">
+            <h2 class="clearfix">
+                <span class="pull-right">
+                  <el-button-group>
+                    <perm label="binding-warehouse-update">
+                      <el-button @click="edit(currentItem)"><i
+                        class="iconfont icon-edit"></i>编辑</el-button>
+                    </perm>
+                    <perm label="binding-warehouse-forbid">
+                      <el-button @click="deletePriceGroup(currentItem)"><i
+                        class="iconfont icon-stop"></i>删除</el-button>
+                    </perm>
+                  </el-button-group>
+                </span>
+            </h2>
+            <div class="content-body clearfix" style="margin-top: 0">
               <el-row>
                 <oms-row label="价格组名称" :span="5">
                   {{currentItem.name}}

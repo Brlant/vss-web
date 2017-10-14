@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">新增价格组</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -283,13 +283,16 @@
           unitPrice: {required: true, message: '请输入单价', trigger: 'blur'},
           orgGoodsId: {required: true, message: '请选择CDC货品', trigger: 'change'}
         },
-        goodses: [] // 货品列表
+        goodses: [], // 货品列表
+        title: '新增价格组'
       };
     },
     watch: {
       formItem (val) {
         if (val.id) {
           this.form = val;
+          this.form.unitPrice = this.form.unitPrice ? this.form.unitPrice.toString() : '';
+          this.title = '编辑价格组';
         } else {
           this.form = {
             name: '',
@@ -297,6 +300,7 @@
             unitPrice: '',
             availabilityStatus: true
           };
+          this.title = '新增价格组';
         }
       }
     },
