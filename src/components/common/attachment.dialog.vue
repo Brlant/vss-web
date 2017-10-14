@@ -98,7 +98,7 @@
         return this.Attachment.attachmentStoragePath;
       },
       docViewUrl: function () {
-        return 'http://doc-view.tinyapp.top/view/url?url=' + encodeURIComponent(this.Attachment.attachmentStoragePath);
+        return 'https://doc-view.sinopharm-bio.com/view/url?url=' + encodeURIComponent(this.Attachment.attachmentStoragePath);
       },
       stateDialogVisible: function () {
         return this.$store.state.attachmentDialog.open;
