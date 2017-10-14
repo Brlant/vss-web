@@ -107,11 +107,11 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <!--<perm label="PurchaseAgreement-info-add">-->
+                  <perm label="purchase-agreement-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
                         <i class="iconfont icon-plus"></i>
                       </a>
-                  <!--</perm>-->
+                  </perm>
                   <!--<a href="#" class="btn-circle" @click.prevent="searchType"><i-->
                   <!--class="iconfont icon-search"></i> </a>-->
                 </span>
@@ -141,12 +141,12 @@
           <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
-                  <!--<perm label="PurchaseAgreement-info-update">-->
+                  <perm label="purchase-agreement-edit">
                     <el-button @click="edit"><i class="iconfont icon-edit"></i> 编辑</el-button>
-                   <!--<perm label="PurchaseAgreement-info-delete">-->
+                   </perm>
+                   <perm label="purchase-agreement-delete">
                        <el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>
-                   <!--</perm>-->
-                   <!--</perm>-->
+                   </perm>
                 </el-button-group>
             </span>
           </h2>

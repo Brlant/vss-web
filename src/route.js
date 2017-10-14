@@ -229,7 +229,7 @@ const route = [
           {
             path: '/resource/vaccin/purchaseAgreement',
             component: resolve => require(['./components/resource/vaccin/purchaseAgreement/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗采购协议', perm: 'vaccine-info'}
+            meta: {moduleId: 'resource', title: '疫苗采购协议', perm: 'purchase-agreement'}
           },
           {
             path: '/resource/vaccin/pov',
@@ -239,7 +239,7 @@ const route = [
           {
             path: '/resource/vaccin/price',
             component: resolve => require(['./components/resource/price/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗价格管理', perm: 'vaccine-info'}
+            meta: {moduleId: 'resource', title: '疫苗价格管理', perm: 'sale-price-group'}
           },
           {
             path: '/resource/store',
