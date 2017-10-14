@@ -48,11 +48,31 @@
       background: @dialog-left-bg;
     }
   }
+
+  .search-input {
+    .el-select {
+      display: block;
+      position: relative;
+    }
+    .el-date-editor.el-input {
+      width: 100%;
+    }
+  }
+
 </style>
 <template>
   <div>
     <div class="container">
-      <div class="d-table clearfix" style="margin-top: 20px">
+      <div class="order-list-status container" style="margin-bottom:20px">
+        <div class="status-item"
+             :class="{'active':item.availabilityStatus===activeStatus}"
+             v-for="(item, key) in priceGroupType"
+             @click="changeStatus(item)">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+        </div>
+      </div>
+      <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
             <h2 class="header">
@@ -60,14 +80,14 @@
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
                   class="iconfont icon-search"></i> </a>
             </span>
-              <!--<span class="pull-right" style="margin-right: 8px">-->
-              <!--<perm label="accounts-receivable-add">-->
-              <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
-              <!--<i class="iconfont icon-plus"></i>-->
-              <!--</a>-->
-              <!--</perm>-->
-              <!--</span>-->
-              所有应收款
+              <span class="pull-right" style="margin-right: 8px">
+                <perm label="accounts-receivable-add">
+                  <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
+                  <i class="iconfont icon-plus"></i>
+                  </a>
+                </perm>
+              </span>
+              价格组
             </h2>
             <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -79,12 +99,7 @@
               <ul class="show-list">
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
-                  <div class="id-part">
-                    应收款总额 <span v-show="item.payableTotal"> ￥{{item.payableTotal | formatMoney }}</span>
-                  </div>
-                  <div>
-                    {{item.payerName }}
-                  </div>
+                  {{item.name }}
                 </li>
               </ul>
               <div class="btn-left-list-more" @click.stop="getOrgMore">
@@ -105,37 +120,70 @@
             <div class="empty-info">暂无信息</div>
           </div>
           <div v-else="" class="d-table-col-wrap">
-            <div class="content-body clearfix">
+            <h2 class="clearfix">
+                <span class="pull-right">
+                  <el-button-group>
+                    <perm label="binding-warehouse-update">
+                      <el-button @click="edit(currentItem)"><i
+                        class="iconfont icon-edit"></i>编辑</el-button>
+                    </perm>
+                    <perm label="binding-warehouse-forbid">
+                      <el-button @click="deletePriceGroup(currentItem)"><i
+                        class="iconfont icon-stop"></i>删除</el-button>
+                    </perm>
+                  </el-button-group>
+                </span>
+            </h2>
+            <div class="content-body clearfix" style="margin-top: 0">
               <el-row>
-                <oms-row label="POV" :span="5">
-                  {{currentItem.payerName}}
+                <oms-row label="价格组名称" :span="5">
+                  {{currentItem.name}}
                 </oms-row>
-                <oms-row label="应收款总额" :span="5">
-                  <span v-show="currentItem.payableTotal">￥{{currentItem.payableTotal | formatMoney}}</span>
+                <oms-row label="货品名称" :span="5">
+                  {{currentItem.goodsName}}
+                </oms-row>
+                <oms-row label="销售单价" :span="5">
+                  <span v-show="currentItem.unitPrice">￥{{currentItem.unitPrice | formatMoney}}</span>
+                </oms-row>
+                <oms-row label="是否可用" :span="5">
+                  {{currentItem.availabilityStatus | formatStatus}}
                 </oms-row>
               </el-row>
             </div>
             <div style="overflow: hidden">
-              <span style="font-size: 14px" class="pull-left">【应收款明细】</span>
-              <span class="pull-right" style="margin-top: 8px">
-               <span class="btn-search-toggle open" v-show="showSearch">
-                  <single-input v-model="filterRights.keyWord" placeholder="请输入订单号搜索"
-                                :showFocus="showSearch"></single-input>
-                  <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
-               </span>
-               <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                  <i class="iconfont icon-search"></i>
-               </a>
-            </span>
+              <el-row>
+                <el-col :span="12" class="search-input" style="padding-right: 10px">
+                  <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
+                             v-model="povId" @click.native="filterPOV('')">
+                    <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                               v-for="org in showOrgList">
+                    </el-option>
+                  </el-select>
+                </el-col>
+                <el-col :span="3">
+                  <perm label="vaccine-authorization-add">
+                    <el-button type="primary" @click="bindPov">绑定POV</el-button>
+                  </perm>
+                </el-col>
+                <el-col :span="9">
+                   <span class="pull-right">
+                     <span class="btn-search-toggle open" v-show="showSearch">
+                        <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入POV名称搜索"
+                                      :showFocus="showSearch"></single-input>
+                        <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+                     </span>
+                     <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
+                        <i class="iconfont icon-search"></i>
+                     </a>
+                  </span>
+                </el-col>
+              </el-row>
             </div>
             <table class="table"
                    style="margin-top: 10px">
               <thead>
               <tr>
-                <th>订单号</th>
-                <th>单据金额</th>
-                <th>实收金额</th>
-                <th>创建时间</th>
+                <th>POV</th>
                 <th>操作</th>
               </tr>
               </thead>
@@ -152,27 +200,14 @@
                   </div>
                 </td>
               </tr>
-              <tr v-else="" v-for="row in receiptDetails" @click="showDetail(row)" class="tr-right"
+              <tr v-else="" v-for="row in receiptDetails" class="tr-right"
                   :class="{active:orderId === row.orderId}">
                 <td>
-                  {{row.orderNo}}
+                  {{ row.povName }}
                 </td>
                 <td>
-                    <span v-show="row.billAmount">
-                    ￥{{row.billAmount | formatMoney}}
-                  </span>
-                </td>
-                <td>
-                  <span v-show="row.prepaidAccounts">
-                    <span v-show="row.prepaidAccounts"> ￥{{row.prepaidAccounts}}</span>
-                  </span>
-                </td>
-                <td>
-                  {{row.createTime | date }}
-                </td>
-                <td>
-                  <perm label="accounts-receivable-add">
-                  <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实收金额</a>
+                  <perm label="vaccine-authorization-delete">
+                    <a href="#" @click.stop.prevent="removePov(row)"><i class="iconfont icon-delete"></i>删除</a>
                   </perm>
                 </td>
               </tr>
@@ -195,25 +230,22 @@
                 @close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showLeft" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <left-form @change="onSubmit" :index="index" @close="resetRightBox" @refresh="refresh"></left-form>
-    </page-right>
-
-    <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
-                partClass="pr-no-animation">
-      <show-detail @change="onSubmit" :orderId="orderId" :currentDetail="currentDetail" :index="index"
-                   @close="resetRightBox"
-                   @refresh="refresh"></show-detail>
+      <left-form @change="onSubmit" :formItem="form" :index="index" @close="resetRightBox"
+                 @refresh="refresh"></left-form>
     </page-right>
   </div>
 
 </template>
 <script>
-  import { receipt } from '@/resources';
+  import utils from '@/tools/utils';
+  import { receipt, BriceGroup, cerpAction, BriceGroupPov } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
-  import showDetail from './show.order.out.vue';
+
   export default {
-    components: {addForm, leftForm, showDetail},
+    components: {
+      addForm, leftForm
+    },
     data: function () {
       return {
         loadingData: false,
@@ -223,8 +255,10 @@
         showTypeSearch: false,
         showSearch: false,
         showTypeList: [],
+        priceGroupType: utils.priceGroupType,
         filters: {
-          keyWord: ''
+          keyWord: '',
+          availabilityStatus: true
         },
         filterRights: {
           keyWord: ''
@@ -247,7 +281,11 @@
         receiptDetails: [], // 疫苗列表
         index: 0,
         orderId: '',
-        currentDetail: {}
+        currentDetail: {},
+        orgList: [],
+        showOrgList: [],
+        povId: '',
+        activeStatus: true
       };
     },
     computed: {
@@ -297,7 +335,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filters);
-        receipt.query(params).then(res => {
+        BriceGroup.query(params).then(res => {
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
@@ -310,7 +348,15 @@
             }
           }
           this.typePager.totalPage = res.data.totalPage;
-
+        });
+        this.querySum(params);
+      },
+      querySum (params) {
+        let para = Object.assign({}, params);
+        para.availabilityStatus = undefined;
+        BriceGroup.querySum(para).then(res => {
+          this.priceGroupType[0].num = res.data['valid'];
+          this.priceGroupType[1].num = res.data['invalid'];
         });
       },
       refresh () {
@@ -328,12 +374,54 @@
         this.loadingData = true;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.pager.pageSize,
+          salePriceGroupId: this.currentItem.id
         }, this.filterRights);
-        receipt.queryDetail(this.currentItem.id, params).then(res => {
+        BriceGroupPov.query(params).then(res => {
           this.loadingData = false;
           this.receiptDetails = res.data.list;
           this.pager.count = res.data.count;
+        });
+      },
+      bindPov () {
+        let form = {
+          'salePriceGroupId': this.currentItem.id,
+          'povId': this.povId
+        };
+        if (!this.povId) {
+          this.$notify.info({
+            message: '请选择POV'
+          });
+          return;
+        }
+        BriceGroupPov.save(form).then(() => {
+          this.$notify.success({
+            message: '绑定POV成功'
+          });
+          this.povId = '';
+          this.getDetail(1);
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '绑定POV失败'
+          });
+        });
+      },
+      removePov (item) {
+        this.$confirm('是否删除POV"' + item.povName + '"?', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          BriceGroupPov.delete(item.id).then(res => {
+            this.$notify.success({
+              message: `删除POV${item.povName}成功`
+            });
+            this.getDetail(1);
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || `删除POV${item.povName}失败`
+            });
+          });
         });
       },
       getOrgMore: function () {
@@ -348,6 +436,18 @@
         this.showPart = true;
         this.currentDetail = item;
       },
+      filterPOV: function (query) {// 过滤POV
+        let params = Object.assign({}, {
+          keyWord: query
+        });
+        cerpAction.queryAllPov(params).then(res => {
+          this.orgList = res.data.list;
+          this.filterPOVs();
+        });
+      },
+      filterPOVs () {
+        this.showOrgList = this.orgList.filter(f => !this.receiptDetails.some(s => f.subordinateId === s.povId));
+      },
       add () {
         if (!this.currentItem.id) {
           this.$notify.info({
@@ -359,10 +459,33 @@
       },
       addDetail () {
         this.showLeft = true;
+        this.form = {};
       },
       edit (row) {
         this.form = row;
-        this.showRight = true;
+        this.showLeft = true;
+      },
+      deletePriceGroup (item) {
+        this.$confirm('是否删除价格组"' + item.name + '"?', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          BriceGroup.delete(item.id).then(res => {
+            this.$notify.success({
+              message: `删除价格组${item.name}成功`
+            });
+            this.getOrgsList(1);
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || `删除价格组${item.name}失败`
+            });
+          });
+        });
+      },
+      changeStatus: function (item) {// 订单分类改变
+        this.activeStatus = item.availabilityStatus;
+        this.filters.availabilityStatus = item.availabilityStatus;
       },
       onSubmit () {
         this.getOrgsList();

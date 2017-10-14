@@ -26,7 +26,7 @@
       left: 0;
       top: 0;
       bottom: 0;
-      text-align: left;
+      text-align: center;
       background-color: #eef2f3;
       > ul {
         margin: 0;
@@ -409,7 +409,7 @@
                   <span>{{product.orgGoodsName}}</span>
                 </td>
                 <td class="ar">
-                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice}}
+                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice | formatMoney}}
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"

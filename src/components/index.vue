@@ -171,6 +171,7 @@
         let data = window.localStorage.getItem('user');
         data = JSON.parse(data);
         this.getRoleMenus(data);
+        this.queryBaseInfo(data);
       }
       this.queryPerms();
       this.queryLevel();
@@ -220,6 +221,7 @@
       },
       queryBaseInfo (data) {
         BaseInfo.queryBaseInfo(data.userCompanyAddress).then(res => {
+          this.$store.commit('initOrgName', res.data.orgDto.name);
           window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');
         });
       }

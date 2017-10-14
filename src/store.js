@@ -13,7 +13,8 @@ const state = {
   roleList: {},
   attachmentDialog: {attachmentId: 0, open: false},
   form: {},
-  bodySize: {left: '180px'}
+  bodySize: {left: '180px'},
+  orgName: ''
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -68,6 +69,9 @@ const mutations = {
   changeBodyLeft(state, isSmall) {
     state.bodySize.left = isSmall ? '64px' : '180px';
     window.localStorage.setItem('bodyLeft', state.bodySize.left);
+  },
+  initOrgName (state, data) {
+    state.orgName = data;
   }
 };
 
