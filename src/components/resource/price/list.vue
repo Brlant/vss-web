@@ -59,6 +59,16 @@
     }
   }
 
+  .table > tbody > tr:first-child > td {
+    border-top: 0;
+  }
+
+  .tr-header {
+    background: #f1f1f1;
+    th {
+      border: 0;
+    }
+  }
 </style>
 <template>
   <div>
@@ -139,7 +149,7 @@
                   </el-button-group>
                 </span>
             </h2>
-            <div class="content-body clearfix" style="margin-top: 0">
+            <div class="content-body clearfix" style="margin-top: 0;margin-bottom: 0">
               <el-row>
                 <oms-row label="价格组名称" :span="5">
                   {{currentItem.name}}
@@ -155,23 +165,26 @@
                 </oms-row>
               </el-row>
             </div>
-            <div style="overflow: hidden">
-              <el-row>
-                <el-col :span="12" class="search-input" style="padding-right: 10px">
-                  <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
-                             v-model="povId" @click.native="filterPOV('')">
-                    <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                               v-for="org in showOrgList">
-                    </el-option>
-                  </el-select>
-                </el-col>
-                <el-col :span="3">
-                  <perm label="sale-price-group-pov-bind">
-                    <el-button type="primary" @click="bindPov">绑定POV</el-button>
-                  </perm>
-                </el-col>
-                <el-col :span="9">
-                   <span class="pull-right">
+            <div style="overflow: hidden;margin-bottom: 5px">
+              <!--<el-row>-->
+              <!--<el-col :span="12" class="search-input" style="padding-right: 10px">-->
+              <!--<el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"-->
+              <!--v-model="povId" @click.native="filterPOV('')">-->
+              <!--<el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"-->
+              <!--v-for="org in showOrgList">-->
+              <!--</el-option>-->
+              <!--</el-select>-->
+              <!--</el-col>-->
+              <!--<el-col :span="3">-->
+              <!--<perm label="sale-price-group-pov-bind">-->
+              <!--<el-button type="primary" @click="bindPov">绑定POV</el-button>-->
+              <!--</perm>-->
+              <!--</el-col>-->
+              <!--<el-col :span="24">-->
+              <!---->
+              <!--</el-col>-->
+              <!--</el-row>-->
+              <span class="pull-right">
                      <span class="btn-search-toggle open" v-show="showSearch">
                         <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入POV名称搜索"
                                       :showFocus="showSearch"></single-input>
@@ -182,15 +195,12 @@
                        </a>
 
                   </span>
-                </el-col>
-              </el-row>
             </div>
-            <table class="table"
-                   style="margin-top: 10px">
+            <table class="table">
               <thead>
-              <tr>
+              <tr class="tr-header">
                 <th>POV</th>
-                <th>操作</th>
+                <!--<th>操作</th>-->
               </tr>
               </thead>
               <tbody>
@@ -211,11 +221,11 @@
                 <td>
                   {{ row.povName }}
                 </td>
-                <td>
-                  <perm label="sale-price-group-pov-delete">
-                    <a href="#" @click.stop.prevent="removePov(row)"><i class="iconfont icon-delete"></i>删除</a>
-                  </perm>
-                </td>
+                <!--<td>-->
+                <!--<perm label="sale-price-group-pov-delete">-->
+                <!--<a href="#" @click.stop.prevent="removePov(row)"><i class="iconfont icon-delete"></i>删除</a>-->
+                <!--</perm>-->
+                <!--</td>-->
               </tr>
               </tbody>
             </table>

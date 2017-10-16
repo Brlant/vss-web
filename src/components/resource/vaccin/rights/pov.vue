@@ -31,6 +31,17 @@
       width: 100%;
     }
   }
+
+  .table > tbody > tr:first-child > td {
+    border-top: 0;
+  }
+
+  .tr-header {
+    background: #f1f1f1;
+    th {
+      border: 0;
+    }
+  }
 </style>
 <template>
   <div>
@@ -70,53 +81,32 @@
       </div>
       <div class="d-table-right">
         <div class="d-table-col-wrap">
+          <h2 class="clearfix">
+              <span class="pull-right">
+                  <perm label="sale-price-group-edit">
+                    <el-button @click="add(currentItem)"><i
+                      class="iconfont icon-plus"></i>添加</el-button>
+                  </perm>
+              </span>
+          </h2>
           <div class="pov-info">
             <el-row class="clearfix font-bold" style="font-weight: 500;font-size: 14px">
-              <el-col :span="2">疫苗名称:</el-col>
-              <el-col :span="10"> {{ orgName }}</el-col>
-            </el-row>
-          </div>
-          <div>
-            <el-row>
-              <el-col :span="13" class="search-input">
-                <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
-                           v-model="povId" @click.native="filterPOV('')">
-                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                             v-for="org in showOrgList">
-                  </el-option>
-                </el-select>
-              </el-col>
-              <el-col :span="3" style="padding-left: 10px">
-                <perm label="vaccine-authorization-add">
-                  <el-button type="primary" @click="bindVaccinePOV">绑定POV</el-button>
-                </perm>
-              </el-col>
-              <el-col :span="8" class="text-right">
-                <!--<span>-->
-                  <!--<span style="margin-top: 8px">-->
-                     <!--<span class="btn-search-toggle open" v-show="showSearch">-->
-                        <!--<single-input v-model="keyWord" placeholder="请输入关键字搜索"-->
-                                      <!--:showFocus="showSearch"></single-input>-->
-                        <!--<i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>-->
-                     <!--</span>-->
-                     <!--<a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">-->
-                        <!--<i class="iconfont icon-search"></i>-->
-                     <!--</a>-->
-                  <!--</span>-->
-                <!--</span>-->
-              </el-col>
+              <oms-row label="疫苗名称" :span="3">
+                {{orgName}}
+              </oms-row>
             </el-row>
           </div>
           <table class="table " :class="{'table-hover':dataRows.length !== 0}" style="margin-top: 10px">
             <thead>
-            <tr>
+            <tr class="tr-header">
               <th>POV</th>
+              <th>销售价格</th>
               <th>操作</th>
             </tr>
             </thead>
-            <tbody v-show="dataRows.length === 0">
+            <tbody v-if="dataRows.length === 0">
             <tr>
-              <td colspan="10" class="text-center">
+              <td colspan="3" class="text-center">
                 <div class="empty-info">暂无信息</div>
               </td>
             </tr>
@@ -127,6 +117,12 @@
                 {{row.povName}}
               </td>
               <td>
+                ￥{{row.price ? row.price : 0 }}
+              </td>
+              <td>
+                <perm label="vaccine-authorization-delete">
+                  <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
+                </perm>
                 <perm label="vaccine-authorization-delete">
                   <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="iconfont icon-delete"></i>删除</a>
                 </perm>
@@ -137,12 +133,20 @@
         </div>
       </div>
     </div>
+    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="refreshDetails"
+                @close="resetRightBox"></add-form>
+    </page-right>
   </div>
 
 </template>
 <script>
+  import addForm from './form.vue';
   import { cerpAction, Vaccine, VaccineRights, PurchaseAgreement } from '@/resources';
   export default {
+    components: {
+      addForm
+    },
     data: function () {
       return {
         showRight: false,
@@ -179,7 +183,8 @@
         vaccineId: '',
         orgList: [],
         showOrgList: [],
-        povId: ''
+        povId: '',
+        formPara: {}
       };
     },
     computed: {
@@ -261,6 +266,10 @@
           this.dataRows = res.data;
         });
       },
+      refreshDetails () {
+        this.getPageList();
+        this.showRight = false;
+      },
       removeVaccine: function (item) {
         this.$confirm('是否删除POV"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
@@ -309,9 +318,25 @@
         });
       },
       showType: function (item) {
-        this.orgName = item.subordinateName;
+        this.orgName = item.orgGoodsName;
         this.currentItem = item;
         this.getPageList();
+      },
+      add () {
+        this.formPara = {};
+        this.showRight = true;
+      },
+      edit (item) {
+        this.formPara = item;
+        this.showRight = true;
+      },
+      changeItem (item) {
+        if (this.action === 'add') {
+          this.getPageList(1);
+        } else {
+          Object.assign(this.formPara, item);
+        }
+        this.showRight = false;
       }
     }
   };
