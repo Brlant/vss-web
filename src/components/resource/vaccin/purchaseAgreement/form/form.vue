@@ -161,10 +161,10 @@
       },
       onSubmit: function (formName) {
         this.changeEndTime(this.form.expireTime);
-        this.form.unitPrice = parseInt(this.form.unitPrice, 0);
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
             this.doing = true;
+            this.form.unitPrice = parseInt(this.form.unitPrice, 0);
             if (this.action === 'add') {
               PurchaseAgreement.save(this.form).then(res => {
                 this.$notify.success({

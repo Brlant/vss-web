@@ -182,7 +182,7 @@
                   采购单价：
                 </el-col>
                 <el-col :span="20">
-                  <span v-if="currentItem.unitPrice">￥</span>{{ currentItem.unitPrice}}
+                  <span v-if="currentItem.unitPrice">￥</span>{{currentItem.unitPrice}}
                 </el-col>
               </el-row>
               <el-row>
@@ -263,6 +263,11 @@
           this.getGoodsList(1);
         },
         deep: true
+      },
+      currentItem: function () {
+        if (this.currentItem.unitPrice) {
+          this.currentItem.unitPrice = utils.autoformatDecimalPoint(this.currentItem.unitPrice.toString());
+        }
       }
     },
     methods: {
