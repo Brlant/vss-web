@@ -108,7 +108,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <el-row class="text-right">
+              <el-row class="text-center">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </el-row>

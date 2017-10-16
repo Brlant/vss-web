@@ -138,7 +138,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="8">
               <oms-form-row label="预计出库时间" :span="8">
                 <el-col :span="24">
                   <el-date-picker
@@ -149,8 +149,8 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="5">
-              <oms-form-row label="" :span="6">
+            <el-col :span="4">
+              <oms-form-row label="" :span="3">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>

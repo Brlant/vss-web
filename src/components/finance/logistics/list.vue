@@ -98,17 +98,15 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="入库时间" :span="6">
-                <el-col :span="24">
-                  <el-date-picker
-                    v-model="aryTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
-                  </el-date-picker>
-                </el-col>
+                <el-date-picker
+                  v-model="aryTime"
+                  type="daterange"
+                  placeholder="请选择" format="yyyy-MM-dd">
+                </el-date-picker>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <el-row class="text-right">
+              <el-row class="text-center">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </el-row>
