@@ -158,80 +158,80 @@
       </div>
 
 
-      <div class="order-list-status container" style="margin-bottom:20px">
-        <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4' }"
-             v-for="(item,key) in orgType"
-             @click="changeStatus(item,key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+  <div class="order-list-status container" style="margin-bottom:20px">
+    <div class="status-item"
+         :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4' }"
+         v-for="(item,key) in orgType"
+         @click="changeStatus(item,key)">
+      <div class="status-bg" :class="['b_color_'+key]"></div>
+      <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+    </div>
+  </div>
+  <div class="order-list clearfix">
+    <el-row class="order-list-header" :gutter="10">
+      <el-col :span="6">货主/订单号</el-col>
+      <el-col :span="4">业务类型</el-col>
+      <el-col :span="filters.state === '-1' ? 5 : 6">POV</el-col>
+      <el-col :span="filters.state === '-1' ? 4 : 5">时间</el-col>
+      <el-col :span="3">状态</el-col>
+      <el-col :span="2" v-show="filters.state === '-1' ">操作</el-col>
+    </el-row>
+    <el-row v-if="loadingData">
+      <el-col :span="24">
+        <oms-loading :loading="loadingData"></oms-loading>
+      </el-col>
+    </el-row>
+    <el-row v-else-if="orderList.length == 0">
+      <el-col :span="24">
+        <div class="empty-info">
+          暂无信息
         </div>
-      </div>
-      <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
-          <el-col :span="6">货主/订单号</el-col>
-          <el-col :span="4">业务类型</el-col>
-          <el-col :span="filters.state === '-1' ? 5 : 6">POV</el-col>
-          <el-col :span="filters.state === '-1' ? 4 : 5">时间</el-col>
-          <el-col :span="3">状态</el-col>
-          <el-col :span="2" v-show="filters.state === '-1' ">操作</el-col>
-        </el-row>
-        <el-row v-if="loadingData">
-          <el-col :span="24">
-            <oms-loading :loading="loadingData"></oms-loading>
-          </el-col>
-        </el-row>
-        <el-row v-else-if="orderList.length == 0">
-          <el-col :span="24">
-            <div class="empty-info">
-              暂无信息
+      </el-col>
+    </el-row>
+    <div v-else="" class="order-list-body flex-list-dom">
+      <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
+           :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
+        <el-row>
+          <el-col :span="6">
+            <div class="f-grey">
+              {{item.orderNo }}
+            </div>
+            <div>
+              {{item.orgName }}
             </div>
           </el-col>
-        </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
-               :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
-            <el-row>
-              <el-col :span="6">
-                <div class="f-grey">
-                  {{item.orderNo }}
-                </div>
-                <div>
-                  {{item.orgName }}
-                </div>
-              </el-col>
-              <el-col :span="4">
-                <div class="vertical-center">
-                  <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
-                </div>
-              </el-col>
-              <el-col :span="filters.state === '-1' ? 5 : 6" class="pt10">
-                <div>{{item.transactOrgName }}</div>
-              </el-col>
-              <el-col :span="filters.state === '-1' ? 4 : 5">
-                <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
-                <div>预计送货时间：{{ item.expectedTime | date }}</div>
-              </el-col>
-              <el-col :span="3">
-                <div class="vertical-center">
-                  {{getOrderStatus(item)}}
-                </div>
-              </el-col>
-              <el-col :span="2" class="opera-btn pt10" v-show="filters.state === '-1' ">
-                <perm label="sales-order-goods-receipt">
+          <el-col :span="4">
+            <div class="vertical-center">
+              <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
+            </div>
+          </el-col>
+          <el-col :span="filters.state === '-1' ? 5 : 6">
+            <div>{{item.transactOrgName }}</div>
+          </el-col>
+          <el-col :span="filters.state === '-1' ? 4 : 5">
+            <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
+            <div>预计送货时间：{{ item.expectedTime | date }}</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="vertical-center">
+              {{getOrderStatus(item)}}
+            </div>
+          </el-col>
+          <el-col :span="2" class="opera-btn pt10" v-show="filters.state === '-1' ">
+            <perm label="sales-order-goods-receipt">
                   <span @click.stop="showPartItem(item)">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
                       class="iconfont icon-allot"></i></a>
                     收货
                   </span>
-                </perm>
-              </el-col>
-            </el-row>
-            <div class="order-list-item-bg"></div>
-          </div>
-        </div>
+            </perm>
+          </el-col>
+        </el-row>
+        <div class="order-list-item-bg"></div>
       </div>
     </div>
+  </div>
+  </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
         layout="prev, pager, next"

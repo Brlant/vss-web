@@ -243,7 +243,7 @@ const route = [
           },
           {
             path: '/resource/bidder',
-            component: resolve => require(['./components/resource/bidder/list.vue'], resolve),
+            component: resolve => require(['./components/resource/bidder/newList.vue'], resolve),
             meta: {moduleId: 'resource', title: '中标疫苗', perm: 'successful-bidder-vaccine'}
           },
           {
