@@ -66,7 +66,7 @@
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id==currentItem.id}">
                 <div class="id-part">
-                  货主货品ID {{item.orgGoodsId }}
+                  组织疫苗ID {{item.orgGoodsId }}
                 </div>
                 <div>
                   {{item.orgGoodsName }}
