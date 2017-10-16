@@ -1,4 +1,5 @@
 <style lang="less" scoped>
+  @import "../../../assets/mixins";
 
   .el-form .el-select {
     display: block;
@@ -7,6 +8,13 @@
   .tr-bg {
     :hover {
       background: #fff;
+    }
+  }
+
+  .tr-right {
+    cursor: pointer;
+    &:hover, &.active {
+      background: @dialog-left-bg;
     }
   }
 </style>
@@ -29,7 +37,7 @@
                 </a>
           </perm>
         </span>
-        <table class="table table-hover">
+        <table class="table">
           <thead>
           <tr>
             <th>疫苗名称</th>
@@ -52,7 +60,7 @@
               </div>
             </td>
           </tr>
-          <tr v-else="" v-for="row in dataRows" :keys="row.id">
+          <tr v-else="" v-for="row in dataRows" :keys="row.id" class="tr-right">
             <td>
               {{row.goodsName}}
             </td>

@@ -42,12 +42,12 @@
     margin: 20px 0;
   }
 
-  .tr-right {
-    cursor: pointer;
-    &:hover, &.active {
-      background: @dialog-left-bg;
-    }
-  }
+  /*<!--.tr-right {-->*/
+  /*<!--cursor: pointer;-->*/
+  /*<!--&:hover, &.active {-->*/
+  /*<!--background: @dialog-left-bg;-->*/
+  /*<!--}-->*/
+  /*<!--}-->*/
 
   .search-input {
     .el-select {
