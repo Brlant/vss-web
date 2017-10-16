@@ -57,6 +57,12 @@
       width: 100%;
     }
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: 340px;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -71,8 +77,17 @@
               <el-col :span="8" class="search-input">
                 <el-select filterable remote placeholder="请输入名称搜索CDC" :remote-method="filterOrgs"
                            :clearable="true"
-                           v-model="orgId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList"></el-option>
+                           v-model="orgId" filterable popper-class="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </el-col>
               <el-col :span="10" style="padding-left: 10px">

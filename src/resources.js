@@ -536,6 +536,9 @@ export const VaccineRights = resource('/vaccine-authorization', http, {
   queryPovByVaccine (orgGoodsId, params) {
     return http.get(`/vaccine-authorization/org-goods/${orgGoodsId}/pov`, {params});
   },
+  queryVaccineByPov (povId, params) {
+    return http.get(`/vaccine-authorization/${povId}`, {params});
+  },
   deleteVaccine (id) {
     return http.put(`/vaccine-authorization/detail/${id}`);
   }

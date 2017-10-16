@@ -219,6 +219,12 @@
   .ar {
     text-align: right;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: 520px;
+    }
+  }
 </style>
 
 <template>
@@ -238,9 +244,17 @@
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="POV" prop="povId">
               <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
-                         v-model="form.povId">
+                         v-model="form.povId" popper-class="good-selects">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                            v-for="org in orgList">
+                  <div style="overflow: hidden">
+                    <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                  </div>
+                  <div style="overflow: hidden">
+                  <span class="select-other-info pull-left" v-if="org.manufacturerCode">
+                    <span>系统代码</span> {{org.manufacturerCode}}
+                  </span>
+                  </div>
                 </el-option>
               </el-select>
             </el-form-item>
