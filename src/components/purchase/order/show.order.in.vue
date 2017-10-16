@@ -98,7 +98,7 @@
         this.currentOrder = {};
         if (!this.orderId) return false;
         InWork.queryOrderDetail(this.orderId).then(res => {
-          res.data.state = this.state;
+          res.data.state = res.data.erpStatus;
           this.currentOrder = res.data;
         });
       },

@@ -615,7 +615,7 @@ export const InWork = resource('/stock-in', http, {
     return http.get('/stock-in/count', {params: obj});
   },
   queryOrderDetail (id) { // 查询订单详细
-    return http.get(`/order/${id}`, {params: {lockFlag: false}});
+    return http.get(`/erp-order/${id}`);
   },
   allotPlace (obj) { // 分配货位
     return http.post('/stock-in/batch/allot', obj);
