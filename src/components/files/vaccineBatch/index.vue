@@ -223,7 +223,22 @@
     watch: {
       filters: {
         handler: function () {
-          this.getBatcheNumbers();
+          if (this.filters.orgId === '' && this.filters.batchNumber === '' && this.filters.goodsId === '') {
+            this.$notify.info({
+              title: '提示',
+              message: '请输入查询条件查询批号文件'
+            });
+            return;
+          } else {
+            if (this.filters.batchNumber === '') {
+              this.$notify.info({
+                title: '提示',
+                message: '请输入查询需要查询的批号'
+              });
+              return;
+            }
+            this.getBatcheNumbers();
+          }
         },
         deep: true
       }
@@ -231,6 +246,7 @@
     methods: {
       getBatcheNumbers() { // 得到批次列表
 //        this.pager.currentPage = pageNo;
+//        if (this.filter.orgId !== '' || this.filter.batchNumber !== '' || this.filter.goodsId !== '') {
         let params = Object.assign({}, this.filters);
 //        this.loadingData = true;
         BatchNumber.query(params).then(res => {
@@ -238,6 +254,7 @@
 //          this.pager.count = res.data.count;
 //          this.loadingData = false;
         });
+//        }
       },
       showDetail(item) {
         this.currentItemId = item.id;
