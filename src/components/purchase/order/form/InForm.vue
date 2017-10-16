@@ -813,16 +813,14 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.orgId || !this.form.supplierId) {
+        if (!this.form.supplierId) {
           this.searchProductList = [];
           return;
         }
         let params = {
-          orgId: this.form.orgId,
-          keyWord: query,
-          factoryId: this.form.supplierId
+          keyWord: query
         };
-        http.get('/org/goods/valid', {params: params}).then(res => {
+        http.get(`purchase-agreement/${this.form.supplierId}/valid/org-goods`, {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
