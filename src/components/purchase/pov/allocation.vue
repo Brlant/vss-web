@@ -15,10 +15,6 @@
     word-break: break-all;
   }
 
-  .pt {
-    padding-top: 8px;
-  }
-
   .good-selects {
     .el-select-dropdown__item {
       font-size: 14px;

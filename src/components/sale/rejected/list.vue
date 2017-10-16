@@ -92,10 +92,6 @@
     cursor: pointer;
   }
 
-  .pt10 {
-    padding-top: 10px;
-  }
-
   .cursor-span {
     cursor: pointer;
   }

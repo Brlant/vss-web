@@ -92,9 +92,7 @@
     cursor: pointer;
   }
 
-  .pt10 {
-    padding-top: 10px;
-  }
+
 
   .cursor-span {
     cursor: pointer;
@@ -203,7 +201,7 @@
                 </div>
               </el-col>
               <el-col :span="4">
-                <div class="vertical-center">
+                <div>
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>

@@ -92,9 +92,7 @@
     cursor: pointer;
   }
 
-  .pt10 {
-    padding-top: 10px;
-  }
+
 
   .cursor-span {
     cursor: pointer;
@@ -211,7 +209,7 @@
                 </div>
               </el-col>
               <el-col :span="4">
-                <div class="vertical-center">
+                <div>
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
@@ -229,7 +227,7 @@
                 </div>
               </el-col>
               <el-col :span="3">
-                <div class="vertical-center">
+                <div>
                   {{getOrderStatus(item)}}
                   <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
                 </div>
