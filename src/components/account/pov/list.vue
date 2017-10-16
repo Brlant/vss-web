@@ -60,7 +60,7 @@
 
   .good-selects {
     .el-select-dropdown__item {
-      width: 425px;
+      width: auto;
     }
   }
 </style>

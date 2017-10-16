@@ -69,6 +69,12 @@
   .order-list-item {
     cursor: pointer;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -100,7 +106,27 @@
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects">
                   <el-option :value="good.id" :key="good.id" :label="good.name"
-                             v-for="good in orgGoods"></el-option>
+                             v-for="good in orgGoods">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{good.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                    <span class="select-other-info pull-left"><span
+                      v-show="good.id">货品ID</span>  {{good.id}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="good.specifications">货品规格</span>  {{good.specifications}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="good.approvalNumber">批准文号</span>  {{good.approvalNumber}}
+                      </span>
+                    </div>
+                    <div style="overflow: hidden">
+                  <span class="select-other-info pull-left"><span
+                    v-show="good.factoryName">生产厂商</span>  {{ good.factoryName }}
+                  </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
