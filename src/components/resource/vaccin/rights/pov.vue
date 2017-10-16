@@ -120,7 +120,7 @@
                 ￥{{row.price ? row.price : 0 }}
               </td>
               <td>
-                <perm label="vaccine-authorization-add">
+                <perm label="vaccine-authorization-update">
                   <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
                 </perm>
                 <perm label="vaccine-authorization-delete">

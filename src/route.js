@@ -244,7 +244,7 @@ const route = [
           {
             path: '/resource/bidder',
             component: resolve => require(['./components/resource/bidder/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '中标疫苗', perm: 'vaccine-authorization'}
+            meta: {moduleId: 'resource', title: '中标疫苗', perm: 'successful-bidder-vaccine'}
           },
           {
             path: '/resource/store',

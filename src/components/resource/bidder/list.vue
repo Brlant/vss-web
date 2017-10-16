@@ -31,7 +31,7 @@
           <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
               <i class="iconfont icon-search"></i>
           </a>
-          <perm label="erp-user-add">
+          <perm label="successful-bidder-add">
                 <a href="#" class="btn-circle" @click.stop.prevent="add">
                     <i class="iconfont icon-plus"></i>
                 </a>
@@ -77,11 +77,11 @@
               {{formatStatus(row.availabilityStatus)}}
             </td>
             <td class="list-op">
-              <perm label="erp-user-edit">
+              <perm label="successful-bidder-update">
                 <a href="#" @click.stop.prevent="edit(row)" v-show="!row.adminFlag"><i
                   class="iconfont icon-edit"></i>编辑</a>
               </perm>
-              <perm label="vaccine-info-delete">
+              <perm label="successful-bidder-delete">
                 <a href="#" @click.stop.prevent="remove(row.id)"><i class="iconfont icon-remove"></i> 删除</a>
               </perm>
             </td>
