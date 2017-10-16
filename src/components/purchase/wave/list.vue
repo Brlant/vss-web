@@ -92,7 +92,7 @@
                 <span>{{ item.createName }}</span>
               </el-col>
               <el-col :span="8" class="pt">
-                <span>{{ item.createTime | date}}</span>
+                <span>{{ item.createTime | time}}</span>
               </el-col>
               <el-col :span="4" class="pt">
                 <span>{{ item.status === 0 ? '未完成' : '已完成' }}</span>
