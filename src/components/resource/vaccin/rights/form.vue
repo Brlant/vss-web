@@ -251,8 +251,8 @@
                     <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
                   </div>
                   <div style="overflow: hidden">
-                  <span class="select-other-info pull-left" v-if="org.manufacturerCode">
-                    <span>系统代码</span> {{org.manufacturerCode}}
+                  <span class="select-other-info pull-left" v-if="org.subordinateCode">
+                    <span>系统代码</span> {{org.subordinateCode}}
                   </span>
                   </div>
                 </el-option>

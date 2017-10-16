@@ -221,6 +221,12 @@
   .ar {
     text-align: right;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: 540px;
+    }
+  }
 </style>
 
 
@@ -262,7 +268,7 @@
                   </div>
                   <div style="overflow: hidden">
                   <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.manufacturerCode}}
+                    <span>系统代码</span> {{org.subordinateCode}}
                   </span>
                   </div>
                 </el-option>
