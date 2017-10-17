@@ -186,7 +186,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in dataRows" @click.prevent=""
-               :class="['status-'+filterListColor(item.availabilityStatus)]">
+               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentId ==item.id}]" >
             <el-row>
               <el-col :span="5">
                 <div class="vertical-center">
@@ -340,6 +340,8 @@
         this.action = 'edit';
         this.formTitle = '编辑';
         this.showRight = true;
+        this.currentId = item.id;
+        this.availabilityStatus = item.availabilityStatus;
         this.row = item;
       },
       formatStatus: function (value) {
