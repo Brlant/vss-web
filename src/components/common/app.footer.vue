@@ -5,9 +5,9 @@
     left: 0;
     bottom: 0;
     right: 0;
-    color: #666;
+    color: #b6b6b6;
     a {
-      color: #666;
+      color: #b6b6b6;
     }
     padding: 6.5px;
     .container {
