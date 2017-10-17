@@ -15,7 +15,7 @@
     <h2 class="clearfix">{{showTitle}}疫苗采购协议</h2>
     <el-form-item label="疫苗" prop="orgGoodsId" class="search-input">
       <el-select placeholder="请选择疫苗" v-model="form.orgGoodsId" filterable remote :remote-method="getOmsGoods"
-                 :clearable="true" popper-class="good-selects">
+                 :clearable="true" popper-class="good-selects" @change="setSalesFirmName(form.orgGoodsId)">
         <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                    v-for="item in goodsList">
           <div style="overflow: hidden">
@@ -26,11 +26,14 @@
                         v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                       </span>
             <span class="select-other-info pull-left"><span
-              v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+              v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
             </span>
           </div>
         </el-option>
       </el-select>
+    </el-form-item>
+    <el-form-item label="供货厂商" v-if="form.orgGoodsId&&salesFirmName">
+      {{salesFirmName}}
     </el-form-item>
     <el-form-item label="采购单价" prop="unitPrice">
       <oms-input type="text" v-model="form.unitPrice" @blur="formatUnitPrice"
@@ -107,6 +110,7 @@
             {required: true, message: '请选择是否生效'}
           ]
         },
+        salesFirmName: '',
         form: this.formItem,
         doing: false,
         attachmentList: [],
@@ -144,6 +148,16 @@
       }
     },
     methods: {
+      setSalesFirmName: function (item) {
+        console.log(item);
+        if (item) {
+          this.goodsList.forEach(val => {
+            if (val.orgGoodsDto.id === item) {
+              this.salesFirmName = val.orgGoodsDto.salesFirmName;
+            }
+          });
+        }
+      },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
         let params = {
           keyWord: keyWord

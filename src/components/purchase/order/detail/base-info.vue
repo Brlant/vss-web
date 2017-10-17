@@ -18,7 +18,7 @@
           <oms-row label="货主" :span="span">
             {{currentOrder.orgName}}
           </oms-row>
-          <oms-row label="销售厂商" :span="span">
+          <oms-row label="供货厂商" :span="span">
             {{currentOrder.supplierName}}
           </oms-row>
           <oms-row label="物流商" :span="span"
@@ -26,10 +26,13 @@
             {{currentOrder.logisticsProviderName}}
           </oms-row>
           <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
-            {{currentOrder.transportationAddress}}
+            {{currentOrder.pickUpWarehouseAddress}}
           </oms-row>
           <oms-row label="运输条件" :span="span">
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
+          </oms-row>
+          <oms-row label="疾控仓库地址" :span="span">
+            <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
           </oms-row>
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
@@ -62,7 +65,7 @@
         <tr>
           <td></td>
           <td>货品</td>
-          <td class="text-center">销售厂商</td>
+          <td class="text-center">供货厂商</td>
           <td class="text-center">数量</td>
           <td class="text-center">单价</td>
           <td class="text-center">金额</td>

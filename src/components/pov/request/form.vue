@@ -243,9 +243,8 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="选择CDC" prop="cdcId">
-              <el-select placeholder="请选择CDC" v-model="form.cdcId" filterable clearable>
-                <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in cdcs"
-                           v-show="item.level === form.type">
+              <el-select placeholder="请选择CDC" v-model="form.cdcId" clearable>
+                <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
               </el-select>
             </el-form-item>
@@ -289,7 +288,7 @@
                         }}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.factoryName">销售厂商</span>  {{ item.factoryName }}</span>
+                        v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}</span>
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->
@@ -315,7 +314,7 @@
                   <oms-row label="疫苗编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
-                  <oms-row label="销售厂商" :span="8">
+                  <oms-row label="供货厂商" :span="8">
                     {{product.fixInfo.salesFirmName}}
                   </oms-row>
                   <oms-row label="批准文号" :span="8">
@@ -419,6 +418,7 @@
         currentList: [],
         warehouses: [],
         cdcs: [],
+        showCdcs: [],
         form: {
           detailDtoList: [],
           remark: '',
@@ -478,7 +478,7 @@
       changeType () {
         this.$refs['orderGoodsForm'].resetFields();
         this.accessoryList = [];
-        this.form.cdcId = this.cdcs.filter(f => f.level === this.form.type)[0] && this.cdcs.filter(f => f.level === this.form.type)[0].orgId || '';
+        this.filterProduct();
         this.searchProduct();
       },
       searchProduct: function () {
@@ -494,9 +494,13 @@
       queryOnCDCs () {
         cerpAction.queryOnCDCs().then(res => {
           this.cdcs = res.data;
-          this.form.cdcId = res.data.filter(f => f.level === this.form.type)[0] && res.data.filter(f => f.level === this.form.type)[0].orgId;
+          this.filterProduct();
           this.searchProduct();
         });
+      },
+      filterProduct () {
+        this.showCdcs = this.cdcs.filter(f => f.level === this.form.type);
+        this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
       searchWarehouses () {
         let user = this.$store.state.user;
