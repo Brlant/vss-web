@@ -289,9 +289,9 @@
               </el-select>
             </el-form-item>
             <el-form-item label="提货地址"
-                          :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'consigneeAddress':'' "
+                          :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
-              <oms-input type="text" v-model="form.consigneeAddress" placeholder="请输入提货地址"></oms-input>
+              <oms-input type="text" v-model="form.pickUpAddress" placeholder="请输入提货地址"></oms-input>
             </el-form-item>
 
             <el-form-item label="运输条件" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
@@ -538,7 +538,7 @@
           'detailDtoList': [],
           'supplierId': '',
           'remark': '',
-          'consigneeAddress': ''
+          'pickUpAddress': ''
         },
         rules: {
           orderNo: [
@@ -558,7 +558,7 @@
           transportationAddress: [
             {required: true, message: '请选择疾控仓库地址', trigger: 'blur'}
           ],
-          consigneeAddress: [
+          pickUpAddress: [
             {required: true, message: '请输入提货地址', trigger: 'blur'}
           ],
           logisticsProviderId: [
@@ -818,7 +818,7 @@
       },
       changeSupplier: function (val) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.consigneeAddress = '';
+          this.form.pickUpAddress = '';
           this.product.orgGoodsId = '';
         }
         if (this.form.transportationMeansId === '2') {
@@ -828,7 +828,7 @@
                 let defaultStore = res.data.filter(item => item.default);
                 if (defaultStore.length) {
                   let address = utils.formatAddress(defaultStore[0].province, defaultStore[0].city, defaultStore[0].region).split('/').join('');
-                  this.form.consigneeAddress = address + defaultStore[0].detail;
+                  this.form.pickUpAddress = address + defaultStore[0].detail;
                 }
               });
             }
@@ -839,7 +839,7 @@
       },
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.consigneeAddress = '';
+          this.form.pickUpAddress = '';
           this.form.logisticsProviderId = '';
           this.form.supplierId = '';
         }
