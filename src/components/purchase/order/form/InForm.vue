@@ -291,7 +291,12 @@
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
-              <oms-input type="text" v-model="form.pickUpAddress" placeholder="请输入提货地址"></oms-input>
+              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
+                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in supplierWarehouses">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
+                </el-option>
+              </el-select>
             </el-form-item>
 
             <el-form-item label="运输条件" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
@@ -556,10 +561,10 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择疾控仓库地址', trigger: 'blur'}
+            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
           ],
           pickUpAddress: [
-            {required: true, message: '请输入提货地址', trigger: 'blur'}
+            {required: true, message: '请选择提货地址', trigger: 'change'}
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
@@ -610,7 +615,8 @@
           expectedTimeLabel: '预计入库时间'
         },
         currentTransportationMeans: [],
-        cdcWarehouses: []
+        cdcWarehouses: [],
+        supplierWarehouses: []
       };
     },
     computed: {
@@ -818,20 +824,20 @@
       },
       changeSupplier: function (val) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
+          this.supplierWarehouses = [];
           this.form.pickUpAddress = '';
           this.product.orgGoodsId = '';
         }
         if (this.form.transportationMeansId === '2') {
-          this.orgList.forEach(item => {
-            if (val === item.id) {
-              Address.queryAddress(val, {deleteFlag: false, orgId: val, auditedStatus: '1'}).then(res => {
-                let defaultStore = res.data.filter(item => item.default);
-                if (defaultStore.length) {
-                  let address = utils.formatAddress(defaultStore[0].province, defaultStore[0].city, defaultStore[0].region).split('/').join('');
-                  this.form.pickUpAddress = address + defaultStore[0].detail;
-                }
-              });
-            }
+          Address.queryAddress(val, {
+            deleteFlag: false,
+//                warehouseType: 0,
+            orgId: val,
+            auditedStatus: '1'
+          }).then(res => {
+            this.supplierWarehouses = res.data;
+            let defaultStore = res.data.filter(item => item.default);
+            this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
           });
         }
         this.searchProduct();
