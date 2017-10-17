@@ -9,10 +9,13 @@
   .main-card-box {
     position: relative;
     margin: 50px auto;
-    width: 549px;
+    width: 548px;
     border-radius: 10px;
     //box-shadow: 0 5px 10px 0 rgba(138, 138, 138, 0.12), 0 0 12px 0 rgba(0, 0, 0, .04);
-    box-shadow: 0 12px 24px 0 rgba(7, 17, 27, .2);
+    box-shadow: 0 12px 24px 0 rgba(7, 17, 27, .2), 0 0 12px 0 rgba(0, 0, 0, .04);
+  }
+  .box-card {
+    box-shadow: none;
   }
   .logo-part, .logo-part-s {
     text-align: center;
@@ -37,8 +40,11 @@
   }
 
   .bg-logo {
-    width: 549px;
+    width: 548px;
     height: 160px;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+    box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.26);
   }
 
   .box-card {
