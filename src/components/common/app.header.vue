@@ -269,7 +269,7 @@
 
 <script>
   import {Auth} from '../../resources';
-  import logo_pic from '../../assets/img/cerp-logo.png';
+  import logo_pic from '../../assets/img/erp-logo.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';
 

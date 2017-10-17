@@ -221,6 +221,12 @@
   .ar {
     text-align: right;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: 540px;
+    }
+  }
 </style>
 
 
@@ -228,7 +234,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">增加订单</h2>
+        <h2 class="clearfix right-title">新增销售订单</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -254,9 +260,17 @@
             </el-form-item>
             <el-form-item label="POV" prop="customerId">
               <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
-                         v-model="form.customerId" @change="changeCustomerId">
+                         v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                            v-for="org in orgList">
+                  <div style="overflow: hidden">
+                    <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                  </div>
+                  <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.subordinateCode}}
+                  </span>
+                  </div>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -338,7 +352,7 @@
                           }}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                         </span>
                       </div>
                     </el-option>
@@ -366,7 +380,7 @@
                     <oms-row label="货品编号" :span="8">
                       {{product.fixInfo.goodsNo}}
                     </oms-row>
-                    <oms-row label="销售厂商" :span="8">
+                    <oms-row label="供货厂商" :span="8">
                       {{product.fixInfo.salesFirmName}}
                     </oms-row>
                     <oms-row label="批准文号" :span="8">

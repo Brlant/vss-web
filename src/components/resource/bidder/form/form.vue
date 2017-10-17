@@ -8,7 +8,7 @@
     <h2 class="clearfix">{{title}}</h2>
     <el-form ref="bidderForm" :model="form" label-width="100px" :rules="rules"
              @submit.prevent="onSubmit()" onsubmit="return false">
-      <el-form-item label="疫苗">
+      <el-form-item label="疫苗" prop="goodsId">
         <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterVaccine"
                    :clearable="true"
                    v-model="form.goodsId" popper-class="good-selects">
@@ -36,7 +36,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="中标年份" prop="phone">
+      <el-form-item label="中标年份" prop="year">
         <div class="block">
           <el-date-picker
             v-model="form.year"
@@ -49,12 +49,12 @@
         </div>
 
       </el-form-item>
-      <el-form-item label="有效时间" prop="email">
+      <el-form-item label="有效时间" prop="expireTime">
         <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择日期"
-                        style="width: 100%;">
+                        style="width: 100%;" @change="formatExpireTimeDate">
         </el-date-picker>
       </el-form-item>
-      <el-form-item label="是否生效" prop="phone">
+      <el-form-item label="是否生效">
         <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
                    v-model="form.availabilityStatus"></el-switch>
       </el-form-item>
@@ -93,18 +93,15 @@
         vaccineList: [],
         goodsId: '',
         rules: {
-//          name: [
-//            {required: true, message: '请输入用户名', trigger: 'blur'}
-//          ],
-//          phone: [
-//            {required: true, message: '请输入手机号码', trigger: 'blur'},
-//          ],
-//          email: [
-//            {required: true, message: '请输入邮箱', trigger: 'blur'},
-//          ],
-//          roleId: [
-//            {required: true, message: '请输入用户角色', trigger: 'blur'}
-//          ]
+          goodsId: [
+            {required: true, message: '请输入疫苗', trigger: 'blur'}
+          ],
+          year: [
+            {required: true, message: '请选择中标年份', trigger: 'change'}
+          ],
+          expireTime: [
+            {required: true, message: '请选择有效时间', trigger: 'change'}
+          ]
         },
         form: {
           goodsId: '',
@@ -122,7 +119,21 @@
     },
     watch: {
       formItem: function () {
-        this.form = this.formItem;// this.formItem;
+        if (this.formItem.id) {
+          this.vaccineList.push({
+            id: this.formItem.goodsId,
+            name: this.formItem.goodsName
+          });
+          this.form = this.formItem;// this.formItem;
+        } else {
+          this.form = {
+            goodsId: '',
+            expireTime: '',
+            year: '',
+            availabilityStatus: true
+          };
+          this.$refs['bidderForm'].resetFields();
+        }
       },
       showRight: function (val) {
         if (!val) {
@@ -132,9 +143,10 @@
     },
     methods: {
       filterVaccine: function (query) {
-        let params = {
+        let params = Object.assign({}, {
+          deleteFlag: false,
           keyWord: query
-        };
+        });
         http.get('/vaccine-info/valid', {params}).then(res => {
           this.vaccineList = res.data.list;
         });
@@ -146,25 +158,47 @@
             return false;
           }
           this.doing = true;
-          http.post('/successful-bidder', self.form).then(() => {
-            this.doing = false;
-            this.$notify.success({
-              duration: 2000,
-              name: '成功',
-              message: '新增疫苗中标记录成功'
+          if (this.action === 'add') {
+            http.post('/successful-bidder', self.form).then(() => {
+              this.doing = false;
+              this.$notify.success({
+                duration: 2000,
+                name: '成功',
+                message: '新增疫苗中标记录成功'
+              });
+              self.$emit('change', self.form);
+            }).catch(() => {
+              this.$notify.error({
+                duration: 2000,
+                message: '新增疫苗中标记录失败'
+              });
+              this.doing = false;
             });
-            self.$emit('change', self.form);
-          }).catch(() => {
-            this.$notify.error({
-              duration: 2000,
-              message: '新增疫苗中标记录失败'
+          }
+          if (this.action === 'edit') {
+            http.put('/successful-bidder', self.form).then(() => {
+              this.doing = false;
+              this.$notify.success({
+                duration: 2000,
+                name: '成功',
+                message: '编辑疫苗中标记录成功'
+              });
+              self.$emit('change', self.form);
+            }).catch(() => {
+              this.$notify.error({
+                duration: 2000,
+                message: '编辑疫苗中标记录失败'
+              });
+              this.doing = false;
             });
-            this.doing = false;
-          });
+          }
         });
       },
       formatDate(param) {
-        this.form.year = this.$moment(param).format('YYYY');
+        this.form.year = this.form.year ? this.$moment(param).format('YYYY') : '';
+      },
+      formatExpireTimeDate(param) {
+        this.form.expireTime = this.form.expireTime ? this.$moment(param).format('YYYY-MM-DD') : '';
       },
       doClose: function () {
         this.$emit('close');

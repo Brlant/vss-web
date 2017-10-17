@@ -127,6 +127,9 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                   :class="{'active':item==currentItem}">
+                <div class="id-part">
+                  组织疫苗ID {{item.orgGoodsId }}
+                </div>
                 <div>
                   <span>{{item.orgGoodsName}}</span>
                 </div>

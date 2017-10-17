@@ -92,9 +92,7 @@
     cursor: pointer;
   }
 
-  .pt10 {
-    padding-top: 10px;
-  }
+
 
   .cursor-span {
     cursor: pointer;
@@ -131,14 +129,14 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="销售厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row label="供货厂商" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="8">
               <oms-form-row label="预计出库时间" :span="8">
                 <el-col :span="24">
                   <el-date-picker
@@ -149,8 +147,8 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="5">
-              <oms-form-row label="" :span="6">
+            <el-col :span="4">
+              <oms-form-row label="" :span="3">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
@@ -173,7 +171,7 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="6">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="filters.state === '-1' ? 5 : 6">销售厂商</el-col>
+          <el-col :span="filters.state === '-1' ? 5 : 6">供货厂商</el-col>
           <el-col :span="filters.state === '-1' ? 4 : 5">时间</el-col>
           <el-col :span="3">状态</el-col>
           <el-col :span="2" v-show="filters.state === '-1' ">操作</el-col>
@@ -203,7 +201,7 @@
                 </div>
               </el-col>
               <el-col :span="4">
-                <div class="vertical-center">
+                <div>
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>

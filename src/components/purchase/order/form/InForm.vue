@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">增加订单</h2>
+        <h2 class="clearfix right-title">新增采购订单</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -249,14 +249,22 @@
                            v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商" prop="supplierId">
-              <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="供货厂商" prop="supplierId">
+              <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                  <span class="pull-left" style="clear: right">{{org.name}}</span>
-                  <span class="pull-right" style="color: #999">
+                  <div style="overflow: hidden">
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    <span class="pull-right" style="color: #999">
                      <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
                     </span>
+                  </div>
+                  <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.manufacturerCode}}
+                  </span>
+                  </div>
+
                 </el-option>
               </el-select>
             </el-form-item>
@@ -265,7 +273,19 @@
               <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
                          :clearable="true"
                          v-model="form.logisticsProviderId">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
+                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList">
+                  <div style="overflow: hidden">
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    <span class="pull-right" style="color: #999">
+                     <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
+                    </span>
+                  </div>
+                  <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.manufacturerCode}}
+                  </span>
+                  </div>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="提货地址"
@@ -336,7 +356,7 @@
                         }}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                       </span>
                     </div>
                   </el-option>
@@ -362,7 +382,7 @@
                   <oms-row label="货品编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
-                  <oms-row label="销售厂商" :span="8">
+                  <oms-row label="供货厂商" :span="8">
                     {{product.fixInfo.salesFirmName}}
                   </oms-row>
                   <oms-row label="批准文号" :span="8">
@@ -520,7 +540,7 @@
             {validator: checkOrderNumber}
           ],
           supplierId: [
-            {required: true, message: '请选择销售厂商', trigger: 'change'}
+            {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
@@ -813,16 +833,14 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.orgId || !this.form.supplierId) {
+        if (!this.form.supplierId) {
           this.searchProductList = [];
           return;
         }
         let params = {
-          orgId: this.form.orgId,
-          keyWord: query,
-          factoryId: this.form.supplierId
+          keyWord: query
         };
-        http.get('/org/goods/valid', {params: params}).then(res => {
+        http.get(`purchase-agreement/${this.form.supplierId}/valid/org-goods`, {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();

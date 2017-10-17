@@ -101,17 +101,17 @@ const route = [
             path: '/pov/request',
             component: resolve => require(['./components/pov/request/list.vue'], resolve),
             meta: {moduleId: 'pov', title: '疫苗要货申请', perm: 'pull-signal'}
-          },
-          {
-            path: '/pov/store',
-            component: resolve => require(['./components/pov/store/list.vue'], resolve),
-            meta: {moduleId: 'pov', title: 'POV库存管理', perm: 'pov-stock-manage'}
-          },
-          {
-            path: '/pov/scan',
-            component: resolve => require(['./components/pov/scan/list.vue'], resolve),
-            meta: {moduleId: 'pov', title: 'POV注射扫码', perm: 'pov-injection-scan'}
           }
+          // {
+          //   path: '/pov/store',
+          //   component: resolve => require(['./components/pov/store/list.vue'], resolve),
+          //   meta: {moduleId: 'pov', title: 'POV库存管理', perm: 'pov-stock-manage'}
+          // },
+          // {
+          //   path: '/pov/scan',
+          //   component: resolve => require(['./components/pov/scan/list.vue'], resolve),
+          //   meta: {moduleId: 'pov', title: 'POV注射扫码', perm: 'pov-injection-scan'}
+          // }
         ]
       },
       {
@@ -243,8 +243,8 @@ const route = [
           },
           {
             path: '/resource/bidder',
-            component: resolve => require(['./components/resource/bidder/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '中标疫苗', perm: 'vaccine-authorization'}
+            component: resolve => require(['./components/resource/bidder/newList.vue'], resolve),
+            meta: {moduleId: 'resource', title: '中标疫苗', perm: 'successful-bidder-vaccine'}
           },
           {
             path: '/resource/store',

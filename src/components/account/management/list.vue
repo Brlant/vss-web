@@ -327,6 +327,11 @@
           this.getPageList(1);
           this.showRight = false;
         } else {
+          if (item.adminFlag) {
+            this.getPageList(1);
+            this.showRight = false;
+            return;
+          }
           let index = this.dataRows.indexOf(this.oldItem);
           if (index !== -1) {
             this.dataRows.splice(index, 1, item);

@@ -1,3 +1,16 @@
+<style lang="less">
+  .order-cost-part {
+    padding: 0 8px;
+    margin-bottom: 20px;
+    background: #f7f7f7;
+    line-height: 26px;
+    > i {
+      margin-right: 10px;
+      display: inline-block;
+      margin-top: 3px;
+    }
+  }
+</style>
 <template>
   <div>
     <div v-if="loadingLog">
@@ -7,6 +20,10 @@
       暂无操作日志信息
     </div>
     <Timeline v-else>
+      <div class="order-cost-part">
+        <i class="el-icon-time"></i> 订单消耗时间:
+        <oms-cost-time :fDate="currentOrder.createTime" :tDate="orderEndTime"></oms-cost-time>
+      </div>
       <template v-for="(log,index) in orderLogList">
         <TimelineItem color="green" v-if="log.showDate">
           <i class="iconfont icon-home1" slot="dot"></i>
@@ -23,7 +40,10 @@
           </el-row>
         </TimelineItem>
       </template>
-
+      <div class="order-cost-part" v-if="orderLogList.length>0">
+        <i class="el-icon-time"></i> 订单消耗时间:
+        <oms-cost-time :fDate="currentOrder.createTime" :tDate="orderEndTime"></oms-cost-time>
+      </div>
     </Timeline>
   </div>
 </template>
@@ -52,7 +72,8 @@
     data () {
       return {
         loadingLog: true,
-        orderLogList: []
+        orderLogList: [],
+        orderEndTime: ''
       };
     },
     watch: {
@@ -78,6 +99,11 @@
             } else {
               dateArr.push(item.dateWeek);
               item.showDate = true;
+            }
+            if ((this.currentOrder.state === '3' || this.currentOrder.state === '8') && this.orderLogList.length > 0) {
+              this.orderEndTime = this.orderLogList[0].operateTime;
+            } else {
+              this.orderEndTime = '';
             }
           });
           this.orderLogList = res.data;

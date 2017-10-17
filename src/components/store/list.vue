@@ -15,10 +15,6 @@
     word-break: break-all;
   }
 
-  .pt {
-    padding-top: 15px;
-  }
-
   .good-selects {
     .el-select-dropdown__item {
       font-size: 14px;
@@ -43,6 +39,12 @@
 
   .order-list-item {
     cursor: pointer;
+  }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
   }
 </style>
 <template>
@@ -80,7 +82,19 @@
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects">
                   <el-option :value="org.orgGoodsDto.id" :key="org.orgGoodsDto.id" :label="org.orgGoodsDto.name"
-                             v-for="org in orgGoods"></el-option>
+                             v-for="org in orgGoods">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{org.orgGoodsDto.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.orgGoodsDto.goodsNo">货品编号</span>  {{org.orgGoodsDto.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.orgGoodsDto.salesFirmName">供货厂商</span>  {{ org.orgGoodsDto.salesFirmName }}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>

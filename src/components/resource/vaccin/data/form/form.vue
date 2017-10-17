@@ -116,10 +116,25 @@
         <el-select placeholder="请选择疫苗种类" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
                    :clearable="true" @change="getGoodsType(form.goodsId)" popper-class="good-selects">
           <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
-            <span class="pull-left">{{ item.name }}</span>
-            <span class="pull-right" style="color:#999">
-            <dict :dict-group="'typeId'" :dict-key="item.typeId"></dict>
-            </span>
+            <div style="overflow: hidden">
+              <span class="pull-left">{{item.name}}</span>
+            </div>
+            <div style="overflow: hidden">
+                <span class="select-other-info pull-left"><span
+                  v-show="item.id">货品ID</span>  {{item.id}}
+                </span>
+              <span class="select-other-info pull-left"><span
+                v-show="item.specifications">货品规格</span>  {{item.specifications}}
+                </span>
+              <span class="select-other-info pull-left"><span
+                v-show="item.approvalNumber">批准文号</span>  {{item.approvalNumber}}
+                </span>
+            </div>
+            <div style="overflow: hidden">
+              <span class="select-other-info pull-left"><span
+                v-show="item.factoryName">生产厂商</span>  {{ item.factoryName }}
+              </span>
+            </div>
           </el-option>
         </el-select>
       </el-form-item>

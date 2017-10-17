@@ -57,6 +57,12 @@
       width: 100%;
     }
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -82,14 +88,26 @@
             <el-col :span="8">
               <oms-form-row label="CDC货品" :span="6">
                 <el-select filterable remote placeholder="请输入名称搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
-                           v-model="filters.orgGoodsId">
+                           v-model="filters.orgGoodsId" popper-class="good-selects">
                   <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
-                             v-for="item in goodses"></el-option>
+                             v-for="item in goodses">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="销售厂商" :span="6">
+              <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
                            v-model="filters.factoryId">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>
@@ -108,7 +126,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <el-row class="text-right">
+              <el-row class="text-center">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </el-row>

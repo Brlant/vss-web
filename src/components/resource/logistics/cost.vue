@@ -102,10 +102,10 @@
                   </span>
                 </perm>
               </div>
-              <oms-row label="一类疫苗费用模式" :span="8">{{ setModel}}</oms-row>
-              <oms-row label="一类疫苗物流费用" :span="8" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{ cost.price}}
+              <oms-row label="一类疫苗费用模式" :span="10">{{ setModel}}</oms-row>
+              <oms-row label="一类疫苗物流费用" :span="10" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{ cost.price}}
               </oms-row>
-              <oms-row label="一类疫苗物流费用比例" :span="8" v-if="cost.model==='1'">{{ cost.price * 100 }}<span
+              <oms-row label="一类疫苗物流费用比例" :span="10" v-if="cost.model==='1'">{{ cost.price * 100 }}<span
                 v-if="cost.price">%</span>
               </oms-row>
             </div>
