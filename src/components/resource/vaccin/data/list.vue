@@ -124,7 +124,7 @@
                               class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
                 </perm>
                 <div class="id-part">
-                  <span>组织疫苗ID{{item.orgGoodsDto.id}}</span>
+                  <span>疫苗编号{{item.orgGoodsDto.id}}</span>
                   <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
                   </el-tag>
                   <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">证照过期</el-tag>
@@ -162,7 +162,7 @@
                   [ 产品图片 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
-                  [ 组织疫苗信息 ]
+                  [ 疫苗信息 ]
                 </el-col>
               </el-row>
               <el-row>
@@ -172,15 +172,15 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
-                  <goods-row label="组织疫苗ID" :span="8">
+                  <goods-row label="疫苗编号" :span="8">
                     {{ data.id}}
                   </goods-row>
-                  <goods-row label="组织疫苗名称" :span="8">
+                  <goods-row label="疫苗名称" :span="8">
                     {{ data.name}}
                   </goods-row>
-                  <goods-row label="疫苗分类" :span="8">
-                    <dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>
-                  </goods-row>
+                  <!--<goods-row label="疫苗分类" :span="8">-->
+                    <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
+                  <!--</goods-row>-->
                   <goods-row label="疫苗标志" :span="8">
                     <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.propertyMap.firstVaccineSign"></dict>
                   </goods-row>
@@ -192,6 +192,9 @@
                   </goods-row>
                   <goods-row label="采购价格" :span="8">
                     ¥ {{ data.procurementPrice | formatMoney}}
+                  </goods-row>
+                  <goods-row label="供货厂商" :span="8">
+                    {{ data.salesFirmName }}
                   </goods-row>
                   <goods-row label="销售价格" :span="8">
                     ¥ {{ data.sellPrice | formatMoney}}
@@ -216,7 +219,7 @@
               <div class="border-show"></div>
               <el-row>
                 <el-col :span="3" class="text-right" style="font-size: 12px">
-                  [ 疫苗基础信息 ]
+                  [ 疫苗标准产品信息 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
                   [ 包装存储信息 ]
@@ -224,7 +227,7 @@
               </el-row>
               <el-row>
                 <el-col :span="12">
-                  <goods-row label="厂家名称" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
+                  <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
                   <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
                   <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>
                   <goods-row label="剂型" :span="12">
@@ -283,7 +286,7 @@
                   [ 药品专用 ]
                 </el-col>
                 <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
-                  [ 疫苗专用 ]
+                  [ 疾控专用 ]
                 </el-col>
                 <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='2'">
                   [ 器械专用 ]
