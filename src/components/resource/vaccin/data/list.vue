@@ -197,7 +197,7 @@
                     {{ data.salesFirmName }}
                   </goods-row>
                   <goods-row label="销售价格" :span="8">
-                    <span v-if="data.sellPrice">¥</span> {{ data.sellPrice | formatMoney}}
+                    <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="库存上限" :span="8">
                     {{ data.inventoryUpperLimit }}
@@ -385,7 +385,7 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox">
-      <goods-part :formItem="form" :action="action" @close="showRight=false" :actionType="showRight"
+      <goods-part :formItem="form" :action="action" :userStatus="1" @close="showRight=false" :actionType="showRight"
                   @change="onSubmit"></goods-part>
     </page-right>
   </div>

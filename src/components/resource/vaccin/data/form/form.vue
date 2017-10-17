@@ -109,12 +109,13 @@
 </style>
 <template>
   <div>
-    <h2 class="clearfix">添加疫苗资料</h2>
+    <h2 class="clearfix">{{showTitle}}疫苗资料</h2>
     <el-form ref="goodSForm" :model="form" :rules="rules" label-width="120px" @submit.prevent="onSubmit('goodSForm')"
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
         <el-select placeholder="请选择疫苗种类" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
-                   :clearable="true" @change="getGoodsType(form.goodsId)" popper-class="good-selects">
+                   :clearable="true" @change="getGoodsType(form.goodsId)" popper-class="good-selects"
+                   @clear="setUsedStatus">
           <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
             <div style="overflow: hidden">
               <span class="pull-left">{{item.name}}</span>
@@ -136,6 +137,12 @@
               </span>
             </div>
           </el-option>
+        </el-select>
+      </el-form-item>
+      <el-form-item label="供货厂商" prop="salesFirm">
+        <el-select filterable remote placeholder="请输入关键字搜供货厂商" :remote-method="filterOrg"
+                   :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)">
+          <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="疫苗编号" prop="goodsNo">
@@ -211,7 +218,7 @@
   </div>
 </template>
 <script>
-  import { Vaccine } from '@/resources';
+  import {Vaccine, BaseInfo} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -221,6 +228,8 @@
           name: '',
           orgId: '',
           status: true,
+          salesFirm: '',
+          salesFirmName: '',
           goodsId: '',
           goodsIsCombination: false,
           goodsNo: '',
@@ -234,6 +243,9 @@
           ],
           goodsNo: [
             {required: true, message: '请输入疫苗编号', trigger: 'blur'}
+          ],
+          salesFirm: [
+            {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
           storageConditionId: [
             {required: true, message: '请选择储存条件', trigger: 'blur'}
@@ -272,11 +284,13 @@
         invariantOtherGoodslist: [], // 所有的oms组合疫苗列表
         selectGoodsList: [], // 已经选择的疫苗列表
         goodsType: '',
-        doing: false
+        doing: false,
+        orgList: []
       };
     },
-    props: ['formItem', 'action', 'actionType'],
+    props: ['formItem', 'action', 'actionType', 'usedStatus'],
     mounted: function () {
+      this.filterOrg();
     },
     computed: {
       typeId () {
@@ -284,6 +298,13 @@
       },
       storageCondition () {
         return this.$store.state.dict['storageCondition'];
+      },
+      showTitle() {
+        let tilet = '新增';
+        if (this.action === 'edit') {
+          tilet = '修改';
+        }
+        return tilet;
       }
     },
     watch: {
@@ -295,11 +316,15 @@
           this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice.toString());
           this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
         } else {
+          this.getCombinationGoods();
+          this.getOmsGoods();
           this.form = {
             name: '',
             orgId: '',
             status: true,
             goodsId: '',
+            salesFirm: '',
+            salesFirmName: '',
             goodsIsCombination: false,
             goodsNo: '',
             bidPrice: '',
@@ -315,8 +340,6 @@
           accessory: '',
           proportion: null
         };
-        this.getCombinationGoods();
-        this.getOmsGoods();
       },
       selectGoodsList: function () {
         this.filtersCombinationGoods();
@@ -328,6 +351,30 @@
       }
     },
     methods: {
+      setUsedStatus: function () {
+        this.usedStatus = true;
+      },
+      setSalesFirm: function (id) {
+        if (id) {
+          this.orgList.forEach(val => {
+            if (val.id === id) {
+              this.form.salesFirm = id;
+              this.form.salesFirmName = val.name;
+            }
+          });
+        }
+      },
+      filterOrg: function (query) {
+        // 查询可用的货主列表
+        let param = {
+          deleteFlag: false,
+          keyWord: query,
+          auditedStatus: '1'
+        };
+        BaseInfo.query(param).then(res => {
+          this.orgList = res.data.list;
+        });
+      },
       setPrice: function () {
         if (this.form.bidPrice) {
           this.form.procurementPrice = this.form.bidPrice;
@@ -372,6 +419,21 @@
             this.goodsType = item.typeId;
           }
         });
+        if (this.usedStatus) {
+          this.goodsList.forEach(val => {
+            if (val.id === id && id) {
+              let factoryId = val.factoryId;
+              if (factoryId) {
+                BaseInfo.queryBaseInfo(factoryId).then(res => {
+                  this.orgList = [];
+                  this.orgList.push(res.data.orgDto);
+                  this.form.salesFirm = res.data.orgDto.id;
+                  this.form.salesFirmName = res.data.orgDto.name;
+                });
+              }
+            }
+          });
+        }
       },
       filtersCombinationGoods () {// 过滤已有的组织疫苗和本身
         let array = [];
