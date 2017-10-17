@@ -75,7 +75,7 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id===currentItem.id}">
-                <perm label="access-role-stop">
+                <perm label="access-role-delete">
                   <oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'
                               class="hover-show"><i
                     class="iconfont icon-delete"></i></oms-remove>
@@ -110,7 +110,7 @@
                     停用
                   </el-button>
                 </perm>
-                 <perm label="access-role-stop">
+                 <perm label="access-role-start">
                    <el-button @click="useNormal()" v-show="resData.usableStatus == 0">
                      <i class="iconfont icon-start"></i>启用
                    </el-button>
