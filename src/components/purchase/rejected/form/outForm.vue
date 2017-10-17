@@ -243,7 +243,7 @@
         <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                  label-width="160px" style="padding-right: 20px">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-            <el-form-item label="选择物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
+            <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" placeholder="请选择物流方式"
                          @change="changeTransportationMeans">
@@ -324,7 +324,7 @@
 
             <div class="oms-form order-product-box">
               <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
-                <el-form-item label="选择产品" prop="orgGoodsId">
+                <el-form-item label="产品" prop="orgGoodsId">
                   <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
                              :remote-method="searchProduct" :clearable="true" :loading="loading"
                              popper-class="order-good-selects"
