@@ -165,10 +165,10 @@
                   {{row.goodsName}}
                 </td>
                 <td>
-                  {{row.price | formatMoney}}
+                  ￥{{row.price | formatMoney}}
                 </td>
                 <td>
-                  {{row.applyCount}}
+                  ￥{{row.applyCount}}
                 </td>
                 <td>
                   {{row.applyMoney | formatMoney}}
