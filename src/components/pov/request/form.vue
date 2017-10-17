@@ -288,7 +288,7 @@
                         }}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.factoryName">销售厂商</span>  {{ item.factoryName }}</span>
+                        v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}</span>
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->
@@ -314,7 +314,7 @@
                   <oms-row label="疫苗编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
-                  <oms-row label="销售厂商" :span="8">
+                  <oms-row label="供货厂商" :span="8">
                     {{product.fixInfo.salesFirmName}}
                   </oms-row>
                   <oms-row label="批准文号" :span="8">

@@ -352,7 +352,7 @@
                           }}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                         </span>
                       </div>
                     </el-option>
@@ -380,7 +380,7 @@
                     <oms-row label="货品编号" :span="8">
                       {{product.fixInfo.goodsNo}}
                     </oms-row>
-                    <oms-row label="销售厂商" :span="8">
+                    <oms-row label="供货厂商" :span="8">
                       {{product.fixInfo.salesFirmName}}
                     </oms-row>
                     <oms-row label="批准文号" :span="8">

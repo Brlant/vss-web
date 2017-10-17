@@ -32,7 +32,7 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="销售厂商" :span="span">
+            <oms-row label="供货厂商" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
           </el-col>
@@ -61,10 +61,10 @@
         </el-row>
         <el-row>
           <el-col :span="3" class="text-right" style="line-height: 36px">
-            销售厂商仓库：
+            供货厂商仓库：
           </el-col>
           <el-col :span="21">
-            <el-select placeholder="请选择销售厂商仓库" v-model="currentOrder.transportationAddress" filterable clearable>
+            <el-select placeholder="请选择供货厂商仓库" v-model="currentOrder.transportationAddress" filterable clearable>
               <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
                 <span class="pull-left">{{ item.name }}</span>
                 <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
@@ -125,10 +125,10 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="销售厂商" :span="span">
+            <oms-row label="供货厂商" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
-            <oms-row label="销售厂商仓库" :span="span">
+            <oms-row label="供货厂商仓库" :span="span">
               {{currentOrder.warehouseAddress}}
             </oms-row>
             <oms-row label="运输条件" :span="span">
@@ -171,7 +171,7 @@
         <tr>
           <td></td>
           <td>名称</td>
-          <td class="text-center">销售厂商</td>
+          <td class="text-center">供货厂商</td>
           <td>批号</td>
           <td>生产日期</td>
           <td>有效期</td>

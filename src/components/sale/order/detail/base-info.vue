@@ -171,7 +171,7 @@
         <tr>
           <td></td>
           <td>名称</td>
-          <td class="text-center">销售厂商</td>
+          <td class="text-center">供货厂商</td>
           <td>批号</td>
           <td>生产日期</td>
           <td>有效期</td>

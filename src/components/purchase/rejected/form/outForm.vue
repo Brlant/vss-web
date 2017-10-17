@@ -252,8 +252,8 @@
                            v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商" prop="customerId">
-              <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="供货厂商" prop="customerId">
+              <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -270,9 +270,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
+            <el-form-item label="供货厂商仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
                           v-show="showContent.isShowOtherContent">
-              <el-select placeholder="请选择销售厂商仓库" v-model="form.transportationAddress" filterable clearable
+              <el-select placeholder="请选择供货厂商仓库" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -348,7 +348,7 @@
                           }}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                         </span>
                       </div>
                     </el-option>
@@ -376,7 +376,7 @@
                     <oms-row label="货品编号" :span="8">
                       {{product.fixInfo.goodsNo}}
                     </oms-row>
-                    <oms-row label="销售厂商" :span="8">
+                    <oms-row label="供货厂商" :span="8">
                       {{product.fixInfo.salesFirmName}}
                     </oms-row>
                     <oms-row label="批准文号" :span="8">
@@ -575,7 +575,7 @@
             {required: true, message: '请选择货主', trigger: 'change'}
           ],
           customerId: [
-            {required: true, message: '请选择销售厂商', trigger: 'change'}
+            {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
           bizType: [
             {required: true, message: '请选择业务类型', trigger: 'change'}
@@ -631,10 +631,10 @@
         isStorageData: true, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
-          isShowCustomerId: true, // 是否显示销售厂商
+          isShowCustomerId: true, // 是否显示供货厂商
           expectedTimeLabel: '预计出库时间'
         },
-        warehouses: [], // 销售厂商仓库列表
+        warehouses: [], // 供货厂商仓库列表
         batchNumbers: [], // 货品批号列表
         selectBatchNumbers: [] // 已经选择的货品批号
       };

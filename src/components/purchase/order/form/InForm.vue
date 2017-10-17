@@ -249,8 +249,8 @@
                            v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商" prop="supplierId">
-              <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="供货厂商" prop="supplierId">
+              <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -356,7 +356,7 @@
                         }}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                       </span>
                     </div>
                   </el-option>
@@ -382,7 +382,7 @@
                   <oms-row label="货品编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
-                  <oms-row label="销售厂商" :span="8">
+                  <oms-row label="供货厂商" :span="8">
                     {{product.fixInfo.salesFirmName}}
                   </oms-row>
                   <oms-row label="批准文号" :span="8">
@@ -540,7 +540,7 @@
             {validator: checkOrderNumber}
           ],
           supplierId: [
-            {required: true, message: '请选择销售厂商', trigger: 'change'}
+            {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}

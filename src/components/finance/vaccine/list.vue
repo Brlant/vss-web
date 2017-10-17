@@ -99,7 +99,7 @@
                         v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                       </span>
                     </div>
                   </el-option>
@@ -107,7 +107,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="销售厂商" :span="6">
+              <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
                            v-model="filters.factoryId">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>

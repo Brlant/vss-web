@@ -91,7 +91,7 @@
                         v-show="org.orgGoodsDto.goodsNo">货品编号</span>  {{org.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.orgGoodsDto.salesFirmName">销售厂商</span>  {{ org.orgGoodsDto.salesFirmName }}
+                        v-show="org.orgGoodsDto.salesFirmName">供货厂商</span>  {{ org.orgGoodsDto.salesFirmName }}
                       </span>
                     </div>
                   </el-option>
