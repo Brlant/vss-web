@@ -32,7 +32,6 @@
         margin: 0;
       }
       > h2 {
-        padding: 0 45px;
         margin: 0;
         font-size: 18px;
         font-weight: bold;
@@ -234,7 +233,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">新增销售订单</h2>
+        <h2 class="clearfix right-title" style="padding: 0">新增CDC销售订单</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
