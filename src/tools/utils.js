@@ -57,8 +57,8 @@ export default {
     1: {'title': '不可用', availabilityStatus: false, num: 0}
   },
   successBidderType: {
-    0: {'title': '可用', availabilityStatus: true, num: 0},
-    1: {'title': '不可用', availabilityStatus: false, num: 0}
+    0: {'title': '生效', availabilityStatus: true, num: 0},
+    1: {'title': '未生效', availabilityStatus: false, num: 0}
   },
   /**
    * 格式化地址，已省/市/区显示

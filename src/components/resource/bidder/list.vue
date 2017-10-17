@@ -155,8 +155,8 @@
       </div>
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
-             :class="{'active':item.availabilityStatus===activeStatus}"
-             v-for="(item, key) in successBidderType"
+             :class="{'active':key===activeStatus}"
+             v-for="(item,key) in successBidderType"
              @click="changeStatus(item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
@@ -186,31 +186,31 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in dataRows" @click.prevent=""
-               :class="['status-'+filterListColor(item.state),{'active':currentId==item.id}]">
+               :class="['status-'+filterListColor(item.availabilityStatus)]">
             <el-row>
               <el-col :span="5">
-                <div>
+                <div class="vertical-center">
                   {{item.goodsName }}
                 </div>
               </el-col>
               <el-col :span="3">
-                <div>
+                <div class="vertical-center">
                   {{item.specifications }}
                 </div>
               </el-col>
               <el-col :span="5">
-                <div>{{item.factoryName }}</div>
+                <div class="vertical-center">{{item.factoryName }}</div>
               </el-col>
               <el-col :span="3">
-                <div>{{item.approvalNumber }}</div>
+                <div class="vertical-center">{{item.approvalNumber }}</div>
               </el-col>
               <el-col :span="2">
-                <div>
+                <div class="vertical-center">
                   {{item.year}}
                 </div>
               </el-col>
               <el-col :span="2">
-                <div>
+                <div class="vertical-center">
                   {{formatStatus(item.availabilityStatus)}}
                 </div>
               </el-col>
@@ -360,12 +360,10 @@
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色
         let status = -1;
-        for (let key in this.orgType) {
-          if (this.orgType[key].state === index) {
-            status = key;
-          }
+        if (index) {
+          return 0;
         }
-        return status;
+        return 1;
       },
       filterVaccine: function (query) {
         let params = Object.assign({}, {
