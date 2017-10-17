@@ -26,10 +26,13 @@
             {{currentOrder.logisticsProviderName}}
           </oms-row>
           <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
-            {{currentOrder.transportationAddress}}
+            {{currentOrder.pickUpAddress}}
           </oms-row>
           <oms-row label="运输条件" :span="span">
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
+          </oms-row>
+          <oms-row label="疾控仓库地址" :span="span">
+            <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
           </oms-row>
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
