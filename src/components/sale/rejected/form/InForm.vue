@@ -280,9 +280,9 @@
               </el-select>
             </el-form-item>
             <el-form-item label="提货地址"
-                          :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'transportationAddress':'' "
+                          :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
-              <oms-input type="text" v-model="form.transportationAddress" placeholder="请输入提货地址"></oms-input>
+              <oms-input type="text" v-model="form.pickUpAddress" placeholder="请输入提货地址"></oms-input>
             </el-form-item>
             <el-form-item label="运输条件" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
                           v-show="showContent.isShowOtherContent">
@@ -294,6 +294,14 @@
             <el-form-item label="物流中心">
               <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable>
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="疾控仓库地址" prop="transportationAddress">
+              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable>
+                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in cdcWarehouses">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="是否进口">
@@ -513,7 +521,7 @@
           'logisticsProviderId': '',
           'transportationCondition': '',
           'transportationMeansId': '1',
-          'transportationAddress': '',
+          'pickUpAddress': '',
           'importedFlag': '',
           'orgRelation': '',
           'logisticsCentreId': '',
@@ -521,7 +529,8 @@
           'expectedTime': '',
           'detailDtoList': [],
           'supplierId': '',
-          'remark': ''
+          'remark': '',
+          transportationAddress: ''
         },
         rules: {
           orderNo: [
@@ -538,8 +547,11 @@
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
-          transportationAddress: [
+          pickUpAddress: [
             {required: true, message: '请输入提货地址', trigger: 'blur'}
+          ],
+          transportationAddress: [
+            {required: true, message: '请选择疾控仓库地址', trigger: 'blur'}
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
@@ -589,7 +601,8 @@
           isShowSupplierId: true, // 是否显示来源单位
           expectedTimeLabel: '预计入库时间'
         },
-        currentTransportationMeans: []
+        currentTransportationMeans: [],
+        cdcWarehouses: []
       };
     },
     computed: {
@@ -633,6 +646,7 @@
         this.form.orgId = user.userCompanyAddress;
         this.filterOrg();
         this.filterLogistics();
+        this.filterAddress();
         this.searchProduct();
         this.checkLicence(this.form.orgId);
       },
@@ -715,6 +729,20 @@
           this.LogisticsCenter = res.data;
         });
       },
+      filterAddress () {
+        Address.queryAddress(this.form.orgId, {
+          deleteFlag: false,
+          orgId: this.form.orgId,
+          auditedStatus: '1'
+        }).then(res => {
+          this.cdcWarehouses = res.data;
+          let defaultStore = res.data.filter(item => item.default);
+          this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
+        });
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+      },
       bizTypeChange: function (val) {// 业务类型改变
         if (!this.isStorageData) {// 有缓存时，不重置表单
           let orgId = this.form.orgId;
@@ -771,7 +799,7 @@
       },
       changeSupplier: function (val) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.transportationAddress = '';
+          this.form.pickUpAddress = '';
         }
         if (this.form.transportationMeansId === '2') {
           this.orgList.forEach(item => {
@@ -780,7 +808,7 @@
                 let defaultStore = res.data.filter(item => item.default);
                 if (defaultStore.length) {
                   let address = utils.formatAddress(defaultStore[0].province, defaultStore[0].city, defaultStore[0].region).split('/').join('');
-                  this.form.transportationAddress = address + defaultStore[0].detail;
+                  this.form.pickUpAddress = address + defaultStore[0].detail;
                 }
               });
             }
@@ -790,7 +818,7 @@
       },
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.transportationAddress = '';
+          this.form.pickUpAddress = '';
           this.form.logisticsProviderId = '';
           this.form.supplierId = '';
         }
