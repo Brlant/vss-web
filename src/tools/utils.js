@@ -48,9 +48,9 @@ export default {
     0: {'title': '待确认', state: '0', num: 0},
     1: {'title': '待审单', state: '1', num: 0},
     2: {'title': '执行中', state: '2', num: 0},
-    3: {'title': '待收货', state: '-1', num: 0},
-    4: {'title': '已完成', state: '3', num: 0},
-    5: {'title': '取消订单', state: '4', num: 0}
+    3: {'title': '待收货', state: '3', num: 0},
+    4: {'title': '已完成', state: '4', num: 0},
+    5: {'title': '取消订单', state: '5', num: 0}
   },
   priceGroupType: {
     0: {'title': '可用', availabilityStatus: true, num: 0},
