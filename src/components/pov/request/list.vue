@@ -261,7 +261,6 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
-        this.showTypeList = [];
         this.currentItem = {};
         this.currentOrder = {};
         let orgId = this.user.userCompanyAddress;
@@ -277,12 +276,12 @@
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
             this.showTypeList = res.data.list;
-            if (this.showTypeList.length !== 0) {
-              this.currentItem = res.data.list[0];
-              this.getDetail();
-            } else {
-              this.currentItem = Object.assign({'id': ''});
-            }
+          }
+          if (this.showTypeList.length !== 0) {
+            this.currentItem = res.data.list[0];
+            this.getDetail();
+          } else {
+            this.currentItem = Object.assign({'id': ''});
           }
           this.typePager.totalPage = res.data.totalPage;
           this.queryCount();

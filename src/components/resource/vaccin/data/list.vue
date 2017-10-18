@@ -569,14 +569,14 @@
         });
       },
       showType: function (item) {
-        if (this.isLocked(item.orgGoodsDto)) {
-          this.$notify.info({
-            message: '已被其他用户锁定，暂时无法查看'
-          });
-          this.data = {id: ''};
-          this.combinationList = [];
-          return;
-        }
+//        if (this.isLocked(item.orgGoodsDto)) {
+//          this.$notify.info({
+//            message: '已被其他用户锁定，暂时无法查看'
+//          });
+//          this.data = {id: ''};
+//          this.combinationList = [];
+//          return;
+//        }
         this.currentItem = item;
         this.queryOrgGoods();
       },
