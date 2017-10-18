@@ -34,8 +34,11 @@
             <el-col :span="4">
               <div>{{log.time}}</div>
             </el-col>
-            <el-col :span="18"><strong>{{log.actionTitle}}</strong> <span
-              class="font-gray"> [{{log.operatorName}}]</span>
+            <el-col :span="18"><strong>{{log.actionTitle}}</strong>
+              <el-tooltip class="item" effect="dark" :content="log.operatorOrgName ? log.operatorOrgName : '平台用户' "
+                          placement="right">
+                <span class="font-gray">[{{log.operatorName}}]</span>
+              </el-tooltip>
             </el-col>
           </el-row>
         </TimelineItem>

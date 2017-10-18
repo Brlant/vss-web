@@ -174,7 +174,7 @@
       <el-col :span="filters.state === '-1' ? 5 : 6">POV</el-col>
       <el-col :span="filters.state === '-1' ? 4 : 5">时间</el-col>
       <el-col :span="3">状态</el-col>
-      <el-col :span="2" v-show="filters.state === '-1' ">操作</el-col>
+      <!--<el-col :span="2" v-show="filters.state === '-1' ">操作</el-col>-->
     </el-row>
     <el-row v-if="loadingData">
       <el-col :span="24">
@@ -217,15 +217,15 @@
               {{getOrderStatus(item)}}
             </div>
           </el-col>
-          <el-col :span="2" class="opera-btn pt10" v-show="filters.state === '-1' ">
-            <perm label="sales-order-goods-receipt">
-                  <span @click.stop="showPartItem(item)">
-                    <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
-                      class="iconfont icon-allot"></i></a>
-                    收货
-                  </span>
-            </perm>
-          </el-col>
+          <!--<el-col :span="2" class="opera-btn pt10" v-show="filters.state === '-1' ">-->
+          <!--&lt;!&ndash;<perm label="sales-order-goods-receipt">&ndash;&gt;-->
+          <!--&lt;!&ndash;<span @click.stop="showPartItem(item)">&ndash;&gt;-->
+          <!--&lt;!&ndash;<a href="#" class="btn-circle btn-opera" @click.prevent=""><i&ndash;&gt;-->
+          <!--&lt;!&ndash;class="iconfont icon-allot"></i></a>&ndash;&gt;-->
+          <!--&lt;!&ndash;收货&ndash;&gt;-->
+          <!--&lt;!&ndash;</span>&ndash;&gt;-->
+          <!--&lt;!&ndash;</perm>&ndash;&gt;-->
+          <!--</el-col>-->
         </el-row>
         <div class="order-list-item-bg"></div>
       </div>
