@@ -195,10 +195,10 @@
         });
       },
       formatDate(param) {
-        this.form.year = this.form.year ? this.$moment(param).format('YYYY') : '';
+        this.form.year = param ? this.$moment(param).format('YYYY') : '';
       },
       formatExpireTimeDate(param) {
-        this.form.expireTime = this.form.expireTime ? this.$moment(param).format('YYYY-MM-DD') : '';
+        this.form.expireTime = param ? this.$moment(param).format('YYYY-MM-DD') : '';
       },
       doClose: function () {
         this.$emit('close');

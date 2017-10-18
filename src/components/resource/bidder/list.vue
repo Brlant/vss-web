@@ -377,7 +377,7 @@
         });
       },
       formatDate(param) {
-        this.searchCondition.year = this.$moment(param).format('YYYY');
+        this.searchCondition.year = param ? this.$moment(param).format('YYYY-MM-DD') : '';
       },
       resetSearchForm: function () {// 重置表单
         let temp = {

@@ -187,12 +187,12 @@ const route = [
           {
             path: '/account/citypov',
             component: resolve => require(['./components/account/pov/city-pov.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定市级POV', perm: 'erp-bind-city-cdc'}
+            meta: {moduleId: 'account', title: '市级绑定POV', perm: 'erp-bind-city-cdc'}
           },
           {
             path: '/account/pov',
             component: resolve => require(['./components/account/pov/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '绑定区县级POV', perm: 'erp-bind-pov-manager'}
+            meta: {moduleId: 'account', title: '区县级绑定POV', perm: 'erp-bind-pov-manager'}
           },
           {
             path: '/account/user',
