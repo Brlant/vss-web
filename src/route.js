@@ -88,7 +88,7 @@ const route = [
           {
             path: '/sale/rejected/:id',
             component: resolve => require(['./components/sale/rejected/list.vue'], resolve),
-            meta: {moduleId: 'sale', title: 'CDC销售退货', perm: 'show'}
+            meta: {moduleId: 'sale', title: 'CDC销售退货', perm: 'sales-return'}
           }
         ]
       },
