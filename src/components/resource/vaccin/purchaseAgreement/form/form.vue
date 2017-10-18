@@ -149,7 +149,6 @@
     },
     methods: {
       setSalesFirmName: function (item) {
-        console.log(item);
         if (item) {
           this.goodsList.forEach(val => {
             if (val.orgGoodsDto.id === item) {
