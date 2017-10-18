@@ -56,7 +56,7 @@
            </perm>
        </span>
       </div>
-      <div class="d-table clearfix" style="margin-top: 20px">
+      <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
             <h2 class="header">

@@ -162,7 +162,7 @@
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
-      <div class="order-list clearfix">
+      <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="5">疫苗名称</el-col>
           <el-col :span="3">规格型号</el-col>
@@ -205,9 +205,7 @@
                 <div class="vertical-center">{{item.approvalNumber }}</div>
               </el-col>
               <el-col :span="2">
-                <div class="vertical-center">
                   {{item.year}}
-                </div>
               </el-col>
               <el-col :span="2">
                 <div class="vertical-center">
@@ -342,7 +340,7 @@
         this.showRight = true;
         this.currentId = item.id;
         this.availabilityStatus = item.availabilityStatus;
-        this.row = item;
+        this.row = JSON.parse(JSON.stringify(item));
       },
       formatStatus: function (value) {
         if (value === true) return '生效';
