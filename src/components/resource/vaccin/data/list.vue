@@ -218,7 +218,7 @@
               </el-row>
               <div class="border-show"></div>
               <el-row>
-                <el-col :span="3" class="text-right" style="font-size: 12px">
+                <el-col :span="4" class="text-right" style="font-size: 12px">
                   [ 疫苗标准产品信息 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
@@ -354,7 +354,7 @@
                     }}
                   </goods-row>
                   <goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.propertyMap.firstVaccineSign"></dict>
+                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.propertyMap.firstVaccineSign"></dict>
                   </goods-row>
                   <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
