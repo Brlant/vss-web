@@ -127,7 +127,7 @@
                   <span>疫苗编号{{item.orgGoodsDto.id}}</span>
                   <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
                   </el-tag>
-                  <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">证照过期</el-tag>
+                  <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">注册证照过期</el-tag>
                 </div>
                 <div>
                   <span>{{item.orgGoodsDto.name}}</span>
@@ -158,7 +158,7 @@
             </h2>
             <div class="page-main-body min-row">
               <el-row>
-                <el-col :span="3" class="text-right" style="font-size: 12px">
+                <el-col :span="4" class="text-right" style="font-size: 12px">
                   [ 产品图片 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
@@ -282,16 +282,16 @@
 
               <div class="border-show"></div>
               <el-row>
-                <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='0'">
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='0'">
                   [ 药品专用 ]
                 </el-col>
-                <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
                   [ 疾控专用 ]
                 </el-col>
-                <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='2'">
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='2'">
                   [ 器械专用 ]
                 </el-col>
-                <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
                   [ 化妆品专用 ]
                 </el-col>
               </el-row>
