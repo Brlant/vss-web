@@ -118,15 +118,20 @@
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
-            <el-col :span="6">
-              <oms-form-row label="物流方式" :span="8">
+            <el-col :span="8">
+              <oms-form-row label="货主订单号" :span="6">
+                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
                              v-for="item in transportationMeansList"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">

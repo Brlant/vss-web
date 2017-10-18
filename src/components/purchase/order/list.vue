@@ -121,6 +121,11 @@
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
             <el-col :span="8">
+              <oms-form-row label="货主订单号" :span="6">
+                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
