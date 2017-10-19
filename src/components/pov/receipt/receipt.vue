@@ -52,8 +52,8 @@
       <div class="content-left">
         <h2 class="clearfix right-title">添加收货信息</h2>
         <div class="product-list">
-          <div v-for="product in productList" :class="{'active': currentItem.id === product.id }"
-               @click="changeProduct(product)" class="product-item">
+          <div v-for="(product,key) in productList" :class="{'active': activeKey === key }"
+               @click="changeProduct(product, key)" class="product-item">
             <oms-row label="货品名称" :span="span">{{product.goodsName}}111</oms-row>
             <oms-row label="批号" :span="span">{{product.batchNumber}}</oms-row>
             <oms-row label="规格" :span="span">{{product.specification}}</oms-row>
@@ -72,8 +72,8 @@
       </div>
       <div class="content-right content-padding">
         <h3></h3>
-        <div v-for="item in productList" v-show="currentItem.id === item.id">
-          <el-form :ref=" 'form' + item.id" :model="item" :rules="rules" label-width="160px"
+        <div v-for="(item, key) in productList" v-show="key === activeKey">
+          <el-form :ref=" 'form' + key" :model="item" :rules="rules" label-width="160px"
                    style="padding-right: 20px">
             <el-form-item label="大包装数量" prop="largePackageCount" v-if="currentItem.largeBoxCount">
               <oms-input type="text" placeholder="请输入大包装数量" v-model.number="item.largePackageCount"></oms-input>
@@ -109,6 +109,7 @@
         ],
         productList: [],
         currentItem: {},
+        activeKey: 0,
         types: [],
         doing: false,
         rules: {
@@ -134,15 +135,16 @@
     },
     methods: {
       onSubmit () {
-        let forms = this.productList.map(item => {
+        let forms = this.productList.map((item, index) => {
           return {
-            name: `form${item.id}`,
+            name: `form${index}`,
             value: item
           };
         });
+        console.log(this.$refs);
         for (let i = 0; i < forms.length; i++) {
           let v = true;
-          this.$refs[forms[i].name].validate((valid) => {
+          this.$refs[forms[i].name][0].validate((valid) => {
             v = valid;
           });
           if (!v) {
@@ -182,7 +184,7 @@
       queryOrderDetail () {
         if (!this.waveId) return false;
         // this.waveId = '163983325267444229';
-        povReceipt.queryWaskGoods('163983325267444229').then(res => {
+        povReceipt.queryWaskGoods(this.waveId).then(res => {
           res.data.forEach(f => {
             f.largePackageCount = '';
             f.bulkCount = '';
@@ -195,8 +197,9 @@
           }
         });
       },
-      changeProduct (item) {
+      changeProduct (item, key) {
         this.currentItem = item;
+        this.activeKey = key;
       }
     }
   };

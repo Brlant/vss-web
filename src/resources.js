@@ -450,7 +450,7 @@ export const povReceipt = resource('/erp-receipt', http, {
     return http.get(`/erp-receipt/wave-task/${waveId}/goods`);
   },
   save (id, obj) {
-    return http.put(`/erp-receipt/${id}`, obj);
+    return http.post(`/erp-receipt/${id}`, obj);
   }
 });
 
