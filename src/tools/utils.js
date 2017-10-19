@@ -56,8 +56,8 @@ export default {
     1: {'title': '未生效', availabilityStatus: false, num: 0}
   },
   receiptType: {
-    0: {'title': '待收货', status: 4, num: ''},
-    1: {'title': '已完成', status: 5, num: ''}
+    0: {'title': '待收货', status: 5, num: ''},
+    1: {'title': '已完成', status: 6, num: ''}
   },
   /**
    * 格式化地址，已省/市/区显示

@@ -108,14 +108,14 @@
               </el-col>
               <el-col :span="3" class="opera-btn">
                 <perm label="pull-signal">
-                  <span v-if="filters.status === 4 " @click="showPart(item)">
+                  <span v-if="filters.status === 5 " @click="showPart(item)">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
                       class="iconfont icon-allot"></i></a>
                     收货
                   </span>
                 </perm>
                 <perm label="pull-signal">
-                  <span v-if="filters.status === 5 " @click="showDetailPart(item)">
+                  <span v-if="filters.status === 6 " @click="showDetailPart(item)">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
                       class="iconfont icon-detail"></i></a>查看收货详情
                   </span>
@@ -166,7 +166,7 @@
           pageSize: 15
         },
         filters: {
-          status: 4
+          status: 5
         },
         activeStatus: 0,
         currentItemId: '',

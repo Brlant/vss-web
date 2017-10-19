@@ -141,7 +141,6 @@
             value: item
           };
         });
-        console.log(this.$refs);
         for (let i = 0; i < forms.length; i++) {
           let v = true;
           this.$refs[forms[i].name][0].validate((valid) => {
