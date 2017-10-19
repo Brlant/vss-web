@@ -442,7 +442,17 @@ export const logisticsCost = resource('/logistics-cost', http, {});
  * pov收货
  * @type {the}
  */
-export const povReceipt = resource('/erp-receipt', http, {});
+export const povReceipt = resource('/erp-receipt', http, {
+  queryWasks (params) {
+    return http.get('/erp-receipt/wave-task', {params});
+  },
+  queryWaskGoods (waveId) {
+    return http.get(`/erp-receipt/wave-task/${waveId}/goods`);
+  },
+  save (id, obj) {
+    return http.put(`/erp-receipt/${id}`, obj);
+  }
+});
 
 /**
  * 应收款项

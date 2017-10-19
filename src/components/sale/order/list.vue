@@ -253,21 +253,17 @@
       <add-form type="1" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <receipt @close="resetRightBox" :orderId="currentOrderId"></receipt>
-    </page-right>
   </div>
 </template>
 <script>
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
-  import receipt from './receipt.vue';
   import { Order, BaseInfo, erpOrder, cerpAction } from '@/resources';
 
   export default {
     components: {
-      showForm, addForm, receipt
+      showForm, addForm
     },
     data: function () {
       return {

@@ -31,11 +31,6 @@ export default {
     0: {'title': '未完成', status: 0, num: 0},
     1: {'title': '已完成', status: 1, num: 0}
   },
-  receiptType: {
-    0: {'title': '所有', status: null, num: 0},
-    1: {'title': '未收', status: 0, num: 0},
-    2: {'title': '已收', status: 1, num: 0}
-  },
   inOrderType: {
     0: {'title': '待审单', state: '6', num: 0},
     1: {'title': '执行中', state: '7', num: 0},
@@ -59,6 +54,10 @@ export default {
   successBidderType: {
     0: {'title': '生效', availabilityStatus: true, num: 0},
     1: {'title': '未生效', availabilityStatus: false, num: 0}
+  },
+  receiptType: {
+    0: {'title': '待收货', status: 4, num: 0},
+    1: {'title': '已完成', status: 5, num: 0}
   },
   /**
    * 格式化地址，已省/市/区显示
