@@ -58,11 +58,6 @@
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
-        <span class="btn-group-right">
-          <a href="#" class="btn-circle" @click.prevent="showSearch=!showSearch">
-              <i class="wms-font wms-font-search"></i>
-          </a>
-        </span>
       </div>
       <div class="order-list flex-list-dom" style="margin-top: 20px">
         <el-row class="order-list-header" :gutter="10">

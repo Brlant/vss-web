@@ -63,7 +63,7 @@
             <oms-row label="中包装" :span="span" v-if="product.mediumBoxCount">{{product.mediumBoxCount}}</oms-row>
             <oms-row label="小包装" :span="span" v-if="product.smallBoxCount">{{product.smallBoxCount}}</oms-row>
             <oms-row label="散件" :span="span" v-if="product.bulkBoxCount">{{product.bulkBoxCount}}</oms-row>
-            <oms-row label="总计" :span="span">{{product.totalCount}}</oms-row>
+            <oms-row label="合计数量" :span="span">{{product.totalCount}}</oms-row>
           </div>
         </div>
         <div class="btn-submit-save">
@@ -183,7 +183,6 @@
       },
       queryOrderDetail () {
         if (!this.waveId) return false;
-        // this.waveId = '163983325267444229';
         povReceipt.queryWaskGoods(this.waveId).then(res => {
           res.data.forEach(f => {
             f.largePackageCount = '';
