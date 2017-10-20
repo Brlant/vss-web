@@ -3,6 +3,7 @@
   .content-part {
     .content-left {
       width: @leftWidth;
+      text-align: center;
     }
     .content-right {
       > h3 {
@@ -25,7 +26,7 @@
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
             <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
-              <el-button type="primary" @click="review" style="width: 80px;">审单通过</el-button>
+              <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
         </ul>
