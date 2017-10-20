@@ -149,18 +149,15 @@
             <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}" style="margin-top: 10px">
               <thead>
               <tr>
-                <th>要货申请ID</th>
-                <th>货品名称</th>
+                <th style="width: 300px">货品名称</th>
                 <th>单价</th>
                 <th>申请数量</th>
                 <th>申请金额</th>
+                <th v-show="filters.status === 4">分配金额</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="row in currentOrder.detailDtoList">
-                <td>
-                  {{row.id}}
-                </td>
                 <td>
                   {{row.goodsName}}
                 </td>
@@ -172,6 +169,9 @@
                 </td>
                 <td>
                   {{row.applyMoney | formatMoney}}
+                </td>
+                <td v-show="filters.status === 4">
+                  {{row.actualCount}}
                 </td>
               </tr>
               </tbody>
