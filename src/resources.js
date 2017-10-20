@@ -471,6 +471,13 @@ export const pay = resource('/accounts-payable', http, {
 });
 
 /**
+ * 中标疫苗
+ * @type {the}
+ */
+export const SuccessfulBidder = resource('/successful-bidder', http, {});
+
+
+/**
  * 应收款项
  * @type {the}
  */

@@ -142,6 +142,16 @@ const route = [
         meta: {moduleId: 'finance', title: '财务管理', icon: 'finance', perm: 'financial-manager'},
         children: [
           {
+            path: '/payment/operation',
+            component: resolve => require(['./components/finance/operation/payment/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '付款作业', perm: 'accounts-receivable'}
+          },
+          {
+            path: '/collection/operation',
+            component: resolve => require(['./components/finance/operation/collection/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '收款作业', perm: 'accounts-payable'}
+          },
+          {
             path: '/finance/get',
             component: resolve => require(['./components/finance/receipt/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '应收账款管理', perm: 'accounts-receivable'}
