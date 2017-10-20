@@ -105,7 +105,7 @@ const route = [
           {
             path: '/pov/receipt',
             component: resolve => require(['./components/pov/receipt/list.vue'], resolve),
-            meta: {moduleId: 'pov', title: 'POV收货', perm: 'pull-signal'}
+            meta: {moduleId: 'pov', title: 'POV收货', perm: 'pov-receipt-manager'}
           }
           // {
           //   path: '/pov/store',
