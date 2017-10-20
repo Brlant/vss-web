@@ -244,7 +244,7 @@
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="POV" prop="povId">
               <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
-                         v-model="form.povId" popper-class="good-selects">
+                         v-model="form.povId" popper-class="good-selects" @click.native="filterPOV('')">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                            v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -261,7 +261,7 @@
             <el-form-item label="选择价格组" prop="salePriceGroupId">
               <el-select filterable remote placeholder="请输入关键字搜索价格组" :remote-method="filterPriceGroup" :clearable="true"
                          v-model="form.salePriceGroupId"
-                         @change="changeSelect">
+                         @change="changeSelect" @click.native="filterPriceGroup('')">
                 <el-option :value="item.id" :key="item.id" :label="item.name"
                            v-for="item in prices">
                   <div style="overflow: hidden">
@@ -341,6 +341,9 @@
         this.unitPrice = ary.length ? ary[0].unitPrice : '';
       },
       filterPriceGroup: function (query) {// 过滤POV
+        if (!query && this.prices.length && this.form.salePriceGroupId) {
+          return false;
+        }
         let params = Object.assign({}, {
           keyWord: query,
           orgGoodsId: this.currentItem.orgGoodsId,
@@ -351,6 +354,9 @@
         });
       },
       filterPOV: function (query) {// 过滤POV
+        if (!query && this.orgList.length && this.form.povId) {
+          return false;
+        }
         let params = Object.assign({}, {
           keyWord: query
         });
