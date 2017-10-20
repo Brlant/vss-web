@@ -118,7 +118,7 @@
                    @clear="setUsedStatus">
           <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
             <div style="overflow: hidden">
-              <span class="pull-left">{{item.name}}</span>
+              <span class="pull-left">{{item.goodsName}}</span>
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
@@ -218,7 +218,7 @@
   </div>
 </template>
 <script>
-  import {Vaccine, BaseInfo} from '@/resources';
+  import {Vaccine, BaseInfo, SuccessfulBidder} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -385,7 +385,7 @@
         let params = {
           keyWord: keyWord
         };
-        Vaccine.queryAvaliableVaccine(params).then(res => {
+        SuccessfulBidder.query(params).then(res => {
           this.goodsList = res.data.list;
           if (this.action === 'edit') {
             let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
