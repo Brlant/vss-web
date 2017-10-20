@@ -205,6 +205,7 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>-->
+            <el-tag type="gray" v-show="level">{{ filterLevel(level) }}</el-tag>
             <span class="org-title">{{orgName}}</span>
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
@@ -277,7 +278,7 @@
     components: {
       omsUploadPicture
     },
-    props: ['toRoute'],
+    props: ['toRoute', 'level'],
     data() {
       return {
         activeId: this.getGroupId(),
@@ -298,6 +299,7 @@
         return this.$store.state.bodySize.left;
       },
       user: function () {
+
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
@@ -358,6 +360,9 @@
       changeSkin: function (skin) {
         this.skin = skin;
         window.localStorage.setItem('skin', JSON.stringify(skin));
+      },
+      filterLevel (level) {
+        return level === 1 ? '市级CDC' : level === 2 ? '区县级CDC' : level === 3 ? 'POV' : '';
       }
     },
     mounted: function () {

@@ -93,7 +93,7 @@
 </style>
 <template>
   <div class="app-body" :style="'padding-left:'+bodyLeft">
-    <app-header :to-route="toRoute" v-if="userType"></app-header>
+    <app-header :to-route="toRoute" v-if="userType" :level="level"></app-header>
     <div class="main-body" style="padding:0 8px;">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
@@ -128,7 +128,8 @@
       transitionName: 'slide-left',
       toRoute: {},
       loading: true,
-      isPermission: true
+      isPermission: true,
+      level: ''
     }),
     computed: {
       userType: function () {
@@ -191,6 +192,7 @@
       },
       queryLevel () {
         cerpAction.queryLevel().then(res => {
+          this.level = res.data;
           window.localStorage.setItem('logLevel', res.data);
           this.isPermission = res.data === 0;
         });
