@@ -17,8 +17,11 @@
             <el-col :span="4">
               <div>{{log.createTime | time}}</div>
             </el-col>
-            <el-col :span="18"><strong>￥{{log.paymentAmount}}</strong> <span
-              class="font-gray"> [{{log.creatorName}}]</span>
+            <el-col :span="18"><strong>￥{{log.paymentAmount}}</strong>
+              <el-tooltip class="item" effect="dark" :content="log.creatorOrgName ? log.creatorOrgName : '平台用户' "
+                          placement="right">
+                <span class="font-gray">[{{log.creatorName}}]</span>
+              </el-tooltip>
             </el-col>
           </el-row>
         </TimelineItem>
