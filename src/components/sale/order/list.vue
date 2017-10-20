@@ -388,7 +388,7 @@
       },
       getOrderList: function (pageNo) {
         if (pageNo === 1) {
-          this.pager.count = 20;
+          this.pager.count = 0;
         }
         this.pager.currentPage = pageNo;
         let param = {};
