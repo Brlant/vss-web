@@ -47,6 +47,12 @@ export default {
     4: {'title': '已完成', state: '4', num: ''},
     5: {'title': '取消订单', state: '5', num: ''}
   },
+  paymentOperation: {
+    0: {'title': '待审核', status: '0', num: 0},
+    1: {'title': '执行中', status: '1', num: 0},
+    2: {'title': '已完成', status: '2', num: 0},
+    3: {'title': '审核未通过', status: '3', num: 0}
+  },
   priceGroupType: {
     0: {'title': '可用', availabilityStatus: true, num: ''},
     1: {'title': '不可用', availabilityStatus: false, num: ''}
