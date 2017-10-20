@@ -387,6 +387,9 @@
         this.getOrderList(1);
       },
       getOrderList: function (pageNo) {
+        if (pageNo === 1) {
+          this.pager.count = 20;
+        }
         this.pager.currentPage = pageNo;
         let param = {};
         this.loadingData = true;
@@ -403,7 +406,10 @@
         } else {
           Order.queryOrderExcepiton(param).then(res => {
             this.orderList = res.data.list;
-            this.pager.count = res.data.count;
+//            this.pager.count = res.data.count;
+            if (this.orderList.length === this.pager.pageSize) {
+              this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
+            }
             this.loadingData = false;
           });
         }
