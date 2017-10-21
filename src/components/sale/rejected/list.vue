@@ -135,7 +135,8 @@
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplierId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                             v-for="org in orgList"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>

@@ -109,8 +109,17 @@
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
-                           v-model="filters.factoryId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>
+                           v-model="filters.factoryId" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
