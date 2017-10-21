@@ -106,8 +106,7 @@
           </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="purchasing-order-add">
-                  <a href="#" class="btn-circle" @click.prevent=""><i
-                    class="iconfont icon-plus"></i> </a>添加
+                  <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>添加
             </perm>
           </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
@@ -153,19 +152,20 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="3">付款单据编号</el-col>
+          <el-col :span="4">付款单据编号</el-col>
           <el-col :span="3">付款类型</el-col>
-          <el-col :span="6">付款单位</el-col>
-          <el-col :span="4">付款方式</el-col>
-          <el-col :span="2">付款金额</el-col>
-          <el-col :span="6">付款说明</el-col>
+          <el-col :span="3">付款单位</el-col>
+          <el-col :span="2">付款方式</el-col>
+          <el-col :span="4">付款金额</el-col>
+          <el-col :span="5">xf</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
             <oms-loading :loading="loadingData"></oms-loading>
           </el-col>
         </el-row>
-        <el-row v-else-if="orderList.length == 0">
+        <el-row v-else-if="billList.length == 0">
           <el-col :span="24">
             <div class="empty-info">
               暂无信息
@@ -173,45 +173,47 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
-               :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
+          <div class="order-list-item" v-for="item in billList"
+               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]">
             <el-row>
-              <el-col :span="3">
-                <div class="f-grey">
-                  {{item.orderNo }}
-                </div>
-                <div>
-                  {{item.orgName }}
-                </div>
-              </el-col>
-              <el-col :span="3">
-                <div>
-                  <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
-                </div>
-              </el-col>
-              <el-col :span="6" class="pt10">
-                <div>{{item.transactOrgName }}</div>
-              </el-col>
               <el-col :span="4">
                 <div>
-                  <span style="letter-spacing:2em;margin-right: -2em">下单</span>
-                  ：{{item.createTime | date }}
+                  {{item.no }}
                 </div>
+              </el-col>
+              <el-col :span="3">
                 <div>
-                  <span>预计入库</span>
-                  ：{{ item.expectedTime | date}}
+                  {{billPayType(item.billPayType)}}
                 </div>
+              </el-col>
+              <el-col :span="3" class="pt10">
+                <div>{{item.orgName }}</div>
               </el-col>
               <el-col :span="2">
                 <div>
-                  {{getOrderStatus(item)}}
-                  <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
+                  <dict :dict-group="'PaymentMethod'" :dict-key="item.payType"></dict>
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="4">
                 <div>
-                  {{getOrderStatus(item)}}
-                  <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
+                  <span v-if="item.amount">¥</span> {{item.amount | formatMoney}}
+                </div>
+              </el-col>
+              <el-col :span="5">
+                <div>
+                  {{item.explain}}
+                </div>
+              </el-col>
+              <el-col :span="3" class="opera-btn">
+                <div>
+                  <!--<perm label="goods-edit">-->
+                  <span @click.stop="audit(item)">
+                      <a @click.pervent="" class="btn-circle btn-opera">
+                        <i class="iconfont icon-verify"></i>
+                      </a>
+                     审核
+                    </span>
+                  <!--</perm>-->
                 </div>
               </el-col>
             </el-row>
@@ -225,30 +227,28 @@
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
         layout="prev, pager, next"
-        :total="pager.count" :pageSize="pager.pageSize" @current-change="getOrderList"
+        :total="pager.count" :pageSize="pager.pageSize" @current-change="getBillList"
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <!--<page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'750px','padding':0}"-->
-                <!--class="order-detail-info" partClass="pr-no-animation">-->
-      <!--<show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"-->
-                 <!--@close="resetRightBox"></show-form>-->
-    <!--</page-right>-->
+    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'750px','padding':0}"
+                class="order-detail-info" partClass="pr-no-animation">
+      <audit-form :formItem="billInfo" :action="action" @close="resetRightBox"></audit-form>
+    </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'750px','padding':0}">
-      <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
-                @close="resetRightBox"></add-form>
+      <add-form @change="onSubmit" :action="action" @close="resetRightBox"></add-form>
     </page-right>
   </div>
 </template>
 <script>
   import utils from '../../../../tools/utils';
-  import showForm from './form/showForm.vue';
+  import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import {Order, BaseInfo, erpOrder} from '../../../../resources';
+  import {Order, BaseInfo, erpOrder, BillOperation} from '../../../../resources';
 
   export default {
     components: {
-      showForm, addForm
+      auditForm, addForm
     },
     data: function () {
       return {
@@ -256,14 +256,9 @@
         showItemRight: false,
         showDetail: false,
         showSearch: false,
-        orderList: [],
+        billList: [],
         filters: {
-          type: 0,
-          state: '6',
-          orderNo: '',
-          bizType: '0',
-          orgId: '',
-          deleteFlag: false
+          status: ''
         },
         searchCondition: {
           orderNo: '',
@@ -272,7 +267,7 @@
         expectedTime: '',
         orgType: utils.paymentOperation,
         activeStatus: 0,
-        currentOrderId: '',
+        currentId: '',
         orgList: [], // 来源单位列表
         logisticsList: [], // 物流商列表
         pager: {
@@ -280,6 +275,7 @@
           count: 0,
           pageSize: 20
         },
+        billInfo: {},
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
         user: {},
@@ -287,12 +283,7 @@
       };
     },
     mounted() {
-      this.getOrderList(1);
-      let orderId = this.$route.params.id;
-      if (orderId && orderId !== ':id') {
-        this.currentOrderId = orderId;
-        this.showDetail = true;
-      }
+      this.getBillList(1);
     },
     computed: {
       transportationMeansList: function () {
@@ -305,12 +296,21 @@
     watch: {
       filters: {
         handler: function () {
-          this.getOrderList(1);
+          this.getBillList(1);
         },
         deep: true
       }
     },
     methods: {
+      billPayType: function (value) {
+        let title = '';
+        if (value === '0') {
+          title = '疫苗厂商付款';
+        } else {
+          title = '物流厂商付款';
+        }
+        return title;
+      },
       getOrderStatus: function (order) {
         let state = '';
         for (let key in this.orgType) {
@@ -334,44 +334,38 @@
       resetRightBox: function () {
         this.showDetail = false;
         this.showItemRight = false;
-        this.defaultIndex = 0;
         this.action = '';
-        // this.getOrderList(this.pager.currentPage);
-        this.$router.push('/purchase/order/:id');
       },
       add: function () {
         this.showItemRight = true;
         this.defaultIndex = 1;
         this.action = 'add';
       },
-      onSubmit: function () {
-        this.getOrderList(1);
+      audit: function (item) {
+        this.showDetail = true;
+        this.billInfo = item;
+        this.action = 'audit';
       },
-      getOrderList: function (pageNo) {
+      onSubmit: function () {
+        this.getBillList(1);
+      },
+      getBillList: function (pageNo) {
         this.pager.currentPage = pageNo;
-        let param = {};
         this.loadingData = true;
-        param = Object.assign({}, this.filters, {
+        let param = Object.assign({}, this.filters, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.pager.pageSize,
+          type: '0'
         });
-        if (this.filters.state !== '10') {
-          erpOrder.query(param).then(res => {
-            this.orderList = res.data.list;
+        BillOperation.query(param).then(res => {
+          this.billList = res.data.list;
             this.pager.count = res.data.count;
             this.loadingData = false;
           });
-        } else {
-          Order.queryOrderExcepiton(param).then(res => {
-            this.orderList = res.data.list;
-            this.pager.count = res.data.count;
-            this.loadingData = false;
-          });
-        }
 //        this.queryStatusNum(param);
       },
       refreshOrder() {
-        this.getOrderList(1);
+        this.getBillList(1);
       },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.searchCondition.orgId;
@@ -436,11 +430,11 @@
       },
       remove: function (order) {
         Order.delete(order.id).then(() => {
-          this.getOrderList();
+          this.getBillList();
         });
       },
       showItem: function (order) {
-        this.currentOrderId = order.id;
+        this.currentId = order.id;
         this.state = order.state;
         this.showDetail = true;
         this.$router.push(`/purchase/order/${order.id}`);

@@ -159,21 +159,12 @@
       },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
         let params = {
-          keyWord: keyWord
+          keyWord: keyWord,
+          deleteFlag: false,
+          status: true
         };
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
-//          if (this.action === 'edit') {
-//            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.orgGoodsDto.id);
-//            if (!isExist) {
-//              this.goodsList.push({
-//                orgGoodsDto: {
-//                  id: this.form.orgGoodsId,
-//                  name: this.form.orgGoodsName
-//                }
-//              });
-//            }
-//          }
         });
       },
       formatUnitPrice() {// 格式化单价，保留两位小数
