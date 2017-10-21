@@ -60,8 +60,10 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row label="POV" :span="6">
-                <el-select placeholder="请选择POV" v-model="searchWord.povId" filterable clearable>
-                  <el-option :label="item.povName" :value="item.povId" :key="item.povId" v-for="item in demandList">
+                <el-select placeholder="请输入关键字搜索POV" v-model="searchWord.povId" filterable remote
+                           :remote-method="filterOrg" clearable="true">
+                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                             v-for="org in orgList">
                   </el-option>
                 </el-select>
               </oms-form-row>
@@ -174,9 +176,10 @@
 </template>
 <script>
   //  import order from '../../../tools/demandList';
-  import { demandAssignment, pullSignal } from '@/resources';
+  import { demandAssignment, pullSignal, cerpAction } from '@/resources';
   import utils from '../../../tools/utils';
   import showForm from './detail/index.vue';
+
   export default {
     components: {showForm},
     data () {
@@ -207,7 +210,8 @@
         currentItemId: '',
         currentItem: {},
         checkList: [], // 选中的订单列表
-        isCheckAll: false
+        isCheckAll: false,
+        orgList: []
       };
     },
     computed: {
@@ -259,6 +263,14 @@
         pullSignal.queryCount(params).then(res => {
           this.assignType[0].num = res.data['audited'];
           this.assignType[1].num = res.data['assigned'];
+        });
+      },
+      filterOrg: function (query) {// 过滤供货商
+        let params = Object.assign({}, {
+          keyWord: query
+        });
+        cerpAction.queryAllPov(params).then(res => {
+          this.orgList = res.data.list;
         });
       },
       showDetail (item) {

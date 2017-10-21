@@ -140,7 +140,7 @@
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.supplierId" popperClass="good-selects">
+                           v-model="searchCondition.customerId" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -299,7 +299,7 @@
           expectedEndTime: '',
           bizType: '1',
           transportationMeansId: '',
-          supplierId: '',
+          customerId: '',
           thirdPartyNumber: '',
           deleteFlag: false
         },
@@ -309,7 +309,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          customerId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -379,7 +379,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          customerId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -430,7 +430,7 @@
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
-          this.searchCondition.supplierId = '';
+          this.searchCondition.customerId = '';
           this.orgList = [];
           return;
         }
@@ -459,7 +459,7 @@
         return status;
       },
       orgChange: function () {
-        this.searchCondition.supplierId = '';
+        this.searchCondition.customerId = '';
         this.orgList = [];
         this.filterOrg();
         this.filterLogistics();

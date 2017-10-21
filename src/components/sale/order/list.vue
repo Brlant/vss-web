@@ -134,7 +134,7 @@
             <el-col :span="8">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.supplierId">
+                           v-model="searchCondition.customerId">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                              v-for="org in orgList">
                   </el-option>
@@ -282,7 +282,7 @@
           expectedEndTime: '',
           bizType: '0',
           transportationMeansId: '',
-          supplierId: '',
+          customerId: '',
           thirdPartyNumber: '',
           deleteFlag: false
         },
@@ -292,7 +292,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          customerId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -362,7 +362,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          customerId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -439,7 +439,7 @@
         return status;
       },
       orgChange: function () {
-        this.searchCondition.supplierId = '';
+        this.searchCondition.customerId = '';
         this.orgList = [];
         this.filterOrg();
         this.filterLogistics();
