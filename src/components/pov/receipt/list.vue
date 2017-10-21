@@ -45,9 +45,9 @@
     color: red;
   }
 
-  /*.order-list-item {*/
-  /*cursor: pointer;*/
-  /*}*/
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -61,12 +61,12 @@
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="5">货主/订单号</el-col>
+          <el-col :span=" filters.status === '3' ? 5 : 6">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="5">POV</el-col>
-          <el-col :span="4">时间</el-col>
+          <el-col :span="filters.status === '3' ? 5 : 6">POV</el-col>
+          <el-col :span="filters.status === '3' ? 4 : 5">时间</el-col>
           <el-col :span="3">状态</el-col>
-          <el-col :span="3">操作</el-col>
+          <el-col :span="3" v-if="filters.status === '3'">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -81,10 +81,10 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item" v-for="item in orderList"
+          <div class="order-list-item" v-for="item in orderList" @click="showDetailPart(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="5">
+              <el-col :span="filters.status === '3' ? 5 : 6">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -97,10 +97,10 @@
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="filters.status === '3' ? 5 : 6">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="filters.status === '3' ? 4 : 5">
                 <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
                 <div>预计送货：{{ item.expectedTime | date }}</div>
               </el-col>
@@ -109,18 +109,14 @@
                   {{getOrderStatus(item)}}
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn pt10">
+              <el-col :span="3" class="opera-btn pt10" v-if="filters.status === '3' ">
                 <perm label="pov-receipt-manager">
-                  <span v-if="filters.status === '3' " @click="showPart(item)">
+                  <span @click.stop="showPart(item)">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
                       class="iconfont icon-allot"></i></a>
                     收货
                   </span>
                 </perm>
-                <span v-show="filters.status === '4' " @click="showDetailPart(item)">
-                  <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
-                    class="iconfont icon-detail"></i></a>查看收货详情
-                </span>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -139,20 +135,20 @@
       <receipt-info :orderId="currentOrderId" @close="resetRightBox"></receipt-info>
     </page-right>
     <page-right :show="showDetailRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <receipt-detail :orderId="currentOrderId" @close="resetRightBox"></receipt-detail>
+      <show-detail :orderId="currentOrderId" @close="resetRightBox"></show-detail>
     </page-right>
   </div>
 </template>
 <script>
   import { povReceipt } from '@/resources';
   import utils from '@/tools/utils';
+  import showDetail from './show.order.vue';
   import receiptInfo from './receipt.vue';
-  import receiptDetail from './receipt-detail.vue';
 
   export default {
     components: {
-      receiptInfo,
-      receiptDetail
+      showDetail,
+      receiptInfo
     },
     data () {
       return {
@@ -167,7 +163,7 @@
           pageSize: 15
         },
         filters: {
-          status: 3
+          status: '3'
         },
         activeStatus: 0,
         currentOrderId: '',

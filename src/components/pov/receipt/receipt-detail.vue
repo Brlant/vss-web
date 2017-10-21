@@ -37,58 +37,55 @@
 </style>
 <template>
   <div>
-    <div class="content-right content-padding">
-      <h3>收货详情</h3>
-      <table class="product-detail-list">
-        <tbody>
-        <tr>
-          <td colspan="2" width="120px" class="t-head">货品</td>
-          <td colspan="2" width="120px" class="t-head">生产厂商</td>
-          <td colspan="2" width="120px" class="t-head">批号</td>
-          <td colspan="2" width="120px" class="t-head">生产日期</td>
-          <td colspan="2" width="120px" class="t-head">有效期</td>
-          <td colspan="2" width="120px" class="t-head">整件数</td>
-          <td colspan="2" width="120px" class="t-head">散件数</td>
-          <td colspan="2" width="120px" class="t-head">合计数量</td>
-        </tr>
-        <tr v-for="item in details">
-          <td colspan="2">
-            <div>
-              <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
-                <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
-              </el-tooltip>
-            </div>
-            <div>
-              <el-tooltip class="item" effect="dark" content="规格" placement="right">
-                <span style="font-size: 12px;color:#999">{{ item.specification }}</span>
-              </el-tooltip>
-            </div>
-          </td>
-          <td colspan="2">
-            {{item.productFactory}}
-          </td>
-          <td colspan="2">{{ item.batchNumber || '无' }}</td>
-          <td colspan="2">{{ item.productionDate | date }}</td>
-          <td colspan="2">{{ item.expirationDate | date }}</td>
-          <td colspan="2">
-            <div v-show="item.largeBoxCount">
-              大包装 {{ item.largeBoxCount }}
-            </div>
-            <div v-show="item.mediumBoxCount">
-              中包装 {{ item.mediumBoxCount }}
-            </div>
-            <div v-show="item.smallBoxCount">
-              小包装 {{ item.smallBoxCount }}
-            </div>
-          </td>
-          <td colspan="2">{{ item.bulkBoxCount }}</td>
-          <td colspan="2">
-            {{ item.totalCount }}
-          </td>
-        </tr>
-        </tbody>
-      </table>
-    </div>
+    <table class="product-detail-list">
+      <tbody>
+      <tr>
+        <td colspan="2" width="120px" class="t-head">货品</td>
+        <td colspan="2" width="120px" class="t-head">生产厂商</td>
+        <td colspan="2" width="120px" class="t-head">批号</td>
+        <td colspan="2" width="120px" class="t-head">生产日期</td>
+        <td colspan="2" width="120px" class="t-head">有效期</td>
+        <td colspan="2" width="120px" class="t-head">整件数</td>
+        <td colspan="2" width="120px" class="t-head">散件数</td>
+        <td colspan="2" width="120px" class="t-head">合计数量</td>
+      </tr>
+      <tr v-for="item in details">
+        <td colspan="2">
+          <div>
+            <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+              <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
+            </el-tooltip>
+          </div>
+          <div>
+            <el-tooltip class="item" effect="dark" content="规格" placement="right">
+              <span style="font-size: 12px;color:#999">{{ item.specification }}</span>
+            </el-tooltip>
+          </div>
+        </td>
+        <td colspan="2">
+          {{item.productFactory}}
+        </td>
+        <td colspan="2">{{ item.batchNumber || '无' }}</td>
+        <td colspan="2">{{ item.productionDate | date }}</td>
+        <td colspan="2">{{ item.expiryDate | date }}</td>
+        <td colspan="2">
+          <div v-show="item.largePackageCount">
+            大包装 {{ item.largePackageCount }}
+          </div>
+          <div v-show="item.mediumPackageCount">
+            中包装 {{ item.mediumPackageCount }}
+          </div>
+          <div v-show="item.smallPackageCount">
+            小包装 {{ item.smallPackageCount }}
+          </div>
+        </td>
+        <td colspan="2">{{ item.bulkCount }}</td>
+        <td colspan="2">
+          {{ item.aggregateQuantity }}
+        </td>
+      </tr>
+      </tbody>
+    </table>
   </div>
 </template>
 <script>
@@ -96,7 +93,11 @@
 
   export default {
     props: {
-      waveId: String
+      orderId: String,
+      index: {
+        type: Number,
+        default: -1
+      }
     },
     data () {
       return {
@@ -106,15 +107,15 @@
       };
     },
     watch: {
-      waveId (val) {
-        if (!val) return;
+      index (val) {
+        if (val !== 1) return;
         this.details = [];
         this.getGoodsDetails();
       }
     },
     methods: {
       getGoodsDetails () {
-        http.get(`/erp-receipt/wave-task/${this.waveId}/goods`).then(res => {
+        http.get(`/erp-receipt/order/${this.orderId}/detail`).then(res => {
           this.details = res.data;
         });
       }
