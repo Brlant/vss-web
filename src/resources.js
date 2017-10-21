@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui';
+import { Notification } from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -455,18 +455,18 @@ export const povReceipt = resource('/erp-receipt', http, {
 });
 
 /**
- * 应收款项
+ * 应付款项
  * @type {the}
  */
 export const pay = resource('/accounts-payable', http, {
   modifyDetail(id, obj) {
-    return http.post('/accounts-payable/detail/${id}/log', obj);
+    return http.post(`/accounts-payable/detail/${id}/log`, obj);
   },
   queryDetail(id, params) {
-    return http.get('/accounts-payable/${id}/detail', {params});
+    return http.get(`/accounts-payable/${id}/detail`, {params});
   },
   addDetail(id, obj) {
-    return http.post('/accounts-payable/${id}/detail', obj);
+    return http.post(`/accounts-payable/${id}/detail`, obj);
   },
   getAmountInfo(id) {
     return http.post('/accounts-payable/' + id + '/amount');
