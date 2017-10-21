@@ -92,10 +92,14 @@
     cursor: pointer;
   }
 
-
-
   .cursor-span {
     cursor: pointer;
+  }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
   }
 </style>
 <template>
@@ -129,15 +133,25 @@
               <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
-                             v-for="item in transportationMeansList"></el-option>
+                             v-for="item in transportationMeansList">
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.supplierId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                           v-model="searchCondition.supplierId" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -145,8 +159,17 @@
               <oms-form-row label="物流商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
                            :clearable="true"
-                           v-model="searchCondition.logisticsProviderId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
+                           v-model="searchCondition.logisticsProviderId" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -424,7 +447,7 @@
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
-        let orgId = this.searchCondition.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.searchCondition.supplierId = '';
           this.orgList = [];
@@ -435,7 +458,7 @@
         });
       },
       filterLogistics: function (query) {// 过滤物流提供方
-        let orgId = this.searchCondition.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.searchCondition.logisticsProviderId = '';
           this.logisticsList = [];

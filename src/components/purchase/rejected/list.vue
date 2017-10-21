@@ -92,10 +92,14 @@
     cursor: pointer;
   }
 
-
-
   .cursor-span {
     cursor: pointer;
+  }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
   }
 </style>
 <template>
@@ -136,8 +140,17 @@
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.supplierId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                           v-model="searchCondition.supplierId" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -415,7 +428,7 @@
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
-        let orgId = this.searchCondition.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.searchCondition.supplierId = '';
           this.orgList = [];
@@ -426,7 +439,7 @@
         });
       },
       filterLogistics: function (query) {// 过滤物流提供方
-        let orgId = this.searchCondition.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.searchCondition.logisticsProviderId = '';
           this.logisticsList = [];

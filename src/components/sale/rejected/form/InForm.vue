@@ -809,6 +809,7 @@
           this.form.pickUpAddress = '';
           this.product.orgGoodsId = '';
         }
+        if (!val) return;
         if (this.form.transportationMeansId === '2') {
           Address.queryAddress(val, {
             deleteFlag: false,

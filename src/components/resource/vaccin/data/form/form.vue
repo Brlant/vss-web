@@ -141,8 +141,18 @@
       </el-form-item>
       <el-form-item label="供货厂商" prop="salesFirm">
         <el-select filterable remote placeholder="请输入关键字搜供货厂商" :remote-method="filterOrg"
-                   :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)">
-          <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                   :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)"
+                   popperClass="good-selects">
+          <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+            <div style="overflow: hidden">
+              <span class="pull-left" style="clear: right">{{org.name}}</span>
+            </div>
+            <div style="overflow: hidden">
+              <span class="select-other-info pull-left">
+                <span>系统代码</span> {{org.manufacturerCode}}
+              </span>
+            </div>
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="疫苗编号" prop="goodsNo">
