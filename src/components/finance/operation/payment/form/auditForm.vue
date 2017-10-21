@@ -349,8 +349,7 @@
           type: 'warning'
         }).then(() => {
           BillOperation.auditInfo(this.form.id, {
-            auditOpinion: this.form.auditOpinion, status: '1'
-          }).then(() => {
+            auditOpinion: this.form.auditOpinion}).then(() => {
             this.$notify.success({
               duration: 2000,
               title: '成功',
@@ -372,7 +371,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          BillOperation.refusedInfo(this.form.id, {auditOpinion: this.form.auditOpinion, status: '3'}).then(() => {
+          BillOperation.refusedInfo(this.form.id, {auditOpinion: this.form.auditOpinion}).then(() => {
             this.$notify.success({
               duration: 2000,
               title: '成功',

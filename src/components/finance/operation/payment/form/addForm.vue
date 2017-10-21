@@ -246,7 +246,7 @@
             </el-form-item>
             <el-form-item label="疫苗厂商" prop="orgId" v-if="form.billPayType==='0'">
               <el-select filterable remote placeholder="请输入关键字搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.orgId">
+                         v-model="form.orgId" @change="setAccountsPayableId">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
@@ -351,7 +351,8 @@
           orgId: '',
           explain: '',
           amount: '',
-          billPayType: ''
+          billPayType: '',
+          accountsPayableId: ''
         },
         payableTotalAmount: '',
         practicalTotalAmount: '',
@@ -422,6 +423,26 @@
     mounted: function () {
     },
     methods: {
+      setAccountsPayableId: function () {
+        if (this.form.orgId) {
+          if (this.form.billPayType === '0') {
+            this.filterOrg();
+            this.orgList.forEach(val => {
+              if (this.form.orgId === val.remitteeId) {
+                this.form.accountsPayableId = val.id;
+              }
+            });
+          }
+          if (this.form.billPayType === '1') {
+            this.logisticsList.forEach(val => {
+              this.filterLogistics();
+              if (this.form.orgId === val.remitteeId) {
+                this.form.accountsPayableId = val.id;
+              }
+            });
+          }
+        }
+      },
       changeBillPayType: function () {
         this.form.orgId = '';
         this.orgList = [];
@@ -487,7 +508,7 @@
             self.$emit('change', res.data);
             this.$nextTick(() => {
               this.doing = false;
-              this.$emit('close');
+              this.$emit('right-close');
             });
           }).catch(error => {
             this.doing = false;

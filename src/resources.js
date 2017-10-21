@@ -455,6 +455,19 @@ export const povReceipt = resource('/erp-receipt', http, {
 });
 
 /**
+ * 应收应付作业
+ * @type {the}
+ */
+export const BillOperation = resource('/bill-operation', http, {
+  auditInfo(id, obj) {
+    return http.put(`/bill-operation/audit/${id}`, obj);
+  },
+  refusedInfo(id, obj) {
+    return http.put(`/bill-operation/refused/${id}`, obj);
+  }
+});
+
+/**
  * 应付款项
  * @type {the}
  */
@@ -469,7 +482,7 @@ export const pay = resource('/accounts-payable', http, {
     return http.post(`/accounts-payable/${id}/detail`, obj);
   },
   getAmountInfo(id) {
-    return http.post('/accounts-payable/' + id + '/amount');
+    return http.get('/accounts-payable/' + id + '/amount');
   }
 });
 
