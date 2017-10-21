@@ -134,7 +134,7 @@
             <el-col :span="8">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.customerId">
+                           v-model="searchCondition.transactOrgId">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                              v-for="org in orgList">
                   </el-option>
@@ -215,7 +215,7 @@
           </el-col>
           <el-col :span="filters.state === '-1' ? 4 : 5">
             <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
-            <div>预计送货时间：{{ item.expectedTime | date }}</div>
+            <div>预计送货：{{ item.expectedTime | date }}</div>
           </el-col>
           <el-col :span="3">
             <div class="vertical-center">
@@ -282,7 +282,7 @@
           expectedEndTime: '',
           bizType: '0',
           transportationMeansId: '',
-          customerId: '',
+          transactOrgId: '',
           thirdPartyNumber: '',
           deleteFlag: false
         },
@@ -292,7 +292,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          customerId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -362,7 +362,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          customerId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -439,7 +439,7 @@
         return status;
       },
       orgChange: function () {
-        this.searchCondition.customerId = '';
+        this.searchCondition.transactOrgId = '';
         this.orgList = [];
         this.filterOrg();
         this.filterLogistics();

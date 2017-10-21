@@ -140,7 +140,7 @@
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.customerId" popperClass="good-selects">
+                           v-model="searchCondition.transactOrgId" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -228,7 +228,7 @@
               </el-col>
               <el-col :span="filters.state === '-1' ? 4 : 5">
                 <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
-                <div>预计出库时间：{{ item.expectedTime | date }}</div>
+                <div>预计出库：{{ item.expectedTime | date }}</div>
               </el-col>
               <el-col :span="3">
                 <div class="vertical-center">
@@ -299,7 +299,7 @@
           expectedEndTime: '',
           bizType: '1',
           transportationMeansId: '',
-          customerId: '',
+          transactOrgId: '',
           thirdPartyNumber: '',
           deleteFlag: false
         },
@@ -309,7 +309,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          customerId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -379,7 +379,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          customerId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -430,7 +430,7 @@
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
-          this.searchCondition.customerId = '';
+          this.searchCondition.transactOrgId = '';
           this.orgList = [];
           return;
         }
@@ -459,7 +459,7 @@
         return status;
       },
       orgChange: function () {
-        this.searchCondition.customerId = '';
+        this.searchCondition.transactOrgId = '';
         this.orgList = [];
         this.filterOrg();
         this.filterLogistics();

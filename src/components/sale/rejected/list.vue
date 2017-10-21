@@ -134,21 +134,21 @@
             <el-col :span="8">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.supplierId">
+                           v-model="searchCondition.transactOrgId">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                              v-for="org in orgList"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="物流商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
-                           :clearable="true"
-                           v-model="searchCondition.logisticsProviderId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="物流商" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"-->
+            <!--:clearable="true"-->
+            <!--v-model="searchCondition.logisticsProviderId">-->
+            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
             <el-col :span="8">
               <oms-form-row label="预计入库时间" :span="8">
                 <el-col :span="24">
@@ -288,7 +288,7 @@
           expectedEndTime: '',
           bizType: '1',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: '',
           deleteFlag: false
         },
@@ -298,7 +298,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -364,7 +364,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -448,7 +448,7 @@
         return status;
       },
       orgChange: function () {
-        this.searchCondition.supplierId = '';
+        this.searchCondition.transactOrgId = '';
         this.orgList = [];
         this.filterOrg();
         this.filterLogistics();

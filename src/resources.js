@@ -444,10 +444,10 @@ export const logisticsCost = resource('/logistics-cost', http, {});
  */
 export const povReceipt = resource('/erp-receipt', http, {
   queryWasks(params) {
-    return http.get('/erp-receipt/wave-task', {params});
+    return http.get('/erp-receipt/order', {params});
   },
-  queryWaskGoods(waveId) {
-    return http.get(`/erp-receipt/wave-task/${waveId}/goods`);
+  queryWaskGoods (orderId) {
+    return http.get(`/erp-receipt/order/${orderId}/goods`);
   },
   save(id, obj) {
     return http.post(`/erp-receipt/${id}`, obj);

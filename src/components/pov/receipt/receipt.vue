@@ -97,7 +97,7 @@
   import { povReceipt } from '@/resources';
   export default {
     props: {
-      waveId: String
+      orderId: String
     },
     data () {
       return {
@@ -129,7 +129,7 @@
       };
     },
     watch: {
-      waveId () {
+      orderId () {
         this.queryOrderDetail();
       }
     },
@@ -166,7 +166,7 @@
         });
         if (this.doing) return;
         this.doing = true;
-        povReceipt.save(this.waveId, obj).then(() => {
+        povReceipt.save(this.orderId, obj).then(() => {
           this.$notify.success({
             message: '添加收货信息成功'
           });
@@ -181,8 +181,9 @@
         });
       },
       queryOrderDetail () {
-        if (!this.waveId) return false;
-        povReceipt.queryWaskGoods(this.waveId).then(res => {
+        if (!this.orderId) return false;
+
+        povReceipt.queryWaskGoods('5543109163143770626').then(res => {
           res.data.forEach(f => {
             f.largePackageCount = '';
             f.bulkCount = '';
