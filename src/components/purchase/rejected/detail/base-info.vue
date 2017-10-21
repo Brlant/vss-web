@@ -111,7 +111,7 @@
             </div>
           </td>
           <td class="text-center" width="140px">
-            {{item.orgGoodsDto.goodsDto.salesFirmName}}
+            {{item.orgGoodsDto.salesFirmName}}
           </td>
           <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
           <td>{{ item.productionDate | date }}</td>

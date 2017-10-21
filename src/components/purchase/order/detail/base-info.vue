@@ -96,7 +96,7 @@
             </div>
           </td>
           <td class="text-center" width="180px">
-            {{item.orgGoodsDto.goodsDto.salesFirmName}}
+            {{item.orgGoodsDto.salesFirmName}}
           </td>
           <td width="100px" class="text-center">
             {{item.amount}}
