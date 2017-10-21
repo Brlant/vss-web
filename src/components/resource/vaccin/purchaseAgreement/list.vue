@@ -348,7 +348,6 @@
         this.filters.availabilityStatus = item.availabilityStatus;
       },
       onSubmit: function (item) {
-//        if (this.action === 'add') {
         this.getGoodsList(1);
         this.showRight = false;
         this.currentItem = {};
