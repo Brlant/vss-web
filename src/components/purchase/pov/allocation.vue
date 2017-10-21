@@ -210,7 +210,7 @@
         }
         demandAssignment.createOrder(this.$route.query.id).then(() => {
           this.$notify.success({
-            message: '提交分配方案成功,将跳转到采购订单'
+            message: '提交分配方案成功,将跳转到销售订单'
           });
           this.$router.push('/sale/order/:id');
         }).catch(error => {

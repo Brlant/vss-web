@@ -256,7 +256,6 @@
             </el-form-item>
             <el-form-item label="需求时间" prop="demandTime">
               <el-date-picker
-                type="date"
                 v-model="form.demandTime"
                 placeholder="请选择需求时间" format="yyyy-MM-dd"
                 @change="changeTime">

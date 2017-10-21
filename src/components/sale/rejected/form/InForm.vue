@@ -318,7 +318,6 @@
                           v-show="showContent.isShowOtherContent">
               <el-date-picker
                 v-model="form.expectedTime"
-                type="date"
                 placeholder="请选择预计入库时间" format="yyyy-MM-dd"
                 @change="changeExpectedTime">
               </el-date-picker>

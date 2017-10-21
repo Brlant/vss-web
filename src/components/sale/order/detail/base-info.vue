@@ -90,7 +90,6 @@
           <el-col :span="21">
             <el-date-picker
               v-model="currentOrder.expectedTime"
-              type="date"
               placeholder="请选择日期" format="yyyy-MM-dd"
               @change="changeExpectedTime">
             </el-date-picker>

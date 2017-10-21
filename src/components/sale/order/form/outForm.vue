@@ -310,7 +310,6 @@
                           v-show="showContent.isShowOtherContent">
               <el-date-picker
                 v-model="form.expectedTime"
-                type="date"
                 placeholder="请选择日期" format="yyyy-MM-dd"
                 @change="changeExpectedTime">
               </el-date-picker>
