@@ -336,7 +336,7 @@
           this.$notify.success({
             message: '需求分配成功'
           });
-          this.$router.push({path: '/purchase/pov/allocation', query: {id: res.data.id}});
+          this.$router.push({path: '/sale/pov/allocation', query: {id: res.data.id}});
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '需求分配失败'
