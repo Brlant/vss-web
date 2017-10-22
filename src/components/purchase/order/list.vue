@@ -212,9 +212,9 @@
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
         </el-row>
-        <el-row v-if="true">
+        <el-row v-if="loadingData">
           <el-col :span="24">
-            <oms-loading :loading="true"></oms-loading>
+            <oms-loading :loading="loadingData"></oms-loading>
           </el-col>
         </el-row>
         <el-row v-else-if="orderList.length == 0">
@@ -275,7 +275,7 @@
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <page-right :show="true" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
+    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
