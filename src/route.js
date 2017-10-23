@@ -176,7 +176,7 @@ const route = [
           {
             path: '/collection/operation',
             component: resolve => require(['./components/finance/operation/collection/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '收款作业', perm: 'payment-payable'}
+            meta: {moduleId: 'finance', title: '收款作业', perm: 'payment-receivable'}
           },
           {
             path: '/finance/get',
