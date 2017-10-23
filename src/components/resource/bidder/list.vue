@@ -244,7 +244,7 @@
                 </perm>
                 <perm label="vaccine-info-delete">
                   <a href="#" @click.stop.prevent="remove(item.id)">
-                    <oms-forbid :item="item" @forbided="forbid" :tips='"确认删除中标疫苗\""+item.goodsName+"\"?"' >
+                    <oms-forbid :item="item" @forbided="remove((item.id))" :tips='"确认删除中标疫苗\""+item.goodsName+"\"?"' >
                       <i class="iconfont icon-remove"></i> 删除</oms-forbid></a>
 
                 </perm>
@@ -274,6 +274,7 @@
   import editForm from './form/form.vue';
   import {BaseInfo, http, Vaccine} from '@/resources';
   import ElCol from 'element-ui/packages/col/src/col';
+  import OmsForbid from '../../common/forbid.vue';
 
   export default {
     components: {
@@ -293,7 +294,6 @@
         showTypeList: [],
         typeTxt: '',
         formTitle: '新增',
-        oldItem: {},
         action: 'add',
         orgGoods: [],
         pager: {
@@ -374,16 +374,8 @@
         else return '未生效';
       },
       itemChange: function (item) {
-        if (this.action === 'add') {
           this.getPageList(1);
           this.showRight = false;
-        } else {
-          let index = this.dataRows.indexOf(this.oldItem);
-          if (index !== -1) {
-            this.dataRows.splice(index, 1, item);
-          }
-          this.showRight = false;
-        }
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色
         let status = -1;
