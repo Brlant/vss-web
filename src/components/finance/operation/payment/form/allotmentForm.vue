@@ -252,7 +252,7 @@
             <el-form-item label="付款方式">
               <dict :dict-group="'PaymentMethod'" :dict-key="billInfo.payType"></dict>
             </el-form-item>
-            <el-form-item label="付款金额">
+            <el-form-item label="付款总金额">
               ¥ {{billInfo.amount | formatMoney}}
             </el-form-item>
             <el-form-item label="付款类型">
@@ -266,23 +266,25 @@
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
 
           <div class="oms-form order-billOrder-box">
-            <el-form ref="orderGoodsAddForm" :rules="billOrderRules" :model="billOrder" label-width="120px">
-              <el-form-item label="订单" prop="orderId">
-                <el-select filterable remote placeholder="请输入关键字搜索订单" :remote-method="searchOrder" :clearable="true"
-                           v-model="billOrder.orderId">
-                  <el-option :value="item.id" :key="item.id" :label="item.orderNo" v-for="item in orderList">
+            <el-form ref="billInfoForm" :rules="billOrderRules" :model="billOrder" label-width="120px">
+              <el-form-item label="订单" prop="accountsPayableDetailId">
+                <el-select filterable remote placeholder="请输入关键字搜索订单" :remote-method="searchAccountsPayableDetailList"
+                           :clearable="true"
+                           v-model="billOrder.accountsPayableDetailId"
+                           @change="setOrderNo(billOrder.accountsPayableDetailId)">
+                  <el-option :value="item.id" :key="item.id" :label="item.orderNo"
+                             v-for="item in accountsPayableDetailList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">订单编号 {{item.orderNo}}</span>
-                      <span class="pull-right" style="color: #999">
-                  </span>
+                      <span class="pull-right" style="color: #999"></span>
                     </div>
                     <div style="overflow: hidden">
-                    <span class="select-other-info pull-left">
-                      <span>单据金额</span> {{item.billAmount | formatMoney}}
-                    </span>
                       <span class="select-other-info pull-left">
-                      <span>实付金额</span> {{item.prepaidAccounts | formatMoney}}
-                    </span>
+                        <span>单据金额</span> {{item.billAmount | formatMoney}}
+                      </span>
+                      <span class="select-other-info pull-left">
+                        <span>实付金额</span> {{item.prepaidAccounts | formatMoney}}
+                      </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -294,44 +296,37 @@
               </el-form-item>
             </el-form>
             <oms-form-row label="" :span="4">
-              <el-button type="primary" @click="addbillOrder">分配金额</el-button>
+              <el-button type="primary" @click="addBillOrder">分配金额</el-button>
             </oms-form-row>
             <div class="billOrder-list-detail">
               <h3 style="background: #13ce66;color: #fff">已分配订单</h3>
               <table class="table">
                 <thead>
                 <tr>
-                  <th style="width:250px">订单编号</th>
+                  <th style="width:180px">订单编号</th>
                   <th>金额</th>
                   <th>操作</th>
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="billOrder in form.billOrderList" :class="{'combinatioon-billOrder':billOrder.isCombination}">
+                <tr v-for="item in form.billOrderList" :class="{'combinatioon-billOrder':billOrder.isCombination}">
                   <td>
-                    <el-tag type="success" v-show="billOrder.isCombination" style="font-size: 10px"
-                            :class="{ml15:billOrder.isCombination}">组合
-                    </el-tag>
-                    <span>{{billOrder.orgGoodsName}}</span>
+                    <span>{{item.orderNo}}</span>
                   </td>
                   <td class="ar">
-                    <span v-show="billOrder.amount">¥</span>{{billOrder.amount | formatMoney}}
+                    <span v-show="item.amount">¥</span>{{item.amount | formatMoney}}
                   </td>
-                  <td class="ar">{{billOrder.amount}} <span v-show="billOrder.measurementUnit">（<dict
-                    :dict-group="'measurementUnit'"
-                    :dict-key="billOrder.measurementUnit"></dict>）</span>
-                  </td>
-                  <td class="ar"><span
-                    v-show="billOrder.amount">¥</span>{{ billOrder.amount * billOrder.amount | formatMoney }}
-                  </td>
-                  <td><a href="#" @click.prevent="remove(billOrder)" v-show="!billOrder.isCombination"><i
-                    class="iconfont icon-delete"></i> 删除</a></td>
+                  <td><a href="#" @click.prevent="remove(item)"><i class="iconfont icon-delete"></i> 删除</a></td>
                 </tr>
                 <tr>
                   <td colspan="3"></td>
+                  <td colspan="2"><span
+                    style="color: #333;font-weight: 700">未分配金额:</span><span>¥ {{notTotalAmount | formatMoney}} </span>
+                  </td>
                   <td colspan="2"><span style="color: #333;font-weight: 700"
-                                        v-show="form.billOrderList.length">合计:</span><span
-                    v-show="form.billOrderList.length"> </span></td>
+                                        v-show="form.billOrderList.length">已分配金额:</span><span
+                    v-show="form.billOrderList.length">¥ {{totalAmount | formatMoney}} </span></td>
+                  <el-tag type="success" v-if="notTotalAmount===0">已分配完成</el-tag>
                 </tr>
                 </tbody>
               </table>
@@ -358,40 +353,40 @@
       }
     },
     data: function () {
-
-      let checkOrderNumber = (rule, value, callback) => {
+      let checkAmount = (rule, value, callback) => {
         if (value === '') {
-          callback();
+          callback(new Error('请输入金额,最多保留两位小数'));
         } else {
-          let re = /^[^\u4e00-\u9fa5]{0,}$/;
-          if (!re.test(value)) {
-            callback(new Error('请输入正确的订单号'));
+          let amount = parseInt(value, 0);
+          if (amount > this.notTotalAmount) {
+            callback(new Error('输入的金额必须小于等于付款总金额'));
           } else {
             callback();
           }
         }
       };
-
       return {
         loading: false,
         idNotify: true,
         billOrder: {
-          'orderId': '',
+          'accountsPayableDetailId': '',
+          'orderNo': '',
           'amount': ''
         },
         accessoryList: [], // 组合货品列表
         searchOrderList: [],
-        orderList: [],
+        accountsPayableDetailList: [],
         form: {
           'billOrderList': []
         },
         rules: {},
         billOrderRules: {
-          orderId: [
+          accountsPayableDetailId: [
             {required: true, message: '请选择订单', trigger: 'change'}
           ],
           amount: [
-            {required: true, message: '请输入金额', trigger: 'change'}
+            {required: true, message: '请输入金额', trigger: 'change'},
+            {validator: checkAmount, trigger: 'blur'}
           ]
         },
         currentPartName: '',
@@ -421,7 +416,27 @@
         supplierWarehouses: []
       };
     },
-    computed: {},
+    computed: {
+      notTotalAmount: function () {
+        let notTotalAmount = 0;
+        let practicalTotalAmount = 0;
+        let payableTotalAmount = this.billInfo.amount;
+        this.form.billOrderList.forEach(val => {
+          practicalTotalAmount = practicalTotalAmount + val.amount;
+        });
+        if (payableTotalAmount) {
+          notTotalAmount = payableTotalAmount - practicalTotalAmount;
+        }
+        return notTotalAmount;
+      },
+      totalAmount: function () {
+        let totalAmount = 0;
+        this.form.billOrderList.forEach(val => {
+          totalAmount = totalAmount + val.amount;
+        });
+        return totalAmount;
+      }
+    },
     watch: {
       formItem: function (val) {
         this.billInfo = Object.assign({}, val);
@@ -438,11 +453,49 @@
       }
     },
     mounted: function () {
-      this.searchOrder();
+      this.searchAccountsPayableDetailList();
     },
     methods: {
-      addbillOrder: function () {
-
+      setOrderNo: function (id) {
+        console.log(id);
+        if (id) {
+          this.accountsPayableDetailList.forEach(val => {
+            if (id === val.id) {
+              this.billOrder.orderNo = val.orderNo;
+            }
+          });
+        }
+      },
+      addBillOrder: function () {
+        this.$refs['billInfoForm'].validate((valid) => {
+          if (valid) {
+            // 将输入的订单和金额加入到列表中
+            if (this.billOrder.accountsPayableDetailId && this.billOrder.amount) {
+              let amount = parseInt(this.billOrder.amount, 0);
+              this.form.billOrderList.push({
+                accountsPayableDetailId: this.billOrder.accountsPayableDetailId,
+                amount: amount,
+                orderNo: this.billOrder.orderNo
+              });
+              // 清空表单
+              this.$refs['billInfoForm'].resetFields();
+            } else {
+              this.$notify({
+                duration: 2000,
+                title: '警告',
+                message: '请输入订单和金额再进行分配操作',
+                type: 'error'
+              });
+            }
+          } else {
+            this.$notify({
+              duration: 2000,
+              title: '警告',
+              message: '请输入正确的订单和金额再进行分配操作',
+              type: 'error'
+            });
+          }
+        });
       },
       billPayType: function (value) {
         let title = '';
@@ -463,7 +516,7 @@
       },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
-        this.$refs['orderGoodsAddForm'].resetFields();
+        this.$refs['billInfoForm'].resetFields();
         this.form.supplierId = '';
         this.form.actualConsignee = '';
         this.form.logisticsProviderId = '';
@@ -480,7 +533,7 @@
       doClose: function () {
         this.$emit('close');
       },
-      searchOrder: function (query) {
+      searchAccountsPayableDetailList: function (query) {
         if (!this.billInfo.accountsPayableId) return;
         let params = Object.assign({}, {
           pageNo: 1,
@@ -488,13 +541,13 @@
           keyWord: ''
         });
         pay.queryDetail(this.billInfo.accountsPayableId, params).then(res => {
-          this.orderList = res.data.list;
+          this.accountsPayableDetailList = res.data.list;
         });
       },
       remove: function (item) {
         this.form.billOrderList.splice(this.form.billOrderList.indexOf(item), 1);
         this.form.billOrderList = this.form.billOrderList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
-        this.searchOrder();
+        this.searchAccountsPayableDetailList();
       },
       onSubmit: function () {// 提交表单
         let self = this;
