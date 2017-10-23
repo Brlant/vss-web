@@ -283,7 +283,7 @@
 </template>
 
 <script>
-  import {http, Address, BaseInfo, pay, BillOperation} from '../../../../../resources';
+  import {http, Address, BaseInfo, pay, BillReceivable} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
 
   export default {
@@ -348,7 +348,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          BillOperation.auditInfo(this.form.id, {
+          BillReceivable.auditInfo(this.form.id, {
             auditOpinion: this.form.auditOpinion}).then(() => {
             this.$notify.success({
               duration: 2000,
@@ -371,7 +371,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          BillOperation.refusedInfo(this.form.id, {auditOpinion: this.form.auditOpinion}).then(() => {
+          BillReceivable.refusedInfo(this.form.id, {auditOpinion: this.form.auditOpinion}).then(() => {
             this.$notify.success({
               duration: 2000,
               title: '成功',

@@ -340,7 +340,7 @@
 </template>
 
 <script>
-  import {http, pay, BillOperation} from './../../../../../resources';
+  import {http, pay, BillPayable} from './../../../../../resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -563,7 +563,7 @@
           saveData.id = this.billInfo.id;
         }
         this.doing = true;
-        BillOperation.banding(saveData.id, saveData).then(res => {
+        BillPayable.banding(saveData.id, saveData).then(res => {
             this.resetForm();
             this.$notify({
               duration: 2000,
