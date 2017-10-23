@@ -287,34 +287,6 @@
                     </div>
                   </el-option>
                 </el-select>
-                <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
-                           :remote-method="searchProduct" :clearable="true" :loading="loading"
-                           popper-class="order-good-selects"
-                           @change="getGoodDetail">
-                  <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
-                             :label="item.orgGoodsDto.name"
-                             :value="item.orgGoodsDto.id">
-                    <div style="overflow: hidden">
-                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                      <el-tag type="success" v-show="item.list.length"
-                              style="line-height: 22px;margin-left: 20px;height: 20px">
-                        组合
-                      </el-tag>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-                      </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥</span>{{ item.orgGoodsDto.procurementPrice
-                        }}
-                      </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
               </el-form-item>
               <el-form-item label="金额" prop="amount">
                 <oms-input type="text" v-model="billOrder.amount" @blur="formatPrice" placeholder="请输入金额,最多保留两位小数">
