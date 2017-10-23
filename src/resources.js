@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui';
+import {Notification} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -464,6 +464,9 @@ export const BillOperation = resource('/bill-operation', http, {
   },
   refusedInfo(id, obj) {
     return http.put(`/bill-operation/refused/${id}`, obj);
+  },
+  banding(id, obj) {
+    return http.put(`/bill-operation/banding/${id}`, obj);
   }
 });
 

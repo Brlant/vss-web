@@ -157,7 +157,7 @@
           <el-col :span="3">付款单位</el-col>
           <el-col :span="2">付款方式</el-col>
           <el-col :span="4">付款金额</el-col>
-          <el-col :span="5">xf</el-col>
+          <el-col :span="5">付款说明</el-col>
           <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -339,6 +339,7 @@
         this.showItemRight = false;
         this.showAllotmentRight = false;
         this.action = '';
+        this.billInfo = {};
       },
       add: function () {
         this.showItemRight = true;

@@ -494,6 +494,14 @@
       },
       onSubmit: function () {// 提交表单
         let self = this;
+        if (this.form.amount > this.notTotalAmount) {
+          this.$notify({
+            duration: 2000,
+            message: '输入的金额必须小于等于未付款总金额',
+            type: 'warning'
+          });
+          return false;
+        }
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.doing = true;
