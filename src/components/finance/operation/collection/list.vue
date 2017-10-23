@@ -115,29 +115,29 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
-          <el-row>
-            <el-col :span="8">
-              <oms-form-row label="货主订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="供货厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.orgId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="6">
-                <el-button type="primary" @click="searchInOrder">查询</el-button>
-                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-              </oms-form-row>
-            </el-col>
-          </el-row>
-        </el-form>
+        <!--<el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">-->
+          <!--<el-row>-->
+            <!--<el-col :span="8">-->
+              <!--<oms-form-row label="货主订单号" :span="6">-->
+                <!--<oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>-->
+              <!--</oms-form-row>-->
+            <!--</el-col>-->
+            <!--<el-col :span="8">-->
+              <!--<oms-form-row label="供货厂商" :span="6">-->
+                <!--<el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"-->
+                           <!--v-model="searchCondition.orgId">-->
+                  <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>-->
+                <!--</el-select>-->
+              <!--</oms-form-row>-->
+            <!--</el-col>-->
+            <!--<el-col :span="6">-->
+              <!--<oms-form-row label="" :span="6">-->
+                <!--<el-button type="primary" @click="searchInOrder">查询</el-button>-->
+                <!--<el-button native-type="reset" @click="resetSearchForm">重置</el-button>-->
+              <!--</oms-form-row>-->
+            <!--</el-col>-->
+          <!--</el-row>-->
+        <!--</el-form>-->
       </div>
 
 
@@ -147,17 +147,17 @@
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div>{{item.title}}</div>
         </div>
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="4">付款单据编号</el-col>
-          <el-col :span="3">付款类型</el-col>
-          <el-col :span="3">付款单位</el-col>
-          <el-col :span="2">付款方式</el-col>
-          <el-col :span="4">付款金额</el-col>
-          <el-col :span="5">xf</el-col>
+          <el-col :span="4">收款单据编号</el-col>
+          <el-col :span="3">收款类型</el-col>
+          <el-col :span="3">收款单位</el-col>
+          <el-col :span="2">收款方式</el-col>
+          <el-col :span="4">收款金额</el-col>
+          <el-col :span="5">收款说明</el-col>
           <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -207,11 +207,17 @@
               <el-col :span="3" class="opera-btn">
                 <div>
                   <!--<perm label="goods-edit">-->
-                  <span @click.stop="audit(item)">
+                  <span @click.stop="audit(item)" v-if="item.status==='0'">
                       <a @click.pervent="" class="btn-circle btn-opera">
                         <i class="iconfont icon-verify"></i>
                       </a>
                      审核
+                    </span>
+                  <span @click.stop="allotmentBill(item)" v-if="item.status==='1'">
+                      <a @click.pervent="" class="btn-circle btn-opera">
+                        <i class="iconfont icon-edit"></i>
+                      </a>
+                     分配
                     </span>
                   <!--</perm>-->
                 </div>
@@ -221,8 +227,6 @@
           </div>
         </div>
       </div>
-
-
     </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
@@ -233,10 +237,13 @@
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'750px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
-      <audit-form :formItem="billInfo" :action="action" @close="resetRightBox"></audit-form>
+      <audit-form :formItem="billInfo" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'750px','padding':0}">
-      <add-form @change="onSubmit" :action="action" @close="resetRightBox"></add-form>
+      <add-form @change="onSubmit" @right-close="resetRightBox"></add-form>
+    </page-right>
+    <page-right :show="showAllotmentRight" @right-close="resetRightBox" :css="{'width':'750px','padding':0}">
+      <allotment-form :formItem="billInfo" @change="onSubmit" @right-close="resetRightBox"></allotment-form>
     </page-right>
   </div>
 </template>
@@ -244,11 +251,12 @@
   import utils from '../../../../tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
+  import allotmentForm from './form/allotmentForm.vue';
   import {Order, BaseInfo, erpOrder, BillOperation} from '../../../../resources';
 
   export default {
     components: {
-      auditForm, addForm
+      auditForm, addForm, allotmentForm
     },
     data: function () {
       return {
@@ -256,9 +264,10 @@
         showItemRight: false,
         showDetail: false,
         showSearch: false,
+        showAllotmentRight: false,
         billList: [],
         filters: {
-          status: ''
+          status: '0'
         },
         searchCondition: {
           orderNo: '',
@@ -268,18 +277,12 @@
         orgType: utils.paymentOperation,
         activeStatus: 0,
         currentId: '',
-        orgList: [], // 来源单位列表
-        logisticsList: [], // 物流商列表
         pager: {
           currentPage: 1,
           count: 0,
           pageSize: 20
         },
-        billInfo: {},
-        defaultIndex: 0, // 添加订单默认选中第一个tab
-        action: '',
-        user: {},
-        state: ''
+        billInfo: {}
       };
     },
     mounted() {
@@ -305,9 +308,9 @@
       billPayType: function (value) {
         let title = '';
         if (value === '0') {
-          title = '疫苗厂商付款';
+          title = '疫苗厂商收款';
         } else {
-          title = '物流厂商付款';
+          title = '物流厂商收款';
         }
         return title;
       },
@@ -334,17 +337,21 @@
       resetRightBox: function () {
         this.showDetail = false;
         this.showItemRight = false;
+        this.showAllotmentRight = false;
         this.action = '';
+        this.billInfo = {};
       },
       add: function () {
         this.showItemRight = true;
         this.defaultIndex = 1;
-        this.action = 'add';
       },
       audit: function (item) {
         this.showDetail = true;
         this.billInfo = item;
-        this.action = 'audit';
+      },
+      allotmentBill: function (item) {
+        this.showAllotmentRight = true;
+        this.billInfo = item;
       },
       onSubmit: function () {
         this.getBillList(1);
@@ -355,39 +362,14 @@
         let param = Object.assign({}, this.filters, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          type: '0'
+          type: '1'
         });
         BillOperation.query(param).then(res => {
           this.billList = res.data.list;
-          this.pager.count = res.data.count;
-          this.loadingData = false;
-        });
+            this.pager.count = res.data.count;
+            this.loadingData = false;
+          });
 //        this.queryStatusNum(param);
-      },
-      refreshOrder() {
-        this.getBillList(1);
-      },
-      filterOrg: function (query) {// 过滤供货商
-        let orgId = this.searchCondition.orgId;
-        if (!orgId) {
-          this.searchCondition.orgId = '';
-          this.orgList = [];
-          return;
-        }
-        BaseInfo.queryOrgByReation(orgId, {keyWord: query}).then(res => {
-          this.orgList = res.data;
-        });
-      },
-      filterLogistics: function (query) {// 过滤物流提供方
-        let orgId = this.searchCondition.orgId;
-        if (!orgId) {
-          this.searchCondition.logisticsProviderId = '';
-          this.logisticsList = [];
-          return;
-        }
-        BaseInfo.queryOrgByValidReation(orgId, {keyWord: query, relation: '3'}).then(res => {
-          this.logisticsList = res.data;
-        });
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色
         let status = -1;
@@ -397,12 +379,6 @@
           }
         }
         return status;
-      },
-      orgChange: function () {
-        this.searchCondition.orgId = '';
-        this.orgList = [];
-        this.filterOrg();
-        this.filterLogistics();
       },
 //      queryStatusNum: function (params) {
 //        erpOrder.queryStateNum(params).then(res => {
@@ -415,33 +391,15 @@
 //          this.orgType[5].num = this.obtionStatusNum(data['exception']);
 //        });
 //      },
-      isLock: function (item) { // 判断是不是被锁定
-        let isLock = false;
-        if (item.lockFlag && item.lockMan !== this.user.userId) {
-          isLock = true;
-        }
-        return isLock;
-      },
       obtionStatusNum: function (num) {
         if (typeof num !== 'number') {
           return 0;
         }
         return num;
       },
-      remove: function (order) {
-        Order.delete(order.id).then(() => {
-          this.getBillList();
-        });
-      },
-      showItem: function (order) {
-        this.currentId = order.id;
-        this.state = order.state;
-        this.showDetail = true;
-        this.$router.push(`/purchase/order/${order.id}`);
-      },
-      changeStatus: function (item, key) {// 订单分类改变
+      changeStatus: function (item, key) {
         this.activeStatus = key;
-        this.filters.state = item.state;
+        this.filters.status = item.status;
       },
       advancedQuery: function () {
         this.showSearch = !this.showSearch;
