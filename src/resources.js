@@ -509,7 +509,11 @@ export const pay = resource('/accounts-payable', http, {
  * 中标疫苗
  * @type {the}
  */
-export const SuccessfulBidder = resource('/successful-bidder', http, {});
+export const SuccessfulBidder = resource('/successful-bidder', http, {
+  queryInfo(params) {
+    return http.get('/successful-bidder/info', {params});
+  }
+});
 
 /**
  * 应收款项
