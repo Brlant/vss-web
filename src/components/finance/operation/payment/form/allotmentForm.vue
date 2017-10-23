@@ -309,24 +309,26 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="item in form.billOrderList" :class="{'combinatioon-billOrder':billOrder.isCombination}">
+                <tr v-for="item in form.billOrderList">
                   <td>
                     <span>{{item.orderNo}}</span>
                   </td>
-                  <td class="ar">
+                  <td>
                     <span v-show="item.amount">¥</span>{{item.amount | formatMoney}}
                   </td>
                   <td><a href="#" @click.prevent="remove(item)"><i class="iconfont icon-delete"></i> 删除</a></td>
                 </tr>
                 <tr>
-                  <td colspan="3"></td>
-                  <td colspan="2"><span
+                  <td></td>
+                  <td><span
                     style="color: #333;font-weight: 700">未分配金额:</span><span>¥ {{notTotalAmount | formatMoney}} </span>
                   </td>
-                  <td colspan="2"><span style="color: #333;font-weight: 700"
-                                        v-show="form.billOrderList.length">已分配金额:</span><span
+                  <td><span style="color: #333;font-weight: 700"
+                            v-show="form.billOrderList.length">已分配金额:</span><span
                     v-show="form.billOrderList.length">¥ {{totalAmount | formatMoney}} </span></td>
-                  <el-tag type="success" v-if="notTotalAmount===0">已分配完成</el-tag>
+                  <td>
+                    <el-tag type="success" v-if="notTotalAmount===0">已分配完成</el-tag>
+                  </td>
                 </tr>
                 </tbody>
               </table>
@@ -339,7 +341,7 @@
 </template>
 
 <script>
-  import {erpOrder, LogisticsCenter, http, Address, BaseInfo, pay} from '@/resources';
+  import {http, pay, BillOperation} from './../../../../../resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -357,9 +359,12 @@
         if (value === '') {
           callback(new Error('请输入金额,最多保留两位小数'));
         } else {
+          if (this.notTotalAmount === 0) {
+            callback(new Error('分配操作已经完成,无需再进行分配操作'));
+          }
           let amount = parseInt(value, 0);
           if (amount > this.notTotalAmount) {
-            callback(new Error('输入的金额必须小于等于付款总金额'));
+            callback(new Error('输入的金额必须小于等于未分配金额'));
           } else {
             callback();
           }
@@ -367,19 +372,23 @@
       };
       return {
         loading: false,
-        idNotify: true,
         billOrder: {
           'accountsPayableDetailId': '',
           'orderNo': '',
           'amount': ''
         },
-        accessoryList: [], // 组合货品列表
-        searchOrderList: [],
         accountsPayableDetailList: [],
         form: {
+          id: '',
           'billOrderList': []
         },
-        rules: {},
+        currentPartName: '',
+        index: 0,
+        billOrderListSet: [
+          {name: '付款单据', key: 0},
+          {name: '金额分配', key: 1}
+        ],
+        billInfo: {},
         billOrderRules: {
           accountsPayableDetailId: [
             {required: true, message: '请选择订单', trigger: 'change'}
@@ -389,31 +398,7 @@
             {validator: checkAmount, trigger: 'blur'}
           ]
         },
-        currentPartName: '',
-        index: 0,
-        billOrderListSet: [
-          {name: '付款单据', key: 0},
-          {name: '金额分配', key: 1}
-        ],
-        orgList: [],
-        customerList: [],
-        logisticsList: [],
-        goodsList: {},
-        relationList: [],
-        LogisticsCenter: [],
-        billInfo: {},
-        doing: false,
-        isSupplierOrOrg: false, // 是不是货主或业务单位
-        saveKey: 'inOrderForm',
-        isStorageData: true, // 判断是不是缓存数据
-        showContent: {
-          isShowOtherContent: true, // 是否显示物流类型
-          isShowSupplierId: true, // 是否显示来源单位
-          expectedTimeLabel: '预计入库时间'
-        },
-        currentTransportationMeans: [],
-        cdcWarehouses: [],
-        supplierWarehouses: []
+        doing: false
       };
     },
     computed: {
@@ -448,16 +433,18 @@
           }
         });
       },
-      transportationMeansList: function (val) {
-        this.currentTransportationMeans = val.slice();
+      'billInfo.id': function (val) {
+        if (!val) {
+          this.resetForm();
+        }
       }
     },
     mounted: function () {
       this.searchAccountsPayableDetailList();
+      this.resetForm();
     },
     methods: {
       setOrderNo: function (id) {
-        console.log(id);
         if (id) {
           this.accountsPayableDetailList.forEach(val => {
             if (id === val.id) {
@@ -488,12 +475,23 @@
               });
             }
           } else {
-            this.$notify({
-              duration: 2000,
-              title: '警告',
-              message: '请输入正确的订单和金额再进行分配操作',
-              type: 'error'
-            });
+            if (this.notTotalAmount === 0) {
+              this.$notify({
+                duration: 2000,
+                title: '警告',
+                message: '分配操作已经完成,无需再进行分配操作',
+                type: 'warning'
+              });
+              // 清空表单
+              this.$refs['billInfoForm'].resetFields();
+            } else {
+              this.$notify({
+                duration: 2000,
+                title: '警告',
+                message: '请输入正确的订单和金额再进行分配操作',
+                type: 'error'
+              });
+            }
           }
         });
       },
@@ -506,23 +504,14 @@
         }
         return title;
       },
-      initForm: function () {// 根据缓存，回设form
-        let oldForm = window.localStorage.getItem(this.saveKey);
-        if (oldForm) {
-          this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-          this.form.logisticsCentreId = this.form.logisticsCentreId
-            ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
-        }
-      },
       resetForm: function () {// 重置表单
-        this.$refs['orderAddForm'].resetFields();
         this.$refs['billInfoForm'].resetFields();
-        this.form.supplierId = '';
-        this.form.actualConsignee = '';
-        this.form.logisticsProviderId = '';
-        this.form.logisticsCentreId = '';
-        this.form.remark = '';
-        this.form.billOrderList = [];
+        this.billOrder = {'accountsPayableDetailId': '', 'orderNo': '', 'amount': ''};
+        this.accountsPayableDetailList = [];
+        this.form = {id: '', 'billOrderList': []};
+        this.currentPartName = '';
+        this.index = 0;
+        this.billInfo = {};
       },
       formatPrice: function () {// 格式化金额，保留两位小数
         this.billOrder.amount = utils.autoformatDecimalPoint(this.billOrder.amount);
@@ -546,55 +535,56 @@
       },
       remove: function (item) {
         this.form.billOrderList.splice(this.form.billOrderList.indexOf(item), 1);
-        this.form.billOrderList = this.form.billOrderList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         this.searchAccountsPayableDetailList();
       },
       onSubmit: function () {// 提交表单
         let self = this;
-        this.$refs['orderAddForm'].validate((valid) => {
-          if (!valid || this.doing) {
+        if (this.doing) {
             this.index = 0;
             return false;
           }
-          let saveData = JSON.parse(JSON.stringify(self.form));
-          if (saveData.billOrderList.length === 0) {
-            this.$notify({
-              duration: 2000,
-              message: '请添加订单产品',
-              type: 'warning'
-            });
-            return false;
-          }
-          saveData.billOrderList.forEach(item => {
-            delete item.fixInfo;
-            delete item.mainOrgId;
-            delete item.isCombination;
+        let saveData = JSON.parse(JSON.stringify(self.form));
+        if (saveData.billOrderList.length === 0) {
+          this.$notify({
+            duration: 2000,
+            message: '请进行分配金额操作',
+            type: 'warning'
           });
-          this.doing = true;
-          if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
-          erpOrder.save(saveData).then(res => {
+          return false;
+        }
+        if (this.notTotalAmount !== 0) {
+          this.$notify({
+            duration: 2000,
+            message: '金额未分配完,请继续进行分配金额操作',
+            type: 'warning'
+          });
+          return false;
+        }
+        if (!this.form.id) {
+          saveData.id = this.billInfo.id;
+        }
+        this.doing = true;
+        BillOperation.banding(saveData.id, saveData).then(res => {
             this.resetForm();
             this.$notify({
               duration: 2000,
-              message: '新增采购订单成功',
+              message: '分配金额操作成功',
               type: 'success'
             });
             self.$emit('change', res.data);
-            window.localStorage.removeItem(this.saveKey);
             this.$nextTick(() => {
               this.doing = false;
-              this.$emit('close');
+              this.$emit('right-close');
             });
           }).catch(error => {
             this.doing = false;
             this.$notify({
               duration: 2000,
-              title: '新增采购订单失败',
+              title: '分配金额操作失败',
               message: error.response.data.msg,
               type: 'error'
             });
           });
-        });
       }
     }
   };
