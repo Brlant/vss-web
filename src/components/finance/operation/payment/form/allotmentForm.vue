@@ -309,24 +309,26 @@
                 </tr>
                 </thead>
                 <tbody>
-                <tr v-for="item in form.billOrderList" :class="{'combinatioon-billOrder':billOrder.isCombination}">
+                <tr v-for="item in form.billOrderList">
                   <td>
                     <span>{{item.orderNo}}</span>
                   </td>
-                  <td class="ar">
+                  <td>
                     <span v-show="item.amount">¥</span>{{item.amount | formatMoney}}
                   </td>
                   <td><a href="#" @click.prevent="remove(item)"><i class="iconfont icon-delete"></i> 删除</a></td>
                 </tr>
                 <tr>
-                  <td colspan="3"></td>
-                  <td colspan="2"><span
+                  <td></td>
+                  <td><span
                     style="color: #333;font-weight: 700">未分配金额:</span><span>¥ {{notTotalAmount | formatMoney}} </span>
                   </td>
-                  <td colspan="2"><span style="color: #333;font-weight: 700"
-                                        v-show="form.billOrderList.length">已分配金额:</span><span
+                  <td><span style="color: #333;font-weight: 700"
+                            v-show="form.billOrderList.length">已分配金额:</span><span
                     v-show="form.billOrderList.length">¥ {{totalAmount | formatMoney}} </span></td>
-                  <el-tag type="success" v-if="notTotalAmount===0">已分配完成</el-tag>
+                  <td>
+                    <el-tag type="success" v-if="notTotalAmount===0">已分配完成</el-tag>
+                  </td>
                 </tr>
                 </tbody>
               </table>
