@@ -219,41 +219,61 @@
   .ar {
     text-align: right;
   }
+
+  .btn-submit-save {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+    padding: 15px;
+  }
 </style>
 
 <template>
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">审核付款申请</h2>
-        <ul>
-          <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存</el-button>
-          </li>
-        </ul>
+        <h2 class="clearfix right-title">审核收款申请</h2>
+        <div class="btn-submit-save">
+          <div style="margin-bottom: 10px">
+            <el-button style="width: 100px" type="warning" @click="audited" native-type="submit">审核通过
+            </el-button>
+          </div>
+          <div style="margin-bottom: 10px">
+            <el-button style="width: 100px" type="warning" @click="notAudited" native-type="submit">
+              审核不通过
+            </el-button>
+          </div>
+        </div>
       </div>
       <div class="content-right min-gutter">
-        <h3>审核付款作业申请</h3>
+        <h3>审核收款作业申请</h3>
         <div>
-          <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
+          <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="付款单据编号">
+            <el-form-item label="收款单据编号">
               {{form.no }}
             </el-form-item>
-            <el-form-item label="付款类型">
+            <el-form-item label="收款类型">
               {{billPayType(form.billPayType)}}
             </el-form-item>
-            <el-form-item label="付款单位">
+            <el-form-item label="收款单位">
               {{form.orgName }}
             </el-form-item>
-            <el-form-item label="付款方式">
+            <el-form-item label="收款方式">
               <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
-            </el-form-item
-            <el-form-item label="付款金额">
-              <span v-if="form.amount">¥</span> {{form.amount | formatMoney}}
             </el-form-item>
-            <el-form-item label="付款类型">
+            <el-form-item label="收款金额">
+              ¥ {{form.amount | formatMoney}}
+            </el-form-item>
+            <el-form-item label="收款类型">
               {{form.explain}}
+            </el-form-item>
+            <el-form-item label="审批意见">
+              <oms-input type="textarea" v-model="form.auditOpinion" placeholder="请输入备注信息"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
           </el-form>
         </div>
@@ -287,20 +307,7 @@
         payableTotalAmount: '',
         practicalTotalAmount: '',
         notTotalAmount: '',
-        rules: {
-          billPayType: [
-            {required: true, message: '请选择付款类型', trigger: 'change'}
-          ],
-          payType: [
-            {required: true, message: '请选择付款方式', trigger: 'change'}
-          ],
-          supplierId: [
-            {required: true, message: '请选择供货厂商', trigger: 'change'}
-          ],
-          amount: [
-            {required: true, message: '请输入金额', trigger: 'blur'}
-          ]
-        },
+        rules: {},
         orgList: [],
         logisticsList: [],
         doing: false
@@ -309,7 +316,7 @@
     computed: {},
     watch: {
       formItem: function (val) {
-        this.form = Object.assign({}, this.form);
+        this.form = Object.assign({}, val);
       }
     },
     mounted: function () {
@@ -318,14 +325,14 @@
       billPayType: function (value) {
         let title = '';
         if (value === '0') {
-          title = '疫苗厂商付款';
+          title = '疫苗厂商收款';
         } else {
-          title = '物流厂商付款';
+          title = '物流厂商收款';
         }
         return title;
       },
       resetForm: function () {// 重置表单
-        this.$refs['addForm'].resetFields();
+        this.$refs['auditForm'].resetFields();
         this.payableTotalAmount = '';
         this.practicalTotalAmount = '';
         this.notTotalAmount = '';
@@ -335,31 +342,47 @@
       doClose: function () {
         this.$emit('close');
       },
-      onSubmit: function () {// 提交表单
-        let self = this;
-        this.$refs['addForm'].validate((valid) => {
-          if (!valid || this.doing) {
-            this.doing = true;
-          }
-          BillOperation.save(this.form).then(res => {
-            this.resetForm();
-            this.$notify({
+      audited: function () {
+        this.$confirm('确认通过收款作业申请"' + this.form.no + '"的审核?', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          BillOperation.auditInfo(this.form.id, {
+            auditOpinion: this.form.auditOpinion}).then(() => {
+            this.$notify.success({
               duration: 2000,
-              message: '新增付款作业申请成功',
-              type: 'success'
+              title: '成功',
+              message: '审核收款作业申请"' + this.form.no + '"成功'
             });
-            self.$emit('change', res.data);
-            this.$nextTick(() => {
-              this.doing = false;
-              this.$emit('close');
-            });
-          }).catch(error => {
-            this.doing = false;
-            this.$notify({
+            this.$emit('change', this.form);
+            this.$emit('right-close');
+          }).catch(() => {
+            this.$notify.error({
               duration: 2000,
-              title: '新增付款作业申请失败',
-              message: error.response.data.msg,
-              type: 'error'
+              message: '审核收款作业申请"' + this.form.no + '"失败'
+            });
+          });
+        });
+      },
+      notAudited: function () {
+        this.$confirm('确认不通过收款作业申请"' + this.form.no + '"的审核?', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          BillOperation.refusedInfo(this.form.id, {auditOpinion: this.form.auditOpinion}).then(() => {
+            this.$notify.success({
+              duration: 2000,
+              title: '成功',
+              message: '收款作业申请"' + this.form.no + '"审核未通过'
+            });
+            this.$emit('change', this.form);
+            this.$emit('right-close');
+          }).catch(() => {
+            this.$notify.error({
+              duration: 2000,
+              message: '收款作业申请"' + this.form.no + '"审核未通过失败'
             });
           });
         });

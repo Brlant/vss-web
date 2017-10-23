@@ -240,22 +240,22 @@
 
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="orderAddForm" label-width="160px" style="padding-right: 20px">
-            <el-form-item label="付款单据编号">
+            <el-form-item label="收款单据编号">
               {{billInfo.no }}
             </el-form-item>
-            <el-form-item label="付款类型">
+            <el-form-item label="收款类型">
               {{billPayType(billInfo.billPayType)}}
             </el-form-item>
-            <el-form-item label="付款单位">
+            <el-form-item label="收款单位">
               {{billInfo.orgName }}
             </el-form-item>
-            <el-form-item label="付款方式">
+            <el-form-item label="收款方式">
               <dict :dict-group="'PaymentMethod'" :dict-key="billInfo.payType"></dict>
             </el-form-item>
-            <el-form-item label="付款总金额">
+            <el-form-item label="收款总金额">
               ¥ {{billInfo.amount | formatMoney}}
             </el-form-item>
-            <el-form-item label="付款类型">
+            <el-form-item label="收款类型">
               {{billInfo.explain}}
             </el-form-item>
             <el-form-item label-width="120px">
@@ -269,7 +269,8 @@
             <el-form ref="billInfoForm" :rules="billOrderRules" :model="billOrder" label-width="120px">
               <el-form-item label="订单" prop="accountsPayableDetailId">
                 <el-select filterable remote placeholder="请输入关键字搜索订单" :remote-method="searchAccountsPayableDetailList"
-                           :clearable="true" v-model="billOrder.accountsPayableDetailId"
+                           :clearable="true"
+                           v-model="billOrder.accountsPayableDetailId"
                            @change="setOrderNo(billOrder.accountsPayableDetailId)">
                   <el-option :value="item.id" :key="item.id" :label="item.orderNo"
                              v-for="item in accountsPayableDetailList">
@@ -384,7 +385,7 @@
         currentPartName: '',
         index: 0,
         billOrderListSet: [
-          {name: '付款单据', key: 0},
+          {name: '收款单据', key: 0},
           {name: '金额分配', key: 1}
         ],
         billInfo: {},
@@ -497,9 +498,9 @@
       billPayType: function (value) {
         let title = '';
         if (value === '0') {
-          title = '疫苗厂商付款';
+          title = '疫苗厂商收款';
         } else {
-          title = '物流厂商付款';
+          title = '物流厂商收款';
         }
         return title;
       },

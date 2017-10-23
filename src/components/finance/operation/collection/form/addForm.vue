@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">新增付款申请</h2>
+        <h2 class="clearfix right-title">新增收款申请</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -233,20 +233,20 @@
         </ul>
       </div>
       <div class="content-right min-gutter">
-        <h3>新增付款作业申请</h3>
+        <h3>新增收款作业申请</h3>
 
         <div>
           <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="付款类型" prop="billPayType">
-              <el-select type="text" v-model="form.billPayType" placeholder="请选择付款类型" @change="changeBillPayType">
-                <el-option :value="'0'" :key="'0'" :label="'疫苗厂商付款'"></el-option>
-                <el-option :value="'1'" :key="'1'" :label="'物流厂商付款'"></el-option>
+            <el-form-item label="收款类型" prop="billPayType">
+              <el-select type="text" v-model="form.billPayType" placeholder="请选择收款类型" @change="changeBillPayType">
+                <el-option :value="'0'" :key="'0'" :label="'疫苗厂商收款'"></el-option>
+                <el-option :value="'1'" :key="'1'" :label="'物流厂商收款'"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="疫苗厂商" prop="orgId" v-if="form.billPayType==='0'">
               <el-select filterable remote placeholder="请输入关键字搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.orgId">
+                         v-model="form.orgId" @change="setAccountsPayableId">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
@@ -288,8 +288,8 @@
             <el-form-item label="未付总金额" v-if="form.orgId">
               ¥ {{notTotalAmount | formatMoney }}
             </el-form-item>
-            <el-form-item label="付款方式" prop="payType">
-              <el-select placeholder="请选择付款方式" v-model="form.payType">
+            <el-form-item label="收款方式" prop="payType">
+              <el-select placeholder="请选择收款方式" v-model="form.payType">
                 <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in PaymentMethod"/>
               </el-select>
             </el-form-item>
@@ -337,7 +337,7 @@
           callback(new Error('请输入金额,最多保留两位小数'));
         } else {
           if (this.form.amount > this.notTotalAmount) {
-            callback(new Error('输入的金额必须小于等于未付款总金额'));
+            callback(new Error('输入的金额必须小于等于未收款总金额'));
           } else {
             callback();
           }
@@ -346,22 +346,23 @@
       return {
         loading: false,
         form: {
-          type: '0',
+          type: '1',
           payType: '',
           orgId: '',
           explain: '',
           amount: '',
-          billPayType: ''
+          billPayType: '',
+          accountsPayableId: ''
         },
         payableTotalAmount: '',
         practicalTotalAmount: '',
         notTotalAmount: '',
         rules: {
           billPayType: [
-            {required: true, message: '请选择付款类型', trigger: 'change'}
+            {required: true, message: '请选择收款类型', trigger: 'change'}
           ],
           payType: [
-            {required: true, message: '请选择付款方式', trigger: 'change'}
+            {required: true, message: '请选择收款方式', trigger: 'change'}
           ],
           supplierId: [
             {required: true, message: '请选择供货厂商', trigger: 'change'}
@@ -422,6 +423,26 @@
     mounted: function () {
     },
     methods: {
+      setAccountsPayableId: function () {
+        if (this.form.orgId) {
+          if (this.form.billPayType === '0') {
+            this.filterOrg();
+            this.orgList.forEach(val => {
+              if (this.form.orgId === val.remitteeId) {
+                this.form.accountsPayableId = val.id;
+              }
+            });
+          }
+          if (this.form.billPayType === '1') {
+            this.logisticsList.forEach(val => {
+              this.filterLogistics();
+              if (this.form.orgId === val.remitteeId) {
+                this.form.accountsPayableId = val.id;
+              }
+            });
+          }
+        }
+      },
       changeBillPayType: function () {
         this.form.orgId = '';
         this.orgList = [];
@@ -473,6 +494,14 @@
       },
       onSubmit: function () {// 提交表单
         let self = this;
+        if (this.form.amount > this.notTotalAmount) {
+          this.$notify({
+            duration: 2000,
+            message: '输入的金额必须小于等于未收款总金额',
+            type: 'warning'
+          });
+          return false;
+        }
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.doing = true;
@@ -481,19 +510,19 @@
             this.resetForm();
             this.$notify({
               duration: 2000,
-              message: '新增付款作业申请成功',
+              message: '新增收款作业申请成功',
               type: 'success'
             });
             self.$emit('change', res.data);
             this.$nextTick(() => {
               this.doing = false;
-              this.$emit('close');
+              this.$emit('right-close');
             });
           }).catch(error => {
             this.doing = false;
             this.$notify({
               duration: 2000,
-              title: '新增付款作业申请失败',
+              title: '新增收款作业申请失败',
               message: error.response.data.msg,
               type: 'error'
             });
