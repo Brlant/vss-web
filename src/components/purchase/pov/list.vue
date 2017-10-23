@@ -41,6 +41,11 @@
     margin-right: -1em;
   }
 
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -61,9 +66,17 @@
             <el-col :span="8">
               <oms-form-row label="POV" :span="6">
                 <el-select placeholder="请输入关键字搜索POV" v-model="searchWord.povId" filterable remote
-                           :remote-method="filterOrg" clearable="true">
+                           :remote-method="filterOrg" :clearable="true" popperClass="good-selects">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                              v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.subordinateCode}}
+                      </span>
+                    </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
