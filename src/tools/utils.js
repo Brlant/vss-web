@@ -69,6 +69,10 @@ export default {
     0: {'title': '正常', status: '0', num: ''},
     1: {'title': '停用', status: '1', num: ''}
   },
+  vaccineType: {
+    0: {'title': '正常', status: '1', num: ''},
+    1: {'title': '停用', status: '0', num: ''}
+  },
   /**
    * 格式化地址，已省/市/区显示
    * @param province
