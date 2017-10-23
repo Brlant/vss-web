@@ -829,6 +829,10 @@
         }
       },
       changeCustomerId (val) {// POV改变时
+        if (!this.isStorageData) {// 当有缓存时，不做清空操作
+          this.product.orgGoodsId = '';
+          this.form.detailDtoList = [];
+        }
         this.checkLicence(val);
         this.searchWarehouses(val);
         this.searchProduct();

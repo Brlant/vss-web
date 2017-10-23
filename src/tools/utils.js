@@ -65,6 +65,10 @@ export default {
     0: {'title': '待收货', state: '3', num: ''},
     1: {'title': '已完成', state: '4', num: ''}
   },
+  firmType: {
+    0: {'title': '正常', status: '0', num: ''},
+    1: {'title': '停用', status: '1', num: ''}
+  },
   /**
    * 格式化地址，已省/市/区显示
    * @param province

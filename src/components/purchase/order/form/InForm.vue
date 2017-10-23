@@ -826,6 +826,7 @@
           this.supplierWarehouses = [];
           this.form.pickUpAddress = '';
           this.product.orgGoodsId = '';
+          this.form.detailDtoList = [];
         }
         if (!val) return;
         if (this.form.transportationMeansId === '2') {

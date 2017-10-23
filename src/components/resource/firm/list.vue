@@ -121,8 +121,16 @@
 </style>
 <template>
   <div>
-
     <div>
+      <div class="order-list-status container" style="margin-bottom:20px">
+        <div class="status-item"
+             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
+             v-for="(item,key) in firmType"
+             @click="changeStatus(item,key)">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+        </div>
+      </div>
       <div class="container d-table">
         <div class="d-table-left">
           <h2 class="header" style="overflow: hidden">
@@ -396,9 +404,12 @@
         currentItem: {}, // 与厂商单条数据相等，完成一些操作
         currentName: '', // 当前单位的名字
         relationData: {}, // 与厂商单条数据相等，完成一些操作
+        firmType: utils.firmType,
+        activeStatus: '0',
         // 过滤条件
         filters: {
-          keyWord: ''
+          keyWord: '',
+          status: ''
         },
         // 表单操作
         form: {},
@@ -491,6 +502,7 @@
         });
       },
       getBusinessRelationItem: function (id) {
+        this.businessRelationItem = {};
         if (!id) return false;
         this.loadingData = true;
         Vendor.queryVendorDetail(id).then(res => {
@@ -530,6 +542,10 @@
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
+      },
+      changeStatus: function (item, key) {// 订单分类改变
+        this.activeStatus = key;
+        this.filters.status = item.status;
       },
       edit: function () {
         this.action = 'edit';
