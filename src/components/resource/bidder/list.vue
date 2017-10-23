@@ -1,5 +1,5 @@
 <style lang="less" scoped="">
-
+  @import '../../../assets/mixins';
   .page-right-part {
     box-sizing: content-box;
     width: 800px;
@@ -99,6 +99,11 @@
   .cursor-span {
     cursor: pointer;
   }
+  .opera-btn-bidder {
+    a:hover {
+      color: @activeColor;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -128,7 +133,27 @@
                            :clearable="true"
                            v-model="searchCondition.goodsId" popper-class="good-selects">
                   <el-option :value="vaccine.id" :key="vaccine.id" :label="vaccine.name"
-                             v-for="vaccine in vaccineList"></el-option>
+                             v-for="vaccine in vaccineList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{vaccine.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                <span class="select-other-info pull-left"><span
+                  v-show="vaccine.id">货品ID</span>  {{vaccine.id}}
+                </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
+                </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}
+                </span>
+                    </div>
+                    <div style="overflow: hidden">
+              <span class="select-other-info pull-left"><span
+                v-show="vaccine.factoryName">生产厂商</span>  {{ vaccine.factoryName }}
+              </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -212,13 +237,16 @@
                   {{formatStatus(item.availabilityStatus)}}
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="4" class="opera-btn-bidder">
                 <perm label="erp-user-edit">
                   <a href="#" @click.stop.prevent="edit(item)"><i
                     class="iconfont icon-edit"></i>编辑</a>
                 </perm>
                 <perm label="vaccine-info-delete">
-                  <a href="#" @click.stop.prevent="remove(item.id)"><i class="iconfont icon-remove"></i> 删除</a>
+                  <a href="#" @click.stop.prevent="remove(item.id)">
+                    <oms-forbid :item="item" @forbided="forbid" :tips='"确认删除中标疫苗\""+item.goodsName+"\"?"' >
+                      <i class="iconfont icon-remove"></i> 删除</oms-forbid></a>
+
                 </perm>
               </el-col>
             </el-row>
@@ -280,8 +308,7 @@
         status: {},
         currentId: '',
         searchCondition: {
-          orgName: '',
-          factoryName: '',
+          goodsId: '',
           year: '',
           availabilityStatus: true
         },
@@ -375,7 +402,7 @@
         });
       },
       formatDate(param) {
-        this.searchCondition.year = param ? this.$moment(param).format('YYYY-MM-DD') : '';
+        this.searchCondition.year = param ? this.$moment(param).format('YYYY') : '';
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
