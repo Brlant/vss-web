@@ -374,7 +374,7 @@
       filterListColor: function (index) {// 过滤左边列表边角颜色
         let status = -1;
         for (let key in this.orgType) {
-          if (this.orgType[key].state === index) {
+          if (this.orgType[key].status === index) {
             status = key;
           }
         }

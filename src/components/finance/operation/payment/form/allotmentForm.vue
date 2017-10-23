@@ -269,8 +269,7 @@
             <el-form ref="billInfoForm" :rules="billOrderRules" :model="billOrder" label-width="120px">
               <el-form-item label="订单" prop="accountsPayableDetailId">
                 <el-select filterable remote placeholder="请输入关键字搜索订单" :remote-method="searchAccountsPayableDetailList"
-                           :clearable="true"
-                           v-model="billOrder.accountsPayableDetailId"
+                           :clearable="true" v-model="billOrder.accountsPayableDetailId"
                            @change="setOrderNo(billOrder.accountsPayableDetailId)">
                   <el-option :value="item.id" :key="item.id" :label="item.orderNo"
                              v-for="item in accountsPayableDetailList">
@@ -284,6 +283,34 @@
                       </span>
                       <span class="select-other-info pull-left">
                         <span>实付金额</span> {{item.prepaidAccounts | formatMoney}}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+                <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
+                           :remote-method="searchProduct" :clearable="true" :loading="loading"
+                           popper-class="order-good-selects"
+                           @change="getGoodDetail">
+                  <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
+                             :label="item.orgGoodsDto.name"
+                             :value="item.orgGoodsDto.id">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      <el-tag type="success" v-show="item.list.length"
+                              style="line-height: 22px;margin-left: 20px;height: 20px">
+                        组合
+                      </el-tag>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥</span>{{ item.orgGoodsDto.procurementPrice
+                        }}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                       </span>
                     </div>
                   </el-option>
