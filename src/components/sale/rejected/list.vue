@@ -95,6 +95,12 @@
   .cursor-span {
     cursor: pointer;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -134,9 +140,18 @@
             <el-col :span="8">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.transactOrgId">
+                           v-model="searchCondition.transactOrgId" popperClass="good-selects">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                             v-for="org in orgList"></el-option>
+                             v-for="org in orgList" popper-class="good-selects">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.subordinateCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -252,7 +267,7 @@
       </el-pagination>
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
-                class="order-detail-info" partClass="pr-no-animation">
+                class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
     </page-right>

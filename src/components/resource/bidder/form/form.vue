@@ -125,6 +125,7 @@
             name: this.formItem.goodsName
           });
           this.form = this.formItem;// this.formItem;
+          this.formatExpireTimeDate(this.form.expireTime);
         } else {
           this.form = {
             goodsId: '',
