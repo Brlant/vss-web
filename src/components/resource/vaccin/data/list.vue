@@ -95,6 +95,14 @@
 <template>
   <div>
     <div>
+      <div class="order-list-status container">
+        <div class="status-item" :class="{'active':key==activeStatus,'item-right':item.type===0} "
+             v-for="(item,key) in vaccineType"
+             @click="changeType(key,item)">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+        </div>
+      </div>
       <div class="container d-table">
         <div class="d-table-left">
           <h2 class="header">
@@ -394,7 +402,7 @@
   import goodsPart from './form/form.vue';
   import { Vaccine } from '@/resources';
   import goodsRow from './goods.row.vue';
-
+  import utils from '@/tools/utils';
   export default {
     components: {goodsPart, goodsRow},
     data: function () {
@@ -403,6 +411,8 @@
         showTypeRight: false,
         showTypeSearch: false,
         showSearch: false,
+        vaccineType: utils.vaccineType,
+        activeStatus: 0,
         data: {},
         combinationList: [],
         typeList: [],
@@ -411,10 +421,8 @@
         form: {},
         action: '',
         currentItem: {},
-        activeStatus: 0,
         filters: {
-          status: null,
-          auditedStatus: null
+          status: '1'
         }
       };
     },
@@ -583,7 +591,6 @@
       changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
         this.activeStatus = key;
         this.filters.status = item.status;
-        this.filters.auditedStatus = item.auditedStatus;
       },
       onSubmit: function (item) {
         if (this.action === 'add') {
