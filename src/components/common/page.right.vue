@@ -4,7 +4,6 @@
   .page-right-part {
     width: 550px;
     padding: 30px;
-    z-index: 3000;
     &.pr-animation {
       transition: 0.2s transform ease-in-out;
       transform: translateX(100%);
