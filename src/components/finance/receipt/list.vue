@@ -136,7 +136,7 @@
                 <th>单据金额</th>
                 <th>实收金额</th>
                 <th>创建时间</th>
-                <th>操作</th>
+                <th>状态</th>
               </tr>
               </thead>
               <tbody>
@@ -171,9 +171,7 @@
                   {{row.createTime | date }}
                 </td>
                 <td>
-                  <perm label="accounts-receivable-add">
-                  <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实收金额</a>
-                  </perm>
+                  {{statusTitle(row.status)}}
                 </td>
               </tr>
               </tbody>
@@ -281,6 +279,17 @@
       }
     },
     methods: {
+      statusTitle: function (status) {
+        if (status) {
+          let title = '';
+          if (status === '0') {
+            title = '已付清';
+          } else if (status === '1') {
+            title = '未付清';
+          }
+          return title;
+        }
+      },
       resetRightBox: function () {
         this.showRight = false;
         this.showLeft = false;
