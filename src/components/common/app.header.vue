@@ -233,7 +233,7 @@
                   <div class="text-right">
                     <span class="wechat-info"
                           v-if="weChatInfo.nickname">微信昵称：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
-                      }}...</span>
+                      }}<span v-if="weChatInfo.nickname && weChatInfo.nickname.length > 3">...</span></span>
                     <a href="#" @click.stop.pre="unbind" v-if="weChatInfo.nickname">解绑微信</a>
                     <router-link to="/resetpsw">重置密码</router-link>
                     <a href="#" @click.stop.pre="logout">退出</a>

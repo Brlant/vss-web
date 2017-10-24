@@ -133,7 +133,7 @@
       },
       queryWeChat () {
         cerpAction.queryWeChatInfo().then(res => {
-          this.$store.initWeChatInfo('initWeChatInfo', res.data);
+          this.$store.commit('initWeChatInfo', res.data);
         });
       }
     },
