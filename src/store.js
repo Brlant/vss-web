@@ -14,7 +14,8 @@ const state = {
   attachmentDialog: {attachmentId: 0, open: false},
   form: {},
   bodySize: {left: '180px'},
-  orgName: ''
+  orgName: '',
+  weChatInfo: ''
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -30,6 +31,17 @@ const mutations = {
     } catch (e) {
 
     }
+  },
+  initWeChatInfo (state, data) {
+    try {
+      if (data && data.nickname) {
+        window.localStorage.setItem('weChatInfo', JSON.stringify(data));
+        state.weChatInfo = data;
+      }
+    } catch (e) {
+
+    }
+
   },
   initCode(state, orgCode) {
     try {

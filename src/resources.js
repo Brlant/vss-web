@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui';
+import { Notification } from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -618,6 +618,7 @@ export const VaccineRights = resource('/vaccine-authorization', http, {
   }
 });
 
+
 /**
  * 绑定操作
  *
@@ -677,6 +678,12 @@ export const cerpAction = resource('/outbound/count', http, {
   },
   queryOnCDCs() {
     return http.get('/erp-org/superior');
+  },
+  queryWeChatInfo () {
+    return http.get('/erp-org/user/wechat');
+  },
+  unBindWeChat () {
+    return http.put('/erp-org/unbind/wechat');
   }
 });
 

@@ -175,6 +175,11 @@
     color: #ffffff;
     margin-right: 10px;
   }
+
+  .wechat-info {
+    float: left;
+    font-size: 12px;
+  }
 </style>
 
 <style>
@@ -226,6 +231,10 @@
                   </div>
                   <div class="last-login">上次登录时间:{{user.userLastLoginTime | date}}</div>
                   <div class="text-right">
+                    <span class="wechat-info"
+                          v-if="weChatInfo.nickname">微信昵称：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
+                      }}...</span>
+                    <a href="#" @click.stop.pre="unbind" v-if="weChatInfo.nickname">解绑微信</a>
                     <router-link to="/resetpsw">重置密码</router-link>
                     <a href="#" @click.stop.pre="logout">退出</a>
                   </div>
@@ -269,7 +278,7 @@
 </template>
 
 <script>
-  import {Auth} from '../../resources';
+  import { Auth, cerpAction } from '../../resources';
   import logo_pic from '../../assets/img/erp-logo.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';
@@ -279,7 +288,7 @@
       omsUploadPicture
     },
     props: ['toRoute', 'level'],
-    data() {
+    data () {
       return {
         activeId: this.getGroupId(),
         logo_pic: logo_pic,
@@ -316,6 +325,9 @@
       },
       orgName () {
         return this.$store.state.orgName;
+      },
+      weChatInfo () {
+        return this.$store.state.weChatInfo;
       }
     },
     watch: {
@@ -363,6 +375,23 @@
       },
       filterLevel (level) {
         return level === 1 ? '市级CDC' : level === 2 ? '区县级CDC' : level === 3 ? 'POV' : '';
+      },
+      unbind () {
+        this.$confirm('是否解除绑定的微信？', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          cerpAction.unBindWeChat().then(() => {
+            this.$notify.success({
+              message: '解绑微信成功'
+            });
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '解绑微信失败'
+            });
+          });
+        });
       }
     },
     mounted: function () {

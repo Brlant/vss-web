@@ -161,6 +161,9 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
+          let weChatInfo = window.localStorage.getItem('weChatInfo');
+          weChatInfo = JSON.parse(weChatInfo);
+          this.$store.commit('initWeChatInfo', weChatInfo);
           this.queryBaseInfo(data);
           this.getRoleMenus(data);
         }).catch(() => {
