@@ -95,6 +95,18 @@
   .cursor-span {
     cursor: pointer;
   }
+
+  .select-other-info {
+    color: #999;
+    margin-left: 10px
+  }
+
+  .selected {
+    .select-other-info {
+      color: #ddd
+    }
+  }
+
 </style>
 <template>
   <div class="order-page">
@@ -115,29 +127,34 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <!--<el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">-->
-          <!--<el-row>-->
-            <!--<el-col :span="8">-->
-              <!--<oms-form-row label="付款单据编号" :span="6">-->
-                <!--<oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入付款单据编号"></oms-input>-->
-              <!--</oms-form-row>-->
-            <!--</el-col>-->
-            <!--<el-col :span="8">-->
-              <!--<oms-form-row label="付款单位" :span="6">-->
-                <!--<el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"-->
-                           <!--v-model="searchCondition.orgId">-->
-                  <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>-->
-                <!--</el-select>-->
-              <!--</oms-form-row>-->
-            <!--</el-col>-->
-            <!--<el-col :span="6">-->
-              <!--<oms-form-row label="" :span="6">-->
-                <!--<el-button type="primary" @click="searchInOrder">查询</el-button>-->
-                <!--<el-button native-type="reset" @click="resetSearchForm">重置</el-button>-->
-              <!--</oms-form-row>-->
-            <!--</el-col>-->
-          <!--</el-row>-->
-        <!--</el-form>-->
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+          <el-row>
+            <el-col :span="8">
+              <oms-form-row label="付款单据编号" :span="6">
+                <oms-input type="text" v-model="searchCondition.keyWord" placeholder="请输入付款单据编号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="付款单位" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索付款单位" :remote-method="filterOrg" :clearable="true"
+                           v-model="searchCondition.orgId">
+                  <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
+                             v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="6">
+              <oms-form-row label="" :span="6">
+                <el-button type="primary" @click="searchInOrder">查询</el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+        </el-form>
       </div>
 
 
@@ -254,7 +271,7 @@
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
   import allotmentForm from './form/allotmentForm.vue';
-  import {Order, BaseInfo, erpOrder, BillPayable} from '../../../../resources';
+  import {Order, BaseInfo, erpOrder, BillPayable, pay} from '../../../../resources';
 
   export default {
     components: {
@@ -272,7 +289,7 @@
           status: '0'
         },
         searchCondition: {
-          orderNo: '',
+          keyWord: '',
           orgId: ''
         },
         expectedTime: '',
@@ -284,11 +301,13 @@
           count: 0,
           pageSize: 20
         },
-        billInfo: {}
+        billInfo: {},
+        orgList: []
       };
     },
     mounted() {
       this.getBillList(1);
+      this.filterOrg();
     },
     computed: {
       transportationMeansList: function () {
@@ -307,6 +326,19 @@
       }
     },
     methods: {
+      filterOrg: function (query) {// 过滤来源单位
+        let params = Object.assign({}, {
+          pageNo: 1,
+          pageSize: 20,
+          keyWord: query,
+          accountsPayableType: '0',
+          payerId: this.$store.state.user.userCompanyAddress,
+          status: '0'
+        });
+        pay.query(params).then(res => {
+          this.orgList = res.data.list;
+        });
+      },
       billPayType: function (value) {
         let title = '';
         if (value === '0') {
@@ -327,14 +359,16 @@
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchCondition);
+        this.getBillList(1);
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          orderNo: '',
+          keyWord: '',
           orgId: ''
         };
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
+        this.getBillList(1);
       },
       resetRightBox: function () {
         this.showDetail = false;
