@@ -268,7 +268,7 @@
             <el-form-item label="收款金额">
               ¥ {{form.amount | formatMoney}}
             </el-form-item>
-            <el-form-item label="收款类型">
+            <el-form-item label="收款说明">
               {{form.explain}}
             </el-form-item>
             <el-form-item label="审批意见">

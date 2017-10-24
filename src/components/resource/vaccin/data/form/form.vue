@@ -118,7 +118,7 @@
                    @clear="setUsedStatus">
           <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
             <div style="overflow: hidden">
-              <span class="pull-left">{{item.goodsName}}</span>
+              <span class="pull-left">{{item.name}}</span>
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
@@ -396,7 +396,7 @@
           keyWord: keyWord
         };
         SuccessfulBidder.queryInfo(params).then(res => {
-          this.goodsList = res.data.list;
+          this.goodsList = res.data;
           if (this.action === 'edit') {
             let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
             if (!isExist) {
