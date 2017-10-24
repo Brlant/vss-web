@@ -255,8 +255,11 @@
             <el-form-item label="收款总金额">
               ¥ {{billInfo.amount | formatMoney}}
             </el-form-item>
-            <el-form-item label="收款类型">
+            <el-form-item label="收款说明">
               {{billInfo.explain}}
+            </el-form-item>
+            <el-form-item label="审核意见">
+              {{billInfo.auditOpinion}}
             </el-form-item>
             <el-form-item label-width="120px">
               <el-button type="primary" @click="index++">金额分配</el-button>
