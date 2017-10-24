@@ -238,14 +238,14 @@
         <div>
           <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="收款类型" prop="billPayType">
-              <el-select type="text" v-model="form.billPayType" placeholder="请选择收款类型" @change="changeBillPayType">
-                <el-option :value="'0'" :key="'0'" :label="'疫苗厂商收款'"></el-option>
-                <el-option :value="'1'" :key="'1'" :label="'物流厂商收款'"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="疫苗厂商" prop="orgId" v-if="form.billPayType==='0'">
-              <el-select filterable remote placeholder="请输入关键字搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
+            <!--<el-form-item label="收款类型" prop="billPayType">-->
+            <!--<el-select type="text" v-model="form.billPayType" placeholder="请选择收款类型" @change="changeBillPayType">-->
+            <!--<el-option :value="'0'" :key="'0'" :label="'疫苗厂商收款'"></el-option>-->
+            <!--<el-option :value="'1'" :key="'1'" :label="'物流厂商收款'"></el-option>-->
+            <!--</el-select>-->
+            <!--</el-form-item>-->
+            <el-form-item label="POV" prop="orgId">
+              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" @change="setAccountsPayableId">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName" v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -261,24 +261,24 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流厂商" v-if="form.billPayType==='1'" prop="orgId">
-              <el-select filterable remote placeholder="请输入关键字搜索物流厂商" :remote-method="filterLogistics" :clearable="true"
-                         v-model="form.orgId">
-                <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
-                           v-for="org in logisticsList">
-                  <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
-                    <span class="pull-right" style="color: #999">
-                  </span>
-                  </div>
-                  <div style="overflow: hidden">
-                    <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.remitteeManufacturerCode}}
-                    </span>
-                  </div>
-                </el-option>
-              </el-select>
-            </el-form-item>
+            <!--<el-form-item label="物流厂商" v-if="form.billPayType==='1'" prop="orgId">-->
+            <!--<el-select filterable remote placeholder="请输入关键字搜索物流厂商" :remote-method="filterLogistics" :clearable="true"-->
+            <!--v-model="form.orgId">-->
+            <!--<el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"-->
+            <!--v-for="org in logisticsList">-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="pull-left" style="clear: right">{{org.remitteeName}}</span>-->
+            <!--<span class="pull-right" style="color: #999">-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="select-other-info pull-left">-->
+            <!--<span>系统代码</span> {{org.remitteeManufacturerCode}}-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--</el-option>-->
+            <!--</el-select>-->
+            <!--</el-form-item>-->
             <el-form-item label="应收总金额" v-if="form.orgId">
               ¥ {{payableTotalAmount | formatMoney }}
             </el-form-item>
@@ -393,7 +393,6 @@
     watch: {
       'form.orgId': function () {
         if (this.form.orgId) {
-          if (this.form.billPayType === '0') {
             this.filterOrg();
             this.orgList.forEach(val => {
               if (this.form.orgId === val.remitteeId) {
@@ -404,55 +403,28 @@
                 });
               }
             });
-          }
-          if (this.form.billPayType === '1') {
-            this.logisticsList.forEach(val => {
-              this.filterLogistics();
-              if (this.form.orgId === val.remitteeId) {
-                receivable.getAmountInfo(val.id).then(res => {
-                  this.payableTotalAmount = res.data.payableTotalAmount;
-                  this.practicalTotalAmount = res.data.practicalTotalAmount;
-                  this.notTotalAmount = res.data.notTotalAmount;
-                });
-              }
-            });
-          }
         }
       }
     },
     mounted: function () {
+      this.filterOrg();
     },
     methods: {
       setAccountsPayableId: function () {
         if (this.form.orgId) {
-          if (this.form.billPayType === '0') {
             this.filterOrg();
             this.orgList.forEach(val => {
               if (this.form.orgId === val.remitteeId) {
                 this.form.accountsPayableId = val.id;
               }
             });
-          }
-          if (this.form.billPayType === '1') {
-            this.logisticsList.forEach(val => {
-              this.filterLogistics();
-              if (this.form.orgId === val.remitteeId) {
-                this.form.accountsPayableId = val.id;
-              }
-            });
-          }
         }
       },
       changeBillPayType: function () {
         this.form.orgId = '';
         this.orgList = [];
         this.logisticsList = [];
-        if (this.form.billPayType === '0') {
-          this.filterOrg();
-        }
-        if (this.form.billPayType === '1') {
-          this.filterLogistics();
-        }
+        this.filterOrg();
       },
       resetForm: function () {// 重置表单
         this.$refs['addForm'].resetFields();
@@ -473,20 +445,6 @@
           pageNo: 1,
           pageSize: 20,
           keyWord: query,
-          accountsPayableType: '0',
-          receivableId: this.$store.state.user.userCompanyAddress,
-          status: '0'
-        });
-        receivable.query(params).then(res => {
-          this.orgList = res.data.list;
-        });
-      },
-      filterLogistics: function (query) {// 过滤来源单位
-        let params = Object.assign({}, {
-          pageNo: 1,
-          pageSize: 20,
-          keyWord: query,
-          accountsPayableType: '1',
           receivableId: this.$store.state.user.userCompanyAddress,
           status: '0'
         });
@@ -497,22 +455,12 @@
       onSubmit: function () {// 提交表单
         let self = this;
         if (this.form.orgId === '') {
-          if (this.form.accountsPayableType === '0') {
             this.$notify({
               duration: 2000,
-              message: '请选择疫苗厂商',
+              message: '请选择POV',
               type: 'warning'
             });
             return false;
-          }
-          if (this.form.accountsPayableType === '1') {
-            this.$notify({
-              duration: 2000,
-              message: '请选择物流厂商',
-              type: 'warning'
-            });
-            return false;
-          }
         }
         if (this.notTotalAmount === 0) {
           this.$notify({

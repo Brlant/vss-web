@@ -420,8 +420,7 @@
         }
       }
     },
-    mounted: function () {
-    },
+    mounted: function () {},
     methods: {
       setAccountsPayableId: function () {
         if (this.form.orgId) {
