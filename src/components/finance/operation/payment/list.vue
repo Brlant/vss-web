@@ -118,12 +118,12 @@
         <!--<el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">-->
           <!--<el-row>-->
             <!--<el-col :span="8">-->
-              <!--<oms-form-row label="货主订单号" :span="6">-->
-                <!--<oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>-->
+              <!--<oms-form-row label="付款单据编号" :span="6">-->
+                <!--<oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入付款单据编号"></oms-input>-->
               <!--</oms-form-row>-->
             <!--</el-col>-->
             <!--<el-col :span="8">-->
-              <!--<oms-form-row label="供货厂商" :span="6">-->
+              <!--<oms-form-row label="付款单位" :span="6">-->
                 <!--<el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"-->
                            <!--v-model="searchCondition.orgId">-->
                   <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>-->

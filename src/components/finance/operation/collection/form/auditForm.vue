@@ -343,7 +343,7 @@
         this.$emit('close');
       },
       audited: function () {
-        this.$confirm('确认通过收款作业申请"' + this.form.no + '"的审核?', '', {
+        this.$confirm('确认通过对' + this.form.orgName + '的收款作业的审核?', '', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'warning'
@@ -353,20 +353,20 @@
             this.$notify.success({
               duration: 2000,
               title: '成功',
-              message: '审核收款作业申请"' + this.form.no + '"成功'
+              message: this.form.orgName + '的收款作业申请的已审核通过'
             });
             this.$emit('change', this.form);
             this.$emit('right-close');
           }).catch(() => {
             this.$notify.error({
               duration: 2000,
-              message: '审核收款作业申请"' + this.form.no + '"失败'
+              message: this.form.orgName + '的收款作业申请的审核通过失败'
             });
           });
         });
       },
       notAudited: function () {
-        this.$confirm('确认不通过收款作业申请"' + this.form.no + '"的审核?', '', {
+        this.$confirm('确认不通过对' + this.form.orgName + '的收款作业的审核?', '', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'warning'
@@ -375,14 +375,14 @@
             this.$notify.success({
               duration: 2000,
               title: '成功',
-              message: '收款作业申请"' + this.form.no + '"审核未通过'
+              message: this.form.orgName + '的收款作业申请的审核未通过'
             });
             this.$emit('change', this.form);
             this.$emit('right-close');
           }).catch(() => {
             this.$notify.error({
               duration: 2000,
-              message: '收款作业申请"' + this.form.no + '"审核未通过失败'
+              message: this.form.orgName + '的收款作业申请的审核未通过失败'
             });
           });
         });
