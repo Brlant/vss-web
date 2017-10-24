@@ -143,12 +143,12 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="5">货品</el-col>
-          <el-col :span="3">疫苗类型</el-col>
+          <el-col :span="4">货品</el-col>
+          <el-col :span="2">疫苗类型</el-col>
           <el-col :span="4">采购订单号</el-col>
           <el-col :span="4">物流厂商</el-col>
           <el-col :span="3">实际到货数量</el-col>
-          <el-col :span="2">物流费用</el-col>
+          <el-col :span="4">物流费用</el-col>
           <el-col :span="3">入库时间</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -166,10 +166,10 @@
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in bills" :key="">
             <el-row>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="4" class="R pt10">
                 {{ item.goodsName }}
               </el-col>
-              <el-col :span="3" class="R pt10">
+              <el-col :span="2" class="R pt10">
                 <dict :dict-group="'vaccineSign'" :dict-key="item.vaccineType"></dict>
               </el-col>
               <el-col :span="4" class="R pt10">
@@ -181,7 +181,7 @@
               <el-col :span="3" class="R pt10">
                 {{ item.purchaseCount }}
               </el-col>
-              <el-col :span="2" class="R pt10 ">
+              <el-col :span="4" class="R pt10 ">
                 <span v-show="item.price">￥</span>{{ item.price | formatMoney}}
               </el-col>
               <el-col :span="3" class="R pt10 ">
