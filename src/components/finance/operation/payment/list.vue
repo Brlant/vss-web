@@ -105,7 +105,7 @@
             <i class="iconfont icon-search"></i> 筛选查询
           </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <perm label="purchasing-order-add">
+            <perm label="payment-payable-add">
                   <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>添加
             </perm>
           </span>
@@ -206,20 +206,22 @@
               </el-col>
               <el-col :span="3" class="opera-btn">
                 <div>
-                  <!--<perm label="goods-edit">-->
-                  <span @click.stop="audit(item)" v-if="item.status==='0'">
-                      <a @click.pervent="" class="btn-circle btn-opera">
-                        <i class="iconfont icon-verify"></i>
-                      </a>
-                     审核
+                  <perm label="payment-payable-audit">
+                    <span @click.stop="audit(item)" v-if="item.status==='0'">
+                        <a @click.pervent="" class="btn-circle btn-opera">
+                          <i class="iconfont icon-verify"></i>
+                        </a>
+                       审核
                     </span>
-                  <span @click.stop="allotmentBill(item)" v-if="item.status==='1'">
-                      <a @click.pervent="" class="btn-circle btn-opera">
-                        <i class="iconfont icon-edit"></i>
-                      </a>
-                     分配
-                    </span>
-                  <!--</perm>-->
+                  </perm>
+                  <perm label="payment-payable-allotment">
+                    <span @click.stop="allotmentBill(item)" v-if="item.status==='1'">
+                        <a @click.pervent="" class="btn-circle btn-opera">
+                          <i class="iconfont icon-edit"></i>
+                        </a>
+                       分配
+                      </span>
+                  </perm>
                 </div>
               </el-col>
             </el-row>
@@ -252,7 +254,7 @@
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
   import allotmentForm from './form/allotmentForm.vue';
-  import {Order, BaseInfo, erpOrder, BillOperation} from '../../../../resources';
+  import {Order, BaseInfo, erpOrder, BillPayable} from '../../../../resources';
 
   export default {
     components: {
@@ -364,7 +366,7 @@
           pageSize: this.pager.pageSize,
           type: '0'
         });
-        BillOperation.query(param).then(res => {
+        BillPayable.query(param).then(res => {
           this.billList = res.data.list;
             this.pager.count = res.data.count;
             this.loadingData = false;

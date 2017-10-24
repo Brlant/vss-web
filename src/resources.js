@@ -455,18 +455,34 @@ export const povReceipt = resource('/erp-receipt', http, {
 });
 
 /**
- * 应收应付作业
+ * 付款作业
  * @type {the}
  */
-export const BillOperation = resource('/bill-operation', http, {
+export const BillPayable = resource('/bill-payable', http, {
   auditInfo(id, obj) {
-    return http.put(`/bill-operation/audit/${id}`, obj);
+    return http.put(`/bill-payable/audit/${id}`, obj);
   },
   refusedInfo(id, obj) {
-    return http.put(`/bill-operation/refused/${id}`, obj);
+    return http.put(`/bill-payable/refused/${id}`, obj);
   },
   banding(id, obj) {
-    return http.put(`/bill-operation/banding/${id}`, obj);
+    return http.put(`/bill-payable/banding/${id}`, obj);
+  }
+});
+
+/**
+ * 收款作业
+ * @type {the}
+ */
+export const BillReceivable = resource('/bill-receivable', http, {
+  auditInfo(id, obj) {
+    return http.put(`/bill-receivable/audit/${id}`, obj);
+  },
+  refusedInfo(id, obj) {
+    return http.put(`/bill-receivable/refused/${id}`, obj);
+  },
+  banding(id, obj) {
+    return http.put(`/bill-receivable/banding/${id}`, obj);
   }
 });
 
@@ -493,7 +509,11 @@ export const pay = resource('/accounts-payable', http, {
  * 中标疫苗
  * @type {the}
  */
-export const SuccessfulBidder = resource('/successful-bidder', http, {});
+export const SuccessfulBidder = resource('/successful-bidder', http, {
+  queryInfo(params) {
+    return http.get('/successful-bidder/info', {params});
+  }
+});
 
 /**
  * 应收款项

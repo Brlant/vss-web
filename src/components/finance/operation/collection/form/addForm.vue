@@ -311,7 +311,7 @@
 </template>
 
 <script>
-  import {http, Address, BaseInfo, pay, BillOperation} from '../../../../../resources';
+  import {http, Address, BaseInfo, pay, BillReceivable} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
 
   export default {
@@ -506,7 +506,7 @@
           if (!valid || this.doing) {
             this.doing = true;
           }
-          BillOperation.save(this.form).then(res => {
+          BillReceivable.save(this.form).then(res => {
             this.resetForm();
             this.$notify({
               duration: 2000,
