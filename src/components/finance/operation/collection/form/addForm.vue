@@ -219,6 +219,23 @@
   .ar {
     text-align: right;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      font-size: 14px;
+      padding: 8px 10px;
+      position: relative;
+      white-space: normal;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: rgb(72, 94, 106);
+      height: auto;
+      width: 430px;
+      line-height: 1.5;
+      box-sizing: border-box;
+      cursor: pointer;
+    }
+  }
 </style>
 
 <template>
@@ -240,7 +257,7 @@
                    label-width="100px" style="padding-right: 20px">
             <el-form-item label="收款单位" prop="orgId">
               <el-select placeholder="请输入关键字搜索POV" v-model="form.orgId" filterable remote
-                         :remote-method="filterOrg" :clearable="true" popperClass="good-selects"
+                         :remote-method="filterPOV" :clearable="true" popperClass="good-selects"
                          @change="setAccountsPayableId">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                            v-for="org in orgList">

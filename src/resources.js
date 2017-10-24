@@ -467,9 +467,6 @@ export const BillPayable = resource('/bill-payable', http, {
   },
   banding(id, obj) {
     return http.put(`/bill-payable/banding/${id}`, obj);
-  },
-  queryInfo(id, params) {
-    return http.get(`/bill-payable/${id}`, {params});
   }
 });
 
@@ -486,9 +483,6 @@ export const BillReceivable = resource('/bill-receivable', http, {
   },
   banding(id, obj) {
     return http.put(`/bill-receivable/banding/${id}`, obj);
-  },
-  queryInfo(id, params) {
-    return http.get(`/bill-receivable/${id}`, {params});
   }
 });
 

@@ -359,10 +359,6 @@
         this.getBillList(1);
       },
       getBillList: function (pageNo) {
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          return;
-        }
         this.pager.currentPage = pageNo;
         this.loadingData = true;
         let param = Object.assign({}, this.filters, {
@@ -370,7 +366,7 @@
           pageSize: this.pager.pageSize,
           type: '0'
         });
-        BillPayable.queryInfo(orgId, param).then(res => {
+        BillPayable.query(param).then(res => {
           this.billList = res.data.list;
             this.pager.count = res.data.count;
             this.loadingData = false;
