@@ -494,6 +494,24 @@
       },
       onSubmit: function () {// 提交表单
         let self = this;
+        if (this.form.orgId === '') {
+          if (this.form.accountsPayableType === '0') {
+            this.$notify({
+              duration: 2000,
+              message: '请选择疫苗厂商',
+              type: 'warning'
+            });
+            return false;
+          }
+          if (this.form.accountsPayableType === '1') {
+            this.$notify({
+              duration: 2000,
+              message: '请选择物流厂商',
+              type: 'warning'
+            });
+            return false;
+          }
+        }
         if (this.form.amount > this.notTotalAmount) {
           this.$notify({
             duration: 2000,

@@ -219,6 +219,42 @@
   .ar {
     text-align: right;
   }
+
+  .order-product-box {
+    position: relative;
+    border-radius: 10px;
+    font-size: 12px;
+    line-height: 26px;
+    .product-info-fix {
+      background: #f6f6f6;
+      margin-top: 10px;
+      padding: 5px;
+      margin-bottom: 20px;
+    }
+    &:hover {
+      border-color: #aaa
+    }
+    .product-remove {
+      position: absolute;
+      right: 0;
+      top: 0;
+      width: 20px;
+      height: 20px;
+      line-height: 20px;
+      text-align: center;
+      cursor: pointer;
+      color: #666;
+      &:hover {
+        color: #333
+      }
+    }
+    .order-goods-info {
+      .col-label {
+        padding-top: 4px;
+      }
+    }
+
+  }
 </style>
 
 <template>
@@ -268,24 +304,29 @@
         </div>
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
 
-          <div class="oms-form order-billOrder-box">
+          <div class="oms-form order-product-box">
             <el-form ref="billInfoForm" :rules="billOrderRules" :model="billOrder" label-width="120px">
               <el-form-item label="订单" prop="accountsPayableDetailId">
-                <el-select filterable remote placeholder="请输入关键字搜索订单" :remote-method="searchAccountsPayableDetailList"
+                <el-select filterable remote placeholder="请输入货主订单号搜索订单" :remote-method="searchAccountsPayableDetailList"
                            :clearable="true" v-model="billOrder.accountsPayableDetailId"
                            @change="setOrderNo(billOrder.accountsPayableDetailId)">
                   <el-option :value="item.id" :key="item.id" :label="item.orderNo"
                              v-for="item in accountsPayableDetailList">
                     <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">订单编号 {{item.orderNo}}</span>
-                      <span class="pull-right" style="color: #999"></span>
+                      <span class="pull-left" style="clear: right">货主订单号 {{item.orderNo}}</span>
+                      <span class="pull-right" style="color: #999">
+                        <span>创建时间</span> {{item.createTime | date}}
+                      </span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>单据金额</span> {{item.billAmount | formatMoney}}
+                        <span>单据金额</span> ¥ {{item.billAmount | formatMoney}}
                       </span>
                       <span class="select-other-info pull-left">
-                        <span>实付金额</span> {{item.prepaidAccounts | formatMoney}}
+                        <span>已付金额</span> ¥ {{item.prepaidAccounts | formatMoney}}
+                      </span>
+                      <span class="select-other-info pull-left">
+                        <span>未付金额</span> ¥ {{item.billAmount - item.prepaidAccounts | formatMoney}}
                       </span>
                     </div>
                   </el-option>
@@ -297,15 +338,36 @@
                 </oms-input>
               </el-form-item>
             </el-form>
+            <div class="product-info-fix clearfix" v-if="billOrder.accountsPayableDetailId">
+              <el-row>
+                <el-col :span="12">
+                  <oms-row label="货主订单号" :span="8">
+                    {{billOrder.orderNo}}
+                  </oms-row>
+                  <oms-row label="创建时间" :span="8">
+                    {{billOrder.createTime | date}}
+                  </oms-row>
+                  <oms-row label="单据金额" :span="8">
+                    ¥ {{billOrder.billAmount | formatMoney}}
+                  </oms-row>
+                  <oms-row label="已付金额" :span="8">
+                    ¥ {{billOrder.prepaidAccounts | formatMoney}}
+                  </oms-row>
+                  <oms-row label="未付金额" :span="8">
+                    ¥ {{billOrder.billAmount - billOrder.prepaidAccounts | formatMoney}}
+                  </oms-row>
+                </el-col>
+              </el-row>
+            </div>
             <oms-form-row label="" :span="4">
-              <el-button type="primary" @click="addBillOrder">分配金额</el-button>
+              <el-button type="primary" @click="addBillOrder">加入订单</el-button>
             </oms-form-row>
             <div class="billOrder-list-detail">
               <h3 style="background: #13ce66;color: #fff">已分配订单</h3>
               <table class="table">
                 <thead>
                 <tr>
-                  <th style="width:180px">订单编号</th>
+                  <th style="width:180px">货主订单号</th>
                   <th>金额</th>
                   <th>操作</th>
                 </tr>
@@ -377,7 +439,10 @@
         billOrder: {
           'accountsPayableDetailId': '',
           'orderNo': '',
-          'amount': ''
+          'amount': '',
+          'createTime': '',
+          'billAmount': '',
+          'prepaidAccounts': ''
         },
         accountsPayableDetailList: [],
         form: {
@@ -451,6 +516,9 @@
           this.accountsPayableDetailList.forEach(val => {
             if (id === val.id) {
               this.billOrder.orderNo = val.orderNo;
+              this.billOrder.createTime = val.createTime;
+              this.billOrder.billAmount = val.billAmount;
+              this.billOrder.prepaidAccounts = val.prepaidAccounts;
             }
           });
         }
@@ -529,7 +597,7 @@
         let params = Object.assign({}, {
           pageNo: 1,
           pageSize: 20,
-          keyWord: ''
+          keyWord: query
         });
         pay.queryDetail(this.billInfo.accountsPayableId, params).then(res => {
           this.accountsPayableDetailList = res.data.list;
