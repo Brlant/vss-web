@@ -403,7 +403,7 @@
             this.$notify.success({
               message: '解绑微信成功'
             });
-            this.weChatInfo = {};
+            this.$store.commit('initWeChatInfo', {});
             window.localStorage.removeItem('weChatInfo');
           }).catch(error => {
             this.$notify.error({

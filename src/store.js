@@ -34,7 +34,7 @@ const mutations = {
   },
   initWeChatInfo (state, data) {
     try {
-      if (data && data.nickname) {
+      if (typeof data === 'object') {
         window.localStorage.setItem('weChatInfo', JSON.stringify(data));
         state.weChatInfo = data;
       }
