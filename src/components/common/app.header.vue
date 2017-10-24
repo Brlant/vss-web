@@ -244,7 +244,7 @@
                     </div>
                   </div>
                   <div class="last-login">上次登录时间:{{user.userLastLoginTime | date}}</div>
-                  <div class="wechat-info">
+                  <div class="wechat-info" v-if="weChatInfo.nickname">
                     <img v-if="weChatInfo.avatarUrl" class="weChat-img" :src="weChatInfo.avatarUrl">
                     <span class="wechat-nick"
                           v-if="weChatInfo.nickname">微信：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
@@ -403,6 +403,8 @@
             this.$notify.success({
               message: '解绑微信成功'
             });
+            this.weChatInfo = {};
+            window.localStorage.removeItem('weChatInfo');
           }).catch(error => {
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '解绑微信失败'

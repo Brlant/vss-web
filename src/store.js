@@ -15,7 +15,7 @@ const state = {
   form: {},
   bodySize: {left: '180px'},
   orgName: '',
-  weChatInfo: ''
+  weChatInfo: {}
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
