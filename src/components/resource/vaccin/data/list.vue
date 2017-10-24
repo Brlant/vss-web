@@ -132,7 +132,7 @@
                               class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
                 </perm>
                 <div class="id-part">
-                  <span>疫苗编号{{item.orgGoodsDto.id}}</span>
+                  <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
                   <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
                   </el-tag>
                   <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">注册证照过期</el-tag>
@@ -181,7 +181,7 @@
                 </el-col>
                 <el-col :span="12">
                   <goods-row label="疫苗编号" :span="8">
-                    {{ data.id}}
+                    {{ data.goodsNo}}
                   </goods-row>
                   <goods-row label="疫苗名称" :span="8">
                     {{ data.name}}

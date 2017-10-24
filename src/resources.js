@@ -618,7 +618,6 @@ export const VaccineRights = resource('/vaccine-authorization', http, {
   }
 });
 
-
 /**
  * 绑定操作
  *

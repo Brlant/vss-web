@@ -177,9 +177,23 @@
   }
 
   .wechat-info {
-    float: left;
     font-size: 12px;
+    .weChat-img {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      float: left;
+    }
+    .wechat-nick {
+      float: left;
+      margin-left: 10px;
+    }
+    .btn-wechat {
+      float: left;
+    }
+    margin-bottom: 5px;
   }
+
 </style>
 
 <style>
@@ -230,11 +244,14 @@
                     </div>
                   </div>
                   <div class="last-login">上次登录时间:{{user.userLastLoginTime | date}}</div>
-                  <div class="text-right">
-                    <span class="wechat-info"
-                          v-if="weChatInfo.nickname">微信昵称：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
+                  <div class="wechat-info">
+                    <img v-if="weChatInfo.avatarUrl" class="weChat-img" :src="weChatInfo.avatarUrl">
+                    <span class="wechat-nick"
+                          v-if="weChatInfo.nickname">微信：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
                       }}<span v-if="weChatInfo.nickname && weChatInfo.nickname.length > 3">...</span></span>
-                    <a href="#" @click.stop.pre="unbind" v-if="weChatInfo.nickname">解绑微信</a>
+                    <a class="btn-wechat" href="#" @click.stop.pre="unbind" v-if="weChatInfo.nickname">(解绑)</a>
+                  </div>
+                  <div class="text-right clearfix">
                     <router-link to="/resetpsw">重置密码</router-link>
                     <a href="#" @click.stop.pre="logout">退出</a>
                   </div>
