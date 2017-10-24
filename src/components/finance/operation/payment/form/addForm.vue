@@ -474,7 +474,8 @@
           pageSize: 20,
           keyWord: query,
           accountsPayableType: '0',
-          payerId: this.$store.state.user.userCompanyAddress
+          payerId: this.$store.state.user.userCompanyAddress,
+          status: '0'
         });
         pay.query(params).then(res => {
           this.orgList = res.data.list;
@@ -486,7 +487,8 @@
           pageSize: 20,
           keyWord: query,
           accountsPayableType: '1',
-          payerId: this.$store.state.user.userCompanyAddress
+          payerId: this.$store.state.user.userCompanyAddress,
+          status: '0'
         });
         pay.query(params).then(res => {
           this.orgList = res.data.list;
@@ -511,6 +513,14 @@
             });
             return false;
           }
+        }
+        if (this.notTotalAmount === 0) {
+          this.$notify({
+            duration: 2000,
+            message: '该笔订单已经付清,无需进行付款作业',
+            type: 'warning'
+          });
+          return false;
         }
         if (this.form.amount > this.notTotalAmount) {
           this.$notify({

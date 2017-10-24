@@ -311,7 +311,7 @@
 </template>
 
 <script>
-  import {http, Address, BaseInfo, receivable, BillOperation} from '../../../../../resources';
+  import {http, Address, BaseInfo, receivable, BillReceivable} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
 
   export default {
@@ -474,7 +474,8 @@
           pageSize: 20,
           keyWord: query,
           accountsPayableType: '0',
-          receivableId: this.$store.state.user.userCompanyAddress
+          receivableId: this.$store.state.user.userCompanyAddress,
+          status: '0'
         });
         receivable.query(params).then(res => {
           this.orgList = res.data.list;
@@ -486,7 +487,8 @@
           pageSize: 20,
           keyWord: query,
           accountsPayableType: '1',
-          receivableId: this.$store.state.user.userCompanyAddress
+          receivableId: this.$store.state.user.userCompanyAddress,
+          status: '0'
         });
         receivable.query(params).then(res => {
           this.orgList = res.data.list;
@@ -512,6 +514,14 @@
             return false;
           }
         }
+        if (this.notTotalAmount === 0) {
+          this.$notify({
+            duration: 2000,
+            message: '该笔订单已经付清,无需进行付款作业',
+            type: 'warning'
+          });
+          return false;
+        }
         if (this.form.amount > this.notTotalAmount) {
           this.$notify({
             duration: 2000,
@@ -524,7 +534,7 @@
           if (!valid || this.doing) {
             this.doing = true;
           }
-          BillOperation.save(this.form).then(res => {
+          BillReceivable.save(this.form).then(res => {
             this.resetForm();
             this.$notify({
               duration: 2000,
