@@ -344,7 +344,7 @@
 </template>
 
 <script>
-  import {http, pay, BillReceivable} from './../../../../../resources';
+  import {http, receivable, BillReceivable} from './../../../../../resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -532,7 +532,7 @@
           pageSize: 20,
           keyWord: ''
         });
-        pay.queryDetail(this.billInfo.accountsPayableId, params).then(res => {
+        receivable.queryDetail(this.billInfo.accountsPayableId, params).then(res => {
           this.accountsPayableDetailList = res.data.list;
         });
       },

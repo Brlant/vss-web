@@ -281,9 +281,9 @@
         if (status) {
           let title = '';
           if (status === '0') {
-            title = '已付清';
-          } else if (status === '1') {
             title = '未付清';
+          } else if (status === '1') {
+            title = '已付清';
           }
           return title;
         }

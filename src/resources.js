@@ -506,6 +506,25 @@ export const pay = resource('/accounts-payable', http, {
 });
 
 /**
+ * 应收款项
+ * @type {the}
+ */
+export const receivable = resource('/accounts-receivable', http, {
+  modifyDetail(id, obj) {
+    return http.post(`/accounts-receivable/detail/${id}/log`, obj);
+  },
+  queryDetail(id, params) {
+    return http.get(`/accounts-receivable/${id}/detail`, {params});
+  },
+  addDetail(id, obj) {
+    return http.post(`/accounts-receivable/${id}/detail`, obj);
+  },
+  getAmountInfo(id) {
+    return http.get('/accounts-receivable/' + id + '/amount');
+  }
+});
+
+/**
  * 中标疫苗
  * @type {the}
  */

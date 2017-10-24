@@ -283,7 +283,7 @@
 </template>
 
 <script>
-  import {http, Address, BaseInfo, pay, BillReceivable} from '../../../../../resources';
+  import {http, Address, BaseInfo, receivable, BillReceivable} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
 
   export default {
