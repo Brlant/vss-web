@@ -29,7 +29,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'https://api-cerp.sinopharm-bio.com/',
+        target: 'http://erp.tinysoft.cc:88/',
         changeOrigin: true
       }
     },
