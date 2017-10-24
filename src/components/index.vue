@@ -15,7 +15,7 @@
     top: 50px;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 1200;
     bottom: 0
   }
 
@@ -79,7 +79,7 @@
 
   .cdc-shade {
     position: fixed;
-    z-index: 900;
+    z-index: 1100;
     top: 50px;
     left: 0;
     right: 0;
