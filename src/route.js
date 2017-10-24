@@ -114,8 +114,20 @@ const route = [
           },
           {
             path: '/sale/allocation',
-            component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-            meta: {moduleId: 'sale', title: '分货作业', perm: 'cerp-create-wave'}
+            component: resolve => require(['./components/common/parent-route.vue'], resolve),
+            meta: {moduleId: 'sale', title: '分货作业', perm: 'cerp-create-wave'},
+            children: [
+              {
+                path: '',
+                component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
+                meta: {moduleId: 'sale', title: '分货作业', perm: 'demand-assignment-query'}
+              },
+              {
+                path: '/sale/allocation/task',
+                component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
+                meta: {moduleId: 'sale', title: '分货作业', perm: 'demand-assignment-update'}
+              }
+            ]
           }
         ]
       },
