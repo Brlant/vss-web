@@ -290,6 +290,7 @@
         filters: {
           type: 1,
           state: '0',
+          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
