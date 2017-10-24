@@ -186,7 +186,7 @@
         });
       },
       showDetail (item) {
-        this.$router.push({path: '/sale/pov/allocation', query: {id: item.id}});
+        this.$router.push({path: '/sale/allocation/task', query: {id: item.id}});
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;
