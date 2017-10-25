@@ -22,7 +22,16 @@
     <el-form-item label="所属物流公司" prop="warehouseSourceFirm" v-if="form.warehouseType==='0'">
       <el-select filterable remote placeholder="请输入关键字搜索物流公司" :remote-method="getOrgs" :clearable="true"
                  v-model="form.warehouseSourceFirm">
-        <el-option :value="item.id" :key="item.id" :label="item.name" v-for="item in orgList"></el-option>
+        <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+          <div style="overflow: hidden">
+            <span class="pull-left" style="clear: right">{{org.name}}</span>
+          </div>
+          <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+          </div>
+        </el-option>
       </el-select>
     </el-form-item>
     <el-form-item label="联系人" prop="contact">
@@ -137,7 +146,8 @@
       getOrgs: function (query) {// 过滤销售商商名称列表
         let params = {
           deleteFlag: false,
-          keyWord: query
+          keyWord: query,
+          auditedStatus: '1'
         };
         BaseInfo.query(params).then(res => {
           this.orgList = res.data.list;
