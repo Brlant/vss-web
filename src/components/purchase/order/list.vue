@@ -92,12 +92,14 @@
     cursor: pointer;
   }
 
-  .pt10 {
-    padding-top: 10px;
-  }
-
   .cursor-span {
     cursor: pointer;
+  }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
   }
 </style>
 <template>
@@ -123,30 +125,54 @@
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
             <el-col :span="8">
+              <oms-form-row label="货主订单号" :span="6">
+                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
-                             v-for="item in transportationMeansList"></el-option>
+                             v-for="item in transportationMeansList">
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="销售厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.supplierId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+              <oms-form-row label="供货厂商" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
+                           v-model="searchCondition.transactOrgId" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="物流商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
-                           :clearable="true"
-                           v-model="searchCondition.logisticsProviderId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="物流商" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"-->
+            <!--:clearable="true"-->
+            <!--v-model="searchCondition.logisticsProviderId" popperClass="good-selects">-->
+            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList">-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
+            <!--</div>-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="select-other-info pull-left">-->
+            <!--<span>系统代码</span> {{org.manufacturerCode}}-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--</el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
             <el-col :span="8">
               <oms-form-row label="预计入库时间" :span="8">
                 <el-col :span="24">
@@ -182,7 +208,7 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="7">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">销售厂商</el-col>
+          <el-col :span="6">供货厂商</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
         </el-row>
@@ -211,7 +237,7 @@
                 </div>
               </el-col>
               <el-col :span="4">
-                <div class="vertical-center">
+                <div>
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
@@ -229,7 +255,7 @@
                 </div>
               </el-col>
               <el-col :span="3">
-                <div class="vertical-center">
+                <div>
                   {{getOrderStatus(item)}}
                   <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
                 </div>
@@ -250,7 +276,7 @@
       </el-pagination>
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
-                class="order-detail-info" partClass="pr-no-animation">
+                class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
     </page-right>
@@ -280,13 +306,14 @@
         filters: {
           type: 0,
           state: '6',
+          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
           bizType: '0',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: '',
           deleteFlag: false
         },
@@ -296,7 +323,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -319,9 +346,12 @@
     mounted () {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
-      if (orderId && orderId !== ':id') {
+      if (orderId && orderId !== ':id' && orderId !== 'add') {
         this.currentOrderId = orderId;
         this.showDetail = true;
+      }
+      if (orderId === 'add') {
+        this.add();
       }
     },
     computed: {
@@ -362,7 +392,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -386,6 +416,9 @@
         this.getOrderList(1);
       },
       getOrderList: function (pageNo) {
+        if (pageNo === 1) {
+          this.pager.count = 0;
+        }
         this.pager.currentPage = pageNo;
         let param = {};
         this.loadingData = true;
@@ -396,13 +429,19 @@
         if (this.filters.state !== '10') {
           erpOrder.query(param).then(res => {
             this.orderList = res.data.list;
-            this.pager.count = res.data.count;
+//            this.pager.count = res.data.count;
+            if (this.orderList.length === this.pager.pageSize) {
+              this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
+            }
             this.loadingData = false;
           });
         } else {
           Order.queryOrderExcepiton(param).then(res => {
             this.orderList = res.data.list;
-            this.pager.count = res.data.count;
+//            this.pager.count = res.data.count;
+            if (this.orderList.length === this.pager.pageSize) {
+              this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
+            }
             this.loadingData = false;
           });
         }
@@ -412,9 +451,9 @@
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
-        let orgId = this.searchCondition.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
-          this.searchCondition.supplierId = '';
+          this.searchCondition.transactOrgId = '';
           this.orgList = [];
           return;
         }
@@ -423,7 +462,7 @@
         });
       },
       filterLogistics: function (query) {// 过滤物流提供方
-        let orgId = this.searchCondition.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.searchCondition.logisticsProviderId = '';
           this.logisticsList = [];
@@ -443,7 +482,7 @@
         return status;
       },
       orgChange: function () {
-        this.searchCondition.supplierId = '';
+        this.searchCondition.transactOrgId = '';
         this.orgList = [];
         this.filterOrg();
         this.filterLogistics();

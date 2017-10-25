@@ -18,18 +18,18 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">订单详情</h2>
+        <h2 class="clearfix right-title">采购退货详情</h2>
         <ul>
           <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
-            <perm label="sales-order-confirm" v-show="currentOrder.state === '0' ">
+            <perm label="return-manager-confirm" v-show="currentOrder.state === '0' ">
               <el-button type="primary" @click="confirm">确认订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="sales-order-audit" v-show="currentOrder.state === '1' ">
+            <perm label="return-manager-audit" v-show="currentOrder.state === '1' ">
               <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
@@ -88,7 +88,7 @@
         this.currentOrder = {};
         if (!this.orderId) return false;
         InWork.queryOrderDetail(this.orderId).then(res => {
-          res.data.state = this.state;
+          res.data.state = res.data.erpStatus;
           this.currentOrder = res.data;
         });
       },

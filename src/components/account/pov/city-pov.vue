@@ -57,6 +57,12 @@
       }
     }
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -95,12 +101,21 @@
               <el-col :span="10" class="search-input">
                 <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrgs"
                            :clearable="true"
-                           v-model="orgId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList"></el-option>
+                           v-model="orgId" popper-class="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
-                <perm label="erp-bind-city-cdc-add">
+                <perm label="erp-bind-city-pov-add">
                   <el-button type="primary" @click="bindDistrict">绑定市级POV</el-button>
                 </perm>
               </el-col>
@@ -144,7 +159,7 @@
                       </span>
                   </el-col>
                   <el-col :span="4" class="R pt10">
-                    <perm label="erp-bind-city-cdc-delete">
+                    <perm label="erp-bind-city-pov-delete">
                       <a href="#" @click.prevent="deleteItem(item)"><i
                         class="iconfont icon-delete"></i> 删除</a>
                     </perm>

@@ -21,6 +21,7 @@ import pageRight from './components/common/page.right.vue';
 import omsInput from './components/common/input.oms.vue';
 import singleInput from './components/common/input.single.oms.vue';
 import omsLoading from './components/common/oms.loading.vue';
+import omsCostTime from './components/common/timeCost.vue';
 
 Vue.use(require('vue-moment'), {moment});
 Vue.use(ElementUI);
@@ -38,7 +39,7 @@ Vue.component(omsRow.name, omsRow);
 Vue.component(formRow.name, formRow);
 Vue.component(pageRight.name, pageRight);
 Vue.component(omsLoading.name, omsLoading);
-
+Vue.component(omsCostTime.name, omsCostTime);
 Vue.filter('date', function (dateTime) {
   if (!dateTime) return '';
   return moment(dateTime).format('YYYY-MM-DD');

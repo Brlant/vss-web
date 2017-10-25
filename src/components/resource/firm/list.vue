@@ -112,11 +112,25 @@
       }
     }
   }
+
+  .page-main-body {
+    .el-row {
+      margin-bottom: 10px;
+    }
+  }
 </style>
 <template>
   <div>
-
     <div>
+      <div class="order-list-status container" style="margin-bottom:20px">
+        <div class="status-item"
+             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
+             v-for="(item,key) in firmType"
+             @click="changeStatus(item,key)">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+        </div>
+      </div>
       <div class="container d-table">
         <div class="d-table-left">
           <h2 class="header" style="overflow: hidden">
@@ -192,7 +206,7 @@
             <div class="page-main-body">
               <!--todo 添加logo-->
               <el-row>
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   单位名称：
                 </el-col>
                 <el-col :span="7">
@@ -200,7 +214,7 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   统一社会信用代码：
                 </el-col>
                 <el-col :span="7">
@@ -209,12 +223,12 @@
                 <el-col :span="4" class="text-right">
                   建立日期：
                 </el-col>
-                <el-col :span="9">
+                <el-col :span="8">
                   {{ businessRelationItem.followOrg.orgDto.createTime | date}}
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   法人代表：
                 </el-col>
                 <el-col :span="7">
@@ -224,12 +238,12 @@
                 <el-col :span="4" class="text-right">
                   邮政编码：
                 </el-col>
-                <el-col :span="9">
+                <el-col :span="8">
                   {{ businessRelationItem.followOrg.orgDto.postcode }}
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   联系人：
                 </el-col>
                 <el-col :span="7">
@@ -239,12 +253,12 @@
                 <el-col :span="4" class="text-right">
                   所在地区：
                 </el-col>
-                <el-col :span="9">
+                <el-col :span="8">
                   {{ companyAddress }}
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   联系电话：
                 </el-col>
                 <el-col :span="7">
@@ -254,12 +268,12 @@
                 <el-col :span="4" class="text-right">
                   详细地址：
                 </el-col>
-                <el-col :span="9">
+                <el-col :span="8">
                   {{ businessRelationItem.followOrg.orgDto.address }}
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   备注：
                 </el-col>
                 <el-col :span="7">
@@ -269,7 +283,7 @@
                 <el-col :span="4" class="text-right">
                   有效期限：
                 </el-col>
-                <el-col :span="9">
+                <el-col :span="8">
                   {{businessRelationItem.expirationDate | date}}
                 </el-col>
               </el-row>
@@ -340,9 +354,18 @@
         <el-form-item label="往来单位" prop="followOrgId">
           <el-select placeholder="请输入关键字搜索厂商" remote :remote-method="queryOtherBusiness" :clearable="true"
                      v-model="form.followOrgId"
-                     filterable>
+                     filterable popper-class="good-selects">
             <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in orgList"
-                       v-show="item.auditedStatus ==1"></el-option>
+                       v-show="item.auditedStatus ==1">
+              <div style="overflow: hidden">
+                <span class="pull-left">{{item.name}}</span>
+              </div>
+              <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{item.manufacturerCode}}
+                  </span>
+              </div>
+            </el-option>
           </el-select>
         </el-form-item>
         <el-form-item label="有效期" prop="expirationDate">
@@ -381,9 +404,12 @@
         currentItem: {}, // 与厂商单条数据相等，完成一些操作
         currentName: '', // 当前单位的名字
         relationData: {}, // 与厂商单条数据相等，完成一些操作
+        firmType: utils.firmType,
+        activeStatus: '0',
         // 过滤条件
         filters: {
-          keyWord: ''
+          keyWord: '',
+          status: ''
         },
         // 表单操作
         form: {},
@@ -476,6 +502,7 @@
         });
       },
       getBusinessRelationItem: function (id) {
+        this.businessRelationItem = {};
         if (!id) return false;
         this.loadingData = true;
         Vendor.queryVendorDetail(id).then(res => {
@@ -515,6 +542,10 @@
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
+      },
+      changeStatus: function (item, key) {// 订单分类改变
+        this.activeStatus = key;
+        this.filters.status = item.status;
       },
       edit: function () {
         this.action = 'edit';

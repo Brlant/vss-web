@@ -26,7 +26,7 @@
       left: 0;
       top: 0;
       bottom: 0;
-      text-align: left;
+      text-align: center;
       background-color: #eef2f3;
       > ul {
         margin: 0;
@@ -228,7 +228,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">增加销售订单</h2>
+        <h2 class="clearfix right-title" style="padding: 0">新增采购退货订单</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -243,7 +243,7 @@
         <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                  label-width="160px" style="padding-right: 20px">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-            <el-form-item label="选择物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
+            <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" placeholder="请选择物流方式"
                          @change="changeTransportationMeans">
@@ -252,20 +252,27 @@
                            v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商" prop="customerId">
-              <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="供货厂商" prop="customerId">
+              <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                  <span class="pull-left" style="clear: right">{{org.name}}</span>
-                  <span class="pull-right" style="color: #999">
+                  <div style="overflow: hidden">
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    <span class="pull-right" style="color: #999">
                      <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
                     </span>
+                  </div>
+                  <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.manufacturerCode}}
+                  </span>
+                  </div>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
+            <el-form-item label="供货厂商仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
                           v-show="showContent.isShowOtherContent">
-              <el-select placeholder="请选择销售厂商仓库" v-model="form.transportationAddress" filterable clearable
+              <el-select placeholder="请选择供货厂商仓库" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -300,7 +307,6 @@
                           v-show="showContent.isShowOtherContent">
               <el-date-picker
                 v-model="form.expectedTime"
-                type="date"
                 placeholder="请选择日期" format="yyyy-MM-dd"
                 @change="changeExpectedTime">
               </el-date-picker>
@@ -317,7 +323,7 @@
 
             <div class="oms-form order-product-box">
               <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
-                <el-form-item label="选择产品" prop="orgGoodsId">
+                <el-form-item label="产品" prop="orgGoodsId">
                   <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
                              :remote-method="searchProduct" :clearable="true" :loading="loading"
                              popper-class="order-good-selects"
@@ -341,7 +347,7 @@
                           }}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                         </span>
                       </div>
                     </el-option>
@@ -369,7 +375,7 @@
                     <oms-row label="货品编号" :span="8">
                       {{product.fixInfo.goodsNo}}
                     </oms-row>
-                    <oms-row label="销售厂商" :span="8">
+                    <oms-row label="供货厂商" :span="8">
                       {{product.fixInfo.salesFirmName}}
                     </oms-row>
                     <oms-row label="批准文号" :span="8">
@@ -465,7 +471,7 @@
                     v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
                   </td>
                   <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                    class="oms-font oms-font-delete"></i> 删除</a></td>
+                    class="iconfont icon-delete"></i> 删除</a></td>
                 </tr>
                 <tr>
                   <td colspan="4"></td>
@@ -568,7 +574,7 @@
             {required: true, message: '请选择货主', trigger: 'change'}
           ],
           customerId: [
-            {required: true, message: '请选择销售厂商', trigger: 'change'}
+            {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
           bizType: [
             {required: true, message: '请选择业务类型', trigger: 'change'}
@@ -624,10 +630,10 @@
         isStorageData: true, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
-          isShowCustomerId: true, // 是否显示销售厂商
+          isShowCustomerId: true, // 是否显示供货厂商
           expectedTimeLabel: '预计出库时间'
         },
-        warehouses: [], // 销售厂商仓库列表
+        warehouses: [], // 供货厂商仓库列表
         batchNumbers: [], // 货品批号列表
         selectBatchNumbers: [] // 已经选择的货品批号
       };
@@ -823,6 +829,10 @@
         }
       },
       changeCustomerId (val) {// POV改变时
+        if (!this.isStorageData) {// 当有缓存时，不做清空操作
+          this.product.orgGoodsId = '';
+          this.form.detailDtoList = [];
+        }
         this.checkLicence(val);
         this.searchWarehouses(val);
         this.searchProduct();

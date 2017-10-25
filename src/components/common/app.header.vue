@@ -171,6 +171,29 @@
     font-size: 13px;
   }
 
+  .org-title {
+    color: #ffffff;
+    margin-right: 10px;
+  }
+
+  .wechat-info {
+    font-size: 12px;
+    .weChat-img {
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      float: left;
+    }
+    .wechat-nick {
+      float: left;
+      margin-left: 10px;
+    }
+    .btn-wechat {
+      float: left;
+    }
+    margin-bottom: 5px;
+  }
+
 </style>
 
 <style>
@@ -201,6 +224,8 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>-->
+            <el-tag type="gray" v-show="level">{{ filterLevel(level) }}</el-tag>
+            <span class="org-title">{{orgName}}</span>
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
                 <img v-if="user.userIcon" :src="user.userIcon">
@@ -219,7 +244,14 @@
                     </div>
                   </div>
                   <div class="last-login">上次登录时间:{{user.userLastLoginTime | date}}</div>
-                  <div class="text-right">
+                  <div class="wechat-info" v-if="weChatInfo.nickname">
+                    <img v-if="weChatInfo.avatarUrl" class="weChat-img" :src="weChatInfo.avatarUrl">
+                    <span class="wechat-nick"
+                          v-if="weChatInfo.nickname">微信：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
+                      }}<span v-if="weChatInfo.nickname && weChatInfo.nickname.length > 3">...</span></span>
+                    <a class="btn-wechat" href="#" @click.stop.pre="unbind" v-if="weChatInfo.nickname">(解绑)</a>
+                  </div>
+                  <div class="text-right clearfix">
                     <router-link to="/resetpsw">重置密码</router-link>
                     <a href="#" @click.stop.pre="logout">退出</a>
                   </div>
@@ -263,7 +295,7 @@
 </template>
 
 <script>
-  import {Auth} from '../../resources';
+  import { Auth, cerpAction } from '../../resources';
   import logo_pic from '../../assets/img/erp-logo.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';
@@ -272,8 +304,8 @@
     components: {
       omsUploadPicture
     },
-    props: ['toRoute'],
-    data() {
+    props: ['toRoute', 'level'],
+    data () {
       return {
         activeId: this.getGroupId(),
         logo_pic: logo_pic,
@@ -293,6 +325,7 @@
         return this.$store.state.bodySize.left;
       },
       user: function () {
+
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
@@ -306,6 +339,12 @@
       },
       activePath: function () {
         return this.$route.path;
+      },
+      orgName () {
+        return this.$store.state.orgName;
+      },
+      weChatInfo () {
+        return this.$store.state.weChatInfo;
       }
     },
     watch: {
@@ -350,6 +389,28 @@
       changeSkin: function (skin) {
         this.skin = skin;
         window.localStorage.setItem('skin', JSON.stringify(skin));
+      },
+      filterLevel (level) {
+        return level === 1 ? '市级CDC' : level === 2 ? '区县级CDC' : level === 3 ? 'POV' : '';
+      },
+      unbind () {
+        this.$confirm('是否解除绑定的微信？', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          cerpAction.unBindWeChat().then(() => {
+            this.$notify.success({
+              message: '解绑微信成功'
+            });
+            this.$store.commit('initWeChatInfo', {});
+            window.localStorage.removeItem('weChatInfo');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '解绑微信失败'
+            });
+          });
+        });
       }
     },
     mounted: function () {

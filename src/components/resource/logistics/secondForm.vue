@@ -289,6 +289,7 @@
             this.form.proportion = this.form.price;
           } else {
             this.form.proportion = this.form.price * 100;
+            this.form.proportion = utils.autoformatDecimalPoint(this.form.proportion.toString());
           }
         } else {
           this.form = {

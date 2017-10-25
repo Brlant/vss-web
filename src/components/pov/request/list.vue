@@ -56,7 +56,7 @@
            </perm>
        </span>
       </div>
-      <div class="d-table clearfix" style="margin-top: 20px">
+      <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
             <h2 class="header">
@@ -149,29 +149,29 @@
             <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}" style="margin-top: 10px">
               <thead>
               <tr>
-                <th>要货申请ID</th>
-                <th>货品名称</th>
+                <th style="width: 300px">货品名称</th>
                 <th>单价</th>
                 <th>申请数量</th>
                 <th>申请金额</th>
+                <th v-show="filters.status === 4">分配金额</th>
               </tr>
               </thead>
               <tbody>
               <tr v-for="row in currentOrder.detailDtoList">
                 <td>
-                  {{row.id}}
-                </td>
-                <td>
                   {{row.goodsName}}
                 </td>
                 <td>
-                  {{row.price | formatMoney}}
+                  ￥{{row.price | formatMoney}}
                 </td>
                 <td>
-                  {{row.applyCount}}
+                  ￥{{row.applyCount}}
                 </td>
                 <td>
                   {{row.applyMoney | formatMoney}}
+                </td>
+                <td v-show="filters.status === 4">
+                  {{row.actualCount}}
                 </td>
               </tr>
               </tbody>
@@ -261,7 +261,6 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
-        this.showTypeList = [];
         this.currentItem = {};
         this.currentOrder = {};
         let orgId = this.user.userCompanyAddress;
@@ -277,12 +276,12 @@
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
             this.showTypeList = res.data.list;
-            if (this.showTypeList.length !== 0) {
-              this.currentItem = res.data.list[0];
-              this.getDetail();
-            } else {
-              this.currentItem = Object.assign({'id': ''});
-            }
+          }
+          if (this.showTypeList.length !== 0) {
+            this.currentItem = res.data.list[0];
+            this.getDetail();
+          } else {
+            this.currentItem = Object.assign({'id': ''});
           }
           this.typePager.totalPage = res.data.totalPage;
           this.queryCount();
@@ -296,8 +295,8 @@
           this.requestType[0].num = res.data['all'];
           this.requestType[1].num = res.data['pending-audit'];
           this.requestType[2].num = res.data['audited'];
-          this.requestType[3].num = res.data['assigned'];
-          this.requestType[4].num = res.data['create-wave'];
+          this.requestType[3].num = res.data['create-wave'];
+          this.requestType[4].num = res.data['assigned'];
           this.requestType[5].num = res.data['canceled'];
         });
       },

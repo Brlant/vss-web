@@ -107,11 +107,11 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <!--<perm label="PurchaseAgreement-info-add">-->
+                  <perm label="purchase-agreement-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
                         <i class="iconfont icon-plus"></i>
                       </a>
-                  <!--</perm>-->
+                  </perm>
                   <!--<a href="#" class="btn-circle" @click.prevent="searchType"><i-->
                   <!--class="iconfont icon-search"></i> </a>-->
                 </span>
@@ -127,6 +127,9 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                   :class="{'active':item==currentItem}">
+                <div class="id-part">
+                  疫苗编号 {{item.orgGoodsId }}
+                </div>
                 <div>
                   <span>{{item.orgGoodsName}}</span>
                 </div>
@@ -141,12 +144,12 @@
           <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
-                  <!--<perm label="PurchaseAgreement-info-update">-->
+                  <perm label="purchase-agreement-edit">
                     <el-button @click="edit"><i class="iconfont icon-edit"></i> 编辑</el-button>
-                   <!--<perm label="PurchaseAgreement-info-delete">-->
+                   </perm>
+                   <perm label="purchase-agreement-delete">
                        <el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>
-                   <!--</perm>-->
-                   <!--</perm>-->
+                   </perm>
                 </el-button-group>
             </span>
           </h2>
@@ -174,7 +177,7 @@
                   供货厂商：
                 </el-col>
                 <el-col :span="20">
-                  {{currentItem.supplierName }}
+                  {{currentItem.factoryName }}
                 </el-col>
               </el-row>
               <el-row>
@@ -182,7 +185,7 @@
                   采购单价：
                 </el-col>
                 <el-col :span="20">
-                  <span v-if="currentItem.amount">￥</span>{{ currentItem.amount}}
+                  <span v-if="currentItem.unitPrice">￥</span>{{currentItem.unitPrice}}
                 </el-col>
               </el-row>
               <el-row>
@@ -263,6 +266,11 @@
           this.getGoodsList(1);
         },
         deep: true
+      },
+      currentItem: function () {
+        if (this.currentItem.unitPrice) {
+          this.currentItem.unitPrice = utils.autoformatDecimalPoint(this.currentItem.unitPrice.toString());
+        }
       }
     },
     methods: {
@@ -275,19 +283,10 @@
       addType: function () {
         this.action = 'add';
         this.form = {
-          name: '',
-          orgId: '',
-          status: true,
-          goodsId: '',
-          goodsIsCombination: false,
-          goodsNo: '',
-          bidPrice: '',
-          procurementPrice: '',
-          sellPrice: '',
-          valuationFlag: false,
-          storageConditionId: '',
-          inventoryLowerLimit: null,
-          inventoryUpperLimit: null
+          id: '',
+          amount: '',
+          unitPrice: '',
+          expireTime: null
         };
         this.showRight = true;
         this.combinationList = [];
@@ -349,7 +348,6 @@
         this.filters.availabilityStatus = item.availabilityStatus;
       },
       onSubmit: function (item) {
-//        if (this.action === 'add') {
         this.getGoodsList(1);
         this.showRight = false;
         this.currentItem = {};

@@ -5,12 +5,10 @@
     left: 0;
     bottom: 0;
     right: 0;
-    background: #454647;
-    color: #bcbcbc;
+    color: #b6b6b6;
     a {
-      color: #bcbcbc;
+      color: #b6b6b6;
     }
-
     padding: 6.5px;
     .container {
       display: flex;

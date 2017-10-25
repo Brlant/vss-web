@@ -3,45 +3,75 @@ import address from './address';
 export default {
   address: address.value,
   requestType: {
-    0: {'title': '所有', status: null, num: 0},
-    1: {'title': '待审批', status: 0, num: 0},
-    2: {'title': '待生成波次', status: 1, num: 0},
-    3: {'title': '待分配', status: 2, num: 0},
-    4: {'title': '已分配', status: 4, num: 0},
-    5: {'title': '已取消', status: 3, num: 0}
+    0: {'title': '所有', status: null, num: ''},
+    1: {'title': '待审批', status: 0, num: ''},
+    2: {'title': '待CDC处理', status: 1, num: ''},
+    3: {'title': '待生成订单', status: 2, num: ''},
+    4: {'title': '已分配', status: 4, num: ''},
+    5: {'title': '已取消', status: 3, num: ''}
+  },
+  inOrderLink: {
+    1: {'title': '订单确认', state: '0', num: ''},
+    2: {'title': '审单', state: '1', num: ''},
+    3: {'title': '收货', state: '2', num: ''},
+    4: {'title': '验收', state: '3', num: ''},
+    5: {'title': '订单挂起', state: '14', num: ''},
+    6: {'title': '已完成', state: '4', num: ''},
+    7: {'title': '已取消', state: '7', num: ''},
+    8: {'title': '拒收待复核', state: '11', num: ''},
+    9: {'title': '拒收已复核', state: '12', num: ''},
+    10: {'title': '已拒收', state: '8', num: ''},
+    11: {'title': '异常', state: '6', num: ''}
   },
   assignType: {
-    0: {'title': '待分配', status: 1, num: 0},
-    1: {'title': '已完成分配', status: 2, num: 0}
+    0: {'title': '待分配', status: 1, num: ''},
+    1: {'title': '已完成分配', status: 2, num: ''}
   },
   waveType: {
-    0: {'title': '未完成', status: 0, num: 0},
-    1: {'title': '已完成', status: 1, num: 0}
-  },
-  receiptType: {
-    0: {'title': '所有', status: null, num: 0},
-    1: {'title': '未收', status: 0, num: 0},
-    2: {'title': '已收', status: 1, num: 0}
+    0: {'title': '未完成', status: 0, num: ''},
+    1: {'title': '已完成', status: 1, num: ''}
   },
   inOrderType: {
-    0: {'title': '待审单', state: '6', num: 0},
-    1: {'title': '执行中', state: '7', num: 0},
-    2: {'title': '已完成', state: '8', num: 0},
-    3: {'title': '已取消', state: '9', num: 0},
-    4: {'title': '已拒收', state: '5', num: 0},
-    5: {'title': '异常', state: '10', num: 0}
+    0: {'title': '待审单', state: '6', num: ''},
+    1: {'title': '执行中', state: '7', num: ''},
+    2: {'title': '已完成', state: '8', num: ''},
+    3: {'title': '已取消', state: '9', num: ''},
+    4: {'title': '已拒收', state: '5', num: ''},
+    5: {'title': '异常', state: '10', num: ''}
   },
   outOrderType: {
-    0: {'title': '待确认', state: '0', num: 0},
-    1: {'title': '待审单', state: '1', num: 0},
-    2: {'title': '执行中', state: '2', num: 0},
-    3: {'title': '待收货', state: '-1', num: 0},
-    4: {'title': '已完成', state: '3', num: 0},
-    5: {'title': '取消订单', state: '4', num: 0}
+    0: {'title': '待确认', state: '0', num: ''},
+    1: {'title': '待审单', state: '1', num: ''},
+    2: {'title': '执行中', state: '2', num: ''},
+    3: {'title': '待收货', state: '3', num: ''},
+    4: {'title': '已完成', state: '4', num: ''},
+    5: {'title': '取消订单', state: '5', num: ''}
+  },
+  paymentOperation: {
+    0: {'title': '待审核', status: '0', num: 0},
+    1: {'title': '待分配', status: '1', num: 0},
+    2: {'title': '已完成', status: '2', num: 0},
+    3: {'title': '审核未通过', status: '3', num: 0}
   },
   priceGroupType: {
-    0: {'title': '可用', availabilityStatus: true, num: 0},
-    1: {'title': '不可用', availabilityStatus: false, num: 0}
+    0: {'title': '可用', availabilityStatus: true, num: ''},
+    1: {'title': '不可用', availabilityStatus: false, num: ''}
+  },
+  successBidderType: {
+    0: {'title': '生效', availabilityStatus: true, num: ''},
+    1: {'title': '未生效', availabilityStatus: false, num: ''}
+  },
+  receiptType: {
+    0: {'title': '待收货', state: '3', num: ''},
+    1: {'title': '已完成', state: '4', num: ''}
+  },
+  firmType: {
+    0: {'title': '正常', status: '0', num: ''},
+    1: {'title': '停用', status: '1', num: ''}
+  },
+  vaccineType: {
+    0: {'title': '正常', status: '1', num: ''},
+    1: {'title': '停用', status: '0', num: ''}
   },
   /**
    * 格式化地址，已省/市/区显示

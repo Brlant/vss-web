@@ -16,13 +16,13 @@
           <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                    @submit.prevent="done" onsubmit="return false">
             <el-form-item label="组织编号" prop="orgCode">
-              <oms-input v-model="user.orgCode"></oms-input>
+              <oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>
             </el-form-item>
             <el-form-item label="用户名" prop="username">
-              <oms-input v-model="user.username"></oms-input>
+              <oms-input v-model="user.username" :showFocus="isFocus === 2"></oms-input>
             </el-form-item>
             <el-form-item label="密码" style="position:relative" prop="password">
-              <oms-input v-model="user.password" type="password"></oms-input>
+              <oms-input v-model="user.password" :showFocus="isFocus === 3" type="password"></oms-input>
               <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>
             </el-form-item>
             <el-form-item label="验证码" v-show="showCode">
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import {Auth} from '../resources';
+  import { Auth, cerpAction } from '../resources';
   import AppFooter from './common/app.footer.vue';
 
   export default {
@@ -71,6 +71,7 @@
         codeUrl: '',
         showCode: false,
         btnString: '登录',
+        isFocus: -1,
         rules: {
           orgCode: [
             {required: true, message: '请输入组织编号', trigger: 'blur'}
@@ -107,6 +108,7 @@
                 }
                 this.$router.replace('/');
               });
+              this.queryWeChat();
             }, error => {
               let data = error.response.data;
               this.$notify.error({
@@ -125,9 +127,18 @@
       getCode: function () {
         this.showCode = true;
         this.codeUrl = process.env.NODE_API + '/foundation/CAPTCHA?' + Math.random();
+      },
+      isFocusIndex () {
+        this.isFocus = !this.user.orgCode ? 1 : !this.user.username ? 2 : !this.user.password ? 3 : '';
+      },
+      queryWeChat () {
+        cerpAction.queryWeChatInfo().then(res => {
+          this.$store.commit('initWeChatInfo', res.data);
+        });
       }
     },
     mounted: function () {
+      this.isFocusIndex();
     }
   };
 </script>

@@ -22,8 +22,7 @@
       <oms-loading :loading="!currentOrder.id"></oms-loading>
     </div>
     <div v-else="" class="page-main-body padding">
-
-      <div v-if="currentOrder.state === '0' " class="confirm-order">
+      <div>
         <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2' ">
           <el-col :span="12">
             <oms-row label="货主订单号" :span="span">
@@ -32,103 +31,10 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="销售厂商" :span="span">
+            <oms-row label="供货厂商" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
-          </el-col>
-          <el-col :span="12">
-            <oms-row label="业务类型">
-              <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
-            </oms-row>
-            <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | date}}</span>
-            </oms-row>
-            <oms-row label="订单状态">
-              {{ getOrderStatus(currentOrder) }}
-            </oms-row>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            物流方式：
-          </el-col>
-          <el-col :span="21">
-            <el-select type="text" v-model="currentOrder.transportationMeansId" placeholder="请选择物流方式">
-              <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in transportationMeansList"></el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            销售厂商仓库：
-          </el-col>
-          <el-col :span="21">
-            <el-select placeholder="请选择销售厂商仓库" v-model="currentOrder.transportationAddress" filterable clearable>
-              <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
-                <span class="pull-left">{{ item.name }}</span>
-                <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
-              </el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            运输条件：
-          </el-col>
-          <el-col :span="21">
-            <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
-              <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in transportationConditionList"></el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            预计出库时间：
-          </el-col>
-          <el-col :span="21">
-            <el-date-picker
-              v-model="currentOrder.expectedTime"
-              type="date"
-              placeholder="请选择日期" format="yyyy-MM-dd"
-              @change="changeExpectedTime">
-            </el-date-picker>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            物流中心：
-          </el-col>
-          <el-col :span="21">
-            <el-select placeholder="请选择物流中心" v-model="currentOrder.logisticsCentreId" filterable>
-              <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"></el-option>
-            </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            备注：
-          </el-col>
-          <el-col :span="21">
-            <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
-                       :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
-          </el-col>
-        </el-row>
-      </div>
-      <div v-else="">
-        <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2' ">
-          <el-col :span="12">
-            <oms-row label="货主订单号" :span="span">
-              {{currentOrder.orderNo}}
-            </oms-row>
-            <oms-row label="货主" :span="span">
-              {{currentOrder.orgName}}
-            </oms-row>
-            <oms-row label="销售厂商" :span="span">
-              {{currentOrder.customerName}}
-            </oms-row>
-            <oms-row label="销售厂商仓库" :span="span">
+            <oms-row label="供货厂商仓库" :span="span">
               {{currentOrder.warehouseAddress}}
             </oms-row>
             <oms-row label="运输条件" :span="span">
@@ -171,7 +77,7 @@
         <tr>
           <td></td>
           <td>名称</td>
-          <td class="text-center">销售厂商</td>
+          <td class="text-center">供货厂商</td>
           <td>批号</td>
           <td>生产日期</td>
           <td>有效期</td>
@@ -205,7 +111,7 @@
             </div>
           </td>
           <td class="text-center" width="140px">
-            {{item.orgGoodsDto.goodsDto.salesFirmName}}
+            {{item.orgGoodsDto.salesFirmName}}
           </td>
           <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
           <td>{{ item.productionDate | date }}</td>
@@ -215,7 +121,7 @@
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
           <td width="80px" class="text-center">
-            <span v-show="item.unitPrice">￥{{item.unitPrice}}</span>
+            <span v-show="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
           </td>
           <td class="text-center">
             <span v-show="item.unitPrice">¥</span>{{ item.amount * item.unitPrice | formatMoney }}

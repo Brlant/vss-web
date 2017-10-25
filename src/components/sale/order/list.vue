@@ -92,12 +92,14 @@
     cursor: pointer;
   }
 
-  .pt10 {
-    padding-top: 10px;
-  }
-
   .cursor-span {
     cursor: pointer;
+  }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
   }
 </style>
 <template>
@@ -122,25 +124,38 @@
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
-            <el-col :span="6">
-              <oms-form-row label="物流方式" :span="8">
+            <el-col :span="8">
+              <oms-form-row label="货主订单号" :span="6">
+                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
                              v-for="item in transportationMeansList"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.supplierId">
+                           v-model="searchCondition.transactOrgId" popperClass="good-selects">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                             v-for="org in orgList">
+                             v-for="org in orgList" popper-class="good-selects">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.subordinateCode}}
+                      </span>
+                    </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="7">
+            <el-col :span="8">
               <oms-form-row label="预计出库时间" :span="8">
                 <el-col :span="24">
                   <el-date-picker
@@ -151,8 +166,8 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="5">
-              <oms-form-row label="" :span="6">
+            <el-col :span="4">
+              <oms-form-row label="" :span="2">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
@@ -162,80 +177,80 @@
       </div>
 
 
-      <div class="order-list-status container" style="margin-bottom:20px">
-        <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4' }"
-             v-for="(item,key) in orgType"
-             @click="changeStatus(item,key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+  <div class="order-list-status container" style="margin-bottom:20px">
+    <div class="status-item"
+         :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4' }"
+         v-for="(item,key) in orgType"
+         @click="changeStatus(item,key)">
+      <div class="status-bg" :class="['b_color_'+key]"></div>
+      <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+    </div>
+  </div>
+  <div class="order-list clearfix">
+    <el-row class="order-list-header" :gutter="10">
+      <el-col :span="6">货主/订单号</el-col>
+      <el-col :span="4">业务类型</el-col>
+      <el-col :span="filters.state === '-1' ? 5 : 6">POV</el-col>
+      <el-col :span="filters.state === '-1' ? 4 : 5">时间</el-col>
+      <el-col :span="3">状态</el-col>
+      <!--<el-col :span="2" v-show="filters.state === '-1' ">操作</el-col>-->
+    </el-row>
+    <el-row v-if="loadingData">
+      <el-col :span="24">
+        <oms-loading :loading="loadingData"></oms-loading>
+      </el-col>
+    </el-row>
+    <el-row v-else-if="orderList.length == 0">
+      <el-col :span="24">
+        <div class="empty-info">
+          暂无信息
         </div>
-      </div>
-      <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
-          <el-col :span="6">货主/订单号</el-col>
-          <el-col :span="4">业务类型</el-col>
-          <el-col :span="filters.state === '-1' ? 5 : 6">POV</el-col>
-          <el-col :span="filters.state === '-1' ? 4 : 5">时间</el-col>
-          <el-col :span="3">状态</el-col>
-          <el-col :span="2" v-show="filters.state === '-1' ">操作</el-col>
-        </el-row>
-        <el-row v-if="loadingData">
-          <el-col :span="24">
-            <oms-loading :loading="loadingData"></oms-loading>
-          </el-col>
-        </el-row>
-        <el-row v-else-if="orderList.length == 0">
-          <el-col :span="24">
-            <div class="empty-info">
-              暂无信息
+      </el-col>
+    </el-row>
+    <div v-else="" class="order-list-body flex-list-dom">
+      <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
+           :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
+        <el-row>
+          <el-col :span="6">
+            <div class="f-grey">
+              {{item.orderNo }}
+            </div>
+            <div>
+              {{item.orgName }}
             </div>
           </el-col>
+          <el-col :span="4">
+            <div class="vertical-center">
+              <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
+            </div>
+          </el-col>
+          <el-col :span="filters.state === '-1' ? 5 : 6">
+            <div>{{item.transactOrgName }}</div>
+          </el-col>
+          <el-col :span="filters.state === '-1' ? 4 : 5">
+            <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
+            <div>预计送货：{{ item.expectedTime | date }}</div>
+          </el-col>
+          <el-col :span="3">
+            <div class="vertical-center">
+              {{getOrderStatus(item)}}
+            </div>
+          </el-col>
+          <!--<el-col :span="2" class="opera-btn pt10" v-show="filters.state === '-1' ">-->
+          <!--&lt;!&ndash;<perm label="sales-order-goods-receipt">&ndash;&gt;-->
+          <!--&lt;!&ndash;<span @click.stop="showPartItem(item)">&ndash;&gt;-->
+          <!--&lt;!&ndash;<a href="#" class="btn-circle btn-opera" @click.prevent=""><i&ndash;&gt;-->
+          <!--&lt;!&ndash;class="iconfont icon-allot"></i></a>&ndash;&gt;-->
+          <!--&lt;!&ndash;收货&ndash;&gt;-->
+          <!--&lt;!&ndash;</span>&ndash;&gt;-->
+          <!--&lt;!&ndash;</perm>&ndash;&gt;-->
+          <!--</el-col>-->
         </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
-               :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
-            <el-row>
-              <el-col :span="6">
-                <div class="f-grey">
-                  {{item.orderNo }}
-                </div>
-                <div>
-                  {{item.orgName }}
-                </div>
-              </el-col>
-              <el-col :span="4">
-                <div class="vertical-center">
-                  <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
-                </div>
-              </el-col>
-              <el-col :span="filters.state === '-1' ? 5 : 6" class="pt10">
-                <div>{{item.transactOrgName }}</div>
-              </el-col>
-              <el-col :span="filters.state === '-1' ? 4 : 5">
-                <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
-                <div>预计送货时间：{{ item.expectedTime | date }}</div>
-              </el-col>
-              <el-col :span="3">
-                <div class="vertical-center">
-                  {{getOrderStatus(item)}}
-                </div>
-              </el-col>
-              <el-col :span="2" class="opera-btn pt10" v-show="filters.state === '-1' ">
-                <perm label="sales-order-goods-receipt">
-                  <span @click.stop="showPartItem(item)">
-                    <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
-                      class="iconfont icon-allot"></i></a>
-                    收货
-                  </span>
-                </perm>
-              </el-col>
-            </el-row>
-            <div class="order-list-item-bg"></div>
-          </div>
-        </div>
+        <div class="order-list-item-bg"></div>
       </div>
     </div>
+  </div>
+  </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
         layout="prev, pager, next"
@@ -244,7 +259,7 @@
       </el-pagination>
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
-                class="order-detail-info" partClass="pr-no-animation">
+                class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
     </page-right>
@@ -252,21 +267,17 @@
       <add-form type="1" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <receipt @close="resetRightBox" :orderId="currentOrderId"></receipt>
-    </page-right>
   </div>
 </template>
 <script>
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
-  import receipt from './receipt.vue';
   import { Order, BaseInfo, erpOrder, cerpAction } from '@/resources';
 
   export default {
     components: {
-      showForm, addForm, receipt
+      showForm, addForm
     },
     data: function () {
       return {
@@ -279,13 +290,14 @@
         filters: {
           type: 1,
           state: '0',
+          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
           bizType: '0',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: '',
           deleteFlag: false
         },
@@ -295,7 +307,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -365,7 +377,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -390,6 +402,9 @@
         this.getOrderList(1);
       },
       getOrderList: function (pageNo) {
+        if (pageNo === 1) {
+          this.pager.count = 0;
+        }
         this.pager.currentPage = pageNo;
         let param = {};
         this.loadingData = true;
@@ -399,7 +414,10 @@
         });
         erpOrder.query(param).then(res => {
           this.orderList = res.data.list;
-          this.pager.count = res.data.count;
+//          this.pager.count = res.data.count;
+          if (this.orderList.length === this.pager.pageSize) {
+            this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
+          }
           this.loadingData = false;
         });
         this.queryStatusNum(param);
@@ -436,7 +454,7 @@
         return status;
       },
       orgChange: function () {
-        this.searchCondition.supplierId = '';
+        this.searchCondition.transactOrgId = '';
         this.orgList = [];
         this.filterOrg();
         this.filterLogistics();

@@ -51,7 +51,7 @@
 <template>
   <div>
     <div class="container">
-      <div class="d-table clearfix" style="margin-top: 20px">
+      <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
             <h2 class="header">
@@ -79,10 +79,10 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    应付款总额 <span v-show="item.payableTotal"> ￥{{item.payableTotal }}</span>
+                    应付款总额 <span v-show="item.payableTotal"> ￥{{item.payableTotal | formatMoney }}</span>
                   </div>
                   <div>
-                    {{item.remitteeName }}
+                    {{item.remitteeName}}
                   </div>
                 </li>
               </ul>
@@ -110,7 +110,7 @@
                   {{currentItem.remitteeName}}
                 </oms-row>
                 <oms-row label="应付款总额" :span="5">
-                  <span v-show="currentItem.payableTotal">￥{{currentItem.payableTotal}}</span>
+                  <span v-show="currentItem.payableTotal">￥{{currentItem.payableTotal | formatMoney}}</span>
                 </oms-row>
               </el-row>
             </div>
@@ -135,7 +135,7 @@
                 <th>单据金额</th>
                 <th>实付金额</th>
                 <th>创建时间</th>
-                <th>操作</th>
+                <th>状态</th>
               </tr>
               </thead>
               <tbody>
@@ -158,21 +158,19 @@
                 </td>
                 <td>
                   <span v-show="row.billAmount">
-                    ￥{{row.billAmount}}
+                    ￥{{row.billAmount | formatMoney}}
                   </span>
                 </td>
                 <td>
                   <span v-show="row.prepaidAccounts">
-                    ￥{{row.prepaidAccounts}}
+                    ￥{{row.prepaidAccounts | formatMoney}}
                   </span>
                 </td>
                 <td>
                   {{row.createTime | date }}
                 </td>
                 <td>
-                  <perm label="accounts-payable-detail-add">
-                    <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>增加实付金额</a>
-                  </perm>
+                  {{statusTitle(row.status)}}
                 </td>
               </tr>
               </tbody>
@@ -279,6 +277,17 @@
       }
     },
     methods: {
+      statusTitle: function (status) {
+        if (status) {
+          let title = '';
+          if (status === '0') {
+            title = '未付清';
+          } else if (status === '1') {
+            title = '已付清';
+          }
+          return title;
+        }
+      },
       resetRightBox: function () {
         this.showRight = false;
         this.showLeft = false;

@@ -13,7 +13,9 @@ const state = {
   roleList: {},
   attachmentDialog: {attachmentId: 0, open: false},
   form: {},
-  bodySize: {left: '180px'}
+  bodySize: {left: '180px'},
+  orgName: '',
+  weChatInfo: {}
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -29,6 +31,17 @@ const mutations = {
     } catch (e) {
 
     }
+  },
+  initWeChatInfo (state, data) {
+    try {
+      if (typeof data === 'object') {
+        window.localStorage.setItem('weChatInfo', JSON.stringify(data));
+        state.weChatInfo = data;
+      }
+    } catch (e) {
+
+    }
+
   },
   initCode(state, orgCode) {
     try {
@@ -68,6 +81,9 @@ const mutations = {
   changeBodyLeft(state, isSmall) {
     state.bodySize.left = isSmall ? '64px' : '180px';
     window.localStorage.setItem('bodyLeft', state.bodySize.left);
+  },
+  initOrgName (state, data) {
+    state.orgName = data;
   }
 };
 

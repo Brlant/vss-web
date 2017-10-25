@@ -41,8 +41,8 @@
                            native-type="submit">
                   {{btnString}}
                 </el-button>
-                <el-button style="display: block;width:50%;">
-                  <router-link to="/login">返回登录</router-link>
+                <el-button style="display: block;width:50%;" @click="$router.push('/login')">
+                  返回登录
                 </el-button>
               </el-button-group>
             </el-form>

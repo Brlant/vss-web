@@ -15,10 +15,6 @@
     word-break: break-all;
   }
 
-  .pt {
-    padding-top: 15px;
-  }
-
   .good-selects {
     .el-select-dropdown__item {
       font-size: 14px;
@@ -73,6 +69,12 @@
   .order-list-item {
     cursor: pointer;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -93,8 +95,17 @@
             <el-col :span="8">
               <oms-form-row label="生产厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
-                           v-model="searchWord.orgId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>
+                           v-model="searchWord.orgId" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -104,7 +115,27 @@
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects">
                   <el-option :value="good.id" :key="good.id" :label="good.name"
-                             v-for="good in orgGoods"></el-option>
+                             v-for="good in orgGoods">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{good.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                    <span class="select-other-info pull-left"><span
+                      v-show="good.id">货品ID</span>  {{good.id}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="good.specifications">货品规格</span>  {{good.specifications}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="good.approvalNumber">批准文号</span>  {{good.approvalNumber}}
+                      </span>
+                    </div>
+                    <div style="overflow: hidden">
+                  <span class="select-other-info pull-left"><span
+                    v-show="good.factoryName">生产厂商</span>  {{ good.factoryName }}
+                  </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -227,7 +258,22 @@
     watch: {
       filters: {
         handler: function () {
-          this.getBatcheNumbers();
+          if (this.filters.orgId === '' && this.filters.batchNumber === '' && this.filters.goodsId === '') {
+            this.$notify.info({
+              title: '提示',
+              message: '请输入查询条件查询批号文件'
+            });
+            return;
+          } else {
+            if (this.filters.batchNumber === '') {
+              this.$notify.info({
+                title: '提示',
+                message: '请输入查询需要查询的批号'
+              });
+              return;
+            }
+            this.getBatcheNumbers();
+          }
         },
         deep: true
       }
@@ -235,6 +281,7 @@
     methods: {
       getBatcheNumbers() { // 得到批次列表
 //        this.pager.currentPage = pageNo;
+//        if (this.filter.orgId !== '' || this.filter.batchNumber !== '' || this.filter.goodsId !== '') {
         let params = Object.assign({}, this.filters);
 //        this.loadingData = true;
         BatchNumber.query(params).then(res => {
@@ -242,6 +289,7 @@
 //          this.pager.count = res.data.count;
 //          this.loadingData = false;
         });
+//        }
       },
       showDetail(item) {
         this.currentItemId = item.id;

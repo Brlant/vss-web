@@ -11,19 +11,32 @@
 
 </style>
 <template>
-  <el-form ref="form" :rules="rules" :model="form" label-width="100px" class="demo-ruleForm">
+  <el-form ref="form" :rules="rules" :model="form" label-width="120px" class="demo-ruleForm">
     <h2 class="clearfix">{{showTitle}}疫苗采购协议</h2>
     <el-form-item label="疫苗" prop="orgGoodsId" class="search-input">
       <el-select placeholder="请选择疫苗" v-model="form.orgGoodsId" filterable remote :remote-method="getOmsGoods"
-                 :clearable="true" popper-class="good-selects">
+                 :clearable="true" popper-class="good-selects" @change="setSalesFirmName(form.orgGoodsId)">
         <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                    v-for="item in goodsList">
-          <span class="pull-left">{{ item.orgGoodsDto.name }}</span class="pull-left">
-          <span class="pull-right" style="color:#999">
-           <span>{{ item.orgGoodsDto.salesFirmName }}</span>
-          </span>
+          <div style="overflow: hidden">
+            <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+          </div>
+          <div style="overflow: hidden">
+            <span class="select-other-info pull-left"><span
+              v-show="item.orgGoodsDto.goodsId">平台货品ID</span>  {{item.orgGoodsDto.goodsId}}
+            </span>
+            <span class="select-other-info pull-left"><span
+              v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+            </span>
+            <span class="select-other-info pull-left"><span
+              v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+            </span>
+          </div>
         </el-option>
       </el-select>
+    </el-form-item>
+    <el-form-item label="供货厂商" v-if="form.orgGoodsId&&salesFirmName">
+      {{salesFirmName}}
     </el-form-item>
     <el-form-item label="采购单价" prop="unitPrice">
       <oms-input type="text" v-model="form.unitPrice" @blur="formatUnitPrice"
@@ -42,7 +55,7 @@
       <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" @change="changeEndTime">
       </el-date-picker>
     </el-form-item>
-    <el-form-item label="是否生效" prop="availabilityStatus">
+    <el-form-item label="是否生效">
       <el-switch v-model="form.availabilityStatus" on-text="是" off-text="否"
                  on-color="#13ce66"
                  off-color="#ff4949">
@@ -60,28 +73,6 @@
 
   export default {
     data: function () {
-//      let checkStartTime = (rule, value, callback) => {
-//        if (value === '') {
-//          callback(new Error('请选择开始日期'));
-//        } else {
-//          if (this.form.expireTime < this.form.startDate) {
-//            callback(new Error('开始日期必须小于到期日期'));
-//          } else {
-//            callback();
-//          }
-//        }
-//      };
-//      let checkEndTime = (rule, value, callback) => {
-//        if (value === '') {
-//          callback(new Error('请选择到期日期'));
-//        } else {
-//          if (this.form.expireTime < this.form.startDate) {
-//            callback(new Error('到期日期必须大于开始日期'));
-//          } else {
-//            callback();
-//          }
-//        }
-//      };
       return {
         rules: {
           orgGoodsId: [
@@ -100,6 +91,7 @@
             {required: true, message: '请选择是否生效'}
           ]
         },
+        salesFirmName: '',
         form: this.formItem,
         doing: false,
         attachmentList: [],
@@ -137,23 +129,23 @@
       }
     },
     methods: {
+      setSalesFirmName: function (item) {
+        if (item) {
+          this.goodsList.forEach(val => {
+            if (val.orgGoodsDto.id === item) {
+              this.salesFirmName = val.orgGoodsDto.salesFirmName;
+            }
+          });
+        }
+      },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
         let params = {
-          keyWord: keyWord
+          keyWord: keyWord,
+          deleteFlag: false,
+          status: true
         };
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
-//          if (this.action === 'edit') {
-//            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.orgGoodsDto.id);
-//            if (!isExist) {
-//              this.goodsList.push({
-//                orgGoodsDto: {
-//                  id: this.form.orgGoodsId,
-//                  name: this.form.orgGoodsName
-//                }
-//              });
-//            }
-//          }
         });
       },
       formatUnitPrice() {// 格式化单价，保留两位小数

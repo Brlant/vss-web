@@ -58,7 +58,7 @@
       </div>
       <div class="img-tools" v-if="type=='image'" @click.stop="stop">
 
-        <el-button type="default" @click.stop="changeZ(1)"><i class="c-erp-font c-erp-font-rotate"></i>
+        <el-button type="default" @click.stop="changeZ(1)"><i class="iconfont icon-rotate"></i>
         </el-button>
 
       </div>
@@ -98,7 +98,7 @@
         return this.Attachment.attachmentStoragePath;
       },
       docViewUrl: function () {
-        return 'http://doc-view.tinyapp.top/view/url?url=' + encodeURIComponent(this.Attachment.attachmentStoragePath);
+        return 'https://doc-view.sinopharm-bio.com/view/url?url=' + encodeURIComponent(this.Attachment.attachmentStoragePath);
       },
       stateDialogVisible: function () {
         return this.$store.state.attachmentDialog.open;

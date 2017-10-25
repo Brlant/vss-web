@@ -37,17 +37,9 @@
                 <i class="iconfont icon-plus"></i>
               </a>
             </perm>
-              <!--<perm label="show">-->
-                <!--<a href="#" class="btn-circle" @click.prevent="searchType">-->
-                  <!--<i class="iconfont icon-search"></i>-->
-                <!--</a>-->
-              <!--</perm>-->
           </span>
           仓库地址
         </h2>
-        <!--<div class="search-left-box" v-show="showTypeSearch">-->
-          <!--<oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>-->
-        <!--</div>-->
         <div v-if="showTypeList.length == 0" class="empty-info">
           暂无信息
         </div>
@@ -55,12 +47,15 @@
           <ul class="show-list">
             <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                 :class="{'active':item.id==currentItem.id}">
+              <div class="id-part">
+                <span v-show="item.default">默认</span>
+                <span class="pull-right">
+                    <el-tag type="danger" v-show="item.status==='3'">停用</el-tag>
+                    <el-tag type="success" v-show=" item.status==='0'">正常</el-tag>
+                </span>
+              </div>
               <div>
                 {{item.name }}
-                <span v-show="item.default"
-                      style="position: absolute;right:60px;font-size: 12px; color: #888;">默认</span>
-                <el-tag type="danger" v-show="item.status==='3'">停用</el-tag>
-                <el-tag type="success" v-show=" item.status==='0'">正常</el-tag>
               </div>
             </li>
           </ul>
@@ -73,21 +68,6 @@
         <div v-else>
           <h2 class="clearfix">
                 <span class="pull-right">
-                    <!--  <a href="#" class="btn-circle"><i class="iconfont icon-filter"></i> </a>-->
-                  <!--<perm label="show">-->
-                    <!--<a href="#" @click.stop.prevent="edit()" v-show="data.status==='0'">-->
-                      <!--<i class="iconfont icon-edit"></i>编辑</a>-->
-                  <!--</perm>-->
-                  <!--<perm label="show">-->
-                    <!--<a href="#" @click.prevent="remove()" class="margin-left"-->
-                       <!--v-show="data.status==='0'||data.status==='1'"><i-->
-                      <!--class="iconfont icon-forbidden"></i>停用</a>-->
-                  <!--</perm>-->
-                  <!--<perm label="show">-->
-                      <!--<a href="#" @click.prevent="start()" class="margin-left"-->
-                         <!--v-show="data.status==='2'||data.status==='3'"><i-->
-                        <!--class=" iconfont icon-start"></i>启用</a>-->
-                  <!--</perm>-->
                   <el-button-group>
                     <perm label="binding-warehouse-update">
                       <el-button @click="edit()" v-show="data.status==='0'"><i
@@ -105,66 +85,43 @@
                 </span>
           </h2>
           <div class="page-main-body">
-            <el-row>
-              <el-col :span="3" class="text-right">
-                仓库名称：
-              </el-col>
-              <el-col :span="20">
-                {{ data.name }}
-              </el-col>
-            </el-row>
-            <el-row style="margin-top: 20px">
-              <el-col :span="3" class="text-right">
-                仓库地址类型：
-              </el-col>
-              <el-col :span="21">
-                <dict :dict-group="'orgAddress'" :dict-key="formatAddress"></dict>
-              </el-col>
-            </el-row>
-            <el-row style="margin-top: 20px">
-              <el-col :span="3" class="text-right">
-                所在地区：
-              </el-col>
-              <el-col :span="21">
-                {{ storeAddress }}
-              </el-col>
-            </el-row>
-            <el-row style="margin-top: 20px">
-              <el-col :span="3" class="text-right">
-                详细地址：
-              </el-col>
-              <el-col :span="21">
-                {{ data.detail }}
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="3" class="text-right">
-                联系人：
-              </el-col>
-              <el-col :span="20">
-                {{ data.contact }}
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="3" class="text-right">
-                联系电话：
-              </el-col>
-              <el-col :span="20">
-                {{ data.telephone }}
-              </el-col>
-            </el-row>
+            <oms-row label="仓库名称" :span="4">
+              {{data.name}}
+            </oms-row>
+            <oms-row label="仓库类型" :span="4">
+              {{warehouseType}}
+            </oms-row>
+            <oms-row label="所属物流公司" :span="4" v-if="data.warehouseType==='0'">
+              {{data.warehouseSourceFirmName}}
+            </oms-row>
+            <oms-row label="仓库地址类型" :span="4">
+              <dict :dict-group="'orgAddress'" :dict-key="formatAddress"></dict>
+            </oms-row>
+            <oms-row label="所在地区" :span="4">
+              {{ storeAddress }}
+            </oms-row>
+            <oms-row label="详细地址" :span="4">
+              {{ data.detail }}
+            </oms-row>
+            <oms-row label="联系人" :span="4">
+              {{ data.contact }}
+            </oms-row>
+            <oms-row label="联系电话" :span="4">
+              {{ data.telephone }}
+            </oms-row>
           </div>
         </div>
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox">
-      <store-part :formItem="formItem" :formType="formType" :actionType="showRight" @change="onSubmit"></store-part>
+      <store-part :formItem="formItem" :formType="formType" :actionType="showRight" @change="onSubmit"
+                  @right-close="resetRightBox"></store-part>
     </page-right>
   </div>
 </template>
 <script>
   import storePart from './form/form.vue';
-  import {Address} from '../../../resources';
+  import { Address } from '../../../resources';
   import utils from '../../../tools/utils';
 
   export default {
@@ -201,11 +158,20 @@
         let value = this.data.type;
         return value.toString();
       },
-      storeAddress() {
+      storeAddress () {
         let province = this.data.province;
         let city = this.data.city;
         let region = this.data.region;
         return utils.formatAddress(province, city, region);
+      },
+      warehouseType () {
+        let warehouseType = '';
+        if (this.data.warehouseType === '0') {
+          warehouseType = '物流公司仓库';
+        } else {
+          warehouseType = '本地仓库';
+        }
+        return warehouseType;
       }
     },
     mounted () {

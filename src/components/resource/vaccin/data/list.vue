@@ -95,6 +95,14 @@
 <template>
   <div>
     <div>
+      <div class="order-list-status container">
+        <div class="status-item" :class="{'active':key==activeStatus,'item-right':item.type===0} "
+             v-for="(item,key) in vaccineType"
+             @click="changeType(key,item)">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+        </div>
+      </div>
       <div class="container d-table">
         <div class="d-table-left">
           <h2 class="header">
@@ -124,10 +132,10 @@
                               class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
                 </perm>
                 <div class="id-part">
-                  <span>组织疫苗ID{{item.orgGoodsDto.id}}</span>
+                  <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
                   <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
                   </el-tag>
-                  <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">证照过期</el-tag>
+                  <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">注册证照过期</el-tag>
                 </div>
                 <div>
                   <span>{{item.orgGoodsDto.name}}</span>
@@ -158,11 +166,11 @@
             </h2>
             <div class="page-main-body min-row">
               <el-row>
-                <el-col :span="3" class="text-right" style="font-size: 12px">
+                <el-col :span="4" class="text-right" style="font-size: 12px">
                   [ 产品图片 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
-                  [ 组织疫苗信息 ]
+                  [ 疫苗信息 ]
                 </el-col>
               </el-row>
               <el-row>
@@ -172,15 +180,15 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
-                  <goods-row label="组织疫苗ID" :span="8">
-                    {{ data.id}}
+                  <goods-row label="疫苗编号" :span="8">
+                    {{ data.goodsNo}}
                   </goods-row>
-                  <goods-row label="组织疫苗名称" :span="8">
+                  <goods-row label="疫苗名称" :span="8">
                     {{ data.name}}
                   </goods-row>
-                  <goods-row label="疫苗分类" :span="8">
-                    <dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>
-                  </goods-row>
+                  <!--<goods-row label="疫苗分类" :span="8">-->
+                    <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
+                  <!--</goods-row>-->
                   <goods-row label="疫苗标志" :span="8">
                     <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.propertyMap.firstVaccineSign"></dict>
                   </goods-row>
@@ -188,13 +196,16 @@
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
                   <goods-row label="中标价格" :span="8">
-                    ¥ {{ data.bidPrice | formatMoney}}
+                    <span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="采购价格" :span="8">
-                    ¥ {{ data.procurementPrice | formatMoney}}
+                    <span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}
+                  </goods-row>
+                  <goods-row label="供货厂商" :span="8">
+                    {{ data.salesFirmName }}
                   </goods-row>
                   <goods-row label="销售价格" :span="8">
-                    ¥ {{ data.sellPrice | formatMoney}}
+                    <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="库存上限" :span="8">
                     {{ data.inventoryUpperLimit }}
@@ -205,9 +216,6 @@
                   <goods-row label="是否组合" :span="8" v-show="data.goodsIsCombination">
                     {{ data.goodsIsCombination | formatStatus}}
                   </goods-row>
-                  <goods-row label="是否可用" :span="8" v-show="data.status">
-                    {{ data.status | formatStatus}}
-                  </goods-row>
                   <goods-row label="是否计价" :span="8" v-show="data.valuationFlag">
                     {{ data.valuationFlag | formatStatus}}
                   </goods-row>
@@ -215,8 +223,8 @@
               </el-row>
               <div class="border-show"></div>
               <el-row>
-                <el-col :span="3" class="text-right" style="font-size: 12px">
-                  [ 疫苗基础信息 ]
+                <el-col :span="4" class="text-right" style="font-size: 12px">
+                  [ 疫苗标准产品信息 ]
                 </el-col>
                 <el-col :span="12" class="text-right" style="font-size: 12px">
                   [ 包装存储信息 ]
@@ -224,7 +232,7 @@
               </el-row>
               <el-row>
                 <el-col :span="12">
-                  <goods-row label="厂家名称" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
+                  <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
                   <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
                   <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>
                   <goods-row label="剂型" :span="12">
@@ -279,16 +287,16 @@
 
               <div class="border-show"></div>
               <el-row>
-                <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='0'">
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='0'">
                   [ 药品专用 ]
                 </el-col>
-                <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
-                  [ 疫苗专用 ]
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
+                  [ 疾控专用 ]
                 </el-col>
-                <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='2'">
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='2'">
                   [ 器械专用 ]
                 </el-col>
-                <el-col :span="3" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
                   [ 化妆品专用 ]
                 </el-col>
               </el-row>
@@ -351,7 +359,7 @@
                     }}
                   </goods-row>
                   <goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.propertyMap.firstVaccineSign"></dict>
+                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.propertyMap.firstVaccineSign"></dict>
                   </goods-row>
                   <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
@@ -382,7 +390,7 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox">
-      <goods-part :formItem="form" :action="action" @close="showRight=false" :actionType="showRight"
+      <goods-part :formItem="form" :action="action" :userStatus="1" @close="showRight=false" :actionType="showRight"
                   @change="onSubmit"></goods-part>
     </page-right>
   </div>
@@ -391,7 +399,7 @@
   import goodsPart from './form/form.vue';
   import { Vaccine } from '@/resources';
   import goodsRow from './goods.row.vue';
-
+  import utils from '@/tools/utils';
   export default {
     components: {goodsPart, goodsRow},
     data: function () {
@@ -400,6 +408,8 @@
         showTypeRight: false,
         showTypeSearch: false,
         showSearch: false,
+        vaccineType: utils.vaccineType,
+        activeStatus: 0,
         data: {},
         combinationList: [],
         typeList: [],
@@ -408,10 +418,8 @@
         form: {},
         action: '',
         currentItem: {},
-        activeStatus: 0,
         filters: {
-          status: null,
-          auditedStatus: null
+          status: '1'
         }
       };
     },
@@ -566,21 +574,20 @@
         });
       },
       showType: function (item) {
-        if (this.isLocked(item.orgGoodsDto)) {
-          this.$notify.info({
-            message: '已被其他用户锁定，暂时无法查看'
-          });
-          this.data = {id: ''};
-          this.combinationList = [];
-          return;
-        }
+//        if (this.isLocked(item.orgGoodsDto)) {
+//          this.$notify.info({
+//            message: '已被其他用户锁定，暂时无法查看'
+//          });
+//          this.data = {id: ''};
+//          this.combinationList = [];
+//          return;
+//        }
         this.currentItem = item;
         this.queryOrgGoods();
       },
       changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
         this.activeStatus = key;
         this.filters.status = item.status;
-        this.filters.auditedStatus = item.auditedStatus;
       },
       onSubmit: function (item) {
         if (this.action === 'add') {

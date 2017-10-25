@@ -3,6 +3,7 @@
   .content-part {
     .content-left {
       width: @leftWidth;
+      text-align: center;
     }
     .content-right {
       > h3 {
@@ -18,14 +19,14 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">订单详情</h2>
+        <h2 class="clearfix right-title">采购订单详情</h2>
         <ul>
           <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
             <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
-              <el-button type="primary" @click="review" style="width: 80px;">审单通过</el-button>
+              <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
         </ul>
@@ -98,7 +99,7 @@
         this.currentOrder = {};
         if (!this.orderId) return false;
         InWork.queryOrderDetail(this.orderId).then(res => {
-          res.data.state = this.state;
+          res.data.state = res.data.erpStatus;
           this.currentOrder = res.data;
         });
       },

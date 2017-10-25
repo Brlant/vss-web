@@ -15,7 +15,7 @@
     top: 50px;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 1200;
     bottom: 0
   }
 
@@ -79,7 +79,7 @@
 
   .cdc-shade {
     position: fixed;
-    z-index: 900;
+    z-index: 1100;
     top: 50px;
     left: 0;
     right: 0;
@@ -93,7 +93,7 @@
 </style>
 <template>
   <div class="app-body" :style="'padding-left:'+bodyLeft">
-    <app-header :to-route="toRoute" v-if="userType"></app-header>
+    <app-header :to-route="toRoute" v-if="userType" :level="level"></app-header>
     <div class="main-body" style="padding:0 8px;">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
@@ -128,7 +128,8 @@
       transitionName: 'slide-left',
       toRoute: {},
       loading: true,
-      isPermission: true
+      isPermission: true,
+      level: ''
     }),
     computed: {
       userType: function () {
@@ -160,6 +161,11 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
+          let weChatInfo = window.localStorage.getItem('weChatInfo');
+          weChatInfo = JSON.parse(weChatInfo);
+          if (weChatInfo && weChatInfo.nickname) {
+            this.$store.commit('initWeChatInfo', weChatInfo);
+          }
           this.queryBaseInfo(data);
           this.getRoleMenus(data);
         }).catch(() => {
@@ -171,6 +177,7 @@
         let data = window.localStorage.getItem('user');
         data = JSON.parse(data);
         this.getRoleMenus(data);
+        this.queryBaseInfo(data);
       }
       this.queryPerms();
       this.queryLevel();
@@ -190,6 +197,7 @@
       },
       queryLevel () {
         cerpAction.queryLevel().then(res => {
+          this.level = res.data;
           window.localStorage.setItem('logLevel', res.data);
           this.isPermission = res.data === 0;
         });
@@ -220,6 +228,7 @@
       },
       queryBaseInfo (data) {
         BaseInfo.queryBaseInfo(data.userCompanyAddress).then(res => {
+          this.$store.commit('initOrgName', res.data.orgDto.name);
           window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');
         });
       }

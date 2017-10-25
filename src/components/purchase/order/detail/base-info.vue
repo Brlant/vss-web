@@ -18,7 +18,7 @@
           <oms-row label="货主" :span="span">
             {{currentOrder.orgName}}
           </oms-row>
-          <oms-row label="销售厂商" :span="span">
+          <oms-row label="供货厂商" :span="span">
             {{currentOrder.supplierName}}
           </oms-row>
           <oms-row label="物流商" :span="span"
@@ -26,10 +26,13 @@
             {{currentOrder.logisticsProviderName}}
           </oms-row>
           <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
-            {{currentOrder.transportationAddress}}
+            {{currentOrder.pickUpWarehouseAddress}}
           </oms-row>
           <oms-row label="运输条件" :span="span">
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
+          </oms-row>
+          <oms-row label="疾控仓库地址" :span="span">
+            <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
           </oms-row>
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
@@ -62,7 +65,7 @@
         <tr>
           <td></td>
           <td>货品</td>
-          <td class="text-center">销售厂商</td>
+          <td class="text-center">供货厂商</td>
           <td class="text-center">数量</td>
           <td class="text-center">单价</td>
           <td class="text-center">金额</td>
@@ -93,14 +96,14 @@
             </div>
           </td>
           <td class="text-center" width="180px">
-            {{item.orgGoodsDto.goodsDto.salesFirmName}}
+            {{item.orgGoodsDto.salesFirmName}}
           </td>
           <td width="100px" class="text-center">
             {{item.amount}}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
           <td width="80px" class="text-center">
-            <span v-show="item.unitPrice">￥{{item.unitPrice}}</span>
+            <span v-show="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
           </td>
           <td class="text-center">
             <span v-show="item.unitPrice">¥</span>{{ item.amount * item.unitPrice | formatMoney }}

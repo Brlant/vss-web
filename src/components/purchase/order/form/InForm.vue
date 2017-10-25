@@ -26,7 +26,7 @@
       left: 0;
       top: 0;
       bottom: 0;
-      text-align: left;
+      text-align: center;
       background-color: #eef2f3;
       > ul {
         margin: 0;
@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">增加采购订单</h2>
+        <h2 class="clearfix right-title">新增采购订单</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -241,7 +241,7 @@
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="选择物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
+            <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" @change="changeTransportationMeans"
                          placeholder="请选择物流方式">
@@ -249,14 +249,22 @@
                            v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="销售厂商" prop="supplierId">
-              <el-select filterable remote placeholder="请输入关键字搜索销售厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="供货厂商" prop="supplierId">
+              <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                  <span class="pull-left" style="clear: right">{{org.name}}</span>
-                  <span class="pull-right" style="color: #999">
+                  <div style="overflow: hidden">
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    <span class="pull-right" style="color: #999">
                      <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
                     </span>
+                  </div>
+                  <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.manufacturerCode}}
+                  </span>
+                  </div>
+
                 </el-option>
               </el-select>
             </el-form-item>
@@ -265,14 +273,32 @@
               <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
                          :clearable="true"
                          v-model="form.logisticsProviderId">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
+                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList">
+                  <div style="overflow: hidden">
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    <span class="pull-right" style="color: #999">
+                     <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
+                    </span>
+                  </div>
+                  <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.manufacturerCode}}
+                  </span>
+                  </div>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="提货地址"
-                          :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'transportationAddress':'' "
+                          :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
-              <oms-input type="text" v-model="form.transportationAddress" placeholder="请输入提货地址"></oms-input>
+              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
+                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in supplierWarehouses">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
+                </el-option>
+              </el-select>
             </el-form-item>
+
             <el-form-item label="运输条件" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationCondition" placeholder="请选择运输条件">
@@ -285,6 +311,14 @@
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
             </el-form-item>
+            <el-form-item label="疾控仓库地址" prop="transportationAddress">
+              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable>
+                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in cdcWarehouses">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
+                </el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="是否进口">
               <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
                          v-model="form.importedFlag"></el-switch>
@@ -294,7 +328,6 @@
                           v-show="showContent.isShowOtherContent">
               <el-date-picker
                 v-model="form.expectedTime"
-                type="date"
                 placeholder="请选择预计入库时间" format="yyyy-MM-dd"
                 @change="changeExpectedTime">
               </el-date-picker>
@@ -312,7 +345,7 @@
 
           <div class="oms-form order-product-box">
             <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
-              <el-form-item label="选择产品" prop="orgGoodsId">
+              <el-form-item label="产品" prop="orgGoodsId">
                 <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
                            :remote-method="searchProduct" :clearable="true" :loading="loading"
                            popper-class="order-good-selects"
@@ -336,7 +369,7 @@
                         }}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">销售厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                       </span>
                     </div>
                   </el-option>
@@ -362,7 +395,7 @@
                   <oms-row label="货品编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
-                  <oms-row label="销售厂商" :span="8">
+                  <oms-row label="供货厂商" :span="8">
                     {{product.fixInfo.salesFirmName}}
                   </oms-row>
                   <oms-row label="批准文号" :span="8">
@@ -374,7 +407,7 @@
                 </el-col>
                 <el-col :span="12">
                   <span v-show="accessoryList.length">【组合货品】</span>
-                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
+                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                       <span style="margin-right: 10px"
                             v-show="acce.procurementPrice">¥ {{ acce.procurementPrice | formatMoney }}</span>
@@ -420,7 +453,7 @@
                   v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
                 </td>
                 <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                  class="oms-font oms-font-delete"></i> 删除</a></td>
+                  class="iconfont icon-delete"></i> 删除</a></td>
               </tr>
               <tr>
                 <td colspan="3"></td>
@@ -508,7 +541,8 @@
           'expectedTime': '',
           'detailDtoList': [],
           'supplierId': '',
-          'remark': ''
+          'remark': '',
+          'pickUpAddress': ''
         },
         rules: {
           orderNo: [
@@ -520,13 +554,16 @@
             {validator: checkOrderNumber}
           ],
           supplierId: [
-            {required: true, message: '请选择销售厂商', trigger: 'change'}
+            {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请输入提货地址', trigger: 'blur'}
+            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+          ],
+          pickUpAddress: [
+            {required: true, message: '请选择提货地址', trigger: 'change'}
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
@@ -576,7 +613,9 @@
           isShowSupplierId: true, // 是否显示来源单位
           expectedTimeLabel: '预计入库时间'
         },
-        currentTransportationMeans: []
+        currentTransportationMeans: [],
+        cdcWarehouses: [],
+        supplierWarehouses: []
       };
     },
     computed: {
@@ -620,6 +659,7 @@
         this.form.orgId = user.userCompanyAddress;
         this.filterOrg();
         this.filterLogistics();
+        this.filterAddress();
         this.checkLicence(this.form.orgId);
       },
       form: {
@@ -713,6 +753,20 @@
           this.LogisticsCenter = res.data;
         });
       },
+      filterAddress () {
+        Address.queryAddress(this.form.orgId, {
+          deleteFlag: false,
+          orgId: this.form.orgId,
+          auditedStatus: '1'
+        }).then(res => {
+          this.cdcWarehouses = res.data;
+          let defaultStore = res.data.filter(item => item.default);
+          this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
+        });
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+      },
       bizTypeChange: function (val) {// 业务类型改变
         if (!this.isStorageData) {// 有缓存时，不重置表单
           let orgId = this.form.orgId;
@@ -769,20 +823,22 @@
       },
       changeSupplier: function (val) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.transportationAddress = '';
+          this.supplierWarehouses = [];
+          this.form.pickUpAddress = '';
           this.product.orgGoodsId = '';
+          this.form.detailDtoList = [];
         }
+        if (!val) return;
         if (this.form.transportationMeansId === '2') {
-          this.orgList.forEach(item => {
-            if (val === item.id) {
-              Address.queryAddress(val, {deleteFlag: false, orgId: val, auditedStatus: '1'}).then(res => {
-                let defaultStore = res.data.filter(item => item.default);
-                if (defaultStore.length) {
-                  let address = utils.formatAddress(defaultStore[0].province, defaultStore[0].city, defaultStore[0].region).split('/').join('');
-                  this.form.transportationAddress = address + defaultStore[0].detail;
-                }
-              });
-            }
+          Address.queryAddress(val, {
+            deleteFlag: false,
+//                warehouseType: 0,
+            orgId: val,
+            auditedStatus: '1'
+          }).then(res => {
+            this.supplierWarehouses = res.data;
+            let defaultStore = res.data.filter(item => item.default);
+            this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
           });
         }
         this.searchProduct();
@@ -790,7 +846,7 @@
       },
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.transportationAddress = '';
+          this.form.pickUpAddress = '';
           this.form.logisticsProviderId = '';
           this.form.supplierId = '';
         }
@@ -813,16 +869,14 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.orgId || !this.form.supplierId) {
+        if (!this.form.supplierId) {
           this.searchProductList = [];
           return;
         }
         let params = {
-          orgId: this.form.orgId,
-          keyWord: query,
-          factoryId: this.form.supplierId
+          keyWord: query
         };
-        http.get('/org/goods/valid', {params: params}).then(res => {
+        http.get(`purchase-agreement/${this.form.supplierId}/valid/org-goods`, {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();

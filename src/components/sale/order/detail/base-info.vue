@@ -90,7 +90,6 @@
           <el-col :span="21">
             <el-date-picker
               v-model="currentOrder.expectedTime"
-              type="date"
               placeholder="请选择日期" format="yyyy-MM-dd"
               @change="changeExpectedTime">
             </el-date-picker>
@@ -171,7 +170,7 @@
         <tr>
           <td></td>
           <td>名称</td>
-          <td class="text-center">销售厂商</td>
+          <td class="text-center">供货厂商</td>
           <td>批号</td>
           <td>生产日期</td>
           <td>有效期</td>
@@ -205,7 +204,7 @@
             </div>
           </td>
           <td class="text-center" width="140px">
-            {{item.orgGoodsDto.goodsDto.salesFirmName}}
+            {{item.orgGoodsDto.salesFirmName}}
           </td>
           <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
           <td>{{ item.productionDate | date }}</td>
@@ -215,7 +214,7 @@
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
           <td width="80px" class="text-center">
-            <span v-show="item.unitPrice">￥{{item.unitPrice}}</span>
+            <span v-show="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
           </td>
           <td class="text-center">
             <span v-show="item.unitPrice">¥</span>{{ item.amount * item.unitPrice | formatMoney }}

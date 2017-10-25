@@ -42,12 +42,12 @@
     margin: 20px 0;
   }
 
-  .tr-right {
-    cursor: pointer;
-    &:hover, &.active {
-      background: @dialog-left-bg;
-    }
-  }
+  /*<!--.tr-right {-->*/
+  /*<!--cursor: pointer;-->*/
+  /*<!--&:hover, &.active {-->*/
+  /*<!--background: @dialog-left-bg;-->*/
+  /*<!--}-->*/
+  /*<!--}-->*/
 
   .search-input {
     .el-select {
@@ -59,31 +59,15 @@
     }
   }
 
-  .list-item {
-    .edit-li {
-      position: absolute;
-      right: 10px;
-      top: 50%;
-      transform: translateY(-50%);
-      display: none;
+  .table > tbody > tr:first-child > td {
+    border-top: 0;
+  }
+
+  .tr-header {
+    background: #f1f1f1;
+    th {
+      border: 0;
     }
-    &.active {
-      .edit-li {
-        display: block;
-      }
-    }
-    .edit-a {
-      &:hover {
-        color: @activeColor;
-      }
-      margin-right: 10px;
-    }
-    .delete-a {
-      &:hover {
-        color: @activeColor;
-      }
-    }
-    padding-right: 70px;
   }
 </style>
 <template>
@@ -98,7 +82,7 @@
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
-      <div class="d-table clearfix" style="margin-top: 20px">
+      <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
             <h2 class="header">
@@ -107,7 +91,7 @@
                   class="iconfont icon-search"></i> </a>
             </span>
               <span class="pull-right" style="margin-right: 8px">
-                <perm label="accounts-receivable-add">
+                <perm label="sale-price-group-add">
                   <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
                   <i class="iconfont icon-plus"></i>
                   </a>
@@ -125,10 +109,11 @@
               <ul class="show-list">
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
-                  {{item.name }}
-                  <div class="edit-li">
-                    <a class="edit-a" @click.prevent="edit(item)"><i class="iconfont icon-edit"></i></a>
-                    <a class="delete-a" @click.prevent="deletePriceGroup(item)"><i class="iconfont icon-delete"></i></a>
+                  <div class="id-part">
+                    {{item.goodsName }}
+                  </div>
+                  <div>
+                    {{item.name }}
                   </div>
                 </li>
               </ul>
@@ -150,7 +135,21 @@
             <div class="empty-info">暂无信息</div>
           </div>
           <div v-else="" class="d-table-col-wrap">
-            <div class="content-body clearfix">
+            <h2 class="clearfix">
+                <span class="pull-right">
+                  <el-button-group>
+                    <perm label="sale-price-group-edit">
+                      <el-button @click="edit(currentItem)"><i
+                        class="iconfont icon-edit"></i>编辑</el-button>
+                    </perm>
+                    <perm label="sale-price-group-delete">
+                      <el-button @click="deletePriceGroup(currentItem)"><i
+                        class="iconfont icon-stop"></i>删除</el-button>
+                    </perm>
+                  </el-button-group>
+                </span>
+            </h2>
+            <div class="content-body clearfix" style="margin-top: 0;margin-bottom: 0">
               <el-row>
                 <oms-row label="价格组名称" :span="5">
                   {{currentItem.name}}
@@ -159,48 +158,49 @@
                   {{currentItem.goodsName}}
                 </oms-row>
                 <oms-row label="销售单价" :span="5">
-                  <span v-show="currentItem.unitPrice">￥{{currentItem.unitPrice}}</span>
+                  <span v-show="currentItem.unitPrice">￥{{currentItem.unitPrice | formatMoney}}</span>
                 </oms-row>
                 <oms-row label="是否可用" :span="5">
                   {{currentItem.availabilityStatus | formatStatus}}
                 </oms-row>
               </el-row>
             </div>
-            <div style="overflow: hidden">
-              <el-row>
-                <el-col :span="12" class="search-input" style="padding-right: 10px">
-                  <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
-                             v-model="povId" @click.native="filterPOV('')">
-                    <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                               v-for="org in showOrgList">
-                    </el-option>
-                  </el-select>
-                </el-col>
-                <el-col :span="3">
-                  <perm label="vaccine-authorization-add">
-                    <el-button type="primary" @click="bindPov">绑定POV</el-button>
-                  </perm>
-                </el-col>
-                <el-col :span="9">
-                   <span class="pull-right">
+            <div style="overflow: hidden;margin-bottom: 5px">
+              <!--<el-row>-->
+              <!--<el-col :span="12" class="search-input" style="padding-right: 10px">-->
+              <!--<el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"-->
+              <!--v-model="povId" @click.native="filterPOV('')">-->
+              <!--<el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"-->
+              <!--v-for="org in showOrgList">-->
+              <!--</el-option>-->
+              <!--</el-select>-->
+              <!--</el-col>-->
+              <!--<el-col :span="3">-->
+              <!--<perm label="sale-price-group-pov-bind">-->
+              <!--<el-button type="primary" @click="bindPov">绑定POV</el-button>-->
+              <!--</perm>-->
+              <!--</el-col>-->
+              <!--<el-col :span="24">-->
+              <!---->
+              <!--</el-col>-->
+              <!--</el-row>-->
+              <span class="pull-right">
                      <span class="btn-search-toggle open" v-show="showSearch">
                         <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入POV名称搜索"
                                       :showFocus="showSearch"></single-input>
                         <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
                      </span>
                      <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                        <i class="iconfont icon-search"></i>
-                     </a>
+                          <i class="iconfont icon-search"></i>
+                       </a>
+
                   </span>
-                </el-col>
-              </el-row>
             </div>
-            <table class="table"
-                   style="margin-top: 10px">
+            <table class="table">
               <thead>
-              <tr>
+              <tr class="tr-header">
                 <th>POV</th>
-                <th>操作</th>
+                <!--<th>操作</th>-->
               </tr>
               </thead>
               <tbody>
@@ -221,11 +221,11 @@
                 <td>
                   {{ row.povName }}
                 </td>
-                <td>
-                  <perm label="vaccine-authorization-delete">
-                    <a href="#" @click.stop.prevent="removePov(row)"><i class="iconfont icon-delete"></i>删除</a>
-                  </perm>
-                </td>
+                <!--<td>-->
+                <!--<perm label="sale-price-group-pov-delete">-->
+                <!--<a href="#" @click.stop.prevent="removePov(row)"><i class="iconfont icon-delete"></i>删除</a>-->
+                <!--</perm>-->
+                <!--</td>-->
               </tr>
               </tbody>
             </table>
@@ -349,7 +349,7 @@
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.typePager.pageSize
         }, this.filters);
         BriceGroup.query(params).then(res => {
           if (isContinue) {
@@ -376,7 +376,7 @@
         });
       },
       refresh () {
-        this.getOrgsList();
+        this.getOrgsList(1);
         this.resetRightBox();
       },
       refreshDetails () {

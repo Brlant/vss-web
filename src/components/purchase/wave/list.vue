@@ -15,10 +15,6 @@
     word-break: break-all;
   }
 
-  .pt {
-    padding-top: 8px;
-  }
-
   .good-selects {
     .el-select-dropdown__item {
       font-size: 14px;
@@ -92,7 +88,7 @@
                 <span>{{ item.createName }}</span>
               </el-col>
               <el-col :span="8" class="pt">
-                <span>{{ item.createTime | date}}</span>
+                <span>{{ item.createTime | time}}</span>
               </el-col>
               <el-col :span="4" class="pt">
                 <span>{{ item.status === 0 ? '未完成' : '已完成' }}</span>
@@ -190,7 +186,7 @@
         });
       },
       showDetail (item) {
-        this.$router.push({path: '/purchase/pov/allocation', query: {id: item.id}});
+        this.$router.push({path: '/sale/allocation/task', query: {id: item.id}});
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

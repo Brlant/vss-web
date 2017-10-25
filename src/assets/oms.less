@@ -54,7 +54,8 @@
     text-align: left;
     background-color: @dialog-left-bg;
     > h2 {
-      padding: 0 45px;
+      text-align: center;
+      padding: 0;
       margin: 0;
       font-size: 18px;
       font-weight: bold;
@@ -633,12 +634,6 @@
         .el-col {
           padding-right: 10px;
         }
-        .vertical-center {
-
-          position: absolute;
-          top: 50%;
-          transform: translateY(-50%);
-        }
       }
       &:hover, &.active {
         .order-list-item-bg {
@@ -854,5 +849,35 @@
   .el-row {
     display: flex;
     align-items: center;
+  }
+}
+
+.font-gray {
+  color: #999 !important;
+}
+.good-selects {
+  .el-select-dropdown__item {
+    font-size: 14px;
+    padding: 8px 10px;
+    position: relative;
+    white-space: normal;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: rgb(72, 94, 106);
+    height: auto;
+    width: 430px;
+    line-height: 1.5;
+    box-sizing: border-box;
+    cursor: pointer;
+  }
+  .select-other-info {
+    color: #999;
+    margin-left: 10px
+  }
+}
+
+.specific-part-z-index {
+  .page-right-part {
+    z-index: 1000;
   }
 }
