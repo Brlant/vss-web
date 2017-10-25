@@ -199,7 +199,7 @@
         <!--<el-form ref="otherGoodsForm" :model="form" :rules="otherGoodsRules" label-width="120px">-->
         <el-form-item label="其他组织疫苗">
           <el-select placeholder="请选择组织疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects" remote
-                     :remote-method="getCombinationGoods" clearable="true">
+                     :remote-method="getCombinationGoods" :clearable="true">
             <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                        v-for="item in otherGoodsList">
               <div style="overflow: hidden">
@@ -342,7 +342,7 @@
           this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
           this.otherGoodsList = [];
         } else {
-          this.getCombinationGoods();
+//          this.getCombinationGoods();
           this.getOmsGoods();
           this.form = {
             name: '',
