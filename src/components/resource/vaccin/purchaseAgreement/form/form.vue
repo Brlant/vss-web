@@ -175,8 +175,9 @@
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
             this.doing = true;
-            this.form.unitPrice = parseInt(this.form.unitPrice, 0);
+//            this.form.unitPrice = parseInt(this.form.unitPrice, 0);
             if (this.action === 'add') {
+              this.form.unitPrice = parseInt(this.form.unitPrice, 0);
               PurchaseAgreement.save(this.form).then(res => {
                 this.$notify.success({
                   duration: 2000,
@@ -193,6 +194,7 @@
                 });
               });
             } else {
+              this.form.unitPrice = parseInt(this.form.unitPrice, 0);
               PurchaseAgreement.update(this.form.id, this.form).then(res => {
                 this.$notify.success({
                   name: '成功',
