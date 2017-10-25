@@ -280,8 +280,9 @@
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
+    <page-right :show="showItemRight" class="specific-part-z-index" @right-close="resetRightBox"
+                :css="{'width':'1000px','padding':0}">
+      <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :purchase="purchase" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
   </div>
@@ -340,7 +341,8 @@
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
         user: {},
-        state: ''
+        state: '',
+        purchase: {}
       };
     },
     mounted () {
@@ -352,6 +354,10 @@
       }
       if (orderId === 'add') {
         this.add();
+        this.purchase = {
+          id: this.$route.query.id,
+          count: this.$route.query.count
+        };
       }
     },
     computed: {

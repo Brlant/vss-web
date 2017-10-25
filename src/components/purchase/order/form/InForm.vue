@@ -489,7 +489,8 @@
       action: {
         type: String,
         default: ''
-      }
+      },
+      purchase: Object
     },
     data: function () {
 
@@ -661,6 +662,9 @@
         this.filterLogistics();
         this.filterAddress();
         this.checkLicence(this.form.orgId);
+        if (this.purchase.id) {
+          this.createOrderInfo();
+        }
       },
       form: {
         handler: 'autoSave',
@@ -676,6 +680,32 @@
       this.initForm();
     },
     methods: {
+      createOrderInfo () {
+        this.form.detailDtoList = [];
+        let orgGoodsId = this.purchase.id;
+        if (!orgGoodsId) return;
+        http.get(`/purchase-agreement/org-goods/${orgGoodsId}`).then(res => {
+          this.form.transportationMeansId = '1';
+          this.form.transportationCondition = '0';
+          this.form.remark = '';
+          if (!res.data.orgGoodsDto.salesFirm) return;
+          this.orgList.push({
+            id: res.data.orgGoodsDto.salesFirm,
+            name: res.data.orgGoodsDto.salesFirmName,
+            relationList: []
+          });
+          this.form.supplierId = res.data.orgGoodsDto.salesFirm;
+          this.$nextTick(() => {
+            this.form.detailDtoList.push({
+              amount: Math.abs(this.purchase.count),
+              orgGoodsId: orgGoodsId,
+              orgGoodsName: res.data.orgGoodsDto.name,
+              unitPrice: res.data.orgGoodsDto.procurementPrice,
+              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
+            });
+          });
+        });
+      },
       autoSave: function () {
         if (!this.form.id) {
           window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
