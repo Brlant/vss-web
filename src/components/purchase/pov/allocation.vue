@@ -136,7 +136,7 @@
                 </span>
                 </div>
                 <div>
-                  <span @click.prevent="goTo()" v-show="item.balanceAmount < 0 ">
+                  <span @click.prevent="goTo(item)" v-show="item.balanceAmount < 0 ">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="iconfont icon-link"></i></a>
                   采购订单
@@ -215,11 +215,12 @@
           }
         });
       },
-      goTo () {
+      goTo (item) {
         this.$notify.success({
           message: '即将跳转到采购订单'
         });
-        this.$router.push('/purchase/order/add');
+//        this.$router.push('/purchase/order/add');
+        this.$router.push({path: '/purchase/order/add', query: {id: item.orgGoodsId, count: item.balanceAmount}});
       },
       submit () {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
