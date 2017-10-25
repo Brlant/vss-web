@@ -5,7 +5,7 @@ import qs from 'qs';
 
 export const http = axios.create({
   baseURL: process.env.NODE_API,
-  timeout: 10000,
+  timeout: 30000,
   withCredentials: true
 });
 
