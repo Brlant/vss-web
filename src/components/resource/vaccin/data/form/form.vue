@@ -405,7 +405,7 @@
           keyWord: keyWord
         };
         SuccessfulBidder.queryInfo(params).then(res => {
-          this.goodsList = res.data.list;
+          this.goodsList = res.data;
           if (this.action === 'edit') {
             let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
             if (!isExist) {
