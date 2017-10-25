@@ -314,7 +314,7 @@
           thirdPartyNumber: ''
         },
         expectedTime: '',
-        orgType: utils.outOrderType,
+        orgType: utils.outReturnOrderType,
         activeStatus: 0,
         currentOrderId: '',
         orgList: [], // 来源单位列表
