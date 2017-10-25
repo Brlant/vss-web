@@ -216,9 +216,6 @@
                   <goods-row label="是否组合" :span="8" v-show="data.goodsIsCombination">
                     {{ data.goodsIsCombination | formatStatus}}
                   </goods-row>
-                  <goods-row label="是否可用" :span="8" v-show="data.status">
-                    {{ data.status | formatStatus}}
-                  </goods-row>
                   <goods-row label="是否计价" :span="8" v-show="data.valuationFlag">
                     {{ data.valuationFlag | formatStatus}}
                   </goods-row>

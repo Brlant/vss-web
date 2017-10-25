@@ -37,17 +37,9 @@
                 <i class="iconfont icon-plus"></i>
               </a>
             </perm>
-            <!--<perm label="show">-->
-            <!--<a href="#" class="btn-circle" @click.prevent="searchType">-->
-            <!--<i class="iconfont icon-search"></i>-->
-            <!--</a>-->
-            <!--</perm>-->
           </span>
           仓库地址
         </h2>
-        <!--<div class="search-left-box" v-show="showTypeSearch">-->
-        <!--<oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>-->
-        <!--</div>-->
         <div v-if="showTypeList.length == 0" class="empty-info">
           暂无信息
         </div>
@@ -55,12 +47,15 @@
           <ul class="show-list">
             <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                 :class="{'active':item.id==currentItem.id}">
+              <div class="id-part">
+                <span v-show="item.default">默认</span>
+                <span class="pull-right">
+                    <el-tag type="danger" v-show="item.status==='3'">停用</el-tag>
+                    <el-tag type="success" v-show=" item.status==='0'">正常</el-tag>
+                </span>
+              </div>
               <div>
                 {{item.name }}
-                <span v-show="item.default"
-                      style="position: absolute;right:60px;font-size: 12px; color: #888;">默认</span>
-                <el-tag type="danger" v-show="item.status==='3'">停用</el-tag>
-                <el-tag type="success" v-show=" item.status==='0'">正常</el-tag>
               </div>
             </li>
           </ul>
@@ -73,21 +68,6 @@
         <div v-else>
           <h2 class="clearfix">
                 <span class="pull-right">
-                    <!--  <a href="#" class="btn-circle"><i class="iconfont icon-filter"></i> </a>-->
-                  <!--<perm label="show">-->
-                  <!--<a href="#" @click.stop.prevent="edit()" v-show="data.status==='0'">-->
-                  <!--<i class="iconfont icon-edit"></i>编辑</a>-->
-                  <!--</perm>-->
-                  <!--<perm label="show">-->
-                  <!--<a href="#" @click.prevent="remove()" class="margin-left"-->
-                  <!--v-show="data.status==='0'||data.status==='1'"><i-->
-                  <!--class="iconfont icon-forbidden"></i>停用</a>-->
-                  <!--</perm>-->
-                  <!--<perm label="show">-->
-                  <!--<a href="#" @click.prevent="start()" class="margin-left"-->
-                  <!--v-show="data.status==='2'||data.status==='3'"><i-->
-                  <!--class=" iconfont icon-start"></i>启用</a>-->
-                  <!--</perm>-->
                   <el-button-group>
                     <perm label="binding-warehouse-update">
                       <el-button @click="edit()" v-show="data.status==='0'"><i
