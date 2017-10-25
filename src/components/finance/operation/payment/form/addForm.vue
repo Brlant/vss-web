@@ -472,9 +472,7 @@
           pageNo: 1,
           pageSize: 20,
           keyWord: query,
-          accountsPayableType: '0',
-          payerId: this.$store.state.user.userCompanyAddress,
-          status: '0'
+          accountsPayableType: '0'
         });
         pay.query(params).then(res => {
           this.orgList = res.data.list;
@@ -485,9 +483,7 @@
           pageNo: 1,
           pageSize: 20,
           keyWord: query,
-          accountsPayableType: '1',
-          payerId: this.$store.state.user.userCompanyAddress,
-          status: '0'
+          accountsPayableType: '1'
         });
         pay.query(params).then(res => {
           this.orgList = res.data.list;

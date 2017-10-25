@@ -444,9 +444,7 @@
         let params = Object.assign({}, {
           pageNo: 1,
           pageSize: 20,
-          keyWord: query,
-          receivableId: this.$store.state.user.userCompanyAddress,
-          status: '0'
+          keyWord: query
         });
         receivable.query(params).then(res => {
           this.orgList = res.data.list;
