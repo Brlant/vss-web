@@ -114,7 +114,8 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox">
-      <store-part :formItem="formItem" :formType="formType" :actionType="showRight" @change="onSubmit"></store-part>
+      <store-part :formItem="formItem" :formType="formType" :actionType="showRight" @change="onSubmit"
+                  @right-close="resetRightBox"></store-part>
     </page-right>
   </div>
 </template>
