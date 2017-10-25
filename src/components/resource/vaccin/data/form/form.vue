@@ -383,6 +383,15 @@
         };
         BaseInfo.query(param).then(res => {
           this.orgList = res.data.list;
+          if (this.action === 'edit') {
+            let isExist = this.orgList.some(item => this.form.orgList.id === item.id);
+            if (!isExist) {
+              this.orgList.push({
+                id: this.form.salesFirm,
+                name: this.form.salesFirmName
+              });
+            }
+          }
         });
       },
       setPrice: function () {
@@ -396,7 +405,7 @@
           keyWord: keyWord
         };
         SuccessfulBidder.queryInfo(params).then(res => {
-          this.goodsList = res.data;
+          this.goodsList = res.data.list;
           if (this.action === 'edit') {
             let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
             if (!isExist) {

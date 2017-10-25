@@ -73,28 +73,6 @@
 
   export default {
     data: function () {
-//      let checkStartTime = (rule, value, callback) => {
-//        if (value === '') {
-//          callback(new Error('请选择开始日期'));
-//        } else {
-//          if (this.form.expireTime < this.form.startDate) {
-//            callback(new Error('开始日期必须小于到期日期'));
-//          } else {
-//            callback();
-//          }
-//        }
-//      };
-//      let checkEndTime = (rule, value, callback) => {
-//        if (value === '') {
-//          callback(new Error('请选择到期日期'));
-//        } else {
-//          if (this.form.expireTime < this.form.startDate) {
-//            callback(new Error('到期日期必须大于开始日期'));
-//          } else {
-//            callback();
-//          }
-//        }
-//      };
       return {
         rules: {
           orgGoodsId: [
@@ -178,7 +156,6 @@
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
             this.doing = true;
-            this.form.unitPrice = parseInt(this.form.unitPrice, 0);
             if (this.action === 'add') {
               PurchaseAgreement.save(this.form).then(res => {
                 this.$notify.success({

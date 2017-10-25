@@ -174,18 +174,20 @@
               Address.save(this.form).then(res => {
                 this.doing = false;
                 this.$emit('change', res.data);
+                this.$emit('right-close');
               });
             } else {
               Address.update(this.form).then(res => {
                 this.doing = false;
                 this.$emit('change', res.data);
+                this.$emit('right-close');
               });
             }
           }
         );
       },
       doClose: function () {
-        this.$emit('close');
+        this.$emit('right-close');
         this.$refs['storeform'].resetFields();
       }
     }
