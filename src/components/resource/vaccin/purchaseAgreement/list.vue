@@ -93,9 +93,61 @@
   }
 </style>
 <template>
-  <div>
-    <div>
-      <div class="order-list-status container">
+  <div class="order-page">
+    <div class="container">
+      <div class="opera-btn-group" :class="{up:!showSearch}">
+        <div class="opera-icon">
+      <span class="">
+      <i class="iconfont icon-search"></i> 筛选查询
+      </span>
+          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addType">
+      <perm label="purchasing-order-add">
+      <a href="#" class="btn-circle" @click.prevent=""><i
+        class="iconfont icon-plus"></i> </a>添加
+      </perm>
+      </span>
+          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+      <i class="el-icon-arrow-up"></i>
+      <span v-show="showSearch">收起筛选</span>
+      <span v-show="!showSearch">展开筛选</span>
+      </span>
+        </div>
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+          <el-row>
+            <el-col :span="8">
+              <oms-form-row label="疫苗名称" :span="6">
+                <oms-input type="text" v-model="searchCondition.keyWord" placeholder="请输入疫苗名称"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="供货厂商" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"-->
+            <!--v-model="searchCondition.transactOrgId" popperClass="good-selects">-->
+            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
+            <!--</div>-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="select-other-info pull-left">-->
+            <!--<span>系统代码</span> {{org.manufacturerCode}}-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--</el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
+            <el-col :span="6">
+              <oms-form-row label="" :span="6">
+                <el-button type="primary" @click="searchInOrder">查询</el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+
+
+      <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item" :class="{'active':key==activeStatus} "
              v-for="(item,key) in orgType"
              @click="changeType(key,item)">
@@ -103,111 +155,69 @@
           <div>{{item.title}}</div>
         </div>
       </div>
-      <div class="container d-table">
-        <div class="d-table-left">
-          <h2 class="header">
-                <span class="pull-right">
-                  <perm label="purchase-agreement-add">
-                      <a href="#" class="btn-circle" @click.stop.prevent="addType">
-                        <i class="iconfont icon-plus"></i>
-                      </a>
-                  </perm>
-                  <!--<a href="#" class="btn-circle" @click.prevent="searchType"><i-->
-                  <!--class="iconfont icon-search"></i> </a>-->
-                </span>
-            疫苗采购协议
-          </h2>
-          <div class="search-left-box" v-show="showTypeSearch">
-            <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
-          </div>
-          <div v-if="showTypeList.length == 0" class="empty-info">
-            暂无信息
-          </div>
-          <div v-else>
-            <ul class="show-list">
-              <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
-                  :class="{'active':item==currentItem}">
-                <div class="id-part">
-                  疫苗编号 {{item.orgGoodsId }}
+      <div class="order-list clearfix">
+        <el-row class="order-list-header" :gutter="10">
+          <el-col :span="6">疫苗名称</el-col>
+          <el-col :span="6">供货厂商</el-col>
+          <el-col :span="4">采购单价</el-col>
+          <el-col :span="4">协议采购数量</el-col>
+          <el-col :span="4">协议有效时间</el-col>
+        </el-row>
+        <el-row v-if="loadingData">
+          <el-col :span="24">
+            <oms-loading :loading="loadingData"></oms-loading>
+          </el-col>
+        </el-row>
+        <el-row v-else-if="showTypeList.length == 0">
+          <el-col :span="24">
+            <div class="empty-info">
+              暂无信息
+            </div>
+          </el-col>
+        </el-row>
+        <div v-else="" class="order-list-body flex-list-dom">
+          <div class="order-list-item" v-for="item in showTypeList" @click.prevent="edit(item)"
+               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentItem.id==item.id}]">
+            <el-row>
+              <el-col :span="6">
+                <div class="f-grey">
+                  {{item.orgGoodsId }}
                 </div>
                 <div>
-                  <span>{{item.orgGoodsName}}</span>
+                  {{item.orgGoodsName }}
                 </div>
-              </li>
-            </ul>
-            <div class="btn-left-list-more" @click.stop="getMore">
-              <el-button v-show="pager.currentPage<pager.totalPage">加载更多</el-button>
-            </div>
-          </div>
-        </div>
-        <div class="d-table-right">
-          <h2 class="clearfix">
-            <span class="pull-right">
-                 <el-button-group>
-                  <perm label="purchase-agreement-edit">
-                    <el-button @click="edit"><i class="iconfont icon-edit"></i> 编辑</el-button>
-                   </perm>
-                   <perm label="purchase-agreement-delete">
-                       <el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>
-                   </perm>
-                </el-button-group>
-            </span>
-          </h2>
-          <div class="page-main-body min-row">
-            <div v-if="currentItem.id===''">
-              <el-row>
-                <el-col :span="24">
-                  <div class="empty-info">
-                    暂无信息
-                  </div>
-                </el-col>
-              </el-row>
-            </div>
-            <div v-if="currentItem.id!==''">
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  货品名称：
-                </el-col>
-                <el-col :span="20">
-                  {{currentItem.orgGoodsName }}
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  供货厂商：
-                </el-col>
-                <el-col :span="20">
-                  {{currentItem.factoryName }}
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  采购单价：
-                </el-col>
-                <el-col :span="20">
-                  <span v-if="currentItem.unitPrice">￥</span>{{currentItem.unitPrice}}
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  协议采购数量：
-                </el-col>
-                <el-col :span="20">
-                  {{ currentItem.amount}}
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  协议有效时间：
-                </el-col>
-                <el-col :span="20">
-                  {{ currentItem.expireTime | date}}
-                </el-col>
-              </el-row>
-            </div>
+              </el-col>
+              <el-col :span="6">
+                <div>
+                  {{item.factoryName}}
+                </div>
+              </el-col>
+              <el-col :span="4" class="pt10">
+                <div>
+                  <span v-if="item.unitPrice">￥</span>{{item.unitPrice}}
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div>
+                  {{ item.amount}} {{item.unit}}
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div>
+                  {{ item.expireTime | date}}
+                </div>
+              </el-col>
+            </el-row>
+            <div class="order-list-item-bg"></div>
           </div>
         </div>
       </div>
+    </div>
+    <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <el-pagination layout="prev, pager, next"
+                     :total="pager.count" :pageSize="pager.pageSize" @current-change="getGoodsList"
+                     :current-page="pager.currentPage">
+      </el-pagination>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox">
       <goods-part :formItem="form" :action="action" @right-close="showRight=false" :actionType="showRight"
@@ -217,20 +227,20 @@
 </template>
 <script>
   import goodsPart from './form/form.vue';
-  import {Vaccine, PurchaseAgreement} from '../../../../resources';
+  import {Vaccine, PurchaseAgreement, BaseInfo} from '../../../../resources';
   import utils from '../../../../tools/utils';
 
   export default {
     components: {goodsPart},
     data: function () {
       return {
+        loadingData: true,
         showRight: false,
         showTypeRight: false,
         showTypeSearch: false,
         showSearch: false,
         data: {},
         combinationList: [],
-        typeList: [],
         showTypeList: [],
         typeTxt: '',
         form: {},
@@ -250,7 +260,11 @@
         orgType: {
           0: {'title': '可用', 'num': 0, 'availabilityStatus': true},
           1: {'title': '停用', 'num': 0, 'availabilityStatus': false}
-        }
+        },
+        searchCondition: {
+          keyWord: ''
+        },
+        orgList: []
       };
     },
     mounted() {
@@ -274,8 +288,41 @@
       }
     },
     methods: {
-      getMore: function () {
-        this.getGoodsList(this.pager.currentPage + 1, true);
+      filterOrg: function (query) {// 过滤来源单位
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          this.orgList = [];
+          return;
+        }
+        let params = {
+          keyWord: query,
+          relation: '1'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
+        });
+      },
+      searchInOrder: function () {// 搜索
+        Object.assign(this.filters, this.searchCondition);
+        this.getGoodsList(1);
+      },
+      resetSearchForm: function () {// 重置表单
+        let temp = {
+          keyWord: ''
+        };
+        this.expectedTime = '';
+        Object.assign(this.searchCondition, temp);
+        Object.assign(this.filters, temp);
+      },
+      filterListColor: function (flag) {// 过滤左边列表边角颜色
+        let status = -1;
+        if (flag) {
+          status = 0;
+        }
+        if (!flag) {
+          status = 1;
+        }
+        return status;
       },
       resetRightBox: function () {
         this.showRight = false;
@@ -294,7 +341,7 @@
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
       },
-      getGoodsList: function (pageNo, isContinue = false) {
+      getGoodsList: function (pageNo) {
         this.pager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -302,43 +349,24 @@
           keyWord: this.typeTxt,
           deleteFlag: false
         }, this.filters);
+        this.loadingData = true;
         PurchaseAgreement.query(params).then(res => {
-          if (isContinue) {
-            this.showTypeList = this.showTypeList.concat(res.data.list);
-          } else {
             this.showTypeList = res.data.list;
-            this.typeList = res.data.list;
             if (res.data.list.length > 0) {
               this.currentItem = Object.assign(this.showTypeList[0]);
             } else {
               this.currentItem = Object.assign({'id': ''});
             }
-          }
+          this.loadingData = false;
           this.pager.totalPage = res.data.totalPage;
         });
       },
-      edit: function () {
+      edit: function (item) {
         this.action = 'edit';
-        this.form = JSON.parse(JSON.stringify(this.currentItem));
+        this.currentItem = item;
+        this.form = JSON.parse(JSON.stringify(item));
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice.toString());
         this.showRight = true;
-      },
-      remove: function () {
-        this.$confirm('确认删除疫苗"' + this.currentItem.orgGoodsName + '的采购协议"?', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let name = this.currentItem.orgGoodsName;
-          PurchaseAgreement.delete(this.currentItem.id).then(() => {
-            this.currentItem = {};
-            this.getGoodsList(1);
-            this.$notify.success({
-              title: '成功',
-              message: '已成功删除"' + name + '的采购协议"'
-            });
-          });
-        });
       },
       showType: function (item) {
         this.currentItem = item;

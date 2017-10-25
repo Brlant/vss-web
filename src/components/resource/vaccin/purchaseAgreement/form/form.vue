@@ -62,6 +62,9 @@
       </el-switch>
     </el-form-item>
     <el-form-item label-width="120px">
+      <el-button type="warning" @click.prevent.stop="remove()" native-type="submit">
+        删除
+      </el-button>
       <el-button type="primary" @click="onSubmit('form')">保存</el-button>
       <el-button @click="cancel">取消</el-button>
     </el-form-item>
@@ -150,6 +153,24 @@
       },
       formatUnitPrice() {// 格式化单价，保留两位小数
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
+      },
+      remove: function () {
+        this.$confirm('确认删除疫苗"' + this.form.orgGoodsName + '的采购协议"?', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          let name = this.form.orgGoodsName;
+          PurchaseAgreement.delete(this.form.id).then(() => {
+            this.currentItem = {};
+            this.getGoodsList(1);
+            this.$notify.success({
+              title: '成功',
+              message: '已成功删除"' + name + '的采购协议"'
+            });
+            this.$emit('change', this.form);
+          });
+        });
       },
       onSubmit: function (formName) {
         this.changeEndTime(this.form.expireTime);
