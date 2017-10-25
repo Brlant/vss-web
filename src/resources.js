@@ -1,11 +1,11 @@
-import {Notification} from 'element-ui';
+import { Notification } from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
 
 export const http = axios.create({
   baseURL: process.env.NODE_API,
-  timeout: 10000,
+  timeout: 30000,
   withCredentials: true
 });
 
@@ -677,6 +677,12 @@ export const cerpAction = resource('/outbound/count', http, {
   },
   queryOnCDCs() {
     return http.get('/erp-org/superior');
+  },
+  queryWeChatInfo () {
+    return http.get('/erp-org/user/wechat');
+  },
+  unBindWeChat () {
+    return http.put('/erp-org/unbind/wechat');
   }
 });
 

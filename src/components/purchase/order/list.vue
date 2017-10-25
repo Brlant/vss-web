@@ -346,9 +346,12 @@
     mounted () {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
-      if (orderId && orderId !== ':id') {
+      if (orderId && orderId !== ':id' && orderId !== 'add') {
         this.currentOrderId = orderId;
         this.showDetail = true;
+      }
+      if (orderId === 'add') {
+        this.add();
       }
     },
     computed: {

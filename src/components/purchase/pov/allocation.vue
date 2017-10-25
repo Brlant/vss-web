@@ -217,9 +217,9 @@
       },
       goTo () {
         this.$notify.success({
-          message: '即将跳转到采购订单，点击添加按钮，采购所需货品'
+          message: '即将跳转到采购订单'
         });
-        this.$router.push('/purchase/order/:id');
+        this.$router.push('/purchase/order/add');
       },
       submit () {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);

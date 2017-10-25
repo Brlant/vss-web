@@ -161,6 +161,11 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
+          let weChatInfo = window.localStorage.getItem('weChatInfo');
+          weChatInfo = JSON.parse(weChatInfo);
+          if (weChatInfo && weChatInfo.nickname) {
+            this.$store.commit('initWeChatInfo', weChatInfo);
+          }
           this.queryBaseInfo(data);
           this.getRoleMenus(data);
         }).catch(() => {

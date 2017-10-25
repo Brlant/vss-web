@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import {Auth} from '../resources';
+  import { Auth, cerpAction } from '../resources';
   import AppFooter from './common/app.footer.vue';
 
   export default {
@@ -108,6 +108,7 @@
                 }
                 this.$router.replace('/');
               });
+              this.queryWeChat();
             }, error => {
               let data = error.response.data;
               this.$notify.error({
@@ -129,6 +130,11 @@
       },
       isFocusIndex () {
         this.isFocus = !this.user.orgCode ? 1 : !this.user.username ? 2 : !this.user.password ? 3 : '';
+      },
+      queryWeChat () {
+        cerpAction.queryWeChatInfo().then(res => {
+          this.$store.commit('initWeChatInfo', res.data);
+        });
       }
     },
     mounted: function () {
