@@ -47,6 +47,14 @@ export default {
     4: {'title': '已完成', state: '4', num: ''},
     5: {'title': '取消订单', state: '5', num: ''}
   },
+  outReturnOrderType: {
+    0: {'title': '待确认', state: '0', num: ''},
+    1: {'title': '待审单', state: '1', num: ''},
+    2: {'title': '执行中', state: '2', num: ''},
+    3: {'title': '待发货', state: '3', num: ''},
+    4: {'title': '已完成', state: '4', num: ''},
+    5: {'title': '取消订单', state: '5', num: ''}
+  },
   paymentOperation: {
     0: {'title': '待审核', status: '0', num: 0},
     1: {'title': '待分配', status: '1', num: 0},

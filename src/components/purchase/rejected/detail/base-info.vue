@@ -231,9 +231,9 @@
       },
       getOrderStatus: function (order) { // 获取订单状态
         let state = '';
-        for (let key in utils.outOrderType) {
-          if (order.state === utils.outOrderType[key].state) {
-            state = utils.outOrderType[key].title;
+        for (let key in utils.outReturnOrderType) {
+          if (order.state === utils.outReturnOrderType[key].state) {
+            state = utils.outReturnOrderType[key].title;
           }
         }
         return state;
