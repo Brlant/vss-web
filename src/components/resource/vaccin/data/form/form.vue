@@ -337,9 +337,15 @@
         this.goodsType = '';
         if (typeof val.id === 'string') {
           this.form = this.formItem;
-          this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
-          this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice.toString());
-          this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
+          if (this.form.bidPrice) {
+            this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
+          }
+          if (this.form.procurementPrice) {
+            this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice.toString());
+          }
+          if (this.form.sellPrice) {
+            this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
+          }
           this.otherGoodsList = [];
         } else {
 //          this.getCombinationGoods();
