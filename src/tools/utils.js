@@ -226,8 +226,11 @@ export default {
     }
   },
   getSelectLabel: function (key, labelList) {
-    let len = labelList.length;
     let label = '';
+    if (!Array.isArray(labelList)) {
+      return label;
+    }
+    let len = labelList.length;
     for (let i = 0; i < len; i++) {
       if (labelList[i].key === key) {
         label = labelList.label;
