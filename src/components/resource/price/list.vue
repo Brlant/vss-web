@@ -349,7 +349,7 @@
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.typePager.pageSize
         }, this.filters);
         BriceGroup.query(params).then(res => {
           if (isContinue) {
@@ -376,7 +376,7 @@
         });
       },
       refresh () {
-        this.getOrgsList();
+        this.getOrgsList(1);
         this.resetRightBox();
       },
       refreshDetails () {
