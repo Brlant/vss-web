@@ -85,27 +85,27 @@
                 <el-input v-model="filters.orderNo"></el-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="CDC货品" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
-                           v-model="filters.orgGoodsId" popper-class="good-selects">
-                  <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
-                             v-for="item in goodses">
-                    <div style="overflow: hidden">
-                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-                      </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="CDC货品" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入名称搜索CDC货品" :remote-method="getGoodsList" :clearable="true"-->
+            <!--v-model="filters.orgGoodsId" popper-class="good-selects">-->
+            <!--<el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"-->
+            <!--v-for="item in goodses">-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="pull-left">{{item.orgGoodsDto.name}}</span>-->
+            <!--</div>-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="select-other-info pull-left"><span-->
+            <!--v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}-->
+            <!--</span>-->
+            <!--<span class="select-other-info pull-left"><span-->
+            <!--v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--</el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
             <el-col :span="8">
               <oms-form-row label="物流厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
@@ -143,13 +143,13 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="4">货品</el-col>
-          <el-col :span="2">疫苗类型</el-col>
-          <el-col :span="4">采购订单号</el-col>
-          <el-col :span="4">物流厂商</el-col>
-          <el-col :span="3">实际到货数量</el-col>
+          <!--<el-col :span="4">货品</el-col>-->
+          <!--<el-col :span="2">疫苗类型</el-col>-->
+          <el-col :span="6">采购订单号</el-col>
+          <el-col :span="6">物流厂商</el-col>
+          <el-col :span="4">实际到货数量</el-col>
           <el-col :span="4">物流费用</el-col>
-          <el-col :span="3">入库时间</el-col>
+          <el-col :span="4">入库时间</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -166,25 +166,25 @@
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in bills" :key="">
             <el-row>
-              <el-col :span="4" class="R pt10">
-                {{ item.goodsName }}
-              </el-col>
-              <el-col :span="2" class="R pt10">
-                <dict :dict-group="'vaccineSign'" :dict-key="item.vaccineType"></dict>
-              </el-col>
-              <el-col :span="4" class="R pt10">
+              <!--<el-col :span="4" class="R pt10">-->
+              <!--{{ item.goodsName }}-->
+              <!--</el-col>-->
+              <!--<el-col :span="2" class="R pt10">-->
+              <!--<dict :dict-group="'vaccineSign'" :dict-key="item.vaccineType"></dict>-->
+              <!--</el-col>-->
+              <el-col :span="6" class="R pt10">
                 {{ item.orderNo }}
               </el-col>
-              <el-col :span="4" class="R pt10">
+              <el-col :span="6" class="R pt10">
                 {{ item.factoryName }}
               </el-col>
-              <el-col :span="3" class="R pt10">
+              <el-col :span="4" class="R pt10">
                 {{ item.purchaseCount }}
               </el-col>
               <el-col :span="4" class="R pt10 ">
                 <span v-show="item.price">￥</span>{{ item.price | formatMoney}}
               </el-col>
-              <el-col :span="3" class="R pt10 ">
+              <el-col :span="4" class="R pt10 ">
                 {{ item.arriveTime | date }}
               </el-col>
             </el-row>
