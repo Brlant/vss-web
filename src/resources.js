@@ -241,6 +241,9 @@ export const vaccineBills = resource('/factory-reconciliation', http, {});
 export const erpOrder = resource('/erp-order', http, {
   queryStateNum(params) {
     return http.get('/erp-order/count', {params});
+  },
+  updateOrder (orderId, obj) {
+    return http.put(`/erp-order/${orderId}/detail`, obj);
   }
 });
 

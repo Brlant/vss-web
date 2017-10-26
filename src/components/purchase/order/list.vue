@@ -206,11 +206,12 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="7">货主/订单号</el-col>
+          <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">供货厂商</el-col>
+          <el-col :span="filters.state === '6' ? 5: 6">供货厂商</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
+          <el-col :span="3" v-if="filters.state === '6'">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -228,7 +229,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="7">
+              <el-col :span="filters.state === '6' ? 5: 7">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -241,7 +242,7 @@
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="6" class="pt10">
+              <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
@@ -260,12 +261,18 @@
                   <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
                 </div>
               </el-col>
+              <el-col :span="3" class="opera-btn" v-if="filters.state === '6' ">
+                <span @click.stop.prevent="editOrder(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="iconfont icon-edit"></i></a>
+                  编辑
+                </span>
+              </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
       </div>
-
 
     </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
@@ -282,7 +289,8 @@
     </page-right>
     <page-right :show="showItemRight" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
-      <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :purchase="purchase" :action="action"
+      <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
+                :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
   </div>
@@ -377,6 +385,12 @@
       }
     },
     methods: {
+      editOrder (item) {
+        this.action = 'edit';
+        this.currentOrderId = item.id;
+        this.showItemRight = true;
+        this.defaultIndex = 2;
+      },
       getOrderStatus: function (order) {
         let state = '';
         for (let key in this.orgType) {
