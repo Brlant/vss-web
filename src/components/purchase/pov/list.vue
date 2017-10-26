@@ -147,7 +147,7 @@
               </el-col>
               <el-col :span="filters.status === 1 ? 6: 7" class="R pt10">
                 <span>
-                  {{ item.applyMan }}
+                  {{ item.id }}
                 </span>
               </el-col>
               <el-col :span="7" class="pt">
