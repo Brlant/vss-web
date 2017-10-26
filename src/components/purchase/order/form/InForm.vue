@@ -231,7 +231,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">新增采购订单</h2>
+        <h2 class="clearfix right-title">{{ defaultIndex === 2 ? '编辑采购订单' : '新增采购订单'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
