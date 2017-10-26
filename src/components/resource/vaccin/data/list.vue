@@ -126,7 +126,7 @@
           <div v-else>
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
-                  :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto,'locked':isLocked(item.orgGoodsDto)}">
+                  :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
                 <perm label="vaccine-info-delete">
                   <oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'
                               class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
@@ -574,14 +574,6 @@
         });
       },
       showType: function (item) {
-//        if (this.isLocked(item.orgGoodsDto)) {
-//          this.$notify.info({
-//            message: '已被其他用户锁定，暂时无法查看'
-//          });
-//          this.data = {id: ''};
-//          this.combinationList = [];
-//          return;
-//        }
         this.currentItem = item;
         this.queryOrgGoods();
       },

@@ -285,7 +285,7 @@
             <el-form-item label="实收总金额" v-if="form.orgId">
               ¥ {{practicalTotalAmount | formatMoney }}
             </el-form-item>
-            <el-form-item label="未付总金额" v-if="form.orgId">
+            <el-form-item label="未收总金额" v-if="form.orgId">
               ¥ {{notTotalAmount | formatMoney }}
             </el-form-item>
             <el-form-item label="收款方式" prop="payType">

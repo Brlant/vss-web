@@ -203,7 +203,7 @@
               </el-col>
               <el-col :span="4">
                 <div>
-                  {{ item.amount}} {{item.unit}}
+                  {{ item.amount}} <dict :dict-group="'measurementUnit'" :dict-key="item.unit"></dict>
                 </div>
               </el-col>
               <el-col :span="4">
