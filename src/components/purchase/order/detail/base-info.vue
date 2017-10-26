@@ -32,7 +32,7 @@
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
           </oms-row>
           <oms-row label="疾控仓库地址" :span="span">
-            <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
+            <span class="goods-span">{{ getWarehouseAdress(currentOrder)}}</span>
           </oms-row>
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
@@ -148,6 +148,12 @@
           }
         }
         return retstate;
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        if (!item.warehouseAddress) {
+          return '';
+        }
+        return utils.formatAddress(item.warehouseProvince, item.warehouseCity, item.warehouseRegion) + '/' + item.warehouseAddress;
       }
     }
   };

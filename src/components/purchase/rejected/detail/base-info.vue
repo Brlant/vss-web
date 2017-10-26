@@ -35,7 +35,7 @@
               {{currentOrder.customerName}}
             </oms-row>
             <oms-row label="供货厂商仓库" :span="span">
-              {{currentOrder.warehouseAddress}}
+              {{ getWarehouseAdress(currentOrder)}}
             </oms-row>
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
@@ -200,9 +200,9 @@
           : item.transportationMeansId === '1' ? '预计提货'
             : item.transportationMeansId === '2' ? '预计发货' : '';
       },
-      getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
-      },
+//      getWarehouseAdress: function (item) { // 得到仓库地址
+//        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+//      },
       searchWarehouses () {
         if (!this.currentOrder.customerId) {
           this.warehouses = [];
@@ -237,6 +237,12 @@
           }
         }
         return state;
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        if (!item.warehouseAddress) {
+          return '';
+        }
+        return utils.formatAddress(item.warehouseProvince, item.warehouseCity, item.warehouseRegion) + '/' + item.warehouseAddress;
       }
     }
   };
