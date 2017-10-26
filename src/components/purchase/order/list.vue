@@ -434,6 +434,13 @@
       },
       onSubmit: function () {
         this.getOrderList(1);
+        if (this.defaultIndex === 2) {
+          let orderId = this.currentOrderId;
+          this.currentOrderId = '';
+          this.$nextTick(() => {
+            this.currentOrderId = orderId;
+          });
+        }
       },
       getOrderList: function (pageNo) {
         if (pageNo === 1) {

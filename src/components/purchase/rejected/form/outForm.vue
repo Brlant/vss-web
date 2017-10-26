@@ -221,6 +221,12 @@
   .ar {
     text-align: right;
   }
+
+  .goods-btn {
+    a:hover {
+      color: @activeColor;
+    }
+  }
 </style>
 
 
@@ -228,7 +234,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="padding: 0">新增采购退货订单</h2>
+        <h2 class="clearfix right-title" style="padding: 0">{{ defaultIndex === 2 ? '编辑采购退货订单' : '新增采购退货订单'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -470,8 +476,16 @@
                   <td class="ar"><span
                     v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
                   </td>
-                  <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                    class="iconfont icon-delete"></i> 删除</a></td>
+                  <td>
+                    <div v-show="defaultIndex === 2">
+                      <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
+                        class="iconfont icon-edit"></i> 编辑</a>
+                    </div>
+                    <div>
+                      <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
+                        class="iconfont icon-delete"></i> 删除</a>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td colspan="4"></td>
@@ -490,7 +504,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo } from '@/resources';
+  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, InWork } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -508,7 +522,8 @@
       defaultIndex: {
         type: Number,
         default: 0
-      }
+      },
+      orderId: String
     },
 
     data: function () {
@@ -674,7 +689,7 @@
           }
         });
       },
-      defaultIndex () {
+      defaultIndex (val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -683,6 +698,11 @@
         this.searchProduct();
         this.filterOrg();
         this.checkLicence(this.form.orgId);
+        if (val === 2) {
+          this.editOrderInfo();
+        } else {
+          this.resetForm();
+        }
       },
       form: {
         handler: 'autoSave',
@@ -718,6 +738,21 @@
         this.form.actualConsignee = '';
         this.form.logisticsCentreId = '';
       },
+      editOrderInfo () {
+        if (!this.orderId) return;
+        InWork.queryOrderDetail(this.orderId).then(res => {
+          this.resetForm();
+          this.isStorageData = true;
+          res.data.detailDtoList.forEach(f => {
+            f.orgGoodsName = f.name;
+          });
+
+          this.form = JSON.parse(JSON.stringify(res.data));
+          this.$nextTick(() => {
+            this.isStorageData = true;
+          });
+        });
+      },
       formatPrice () {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
@@ -738,7 +773,7 @@
         let bizType = this.form.bizType;
         if (!orgId || !bizType) {
           this.orgList = [];
-          this.form.supplierId = '';
+          this.form.customerId = '';
           return;
         }
         let params = {
@@ -880,14 +915,14 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.supplierId) {
+        if (!this.form.customerId) {
           this.searchProductList = [];
           return;
         }
         let params = {
           keyWord: query
         };
-        http.get(`purchase-agreement/${this.form.supplierId}/valid/org-goods`, {params: params}).then(res => {
+        http.get(`purchase-agreement/${this.form.customerId}/valid/org-goods`, {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
@@ -1165,6 +1200,13 @@
         }
         this.searchProduct();
       },
+      editItem (item) {
+        this.product.orgGoodsId = item.orgGoodsId;
+        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
+        this.product.amount = item.amount;
+        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.remove(item);
+      },
       onSubmit: function () {// 提交表单
 
         let self = this;
@@ -1190,28 +1232,53 @@
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.customerId = saveData.orgId;
-          erpOrder.save(saveData).then(res => {
-            this.resetForm();
-            this.$notify({
-              duration: 2000,
-              message: '新增销售订单成功',
-              type: 'success'
-            });
-            window.localStorage.removeItem(this.saveKey);
-            self.$emit('change', res.data);
-            this.$nextTick(() => {
+
+          if (saveData.id) {
+            erpOrder.updateOrder(saveData.id, saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '编辑销售订单成功',
+                type: 'success'
+              });
+              self.$emit('change');
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
               this.doing = false;
-              this.$emit('close');
+              this.$notify({
+                duration: 2000,
+                title: '编辑销售订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          }).catch(error => {
-            this.doing = false;
-            this.$notify({
-              duration: 2000,
-              title: '新增销售订单失败',
-              message: error.response.data.msg,
-              type: 'error'
+          } else {
+            erpOrder.save(saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '新增销售订单成功',
+                type: 'success'
+              });
+              window.localStorage.removeItem(this.saveKey);
+              self.$emit('change', res.data);
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
+              this.doing = false;
+              this.$notify({
+                duration: 2000,
+                title: '新增销售订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          });
+          }
         });
       }
     }
