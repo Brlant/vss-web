@@ -199,7 +199,7 @@
         <!--<el-form ref="otherGoodsForm" :model="form" :rules="otherGoodsRules" label-width="120px">-->
         <el-form-item label="其他组织疫苗">
           <el-select placeholder="请选择组织疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects" remote
-                     :remote-method="getCombinationGoods" :clearable="true">
+                     :remote-method="queryCombinationGoods" :clearable="true">
             <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                        v-for="item in otherGoodsList">
               <div style="overflow: hidden">
@@ -347,8 +347,9 @@
             this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
           }
           this.otherGoodsList = [];
+          this.getCombinationGoods();
         } else {
-//          this.getCombinationGoods();
+//          this.queryCombinationGoods();
           this.getOmsGoods();
           this.form = {
             name: '',
@@ -441,7 +442,7 @@
           this.getGoodsType(this.form.goodsId);
         });
       },
-      getCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
+      queryCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {
           keyWord: keyWord,
           deleteFlag: false
@@ -449,6 +450,17 @@
         Vaccine.query(params).then(res => {
           this.invariantOtherGoodslist = JSON.parse(JSON.stringify(res.data.list));
           this.filtersCombinationGoods();
+        });
+      },
+      getCombinationGoods: function (keyWord) {// 获取其他组合货品列表
+        let params = Object.assign({}, {
+          deleteFlag: false,
+          orgId: this.$route.params.id,
+          keyWord: keyWord
+        });
+        Vaccine.query(params).then(res => {
+          let list = JSON.parse(JSON.stringify(res.data.list));
+          this.filterSelectGoodsList(list);
         });
       },
       getGoodsType: function (id) {
