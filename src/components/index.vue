@@ -161,11 +161,7 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
-          let weChatInfo = window.localStorage.getItem('weChatInfo');
-          weChatInfo = JSON.parse(weChatInfo);
-          if (weChatInfo && weChatInfo.nickname) {
-            this.$store.commit('initWeChatInfo', weChatInfo);
-          }
+          this.queryWeChat();
           this.queryBaseInfo(data);
           this.getRoleMenus(data);
         }).catch(() => {
@@ -224,6 +220,13 @@
           });
           menuData.menuList = menuList;
           this.$store.commit('initPermList', menuData);
+        });
+      },
+      queryWeChat () {
+        cerpAction.queryWeChatInfo().then(res => {
+          this.$store.commit('initWeChatInfo', res.data);
+        }).catch(() => {
+          this.$store.commit('initWeChatInfo', {});
         });
       },
       queryBaseInfo (data) {

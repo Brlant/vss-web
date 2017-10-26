@@ -196,9 +196,15 @@
       },
       queryCount (params) {
         http.get('/erp-receipt/order/count', {params}).then(res => {
-          this.receiptType[0].num = res.data['out-pov-receipt'];
-          this.receiptType[1].num = res.data['out-complete'];
+          this.receiptType[0].num = this.obtionStatusNum(res.data['out-pov-receipt']);
+          this.receiptType[1].num = this.obtionStatusNum(res.data['out-complete']);
         });
+      },
+      obtionStatusNum: function (num) {
+        if (typeof num !== 'number') {
+          return 0;
+        }
+        return num;
       },
       resetRightBox () {
         this.showRight = false;
