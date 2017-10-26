@@ -28,7 +28,7 @@
               <el-button type="primary" @click="confirm">确认订单</el-button>
             </perm>
           </li>
-          <li class="text-center order-btn" style="margin-top: 40px">
+          <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="sales-order-confirm" v-show="currentOrder.state === '0' || currentOrder.state === '1'">
               <el-button type="primary" @click="cancel">取消订单</el-button>
             </perm>

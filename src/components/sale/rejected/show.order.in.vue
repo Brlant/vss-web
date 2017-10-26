@@ -28,8 +28,8 @@
               <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
-          <li class="text-center order-btn" style="margin-top: 40px">
-            <perm label="sales-order-confirm" v-show="currentOrder.state === '0'">
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm label="sales-order-confirm" v-show="currentOrder.state === '6'">
               <el-button type="primary" @click="cancel">取消订单</el-button>
             </perm>
           </li>
