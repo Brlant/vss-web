@@ -618,6 +618,9 @@ export const VaccineRights = resource('/vaccine-authorization', http, {
   },
   deleteVaccine(id) {
     return http.put(`/vaccine-authorization/detail/${id}`);
+  },
+  batchSave (obj) {
+    return http.post('/vaccine-authorization/batch', obj);
   }
 });
 

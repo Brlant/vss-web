@@ -1,5 +1,6 @@
 <style lang="less" scoped="">
   @import '../../../assets/mixins';
+
   .page-right-part {
     box-sizing: content-box;
     width: 800px;
@@ -99,6 +100,7 @@
   .cursor-span {
     cursor: pointer;
   }
+
   .opera-btn-bidder {
     a:hover {
       color: @activeColor;
@@ -211,7 +213,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in dataRows" @click.prevent=""
-               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentId ==item.id}]" >
+               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentId ==item.id}]">
             <el-row>
               <el-col :span="5">
                 <div class="vertical-center">
@@ -230,7 +232,7 @@
                 <div class="vertical-center">{{item.approvalNumber }}</div>
               </el-col>
               <el-col :span="2">
-                  {{item.year}}
+                {{item.year}}
               </el-col>
               <el-col :span="2">
                 <div class="vertical-center">
@@ -244,8 +246,10 @@
                 </perm>
                 <perm label="vaccine-info-delete">
                   <a href="#" @click.stop.prevent="remove(item.id)">
-                    <oms-forbid :item="item" @forbided="remove((item.id))" :tips='"确认删除中标疫苗\""+item.goodsName+"\"?"' >
-                      <i class="iconfont icon-remove"></i> 删除</oms-forbid></a>
+                    <oms-forbid :item="item" @forbided="remove((item.id))" :tips='"确认删除中标疫苗\""+item.goodsName+"\"?"'>
+                      <i class="iconfont icon-remove"></i> 删除
+                    </oms-forbid>
+                  </a>
 
                 </perm>
               </el-col>
@@ -344,13 +348,12 @@
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+          this.querySum(params);
         });
-        this.querySum(params);
+
       },
       querySum(params) {
-        let para = Object.assign({}, params);
-        para.availabilityStatus = undefined;
-        http.get('successful-bidder/count').then(res => {
+        http.get('successful-bidder/count', {params}).then(res => {
           this.successBidderType[0].num = res.data['true'];
           this.successBidderType[1].num = res.data['false'];
         });
@@ -374,8 +377,8 @@
         else return '未生效';
       },
       itemChange: function (item) {
-          this.getPageList(1);
-          this.showRight = false;
+        this.getPageList(1);
+        this.showRight = false;
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色
         let status = -1;

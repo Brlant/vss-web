@@ -223,6 +223,7 @@
   .good-selects {
     .el-select-dropdown__item {
       width: 520px;
+      height: 70px;
     }
   }
 </style>
@@ -242,9 +243,10 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="POV" prop="povId">
-              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
-                         v-model="form.povId" popper-class="good-selects" @click.native="filterPOV('')">
+            <el-form-item label="POV" prop="povList" v-if="!form.id">
+              <el-select filterable remote placeholder="请输入关键字搜索POV" multiple :remote-method="filterPOV"
+                         :clearable="true"
+                         v-model="form.povList" popper-class="good-selects">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                            v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -257,6 +259,9 @@
                   </div>
                 </el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="POV" prop="povId" v-if="form.id">
+              <span>{{ formItem.povName }}</span>
             </el-form-item>
             <el-form-item label="选择价格组" prop="salePriceGroupId">
               <el-select filterable remote placeholder="请输入关键字搜索价格组" :remote-method="filterPriceGroup" :clearable="true"
@@ -292,13 +297,15 @@
     data () {
       return {
         form: {
-          povId: '',
           orgGoodsId: '',
-          salePriceGroupId: ''
+          salePriceGroupId: '',
+          povList: [],
+          povId: ''
         },
         rules: {
           salePriceGroupId: {required: true, message: '请选择价格组', trigger: 'change'},
-          povId: {required: true, message: '请选择POV', trigger: 'change'}
+          povList: {required: true, type: 'array', message: '请选择POV', trigger: 'change'},
+          povId: {required: true, message: '请选择价格组', trigger: 'change'}
         },
         prices: [], // 货品列表
         title: '新增疫苗授权详情',
@@ -308,6 +315,7 @@
     },
     watch: {
       formItem (val) {
+        this.$refs['d-form'].resetFields();
         if (val.id) {
           this.title = '编辑疫苗授权详情';
           this.orgList.push({
@@ -319,11 +327,13 @@
             name: val.salePriceGroupName
           });
           this.form = val;
+          this.form.povList = [];
         } else {
           this.form = {
-            povId: '',
             orgGoodsId: '',
-            salePriceGroupId: ''
+            salePriceGroupId: '',
+            povList: [],
+            povId: ''
           };
           this.title = '新增疫苗授权详情';
         }
@@ -354,9 +364,9 @@
         });
       },
       filterPOV: function (query) {// 过滤POV
-        if (!query && this.orgList.length && this.form.povId) {
-          return false;
-        }
+//        if (!query && this.orgList.length && this.form.povId) {
+//          return false;
+//        }
         let params = Object.assign({}, {
           keyWord: query
         });
@@ -380,7 +390,13 @@
               this.$notify.success({
                 message: '修改疫苗授权成功'
               });
-              this.$refs['d-form'].resetFields();
+//              this.$refs['d-form'].resetFields();
+              this.form = {
+                orgGoodsId: '',
+                salePriceGroupId: '',
+                povList: [],
+                povId: ''
+              };
               this.$emit('refresh');
             }).catch(error => {
               this.$notify.error({
@@ -388,8 +404,12 @@
               });
             });
           } else {
-            this.form.orgGoodsId = this.currentItem.orgGoodsId;
-            VaccineRights.save(this.form).then(() => {
+            let obj = {
+              'orgGoodsId': this.currentItem.orgGoodsId,
+              'povList': this.form.povList,
+              'groupId': this.form.salePriceGroupId
+            };
+            VaccineRights.batchSave(obj).then(() => {
               this.$notify.success({
                 message: '添加疫苗授权成功'
               });
@@ -397,7 +417,7 @@
               this.$emit('refresh');
             }).catch(error => {
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '添加疫苗授权成功'
+                message: error.response.data && error.response.data.msg || '添加疫苗授权失败'
               });
             });
           }
