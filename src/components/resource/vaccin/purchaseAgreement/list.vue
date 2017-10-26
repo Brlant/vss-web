@@ -305,6 +305,12 @@
           this.orgType[1].num = this.obtionStatusNum(data['invalid']);
         });
       },
+      obtionStatusNum: function (num) {
+        if (typeof num !== 'number') {
+          return 0;
+        }
+        return num;
+      },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchCondition);
         this.getGoodsList(1);
