@@ -164,7 +164,7 @@
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}</div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix">
@@ -405,7 +405,7 @@
             this.pager.count = res.data.count;
             this.loadingData = false;
           });
-//        this.queryStatusNum(param);
+        this.queryStatusNum(param);
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色
         let status = -1;
@@ -416,17 +416,16 @@
         }
         return status;
       },
-//      queryStatusNum: function (params) {
-//        erpOrder.queryStateNum(params).then(res => {
-//          let data = res.data;
-//          this.orgType[0].num = this.obtionStatusNum(data['in-pend-check']);
-//          this.orgType[1].num = this.obtionStatusNum(data['in-pend-execute']);
-//          this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
-//          this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
-//          this.orgType[4].num = this.obtionStatusNum(data['in-refuse']);
-//          this.orgType[5].num = this.obtionStatusNum(data['exception']);
-//        });
-//      },
+      queryStatusNum: function (params) {
+        BillPayable.queryStateNum(params).then(res => {
+          let data = res.data;
+          this.orgType[0].num = this.obtionStatusNum(data['audit']);
+          this.orgType[1].num = this.obtionStatusNum(data['allocated']);
+          this.orgType[2].num = this.obtionStatusNum(data['complete']);
+          this.orgType[3].num = this.obtionStatusNum(data['notAudit']);
+        });
+      },
+
       obtionStatusNum: function (num) {
         if (typeof num !== 'number') {
           return 0;
