@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui';
+import {Notification} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -473,6 +473,9 @@ export const BillPayable = resource('/bill-payable', http, {
   },
   banding(id, obj) {
     return http.put(`/bill-payable/banding/${id}`, obj);
+  },
+  queryStateNum: (params) => {
+    return http.get('/bill-payable/count', {params});
   }
 });
 
@@ -489,6 +492,9 @@ export const BillReceivable = resource('/bill-receivable', http, {
   },
   banding(id, obj) {
     return http.put(`/bill-receivable/banding/${id}`, obj);
+  },
+  queryStateNum: (params) => {
+    return http.get('/bill-receivable/count', {params});
   }
 });
 
