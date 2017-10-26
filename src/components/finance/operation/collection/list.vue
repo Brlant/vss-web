@@ -125,8 +125,9 @@
             <el-col :span="8">
               <oms-form-row label="付款单位" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.orgId" @change="setAccountsPayableId">
-                  <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName" v-for="org in orgList">
+                           v-model="searchCondition.orgId">
+                  <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
+                             v-for="org in payOrgList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
                     </div>
@@ -266,6 +267,8 @@
     },
     data: function () {
       return {
+        orgList: [],
+        payOrgList: [],
         loadingData: true,
         showItemRight: false,
         showDetail: false,
