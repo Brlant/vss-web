@@ -28,6 +28,11 @@
               <el-button type="primary" @click="confirm">确认订单</el-button>
             </perm>
           </li>
+          <li class="text-center order-btn" style="margin-top: 40px">
+            <perm label="return-manager-confirm" v-show="currentOrder.state === '0' || currentOrder.state === '1'">
+              <el-button type="primary" @click="cancel">取消订单</el-button>
+            </perm>
+          </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="return-manager-audit" v-show="currentOrder.state === '1' ">
               <el-button type="primary" @click="review">审单通过</el-button>
@@ -48,7 +53,7 @@
   import basicInfo from './detail/base-info.vue';
   import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
-  import { InWork, http } from '@/resources';
+  import { InWork, http, erpOrder } from '@/resources';
 
   export default {
     components: {basicInfo, log, receipt},
@@ -136,6 +141,25 @@
       transformState (state) {
         this.currentOrder.state = state;
         this.$emit('refreshOrder');
+      },
+      cancel () {
+        this.$confirm('是否取消订单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          erpOrder.cancel(this.orderId).then(() => {
+            this.$notify.success({
+              message: '取消订单成功'
+            });
+            this.$emit('close');
+            this.$emit('refreshOrder');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '取消订单失败'
+            });
+          });
+        });
       }
     }
   };

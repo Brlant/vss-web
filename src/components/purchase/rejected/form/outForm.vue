@@ -294,8 +294,14 @@
                          v-model="form.sameBatchNumber"></el-switch>
             </el-form-item>
             <el-form-item label="物流中心">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
+              <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">-->
+              <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
+              <!--</el-select>-->
+              <el-select placeholder="请选择疾控仓库地址" v-model="form.logisticsCentreId" filterable :clearable="true">
+                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="运输条件" prop="transportationCondition">
@@ -568,7 +574,7 @@
           transportationAddress: '',
           importedFlag: false,
           orgRelation: '',
-          logisticsCentreId: window.localStorage.getItem('logisticsCentreId'),
+          logisticsCentreId: '',
           sameBatchNumber: false,
           actualConsignee: '',
           'thirdPartyNumber': '',
@@ -703,6 +709,7 @@
         } else {
           this.resetForm();
         }
+        this.filterAddress();
       },
       form: {
         handler: 'autoSave',
@@ -712,12 +719,12 @@
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
+//      this.filterLogisticsCenter();
       let oldForm = window.localStorage.getItem(this.saveKey);
       if (oldForm) {
         this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-        this.form.logisticsCentreId = this.form.logisticsCentreId
-          ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
+//        this.form.logisticsCentreId = this.form.logisticsCentreId
+//          ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
       }
     },
     methods: {
@@ -896,6 +903,17 @@
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+      },
+      filterAddress () {
+        Address.queryAddress(this.form.orgId, {
+          deleteFlag: false,
+          orgId: this.form.orgId,
+          auditedStatus: '1'
+        }).then(res => {
+          this.LogisticsCenter = res.data;
+          let defaultStore = res.data.filter(item => item.default);
+          this.form.logisticsCentreId = defaultStore.length ? defaultStore[0].id : '';
+        });
       },
       checkLicence: function (val) {// 检查货主/单位证照是否过期
         if (!val || !this.action) return;
@@ -1210,6 +1228,7 @@
       onSubmit: function () {// 提交表单
 
         let self = this;
+        this.changeExpectedTime(this.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;

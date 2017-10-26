@@ -976,6 +976,7 @@
       },
       onSubmit: function () {// 提交表单
         let self = this;
+        this.changeExpectedTime(this.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;

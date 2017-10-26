@@ -244,6 +244,9 @@ export const erpOrder = resource('/erp-order', http, {
   },
   updateOrder (orderId, obj) {
     return http.put(`/erp-order/${orderId}/detail`, obj);
+  },
+  cancel (orderId) {
+    return http.get(`/erp-order/${orderId}/check`);
   }
 });
 

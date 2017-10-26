@@ -615,6 +615,7 @@
       },
       onSubmit: function () {// 提交表单
         let self = this;
+        this.changeTime(this.form.demandTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             return false;
