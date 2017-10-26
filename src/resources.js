@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui';
+import { Notification } from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -246,7 +246,7 @@ export const erpOrder = resource('/erp-order', http, {
     return http.put(`/erp-order/${orderId}/detail`, obj);
   },
   cancel (orderId) {
-    return http.get(`/erp-order/${orderId}/check`);
+    return http.put(`/erp-order/${orderId}/cancel`);
   }
 });
 
