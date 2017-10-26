@@ -219,6 +219,12 @@
   .ar {
     text-align: right;
   }
+
+  .goods-btn {
+    a:hover {
+      color: @activeColor;
+    }
+  }
 </style>
 
 <template>
@@ -290,7 +296,7 @@
             </el-form-item>
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
-                          v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
+                          v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
               <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in supplierWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -307,12 +313,12 @@
               </el-select>
             </el-form-item>
             <el-form-item label="物流中心">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable>
+              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
             </el-form-item>
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable>
+              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
@@ -452,8 +458,16 @@
                 <td class="ar"><span
                   v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
                 </td>
-                <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                  class="iconfont icon-delete"></i> 删除</a></td>
+                <td class="goods-btn">
+                  <div v-show="defaultIndex === 2">
+                    <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
+                      class="iconfont icon-edit"></i> 编辑</a>
+                  </div>
+                  <div>
+                    <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
+                      class="iconfont icon-delete"></i> 删除</a>
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td colspan="3"></td>
@@ -471,7 +485,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo } from '@/resources';
+  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, InWork } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -490,7 +504,8 @@
         type: String,
         default: ''
       },
-      purchase: Object
+      purchase: Object,
+      orderId: String
     },
     data: function () {
 
@@ -652,7 +667,7 @@
           }
         });
       },
-      defaultIndex () {
+      defaultIndex (val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -664,6 +679,11 @@
         this.checkLicence(this.form.orgId);
         if (this.purchase.id) {
           this.createOrderInfo();
+        }
+        if (val === 2) {
+          this.editOrderInfo();
+        } else {
+          this.resetForm();
         }
       },
       form: {
@@ -706,6 +726,22 @@
           });
         });
       },
+      editOrderInfo () {
+        if (!this.orderId) return;
+        InWork.queryOrderDetail(this.orderId).then(res => {
+//          this.currentOrder = res.data;
+          this.resetForm();
+          this.isStorageData = true;
+          res.data.detailDtoList.forEach(f => {
+            f.orgGoodsName = f.name;
+          });
+          this.form = JSON.parse(JSON.stringify(res.data));
+          this.$nextTick(() => {
+            this.isStorageData = true;
+          });
+        });
+      },
+
       autoSave: function () {
         if (!this.form.id) {
           window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
@@ -1022,6 +1058,23 @@
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         this.searchProduct();
       },
+      editItem (item) {
+//        this.filterProductList = [];
+//        this.searchProductList = [];
+//        this.searchProductList.push({
+//          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+//          list: []
+//        });
+//        this.filterProductList.push({
+//          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+//          list: []
+//        });
+        this.product.orgGoodsId = item.orgGoodsId;
+        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
+        this.product.amount = item.amount;
+        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.remove(item);
+      },
       onSubmit: function () {// 提交表单
         let self = this;
         this.$refs['orderAddForm'].validate((valid) => {
@@ -1042,31 +1095,56 @@
             delete item.fixInfo;
             delete item.mainOrgId;
             delete item.isCombination;
+            delete item.orgGoodsDto;
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
-          erpOrder.save(saveData).then(res => {
-            this.resetForm();
-            this.$notify({
-              duration: 2000,
-              message: '新增采购订单成功',
-              type: 'success'
-            });
-            self.$emit('change', res.data);
-            window.localStorage.removeItem(this.saveKey);
-            this.$nextTick(() => {
+          if (saveData.id) {
+            erpOrder.updateOrder(saveData.id, saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '编辑采购订单成功',
+                type: 'success'
+              });
+              self.$emit('change');
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
               this.doing = false;
-              this.$emit('close');
+              this.$notify({
+                duration: 2000,
+                title: '编辑采购订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          }).catch(error => {
-            this.doing = false;
-            this.$notify({
-              duration: 2000,
-              title: '新增采购订单失败',
-              message: error.response.data.msg,
-              type: 'error'
+          } else {
+            erpOrder.save(saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '新增采购订单成功',
+                type: 'success'
+              });
+              self.$emit('change', res.data);
+              window.localStorage.removeItem(this.saveKey);
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
+              this.doing = false;
+              this.$notify({
+                duration: 2000,
+                title: '新增采购订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          });
+          }
         });
       }
     }
