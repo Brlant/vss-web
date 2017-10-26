@@ -56,7 +56,7 @@
         <div class="status-item" :class="{'active':key==activeStatus}"
              v-for="(item,key) in receiptType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="state-num">{{item.num}}</span></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
@@ -140,7 +140,7 @@
   </div>
 </template>
 <script>
-  import { povReceipt } from '@/resources';
+  import { povReceipt, http } from '@/resources';
   import utils from '@/tools/utils';
   import showDetail from './show.order.vue';
   import receiptInfo from './receipt.vue';
@@ -191,6 +191,13 @@
           this.orderList = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+        });
+        this.queryCount(params);
+      },
+      queryCount (params) {
+        http.get('/erp-receipt/order/count', {params}).then(res => {
+          this.receiptType[0].num = res.data['out-pov-receipt'];
+          this.receiptType[1].num = res.data['out-complete'];
         });
       },
       resetRightBox () {
