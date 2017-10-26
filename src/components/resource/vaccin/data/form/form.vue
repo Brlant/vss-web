@@ -425,7 +425,8 @@
       },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
         let params = {
-          keyWord: keyWord
+          keyWord: keyWord,
+          availabilityStatus: true
         };
         SuccessfulBidder.queryInfo(params).then(res => {
           this.goodsList = res.data;
