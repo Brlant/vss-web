@@ -126,7 +126,7 @@
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.factoryId" popperClass="good-selects">
+                           v-model="searchCondition.factoryId" popperClass="good-selects" style="width: 100%">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -140,8 +140,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="6">
+            <el-col :span="4">
+              <oms-form-row label="" :span="3">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
@@ -193,7 +193,7 @@
               </el-col>
               <el-col :span="6">
                 <div>
-                  {{item.factoryId}}
+                  {{item.factoryName}}
                 </div>
               </el-col>
               <el-col :span="4" class="pt10">
@@ -285,6 +285,9 @@
           this.getGoodsList(1);
         },
         deep: true
+      },
+      showSearch: function () {
+        this.filterOrg();
       }
     },
     methods: {
