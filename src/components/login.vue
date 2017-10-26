@@ -134,6 +134,8 @@
       queryWeChat () {
         cerpAction.queryWeChatInfo().then(res => {
           this.$store.commit('initWeChatInfo', res.data);
+        }).catch(() => {
+          this.$store.commit('initWeChatInfo', {});
         });
       }
     },
