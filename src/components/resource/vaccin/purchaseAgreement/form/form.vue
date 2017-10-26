@@ -62,10 +62,10 @@
       </el-switch>
     </el-form-item>
     <el-form-item label-width="120px">
-      <el-button type="warning" @click.prevent.stop="remove()" native-type="submit">
-        删除
-      </el-button>
-      <el-button type="primary" @click="onSubmit('form')">保存</el-button>
+      <!--<el-button type="warning" @click.prevent.stop="remove()" native-type="submit">-->
+      <!--删除-->
+      <!--</el-button>-->
+      <el-button type="primary" @click="onSubmit('form')" :disabled="doing">保存</el-button>
       <el-button @click="cancel">取消</el-button>
     </el-form-item>
   </el-form>
@@ -122,6 +122,9 @@
     watch: {
       formItem: function (val) {
         this.form = Object.assign({}, val);
+        if (!this.form.id) {
+          this.form.availabilityStatus = true;
+        }
         this.attachmentList = [];
         this.getOmsGoods();
       },
@@ -149,29 +152,41 @@
         };
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
+          if (this.action === 'edit') {
+            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.id);
+            if (!isExist) {
+              this.goodsList.push({
+                orgGoodsDto: {
+                  id: this.form.orgGoodsId,
+                  name: this.form.orgGoodsName
+                }
+              });
+            }
+          }
         });
       },
       formatUnitPrice() {// 格式化单价，保留两位小数
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
-      remove: function () {
-        this.$confirm('确认删除疫苗"' + this.form.orgGoodsName + '的采购协议"?', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let name = this.form.orgGoodsName;
-          PurchaseAgreement.delete(this.form.id).then(() => {
-            this.currentItem = {};
-            this.getGoodsList(1);
-            this.$notify.success({
-              title: '成功',
-              message: '已成功删除"' + name + '的采购协议"'
-            });
-            this.$emit('change', this.form);
-          });
-        });
-      },
+//      remove: function () {
+//        this.$confirm('确认删除疫苗"' + this.form.orgGoodsName + '的采购协议"?', '', {
+//          confirmButtonText: '确定',
+//          cancelButtonText: '取消',
+//          type: 'warning'
+//        }).then(() => {
+//          let name = this.form.orgGoodsName;
+//          PurchaseAgreement.delete(this.form.id).then(() => {
+//            this.currentItem = {};
+//            this.getGoodsList(1);
+//            this.$notify.success({
+//              title: '成功',
+//              message: '已成功删除"' + name + '的采购协议"'
+//            });
+//            this.$emit('change', this.form);
+//            this.$emit('right-close');
+//          });
+//        });
+//      },
       onSubmit: function (formName) {
         this.changeEndTime(this.form.expireTime);
         this.$refs[formName].validate((valid) => {
@@ -187,10 +202,9 @@
                 this.doing = false;
                 this.$emit('change', res.data);
                 this.$emit('right-close');
-              }).catch(() => {
+              }).catch(error => {
                 this.$notify.error({
-                  duration: 2000,
-                  message: '新增疫苗采购协议失败'
+                  message: error.response.data && error.response.data.msg || '新增疫苗采购协议失败'
                 });
               });
             } else {
@@ -202,10 +216,9 @@
                 this.doing = false;
                 this.$emit('change', res.data);
                 this.$emit('right-close');
-              }).catch(() => {
+              }).catch(error => {
                 this.$notify.error({
-                  duration: 2000,
-                  message: '修改疫苗采购协议信息失败'
+                  message: error.response.data && error.response.data.msg || '修改疫苗采购协议信息失败'
                 });
                 this.doing = false;
               });

@@ -407,6 +407,9 @@ export const Address = resource('/binding-warehouse', http, {
 export const PurchaseAgreement = resource('/purchase-agreement', http, {
   queryValidVaccin(params) {
     return http.get('/purchase-agreement/valid/pager', {params});
+  },
+  queryStateNum: (params) => {
+    return http.get('/purchase-agreement/count', {params});
   }
 });
 

@@ -91,6 +91,10 @@
     margin-right: 40px;
     margin-bottom: 20px;
   }
+
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -119,23 +123,23 @@
                 <oms-input type="text" v-model="searchCondition.keyWord" placeholder="请输入疫苗名称"></oms-input>
               </oms-form-row>
             </el-col>
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="供货厂商" :span="6">-->
-            <!--<el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"-->
-            <!--v-model="searchCondition.transactOrgId" popperClass="good-selects">-->
-            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
-            <!--</div>-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="select-other-info pull-left">-->
-            <!--<span>系统代码</span> {{org.manufacturerCode}}-->
-            <!--</span>-->
-            <!--</div>-->
-            <!--</el-option>-->
-            <!--</el-select>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
+            <el-col :span="8">
+              <oms-form-row label="供货厂商" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
+                           v-model="searchCondition.factoryId" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
             <el-col :span="6">
               <oms-form-row label="" :span="6">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
@@ -152,7 +156,7 @@
              v-for="(item,key) in orgType"
              @click="changeType(key,item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}</div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix">
@@ -176,7 +180,7 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item" v-for="item in showTypeList" @click.prevent="edit(item)"
+          <div class="order-list-item" v-for="item in showTypeList" @click="edit(item)"
                :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentItem.id==item.id}]">
             <el-row>
               <el-col :span="6">
@@ -189,7 +193,7 @@
               </el-col>
               <el-col :span="6">
                 <div>
-                  {{item.factoryName}}
+                  {{item.factoryId}}
                 </div>
               </el-col>
               <el-col :span="4" class="pt10">
@@ -262,7 +266,8 @@
           1: {'title': '停用', 'num': 0, 'availabilityStatus': false}
         },
         searchCondition: {
-          keyWord: ''
+          keyWord: '',
+          factoryId: ''
         },
         orgList: []
       };
@@ -280,26 +285,24 @@
           this.getGoodsList(1);
         },
         deep: true
-      },
-      currentItem: function () {
-        if (this.currentItem.unitPrice) {
-          this.currentItem.unitPrice = utils.autoformatDecimalPoint(this.currentItem.unitPrice.toString());
-        }
       }
     },
     methods: {
-      filterOrg: function (query) {// 过滤来源单位
+      filterOrg: function (query) {// 过滤供货商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.orgList = [];
           return;
         }
-        let params = {
-          keyWord: query,
-          relation: '1'
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+        BaseInfo.queryOrgByReation(orgId, {keyWord: query}).then(res => {
           this.orgList = res.data;
+        });
+      },
+      queryStatusNum: function (params) {
+        PurchaseAgreement.queryStateNum(params).then(res => {
+          let data = res.data;
+          this.orgType[0].num = this.obtionStatusNum(data['valid']);
+          this.orgType[1].num = this.obtionStatusNum(data['invalid']);
         });
       },
       searchInOrder: function () {// 搜索
@@ -308,11 +311,12 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          keyWord: ''
+          keyWord: '',
+          factoryId: ''
         };
-        this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
+        this.getGoodsList(1);
       },
       filterListColor: function (flag) {// 过滤左边列表边角颜色
         let status = -1;
@@ -360,6 +364,7 @@
           this.loadingData = false;
           this.pager.totalPage = res.data.totalPage;
         });
+        this.queryStatusNum(params);
       },
       edit: function (item) {
         this.action = 'edit';
@@ -367,9 +372,6 @@
         this.form = JSON.parse(JSON.stringify(item));
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice.toString());
         this.showRight = true;
-      },
-      showType: function (item) {
-        this.currentItem = item;
       },
       changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
         this.activeStatus = key;
