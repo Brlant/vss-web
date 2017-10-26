@@ -271,7 +271,7 @@
                            v-for="item in prices">
                   <div style="overflow: hidden">
                     <span class="pull-left">{{item.name}}</span>
-                    <span class="pull-right" v-show="item.unitPrice">销售单价 ￥{{item.unitPrice}}</span>
+                    <span class="pull-right">销售单价 ￥{{item.unitPrice}}</span>
                   </div>
                 </el-option>
               </el-select>
