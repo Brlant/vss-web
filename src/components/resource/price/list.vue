@@ -158,7 +158,7 @@
                   {{currentItem.goodsName}}
                 </oms-row>
                 <oms-row label="销售单价" :span="5">
-                  <span v-show="currentItem.unitPrice">￥{{currentItem.unitPrice | formatMoney}}</span>
+                  <span>￥{{currentItem.unitPrice | formatMoney}}</span>
                 </oms-row>
                 <oms-row label="是否可用" :span="5">
                   {{currentItem.availabilityStatus | formatStatus}}

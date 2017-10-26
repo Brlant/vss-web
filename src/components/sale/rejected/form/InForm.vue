@@ -282,7 +282,7 @@
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
-              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
+              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in supplierWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
@@ -297,12 +297,12 @@
               </el-select>
             </el-form-item>
             <el-form-item label="物流中心">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable>
+              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
             </el-form-item>
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable>
+              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
@@ -653,7 +653,6 @@
         this.filterOrg();
         this.filterLogistics();
         this.filterAddress();
-        this.searchProduct();
         this.checkLicence(this.form.orgId);
       },
       form: {
@@ -823,6 +822,7 @@
           });
         }
         this.checkLicence(val);
+        this.searchProduct();
       },
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
@@ -849,11 +849,16 @@
         });
       },
       searchProduct: function (query) {
+        if (!this.form.supplierId || !this.form.orgId) {
+          this.searchProductList = [];
+          return;
+        }
         let params = {
-          orgId: this.form.orgId,
+          cdcId: this.form.orgId,
+          povId: this.form.supplierId,
           keyWord: query
         };
-        http.get('/org/goods/valid', {params: params}).then(res => {
+        http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();

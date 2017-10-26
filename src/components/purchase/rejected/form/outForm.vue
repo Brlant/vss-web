@@ -288,7 +288,7 @@
                          v-model="form.sameBatchNumber"></el-switch>
             </el-form-item>
             <el-form-item label="物流中心">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable>
+              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
             </el-form-item>

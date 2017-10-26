@@ -274,9 +274,9 @@
               </el-select>
             </el-form-item>
             <el-form-item label="POV仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
-                          v-show="showContent.isShowOtherContent">
+                          v-show="showContent.isShowOtherContent" :clearable="true">
               <el-select placeholder="请选择POV仓库" v-model="form.transportationAddress" filterable clearable
-                         @change="changeWarehouseAdress">
+                         @change="changeWarehouseAdress" :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
@@ -291,7 +291,7 @@
                          v-model="form.sameBatchNumber"></el-switch>
             </el-form-item>
             <el-form-item label="物流中心">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable>
+              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
             </el-form-item>
@@ -683,7 +683,6 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
-        this.searchProduct();
         this.filterPOV();
         this.checkLicence(this.form.orgId);
       },
@@ -826,6 +825,7 @@
       changeCustomerId(val) {// POV改变时
         this.checkLicence(val);
         this.searchWarehouses(val);
+        this.searchProduct();
       },
       searchWarehouses (orgId) {
         if (!orgId) {
@@ -870,11 +870,16 @@
         });
       },
       searchProduct: function (query) {
+        if (!this.form.customerId || !this.form.orgId) {
+          this.searchProductList = [];
+          return;
+        }
         let params = {
-          orgId: this.form.orgId,
+          cdcId: this.form.orgId,
+          povId: this.form.customerId,
           keyWord: query
         };
-        http.get('/org/goods/valid', {params: params}).then(res => {
+        http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
