@@ -673,7 +673,9 @@
         },
         warehouses: [], // POV仓库列表
         batchNumbers: [], // 货品批号列表
-        selectBatchNumbers: [] // 已经选择的货品批号
+        selectBatchNumbers: [], // 已经选择的货品批号
+        changeTotalNumber: utils.changeTotalNumber,
+        isCheckPackage: utils.isCheckPackage
       };
     },
     computed: {
@@ -779,16 +781,7 @@
         });
       },
       changeNumber () {
-        let val = this.product.amount;
-        let count = this.product.fixInfo.goodsDto.smallPacking;
-        let remainder = val % count;
-        if (!count) return;
-        if (remainder === 0) return;
-        let re = val % count === 0 ? val : parseInt(val, 10) + count - remainder;
-        this.product.amount = re;
-        this.$notify.info({
-          message: `数量${val}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
-        });
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       formatPrice() {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
@@ -1003,7 +996,7 @@
             });
           }
         });
-
+        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         this.queryBatchNumers();
       },
       filterProducts: function () {
@@ -1088,14 +1081,16 @@
           });
           return false;
         }
-        if (!this.batchNumbers.length && this.form.bizType === '0') {
+        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+        if (!isCheck) return;
+        if (!this.batchNumbers.length) {
           this.$notify.info({
             duration: 2000,
             message: '无库存批次，无法加入订单'
           });
           return false;
         }
-        if (this.batchNumbers.length && this.form.bizType === '0') {
+        if (this.batchNumbers.length) {
           let isHave = this.batchNumbers.some(item => item.lots.some(s => s.count > 0));
           if (!isHave) {
             this.$notify.info({
@@ -1113,23 +1108,6 @@
               message: '请选择货品批号'
             });
             return false;
-          }
-          if (this.form.sameBatchNumber) {
-            let seleteNumber = 0;
-            this.batchNumbers.forEach(i => {
-              i.lots.forEach(l => {
-                if (l.isChecked) {
-                  seleteNumber++;
-                }
-              });
-            });
-            if (seleteNumber > 1) {
-              this.$notify.info({
-                duration: 2000,
-                message: '请选择单个批号'
-              });
-              return false;
-            }
           }
           let isHaveCount = this.batchNumbers.some(item => item.lots.some(l => l.isChecked && !l.productCount));
           if (isHaveCount) {

@@ -246,5 +246,36 @@ export default {
       }
     }
     return label;
+  },
+  changeTotalNumber (amount, smallPacking) {
+    if (!smallPacking) return;
+    let number = Number(amount);
+    let remainder = number % smallPacking;
+    let isMultiple = remainder === 0;
+    if (isMultiple) return number;
+    let integer = parseInt(number, 10) + 1;
+    isMultiple = integer % smallPacking === 0;
+    if (isMultiple) {
+      this.$notify.info({
+        message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${integer}`
+      });
+      return integer;
+    }
+    let re = integer + smallPacking - remainder;
+    this.$notify.info({
+      message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
+    });
+    return re;
+  },
+  isCheckPackage (count) {
+    if (!count || count < 0) {
+      this.$notify({
+        duration: 2000,
+        title: '货品资料不足',
+        message: '货品无最小包装单位，请补充资料，或者选择其他货品',
+        type: 'error'
+      });
+    }
+    return count > 0;
   }
 };

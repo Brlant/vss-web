@@ -637,7 +637,9 @@
         },
         currentTransportationMeans: [],
         cdcWarehouses: [],
-        supplierWarehouses: []
+        supplierWarehouses: [],
+        changeTotalNumber: utils.changeTotalNumber,
+        isCheckPackage: utils.isCheckPackage
       };
     },
     computed: {
@@ -762,28 +764,7 @@
         });
       },
       changeNumber () {
-        let val = this.product.amount;
-        let count = this.product.fixInfo.goodsDto.smallPacking;
-        let remainder = val % count;
-        if (!count) return;
-        if (remainder === 0) return;
-        let re = val % count === 0 ? val : parseInt(val, 10) + count - remainder;
-        this.product.amount = re;
-        this.$notify.info({
-          message: `数量${val}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
-        });
-      },
-      isCheckPackage () {
-        let count = this.product.fixInfo.goodsDto.smallPacking;
-        if (!count || count < 0) {
-          this.$notify({
-            duration: 2000,
-            title: '货品资料不足',
-            message: '货品无最小包装单位，请补充资料，或者选择其他货品',
-            type: 'error'
-          });
-        }
-        return count > 0;
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -1042,9 +1023,9 @@
                 return false;
               }
             });
-            this.isCheckPackage();
           }
         });
+        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
@@ -1054,7 +1035,7 @@
           });
           return false;
         }
-        let isCheck = this.isCheckPackage();
+        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;
         this.$refs['orderGoodsAddForm'].validate((valid) => {
           if (!valid) {

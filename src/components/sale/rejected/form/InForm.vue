@@ -628,8 +628,9 @@
         },
         currentTransportationMeans: [],
         cdcWarehouses: [],
-        supplierWarehouses: []
-
+        supplierWarehouses: [],
+        changeTotalNumber: utils.changeTotalNumber,
+        isCheckPackage: utils.isCheckPackage
       };
     },
     computed: {
@@ -711,16 +712,7 @@
         });
       },
       changeNumber () {
-        let val = this.product.amount;
-        let count = this.product.fixInfo.goodsDto.smallPacking;
-        let remainder = val % count;
-        if (!count) return;
-        if (remainder === 0) return;
-        let re = val % count === 0 ? val : parseInt(val, 10) + count - remainder;
-        this.product.amount = re;
-        this.$notify.info({
-          message: `数量${val}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
-        });
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -970,6 +962,7 @@
             });
           }
         });
+        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
@@ -979,6 +972,8 @@
           });
           return false;
         }
+        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+        if (!isCheck) return;
         this.$refs['orderGoodsAddForm'].validate((valid) => {
           if (!valid) {
             return false;
