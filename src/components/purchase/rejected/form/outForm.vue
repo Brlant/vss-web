@@ -438,7 +438,7 @@
                   </td>
                   <td>
                     <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                              @change="isChangeValue(batchNumber)">
+                              @blur="isChangeValue(batchNumber)">
                       <template slot="append">
                         <dict :dict-group="'measurementUnit'"
                               :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
@@ -1045,6 +1045,7 @@
         });
       },
       isChangeValue (item) {
+        item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         if (item.productCount > item.count) {
           this.$notify.warning({
             duration: 2000,
@@ -1086,7 +1087,6 @@
         }
         let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;
-
         if (!this.batchNumbers.length) {
           this.$notify.info({
             duration: 2000,
