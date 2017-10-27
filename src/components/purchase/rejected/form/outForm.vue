@@ -289,10 +289,10 @@
             <el-form-item label="实际收货人" v-show="showContent.isShowOtherContent">
               <oms-input type="text" placeholder="请输入实际收货人" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
-            <el-form-item label="是否同批号">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.sameBatchNumber"></el-switch>
-            </el-form-item>
+            <!--<el-form-item label="是否同批号">-->
+            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--v-model="form.sameBatchNumber"></el-switch>-->
+            <!--</el-form-item>-->
             <el-form-item label="疾控仓库地址" prop="logisticsCentreId">
               <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
