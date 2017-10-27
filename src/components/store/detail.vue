@@ -54,7 +54,7 @@
               </div>
             </td>
             <td>
-              <span v-show="i.packageSize">
+              <span>
                  {{ i.packageAmount }}  个  {{ packSizeTyps[i.packageSize] }}
               </span>
             </td>
