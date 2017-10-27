@@ -225,6 +225,12 @@
       width: 540px;
     }
   }
+
+  .goods-btn {
+    a:hover {
+      color: @activeColor;
+    }
+  }
 </style>
 
 <template>
@@ -435,22 +441,32 @@
                   <span>{{product.orgGoodsName}}</span>
                 </td>
                 <td class="ar">
-                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice | formatMoney}}
+                  <span v-show="product.unitPrice">¥{{product.unitPrice | formatMoney}}</span>
+                  <span v-if="!product.unitPrice">-</span>
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
                 <td class="ar"><span
-                  v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
+                  v-show="product.unitPrice">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                  <span v-if="!product.unitPrice">-</span>
                 </td>
-                <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                  class="iconfont icon-delete"></i> 删除</a></td>
+                <td>
+                  <div v-show="defaultIndex === 2">
+                    <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
+                      class="iconfont icon-edit"></i> 编辑</a>
+                  </div>
+                  <div>
+                    <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
+                      class="iconfont icon-delete"></i> 删除</a>
+                  </div>
+                </td>
               </tr>
               <tr>
                 <td colspan="3"></td>
                 <td colspan="2"><span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length">合计:</span><span
-                  v-show="form.detailDtoList.length">   ¥{{ totalMoney | formatMoney }}</span></td>
+                  v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
               </tr>
               </tbody>
             </table>
@@ -463,7 +479,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, cerpAction } from '@/resources';
+  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, cerpAction, InWork } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -481,7 +497,8 @@
       action: {
         type: String,
         default: ''
-      }
+      },
+      orderId: String
     },
     data: function () {
 
@@ -644,7 +661,7 @@
           }
         });
       },
-      defaultIndex () {
+      defaultIndex (val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -652,8 +669,13 @@
         this.form.orgId = user.userCompanyAddress;
         this.filterOrg();
         this.filterLogistics();
-        this.filterAddress();
         this.checkLicence(this.form.orgId);
+        if (val === 2) {
+          this.editOrderInfo();
+        } else {
+          this.resetForm();
+        }
+        this.filterAddress();
       },
       form: {
         handler: 'autoSave',
@@ -669,6 +691,21 @@
       this.initForm();
     },
     methods: {
+      editOrderInfo () {
+        if (!this.orderId) return;
+        InWork.queryOrderDetail(this.orderId).then(res => {
+//          this.currentOrder = res.data;
+          this.resetForm();
+          this.isStorageData = true;
+          res.data.detailDtoList.forEach(f => {
+            f.orgGoodsName = f.name;
+          });
+          this.form = JSON.parse(JSON.stringify(res.data));
+          this.$nextTick(() => {
+            this.isStorageData = true;
+          });
+        });
+      },
       autoSave: function () {
         if (!this.form.id) {
           window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
@@ -974,6 +1011,23 @@
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         this.searchProduct();
       },
+      editItem (item) {
+//        this.filterProductList = [];
+//        this.searchProductList = [];
+//        this.searchProductList.push({
+//          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+//          list: []
+//        });
+        this.filterProductList.push({
+          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+          list: []
+        });
+        this.product.orgGoodsId = item.orgGoodsId;
+        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
+        this.product.amount = item.amount;
+        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.remove(item);
+      },
       onSubmit: function () {// 提交表单
         let self = this;
         this.changeExpectedTime(this.expectedTime);
@@ -995,31 +1049,56 @@
             delete item.fixInfo;
             delete item.mainOrgId;
             delete item.isCombination;
+            delete item.orgGoodsDto;
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
-          erpOrder.save(saveData).then(res => {
-            this.resetForm();
-            this.$notify({
-              duration: 2000,
-              message: '新增订单成功',
-              type: 'success'
-            });
-            self.$emit('change', res.data);
-            window.localStorage.removeItem(this.saveKey);
-            this.$nextTick(() => {
+          if (saveData.id) {
+            erpOrder.updateOrder(saveData.id, saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '编辑销售退货订单成功',
+                type: 'success'
+              });
+              self.$emit('change');
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
               this.doing = false;
-              this.$emit('close');
+              this.$notify({
+                duration: 2000,
+                title: '编辑销售退货订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          }).catch(error => {
-            this.doing = false;
-            this.$notify({
-              duration: 2000,
-              title: '新增订单失败',
-              message: error.response.data.msg,
-              type: 'error'
+          } else {
+            erpOrder.save(saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '新增销售退货订单成功',
+                type: 'success'
+              });
+              self.$emit('change', res.data);
+              window.localStorage.removeItem(this.saveKey);
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
+              this.doing = false;
+              this.$notify({
+                duration: 2000,
+                title: '新增销售退货订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          });
+          }
         });
       }
     }

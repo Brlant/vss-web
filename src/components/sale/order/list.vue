@@ -188,12 +188,12 @@
   </div>
   <div class="order-list clearfix">
     <el-row class="order-list-header" :gutter="10">
-      <el-col :span="6">货主/订单号</el-col>
+      <el-col :span="filters.state === '0' ? 5: 6">货主/订单号</el-col>
       <el-col :span="4">业务类型</el-col>
-      <el-col :span="filters.state === '-1' ? 5 : 6">POV</el-col>
-      <el-col :span="filters.state === '-1' ? 4 : 5">时间</el-col>
+      <el-col :span="filters.state === '0' ? 5: 6">POV</el-col>
+      <el-col :span="5">时间</el-col>
       <el-col :span="3">状态</el-col>
-      <!--<el-col :span="2" v-show="filters.state === '-1' ">操作</el-col>-->
+      <el-col :span="2" class="opera-btn" v-if="filters.state === '0' "></el-col>
     </el-row>
     <el-row v-if="loadingData">
       <el-col :span="24">
@@ -224,10 +224,10 @@
               <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
             </div>
           </el-col>
-          <el-col :span="filters.state === '-1' ? 5 : 6">
+          <el-col :span="6">
             <div>{{item.transactOrgName }}</div>
           </el-col>
-          <el-col :span="filters.state === '-1' ? 4 : 5">
+          <el-col :span="5">
             <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
             <div>预计送货：{{ item.expectedTime | date }}</div>
           </el-col>
@@ -236,15 +236,13 @@
               {{getOrderStatus(item)}}
             </div>
           </el-col>
-          <!--<el-col :span="2" class="opera-btn pt10" v-show="filters.state === '-1' ">-->
-          <!--&lt;!&ndash;<perm label="sales-order-goods-receipt">&ndash;&gt;-->
-          <!--&lt;!&ndash;<span @click.stop="showPartItem(item)">&ndash;&gt;-->
-          <!--&lt;!&ndash;<a href="#" class="btn-circle btn-opera" @click.prevent=""><i&ndash;&gt;-->
-          <!--&lt;!&ndash;class="iconfont icon-allot"></i></a>&ndash;&gt;-->
-          <!--&lt;!&ndash;收货&ndash;&gt;-->
-          <!--&lt;!&ndash;</span>&ndash;&gt;-->
-          <!--&lt;!&ndash;</perm>&ndash;&gt;-->
-          <!--</el-col>-->
+          <el-col :span="2" class="opera-btn" v-if="filters.state === '0' ">
+            <span @click.stop.prevent="editOrder(item)">
+                <a href="#" class="btn-circle" @click.prevent=""><i
+                  class="iconfont icon-edit"></i></a>
+              编辑
+            </span>
+          </el-col>
         </el-row>
         <div class="order-list-item-bg"></div>
       </div>
@@ -264,7 +262,7 @@
                  @close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form type="1" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
+      <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
   </div>
@@ -352,6 +350,12 @@
       }
     },
     methods: {
+      editOrder (item) {
+        this.action = 'edit';
+        this.currentOrderId = item.id;
+        this.showItemRight = true;
+        this.defaultIndex = 2;
+      },
       showPartItem (item) {
         this.currentOrderId = item.id;
         this.showPart = true;
