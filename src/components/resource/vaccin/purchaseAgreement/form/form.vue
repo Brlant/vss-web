@@ -95,10 +95,10 @@
           ]
         },
         salesFirmName: '',
-        form: this.formItem,
+        form: {},
         doing: false,
         attachmentList: [],
-        goodsList: '',
+        goodsList: [],
         goodsType: '',
         x: ''
       };
