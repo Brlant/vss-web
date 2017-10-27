@@ -509,7 +509,6 @@
     },
     mounted: function () {
       this.searchAccountsPayableDetailList();
-      this.resetForm();
     },
     methods: {
       setOrderNo: function (id) {
