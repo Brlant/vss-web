@@ -714,16 +714,30 @@
             name: res.data.orgGoodsDto.salesFirmName,
             relationList: []
           });
+
           this.form.supplierId = res.data.orgGoodsDto.salesFirm;
           this.$nextTick(() => {
-            this.form.detailDtoList.push({
-              amount: Math.abs(this.purchase.count),
-              orgGoodsId: orgGoodsId,
-              orgGoodsName: res.data.orgGoodsDto.name,
-              unitPrice: res.data.orgGoodsDto.procurementPrice,
-              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
+            this.filterProductList.push({
+              orgGoodsDto: res.data.orgGoodsDto || {},
+              list: []
             });
-          });
+            this.product.orgGoodsId = res.data.orgGoodsDto.id;
+            this.product.fixInfo = res.data.orgGoodsDto;
+            let price = res.data.orgGoodsDto.procurementPrice;
+            this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
+            this.product.measurementUnit = res.data.orgGoodsDto.goodsDto.measurementUnit;
+            this.accessoryList = res.data.list;
+            this.product.amount = Math.abs(this.purchase.count);
+            });
+//          this.$nextTick(() => {
+//            this.form.detailDtoList.push({
+//              amount: Math.abs(this.purchase.count),
+//              orgGoodsId: orgGoodsId,
+//              orgGoodsName: res.data.orgGoodsDto.name,
+//              unitPrice: res.data.orgGoodsDto.procurementPrice,
+//              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
+//            });
+//          });
         });
       },
       editOrderInfo () {
