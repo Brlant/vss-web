@@ -293,7 +293,7 @@
               <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
                          v-model="form.sameBatchNumber"></el-switch>
             </el-form-item>
-            <el-form-item label="疾控仓库地址">
+            <el-form-item label="疾控仓库地址" prop="logisticsCentreId">
               <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
@@ -608,6 +608,9 @@
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
+          ],
+          logisticsCentreId: [
+            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
