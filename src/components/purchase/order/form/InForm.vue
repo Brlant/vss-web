@@ -449,14 +449,16 @@
                   <span>{{product.orgGoodsName}}</span>
                 </td>
                 <td class="ar">
-                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice | formatMoney}}
+                  <span v-show="product.unitPrice">¥{{product.unitPrice | formatMoney}}</span>
+                  <span v-if="!product.unitPrice">-</span>
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar"><span
-                  v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
+                <td class="ar">
+                  <span v-show="product.unitPrice">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                  <span v-if="!product.unitPrice">-</span>
                 </td>
                 <td class="goods-btn">
                   <div v-show="defaultIndex === 2">
@@ -472,7 +474,7 @@
               <tr>
                 <td colspan="3"></td>
                 <td colspan="2"><span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length">合计:</span><span
-                  v-show="form.detailDtoList.length">   ¥{{ totalMoney | formatMoney }}</span></td>
+                  v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
               </tr>
               </tbody>
             </table>
@@ -714,16 +716,30 @@
             name: res.data.orgGoodsDto.salesFirmName,
             relationList: []
           });
+
           this.form.supplierId = res.data.orgGoodsDto.salesFirm;
           this.$nextTick(() => {
-            this.form.detailDtoList.push({
-              amount: Math.abs(this.purchase.count),
-              orgGoodsId: orgGoodsId,
-              orgGoodsName: res.data.orgGoodsDto.name,
-              unitPrice: res.data.orgGoodsDto.procurementPrice,
-              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
+            this.filterProductList.push({
+              orgGoodsDto: res.data.orgGoodsDto || {},
+              list: []
             });
-          });
+            this.product.orgGoodsId = res.data.orgGoodsDto.id;
+            this.product.fixInfo = res.data.orgGoodsDto;
+            let price = res.data.orgGoodsDto.procurementPrice;
+            this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
+            this.product.measurementUnit = res.data.orgGoodsDto.goodsDto.measurementUnit;
+            this.accessoryList = res.data.list;
+            this.product.amount = Math.abs(this.purchase.count);
+            });
+//          this.$nextTick(() => {
+//            this.form.detailDtoList.push({
+//              amount: Math.abs(this.purchase.count),
+//              orgGoodsId: orgGoodsId,
+//              orgGoodsName: res.data.orgGoodsDto.name,
+//              unitPrice: res.data.orgGoodsDto.procurementPrice,
+//              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
+//            });
+//          });
         });
       },
       editOrderInfo () {
@@ -1065,10 +1081,10 @@
 //          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
 //          list: []
 //        });
-//        this.filterProductList.push({
-//          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
-//          list: []
-//        });
+        this.filterProductList.push({
+          orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
+          list: []
+        });
         this.product.orgGoodsId = item.orgGoodsId;
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;

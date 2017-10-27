@@ -293,7 +293,7 @@
               <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
                          v-model="form.sameBatchNumber"></el-switch>
             </el-form-item>
-            <el-form-item label="物流中心">
+            <el-form-item label="疾控仓库地址" prop="logisticsCentreId">
               <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
@@ -368,7 +368,7 @@
                 <el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "
                               v-show="batchNumbers.length === 0 ">
                   <oms-input type="number" v-model.number="product.amount" :min="0">
-                    <template slot="append">
+                    <template slot="append" style="width: 30px">
                       <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                     </template>
                   </oms-input>
@@ -471,16 +471,19 @@
                     <el-tag type="success" v-show="product.isCombination" style="font-size: 10px"
                             :class="{ml15:product.isCombination}">组合
                     </el-tag>
-                    <span v-show="isShowName(product)">{{product.orgGoodsName}}</span>
+                    <span v-show="!product.isCombination">{{product.orgGoodsName}}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
-                  <td class="ar"><span v-show="product.unitPrice">¥</span> {{product.unitPrice | formatMoney}} </td>
+                  <td class="ar">
+                    <span v-show="product.unitPrice">¥ {{product.unitPrice | formatMoney}}</span>
+                  </td>
                   <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
                   <td class="ar"><span
-                    v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
+                    v-show="product.unitPrice">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                    <span v-if="!product.unitPrice">-</span>
                   </td>
                   <td>
                     <div v-show="defaultIndex === 2">
@@ -497,7 +500,7 @@
                   <td colspan="4"></td>
                   <td colspan="2"><span style="color: #333;font-weight: 700"
                                         v-show="form.detailDtoList.length">合计:</span><span
-                    v-show="form.detailDtoList.length">   ¥{{ totalMoney | formatMoney }}</span></td>
+                    v-show="form.detailDtoList.length  && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
                 </tr>
                 </tbody>
               </table>
@@ -608,6 +611,9 @@
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
+          ],
+          logisticsCentreId: [
+            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
@@ -752,8 +758,8 @@
           this.isStorageData = true;
           res.data.detailDtoList.forEach(f => {
             f.orgGoodsName = f.name;
+            f.no = f.batchNumber;
           });
-
           this.form = JSON.parse(JSON.stringify(res.data));
           this.$nextTick(() => {
             this.isStorageData = true;
@@ -1219,6 +1225,10 @@
         this.searchProduct();
       },
       editItem (item) {
+        this.filterProductList.push({
+          orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
+          list: []
+        });
         this.product.orgGoodsId = item.orgGoodsId;
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;

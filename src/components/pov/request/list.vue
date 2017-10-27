@@ -153,7 +153,7 @@
                 <th>单价</th>
                 <th>申请数量</th>
                 <th>申请金额</th>
-                <th v-show="filters.status === 4">分配金额</th>
+                <th v-show="filters.status === 4">分配数量</th>
               </tr>
               </thead>
               <tbody>
@@ -162,13 +162,15 @@
                   {{row.goodsName}}
                 </td>
                 <td>
-                  ￥{{row.price | formatMoney}}
+                  <span v-if="row.price">￥{{row.price | formatMoney}}</span>
+                  <span v-if="!row.price">-</span>
                 </td>
                 <td>
                   {{row.applyCount}}
                 </td>
                 <td>
-                  {{row.applyMoney | formatMoney}}
+                  <span v-if="row.applyMoney">￥{{row.applyMoney | formatMoney}}</span>
+                  <span v-if="!row.applyMoney">-</span>
                 </td>
                 <td v-show="filters.status === 4">
                   {{row.actualCount}}

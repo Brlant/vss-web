@@ -103,14 +103,14 @@
               dateArr.push(item.dateWeek);
               item.showDate = true;
             }
-            if ((this.currentOrder.state === '3' || this.currentOrder.state === '8') && this.orderLogList.length > 0) {
-              this.orderEndTime = this.orderLogList[0].operateTime;
-            } else {
-              this.orderEndTime = '';
-            }
           });
           this.orderLogList = res.data;
           this.loadingLog = false;
+          if ((this.currentOrder.erpStatus === '4' || this.currentOrder.erpStatus === '5' || this.currentOrder.erpStatus === '8' || this.currentOrder.erpStatus === '9') && this.orderLogList.length > 0) {
+            this.orderEndTime = this.orderLogList[0].operateTime;
+          } else {
+            this.orderEndTime = '';
+          }
         });
       }
     }

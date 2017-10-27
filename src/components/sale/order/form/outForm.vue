@@ -226,6 +226,13 @@
       width: 540px;
     }
   }
+
+  .goods-btn {
+    a:hover {
+      color: @activeColor;
+    }
+  }
+
 </style>
 
 
@@ -290,7 +297,7 @@
               <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
                          v-model="form.sameBatchNumber"></el-switch>
             </el-form-item>
-            <el-form-item label="疾控仓库地址">
+            <el-form-item label="疾控仓库地址" prop="logisticsCentreId">
               <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
@@ -468,25 +475,39 @@
                     <el-tag type="success" v-show="product.isCombination" style="font-size: 10px"
                             :class="{ml15:product.isCombination}">组合
                     </el-tag>
-                    <span v-show="isShowName(product)">{{product.orgGoodsName}}</span>
+                    <span v-show="!product.isCombination">{{product.orgGoodsName}}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
-                  <td class="ar"><span v-show="product.unitPrice">¥</span> {{product.unitPrice | formatMoney}} </td>
+                  <td class="ar">
+                   <span v-show="product.unitPrice">
+                     <span>¥</span>{{product.unitPrice | formatMoney}}
+                  </span>
+                    <span v-if="!product.unitPrice">-</span>
+                  </td>
                   <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
-                  <td class="ar"><span
-                    v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
+                  <td class="ar">
+                    <span v-show="product.unitPrice">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                    <span v-if="!product.unitPrice">-</span>
                   </td>
-                  <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                    class="iconfont icon-delete"></i> 删除</a></td>
+                  <td>
+                    <div v-show="defaultIndex === 2">
+                      <a href="#" @click.prevent="editItem(product)"><i
+                        class="iconfont icon-edit"></i> 编辑</a>
+                    </div>
+                    <div>
+                      <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
+                        class="iconfont icon-delete"></i> 删除</a>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td colspan="4"></td>
                   <td colspan="2"><span style="color: #333;font-weight: 700"
                                         v-show="form.detailDtoList.length">合计:</span><span
-                    v-show="form.detailDtoList.length">   ¥{{ totalMoney | formatMoney }}</span></td>
+                    v-show="form.detailDtoList.length && totalMoney">¥{{ totalMoney | formatMoney }}</span></td>
                 </tr>
                 </tbody>
               </table>
@@ -499,7 +520,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, cerpAction } from '@/resources';
+  import { erpOrder, LogisticsCenter, http, Address, cerpAction, InWork } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -517,7 +538,8 @@
       defaultIndex: {
         type: Number,
         default: 0
-      }
+      },
+      orderId: String
     },
 
     data: function () {
@@ -596,6 +618,9 @@
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
+          ],
+          logisticsCentreId: [
+            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
@@ -683,7 +708,7 @@
           }
         });
       },
-      defaultIndex () {
+      defaultIndex (val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -691,6 +716,11 @@
         this.form.orgId = user.userCompanyAddress;
         this.filterPOV();
         this.checkLicence(this.form.orgId);
+        if (val === 2) {
+          this.editOrderInfo();
+        } else {
+          this.resetForm();
+        }
         this.filterAddress();
       },
       form: {
@@ -727,6 +757,22 @@
         this.form.transportationAddress = '';
         this.form.actualConsignee = '';
         this.form.logisticsCentreId = '';
+      },
+      editOrderInfo () {
+        if (!this.orderId) return;
+        InWork.queryOrderDetail(this.orderId).then(res => {
+//          this.currentOrder = res.data;
+          this.resetForm();
+          this.isStorageData = true;
+          res.data.detailDtoList.forEach(f => {
+            f.orgGoodsName = f.name;
+            f.no = f.batchNumber;
+          });
+          this.form = JSON.parse(JSON.stringify(res.data));
+          this.$nextTick(() => {
+            this.isStorageData = true;
+          });
+        });
       },
       formatPrice() {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
@@ -1011,7 +1057,7 @@
         } else {
           isShow = false;
         }
-        return isShow;
+        return !isShow;
       },
       checkItemAll(item) {
         item.lots.forEach(l => {
@@ -1193,6 +1239,23 @@
         }
         this.searchProduct();
       },
+      editItem (item) {
+//        this.filterProductList = [];
+//        this.searchProductList = [];
+//        this.searchProductList.push({
+//          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+//          list: []
+//        });
+        this.filterProductList.push({
+          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+          list: []
+        });
+        this.product.orgGoodsId = item.orgGoodsId;
+        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
+        this.product.amount = item.amount;
+        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.remove(item);
+      },
       onSubmit: function () {// 提交表单
 
         let self = this;
@@ -1216,31 +1279,56 @@
             delete item.mainOrgId;
             delete item.isCombination;
             delete item.proportion;
+            delete item.orgGoodsDto;
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.customerId = saveData.orgId;
-          erpOrder.save(saveData).then(res => {
-            this.resetForm();
-            this.$notify({
-              duration: 2000,
-              message: '新增销售订单成功',
-              type: 'success'
-            });
-            window.localStorage.removeItem(this.saveKey);
-            self.$emit('change', res.data);
-            this.$nextTick(() => {
+          if (saveData.id) {
+            erpOrder.updateOrder(saveData.id, saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '编辑销售订单成功',
+                type: 'success'
+              });
+              self.$emit('change');
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
               this.doing = false;
-              this.$emit('close');
+              this.$notify({
+                duration: 2000,
+                title: '编辑销售订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          }).catch(error => {
-            this.doing = false;
-            this.$notify({
-              duration: 2000,
-              title: '新增销售订单失败',
-              message: error.response.data.msg,
-              type: 'error'
+          } else {
+            erpOrder.save(saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '新增销售订单成功',
+                type: 'success'
+              });
+              window.localStorage.removeItem(this.saveKey);
+              self.$emit('change', res.data);
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
+              this.doing = false;
+              this.$notify({
+                duration: 2000,
+                title: '新增销售订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          });
+          }
         });
       }
     }

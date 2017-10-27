@@ -18,46 +18,6 @@
           批号 {{index + 1}} -
           {{ item.no }}
         </h3>
-
-        <el-row style="margin-bottom: 10px">
-          <el-col :span="20">
-            <el-row style="margin-bottom: 10px"
-                    v-show="!isShow(item)">
-              <perm label="batch-number-upload">
-                <el-col :span="11" class="batch-number-upload">
-                  <oms-upload-relation uploadName="选取药检报告附件"
-                                       :formData="{objectId:item.batchNumberId,objectType:'batch'}"
-                                       @change="changeDrugControlReportFiles"
-                                       :showFileList="isShowFileList"></oms-upload-relation>
-                </el-col>
-                <el-col :span="11" class="batch-number-upload">
-                  <oms-upload-relation uploadName="选取批签发附件" :formData="{objectId:item.batchNumberId,objectType:'batch'}"
-                                       @change="changeBatchReleaseFiles"
-                                       :showFileList="isShowFileList"></oms-upload-relation>
-                </el-col>
-              </perm>
-            </el-row>
-            <el-row style="margin-bottom: 10px" v-show="!isShow(item)">
-              <perm label="batch-number-upload">
-                <el-col :span="11" class="batch-number-upload">
-                  <oms-upload-relation uploadName="选取进口注册证" :formData="{objectId:item.batchNumberId,objectType:'batch'}"
-                                       @change="changeImportCertificatesFiles"
-                                       :showFileList="isShowFileList"></oms-upload-relation>
-                </el-col>
-                <el-col :span="11" class="batch-number-upload">
-                  <oms-upload-relation uploadName="选取通关单" :formData="{objectId:item.batchNumberId,objectType:'batch'}"
-                                       @change="changeCustomsPassFiles"
-                                       :showFileList="isShowFileList"></oms-upload-relation>
-                </el-col>
-              </perm>
-            </el-row>
-          </el-col>
-          <el-col :span="2" v-show="!isShow(item)">
-            <perm label="batch-number-edit">
-              <el-button type="primary" size="small" @click.prevent="onSubmit(item)">确认绑定</el-button>
-            </perm>
-          </el-col>
-        </el-row>
         <div v-show="isShow(item)">
           <attachment-show label="药检报告" :orderAttachment="item.attachmentMap.drugControlReports"
                            :currentOrder="currentOrder"
@@ -81,7 +41,9 @@
                            :attachmentRight="attachmentRight"
                            :isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>
         </div>
-
+        <div v-show="!isShow(item)">
+          暂无附件信息
+        </div>
       </div>
     </div>
   </div>

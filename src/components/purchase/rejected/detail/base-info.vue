@@ -60,8 +60,8 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <oms-row label="物流中心" :span="3">
-            <span class="goods-span">{{currentOrder.centreName}}</span>
+          <oms-row label="疾控仓库地址" :span="3">
+            <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
@@ -121,10 +121,14 @@
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
           <td width="80px" class="text-center">
-            <span>￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
           <td class="text-center">
-            <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+           <span v-if="item.unitPrice">
+              <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+            </span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
         </tr>
         <tr class="text-center">
