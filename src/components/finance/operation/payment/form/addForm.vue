@@ -265,7 +265,7 @@
               <el-select filterable remote placeholder="请输入关键字搜索物流厂商" :remote-method="filterLogistics" :clearable="true"
                          v-model="form.orgId">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
-                           v-for="org in logisticsList">
+                           v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
                     <span class="pull-right" style="color: #999">
