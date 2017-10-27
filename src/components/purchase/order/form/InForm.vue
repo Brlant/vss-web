@@ -371,8 +371,8 @@
                         v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥</span>{{ item.orgGoodsDto.procurementPrice
-                        }}
+                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice
+                        }}</span>
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
@@ -382,7 +382,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="产品数量" class="productItem-info" prop="amount">
-                <oms-input type="number" v-model.number="product.amount" :min="0">
+                <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
                   <template slot="append">
                     <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                   </template>
@@ -398,6 +398,10 @@
             <div class="product-info-fix clearfix">
               <el-row>
                 <el-col :span="12">
+                  <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
+                    {{product.fixInfo.goodsDto.smallPacking}}/
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                  </oms-row>
                   <oms-row label="货品编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
@@ -730,7 +734,7 @@
             this.product.measurementUnit = res.data.orgGoodsDto.goodsDto.measurementUnit;
             this.accessoryList = res.data.list;
             this.product.amount = Math.abs(this.purchase.count);
-            });
+          });
 //          this.$nextTick(() => {
 //            this.form.detailDtoList.push({
 //              amount: Math.abs(this.purchase.count),
@@ -757,7 +761,37 @@
           });
         });
       },
+      changeNumber () {
 
+        let val = parseInt(Number(this.product.amount), 10) + 1;
+        let count = this.product.fixInfo.goodsDto.smallPacking;
+        let iszs = val % this.product.amount === 0;
+        if (!count) return;
+        let remainder = val % count;
+        if (remainder === 0 && !iszs) {
+          this.$notify.info({
+            message: `数量${val}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
+          });
+        }
+        if (remainder === 0) return;
+        let re = val % count === 0 ? val : parseInt(val, 10) + count - remainder;
+        this.product.amount = re;
+        this.$notify.info({
+          message: `数量${val}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
+        });
+      },
+      isCheckPackage () {
+        let count = this.product.fixInfo.goodsDto.smallPacking;
+        if (!count || count < 0) {
+          this.$notify({
+            duration: 2000,
+            title: '货品资料不足',
+            message: '货品无最小包装单位，请补充资料，或者选择其他货品',
+            type: 'error'
+          });
+        }
+        return count > 0;
+      },
       autoSave: function () {
         if (!this.form.id) {
           window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
@@ -1015,6 +1049,7 @@
                 return false;
               }
             });
+            this.isCheckPackage();
           }
         });
       },
@@ -1026,6 +1061,8 @@
           });
           return false;
         }
+        let isCheck = this.isCheckPackage();
+        if (!isCheck) return;
         this.$refs['orderGoodsAddForm'].validate((valid) => {
           if (!valid) {
             return false;

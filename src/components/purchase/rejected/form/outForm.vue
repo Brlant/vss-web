@@ -355,8 +355,8 @@
                           v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥</span>{{ item.orgGoodsDto.procurementPrice
-                          }}
+                          v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice
+                          }}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
@@ -367,7 +367,7 @@
                 </el-form-item>
                 <el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "
                               v-show="batchNumbers.length === 0 ">
-                  <oms-input type="number" v-model.number="product.amount" :min="0">
+                  <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
                     <template slot="append" style="width: 30px">
                       <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                     </template>
@@ -384,6 +384,10 @@
               <div class="product-info-fix clearfix">
                 <el-row>
                   <el-col :span="12">
+                    <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
+                      {{product.fixInfo.goodsDto.smallPacking}}/
+                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    </oms-row>
                     <oms-row label="货品编号" :span="8">
                       {{product.fixInfo.goodsNo}}
                     </oms-row>
@@ -766,6 +770,18 @@
           });
         });
       },
+      changeNumber () {
+        let val = this.product.amount;
+        let count = this.product.fixInfo.goodsDto.smallPacking;
+        let remainder = val % count;
+        if (!count) return;
+        if (remainder === 0) return;
+        let re = val % count === 0 ? val : parseInt(val, 10) + count - remainder;
+        this.product.amount = re;
+        this.$notify.info({
+          message: `数量${val}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
+        });
+      },
       formatPrice () {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
@@ -1017,7 +1033,7 @@
           orgId: this.form.orgId,
           orgGoodsId: this.product.orgGoodsId
         };
-        http.get('/stock-batch/valid/batch', {params}).then(res => {
+        http.get('/erp-stock/valid/batch', {params}).then(res => {
           if (res.data.length) {
             res.data.forEach(f => {
               f.isChecked = false;
