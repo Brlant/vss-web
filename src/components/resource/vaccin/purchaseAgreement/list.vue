@@ -378,7 +378,7 @@
               this.currentItem = Object.assign({'id': ''});
             }
           this.loadingData = false;
-          this.pager.totalPage = res.data.totalPage;
+          this.pager.count = res.data.count;
         });
         this.queryStatusNum(params);
       },

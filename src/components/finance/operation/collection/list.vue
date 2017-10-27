@@ -259,7 +259,7 @@
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
   import allotmentForm from './form/allotmentForm.vue';
-  import {Order, BaseInfo, erpOrder, BillReceivable, receivable} from '../../../../resources';
+  import {BillReceivable, receivable} from '../../../../resources';
 
   export default {
     components: {

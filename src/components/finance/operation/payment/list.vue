@@ -271,7 +271,7 @@
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
   import allotmentForm from './form/allotmentForm.vue';
-  import {Order, BaseInfo, erpOrder, BillPayable, pay} from '../../../../resources';
+  import {BillPayable, pay} from '../../../../resources';
 
   export default {
     components: {
