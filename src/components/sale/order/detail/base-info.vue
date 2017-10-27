@@ -97,11 +97,17 @@
         </el-row>
         <el-row>
           <el-col :span="3" class="text-right" style="line-height: 36px">
-            物流中心：
+            疾控仓库地址：
           </el-col>
           <el-col :span="21">
-            <el-select placeholder="请选择物流中心" v-model="currentOrder.logisticsCentreId" filterable>
-              <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"></el-option>
+            <!--<el-select placeholder="请选择物流中心" v-model="currentOrder.logisticsCentreId" filterable>-->
+            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"></el-option>-->
+            <!--</el-select>-->
+            <el-select placeholder="请选择疾控仓库地址" v-model="currentOrder.logisticsCentreId" filterable :clearable="true">
+              <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter">
+                <span class="pull-left">{{ item.name }}</span>
+                <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
+              </el-option>
             </el-select>
           </el-col>
         </el-row>
@@ -284,7 +290,8 @@
       currentOrder (val) {
         if (!val.id) return;
         this.searchWarehouses();
-        this.filterLogisticsCenter();
+//        this.filterLogisticsCenter();
+        this.filterAddress();
       }
     },
     methods: {
@@ -313,6 +320,15 @@
           deleteFlag: false
         };
         LogisticsCenter.query(param).then(res => {
+          this.LogisticsCenter = res.data;
+        });
+      },
+      filterAddress () {
+        Address.queryAddress(this.currentOrder.orgId, {
+          deleteFlag: false,
+          orgId: this.currentOrder.orgId,
+          auditedStatus: '1'
+        }).then(res => {
           this.LogisticsCenter = res.data;
         });
       },
