@@ -247,15 +247,15 @@
             <el-form-item label="POV" prop="orgId">
               <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" @change="setAccountsPayableId">
-                <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName" v-for="org in orgList">
+                <el-option :value="org.payerId" :key="org.payerId" :label="org.payerName" v-for="org in orgList">
                   <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
+                    <span class="pull-left" style="clear: right">{{org.payerName}}</span>
                     <span class="pull-right" style="color: #999">
                   </span>
                   </div>
                   <div style="overflow: hidden">
                     <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.remitteeManufacturerCode}}
+                    <span>系统代码</span> {{org.payerManufacturerCode}}
                     </span>
                   </div>
                 </el-option>

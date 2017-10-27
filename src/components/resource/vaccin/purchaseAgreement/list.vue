@@ -150,11 +150,9 @@
         </el-form>
       </div>
 
-
       <div class="order-list-status container" style="margin-bottom:20px">
-        <div class="status-item" :class="{'active':key==activeStatus} "
-             v-for="(item,key) in orgType"
-             @click="changeType(key,item)">
+        <div class="status-item" :class="{'active':key==activeStatus }" v-for="(item,key) in orgType"
+             @click="changeType(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
@@ -259,7 +257,6 @@
         },
         filters: {
           availabilityStatus: true
-//          auditedStatus: null
         },
         orgType: {
           0: {'title': '可用', 'num': 0, 'availabilityStatus': true},
@@ -277,17 +274,14 @@
       this.getGoodsList(1);
     },
     watch: {
-      'typeTxt': function () {
-        this.getGoodsList(1);
+      showSearch: function () {
+        this.filterOrg();
       },
       filters: {
-        handler() {
+        handler () {
           this.getGoodsList(1);
         },
         deep: true
-      },
-      showSearch: function () {
-        this.filterOrg();
       }
     },
     methods: {
@@ -385,18 +379,16 @@
       edit: function (item) {
         this.action = 'edit';
         this.currentItem = item;
-        this.form = JSON.parse(JSON.stringify(item));
+        this.form = JSON.parse(JSON.stringify(this.currentItem));
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice.toString());
         this.showRight = true;
       },
-      changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
+      changeType: function (item, key) {// 根据当前选中的标签，重置状态等相关参数。
         this.activeStatus = key;
         this.filters.availabilityStatus = item.availabilityStatus;
       },
-      onSubmit: function (item) {
+      onSubmit: function () {
         this.getGoodsList(1);
-        this.showRight = false;
-        this.currentItem = {};
 //        } else {
 //          let self = this;
 //          self.showTypeList.forEach(function (val, index) {
