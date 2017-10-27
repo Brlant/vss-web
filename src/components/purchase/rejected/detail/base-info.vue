@@ -121,10 +121,14 @@
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
           <td width="80px" class="text-center">
-            <span>￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
           <td class="text-center">
-            <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+           <span v-if="item.unitPrice">
+              <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+            </span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
         </tr>
         <tr class="text-center">

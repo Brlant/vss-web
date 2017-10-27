@@ -162,13 +162,15 @@
                   {{row.goodsName}}
                 </td>
                 <td>
-                  ￥{{row.price | formatMoney}}
+                  <span v-if="item.price">￥{{item.price | formatMoney}}</span>
+                  <span v-if="!item.price">-</span>
                 </td>
                 <td>
                   {{row.applyCount}}
                 </td>
                 <td>
-                  {{row.applyMoney | formatMoney}}
+                  <span v-if="item.applyMoney">￥{{item.applyMoney | formatMoney}}</span>
+                  <span v-if="!item.applyMoney">-</span>
                 </td>
                 <td v-show="filters.status === 4">
                   {{row.actualCount}}
