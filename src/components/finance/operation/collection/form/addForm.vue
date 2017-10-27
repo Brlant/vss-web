@@ -238,12 +238,6 @@
         <div>
           <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <!--<el-form-item label="收款类型" prop="billPayType">-->
-            <!--<el-select type="text" v-model="form.billPayType" placeholder="请选择收款类型" @change="changeBillPayType">-->
-            <!--<el-option :value="'0'" :key="'0'" :label="'疫苗厂商收款'"></el-option>-->
-            <!--<el-option :value="'1'" :key="'1'" :label="'物流厂商收款'"></el-option>-->
-            <!--</el-select>-->
-            <!--</el-form-item>-->
             <el-form-item label="POV" prop="orgId">
               <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" @change="setAccountsPayableId">
@@ -261,24 +255,6 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item label="物流厂商" v-if="form.billPayType==='1'" prop="orgId">-->
-            <!--<el-select filterable remote placeholder="请输入关键字搜索物流厂商" :remote-method="filterLogistics" :clearable="true"-->
-            <!--v-model="form.orgId">-->
-            <!--<el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"-->
-            <!--v-for="org in logisticsList">-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="pull-left" style="clear: right">{{org.remitteeName}}</span>-->
-            <!--<span class="pull-right" style="color: #999">-->
-            <!--</span>-->
-            <!--</div>-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="select-other-info pull-left">-->
-            <!--<span>系统代码</span> {{org.remitteeManufacturerCode}}-->
-            <!--</span>-->
-            <!--</div>-->
-            <!--</el-option>-->
-            <!--</el-select>-->
-            <!--</el-form-item>-->
             <el-form-item label="应收总金额" v-if="form.orgId">
               ¥ {{payableTotalAmount | formatMoney }}
             </el-form-item>
@@ -395,7 +371,7 @@
         if (this.form.orgId) {
             this.filterOrg();
             this.orgList.forEach(val => {
-              if (this.form.orgId === val.remitteeId) {
+              if (this.form.orgId === val.payerId) {
                 receivable.getAmountInfo(val.id).then(res => {
                   this.payableTotalAmount = res.data.payableTotalAmount;
                   this.practicalTotalAmount = res.data.practicalTotalAmount;
