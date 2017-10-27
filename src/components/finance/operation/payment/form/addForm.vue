@@ -263,7 +263,7 @@
             </el-form-item>
             <el-form-item label="物流厂商" v-if="form.billPayType==='1'" prop="orgId">
               <el-select filterable remote placeholder="请输入关键字搜索物流厂商" :remote-method="filterLogistics" :clearable="true"
-                         v-model="form.orgId">
+                         v-model="form.orgId" @change="setAccountsPayableId">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
                            v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -406,7 +406,7 @@
             });
           }
           if (this.form.billPayType === '1') {
-            this.logisticsList.forEach(val => {
+            this.orgList.forEach(val => {
               this.filterLogistics();
               if (this.form.orgId === val.remitteeId) {
                 pay.getAmountInfo(val.id).then(res => {
