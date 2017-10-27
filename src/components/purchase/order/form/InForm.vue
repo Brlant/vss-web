@@ -762,17 +762,10 @@
         });
       },
       changeNumber () {
-
-        let val = parseInt(Number(this.product.amount), 10) + 1;
+        let val = this.product.amount;
         let count = this.product.fixInfo.goodsDto.smallPacking;
-        let iszs = val % this.product.amount === 0;
-        if (!count) return;
         let remainder = val % count;
-        if (remainder === 0 && !iszs) {
-          this.$notify.info({
-            message: `数量${val}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
-          });
-        }
+        if (!count) return;
         if (remainder === 0) return;
         let re = val % count === 0 ? val : parseInt(val, 10) + count - remainder;
         this.product.amount = re;
