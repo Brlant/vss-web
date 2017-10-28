@@ -1,4 +1,5 @@
 <style lang="less" scoped="">
+  @import "../../assets/mixins";
   .content-part {
     .content-right {
       > h3 {
@@ -17,6 +18,16 @@
   .table > tbody > tr:first-child > td {
     border-top: 0;
   }
+
+  .tr-ntd-bg {
+    &:nth-child(odd) {
+      background: #ffffff;
+    }
+    &:nth-child(even) {
+      background: @dialog-left-bg;
+    }
+  }
+
 </style>
 <template>
   <div>
@@ -43,7 +54,7 @@
               </div>
             </td>
           </tr>
-          <tr v-else="" v-for="i in storeDetails" :key="i.id">
+          <tr v-else="" v-for="i in storeDetails" :key="i.id" class="tr-ntd-bg">
             <td>
               <div>
                 {{ i.warehouseName }}
