@@ -254,14 +254,15 @@ export default {
     let isMultiple = remainder === 0;
     if (isMultiple) return number;
     let integer = parseInt(number, 10) + 1;
-    isMultiple = integer % smallPacking === 0;
+    let ri = integer % smallPacking;
+    isMultiple = ri === 0;
     if (isMultiple) {
       this.$notify.info({
         message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${integer}`
       });
       return integer;
     }
-    let re = integer + smallPacking - remainder;
+    let re = integer + smallPacking - ri;
     this.$notify.info({
       message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
     });
