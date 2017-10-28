@@ -27,7 +27,6 @@
           <thead>
           <tr class="tr-bg">
             <td width="300px">仓库名称/地址</td>
-            <td width="150px">包装数量</td>
             <td width="150px">数量</td>
           </tr>
           </thead>
@@ -52,11 +51,6 @@
               <div>
                 {{ i.warehouseAddress }}
               </div>
-            </td>
-            <td>
-              <span>
-                 {{ i.packageAmount }}  个  {{ packSizeTyps[i.packageSize] }}
-              </span>
             </td>
             <td>
               {{ i.realCount }}
