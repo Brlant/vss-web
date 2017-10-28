@@ -283,8 +283,8 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.sellPrice">销售价格 ￥</span>{{ item.sellPrice
-                        }}
+                        v-show="item.sellPrice">销售价格 ￥{{ item.sellPrice
+                        }}</span>
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}</span>
@@ -298,7 +298,8 @@
               </el-select>
             </el-form-item>
             <el-form-item label="疫苗数量" prop="amount">
-              <oms-input type="number" placeholder="请输入申请数量" v-model.number="product.amount" :min="0">
+              <oms-input type="number" placeholder="请输入申请数量" v-model.number="product.amount" :min="0"
+                         @blur="changeNumber">
                 <template slot="append">
                   <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                 </template>
@@ -310,6 +311,10 @@
             <div class="product-info-fix clearfix">
               <el-row>
                 <el-col :span="12">
+                  <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
+                    {{product.fixInfo.goodsDto.smallPacking}}/
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                  </oms-row>
                   <oms-row label="疫苗编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
@@ -360,22 +365,27 @@
                   <span>{{product.orgGoodsName}}</span>
                 </td>
                 <td class="ar">
-                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice | formatMoney}}
+                  <span v-if=" Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
+                  <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar"><span
-                  v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
+                <td class="ar">
+                  <span v-if="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                  <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
                 <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
                   class="iconfont icon-delete"></i> 删除</a></td>
               </tr>
               <tr>
                 <td colspan="3"></td>
-                <td colspan="2"><span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length">合计:</span><span
-                  v-show="form.detailDtoList.length">   ¥{{ totalMoney | formatMoney }}</span></td>
+                <td colspan="2">
+                  <span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length &&  Number(totalMoney)">合计:  ¥{{ totalMoney | formatMoney
+                    }}
+                  </span>
+                </td>
               </tr>
               </tbody>
             </table>
@@ -449,7 +459,9 @@
             {required: true, type: 'number', message: '请输入数量', trigger: 'blur'}
           ]
 
-        }
+        },
+        changeTotalNumber: utils.changeTotalNumber,
+        isCheckPackage: utils.isCheckPackage
       };
     },
     computed: {
@@ -471,6 +483,9 @@
       }
     },
     methods: {
+      changeNumber () {
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+      },
       changeTime: function (date) {// 格式化时间
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
@@ -560,6 +575,7 @@
                   return false;
                 }
               });
+              this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
             }
           });
         });
@@ -569,6 +585,8 @@
           if (!valid) {
             return false;
           }
+          let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+          if (!isCheck) return;
           this.currentList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
               this.product.orgGoodsName = item.orgGoodsDto.name;
@@ -606,6 +624,7 @@
             this.accessoryList = [];
             this.currentList = [];
           });
+          console.log(this.form.detailDtoList);
         });
       },
       remove: function (item) {

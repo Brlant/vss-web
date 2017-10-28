@@ -371,8 +371,8 @@
                         v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥</span>{{ item.orgGoodsDto.procurementPrice
-                        }}
+                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice
+                        }}</span>
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
@@ -382,7 +382,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="产品数量" class="productItem-info" prop="amount">
-                <oms-input type="number" v-model.number="product.amount" :min="0">
+                <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
                   <template slot="append">
                     <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                   </template>
@@ -398,6 +398,10 @@
             <div class="product-info-fix clearfix">
               <el-row>
                 <el-col :span="12">
+                  <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
+                    {{product.fixInfo.goodsDto.smallPacking}}/
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                  </oms-row>
                   <oms-row label="货品编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
@@ -633,7 +637,9 @@
         },
         currentTransportationMeans: [],
         cdcWarehouses: [],
-        supplierWarehouses: []
+        supplierWarehouses: [],
+        changeTotalNumber: utils.changeTotalNumber,
+        isCheckPackage: utils.isCheckPackage
       };
     },
     computed: {
@@ -730,7 +736,7 @@
             this.product.measurementUnit = res.data.orgGoodsDto.goodsDto.measurementUnit;
             this.accessoryList = res.data.list;
             this.product.amount = Math.abs(this.purchase.count);
-            });
+          });
 //          this.$nextTick(() => {
 //            this.form.detailDtoList.push({
 //              amount: Math.abs(this.purchase.count),
@@ -757,7 +763,9 @@
           });
         });
       },
-
+      changeNumber () {
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+      },
       autoSave: function () {
         if (!this.form.id) {
           window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
@@ -1017,6 +1025,7 @@
             });
           }
         });
+        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
@@ -1026,6 +1035,8 @@
           });
           return false;
         }
+        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+        if (!isCheck) return;
         this.$refs['orderGoodsAddForm'].validate((valid) => {
           if (!valid) {
             return false;

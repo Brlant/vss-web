@@ -1,4 +1,5 @@
 <style lang="less" scoped="">
+  @import "../../assets/mixins";
   .content-part {
     .content-right {
       > h3 {
@@ -17,6 +18,16 @@
   .table > tbody > tr:first-child > td {
     border-top: 0;
   }
+
+  .tr-ntd-bg {
+    &:nth-child(odd) {
+      background: #ffffff;
+    }
+    &:nth-child(even) {
+      background: @dialog-left-bg;
+    }
+  }
+
 </style>
 <template>
   <div>
@@ -27,7 +38,6 @@
           <thead>
           <tr class="tr-bg">
             <td width="300px">仓库名称/地址</td>
-            <td width="150px">包装数量</td>
             <td width="150px">数量</td>
           </tr>
           </thead>
@@ -44,7 +54,7 @@
               </div>
             </td>
           </tr>
-          <tr v-else="" v-for="i in storeDetails" :key="i.id">
+          <tr v-else="" v-for="i in storeDetails" :key="i.id" class="tr-ntd-bg">
             <td>
               <div>
                 {{ i.warehouseName }}
@@ -52,11 +62,6 @@
               <div>
                 {{ i.warehouseAddress }}
               </div>
-            </td>
-            <td>
-              <span v-show="i.packageSize">
-                 {{ i.packageAmount }}  个  {{ packSizeTyps[i.packageSize] }}
-              </span>
             </td>
             <td>
               {{ i.realCount }}

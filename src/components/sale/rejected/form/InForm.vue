@@ -237,7 +237,8 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="padding: 0">新增CDC销售退货订单</h2>
+        <h2 class="clearfix right-title" style="padding: 0">
+          {{ defaultIndex === 2 ? '编辑CDC销售退货订单' : '新增CDC销售退货订单'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -362,8 +363,8 @@
                           v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.sellPrice">销售价格 ￥</span>{{ item.orgGoodsDto.sellPrice
-                          }}
+                          v-show="item.orgGoodsDto.sellPrice">销售价格 ￥{{ item.orgGoodsDto.sellPrice
+                          }}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
@@ -374,7 +375,7 @@
                 </el-select>
               </el-form-item>
               <el-form-item label="产品数量" class="productItem-info" prop="amount">
-                <oms-input type="number" v-model.number="product.amount" :min="0">
+                <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
                   <template slot="append">
                     <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                   </template>
@@ -390,6 +391,10 @@
             <div class="product-info-fix clearfix">
               <el-row>
                 <el-col :span="12">
+                  <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
+                    {{product.fixInfo.goodsDto.smallPacking}}/
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                  </oms-row>
                   <oms-row label="货品编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
@@ -624,8 +629,9 @@
         },
         currentTransportationMeans: [],
         cdcWarehouses: [],
-        supplierWarehouses: []
-
+        supplierWarehouses: [],
+        changeTotalNumber: utils.changeTotalNumber,
+        isCheckPackage: utils.isCheckPackage
       };
     },
     computed: {
@@ -705,6 +711,9 @@
             this.isStorageData = true;
           });
         });
+      },
+      changeNumber () {
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -954,6 +963,7 @@
             });
           }
         });
+        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
@@ -963,6 +973,8 @@
           });
           return false;
         }
+        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+        if (!isCheck) return;
         this.$refs['orderGoodsAddForm'].validate((valid) => {
           if (!valid) {
             return false;

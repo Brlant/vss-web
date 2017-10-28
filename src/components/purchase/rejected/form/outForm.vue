@@ -355,8 +355,8 @@
                           v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥</span>{{ item.orgGoodsDto.procurementPrice
-                          }}
+                          v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice
+                          }}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
@@ -367,7 +367,7 @@
                 </el-form-item>
                 <el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "
                               v-show="batchNumbers.length === 0 ">
-                  <oms-input type="number" v-model.number="product.amount" :min="0">
+                  <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
                     <template slot="append" style="width: 30px">
                       <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                     </template>
@@ -384,6 +384,10 @@
               <div class="product-info-fix clearfix">
                 <el-row>
                   <el-col :span="12">
+                    <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
+                      {{product.fixInfo.goodsDto.smallPacking}}/
+                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    </oms-row>
                     <oms-row label="货品编号" :span="8">
                       {{product.fixInfo.goodsNo}}
                     </oms-row>
@@ -434,7 +438,7 @@
                   </td>
                   <td>
                     <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                              @change="isChangeValue(batchNumber)">
+                              @blur="isChangeValue(batchNumber)">
                       <template slot="append">
                         <dict :dict-group="'measurementUnit'"
                               :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
@@ -662,7 +666,9 @@
         },
         warehouses: [], // 供货厂商仓库列表
         batchNumbers: [], // 货品批号列表
-        selectBatchNumbers: [] // 已经选择的货品批号
+        selectBatchNumbers: [], // 已经选择的货品批号
+        changeTotalNumber: utils.changeTotalNumber,
+        isCheckPackage: utils.isCheckPackage
       };
     },
     computed: {
@@ -765,6 +771,9 @@
             this.isStorageData = true;
           });
         });
+      },
+      changeNumber () {
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       formatPrice () {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
@@ -989,6 +998,7 @@
             });
           }
         });
+        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
 
         this.queryBatchNumers();
       },
@@ -1017,7 +1027,7 @@
           orgId: this.form.orgId,
           orgGoodsId: this.product.orgGoodsId
         };
-        http.get('/stock-batch/valid/batch', {params}).then(res => {
+        http.get('/erp-stock/valid/batch', {params}).then(res => {
           if (res.data.length) {
             res.data.forEach(f => {
               f.isChecked = false;
@@ -1035,6 +1045,7 @@
         });
       },
       isChangeValue (item) {
+        item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         if (item.productCount > item.count) {
           this.$notify.warning({
             duration: 2000,
@@ -1074,6 +1085,25 @@
           });
           return false;
         }
+        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+        if (!isCheck) return;
+        if (!this.batchNumbers.length) {
+          this.$notify.info({
+            duration: 2000,
+            message: '无库存批次，无法加入订单'
+          });
+          return false;
+        }
+        if (this.batchNumbers.length) {
+          let isHave = this.batchNumbers.some(item => item.lots.some(s => s.count > 0));
+          if (!isHave) {
+            this.$notify.info({
+              duration: 2000,
+              message: '无库存，无法加入订单'
+            });
+            return false;
+          }
+        }
         if (this.batchNumbers.length) {
           let isChecked = this.batchNumbers.every(item => item.lots.some(l => l.isChecked));
           if (!isChecked) {
@@ -1082,23 +1112,6 @@
               message: '请选择货品批号'
             });
             return false;
-          }
-          if (this.form.sameBatchNumber) {
-            let seleteNumber = 0;
-            this.batchNumbers.forEach(i => {
-              i.lots.forEach(l => {
-                if (l.isChecked) {
-                  seleteNumber++;
-                }
-              });
-            });
-            if (seleteNumber > 1) {
-              this.$notify.info({
-                duration: 2000,
-                message: '请选择单个批号'
-              });
-              return false;
-            }
           }
           let isHaveCount = this.batchNumbers.some(item => item.lots.some(l => l.isChecked && !l.productCount));
           if (isHaveCount) {
