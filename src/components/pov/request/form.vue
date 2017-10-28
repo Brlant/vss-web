@@ -365,22 +365,27 @@
                   <span>{{product.orgGoodsName}}</span>
                 </td>
                 <td class="ar">
-                  <span v-if="product.unitPrice">¥{{product.unitPrice | formatMoney}}</span>
+                  <span v-if=" Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
+                  <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
                 <td class="ar">
-                  <span v-if="product.unitPrice">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                  <span v-if="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                  <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
                 <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
                   class="iconfont icon-delete"></i> 删除</a></td>
               </tr>
               <tr>
                 <td colspan="3"></td>
-                <td colspan="2"><span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length">合计:</span><span
-                  v-show="form.detailDtoList.length">   ¥{{ totalMoney | formatMoney }}</span></td>
+                <td colspan="2">
+                  <span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length &&  Number(totalMoney)">合计:  ¥{{ totalMoney | formatMoney
+                    }}
+                  </span>
+                </td>
               </tr>
               </tbody>
             </table>
@@ -619,6 +624,7 @@
             this.accessoryList = [];
             this.currentList = [];
           });
+          console.log(this.form.detailDtoList);
         });
       },
       remove: function (item) {
