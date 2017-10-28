@@ -47,10 +47,6 @@
     <el-form-item label="协议采购数量" prop="amount">
       <oms-input type="number" v-model.number="form.amount" min="0" placeholder="请输入协议采购数量"></oms-input>
     </el-form-item>
-    <!--<el-form-item label="协议开始时间" prop="startDate" ref="startDate">-->
-    <!--<el-date-picker v-model="form.startDate" format="yyyy-MM-dd" placeholder="选择开始时间" @change="changeStartTime">-->
-    <!--</el-date-picker>-->
-    <!--</el-form-item>-->
     <el-form-item label="协议到期时间" prop="expireTime" ref="expireTime">
       <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" @change="changeEndTime">
       </el-date-picker>
@@ -97,10 +93,7 @@
         salesFirmName: '',
         form: {},
         doing: false,
-        attachmentList: [],
-        goodsList: [],
-        goodsType: '',
-        x: ''
+        goodsList: []
       };
     },
     computed: {
@@ -121,11 +114,18 @@
     props: ['formItem', 'action', 'actionType'],
     watch: {
       formItem: function (val) {
-        this.form = Object.assign({}, val);
-        if (!this.form.id) {
-          this.form.availabilityStatus = true;
+        if (this.action === 'add') {
+          this.form = {
+            orgGoodsId: '',
+            unitPrice: '',
+            amount: '',
+            expireTime: '',
+            availabilityStatus: true
+          };
         }
-        this.attachmentList = [];
+        if (this.action === 'edit') {
+          this.form = Object.assign({}, val);
+        }
         this.getOmsGoods();
       },
       actionType: function (val) {
@@ -153,7 +153,7 @@
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
           if (this.action === 'edit') {
-            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.id);
+            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.orgGoodsDto.id);
             if (!isExist) {
               this.goodsList.push({
                 orgGoodsDto: {

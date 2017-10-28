@@ -286,14 +286,6 @@
     },
     methods: {
       filterOrg: function (query) {// 过滤供货商
-//        let orgId = this.$store.state.user.userCompanyAddress;
-//        if (!orgId) {
-//          this.orgList = [];
-//          return;
-//        }
-//        BaseInfo.queryOrgByReation(orgId, {keyWord: query}).then(res => {
-//          this.orgList = res.data;
-//        });
         let params = {
           deleteFlag: false,
           keyWord: query
