@@ -726,6 +726,7 @@
           this.editOrderInfo();
         } else {
           this.resetForm();
+          this.form.state = '';
         }
         this.filterAddress();
       },

@@ -692,6 +692,7 @@
           this.editOrderInfo();
         } else {
           this.resetForm();
+          this.form.state = '';
         }
       },
       form: {
