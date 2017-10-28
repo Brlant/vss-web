@@ -296,7 +296,7 @@
 
 <script>
   import { Auth, cerpAction } from '../../resources';
-  import logo_pic from '../../assets/img/erp-logo.png';
+  import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';
 

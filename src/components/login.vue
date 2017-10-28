@@ -6,7 +6,7 @@
   <div class="main-box-rap">
     <div class="main-card-box">
       <img class="bg-logo" src="../assets/img/bg.png">
-      <img class="img-logo" src="../assets/img/cerp-logo.png">
+      <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part-s clearfix">
         <div class="m-logo">疾病预防控制中心疫苗管理系统</div>
         <div class="e-logo">CDC Vaccine Management System</div>
