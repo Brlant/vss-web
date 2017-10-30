@@ -446,16 +446,16 @@
                   <span>{{product.orgGoodsName}}</span>
                 </td>
                 <td class="ar">
-                  <span v-show="product.unitPrice">¥{{product.unitPrice | formatMoney}}</span>
-                  <span v-if="!product.unitPrice">-</span>
+                  <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
+                  <span v-if="!Number(product.unitPrice)">-</span>
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
                 <td class="ar"><span
-                  v-show="product.unitPrice">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
-                  <span v-if="!product.unitPrice">-</span>
+                  v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                  <span v-if="!Number(product.unitPrice)">-</span>
                 </td>
                 <td class="goods-btn">
                   <div v-show="defaultIndex === 2">
@@ -470,7 +470,8 @@
               </tr>
               <tr>
                 <td colspan="3"></td>
-                <td colspan="2"><span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length">合计:</span><span
+                <td colspan="2"><span style="color: #333;font-weight: 700"
+                                      v-show="form.detailDtoList.length && totalMoney">合计:</span><span
                   v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
               </tr>
               </tbody>
@@ -854,6 +855,10 @@
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.supplierWarehouses = [];
           this.form.pickUpAddress = '';
+          this.product.orgGoodsId = '';
+          this.$refs['orderGoodsAddForm'].resetFields();
+          this.accessoryList = [];
+          this.form.detailDtoList = [];
           this.product.orgGoodsId = '';
         }
         if (!val) return;

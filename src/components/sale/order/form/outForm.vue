@@ -450,7 +450,11 @@
                     </el-input>
                   </td>
                   <td>{{ batchNumber.no }}</td>
-                  <td>{{ batchNumber.count }}</td>
+                  <td>
+                    {{ batchNumber.count }}
+                    <dict :dict-group="'measurementUnit'"
+                          :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                  </td>
                   <td>{{ batchNumber.productionDate | date }}</td>
                   <td>{{ batchNumber.expirationDate | date }}</td>
                 </tr>
@@ -483,18 +487,20 @@
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
                   <td class="ar">
-                   <span v-show="product.unitPrice">
+                   <span v-show="Number(product.unitPrice)">
                      <span>¥</span>{{product.unitPrice | formatMoney}}
-                  </span>
-                    <span v-if="!product.unitPrice">-</span>
+                     <span v-if="!Number(product.unitPrice)">-</span>
+                   </span>
+                    <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
                   <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
                   <td class="ar">
-                    <span v-show="product.unitPrice">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
-                    <span v-if="!product.unitPrice">-</span>
+                    <span v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney
+                      }}</span>
+                    <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
                   <td class="goods-btn">
                     <div v-show="defaultIndex === 2">
@@ -510,7 +516,7 @@
                 <tr>
                   <td colspan="4"></td>
                   <td colspan="2"><span style="color: #333;font-weight: 700"
-                                        v-show="form.detailDtoList.length">合计:</span><span
+                                        v-show="form.detailDtoList.length && totalMoney">合计:</span><span
                     v-show="form.detailDtoList.length && totalMoney">¥{{ totalMoney | formatMoney }}</span></td>
                 </tr>
                 </tbody>
@@ -888,6 +894,13 @@
         }
       },
       changeCustomerId(val) {// POV改变时
+        if (!this.isStorageData) {// 有缓存时，不重置表单
+          this.$refs['orderGoodsAddForm'].resetFields();
+          this.accessoryList = [];
+          this.batchNumbers = [];
+          this.form.detailDtoList = [];
+          this.product.orgGoodsId = '';
+        }
         this.checkLicence(val);
         this.searchWarehouses(val);
         this.searchProduct();

@@ -266,8 +266,6 @@
           </div>
         </div>
       </div>
-
-
     </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
