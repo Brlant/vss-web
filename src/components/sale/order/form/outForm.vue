@@ -479,7 +479,7 @@
                     <el-tag type="success" v-show="product.isCombination" style="font-size: 10px"
                             :class="{ml15:product.isCombination}">组合
                     </el-tag>
-                    <span v-show="!product.isCombination">{{product.orgGoodsName}}</span>
+                    <span>{{product.orgGoodsName}}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
                   <td class="ar">
