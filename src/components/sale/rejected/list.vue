@@ -253,11 +253,13 @@
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn" v-if="filters.state === '6' ">
-                  <span @click.stop.prevent="editOrder(item)">
+                <perm label="sales-return-edit">
+                   <span @click.stop.prevent="editOrder(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="iconfont icon-edit"></i></a>
                     编辑
                   </span>
+                </perm>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>

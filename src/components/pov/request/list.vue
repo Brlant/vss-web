@@ -103,7 +103,7 @@
                       <el-button @click="audited()"><i
                         class="iconfont icon-verify"></i>审核</el-button>
                     </perm>
-                    <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
+                    <perm label="pull-signal-edit" v-show="currentOrder.status === 0">
                       <el-button @click="editOrder()"><i
                         class="iconfont icon-edit"></i>编辑</el-button>
                     </perm>
