@@ -489,7 +489,7 @@
                     v-show="product.unitPrice">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
                     <span v-if="!product.unitPrice">-</span>
                   </td>
-                  <td>
+                  <td class="goods-btn">
                     <div v-show="defaultIndex === 2">
                       <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
                         class="iconfont icon-edit"></i> 编辑</a>

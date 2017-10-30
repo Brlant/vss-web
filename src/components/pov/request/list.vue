@@ -103,6 +103,10 @@
                       <el-button @click="audited()"><i
                         class="iconfont icon-verify"></i>审核</el-button>
                     </perm>
+                    <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
+                      <el-button @click="editOrder()"><i
+                        class="iconfont icon-edit"></i>编辑</el-button>
+                    </perm>
                     <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
                       <el-button @click="cancel()"><i
                         class="iconfont icon-verify"></i>取消</el-button>
@@ -167,6 +171,11 @@
                 </td>
                 <td>
                   {{row.applyCount}}
+                  （
+                  <dict
+                    :dict-group="'measurementUnit'"
+                    :dict-key="row.unit"></dict>
+                  ）
                 </td>
                 <td>
                   <span v-if="row.applyMoney">￥{{row.applyMoney | formatMoney}}</span>
@@ -183,7 +192,7 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form  @change="onSubmit" :index="index" @close="resetRightBox"></add-form>
+      <add-form @change="onSubmit" :index="index" :currentOrder="currentOrder" @close="resetRightBox"></add-form>
     </page-right>
   </div>
 
@@ -258,6 +267,7 @@
     methods: {
       resetRightBox: function () {
         this.showRight = false;
+        this.index = 0;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
@@ -367,10 +377,11 @@
       },
       add () {
         this.showRight = true;
-        this.index = 0;
-        this.$nextTick(() => {
-          this.index = 1;
-        });
+        this.index = 1;
+      },
+      editOrder (item) {
+        this.index = 2;
+        this.showRight = true;
       },
       onSubmit () {
         this.getOrgsList();
