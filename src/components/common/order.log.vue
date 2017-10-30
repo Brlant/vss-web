@@ -24,6 +24,7 @@
         <i class="el-icon-time"></i> 订单消耗时间:
         <oms-cost-time :fDate="currentOrder.createTime" :tDate="orderEndTime"></oms-cost-time>
         <el-tag v-if="this.orderEndTime" type="success">已结束</el-tag>
+        <el-tag v-if="!this.orderEndTime" type="success">进行中</el-tag>
       </div>
       <template v-for="(log,index) in orderLogList">
         <TimelineItem color="green" v-if="log.showDate">
