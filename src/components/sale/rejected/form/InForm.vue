@@ -681,6 +681,7 @@
         } else {
           this.resetForm();
           this.form.state = '';
+          this.form.id = null;
         }
         this.filterAddress();
       },

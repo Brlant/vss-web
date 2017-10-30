@@ -506,6 +506,7 @@
           this.editOrderInfo();
         } else {
           this.resetForm();
+          this.form.id = null;
         }
       }
     },

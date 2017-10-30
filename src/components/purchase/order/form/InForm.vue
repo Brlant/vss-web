@@ -693,6 +693,7 @@
         } else {
           this.resetForm();
           this.form.state = '';
+          this.form.id = null;
         }
       },
       form: {
