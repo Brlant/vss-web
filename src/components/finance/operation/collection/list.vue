@@ -95,6 +95,25 @@
   .cursor-span {
     cursor: pointer;
   }
+
+  .el-select-dropdown__item {
+    font-size: 14px;
+    padding: 8px 10px;
+    position: relative;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #48576a;
+    height: auto;
+    line-height: normal;
+    box-sizing: border-box;
+    cursor: pointer;
+    .select-other-info {
+      padding-left: 10px;
+      color: #8E8E8E
+    }
+  }
+
 </style>
 <template>
   <div class="order-page">
@@ -126,11 +145,16 @@
               <oms-form-row label="付款单位" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.orgId">
-                  <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
-                             v-for="org in payOrgList">
-                    <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
-                    </div>
+                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                      <div style="overflow: hidden">
+                        <span class="pull-left" style="clear: right">{{org.name}}</span>
+                        <span class="pull-right" style="color: #999"></span>
+                      </div>
+                      <div style="overflow: hidden">
+                        <span class="select-other-info pull-left">
+                          <span>系统代码</span> {{org.manufacturerCode}}
+                        </span>
+                      </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
@@ -192,6 +216,9 @@
                 </div>
               </el-col>
               <el-col :span="3" class="pt10">
+                <div class="f-grey">
+                  {{item.orgNo }}
+                </div>
                 <div>{{item.orgName }}</div>
               </el-col>
               <el-col :span="2">
@@ -259,7 +286,7 @@
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
   import allotmentForm from './form/allotmentForm.vue';
-  import {BillReceivable, receivable} from '../../../../resources';
+  import {BillReceivable, receivable, BaseInfo} from '../../../../resources';
 
   export default {
     components: {
@@ -296,6 +323,7 @@
     },
     mounted() {
       this.getBillList(1);
+      this.filterOrg();
     },
     computed: {
       transportationMeansList: function () {
@@ -315,14 +343,10 @@
     },
     methods: {
       filterOrg: function (query) {// 过滤来源单位
-        let params = Object.assign({}, {
-          pageNo: 1,
-          pageSize: 20,
-          keyWord: query,
-          receivableId: this.$store.state.user.userCompanyAddress,
-          status: '0'
-        });
-        receivable.query(params).then(res => {
+        let param = {
+          keyWord: query
+        };
+        BaseInfo.query(param).then(res => {
           this.orgList = res.data.list;
         });
       },
