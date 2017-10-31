@@ -116,7 +116,7 @@
               <div style="margin-top: 10px;margin-bottom: 10px">
                 <span style="font-size: 14px">客户意见</span>
                 <div class="comment-box" style="margin-top: 4px">
-                  <oms-input type="textarea" :rows="3" v-model="exception.dealDescription"
+                  <oms-input type="textarea" :rows="3" v-model="exception.deal"
                              placeholder="请输入客户意见"></oms-input>
                   <div style="margin: 10px">
                     <oms-upload-relation :formData="{objectId:'',objectType:'orgDescription'}"
@@ -283,6 +283,7 @@
             item.showDel = false;
             item.attachmentIdList = [];
             item.dealDescriptionOrg = item.dealDescription;
+            item.deal = '';
           });
           this.loadingData = false;
           this.exceptionDtoList = res.data;
@@ -305,7 +306,7 @@
         });
       },
       saveException: function (exc) {
-        if (!exc.dealDescription) {
+        if (!exc.deal) {
           this.$notify({
             duration: 20000,
             message: '请输入客户意见',
@@ -314,7 +315,7 @@
           return;
         }
         let object = {
-          content: exc.dealDescription,
+          content: exc.deal,
           attachmentIdList: exc.attachmentIdList,
           objectId: exc.id
         };
