@@ -11,6 +11,24 @@
       }
     }
   }
+
+  .comment-part {
+    .comment-item {
+      border: 1px solid #eee;
+      border-radius: 5px;
+      margin-bottom: 5px;
+      padding-left: 5px;
+    }
+    .date {
+      color: #999;
+    }
+    .content {
+      padding-left: 15px;
+    }
+    .attachment {
+      color: #999;
+    }
+  }
 </style>
 <template>
   <div>
@@ -50,7 +68,7 @@
                 </oms-row>
               </el-col>
               <oms-row :span="4" label="异常备注" class="mb-15">{{exception.description}} </oms-row>
-              <oms-row :span="4" label="客户意见" class="mb-15">{{exception.dealDescriptionOrg}} </oms-row>
+              <!--<oms-row :span="4" label="客户意见" class="mb-15">{{exception.dealDescriptionOrg}} </oms-row>-->
 
               <oms-row :span="4" label="异常原因附件" v-if="exception.reasonAttachments.length" class="mb-15">
                 <attachment-show :orderAttachment="exception.reasonAttachments"
@@ -58,11 +76,31 @@
                                  attachmentClass="exception-attachment"
                                  @refreshAttachment="queryAllExceptionList"></attachment-show>
               </oms-row>
-              <oms-row :span="4" label="客户反馈附件" v-if="exception.feedBackAttachments.length" class="mb-15">
-                <attachment-show :orderAttachment="exception.feedBackAttachments"
-                                 :attachmentRight="clientRight"
-                                 attachmentClass="exception-attachment"
-                                 @refreshAttachment="queryAllExceptionList"></attachment-show>
+              <!--<oms-row :span="4" label="客户反馈附件" v-if="exception.feedBackAttachments.length" class="mb-15">-->
+              <!--<attachment-show :orderAttachment="exception.feedBackAttachments"-->
+              <!--:attachmentRight="clientRight"-->
+              <!--attachmentClass="exception-attachment"-->
+              <!--@refreshAttachment="queryAllExceptionList"></attachment-show>-->
+              <!--</oms-row>-->
+              <oms-row :span="4" label="回复" class="mb-15">
+                <div class="comment-part">
+                  <div class="comment-item" v-for="item in exception.commentList">
+                    <div class="header">
+                      <span> {{ item.creatorName }}</span>
+                      <span class="date"> {{ item.createDate | time}}</span>
+                    </div>
+                    <el-row class="content">
+                      {{item.content}}
+                    </el-row>
+                    <el-row>
+                      <span class="attachment" v-show="item.list.length">附件信息</span>
+                      <attachment-show :orderAttachment="item.list"
+                                       :attachmentRight="exceptionReasonRight"
+                                       attachmentClass="exception-attachment"
+                                       @refreshAttachment="queryAllExceptionList"></attachment-show>
+                    </el-row>
+                  </div>
+                </div>
               </oms-row>
             </div>
             <span slot="header-left">
@@ -276,8 +314,9 @@
           return;
         }
         let object = {
-          dealDescription: exc.dealDescription,
-          attachmentIdList: exc.attachmentIdList
+          content: exc.dealDescription,
+          attachmentIdList: exc.attachmentIdList,
+          objectId: exc.id
         };
         this.doing = true;
         http.put('/quality-exception/' + exc.id, object).then(() => {

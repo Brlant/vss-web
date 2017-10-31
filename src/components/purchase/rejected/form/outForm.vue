@@ -446,7 +446,11 @@
                     </el-input>
                   </td>
                   <td>{{ batchNumber.no }}</td>
-                  <td>{{ batchNumber.count }}</td>
+                  <td>
+                    {{ batchNumber.count }}
+                    <dict :dict-group="'measurementUnit'"
+                          :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                  </td>
                   <td>{{ batchNumber.productionDate | date }}</td>
                   <td>{{ batchNumber.expirationDate | date }}</td>
                 </tr>
@@ -475,21 +479,22 @@
                     <el-tag type="success" v-show="product.isCombination" style="font-size: 10px"
                             :class="{ml15:product.isCombination}">组合
                     </el-tag>
-                    <span v-show="!product.isCombination">{{product.orgGoodsName}}</span>
+                    <span>{{product.orgGoodsName}}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
                   <td class="ar">
-                    <span v-show="product.unitPrice">¥ {{product.unitPrice | formatMoney}}</span>
+                    <span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>
+                    <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
                   <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
                   <td class="ar"><span
-                    v-show="product.unitPrice">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
-                    <span v-if="!product.unitPrice">-</span>
+                    v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                    <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
-                  <td>
+                  <td class="goods-btn">
                     <div v-show="defaultIndex === 2">
                       <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
                         class="iconfont icon-edit"></i> 编辑</a>
@@ -503,7 +508,7 @@
                 <tr>
                   <td colspan="4"></td>
                   <td colspan="2"><span style="color: #333;font-weight: 700"
-                                        v-show="form.detailDtoList.length">合计:</span><span
+                                        v-show="form.detailDtoList.length && totalMoney">合计:</span><span
                     v-show="form.detailDtoList.length  && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
                 </tr>
                 </tbody>
@@ -721,6 +726,7 @@
         } else {
           this.resetForm();
           this.form.state = '';
+          this.form.id = null;
         }
         this.filterAddress();
       },
@@ -890,6 +896,9 @@
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.product.orgGoodsId = '';
           this.form.detailDtoList = [];
+          this.$refs['orderGoodsAddForm'].resetFields();
+          this.accessoryList = [];
+          this.batchNumbers = [];
         }
         this.checkLicence(val);
         this.searchWarehouses(val);

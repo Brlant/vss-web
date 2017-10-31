@@ -219,6 +219,12 @@
   .ar {
     text-align: right;
   }
+
+  .goods-btn {
+    a:hover {
+      color: @activeColor;
+    }
+  }
 </style>
 
 <template>
@@ -376,8 +382,14 @@
                   <span v-if="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
                   <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
-                <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                  class="iconfont icon-delete"></i> 删除</a></td>
+                <td class="goods-btn">
+                  <div v-show="index === 2">
+                    <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
+                      class="iconfont icon-edit"></i> 编辑</a>
+                  </div>
+                  <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination">
+                    <i class="iconfont icon-delete"></i> 删除</a>
+                </td>
               </tr>
               <tr>
                 <td colspan="3"></td>
@@ -404,7 +416,8 @@
     name: 'addForm',
     loading: false,
     props: {
-      index: Number
+      index: Number,
+      currentOrder: Object
     },
     data: function () {
       return {
@@ -477,12 +490,48 @@
     watch: {
       index (val) {
         if (!val) return;
+        this.form = {
+          detailDtoList: [],
+          remark: '',
+          warehouseId: '',
+          povId: '',
+          demandTime: '',
+          cdcId: '',
+          type: 1
+        };
         this.searchWarehouses();
         this.queryOnCDCs();
         this.currentList = [];
+        if (val === 2) {
+          this.editOrderInfo();
+        } else {
+          this.resetForm();
+          this.form.id = null;
+        }
       }
     },
     methods: {
+      editOrderInfo () {
+
+        let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
+          return {
+            amount: m.applyCount,
+            measurementUnit: m.unit,
+            orgGoodsId: m.orgGoodsId,
+            orgGoodsName: m.goodsName,
+            unitPrice: m.price
+          };
+        });
+        this.form = {
+          id: this.currentOrder.id,
+          cdcId: this.currentOrder.cdcId,
+          demandTime: this.currentOrder.demandTime,
+          type: Number(this.currentOrder.vaccineSign),
+          warehouseId: this.currentOrder.warehouseId,
+          detailDtoList: orgDetailGoods
+        };
+//        this.form = JSON.parse(JSON.stringify(this.currentOrder));
+      },
       changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
@@ -521,7 +570,7 @@
         Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress}).then(res => {
           this.warehouses = res.data || [];
           let fs = this.warehouses.filter(i => i.default)[0];
-          this.form.transportationAddress = fs && fs.id || '';
+          this.form.warehouseId = fs && fs.id || '';
         });
       },
       filterProducts: function () {
@@ -624,13 +673,21 @@
             this.accessoryList = [];
             this.currentList = [];
           });
-          console.log(this.form.detailDtoList);
         });
       },
       remove: function (item) {
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         this.searchProduct();
+      },
+      editItem (item) {
+        this.filterProductList.push({
+          orgGoodsId: item.orgGoodsId,
+          goodsName: item.orgGoodsName
+        });
+        this.product.orgGoodsId = item.orgGoodsId;
+        this.product.amount = item.amount;
+        this.remove(item);
       },
       onSubmit: function () {// 提交表单
         let self = this;
@@ -663,27 +720,52 @@
             delete item.amount;
           });
           this.doing = true;
-          pullSignal.save(saveData).then(res => {
-            this.resetForm();
-            this.$notify({
-              duration: 2000,
-              message: '新增要货申请单成功',
-              type: 'success'
-            });
-            self.$emit('change', res.data);
-            this.$nextTick(() => {
+
+          if (saveData.id) {
+            pullSignal.update(saveData.id, saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '编辑要货申请单成功',
+                type: 'success'
+              });
+              self.$emit('change');
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
               this.doing = false;
-              this.$emit('close');
+              this.$notify({
+                duration: 2000,
+                title: '编辑要货申请单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          }).catch(error => {
-            this.doing = false;
-            this.$notify({
-              duration: 2000,
-              title: '新增要货申请单失败',
-              message: error.response.data.msg,
-              type: 'error'
+          } else {
+            pullSignal.save(saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '新增要货申请单成功',
+                type: 'success'
+              });
+              self.$emit('change', res.data);
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
+              this.doing = false;
+              this.$notify({
+                duration: 2000,
+                title: '新增要货申请单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          });
+          }
         });
       },
       resetForm () {
