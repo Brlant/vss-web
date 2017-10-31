@@ -254,7 +254,10 @@
         currentItemId: ''
       };
     },
-    mounted() {},
+    mounted() {
+      this.filterFactory();
+      this.filterOrgGoods();
+    },
     watch: {
       filters: {
         handler: function () {
@@ -265,13 +268,13 @@
             });
             return;
           } else {
-            if (this.filters.batchNumber === '') {
-              this.$notify.info({
-                title: '提示',
-                message: '请输入查询需要查询的批号'
-              });
-              return;
-            }
+//            if (this.filters.batchNumber === '') {
+//              this.$notify.info({
+//                title: '提示',
+//                message: '请输入查询需要查询的批号'
+//              });
+//              return;
+//            }
             this.getBatcheNumbers();
           }
         },
