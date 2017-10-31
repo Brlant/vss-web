@@ -5,8 +5,8 @@ export default {
   requestType: {
     0: {'title': '所有', status: null, num: ''},
     1: {'title': '待审批', status: 0, num: ''},
-    2: {'title': '待生成波次', status: 1, num: ''},
-    3: {'title': '待分配', status: 2, num: ''},
+    2: {'title': '待CDC处理', status: 1, num: ''},
+    3: {'title': '待生成订单', status: 2, num: ''},
     4: {'title': '已分配', status: 4, num: ''},
     5: {'title': '已取消', status: 3, num: ''}
   },
@@ -25,7 +25,7 @@ export default {
   },
   assignType: {
     0: {'title': '待分配', status: 1, num: ''},
-    1: {'title': '已完成分配', status: 2, num: ''}
+    1: {'title': '已完成分配', status: 4, num: ''}
   },
   waveType: {
     0: {'title': '未完成', status: 0, num: ''},
@@ -47,11 +47,19 @@ export default {
     4: {'title': '已完成', state: '4', num: ''},
     5: {'title': '取消订单', state: '5', num: ''}
   },
+  outReturnOrderType: {
+    0: {'title': '待确认', state: '0', num: ''},
+    1: {'title': '待审单', state: '1', num: ''},
+    2: {'title': '执行中', state: '2', num: ''},
+    3: {'title': '待发货', state: '3', num: ''},
+    4: {'title': '已完成', state: '4', num: ''},
+    5: {'title': '取消订单', state: '5', num: ''}
+  },
   paymentOperation: {
-    0: {'title': '待审核', status: '0', num: 0},
-    1: {'title': '执行中', status: '1', num: 0},
-    2: {'title': '已完成', status: '2', num: 0},
-    3: {'title': '审核未通过', status: '3', num: 0}
+    0: {'title': '待审核', status: '0', num: ''},
+    1: {'title': '待分配', status: '1', num: ''},
+    2: {'title': '已完成', status: '2', num: ''},
+    3: {'title': '审核未通过', status: '3', num: ''}
   },
   priceGroupType: {
     0: {'title': '可用', availabilityStatus: true, num: ''},
@@ -62,8 +70,16 @@ export default {
     1: {'title': '未生效', availabilityStatus: false, num: ''}
   },
   receiptType: {
-    0: {'title': '待收货', status: 5, num: ''},
-    1: {'title': '已完成', status: 6, num: ''}
+    0: {'title': '待收货', state: '3', num: ''},
+    1: {'title': '已完成', state: '4', num: ''}
+  },
+  firmType: {
+    0: {'title': '正常', status: '0', num: ''},
+    1: {'title': '停用', status: '1', num: ''}
+  },
+  vaccineType: {
+    0: {'title': '正常', status: '1', num: ''},
+    1: {'title': '停用', status: '0', num: ''}
   },
   /**
    * 格式化地址，已省/市/区显示
@@ -218,8 +234,11 @@ export default {
     }
   },
   getSelectLabel: function (key, labelList) {
-    let len = labelList.length;
     let label = '';
+    if (!Array.isArray(labelList)) {
+      return label;
+    }
+    let len = labelList.length;
     for (let i = 0; i < len; i++) {
       if (labelList[i].key === key) {
         label = labelList.label;
@@ -227,5 +246,37 @@ export default {
       }
     }
     return label;
+  },
+  changeTotalNumber (amount, smallPacking) {
+    if (!smallPacking) return;
+    let number = Number(amount);
+    let remainder = number % smallPacking;
+    let isMultiple = remainder === 0;
+    if (isMultiple) return number;
+    let integer = parseInt(number, 10) + 1;
+    let ri = integer % smallPacking;
+    isMultiple = ri === 0;
+    if (isMultiple) {
+      this.$notify.info({
+        message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${integer}`
+      });
+      return integer;
+    }
+    let re = integer + smallPacking - ri;
+    this.$notify.info({
+      message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
+    });
+    return re;
+  },
+  isCheckPackage (count) {
+    if (!count || count < 0) {
+      this.$notify({
+        duration: 2000,
+        title: '货品资料不足',
+        message: '货品无最小包装单位，请补充资料，或者选择其他货品',
+        type: 'error'
+      });
+    }
+    return count > 0;
   }
 };

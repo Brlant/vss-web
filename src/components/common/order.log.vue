@@ -23,6 +23,8 @@
       <div class="order-cost-part">
         <i class="el-icon-time"></i> 订单消耗时间:
         <oms-cost-time :fDate="currentOrder.createTime" :tDate="orderEndTime"></oms-cost-time>
+        <el-tag v-if="this.orderEndTime" type="success">已结束</el-tag>
+        <el-tag v-if="!this.orderEndTime" type="success">进行中</el-tag>
       </div>
       <template v-for="(log,index) in orderLogList">
         <TimelineItem color="green" v-if="log.showDate">
@@ -55,7 +57,9 @@
   import { TimelineItem, Timeline } from './timeline/index.js';
 
   export default {
-    components: {TimelineItem, Timeline},
+    components: {
+      TimelineItem, Timeline
+    },
     props: {
       currentOrder: {
         type: Object,
@@ -103,14 +107,14 @@
               dateArr.push(item.dateWeek);
               item.showDate = true;
             }
-            if ((this.currentOrder.state === '3' || this.currentOrder.state === '8') && this.orderLogList.length > 0) {
-              this.orderEndTime = this.orderLogList[0].operateTime;
-            } else {
-              this.orderEndTime = '';
-            }
           });
           this.orderLogList = res.data;
           this.loadingLog = false;
+          if ((this.currentOrder.erpStatus === '4' || this.currentOrder.erpStatus === '5' || this.currentOrder.erpStatus === '8' || this.currentOrder.erpStatus === '9') && this.orderLogList.length > 0) {
+            this.orderEndTime = this.orderLogList[0].operateTime;
+          } else {
+            this.orderEndTime = '';
+          }
         });
       }
     }

@@ -1,4 +1,5 @@
 <style lang="less" scoped="">
+  @import '../../../assets/mixins';
 
   .page-right-part {
     box-sizing: content-box;
@@ -99,6 +100,12 @@
   .cursor-span {
     cursor: pointer;
   }
+
+  .opera-btn-bidder {
+    a:hover {
+      color: @activeColor;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -128,7 +135,27 @@
                            :clearable="true"
                            v-model="searchCondition.goodsId" popper-class="good-selects">
                   <el-option :value="vaccine.id" :key="vaccine.id" :label="vaccine.name"
-                             v-for="vaccine in vaccineList"></el-option>
+                             v-for="vaccine in vaccineList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{vaccine.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                <span class="select-other-info pull-left"><span
+                  v-show="vaccine.id">货品ID</span>  {{vaccine.id}}
+                </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
+                </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}
+                </span>
+                    </div>
+                    <div style="overflow: hidden">
+              <span class="select-other-info pull-left"><span
+                v-show="vaccine.factoryName">生产厂商</span>  {{ vaccine.factoryName }}
+              </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -186,7 +213,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in dataRows" @click.prevent=""
-               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentId ==item.id}]" >
+               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentId ==item.id}]">
             <el-row>
               <el-col :span="5">
                 <div class="vertical-center">
@@ -205,20 +232,25 @@
                 <div class="vertical-center">{{item.approvalNumber }}</div>
               </el-col>
               <el-col :span="2">
-                  {{item.year}}
+                {{item.year}}
               </el-col>
               <el-col :span="2">
                 <div class="vertical-center">
                   {{formatStatus(item.availabilityStatus)}}
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="4" class="opera-btn-bidder">
                 <perm label="erp-user-edit">
                   <a href="#" @click.stop.prevent="edit(item)"><i
                     class="iconfont icon-edit"></i>编辑</a>
                 </perm>
                 <perm label="vaccine-info-delete">
-                  <a href="#" @click.stop.prevent="remove(item.id)"><i class="iconfont icon-remove"></i> 删除</a>
+                  <a href="#" @click.stop.prevent="remove(item.id)">
+                    <oms-forbid :item="item" @forbided="remove((item.id))" :tips='"确认删除中标疫苗\""+item.goodsName+"\"?"'>
+                      <i class="iconfont icon-remove"></i> 删除
+                    </oms-forbid>
+                  </a>
+
                 </perm>
               </el-col>
             </el-row>
@@ -246,6 +278,7 @@
   import editForm from './form/form.vue';
   import {BaseInfo, http, Vaccine} from '@/resources';
   import ElCol from 'element-ui/packages/col/src/col';
+  import OmsForbid from '../../common/forbid.vue';
 
   export default {
     components: {
@@ -265,7 +298,6 @@
         showTypeList: [],
         typeTxt: '',
         formTitle: '新增',
-        oldItem: {},
         action: 'add',
         orgGoods: [],
         pager: {
@@ -280,8 +312,7 @@
         status: {},
         currentId: '',
         searchCondition: {
-          orgName: '',
-          factoryName: '',
+          goodsId: '',
           year: '',
           availabilityStatus: true
         },
@@ -317,13 +348,12 @@
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+          this.querySum(params);
         });
-        this.querySum(params);
+
       },
       querySum(params) {
-        let para = Object.assign({}, params);
-        para.availabilityStatus = undefined;
-        http.get('successful-bidder/count').then(res => {
+        http.get('successful-bidder/count', {params}).then(res => {
           this.successBidderType[0].num = res.data['true'];
           this.successBidderType[1].num = res.data['false'];
         });
@@ -347,16 +377,8 @@
         else return '未生效';
       },
       itemChange: function (item) {
-        if (this.action === 'add') {
-          this.getPageList(1);
-          this.showRight = false;
-        } else {
-          let index = this.dataRows.indexOf(this.oldItem);
-          if (index !== -1) {
-            this.dataRows.splice(index, 1, item);
-          }
-          this.showRight = false;
-        }
+        this.getPageList(1);
+        this.showRight = false;
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色
         let status = -1;
@@ -375,7 +397,7 @@
         });
       },
       formatDate(param) {
-        this.searchCondition.year = param ? this.$moment(param).format('YYYY-MM-DD') : '';
+        this.searchCondition.year = param ? this.$moment(param).format('YYYY') : '';
       },
       resetSearchForm: function () {// 重置表单
         let temp = {

@@ -95,6 +95,12 @@
   .cursor-span {
     cursor: pointer;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -134,20 +140,30 @@
             <el-col :span="8">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.supplierId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                           v-model="searchCondition.transactOrgId" popperClass="good-selects">
+                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                             v-for="org in orgList" popper-class="good-selects">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.subordinateCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="物流商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
-                           :clearable="true"
-                           v-model="searchCondition.logisticsProviderId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="物流商" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"-->
+            <!--:clearable="true"-->
+            <!--v-model="searchCondition.logisticsProviderId">-->
+            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
             <el-col :span="8">
               <oms-form-row label="预计入库时间" :span="8">
                 <el-col :span="24">
@@ -181,11 +197,12 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="7">货主/订单号</el-col>
+          <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">POV</el-col>
+          <el-col :span="filters.state === '6' ? 5: 6">POV</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
+          <el-col :span="3" v-if="filters.state === '6'">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -203,7 +220,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="7">
+              <el-col :span="filters.state === '6' ? 5: 7">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -216,7 +233,7 @@
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="6" class="pt10">
+              <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
@@ -235,13 +252,20 @@
                   <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
                 </div>
               </el-col>
+              <el-col :span="3" class="opera-btn" v-if="filters.state === '6' ">
+                <perm label="sales-return-edit">
+                   <span @click.stop.prevent="editOrder(item)">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="iconfont icon-edit"></i></a>
+                    编辑
+                  </span>
+                </perm>
+              </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
       </div>
-
-
     </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
@@ -251,12 +275,12 @@
       </el-pagination>
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
-                class="order-detail-info" partClass="pr-no-animation">
+                class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
+      <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
   </div>
@@ -281,13 +305,14 @@
         filters: {
           type: 0,
           state: '6',
+          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
           bizType: '1',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: '',
           deleteFlag: false
         },
@@ -297,7 +322,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -342,6 +367,12 @@
       }
     },
     methods: {
+      editOrder (item) {
+        this.action = 'edit';
+        this.currentOrderId = item.id;
+        this.showItemRight = true;
+        this.defaultIndex = 2;
+      },
       getOrderStatus: function (order) {
         let state = '';
         for (let key in this.orgType) {
@@ -363,7 +394,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -447,7 +478,7 @@
         return status;
       },
       orgChange: function () {
-        this.searchCondition.supplierId = '';
+        this.searchCondition.transactOrgId = '';
         this.orgList = [];
         this.filterOrg();
         this.filterLogistics();

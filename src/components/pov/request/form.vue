@@ -219,6 +219,12 @@
   .ar {
     text-align: right;
   }
+
+  .goods-btn {
+    a:hover {
+      color: @activeColor;
+    }
+  }
 </style>
 
 <template>
@@ -256,7 +262,6 @@
             </el-form-item>
             <el-form-item label="需求时间" prop="demandTime">
               <el-date-picker
-                type="date"
                 v-model="form.demandTime"
                 placeholder="请选择需求时间" format="yyyy-MM-dd"
                 @change="changeTime">
@@ -284,8 +289,8 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.sellPrice">销售价格 ￥</span>{{ item.sellPrice
-                        }}
+                        v-show="item.sellPrice">销售价格 ￥{{ item.sellPrice
+                        }}</span>
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}</span>
@@ -299,7 +304,8 @@
               </el-select>
             </el-form-item>
             <el-form-item label="疫苗数量" prop="amount">
-              <oms-input type="number" placeholder="请输入申请数量" v-model.number="product.amount" :min="0">
+              <oms-input type="number" placeholder="请输入申请数量" v-model.number="product.amount" :min="0"
+                         @blur="changeNumber">
                 <template slot="append">
                   <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                 </template>
@@ -311,6 +317,10 @@
             <div class="product-info-fix clearfix">
               <el-row>
                 <el-col :span="12">
+                  <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
+                    {{product.fixInfo.goodsDto.smallPacking}}/
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                  </oms-row>
                   <oms-row label="疫苗编号" :span="8">
                     {{product.fixInfo.goodsNo}}
                   </oms-row>
@@ -361,22 +371,33 @@
                   <span>{{product.orgGoodsName}}</span>
                 </td>
                 <td class="ar">
-                  <span v-show="product.unitPrice">¥</span>{{product.unitPrice | formatMoney}}
+                  <span v-if=" Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
+                  <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar"><span
-                  v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
+                <td class="ar">
+                  <span v-if="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                  <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
-                <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                  class="iconfont icon-delete"></i> 删除</a></td>
+                <td class="goods-btn">
+                  <div v-show="index === 2">
+                    <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
+                      class="iconfont icon-edit"></i> 编辑</a>
+                  </div>
+                  <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination">
+                    <i class="iconfont icon-delete"></i> 删除</a>
+                </td>
               </tr>
               <tr>
                 <td colspan="3"></td>
-                <td colspan="2"><span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length">合计:</span><span
-                  v-show="form.detailDtoList.length">   ¥{{ totalMoney | formatMoney }}</span></td>
+                <td colspan="2">
+                  <span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length &&  Number(totalMoney)">合计:  ¥{{ totalMoney | formatMoney
+                    }}
+                  </span>
+                </td>
               </tr>
               </tbody>
             </table>
@@ -395,7 +416,8 @@
     name: 'addForm',
     loading: false,
     props: {
-      index: Number
+      index: Number,
+      currentOrder: Object
     },
     data: function () {
       return {
@@ -450,7 +472,9 @@
             {required: true, type: 'number', message: '请输入数量', trigger: 'blur'}
           ]
 
-        }
+        },
+        changeTotalNumber: utils.changeTotalNumber,
+        isCheckPackage: utils.isCheckPackage
       };
     },
     computed: {
@@ -466,12 +490,51 @@
     watch: {
       index (val) {
         if (!val) return;
+        this.form = {
+          detailDtoList: [],
+          remark: '',
+          warehouseId: '',
+          povId: '',
+          demandTime: '',
+          cdcId: '',
+          type: 1
+        };
         this.searchWarehouses();
         this.queryOnCDCs();
         this.currentList = [];
+        if (val === 2) {
+          this.editOrderInfo();
+        } else {
+          this.resetForm();
+          this.form.id = null;
+        }
       }
     },
     methods: {
+      editOrderInfo () {
+
+        let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
+          return {
+            amount: m.applyCount,
+            measurementUnit: m.unit,
+            orgGoodsId: m.orgGoodsId,
+            orgGoodsName: m.goodsName,
+            unitPrice: m.price
+          };
+        });
+        this.form = {
+          id: this.currentOrder.id,
+          cdcId: this.currentOrder.cdcId,
+          demandTime: this.currentOrder.demandTime,
+          type: Number(this.currentOrder.vaccineSign),
+          warehouseId: this.currentOrder.warehouseId,
+          detailDtoList: orgDetailGoods
+        };
+//        this.form = JSON.parse(JSON.stringify(this.currentOrder));
+      },
+      changeNumber () {
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+      },
       changeTime: function (date) {// 格式化时间
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
@@ -507,7 +570,7 @@
         Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress}).then(res => {
           this.warehouses = res.data || [];
           let fs = this.warehouses.filter(i => i.default)[0];
-          this.form.transportationAddress = fs && fs.id || '';
+          this.form.warehouseId = fs && fs.id || '';
         });
       },
       filterProducts: function () {
@@ -561,6 +624,7 @@
                   return false;
                 }
               });
+              this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
             }
           });
         });
@@ -570,6 +634,8 @@
           if (!valid) {
             return false;
           }
+          let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+          if (!isCheck) return;
           this.currentList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
               this.product.orgGoodsName = item.orgGoodsDto.name;
@@ -614,8 +680,18 @@
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         this.searchProduct();
       },
+      editItem (item) {
+        this.filterProductList.push({
+          orgGoodsId: item.orgGoodsId,
+          goodsName: item.orgGoodsName
+        });
+        this.product.orgGoodsId = item.orgGoodsId;
+        this.product.amount = item.amount;
+        this.remove(item);
+      },
       onSubmit: function () {// 提交表单
         let self = this;
+        this.changeTime(this.form.demandTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             return false;
@@ -644,27 +720,52 @@
             delete item.amount;
           });
           this.doing = true;
-          pullSignal.save(saveData).then(res => {
-            this.resetForm();
-            this.$notify({
-              duration: 2000,
-              message: '新增要货申请单成功',
-              type: 'success'
-            });
-            self.$emit('change', res.data);
-            this.$nextTick(() => {
+
+          if (saveData.id) {
+            pullSignal.update(saveData.id, saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '编辑要货申请单成功',
+                type: 'success'
+              });
+              self.$emit('change');
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
               this.doing = false;
-              this.$emit('close');
+              this.$notify({
+                duration: 2000,
+                title: '编辑要货申请单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          }).catch(error => {
-            this.doing = false;
-            this.$notify({
-              duration: 2000,
-              title: '新增要货申请单失败',
-              message: error.response.data.msg,
-              type: 'error'
+          } else {
+            pullSignal.save(saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '新增要货申请单成功',
+                type: 'success'
+              });
+              self.$emit('change', res.data);
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
+              this.doing = false;
+              this.$notify({
+                duration: 2000,
+                title: '新增要货申请单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          });
+          }
         });
       },
       resetForm () {

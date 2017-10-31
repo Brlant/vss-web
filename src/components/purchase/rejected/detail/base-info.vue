@@ -35,7 +35,7 @@
               {{currentOrder.customerName}}
             </oms-row>
             <oms-row label="供货厂商仓库" :span="span">
-              {{currentOrder.warehouseAddress}}
+              {{ getWarehouseAdress(currentOrder)}}
             </oms-row>
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
@@ -60,8 +60,8 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <oms-row label="物流中心" :span="3">
-            <span class="goods-span">{{currentOrder.centreName}}</span>
+          <oms-row label="疾控仓库地址" :span="3">
+            <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
@@ -111,7 +111,7 @@
             </div>
           </td>
           <td class="text-center" width="140px">
-            {{item.orgGoodsDto.goodsDto.salesFirmName}}
+            {{item.orgGoodsDto.salesFirmName}}
           </td>
           <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
           <td>{{ item.productionDate | date }}</td>
@@ -121,10 +121,14 @@
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
           <td width="80px" class="text-center">
-            <span v-show="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
           <td class="text-center">
-            <span v-show="item.unitPrice">¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+           <span v-if="item.unitPrice">
+              <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+            </span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
         </tr>
         <tr class="text-center">
@@ -200,9 +204,9 @@
           : item.transportationMeansId === '1' ? '预计提货'
             : item.transportationMeansId === '2' ? '预计发货' : '';
       },
-      getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
-      },
+//      getWarehouseAdress: function (item) { // 得到仓库地址
+//        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+//      },
       searchWarehouses () {
         if (!this.currentOrder.customerId) {
           this.warehouses = [];
@@ -231,12 +235,18 @@
       },
       getOrderStatus: function (order) { // 获取订单状态
         let state = '';
-        for (let key in utils.outOrderType) {
-          if (order.state === utils.outOrderType[key].state) {
-            state = utils.outOrderType[key].title;
+        for (let key in utils.outReturnOrderType) {
+          if (order.state === utils.outReturnOrderType[key].state) {
+            state = utils.outReturnOrderType[key].title;
           }
         }
         return state;
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        if (!item.warehouseAddress) {
+          return '';
+        }
+        return utils.formatAddress(item.warehouseProvince, item.warehouseCity, item.warehouseRegion) + '/' + item.warehouseAddress;
       }
     }
   };

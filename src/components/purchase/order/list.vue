@@ -92,10 +92,14 @@
     cursor: pointer;
   }
 
-
-
   .cursor-span {
     cursor: pointer;
+  }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
   }
 </style>
 <template>
@@ -129,27 +133,46 @@
               <oms-form-row label="物流方式" :span="6">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
-                             v-for="item in transportationMeansList"></el-option>
+                             v-for="item in transportationMeansList">
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.supplierId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                           v-model="searchCondition.transactOrgId" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="物流商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
-                           :clearable="true"
-                           v-model="searchCondition.logisticsProviderId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="物流商" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"-->
+            <!--:clearable="true"-->
+            <!--v-model="searchCondition.logisticsProviderId" popperClass="good-selects">-->
+            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList">-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
+            <!--</div>-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="select-other-info pull-left">-->
+            <!--<span>系统代码</span> {{org.manufacturerCode}}-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--</el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
             <el-col :span="8">
               <oms-form-row label="预计入库时间" :span="8">
                 <el-col :span="24">
@@ -183,11 +206,12 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="7">货主/订单号</el-col>
+          <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">供货厂商</el-col>
+          <el-col :span="filters.state === '6' ? 5: 6">供货厂商</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
+          <el-col :span="3" v-if="filters.state === '6'">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -205,7 +229,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="7">
+              <el-col :span="filters.state === '6' ? 5: 7">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -218,7 +242,7 @@
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="6" class="pt10">
+              <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
@@ -237,12 +261,20 @@
                   <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
                 </div>
               </el-col>
+              <el-col :span="3" class="opera-btn" v-if="filters.state === '6' ">
+                <perm label="purchasing-order-edit">
+                   <span @click.stop.prevent="editOrder(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="iconfont icon-edit"></i></a>
+                  编辑
+                </span>
+                </perm>
+              </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
       </div>
-
 
     </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
@@ -253,12 +285,14 @@
       </el-pagination>
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
-                class="order-detail-info" partClass="pr-no-animation">
+                class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form type="0" :defaultIndex="defaultIndex" @change="onSubmit" :action="action"
+    <page-right :show="showItemRight" class="specific-part-z-index" @right-close="resetRightBox"
+                :css="{'width':'1000px','padding':0}">
+      <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
+                :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
   </div>
@@ -283,13 +317,14 @@
         filters: {
           type: 0,
           state: '6',
+          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
           bizType: '0',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: '',
           deleteFlag: false
         },
@@ -299,7 +334,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -316,15 +351,23 @@
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
         user: {},
-        state: ''
+        state: '',
+        purchase: {}
       };
     },
     mounted () {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
-      if (orderId && orderId !== ':id') {
+      if (orderId && orderId !== ':id' && orderId !== 'add') {
         this.currentOrderId = orderId;
         this.showDetail = true;
+      }
+      if (orderId === 'add') {
+        this.add();
+        this.purchase = {
+          id: this.$route.query.id,
+          count: this.$route.query.count
+        };
       }
     },
     computed: {
@@ -344,6 +387,12 @@
       }
     },
     methods: {
+      editOrder (item) {
+        this.action = 'edit';
+        this.currentOrderId = item.id;
+        this.showItemRight = true;
+        this.defaultIndex = 2;
+      },
       getOrderStatus: function (order) {
         let state = '';
         for (let key in this.orgType) {
@@ -365,7 +414,7 @@
           expectedStartTime: '',
           expectedEndTime: '',
           transportationMeansId: '',
-          supplierId: '',
+          transactOrgId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -387,6 +436,13 @@
       },
       onSubmit: function () {
         this.getOrderList(1);
+        if (this.defaultIndex === 2) {
+          let orderId = this.currentOrderId;
+          this.currentOrderId = '';
+          this.$nextTick(() => {
+            this.currentOrderId = orderId;
+          });
+        }
       },
       getOrderList: function (pageNo) {
         if (pageNo === 1) {
@@ -424,9 +480,9 @@
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
-        let orgId = this.searchCondition.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
-          this.searchCondition.supplierId = '';
+          this.searchCondition.transactOrgId = '';
           this.orgList = [];
           return;
         }
@@ -435,7 +491,7 @@
         });
       },
       filterLogistics: function (query) {// 过滤物流提供方
-        let orgId = this.searchCondition.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.searchCondition.logisticsProviderId = '';
           this.logisticsList = [];
@@ -455,7 +511,7 @@
         return status;
       },
       orgChange: function () {
-        this.searchCondition.supplierId = '';
+        this.searchCondition.transactOrgId = '';
         this.orgList = [];
         this.filterOrg();
         this.filterLogistics();

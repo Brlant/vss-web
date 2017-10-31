@@ -44,6 +44,10 @@
   .color-red {
     color: red;
   }
+
+  .mb5 {
+    margin-bottom: 5px;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -117,16 +121,27 @@
                 </span>
               </el-col>
               <el-col :span="3" class="opera-btn">
-                <span @click.prevent="showPart(item)" v-show="status === 0 ">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="iconfont icon-detail"></i></a>
-                  手动分配
-                </span>
-                <span @click.prevent="showPart(item)" v-show="status === 1 ">
+                <div class="mb5">
+                    <span @click.prevent="showPart(item)" v-show="status === 0 ">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="iconfont icon-detail"></i></a>
+                    手动分配
+                    </span>
+                </div>
+                <div class="mb5">
+                  <span @click.prevent="showPart(item)" v-show="status === 1 ">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="iconfont icon-detail"></i></a>
                   查看详情
                 </span>
+                </div>
+                <div>
+                  <span @click.prevent="goTo(item)" v-show="item.balanceAmount < 0 ">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="iconfont icon-link"></i></a>
+                  采购订单
+                  </span>
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -200,6 +215,13 @@
           }
         });
       },
+      goTo (item) {
+        this.$notify.success({
+          message: '即将跳转到采购订单'
+        });
+//        this.$router.push('/purchase/order/add');
+        this.$router.push({path: '/purchase/order/add', query: {id: item.orgGoodsId, count: item.balanceAmount}});
+      },
       submit () {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
         if (isNotNormal) {
@@ -210,7 +232,7 @@
         }
         demandAssignment.createOrder(this.$route.query.id).then(() => {
           this.$notify.success({
-            message: '提交分配方案成功,将跳转到采购订单'
+            message: '提交分配方案成功,将跳转到销售订单'
           });
           this.$router.push('/sale/order/:id');
         }).catch(error => {

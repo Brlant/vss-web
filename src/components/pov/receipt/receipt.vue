@@ -1,5 +1,6 @@
 <style lang="less" scoped>
   @import '../../../assets/mixins';
+
   @leftWidth: 280px;
   .content-part {
     .content-left {
@@ -26,6 +27,12 @@
 
   .product-list {
     padding: 10px;
+    position: absolute;
+    top: 60px;
+    left: 0;
+    right: 0;
+    bottom: 100px;
+    overflow: auto;
     .product-item {
       margin-bottom: 15px;
       border: 1px solid #ccc;
@@ -54,16 +61,11 @@
         <div class="product-list">
           <div v-for="(product,key) in productList" :class="{'active': activeKey === key }"
                @click="changeProduct(product, key)" class="product-item">
-            <oms-row label="货品名称" :span="span">{{product.goodsName}}111</oms-row>
+            <oms-row label="货品名称" :span="span">{{product.name}}111</oms-row>
             <oms-row label="批号" :span="span">{{product.batchNumber}}</oms-row>
-            <oms-row label="规格" :span="span">{{product.specification}}</oms-row>
-            <oms-row label="生产厂商" :span="span">{{product.productFactory}}</oms-row>
-            <oms-row label="销售厂商" :span="span">{{product.saleFactory}}</oms-row>
-            <oms-row label="大包装" :span="span" v-if="product.largeBoxCount">{{product.largeBoxCount}}</oms-row>
-            <oms-row label="中包装" :span="span" v-if="product.mediumBoxCount">{{product.mediumBoxCount}}</oms-row>
-            <oms-row label="小包装" :span="span" v-if="product.smallBoxCount">{{product.smallBoxCount}}</oms-row>
-            <oms-row label="散件" :span="span" v-if="product.bulkBoxCount">{{product.bulkBoxCount}}</oms-row>
-            <oms-row label="合计数量" :span="span">{{product.totalCount}}</oms-row>
+            <oms-row label="规格" :span="span">{{product.orgGoodsDto.goodsDto.specifications}}</oms-row>
+            <oms-row label="生产厂商" :span="span">{{product.orgGoodsDto.goodsDto.factoryName}}</oms-row>
+            <oms-row label="数量" :span="span">{{product.amount}}</oms-row>
           </div>
         </div>
         <div class="btn-submit-save">
@@ -75,16 +77,10 @@
         <div v-for="(item, key) in productList" v-show="key === activeKey">
           <el-form :ref=" 'form' + key" :model="item" :rules="rules" label-width="160px"
                    style="padding-right: 20px">
-            <el-form-item label="大包装数量" prop="largePackageCount" v-if="currentItem.largeBoxCount">
-              <oms-input type="text" placeholder="请输入大包装数量" v-model.number="item.largePackageCount"></oms-input>
+            <el-form-item label="整件数量">
+              <oms-input type="text" placeholder="请输入整件数量" v-model.number="item.largePackageCount"></oms-input>
             </el-form-item>
-            <el-form-item label="中包装数量" prop="mediumPackageCount" v-if="currentItem.mediumBoxCount">
-              <oms-input type="text" placeholder="请输入中包装数量" v-model.number="item.mediumPackageCount"></oms-input>
-            </el-form-item>
-            <el-form-item label="小包装数量" prop="smallPackageCount" v-if="currentItem.smallBoxCount">
-              <oms-input type="text" placeholder="请输入小包装数量" v-model.number="item.smallPackageCount"></oms-input>
-            </el-form-item>
-            <el-form-item label="散件数量" prop="bulkCount" v-if="currentItem.bulkBoxCount">
+            <el-form-item label="散件数量">
               <oms-input type="text" placeholder="请输入散件数量" v-model.number="item.bulkCount"></oms-input>
             </el-form-item>
           </el-form>
@@ -94,10 +90,11 @@
   </div>
 </template>
 <script>
-  import { povReceipt } from '@/resources';
+  import { povReceipt, InWork } from '@/resources';
+
   export default {
     props: {
-      waveId: String
+      orderId: String
     },
     data () {
       return {
@@ -129,28 +126,28 @@
       };
     },
     watch: {
-      waveId () {
+      orderId () {
         this.queryOrderDetail();
       }
     },
     methods: {
       onSubmit () {
-        let forms = this.productList.map((item, index) => {
-          return {
-            name: `form${index}`,
-            value: item
-          };
-        });
-        for (let i = 0; i < forms.length; i++) {
-          let v = true;
-          this.$refs[forms[i].name][0].validate((valid) => {
-            v = valid;
-          });
-          if (!v) {
-            this.currentItem = forms[i].value;
-            return;
-          }
-        }
+//        let forms = this.productList.map((item, index) => {
+//          return {
+//            name: `form${index}`,
+//            value: item
+//          };
+//        });
+//        for (let i = 0; i < forms.length; i++) {
+//          let v = true;
+//          this.$refs[forms[i].name][0].validate((valid) => {
+//            v = valid;
+//          });
+//          if (!v) {
+//            this.currentItem = forms[i].value;
+//            return;
+//          }
+//        }
         let obj = {
           list: []
         };
@@ -166,7 +163,7 @@
         });
         if (this.doing) return;
         this.doing = true;
-        povReceipt.save(this.waveId, obj).then(() => {
+        povReceipt.save(this.orderId, obj).then(() => {
           this.$notify.success({
             message: '添加收货信息成功'
           });
@@ -181,15 +178,15 @@
         });
       },
       queryOrderDetail () {
-        if (!this.waveId) return false;
-        povReceipt.queryWaskGoods(this.waveId).then(res => {
-          res.data.forEach(f => {
+        if (!this.orderId) return false;
+        InWork.queryOrderDetail(this.orderId).then(res => {
+          res.data.detailDtoList.forEach(f => {
             f.largePackageCount = '';
             f.bulkCount = '';
             f.mediumPackageCount = '';
             f.smallPackageCount = '';
           });
-          this.productList = res.data.slice();
+          this.productList = [].concat(res.data.detailDtoList);
           if (this.productList.length) {
             this.currentItem = this.productList[0];
           }

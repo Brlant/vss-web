@@ -22,9 +22,12 @@
             <span class="pull-left">{{item.orgGoodsDto.name}}</span>
           </div>
           <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-                      </span>
+            <span class="select-other-info pull-left"><span
+              v-show="item.orgGoodsDto.goodsId">平台货品ID</span>  {{item.orgGoodsDto.goodsId}}
+            </span>
+            <span class="select-other-info pull-left"><span
+              v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+            </span>
             <span class="select-other-info pull-left"><span
               v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
             </span>
@@ -44,10 +47,6 @@
     <el-form-item label="协议采购数量" prop="amount">
       <oms-input type="number" v-model.number="form.amount" min="0" placeholder="请输入协议采购数量"></oms-input>
     </el-form-item>
-    <!--<el-form-item label="协议开始时间" prop="startDate" ref="startDate">-->
-    <!--<el-date-picker v-model="form.startDate" format="yyyy-MM-dd" placeholder="选择开始时间" @change="changeStartTime">-->
-    <!--</el-date-picker>-->
-    <!--</el-form-item>-->
     <el-form-item label="协议到期时间" prop="expireTime" ref="expireTime">
       <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" @change="changeEndTime">
       </el-date-picker>
@@ -59,7 +58,10 @@
       </el-switch>
     </el-form-item>
     <el-form-item label-width="120px">
-      <el-button type="primary" @click="onSubmit('form')">保存</el-button>
+      <!--<el-button type="warning" @click.prevent.stop="remove()" native-type="submit">-->
+      <!--删除-->
+      <!--</el-button>-->
+      <el-button type="primary" @click="onSubmit('form')" :disabled="doing">保存</el-button>
       <el-button @click="cancel">取消</el-button>
     </el-form-item>
   </el-form>
@@ -70,28 +72,6 @@
 
   export default {
     data: function () {
-//      let checkStartTime = (rule, value, callback) => {
-//        if (value === '') {
-//          callback(new Error('请选择开始日期'));
-//        } else {
-//          if (this.form.expireTime < this.form.startDate) {
-//            callback(new Error('开始日期必须小于到期日期'));
-//          } else {
-//            callback();
-//          }
-//        }
-//      };
-//      let checkEndTime = (rule, value, callback) => {
-//        if (value === '') {
-//          callback(new Error('请选择到期日期'));
-//        } else {
-//          if (this.form.expireTime < this.form.startDate) {
-//            callback(new Error('到期日期必须大于开始日期'));
-//          } else {
-//            callback();
-//          }
-//        }
-//      };
       return {
         rules: {
           orgGoodsId: [
@@ -111,12 +91,9 @@
           ]
         },
         salesFirmName: '',
-        form: this.formItem,
+        form: {},
         doing: false,
-        attachmentList: [],
-        goodsList: '',
-        goodsType: '',
-        x: ''
+        goodsList: []
       };
     },
     computed: {
@@ -137,8 +114,18 @@
     props: ['formItem', 'action', 'actionType'],
     watch: {
       formItem: function (val) {
-        this.form = Object.assign({}, val);
-        this.attachmentList = [];
+        if (this.action === 'add') {
+          this.form = {
+            orgGoodsId: '',
+            unitPrice: '',
+            amount: '',
+            expireTime: '',
+            availabilityStatus: true
+          };
+        }
+        if (this.action === 'edit') {
+          this.form = Object.assign({}, val);
+        }
         this.getOmsGoods();
       },
       actionType: function (val) {
@@ -159,32 +146,52 @@
       },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
         let params = {
-          keyWord: keyWord
+          keyWord: keyWord,
+          deleteFlag: false,
+          status: true
         };
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
-//          if (this.action === 'edit') {
-//            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.orgGoodsDto.id);
-//            if (!isExist) {
-//              this.goodsList.push({
-//                orgGoodsDto: {
-//                  id: this.form.orgGoodsId,
-//                  name: this.form.orgGoodsName
-//                }
-//              });
-//            }
-//          }
+          if (this.action === 'edit') {
+            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.orgGoodsDto.id);
+            if (!isExist) {
+              this.goodsList.push({
+                orgGoodsDto: {
+                  id: this.form.orgGoodsId,
+                  name: this.form.orgGoodsName
+                }
+              });
+            }
+          }
         });
       },
       formatUnitPrice() {// 格式化单价，保留两位小数
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
+//      remove: function () {
+//        this.$confirm('确认删除疫苗"' + this.form.orgGoodsName + '的采购协议"?', '', {
+//          confirmButtonText: '确定',
+//          cancelButtonText: '取消',
+//          type: 'warning'
+//        }).then(() => {
+//          let name = this.form.orgGoodsName;
+//          PurchaseAgreement.delete(this.form.id).then(() => {
+//            this.currentItem = {};
+//            this.getGoodsList(1);
+//            this.$notify.success({
+//              title: '成功',
+//              message: '已成功删除"' + name + '的采购协议"'
+//            });
+//            this.$emit('change', this.form);
+//            this.$emit('right-close');
+//          });
+//        });
+//      },
       onSubmit: function (formName) {
         this.changeEndTime(this.form.expireTime);
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
             this.doing = true;
-            this.form.unitPrice = parseInt(this.form.unitPrice, 0);
             if (this.action === 'add') {
               PurchaseAgreement.save(this.form).then(res => {
                 this.$notify.success({
@@ -195,10 +202,9 @@
                 this.doing = false;
                 this.$emit('change', res.data);
                 this.$emit('right-close');
-              }).catch(() => {
+              }).catch(error => {
                 this.$notify.error({
-                  duration: 2000,
-                  message: '新增疫苗采购协议失败'
+                  message: error.response.data && error.response.data.msg || '新增疫苗采购协议失败'
                 });
               });
             } else {
@@ -210,10 +216,9 @@
                 this.doing = false;
                 this.$emit('change', res.data);
                 this.$emit('right-close');
-              }).catch(() => {
+              }).catch(error => {
                 this.$notify.error({
-                  duration: 2000,
-                  message: '修改疫苗采购协议信息失败'
+                  message: error.response.data && error.response.data.msg || '修改疫苗采购协议信息失败'
                 });
                 this.doing = false;
               });

@@ -5,7 +5,7 @@
   <div class="main-box-rap">
     <div class="main-card-box">
       <img class="bg-logo" src="../assets/img/bg.png">
-      <img class="img-logo" src="../assets/img/cerp-logo.png">
+      <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part clearfix">
         <div class="m-logo">重置密码</div>
       </div>

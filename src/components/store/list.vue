@@ -64,19 +64,6 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="选择厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
-                           v-model="searchWord.factoryId">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="批号" :span="6">
-                <el-input v-model="searchWord.keyWord" placeholder="请输入批号"></el-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
               <oms-form-row label="货主货品" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索货主货品" :remote-method="filterOrgGoods"
                            :clearable="true"
@@ -92,6 +79,28 @@
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="org.orgGoodsDto.salesFirmName">供货厂商</span>  {{ org.orgGoodsDto.salesFirmName }}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="批号" :span="6">
+                <el-input v-model="searchWord.keyWord" placeholder="请输入批号"></el-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="生产厂商" :span="6">
+                <el-select filterable remote placeholder="请输入关键字生产厂商" :remote-method="filterFactory" :clearable="true"
+                           v-model="searchWord.factoryId" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -270,14 +279,13 @@
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
       },
-      filterFactory (query) { // 查询厂商
-        let orgId = this.$store.state.user.userCompanyAddress;
+      filterFactory (query) { // 生产厂商
         let params = {
-          keyWord: query,
-          relation: '1'
+          deleteFlag: false,
+          keyWord: query
         };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.factories = res.data;
+        BaseInfo.query(params).then(res => {
+          this.factories = res.data.list;
         });
       },
       filterOrgGoods (query) {

@@ -95,6 +95,14 @@
 <template>
   <div>
     <div>
+      <div class="order-list-status container">
+        <div class="status-item" :class="{'active':key==activeStatus,'item-right':item.type===0} "
+             v-for="(item,key) in vaccineType"
+             @click="changeType(key,item)">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+        </div>
+      </div>
       <div class="container d-table">
         <div class="d-table-left">
           <h2 class="header">
@@ -118,13 +126,13 @@
           <div v-else>
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
-                  :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto,'locked':isLocked(item.orgGoodsDto)}">
+                  :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
                 <perm label="vaccine-info-delete">
                   <oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'
                               class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
                 </perm>
                 <div class="id-part">
-                  <span>疫苗编号{{item.orgGoodsDto.id}}</span>
+                  <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
                   <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
                   </el-tag>
                   <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">注册证照过期</el-tag>
@@ -173,7 +181,7 @@
                 </el-col>
                 <el-col :span="12">
                   <goods-row label="疫苗编号" :span="8">
-                    {{ data.id}}
+                    {{ data.goodsNo}}
                   </goods-row>
                   <goods-row label="疫苗名称" :span="8">
                     {{ data.name}}
@@ -207,9 +215,6 @@
                   </goods-row>
                   <goods-row label="是否组合" :span="8" v-show="data.goodsIsCombination">
                     {{ data.goodsIsCombination | formatStatus}}
-                  </goods-row>
-                  <goods-row label="是否可用" :span="8" v-show="data.status">
-                    {{ data.status | formatStatus}}
                   </goods-row>
                   <goods-row label="是否计价" :span="8" v-show="data.valuationFlag">
                     {{ data.valuationFlag | formatStatus}}
@@ -394,7 +399,7 @@
   import goodsPart from './form/form.vue';
   import { Vaccine } from '@/resources';
   import goodsRow from './goods.row.vue';
-
+  import utils from '@/tools/utils';
   export default {
     components: {goodsPart, goodsRow},
     data: function () {
@@ -403,6 +408,8 @@
         showTypeRight: false,
         showTypeSearch: false,
         showSearch: false,
+        vaccineType: utils.vaccineType,
+        activeStatus: 0,
         data: {},
         combinationList: [],
         typeList: [],
@@ -411,10 +418,8 @@
         form: {},
         action: '',
         currentItem: {},
-        activeStatus: 0,
         filters: {
-          status: null,
-          auditedStatus: null
+          status: '1'
         }
       };
     },
@@ -569,21 +574,12 @@
         });
       },
       showType: function (item) {
-//        if (this.isLocked(item.orgGoodsDto)) {
-//          this.$notify.info({
-//            message: '已被其他用户锁定，暂时无法查看'
-//          });
-//          this.data = {id: ''};
-//          this.combinationList = [];
-//          return;
-//        }
         this.currentItem = item;
         this.queryOrgGoods();
       },
       changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
         this.activeStatus = key;
         this.filters.status = item.status;
-        this.filters.auditedStatus = item.auditedStatus;
       },
       onSubmit: function (item) {
         if (this.action === 'add') {

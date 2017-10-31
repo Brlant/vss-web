@@ -158,7 +158,7 @@
                   {{currentItem.goodsName}}
                 </oms-row>
                 <oms-row label="销售单价" :span="5">
-                  <span v-show="currentItem.unitPrice">￥{{currentItem.unitPrice | formatMoney}}</span>
+                  <span>￥{{currentItem.unitPrice | formatMoney}}</span>
                 </oms-row>
                 <oms-row label="是否可用" :span="5">
                   {{currentItem.availabilityStatus | formatStatus}}
@@ -349,7 +349,7 @@
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.typePager.pageSize
         }, this.filters);
         BriceGroup.query(params).then(res => {
           if (isContinue) {
@@ -376,7 +376,7 @@
         });
       },
       refresh () {
-        this.getOrgsList();
+        this.getOrgsList(1);
         this.resetRightBox();
       },
       refreshDetails () {

@@ -15,7 +15,7 @@
     top: 50px;
     left: 0;
     right: 0;
-    z-index: 1000;
+    z-index: 1200;
     bottom: 0
   }
 
@@ -79,7 +79,7 @@
 
   .cdc-shade {
     position: fixed;
-    z-index: 900;
+    z-index: 1100;
     top: 50px;
     left: 0;
     right: 0;
@@ -161,6 +161,7 @@
           }
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
+          this.queryWeChat();
           this.queryBaseInfo(data);
           this.getRoleMenus(data);
         }).catch(() => {
@@ -219,6 +220,13 @@
           });
           menuData.menuList = menuList;
           this.$store.commit('initPermList', menuData);
+        });
+      },
+      queryWeChat () {
+        cerpAction.queryWeChatInfo().then(res => {
+          this.$store.commit('initWeChatInfo', res.data);
+        }).catch(() => {
+          this.$store.commit('initWeChatInfo', {});
         });
       },
       queryBaseInfo (data) {

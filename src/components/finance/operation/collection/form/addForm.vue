@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">新增付款申请</h2>
+        <h2 class="clearfix right-title">新增收款申请</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -233,63 +233,39 @@
         </ul>
       </div>
       <div class="content-right min-gutter">
-        <h3>新增付款作业申请</h3>
+        <h3>新增收款作业申请</h3>
 
         <div>
           <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="付款类型" prop="billPayType">
-              <el-select type="text" v-model="form.billPayType" placeholder="请选择付款类型" @change="changeBillPayType">
-                <el-option :value="'0'" :key="'0'" :label="'疫苗厂商付款'"></el-option>
-                <el-option :value="'1'" :key="'1'" :label="'物流厂商付款'"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="疫苗厂商" prop="orgId" v-if="form.billPayType==='0'">
-              <el-select filterable remote placeholder="请输入关键字搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="POV" prop="orgId">
+              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" @change="setAccountsPayableId">
-                <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName" v-for="org in orgList">
+                <el-option :value="org.payerId" :key="org.payerId" :label="org.payerName" v-for="org in orgList">
                   <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
+                    <span class="pull-left" style="clear: right">{{org.payerName}}</span>
                     <span class="pull-right" style="color: #999">
                   </span>
                   </div>
                   <div style="overflow: hidden">
                     <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.remitteeManufacturerCode}}
+                    <span>系统代码</span> {{org.payerManufacturerCode}}
                     </span>
                   </div>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流厂商" v-if="form.billPayType==='1'" prop="orgId">
-              <el-select filterable remote placeholder="请输入关键字搜索物流厂商" :remote-method="filterLogistics" :clearable="true"
-                         v-model="form.orgId" @change="setAccountsPayableId">
-                <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
-                           v-for="org in orgList">
-                  <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
-                    <span class="pull-right" style="color: #999">
-                  </span>
-                  </div>
-                  <div style="overflow: hidden">
-                    <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.remitteeManufacturerCode}}
-                    </span>
-                  </div>
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="应付总金额" v-if="form.orgId">
+            <el-form-item label="应收总金额" v-if="form.orgId">
               ¥ {{payableTotalAmount | formatMoney }}
             </el-form-item>
-            <el-form-item label="实付总金额" v-if="form.orgId">
+            <el-form-item label="实收总金额" v-if="form.orgId">
               ¥ {{practicalTotalAmount | formatMoney }}
             </el-form-item>
-            <el-form-item label="未付总金额" v-if="form.orgId">
+            <el-form-item label="未收总金额" v-if="form.orgId">
               ¥ {{notTotalAmount | formatMoney }}
             </el-form-item>
-            <el-form-item label="付款方式" prop="payType">
-              <el-select placeholder="请选择付款方式" v-model="form.payType">
+            <el-form-item label="收款方式" prop="payType">
+              <el-select placeholder="请选择收款方式" v-model="form.payType">
                 <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in PaymentMethod"/>
               </el-select>
             </el-form-item>
@@ -311,7 +287,7 @@
 </template>
 
 <script>
-  import {http, Address, BaseInfo, pay, BillPayable} from '../../../../../resources';
+  import {http, Address, BaseInfo, receivable, BillReceivable} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
 
   export default {
@@ -337,7 +313,7 @@
           callback(new Error('请输入金额,最多保留两位小数'));
         } else {
           if (this.form.amount > this.notTotalAmount) {
-            callback(new Error('输入的金额必须小于等于未付款总金额'));
+            callback(new Error('输入的金额必须小于等于未收款总金额'));
           } else {
             callback();
           }
@@ -346,7 +322,7 @@
       return {
         loading: false,
         form: {
-          type: '0',
+          type: '1',
           payType: '',
           orgId: '',
           explain: '',
@@ -359,10 +335,10 @@
         notTotalAmount: '',
         rules: {
           billPayType: [
-            {required: true, message: '请选择付款类型', trigger: 'change'}
+            {required: true, message: '请选择收款类型', trigger: 'change'}
           ],
           payType: [
-            {required: true, message: '请选择付款方式', trigger: 'change'}
+            {required: true, message: '请选择收款方式', trigger: 'change'}
           ],
           supplierId: [
             {required: true, message: '请选择供货厂商', trigger: 'change'}
@@ -393,65 +369,38 @@
     watch: {
       'form.orgId': function () {
         if (this.form.orgId) {
-          if (this.form.billPayType === '0') {
             this.filterOrg();
             this.orgList.forEach(val => {
-              if (this.form.orgId === val.remitteeId) {
-                pay.getAmountInfo(val.id).then(res => {
+              if (this.form.orgId === val.payerId) {
+                receivable.getAmountInfo(val.id).then(res => {
                   this.payableTotalAmount = res.data.payableTotalAmount;
                   this.practicalTotalAmount = res.data.practicalTotalAmount;
                   this.notTotalAmount = res.data.notTotalAmount;
                 });
               }
             });
-          }
-          if (this.form.billPayType === '1') {
-            this.orgList.forEach(val => {
-              this.filterLogistics();
-              if (this.form.orgId === val.remitteeId) {
-                pay.getAmountInfo(val.id).then(res => {
-                  this.payableTotalAmount = res.data.payableTotalAmount;
-                  this.practicalTotalAmount = res.data.practicalTotalAmount;
-                  this.notTotalAmount = res.data.notTotalAmount;
-                });
-              }
-            });
-          }
         }
       }
     },
-    mounted: function () {},
+    mounted: function () {
+      this.filterOrg();
+    },
     methods: {
       setAccountsPayableId: function () {
         if (this.form.orgId) {
-          if (this.form.billPayType === '0') {
             this.filterOrg();
             this.orgList.forEach(val => {
               if (this.form.orgId === val.remitteeId) {
                 this.form.accountsPayableId = val.id;
               }
             });
-          }
-          if (this.form.billPayType === '1') {
-            this.logisticsList.forEach(val => {
-              this.filterLogistics();
-              if (this.form.orgId === val.remitteeId) {
-                this.form.accountsPayableId = val.id;
-              }
-            });
-          }
         }
       },
       changeBillPayType: function () {
         this.form.orgId = '';
         this.orgList = [];
         this.logisticsList = [];
-        if (this.form.billPayType === '0') {
-          this.filterOrg();
-        }
-        if (this.form.billPayType === '1') {
-          this.filterLogistics();
-        }
+        this.filterOrg();
       },
       resetForm: function () {// 重置表单
         this.$refs['addForm'].resetFields();
@@ -471,43 +420,21 @@
         let params = Object.assign({}, {
           pageNo: 1,
           pageSize: 20,
-          keyWord: query,
-          accountsPayableType: '0'
+          keyWord: query
         });
-        pay.query(params).then(res => {
-          this.orgList = res.data.list;
-        });
-      },
-      filterLogistics: function (query) {// 过滤来源单位
-        let params = Object.assign({}, {
-          pageNo: 1,
-          pageSize: 20,
-          keyWord: query,
-          accountsPayableType: '1'
-        });
-        pay.query(params).then(res => {
+        receivable.query(params).then(res => {
           this.orgList = res.data.list;
         });
       },
       onSubmit: function () {// 提交表单
         let self = this;
         if (this.form.orgId === '') {
-          if (this.form.accountsPayableType === '0') {
             this.$notify({
               duration: 2000,
-              message: '请选择疫苗厂商',
+              message: '请选择POV',
               type: 'warning'
             });
             return false;
-          }
-          if (this.form.accountsPayableType === '1') {
-            this.$notify({
-              duration: 2000,
-              message: '请选择物流厂商',
-              type: 'warning'
-            });
-            return false;
-          }
         }
         if (this.notTotalAmount === 0) {
           this.$notify({
@@ -520,7 +447,7 @@
         if (this.form.amount > this.notTotalAmount) {
           this.$notify({
             duration: 2000,
-            message: '输入的金额必须小于等于未付款总金额',
+            message: '输入的金额必须小于等于未收款总金额',
             type: 'warning'
           });
           return false;
@@ -529,11 +456,11 @@
           if (!valid || this.doing) {
             this.doing = true;
           }
-          BillPayable.save(this.form).then(res => {
+          BillReceivable.save(this.form).then(res => {
             this.resetForm();
             this.$notify({
               duration: 2000,
-              message: '新增付款作业申请成功',
+              message: '新增收款作业申请成功',
               type: 'success'
             });
             self.$emit('change', res.data);
@@ -545,7 +472,7 @@
             this.doing = false;
             this.$notify({
               duration: 2000,
-              title: '新增付款作业申请失败',
+              title: '新增收款作业申请失败',
               message: error.response.data.msg,
               type: 'error'
             });

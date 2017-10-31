@@ -94,6 +94,11 @@
       },
       objectType: function (val) {
         this.object.objectType = val;
+      },
+      showFileList (val) {
+        if (!val) {
+          this.$refs['upload'].clearFiles();
+        }
       }
     },
 

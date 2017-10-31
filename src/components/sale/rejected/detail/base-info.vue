@@ -32,7 +32,7 @@
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
           </oms-row>
           <oms-row label="疾控仓库地址" :span="span">
-            <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
+            <span class="goods-span">{{ getWarehouseAdress(currentOrder)}}</span>
           </oms-row>
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
@@ -96,24 +96,28 @@
             </div>
           </td>
           <td class="text-center" width="180px">
-            {{item.orgGoodsDto.goodsDto.salesFirmName}}
+            {{item.orgGoodsDto.salesFirmName}}
           </td>
           <td width="100px" class="text-center">
             {{item.amount}}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
           <td width="80px" class="text-center">
-            <span v-show="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
           <td class="text-center">
-            <span v-show="item.unitPrice">¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+            <span v-if="item.unitPrice">
+              <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+            </span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
         </tr>
         <tr class="text-center">
           <td colspan="4"></td>
-          <td colspan="2" align="right"><span style="font-weight:600;"
-                                              v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney
-            }}</span>
+          <td colspan="2" align="right">
+            <span style="font-weight:600;"
+                  v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney}}</span>
           </td>
         </tr>
         </tbody>
@@ -148,6 +152,12 @@
           }
         }
         return retstate;
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        if (!item.warehouseAddress) {
+          return '';
+        }
+        return utils.formatAddress(item.warehouseProvince, item.warehouseCity, item.warehouseRegion) + '/' + item.warehouseAddress;
       }
     }
   };

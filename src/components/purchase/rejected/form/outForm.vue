@@ -221,6 +221,12 @@
   .ar {
     text-align: right;
   }
+
+  .goods-btn {
+    a:hover {
+      color: @activeColor;
+    }
+  }
 </style>
 
 
@@ -228,7 +234,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="padding: 0">新增采购退货订单</h2>
+        <h2 class="clearfix right-title" style="padding: 0">{{ defaultIndex === 2 ? '编辑采购退货订单' : '新增采购退货订单'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -283,13 +289,19 @@
             <el-form-item label="实际收货人" v-show="showContent.isShowOtherContent">
               <oms-input type="text" placeholder="请输入实际收货人" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
-            <el-form-item label="是否同批号">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.sameBatchNumber"></el-switch>
-            </el-form-item>
-            <el-form-item label="物流中心">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable>
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
+            <!--<el-form-item label="是否同批号">-->
+            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--v-model="form.sameBatchNumber"></el-switch>-->
+            <!--</el-form-item>-->
+            <el-form-item label="疾控仓库地址" prop="logisticsCentreId">
+              <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">-->
+              <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
+              <!--</el-select>-->
+              <el-select placeholder="请选择疾控仓库地址" v-model="form.logisticsCentreId" filterable :clearable="true">
+                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
+                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="运输条件" prop="transportationCondition">
@@ -307,7 +319,6 @@
                           v-show="showContent.isShowOtherContent">
               <el-date-picker
                 v-model="form.expectedTime"
-                type="date"
                 placeholder="请选择日期" format="yyyy-MM-dd"
                 @change="changeExpectedTime">
               </el-date-picker>
@@ -344,8 +355,8 @@
                           v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥</span>{{ item.orgGoodsDto.procurementPrice
-                          }}
+                          v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice
+                          }}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
@@ -356,8 +367,8 @@
                 </el-form-item>
                 <el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "
                               v-show="batchNumbers.length === 0 ">
-                  <oms-input type="number" v-model.number="product.amount" :min="0">
-                    <template slot="append">
+                  <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
+                    <template slot="append" style="width: 30px">
                       <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                     </template>
                   </oms-input>
@@ -373,6 +384,10 @@
               <div class="product-info-fix clearfix">
                 <el-row>
                   <el-col :span="12">
+                    <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
+                      {{product.fixInfo.goodsDto.smallPacking}}/
+                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    </oms-row>
                     <oms-row label="货品编号" :span="8">
                       {{product.fixInfo.goodsNo}}
                     </oms-row>
@@ -423,7 +438,7 @@
                   </td>
                   <td>
                     <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                              @change="isChangeValue(batchNumber)">
+                              @blur="isChangeValue(batchNumber)">
                       <template slot="append">
                         <dict :dict-group="'measurementUnit'"
                               :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
@@ -431,7 +446,11 @@
                     </el-input>
                   </td>
                   <td>{{ batchNumber.no }}</td>
-                  <td>{{ batchNumber.count }}</td>
+                  <td>
+                    {{ batchNumber.count }}
+                    <dict :dict-group="'measurementUnit'"
+                          :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                  </td>
                   <td>{{ batchNumber.productionDate | date }}</td>
                   <td>{{ batchNumber.expirationDate | date }}</td>
                 </tr>
@@ -460,25 +479,37 @@
                     <el-tag type="success" v-show="product.isCombination" style="font-size: 10px"
                             :class="{ml15:product.isCombination}">组合
                     </el-tag>
-                    <span v-show="isShowName(product)">{{product.orgGoodsName}}</span>
+                    <span>{{product.orgGoodsName}}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
-                  <td class="ar"><span v-show="product.unitPrice">¥</span> {{product.unitPrice | formatMoney}} </td>
+                  <td class="ar">
+                    <span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>
+                    <span v-if="!Number(product.unitPrice)">-</span>
+                  </td>
                   <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
                   <td class="ar"><span
-                    v-show="product.unitPrice">¥</span>{{ product.amount * product.unitPrice | formatMoney }}
+                    v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                    <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
-                  <td><a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                    class="iconfont icon-delete"></i> 删除</a></td>
+                  <td class="goods-btn">
+                    <div v-show="defaultIndex === 2">
+                      <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
+                        class="iconfont icon-edit"></i> 编辑</a>
+                    </div>
+                    <div>
+                      <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
+                        class="iconfont icon-delete"></i> 删除</a>
+                    </div>
+                  </td>
                 </tr>
                 <tr>
                   <td colspan="4"></td>
                   <td colspan="2"><span style="color: #333;font-weight: 700"
-                                        v-show="form.detailDtoList.length">合计:</span><span
-                    v-show="form.detailDtoList.length">   ¥{{ totalMoney | formatMoney }}</span></td>
+                                        v-show="form.detailDtoList.length && totalMoney">合计:</span><span
+                    v-show="form.detailDtoList.length  && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
                 </tr>
                 </tbody>
               </table>
@@ -491,7 +522,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo } from '@/resources';
+  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, InWork } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -509,7 +540,8 @@
       defaultIndex: {
         type: Number,
         default: 0
-      }
+      },
+      orderId: String
     },
 
     data: function () {
@@ -554,7 +586,7 @@
           transportationAddress: '',
           importedFlag: false,
           orgRelation: '',
-          logisticsCentreId: window.localStorage.getItem('logisticsCentreId'),
+          logisticsCentreId: '',
           sameBatchNumber: false,
           actualConsignee: '',
           'thirdPartyNumber': '',
@@ -588,6 +620,9 @@
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
+          ],
+          logisticsCentreId: [
+            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
@@ -636,7 +671,9 @@
         },
         warehouses: [], // 供货厂商仓库列表
         batchNumbers: [], // 货品批号列表
-        selectBatchNumbers: [] // 已经选择的货品批号
+        selectBatchNumbers: [], // 已经选择的货品批号
+        changeTotalNumber: utils.changeTotalNumber,
+        isCheckPackage: utils.isCheckPackage
       };
     },
     computed: {
@@ -675,7 +712,7 @@
           }
         });
       },
-      defaultIndex () {
+      defaultIndex (val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -684,6 +721,14 @@
         this.searchProduct();
         this.filterOrg();
         this.checkLicence(this.form.orgId);
+        if (val === 2) {
+          this.editOrderInfo();
+        } else {
+          this.resetForm();
+          this.form.state = '';
+          this.form.id = null;
+        }
+        this.filterAddress();
       },
       form: {
         handler: 'autoSave',
@@ -693,12 +738,12 @@
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
+//      this.filterLogisticsCenter();
       let oldForm = window.localStorage.getItem(this.saveKey);
       if (oldForm) {
         this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-        this.form.logisticsCentreId = this.form.logisticsCentreId
-          ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
+//        this.form.logisticsCentreId = this.form.logisticsCentreId
+//          ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
       }
     },
     methods: {
@@ -718,6 +763,24 @@
         this.form.transportationAddress = '';
         this.form.actualConsignee = '';
         this.form.logisticsCentreId = '';
+      },
+      editOrderInfo () {
+        if (!this.orderId) return;
+        InWork.queryOrderDetail(this.orderId).then(res => {
+          this.resetForm();
+          this.isStorageData = true;
+          res.data.detailDtoList.forEach(f => {
+            f.orgGoodsName = f.name;
+            f.no = f.batchNumber;
+          });
+          this.form = JSON.parse(JSON.stringify(res.data));
+          this.$nextTick(() => {
+            this.isStorageData = true;
+          });
+        });
+      },
+      changeNumber () {
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       formatPrice () {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
@@ -739,7 +802,7 @@
         let bizType = this.form.bizType;
         if (!orgId || !bizType) {
           this.orgList = [];
-          this.form.supplierId = '';
+          this.form.customerId = '';
           return;
         }
         let params = {
@@ -830,6 +893,13 @@
         }
       },
       changeCustomerId (val) {// POV改变时
+        if (!this.isStorageData) {// 当有缓存时，不做清空操作
+          this.product.orgGoodsId = '';
+          this.form.detailDtoList = [];
+          this.$refs['orderGoodsAddForm'].resetFields();
+          this.accessoryList = [];
+          this.batchNumbers = [];
+        }
         this.checkLicence(val);
         this.searchWarehouses(val);
         this.searchProduct();
@@ -859,6 +929,17 @@
       getWarehouseAdress: function (item) { // 得到仓库地址
         return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
       },
+      filterAddress () {
+        Address.queryAddress(this.form.orgId, {
+          deleteFlag: false,
+          orgId: this.form.orgId,
+          auditedStatus: '1'
+        }).then(res => {
+          this.LogisticsCenter = res.data;
+          let defaultStore = res.data.filter(item => item.default);
+          this.form.logisticsCentreId = defaultStore.length ? defaultStore[0].id : '';
+        });
+      },
       checkLicence: function (val) {// 检查货主/单位证照是否过期
         if (!val || !this.action) return;
         http.get('/order-licence/org/' + val + '/overdue').then(res => {
@@ -877,16 +958,14 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.orgId || !this.form.customerId) {
+        if (!this.form.customerId) {
           this.searchProductList = [];
           return;
         }
         let params = {
-          orgId: this.form.orgId,
-          keyWord: query,
-          factoryId: this.form.customerId
+          keyWord: query
         };
-        http.get('/org/goods/valid', {params: params}).then(res => {
+        http.get(`purchase-agreement/${this.form.customerId}/valid/org-goods`, {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
@@ -929,6 +1008,7 @@
             });
           }
         });
+        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
 
         this.queryBatchNumers();
       },
@@ -957,7 +1037,7 @@
           orgId: this.form.orgId,
           orgGoodsId: this.product.orgGoodsId
         };
-        http.get('/stock-batch/valid/batch', {params}).then(res => {
+        http.get('/erp-stock/valid/batch', {params}).then(res => {
           if (res.data.length) {
             res.data.forEach(f => {
               f.isChecked = false;
@@ -975,6 +1055,7 @@
         });
       },
       isChangeValue (item) {
+        item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         if (item.productCount > item.count) {
           this.$notify.warning({
             duration: 2000,
@@ -1014,6 +1095,25 @@
           });
           return false;
         }
+        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+        if (!isCheck) return;
+        if (!this.batchNumbers.length) {
+          this.$notify.info({
+            duration: 2000,
+            message: '无库存批次，无法加入订单'
+          });
+          return false;
+        }
+        if (this.batchNumbers.length) {
+          let isHave = this.batchNumbers.some(item => item.lots.some(s => s.count > 0));
+          if (!isHave) {
+            this.$notify.info({
+              duration: 2000,
+              message: '无库存，无法加入订单'
+            });
+            return false;
+          }
+        }
         if (this.batchNumbers.length) {
           let isChecked = this.batchNumbers.every(item => item.lots.some(l => l.isChecked));
           if (!isChecked) {
@@ -1022,23 +1122,6 @@
               message: '请选择货品批号'
             });
             return false;
-          }
-          if (this.form.sameBatchNumber) {
-            let seleteNumber = 0;
-            this.batchNumbers.forEach(i => {
-              i.lots.forEach(l => {
-                if (l.isChecked) {
-                  seleteNumber++;
-                }
-              });
-            });
-            if (seleteNumber > 1) {
-              this.$notify.info({
-                duration: 2000,
-                message: '请选择单个批号'
-              });
-              return false;
-            }
           }
           let isHaveCount = this.batchNumbers.some(item => item.lots.some(l => l.isChecked && !l.productCount));
           if (isHaveCount) {
@@ -1164,9 +1247,21 @@
         }
         this.searchProduct();
       },
+      editItem (item) {
+        this.filterProductList.push({
+          orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
+          list: []
+        });
+        this.product.orgGoodsId = item.orgGoodsId;
+        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
+        this.product.amount = item.amount;
+        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.remove(item);
+      },
       onSubmit: function () {// 提交表单
 
         let self = this;
+        this.changeExpectedTime(this.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;
@@ -1189,28 +1284,53 @@
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.customerId = saveData.orgId;
-          erpOrder.save(saveData).then(res => {
-            this.resetForm();
-            this.$notify({
-              duration: 2000,
-              message: '新增销售订单成功',
-              type: 'success'
-            });
-            window.localStorage.removeItem(this.saveKey);
-            self.$emit('change', res.data);
-            this.$nextTick(() => {
+
+          if (saveData.id) {
+            erpOrder.updateOrder(saveData.id, saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '编辑销售订单成功',
+                type: 'success'
+              });
+              self.$emit('change');
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
               this.doing = false;
-              this.$emit('close');
+              this.$notify({
+                duration: 2000,
+                title: '编辑销售订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          }).catch(error => {
-            this.doing = false;
-            this.$notify({
-              duration: 2000,
-              title: '新增销售订单失败',
-              message: error.response.data.msg,
-              type: 'error'
+          } else {
+            erpOrder.save(saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '新增销售订单成功',
+                type: 'success'
+              });
+              window.localStorage.removeItem(this.saveKey);
+              self.$emit('change', res.data);
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('close');
+              });
+            }).catch(error => {
+              this.doing = false;
+              this.$notify({
+                duration: 2000,
+                title: '新增销售订单失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
             });
-          });
+          }
         });
       }
     }

@@ -1,11 +1,11 @@
-import {Notification} from 'element-ui';
+import { Notification } from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
 
 export const http = axios.create({
   baseURL: process.env.NODE_API,
-  timeout: 10000,
+  timeout: 30000,
   withCredentials: true
 });
 
@@ -241,6 +241,12 @@ export const vaccineBills = resource('/factory-reconciliation', http, {});
 export const erpOrder = resource('/erp-order', http, {
   queryStateNum(params) {
     return http.get('/erp-order/count', {params});
+  },
+  updateOrder (orderId, obj) {
+    return http.put(`/erp-order/${orderId}/detail`, obj);
+  },
+  cancel (orderId) {
+    return http.put(`/erp-order/${orderId}/cancel`);
   }
 });
 
@@ -407,6 +413,9 @@ export const Address = resource('/binding-warehouse', http, {
 export const PurchaseAgreement = resource('/purchase-agreement', http, {
   queryValidVaccin(params) {
     return http.get('/purchase-agreement/valid/pager', {params});
+  },
+  queryStateNum: (params) => {
+    return http.get('/purchase-agreement/count', {params});
   }
 });
 
@@ -444,10 +453,10 @@ export const logisticsCost = resource('/logistics-cost', http, {});
  */
 export const povReceipt = resource('/erp-receipt', http, {
   queryWasks(params) {
-    return http.get('/erp-receipt/wave-task', {params});
+    return http.get('/erp-receipt/order', {params});
   },
-  queryWaskGoods(waveId) {
-    return http.get(`/erp-receipt/wave-task/${waveId}/goods`);
+  queryWaskGoods (orderId) {
+    return http.get(`/erp-receipt/order/${orderId}/goods`);
   },
   save(id, obj) {
     return http.post(`/erp-receipt/${id}`, obj);
@@ -455,21 +464,78 @@ export const povReceipt = resource('/erp-receipt', http, {
 });
 
 /**
- * 应收款项
+ * 付款作业
+ * @type {the}
+ */
+export const BillPayable = resource('/bill-payable', http, {
+  auditInfo(id, obj) {
+    return http.put(`/bill-payable/audit/${id}`, obj);
+  },
+  refusedInfo(id, obj) {
+    return http.put(`/bill-payable/refused/${id}`, obj);
+  },
+  banding(id, obj) {
+    return http.put(`/bill-payable/banding/${id}`, obj);
+  },
+  queryStateNum: (params) => {
+    return http.get('/bill-payable/count', {params});
+  }
+});
+
+/**
+ * 收款作业
+ * @type {the}
+ */
+export const BillReceivable = resource('/bill-receivable', http, {
+  auditInfo(id, obj) {
+    return http.put(`/bill-receivable/audit/${id}`, obj);
+  },
+  refusedInfo(id, obj) {
+    return http.put(`/bill-receivable/refused/${id}`, obj);
+  },
+  banding(id, obj) {
+    return http.put(`/bill-receivable/banding/${id}`, obj);
+  },
+  queryStateNum: (params) => {
+    return http.get('/bill-receivable/count', {params});
+  }
+});
+
+/**
+ * 应付款项
  * @type {the}
  */
 export const pay = resource('/accounts-payable', http, {
   modifyDetail(id, obj) {
-    return http.post('/accounts-payable/detail/${id}/log', obj);
+    return http.post(`/accounts-payable/detail/${id}/log`, obj);
   },
   queryDetail(id, params) {
-    return http.get('/accounts-payable/${id}/detail', {params});
+    return http.get(`/accounts-payable/${id}/detail`, {params});
   },
   addDetail(id, obj) {
-    return http.post('/accounts-payable/${id}/detail', obj);
+    return http.post(`/accounts-payable/${id}/detail`, obj);
   },
   getAmountInfo(id) {
-    return http.post('/accounts-payable/' + id + '/amount');
+    return http.get('/accounts-payable/' + id + '/amount');
+  }
+});
+
+/**
+ * 应收款项
+ * @type {the}
+ */
+export const receivable = resource('/accounts-receivable', http, {
+  modifyDetail(id, obj) {
+    return http.post(`/accounts-receivable/detail/${id}/log`, obj);
+  },
+  queryDetail(id, params) {
+    return http.get(`/accounts-receivable/${id}/detail`, {params});
+  },
+  addDetail(id, obj) {
+    return http.post(`/accounts-receivable/${id}/detail`, obj);
+  },
+  getAmountInfo(id) {
+    return http.get('/accounts-receivable/' + id + '/amount');
   }
 });
 
@@ -477,7 +543,11 @@ export const pay = resource('/accounts-payable', http, {
  * 中标疫苗
  * @type {the}
  */
-export const SuccessfulBidder = resource('/successful-bidder', http, {});
+export const SuccessfulBidder = resource('/successful-bidder', http, {
+  queryInfo(params) {
+    return http.get('/successful-bidder/info', {params});
+  }
+});
 
 /**
  * 应收款项
@@ -560,6 +630,9 @@ export const VaccineRights = resource('/vaccine-authorization', http, {
   },
   deleteVaccine(id) {
     return http.put(`/vaccine-authorization/detail/${id}`);
+  },
+  batchSave (obj) {
+    return http.post('/vaccine-authorization/batch', obj);
   }
 });
 
@@ -622,6 +695,12 @@ export const cerpAction = resource('/outbound/count', http, {
   },
   queryOnCDCs() {
     return http.get('/erp-org/superior');
+  },
+  queryWeChatInfo () {
+    return http.get('/erp-org/user/wechat');
+  },
+  unBindWeChat () {
+    return http.put('/erp-org/unbind/wechat');
   }
 });
 

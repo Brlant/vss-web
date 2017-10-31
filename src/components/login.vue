@@ -6,7 +6,7 @@
   <div class="main-box-rap">
     <div class="main-card-box">
       <img class="bg-logo" src="../assets/img/bg.png">
-      <img class="img-logo" src="../assets/img/cerp-logo.png">
+      <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part-s clearfix">
         <div class="m-logo">疾病预防控制中心疫苗管理系统</div>
         <div class="e-logo">CDC Vaccine Management System</div>
@@ -50,7 +50,7 @@
 </template>
 
 <script>
-  import {Auth} from '../resources';
+  import { Auth, cerpAction } from '../resources';
   import AppFooter from './common/app.footer.vue';
 
   export default {
@@ -108,6 +108,7 @@
                 }
                 this.$router.replace('/');
               });
+              this.queryWeChat();
             }, error => {
               let data = error.response.data;
               this.$notify.error({
@@ -129,6 +130,13 @@
       },
       isFocusIndex () {
         this.isFocus = !this.user.orgCode ? 1 : !this.user.username ? 2 : !this.user.password ? 3 : '';
+      },
+      queryWeChat () {
+        cerpAction.queryWeChatInfo().then(res => {
+          this.$store.commit('initWeChatInfo', res.data);
+        }).catch(() => {
+          this.$store.commit('initWeChatInfo', {});
+        });
       }
     },
     mounted: function () {

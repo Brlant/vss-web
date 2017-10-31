@@ -118,7 +118,7 @@
                    @clear="setUsedStatus">
           <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
             <div style="overflow: hidden">
-              <span class="pull-left">{{item.goodsName}}</span>
+              <span class="pull-left">{{item.name}}</span>
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
@@ -141,8 +141,18 @@
       </el-form-item>
       <el-form-item label="供货厂商" prop="salesFirm">
         <el-select filterable remote placeholder="请输入关键字搜供货厂商" :remote-method="filterOrg"
-                   :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)">
-          <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList"></el-option>
+                   :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)"
+                   popperClass="good-selects">
+          <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+            <div style="overflow: hidden">
+              <span class="pull-left" style="clear: right">{{org.name}}</span>
+            </div>
+            <div style="overflow: hidden">
+              <span class="select-other-info pull-left">
+                <span>系统代码</span> {{org.manufacturerCode}}
+              </span>
+            </div>
+          </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="疫苗编号" prop="goodsNo">
@@ -188,9 +198,24 @@
       <div v-show="form.goodsIsCombination">
         <!--<el-form ref="otherGoodsForm" :model="form" :rules="otherGoodsRules" label-width="120px">-->
         <el-form-item label="其他组织疫苗">
-          <el-select placeholder="请选择组织疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects">
+          <el-select placeholder="请选择组织疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects" remote
+                     :remote-method="queryCombinationGoods" :clearable="true">
             <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                        v-for="item in otherGoodsList">
+              <div style="overflow: hidden">
+                <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+              </div>
+              <div style="overflow: hidden">
+              <span class="select-other-info pull-left"><span
+                v-show="item.orgGoodsDto.goodsId">平台货品ID</span>  {{item.orgGoodsDto.goodsId}}
+              </span>
+                <span class="select-other-info pull-left"><span
+                  v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+              </span>
+                <span class="select-other-info pull-left"><span
+                  v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+              </span>
+              </div>
             </el-option>
           </el-select>
         </el-form-item>
@@ -312,11 +337,19 @@
         this.goodsType = '';
         if (typeof val.id === 'string') {
           this.form = this.formItem;
-          this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
-          this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice.toString());
-          this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
-        } else {
+          if (this.form.bidPrice) {
+            this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
+          }
+          if (this.form.procurementPrice) {
+            this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice.toString());
+          }
+          if (this.form.sellPrice) {
+            this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
+          }
+          this.otherGoodsList = [];
           this.getCombinationGoods();
+        } else {
+//          this.queryCombinationGoods();
           this.getOmsGoods();
           this.form = {
             name: '',
@@ -335,6 +368,7 @@
             inventoryLowerLimit: null,
             inventoryUpperLimit: null
           };
+          this.otherGoodsList = [];
         }
         this.otherForm = {
           accessory: '',
@@ -373,6 +407,15 @@
         };
         BaseInfo.query(param).then(res => {
           this.orgList = res.data.list;
+          if (this.action === 'edit') {
+            let isExist = this.orgList.some(item => this.form.orgList.id === item.id);
+            if (!isExist) {
+              this.orgList.push({
+                id: this.form.salesFirm,
+                name: this.form.salesFirmName
+              });
+            }
+          }
         });
       },
       setPrice: function () {
@@ -383,10 +426,11 @@
       },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
         let params = {
-          keyWord: keyWord
+          keyWord: keyWord,
+          availabilityStatus: true
         };
-        SuccessfulBidder.query(params).then(res => {
-          this.goodsList = res.data.list;
+        SuccessfulBidder.queryInfo(params).then(res => {
+          this.goodsList = res.data;
           if (this.action === 'edit') {
             let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
             if (!isExist) {
@@ -399,14 +443,25 @@
           this.getGoodsType(this.form.goodsId);
         });
       },
-      getCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
+      queryCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {
           keyWord: keyWord,
           deleteFlag: false
         });
         Vaccine.query(params).then(res => {
           this.invariantOtherGoodslist = JSON.parse(JSON.stringify(res.data.list));
-          this.filterSelectGoodsList(res.data.list);
+          this.filtersCombinationGoods();
+        });
+      },
+      getCombinationGoods: function (keyWord) {// 获取其他组合货品列表
+        let params = Object.assign({}, {
+          deleteFlag: false,
+          orgId: this.$route.params.id,
+          keyWord: keyWord
+        });
+        Vaccine.query(params).then(res => {
+          let list = JSON.parse(JSON.stringify(res.data.list));
+          this.filterSelectGoodsList(list);
         });
       },
       getGoodsType: function (id) {

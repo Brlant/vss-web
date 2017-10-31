@@ -90,7 +90,6 @@
           <el-col :span="21">
             <el-date-picker
               v-model="currentOrder.expectedTime"
-              type="date"
               placeholder="请选择日期" format="yyyy-MM-dd"
               @change="changeExpectedTime">
             </el-date-picker>
@@ -98,11 +97,17 @@
         </el-row>
         <el-row>
           <el-col :span="3" class="text-right" style="line-height: 36px">
-            物流中心：
+            疾控仓库地址：
           </el-col>
           <el-col :span="21">
-            <el-select placeholder="请选择物流中心" v-model="currentOrder.logisticsCentreId" filterable>
-              <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"></el-option>
+            <!--<el-select placeholder="请选择物流中心" v-model="currentOrder.logisticsCentreId" filterable>-->
+            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"></el-option>-->
+            <!--</el-select>-->
+            <el-select placeholder="请选择疾控仓库地址" v-model="currentOrder.logisticsCentreId" filterable :clearable="true">
+              <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter">
+                <span class="pull-left">{{ item.name }}</span>
+                <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
+              </el-option>
             </el-select>
           </el-col>
         </el-row>
@@ -154,8 +159,8 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <oms-row label="物流中心" :span="3">
-            <span class="goods-span">{{currentOrder.centreName}}</span>
+          <oms-row label="疾控仓库地址" :span="3">
+            <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
@@ -205,7 +210,7 @@
             </div>
           </td>
           <td class="text-center" width="140px">
-            {{item.orgGoodsDto.goodsDto.salesFirmName}}
+            {{item.orgGoodsDto.salesFirmName}}
           </td>
           <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
           <td>{{ item.productionDate | date }}</td>
@@ -215,10 +220,14 @@
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
           <td width="80px" class="text-center">
-            <span v-show="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
           <td class="text-center">
-            <span v-show="item.unitPrice">¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+            <span v-if="item.unitPrice">
+              <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+            </span>
+            <span v-if="!item.unitPrice">-</span>
           </td>
         </tr>
         <tr class="text-center">
@@ -285,7 +294,8 @@
       currentOrder (val) {
         if (!val.id) return;
         this.searchWarehouses();
-        this.filterLogisticsCenter();
+//        this.filterLogisticsCenter();
+        this.filterAddress();
       }
     },
     methods: {
@@ -314,6 +324,15 @@
           deleteFlag: false
         };
         LogisticsCenter.query(param).then(res => {
+          this.LogisticsCenter = res.data;
+        });
+      },
+      filterAddress () {
+        Address.queryAddress(this.currentOrder.orgId, {
+          deleteFlag: false,
+          orgId: this.currentOrder.orgId,
+          auditedStatus: '1'
+        }).then(res => {
           this.LogisticsCenter = res.data;
         });
       },

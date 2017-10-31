@@ -103,6 +103,10 @@
                       <el-button @click="audited()"><i
                         class="iconfont icon-verify"></i>审核</el-button>
                     </perm>
+                    <perm label="pull-signal-edit" v-show="currentOrder.status === 0">
+                      <el-button @click="editOrder()"><i
+                        class="iconfont icon-edit"></i>编辑</el-button>
+                    </perm>
                     <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
                       <el-button @click="cancel()"><i
                         class="iconfont icon-verify"></i>取消</el-button>
@@ -153,7 +157,7 @@
                 <th>单价</th>
                 <th>申请数量</th>
                 <th>申请金额</th>
-                <th v-show="filters.status === 4">分配金额</th>
+                <th v-show="filters.status === 4">分配数量</th>
               </tr>
               </thead>
               <tbody>
@@ -162,13 +166,20 @@
                   {{row.goodsName}}
                 </td>
                 <td>
-                  ￥{{row.price | formatMoney}}
+                  <span v-if="row.price">￥{{row.price | formatMoney}}</span>
+                  <span v-if="!row.price">-</span>
                 </td>
                 <td>
-                  ￥{{row.applyCount}}
+                  {{row.applyCount}}
+                  （
+                  <dict
+                    :dict-group="'measurementUnit'"
+                    :dict-key="row.unit"></dict>
+                  ）
                 </td>
                 <td>
-                  {{row.applyMoney | formatMoney}}
+                  <span v-if="row.applyMoney">￥{{row.applyMoney | formatMoney}}</span>
+                  <span v-if="!row.applyMoney">-</span>
                 </td>
                 <td v-show="filters.status === 4">
                   {{row.actualCount}}
@@ -181,7 +192,7 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form  @change="onSubmit" :index="index" @close="resetRightBox"></add-form>
+      <add-form @change="onSubmit" :index="index" :currentOrder="currentOrder" @close="resetRightBox"></add-form>
     </page-right>
   </div>
 
@@ -256,6 +267,7 @@
     methods: {
       resetRightBox: function () {
         this.showRight = false;
+        this.index = 0;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
@@ -295,8 +307,8 @@
           this.requestType[0].num = res.data['all'];
           this.requestType[1].num = res.data['pending-audit'];
           this.requestType[2].num = res.data['audited'];
-          this.requestType[3].num = res.data['assigned'];
-          this.requestType[4].num = res.data['create-wave'];
+          this.requestType[3].num = res.data['create-wave'];
+          this.requestType[4].num = res.data['assigned'];
           this.requestType[5].num = res.data['canceled'];
         });
       },
@@ -365,10 +377,11 @@
       },
       add () {
         this.showRight = true;
-        this.index = 0;
-        this.$nextTick(() => {
-          this.index = 1;
-        });
+        this.index = 1;
+      },
+      editOrder (item) {
+        this.index = 2;
+        this.showRight = true;
       },
       onSubmit () {
         this.getOrgsList();
