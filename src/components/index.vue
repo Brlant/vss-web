@@ -105,7 +105,7 @@
     <a href="#" target="_blank" class="min-div"><span id="fileDownLoadRap"></span></a>
 
     <div class="cdc-shade" v-if="isPermission">
-      <el-button class="btn" type="primary" @click="queryRoles">我是市级CDC</el-button>
+      <el-button class="btn" type="primary" @click="queryRoles">我是市CDC</el-button>
     </div>
   </div>
 
@@ -177,6 +177,10 @@
       }
       this.queryPerms();
       this.queryLevel();
+      window.addEventListener('resize', (e) => {
+        this.setBodyHeight();
+      });
+      this.setBodyHeight();
     },
     methods: {
       queryRoles () {
@@ -187,7 +191,7 @@
         }).catch((error) => {
           this.loading = true;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '绑定市级CDC出错'
+            message: error.response.data && error.response.data.msg || '绑定市CDC出错'
           });
         });
       },
@@ -234,6 +238,9 @@
           this.$store.commit('initOrgName', res.data.orgDto.name);
           window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');
         });
+      },
+      setBodyHeight: function () {
+        this.$store.commit('setBodyHeight', window.innerHeight - 200 + 'px');
       }
     }
   };

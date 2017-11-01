@@ -132,10 +132,12 @@
         </div>
       </div>
       <div class="container d-table">
+
         <div class="d-table-left">
-          <h2 class="header" style="overflow: hidden">
-            厂商资料
-            <span class="pull-right">
+          <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+            <h2 class="header" style="overflow: hidden">
+              厂商资料
+              <span class="pull-right">
                    <perm label="manufacturer-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType"><i
                         class="iconfont icon-plus"></i> </a>
@@ -143,31 +145,32 @@
                       <a href="#" class="btn-circle" @click.prevent="searchType"><i
                         class="iconfont icon-search"></i> </a>
                 </span>
-          </h2>
-          <div class="search-left-box clearfix" v-show="showTypeSearch">
-            <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
-          </div>
-          <div v-if="loadingListData">
-            <oms-loading :loading="loadingListData"></oms-loading>
-          </div>
-          <div v-else-if="businessRelationList.length == 0" class="empty-info">
-            暂无信息
-          </div>
-          <div v-else>
-            <ul class="show-list">
-              <li v-for="item in businessRelationList" class="list-item" @click="showType(item)"
-                  :class="{'active':item.id==currentItem.id}">
-                <div class="id-part">
-                  <el-tag type="warning" v-show=" isExpirationTime(item) === '1' ">即将到期</el-tag>
-                  <el-tag type="danger" v-show=" isExpirationTime(item) === '2' ">已过期</el-tag>
-                </div>
-                <div>
-                  {{item.followOrgName }}
-                </div>
-              </li>
-            </ul>
-            <div class="btn-left-list-more" @click.stop="getOrgMore">
-              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            </h2>
+            <div class="search-left-box clearfix" v-show="showTypeSearch">
+              <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+            </div>
+            <div v-if="loadingListData">
+              <oms-loading :loading="loadingListData"></oms-loading>
+            </div>
+            <div v-else-if="businessRelationList.length == 0" class="empty-info">
+              暂无信息
+            </div>
+            <div v-else>
+              <ul class="show-list">
+                <li v-for="item in businessRelationList" class="list-item" @click="showType(item)"
+                    :class="{'active':item.id==currentItem.id}">
+                  <div class="id-part">
+                    <el-tag type="warning" v-show=" isExpirationTime(item) === '1' ">即将到期</el-tag>
+                    <el-tag type="danger" v-show=" isExpirationTime(item) === '2' ">已过期</el-tag>
+                  </div>
+                  <div>
+                    {{item.followOrgName }}
+                  </div>
+                </li>
+              </ul>
+              <div class="btn-left-list-more" @click.stop="getOrgMore">
+                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -450,6 +453,9 @@
         let city = this.businessRelationItem.followOrg.orgDto.city;
         let region = this.businessRelationItem.followOrg.orgDto.region;
         return utils.formatAddress(province, city, region);
+      },
+      bodyHeight: function () {
+        return this.$store.state.bodyHeight;
       }
     },
     watch: {

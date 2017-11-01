@@ -95,7 +95,7 @@
                   <el-button type="primary" @click="bindDistrict">绑定CDC</el-button>
                 </perm>
                 <perm label="erp-bind-cdc-batch-add" style="margin-left: 20px">
-                  <el-button type="primary" @click="bindAll">一键绑定区县级CDC和POV</el-button>
+                  <el-button type="primary" @click="bindAll">一键绑定区CDC和POV</el-button>
                 </perm>
               </el-col>
               <el-col :span="6" class="text-right">
@@ -211,7 +211,7 @@
         });
       },
       bindAll () {
-        this.$confirm('是否一键绑定区县级CDC和POV', '', {
+        this.$confirm('是否一键绑定区CDC和POV', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
