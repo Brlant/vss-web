@@ -21,7 +21,7 @@
     </el-form-item>
     <el-form-item label="所属物流公司" prop="warehouseSourceFirm" v-if="form.warehouseType==='0'">
       <el-select filterable remote placeholder="请输入关键字搜索物流公司" :remote-method="getOrgs" :clearable="true"
-                 v-model="form.warehouseSourceFirm">
+                 v-model="form.warehouseSourceFirm" popper-class="good-selects">
         <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
           <div style="overflow: hidden">
             <span class="pull-left" style="clear: right">{{org.name}}</span>
