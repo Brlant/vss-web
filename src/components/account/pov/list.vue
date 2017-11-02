@@ -116,7 +116,7 @@
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
                 <perm label="erp-bind-pov-add">
-                  <el-button type="primary" @click="bindDistrict">绑定区县级POV</el-button>
+                  <el-button type="primary" @click="bindDistrict">绑定区级POV</el-button>
                 </perm>
               </el-col>
               <el-col :span="11" class="text-right">

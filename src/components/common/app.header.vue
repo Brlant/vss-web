@@ -391,7 +391,7 @@
         window.localStorage.setItem('skin', JSON.stringify(skin));
       },
       filterLevel (level) {
-        return level === 1 ? '市级CDC' : level === 2 ? '区县级CDC' : level === 3 ? 'POV' : '';
+        return level === 1 ? '市级CDC' : level === 2 ? '区级CDC' : level === 3 ? 'POV' : '';
       },
       unbind () {
         this.$confirm('是否解除绑定的微信？', '', {

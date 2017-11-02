@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui';
+import {Notification} from 'element-ui';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -644,7 +644,7 @@ export const cerpAccess = resource('', http, {
   bindMunicipal() { // 绑定cdc角色
     return http.put('/erp-access/bind/municipal');
   },
-  bindDistrict(id) { // 市级绑定区县CDC
+  bindDistrict(id) { // 市级绑定区CDC
     return http.put(`/erp-access/bind/district/${id}`);
   },
   bindPov(cdcId, id) { // 绑定pov
