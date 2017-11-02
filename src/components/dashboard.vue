@@ -1,13 +1,13 @@
 <style lang="less" scoped="">
   @import "../assets/mixins.less";
-  @card-box-border-color: #ddd;
+  @card-box-border-color: #eee;
   .card-box {
     border: 1px solid @card-box-border-color;
     margin-bottom: 20px;
     .card-box-header {
       padding: 15px 20px;
       border-bottom: 1px solid @card-box-border-color;
-      background: @card-box-border-color*1.1;
+      background: @card-box-border-color*1.05;
     }
     .card-box-body {
       padding: 5px 20px;
