@@ -250,6 +250,28 @@ export const erpOrder = resource('/erp-order', http, {
   }
 });
 
+/**
+ * 采购合同
+ * @type {the}
+ */
+export const PurchaseContract = resource('/purchase-contract', http, {
+  queryStateNum(params) {
+    return http.get('/purchase-contract/count', {params});
+  },
+  updateOrder(orderId, obj) {
+    return http.put(`/purchase-contract/${orderId}/detail`, obj);
+  },
+  cancel(orderId) {
+    return http.put(`/purchase-contract/${orderId}/cancel`);
+  },
+  queryContractDetail(id) { // 查询订单详细
+    return http.get(`/purchase-contract/${id}`);
+  },
+  batchCreateOrder(id) {// 批量生成采购订单
+    return http.put(`/purchase-contract/${id}/batch/order`);
+  }
+});
+
 // 订单
 export const Order = resource('/order', http, {
   check: (orderId, obj) => {
