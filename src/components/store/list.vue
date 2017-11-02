@@ -170,8 +170,6 @@
               </el-col>
               <el-col :span="3">
                 <div><span class="align-word">合格</span>：{{ item.qualifiedCount }}</div>
-                <div><span class="align-word">待定</span>：{{ item.undeterminedCount }}</div>
-                <div><span>不合格</span>：{{ item.unqualifiedCount }}</div>
               </el-col>
               <el-col :span="2" class="pt" align="center">
                 <span>{{ item.transitCount }}</span>
