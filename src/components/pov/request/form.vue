@@ -383,7 +383,7 @@
                   <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
                 <td class="goods-btn">
-                  <div v-show="index === 2">
+                  <div v-show="index === 2 || index === 3">
                     <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
                       class="iconfont icon-edit"></i> 编辑</a>
                   </div>
@@ -504,6 +504,8 @@
         this.currentList = [];
         if (val === 2) {
           this.editOrderInfo();
+        } else if (val === 3) {
+          this.addOrderInfo();
         } else {
           this.resetForm();
           this.form.id = null;
@@ -512,7 +514,6 @@
     },
     methods: {
       editOrderInfo () {
-
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
           return {
             amount: m.applyCount,
@@ -524,6 +525,25 @@
         });
         this.form = {
           id: this.currentOrder.id,
+          cdcId: this.currentOrder.cdcId,
+          demandTime: this.currentOrder.demandTime,
+          type: Number(this.currentOrder.vaccineSign),
+          warehouseId: this.currentOrder.warehouseId,
+          detailDtoList: orgDetailGoods
+        };
+//        this.form = JSON.parse(JSON.stringify(this.currentOrder));
+      },
+      addOrderInfo () {
+        let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
+          return {
+            amount: m.applyCount,
+            measurementUnit: m.unit,
+            orgGoodsId: m.orgGoodsId,
+            orgGoodsName: m.goodsName,
+            unitPrice: m.price
+          };
+        });
+        this.form = {
           cdcId: this.currentOrder.cdcId,
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.vaccineSign),
