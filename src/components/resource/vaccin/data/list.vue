@@ -91,10 +91,28 @@
     margin-right: 40px;
     margin-bottom: 20px;
   }
+
+  .d-table-col-wrap {
+    overflow: auto;
+  }
+
+  .lot-load {
+    text-align: center;
+    .el-button {
+      border: none;
+      color: #666;
+      background: 0 0;
+      padding-left: 0;
+      padding-right: 0;
+      &:hover {
+        color: #333
+      }
+    }
+  }
 </style>
 <template>
   <div>
-    <div>
+    <div class="container">
       <div class="order-list-status container">
         <div class="status-item" :class="{'active':key==activeStatus,'item-right':item.type===0} "
              v-for="(item,key) in vaccineType"
@@ -103,9 +121,10 @@
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
-      <div class="container d-table">
+      <div class="d-table">
         <div class="d-table-left">
-          <h2 class="header">
+          <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+            <h2 class="header">
                 <span class="pull-right">
                   <perm label="vaccine-info-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
@@ -115,36 +134,38 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="iconfont icon-search"></i> </a>
                 </span>
-            疫苗资料
-          </h2>
-          <div class="search-left-box" v-show="showTypeSearch">
-            <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
-          </div>
-          <div v-if="showTypeList.length == 0" class="empty-info">
-            暂无信息
-          </div>
-          <div v-else>
-            <ul class="show-list">
-              <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
-                  :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
-                <perm label="vaccine-info-delete">
-                  <oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'
-                              class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
-                </perm>
-                <div class="id-part">
-                  <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
-                  <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
-                  </el-tag>
-                  <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">注册证照过期</el-tag>
-                </div>
-                <div>
-                  <span>{{item.orgGoodsDto.name}}</span>
-                </div>
-              </li>
-            </ul>
-            <div class="btn-left-list-more" @click.stop="getOrgMore">
-              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              疫苗资料
+            </h2>
+            <div class="search-left-box" v-show="showTypeSearch">
+              <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
+            <div v-if="showTypeList.length == 0" class="empty-info">
+              暂无信息
+            </div>
+            <div v-else>
+              <ul class="show-list">
+                <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
+                    :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
+                  <perm label="vaccine-info-delete">
+                    <oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'
+                                class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
+                  </perm>
+                  <div class="id-part">
+                    <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
+                    <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
+                    </el-tag>
+                    <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">注册证照过期</el-tag>
+                  </div>
+                  <div>
+                    <span>{{item.orgGoodsDto.name}}</span>
+                  </div>
+                </li>
+              </ul>
+
+            </div>
+          </div>
+          <div class="lot-load" @click.stop="getOrgMore">
+            <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
           </div>
         </div>
         <div class="d-table-right">
@@ -447,6 +468,11 @@
         deep: true
       }
     },
+    computed: {
+      bodyHeight: function () {
+        return this.$store.state.bodyHeight;
+      }
+    },
     methods: {
       handlePreview: function (id) {
         this.$store.commit('changeAttachment', id);
@@ -518,6 +544,9 @@
       edit: function () {
         this.action = 'edit';
         this.form = JSON.parse(JSON.stringify(this.data));
+        this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
+        this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice.toString());
+        this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
         this.showRight = true;
       },
       forbid: function () {

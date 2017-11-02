@@ -99,6 +99,11 @@
             <h2 class="clearfix">
               <span class="pull-right">
                 <el-button-group>
+                   <perm label="pull-signal-add">
+                        <el-button @click="addOrder()"><i
+                          class="iconfont icon-reset"></i> 再次要货
+                        </el-button>
+                    </perm>
                     <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
                       <el-button @click="audited()"><i
                         class="iconfont icon-verify"></i>审核</el-button>
@@ -107,6 +112,7 @@
                       <el-button @click="editOrder()"><i
                         class="iconfont icon-edit"></i>编辑</el-button>
                     </perm>
+
                     <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
                       <el-button @click="cancel()"><i
                         class="iconfont icon-verify"></i>取消</el-button>
@@ -381,6 +387,10 @@
       },
       editOrder (item) {
         this.index = 2;
+        this.showRight = true;
+      },
+      addOrder (item) {
+        this.index = 3;
         this.showRight = true;
       },
       onSubmit () {

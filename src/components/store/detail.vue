@@ -45,14 +45,12 @@
             <oms-row label="货主货品名称" :span="span">{{currentItem.goodsName }}</oms-row>
             <oms-row label="生产厂商" :span="span">{{ currentItem.factoryName }}</oms-row>
             <oms-row label="批号" :span="span">{{ currentItem.batchNumber }}</oms-row>
-            <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="可用数量" :span="span">{{ currentItem.availableCount }}</oms-row>
             <oms-row label="合格库存数量" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
-            <oms-row label="待定库存数量" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
-            <oms-row label="不合格库存数量" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
             <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
+            <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
           </el-col>
         </el-row>
         <table class="table clearfix">
