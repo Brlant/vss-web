@@ -1,5 +1,6 @@
 <style lang="less" scoped="">
   @import "../assets/mixins.less";
+
   @card-box-border-color: #eee;
   .card-box {
     border: 1px solid @card-box-border-color;
@@ -31,27 +32,34 @@
       font-size: 2.5em;
       i {
         font-size: 1em;
-        margin-right:10px;
+        margin-right: 10px;
 
       }
     }
+  }
+
+  .no-info {
+    font-size: 12px;
   }
 </style>
 
 <template>
   <div class="container">
-    <div class="card-box">
+    <div class="card-box" v-if="level !== 3">
       <div class="card-box-header">采购订单异常</div>
       <div class="card-box-body">
-        <el-row v-for="(o, index) in 5" :key="o" type="flex" :gutter="15">
+        <div v-if="!orderList.length" class="no-info">
+          暂无异常订单
+        </div>
+        <el-row v-else="" v-for="(item, index) in orderList" :key="item.id" type="flex" :gutter="15">
           <el-col :span="4">
-            2017-05-12
+            {{ item.createTime | date}}
           </el-col>
           <el-col :span="4">
-            PO31012823001
+            {{ item.orderNo}}
           </el-col>
           <el-col :span="8">
-            长春百克生物股份有限公司
+            {{ item.orgName}}
           </el-col>
         </el-row>
       </div>
@@ -60,15 +68,18 @@
     <div class="card-box">
       <div class="card-box-header">接种点要货需求</div>
       <div class="card-box-body">
-        <el-row v-for="(o, index) in 5" :key="o" type="flex" :gutter="15">
+        <div v-if="!requirementList.length" class="no-info">
+          暂无异接种点要货需求单
+        </div>
+        <el-row v-else="" v-for="(item, index) in requirementList" :key="item.id" type="flex" :gutter="15">
           <el-col :span="4">
-            2017-05-12
+            {{ item.applyTime | date}}
           </el-col>
           <el-col :span="4">
-            PO31012823001
+            {{ item.id}}
           </el-col>
           <el-col :span="8">
-            长春百克生物股份有限公司
+            {{ item.povName}}
           </el-col>
         </el-row>
       </div>
@@ -98,17 +109,68 @@
 
 </template>
 <script>
-  import ElButton from '../../node_modules/element-ui/packages/button/src/button.vue';
+  import { Order, pullSignal } from '@/resources';
 
   export default {
-    components: {ElButton},
     data: function () {
-      return {};
+      return {
+        orderList: [],
+        requirementList: []
+      };
     },
-    mounted() {
-
+    mounted () {
+      if (this.level !== 3) {
+        this.getOrderList();
+      }
+      this.getRequirementList();
     },
-    method: {}
+    computed: {
+      user () {
+        return this.$store.state.user;
+      },
+      level () {
+        return this.$store.state.orgLevel;
+      }
+    },
+    watch: {
+      user () {
+        if (this.level !== 3) {
+          this.getOrderList();
+        }
+      },
+      level () {
+        this.getRequirementList();
+      }
+    },
+    methods: {
+      getOrderList: function () {
+        let param = Object.assign({}, this.filters, {
+          pageNo: 1,
+          pageSize: 5,
+          type: 0,
+          searchType: 1
+        });
+        Order.queryOrderExcepiton(param).then(res => {
+          this.orderList = res.data.list;
+        });
+      },
+      getRequirementList: function () {
+        if (typeof this.level !== 'number') return;
+        let params = {
+          pageNo: 1,
+          pageSize: 5
+        };
+        let orgId = this.user.userCompanyAddress;
+        if (this.level === 3) {
+          Object.assign(params, {povId: orgId});
+        } else {
+          Object.assign(params, {cdcId: orgId, status: 1});
+        }
+        pullSignal.query(params).then(res => {
+          this.requirementList = res.data.list;
+        });
+      }
+    }
   };
 
 </script>
