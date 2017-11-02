@@ -156,6 +156,10 @@
       initFormValue: function () {
         this.selectOptions = [];
         if (this.formItem.id) {
+          this.orgList.push({
+            id: this.form.warehouseSourceFirm,
+            name: this.form.warehouseSourceFirmName
+          });
           this.form = Object.assign({}, this.formItem);
           this.selectOptions.push(this.form.province);
           this.selectOptions.push(this.form.city);
