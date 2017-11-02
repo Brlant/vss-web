@@ -132,10 +132,12 @@
         </div>
       </div>
       <div class="container d-table">
+
         <div class="d-table-left">
-          <h2 class="header" style="overflow: hidden">
-            厂商资料
-            <span class="pull-right">
+          <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+            <h2 class="header" style="overflow: hidden">
+              厂商资料
+              <span class="pull-right">
                    <perm label="manufacturer-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType"><i
                         class="iconfont icon-plus"></i> </a>
@@ -143,29 +145,33 @@
                       <a href="#" class="btn-circle" @click.prevent="searchType"><i
                         class="iconfont icon-search"></i> </a>
                 </span>
-          </h2>
-          <div class="search-left-box clearfix" v-show="showTypeSearch">
-            <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
-          </div>
-          <div v-if="loadingListData">
-            <oms-loading :loading="loadingListData"></oms-loading>
-          </div>
-          <div v-else-if="businessRelationList.length == 0" class="empty-info">
-            暂无信息
-          </div>
-          <div v-else>
-            <ul class="show-list">
-              <li v-for="item in businessRelationList" class="list-item" @click="showType(item)"
-                  :class="{'active':item.id==currentItem.id}">
-                <div class="id-part">
-                  <el-tag type="warning" v-show=" isExpirationTime(item) === '1' ">即将到期</el-tag>
-                  <el-tag type="danger" v-show=" isExpirationTime(item) === '2' ">已过期</el-tag>
-                </div>
-                <div>
-                  {{item.followOrgName }}
-                </div>
-              </li>
-            </ul>
+            </h2>
+            <div class="search-left-box clearfix" v-show="showTypeSearch">
+              <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+            </div>
+            <div v-if="loadingListData">
+              <oms-loading :loading="loadingListData"></oms-loading>
+            </div>
+            <div v-else-if="businessRelationList.length == 0" class="empty-info">
+              暂无信息
+            </div>
+            <div v-else>
+              <ul class="show-list">
+                <li v-for="item in businessRelationList" class="list-item" @click="showType(item)"
+                    :class="{'active':item.id==currentItem.id}">
+                  <div class="id-part">
+                    <el-tag type="warning" v-show=" isExpirationTime(item) === '1' ">即将到期</el-tag>
+                    <el-tag type="danger" v-show=" isExpirationTime(item) === '2' ">已过期</el-tag>
+                  </div>
+                  <div>
+                    {{item.followOrgName }}
+                  </div>
+                </li>
+              </ul>
+              <div class="btn-left-list-more" @click.stop="getOrgMore">
+                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="d-table-right">
@@ -429,6 +435,12 @@
           expirationDate: [
             {required: true, message: '请选择有效期', trigger: 'change'}
           ]
+        },
+        typePager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20,
+          totalPage: 1
         }
       };
     },
@@ -441,12 +453,15 @@
         let city = this.businessRelationItem.followOrg.orgDto.city;
         let region = this.businessRelationItem.followOrg.orgDto.region;
         return utils.formatAddress(province, city, region);
+      },
+      bodyHeight: function () {
+        return this.$store.state.bodyHeight;
       }
     },
     watch: {
       filters: {
         handler () {
-          this.getBusinessRelationList();
+          this.getBusinessRelationList(1);
         },
         deep: true
       },
@@ -457,7 +472,7 @@
       }
     },
     mounted () {
-      this.getBusinessRelationList();
+      this.getBusinessRelationList(1);
     },
     methods: {
       resetPhoto: function () {
@@ -489,14 +504,23 @@
         }
         return state;
       },
-      getBusinessRelationList () {
-        let params = Object.assign({}, this.filters);
+      getBusinessRelationList (pageNo, isContinue = false) {
+        this.typePager.currentPage = pageNo;
+        let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.typePager.pageSize
+        }, this.filters);
         this.loadingListData = true;
         Vendor.query(params).then(res => {
-          this.businessRelationList = res.data.list;
-          this.currentItem = Object.assign({}, {'id': ''}, this.businessRelationList[0]);
-          this.currentName = this.currentItem.followOrgName;
-          this.relationData = this.currentItem;
+          if (isContinue) {
+            this.businessRelationList = this.businessRelationList.concat(res.data.list);
+          } else {
+            this.businessRelationList = res.data.list;
+            this.currentItem = Object.assign({}, {'id': ''}, this.businessRelationList[0]);
+            this.currentName = this.currentItem.followOrgName;
+            this.relationData = this.currentItem;
+          }
+          this.typePager.totalPage = res.data.totalPage;
           this.loadingListData = false;
           this.getBusinessRelationItem(this.currentItem.id);
         });
@@ -509,6 +533,9 @@
           this.businessRelationItem = res.data;
           this.loadingData = false;
         });
+      },
+      getOrgMore: function () {
+        this.getBusinessRelationList(this.typePager.currentPage + 1, true);
       },
       queryOtherBusiness: function (keyWord) {// 后台搜索
         let params = {
@@ -574,7 +601,7 @@
           let data = this.relationData;
           data.status = '1';
           Vendor.update(data.id, data).then(() => {
-            this.getBusinessRelationList();
+            this.getBusinessRelationList(1);
             this.$notify.success({
               title: '成功',
               message: '已经停用"' + this.currentName + '"'
@@ -591,7 +618,7 @@
           let data = this.relationData;
           data.status = '0';
           Vendor.update(data.id, data).then(() => {
-            this.getBusinessRelationList();
+            this.getBusinessRelationList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功启用"' + this.currentName + '"'
@@ -610,7 +637,7 @@
             Vendor.save(this.form).then(() => {
               this.doing = false;
               this.showRight = false;
-              this.getBusinessRelationList();
+              this.getBusinessRelationList(1);
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
@@ -627,7 +654,7 @@
             Vendor.update(this.form.id, this.form).then(() => {
               this.doing = false;
               this.showRight = false;
-              this.getBusinessRelationList();
+              this.getBusinessRelationList(1);
               this.$notify.success({
                 duration: 2000,
                 name: '成功',

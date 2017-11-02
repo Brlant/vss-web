@@ -193,7 +193,7 @@
       <el-col :span="filters.state === '0' ? 5: 6">POV</el-col>
       <el-col :span="5">时间</el-col>
       <el-col :span="3">状态</el-col>
-      <el-col :span="2" class="opera-btn" v-if="filters.state === '0' "></el-col>
+      <el-col :span="2" class="opera-btn" v-if="filters.state === '0' ">操作</el-col>
     </el-row>
     <el-row v-if="loadingData">
       <el-col :span="24">

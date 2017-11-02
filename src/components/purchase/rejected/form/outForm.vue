@@ -437,7 +437,7 @@
                     <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
                   </td>
                   <td>
-                    <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
+                    <el-input style="width:180px" type="number" v-model.number="batchNumber.productCount" :min="0"
                               @blur="isChangeValue(batchNumber)">
                       <template slot="append">
                         <dict :dict-group="'measurementUnit'"

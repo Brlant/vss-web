@@ -142,6 +142,9 @@
                 </div>
               </li>
             </ul>
+            <div class="btn-left-list-more" @click.stop="getOrgMore">
+              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            </div>
           </div>
         </div>
         <div class="d-table-right">
@@ -420,20 +423,26 @@
         currentItem: {},
         filters: {
           status: '1'
+        },
+        typePager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20,
+          totalPage: 1
         }
       };
     },
     mounted () {
       this.$emit('loaded');
-      this.getGoodsList();
+      this.getGoodsList(1);
     },
     watch: {
       'typeTxt': function () {
-        this.getGoodsList();
+        this.getGoodsList(1);
       },
       filters: {
         handler () {
-          this.getGoodsList();
+          this.getGoodsList(1);
         },
         deep: true
       }
@@ -474,16 +483,24 @@
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
       },
-      getGoodsList: function () {
+      getGoodsList: function (pageNo, isContinue = false) {
+        this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.typePager.pageSize,
           keyWord: this.typeTxt,
           deleteFlag: false
         }, this.filters);
         Vaccine.query(params).then(res => {
-          this.showTypeList = res.data.list;
-          this.typeList = res.data.list;
-          this.currentItem = Object.assign({orgGoodsDto: {}, list: []}, this.showTypeList[0]);// , this.showTypeList[0]
+          if (isContinue) {
+            this.showTypeList = this.showTypeList.concat(res.data.list);
+          } else {
+            this.showTypeList = res.data.list;
+            this.typeList = res.data.list;
+            this.currentItem = Object.assign({orgGoodsDto: {}, list: []}, this.showTypeList[0]);// , this.showTypeList[0]
+          }
           this.data.id = '';
+          this.typePager.totalPage = res.data.totalPage;
           this.queryOrgGoods();
         });
       },
@@ -494,6 +511,9 @@
           this.data = res.data.orgGoodsDto;
           this.combinationList = res.data.list;
         });
+      },
+      getOrgMore: function () {
+        this.getGoodsList(this.typePager.currentPage + 1, true);
       },
       edit: function () {
         this.action = 'edit';
@@ -515,7 +535,7 @@
           });
           item.orgGoodsDto.status = false;
           Vaccine.update(item.orgGoodsDto.id, item).then(() => {
-            this.getGoodsList();
+            this.getGoodsList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功停用疫苗"' + item.orgGoodsDto.name + '"'
@@ -538,7 +558,7 @@
           });
           item.orgGoodsDto.status = true;
           Vaccine.update(item.orgGoodsDto.id, item).then(() => {
-            this.getGoodsList();
+            this.getGoodsList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功启用疫苗"' + item.orgGoodsDto.name + '"'
@@ -555,7 +575,7 @@
           let name = this.data.name;
           Vaccine.delete(this.data.id).then(() => {
             this.data = {};
-            this.getGoodsList();
+            this.getGoodsList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功删除"' + name + '"'
@@ -566,7 +586,7 @@
       removeType: function (item) {
         Vaccine.delete(item.orgGoodsDto.id).then(() => {
           this.data = {};
-          this.getGoodsList();
+          this.getGoodsList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功删除疫苗"' + item.orgGoodsDto.name + '"'
@@ -583,7 +603,7 @@
       },
       onSubmit: function (item) {
         if (this.action === 'add') {
-          this.getGoodsList();
+          this.getGoodsList(1);
           this.showRight = false;
         } else {
           let self = this;

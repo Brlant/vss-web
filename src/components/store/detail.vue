@@ -28,12 +28,33 @@
     }
   }
 
+  .batch-info {
+    .oms-row {
+      margin-bottom: 10px;
+    }
+  }
 </style>
 <template>
   <div>
     <div class="content-part">
       <div class="content-right content-padding">
-        <h3>货品所在仓库详情</h3>
+        <h3>库存详情</h3>
+        <el-row class="batch-info">
+          <el-col :span="12">
+            <oms-row label="货主" :span="span">{{ currentItem.orgName }}</oms-row>
+            <oms-row label="货主货品名称" :span="span">{{currentItem.goodsName }}</oms-row>
+            <oms-row label="生产厂商" :span="span">{{ currentItem.factoryName }}</oms-row>
+            <oms-row label="批号" :span="span">{{ currentItem.batchNumber }}</oms-row>
+            <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
+          </el-col>
+          <el-col :span="12">
+            <oms-row label="可用数量" :span="span">{{ currentItem.availableCount }}</oms-row>
+            <oms-row label="合格库存数量" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
+            <oms-row label="待定库存数量" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
+            <oms-row label="不合格库存数量" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
+            <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
+          </el-col>
+        </el-row>
         <table class="table clearfix">
           <thead>
           <tr class="tr-bg">
@@ -77,17 +98,18 @@
   import { http } from '@/resources';
 
   export default {
-    props: ['id'],
+    props: ['currentItem'],
     data () {
       return {
-        loadingData: true,
+        loadingData: false,
         storeDetails: [],
         packSizeTyps: [
           '大包装',
           '中包装',
           '小包装',
           '散件'
-        ]
+        ],
+        span: 9
       };
     },
     watch: {
@@ -98,9 +120,9 @@
     methods: {
       queryStoreDetails () {
         this.storeDetails = [];
-        if (!this.id) return;
+        if (!this.currentItem.id) return;
         this.loadingData = true;
-        http.get(`/erp-stock/${this.id}/detail`).then(res => {
+        http.get(`/erp-stock/${this.currentItem.id}/detail`).then(res => {
           this.loadingData = false;
           this.storeDetails = res.data.list;
         });

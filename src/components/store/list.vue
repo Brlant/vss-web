@@ -195,7 +195,7 @@
     </div>
 
     <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
-      <detail :id="currentItemId" @close="resetRightBox"></detail>
+      <detail :currentItem="currentItem" @close="resetRightBox"></detail>
     </page-right>
   </div>
 </template>
@@ -231,7 +231,8 @@
           count: 0,
           pageSize: 20
         },
-        currentItemId: ''
+        currentItemId: '',
+        currentItem: {}
       };
     },
     mounted () {
@@ -261,6 +262,7 @@
       },
       showDetail (item) {
         this.currentItemId = item.id;
+        this.currentItem = item;
         this.showDetailPart = true;
       },
       resetRightBox () {
