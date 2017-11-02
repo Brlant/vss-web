@@ -332,6 +332,9 @@
         let menuArr = route[0].children.filter(item => item.meta.moduleId && (item.meta.perm === 'show' ||
           this.$store.state.permissions.includes(item.meta.perm)));
         menuArr.forEach(item => {
+          item.children.forEach(i => {
+            i.path = i.path.replace(/:id/, 'list');
+          });
           item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
           }
         );
