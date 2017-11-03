@@ -236,7 +236,7 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="选择收款方" prop="povId">
+            <el-form-item label="收款方" prop="povId">
               <el-select placeholder="请选择收款方" v-model="form.remitteeId" filterable remote clearable
                          @click.native="queryOrgs('')"
                          :remote-method="queryOrgs">
