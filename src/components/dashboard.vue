@@ -69,7 +69,7 @@
       <div class="card-box-header">接种点要货需求</div>
       <div class="card-box-body">
         <div v-if="!requirementList.length" class="no-info">
-          暂无异接种点要货需求单
+          暂无接种点要货需求单
         </div>
         <el-row v-else="" v-for="(item, index) in requirementList" :key="item.id" type="flex" :gutter="15">
           <el-col :span="4">
