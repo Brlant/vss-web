@@ -319,7 +319,7 @@ const route = [
           {
             path: '/resource/material',
             component: resolve => require(['./components/resource/material/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '物料管理', perm: 'cerp-logistics-cost'}
+            meta: {moduleId: 'resource', title: '物料管理', perm: 'material-manager'}
           }
         ]
       }
