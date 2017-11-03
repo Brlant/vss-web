@@ -331,15 +331,15 @@
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
                 </td>
-                <td class="ar">
+                <td>
                   <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
                   <span v-if="!Number(product.unitPrice)">-</span>
                 </td>
-                <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
+                <td>{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar">
+                <td>
                   <span v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney
                     }}</span>
                   <span v-if="!Number(product.unitPrice)">-</span>
