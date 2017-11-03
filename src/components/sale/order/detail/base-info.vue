@@ -48,78 +48,49 @@
             </oms-row>
           </el-col>
         </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            物流方式：
-          </el-col>
-          <el-col :span="21">
+        <el-form ref="orderAddForm" :rules="rules" :model="currentOrder"
+                 label-width="160px" style="padding-right: 20px">
+          <el-form-item label="物流方式" prop="transportationMeansId">
             <el-select type="text" v-model="currentOrder.transportationMeansId" placeholder="请选择物流方式">
               <el-option :value="item.key" :key="item.key" :label="item.label"
                          v-for="item in transportationMeansList"></el-option>
             </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            POV仓库：
-          </el-col>
-          <el-col :span="21">
+          </el-form-item>
+          <el-form-item label="POV仓库" prop="transportationAddress">
             <el-select placeholder="请选择POV仓库" v-model="currentOrder.transportationAddress" filterable clearable>
               <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
                 <span class="pull-left">{{ item.name }}</span>
                 <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
               </el-option>
             </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            运输条件：
-          </el-col>
-          <el-col :span="21">
+          </el-form-item>
+          <el-form-item label="运输条件" prop="transportationCondition">
             <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
               <el-option :value="item.key" :key="item.key" :label="item.label"
                          v-for="item in transportationConditionList"></el-option>
             </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            预计送货时间：
-          </el-col>
-          <el-col :span="21">
+          </el-form-item>
+          <el-form-item label="预计送货时间" prop="transportationMeansId">
             <el-date-picker
               v-model="currentOrder.expectedTime"
               placeholder="请选择日期" format="yyyy-MM-dd"
               @change="changeExpectedTime">
             </el-date-picker>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            疾控仓库地址：
-          </el-col>
-          <el-col :span="21">
-            <!--<el-select placeholder="请选择物流中心" v-model="currentOrder.logisticsCentreId" filterable>-->
-            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"></el-option>-->
-            <!--</el-select>-->
+          </el-form-item>
+          <el-form-item label="疾控仓库地址" prop="logisticsCentreId">
             <el-select placeholder="请选择疾控仓库地址" v-model="currentOrder.logisticsCentreId" filterable :clearable="true">
               <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter">
                 <span class="pull-left">{{ item.name }}</span>
                 <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
               </el-option>
             </el-select>
-          </el-col>
-        </el-row>
-        <el-row>
-          <el-col :span="3" class="text-right" style="line-height: 36px">
-            备注：
-          </el-col>
-          <el-col :span="21">
+          </el-form-item>
+          <material-part @changeRemark="changeRemark"></material-part>
+          <el-form-item label="备注" prop="remark">
             <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
-          </el-col>
-        </el-row>
+          </el-form-item>
+        </el-form>
       </div>
       <div v-else="">
         <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2' ">
@@ -167,7 +138,6 @@
           <oms-row label="备注" :span="3">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
-
 
       <hr class="hr"/>
 
@@ -245,21 +215,43 @@
 <script>
   import utils from '@/tools/utils';
   import { Address, LogisticsCenter } from '@/resources';
+  import materialPart from '../material.vue';
   export default {
-    components: {},
+    components: {materialPart},
     props: {
       currentOrder: {
         type: Object,
         default: function () {
           return {};
         }
-      }
+      },
+      isCheck: Boolean
     },
     data () {
       return {
         span: 6,
         warehouses: [],
-        LogisticsCenter: []
+        LogisticsCenter: [],
+        rules: {
+          transportationMeansId: [
+            {required: true, message: '请选择物流方式', trigger: 'change'}
+          ],
+          transportationAddress: [
+            {required: true, message: '请选择POV仓库', trigger: 'change'}
+          ],
+          logisticsCentreId: [
+            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+          ],
+          transportationCondition: [
+            {required: true, message: '请选择运输条件', trigger: 'blur'}
+          ],
+          expectedTime: [
+            {required: true, message: '请选择日期', trigger: 'change'}
+          ],
+          remark: [
+            {required: true, message: '请输入备注信息', trigger: 'blur'}
+          ]
+        }
       };
     },
     computed: {
@@ -296,6 +288,11 @@
         this.searchWarehouses();
 //        this.filterLogisticsCenter();
         this.filterAddress();
+      },
+      isCheck (val) {
+        if (val) {
+          this.check();
+        }
       }
     },
     methods: {
@@ -306,6 +303,13 @@
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+      },
+      changeRemark (form) {
+        if (!this.currentOrder.remark) {
+          this.currentOrder.remark = form.name + '  数量' + form.count;
+        } else {
+          this.currentOrder.remark += '，' + form.name + '  数量' + form.count;
+        }
       },
       searchWarehouses () {
         if (!this.currentOrder.customerId) {
@@ -350,6 +354,14 @@
           }
         }
         return state;
+      },
+      check () {
+        this.$refs['orderAddForm'].validate((valid) => {
+          if (!valid) {
+            return false;
+          }
+          this.$emit('checkPass');
+        });
       }
     }
   };

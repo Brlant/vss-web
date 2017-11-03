@@ -25,7 +25,7 @@
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
             <perm label="sales-order-confirm" v-show="currentOrder.state === '0' ">
-              <el-button type="primary" @click="confirm">确认订单</el-button>
+              <el-button type="primary" @click="check">确认订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
@@ -42,7 +42,8 @@
       </div>
       <div class="content-right content-padding">
         <h3>{{ title }}</h3>
-        <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
+        <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index" :isCheck="isCheck"
+                    @checkPass="checkPass"></basic-info>
         <receipt :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt>
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
       </div>
@@ -67,7 +68,8 @@
       return {
         currentOrder: {},
         index: 0,
-        title: ''
+        title: '',
+        isCheck: false
       };
     },
     watch: {
@@ -101,22 +103,22 @@
         this.index = item.key;
         this.title = item.name;
       },
-      confirm () {
-        this.$confirm('是否确认订单', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
-            this.$notify.success({
-              message: '确认订单成功'
-            });
-            this.transformState('1');
-            this.$emit('close');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '确认订单失败'
-            });
+      check () {
+        this.isCheck = false;
+        this.$nextTick(() => {
+          this.isCheck = true;
+        });
+      },
+      checkPass () {
+        http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
+          this.$notify.success({
+            message: '确认订单成功'
+          });
+          this.transformState('1');
+          this.$emit('close');
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '确认订单失败'
           });
         });
       },
