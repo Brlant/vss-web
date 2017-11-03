@@ -348,6 +348,14 @@ export const Order = resource('/order', http, {
   }
 });
 
+
+/**
+ *发票信息
+ * @type {the}
+ */
+export const invoiceManage = resource('/invoice/', http, {});
+
+
 /**
  *
  * @type {the}

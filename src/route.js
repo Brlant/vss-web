@@ -214,6 +214,11 @@ const route = [
             path: '/finance/org',
             component: resolve => require(['./components/finance/logistics/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '物流厂商对账', perm: 'logistics-vendor-reconciliation'}
+          },
+          {
+            path: '/payment/invoice',
+            component: resolve => require(['./components/finance/invoice/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '厂商发票管理', perm: 'payment-payable'}
           }
           // {
           //   path: '/finance/paying',
