@@ -225,20 +225,42 @@
       color: @activeColor;
     }
   }
+
+  .btn-submit-save {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+    padding: 15px;
+  }
 </style>
 
 <template>
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">{{ defaultIndex === 2 ? '编辑采购订单' : '新增采购订单'}}</h2>
+        <h2 class="clearfix right-title"> 查看采购合同</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
-          <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存订单</el-button>
-          </li>
+          <div class="btn-submit-save">
+            <perm label="purchasing-contract-add">
+              <div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">
+                <el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>
+              </div>
+            </perm>
+            <perm label="purchasing-contract-edit">
+              <div style="margin-bottom: 10px" v-if="form.purchaseContractIsUsed">
+                <el-button type="success" @click="synchroOrder" style="width: 150px">同步采购合同</el-button>
+              </div>
+            </perm>
+            <div style="margin-bottom: 10px">
+              <el-button @click="$emit('right-close')" style="width: 150px">关闭</el-button>
+            </div>
+          </div>
         </ul>
       </div>
       <div class="content-right min-gutter">
@@ -247,173 +269,49 @@
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
-                          v-show="showContent.isShowOtherContent">
-              <el-select type="text" v-model="form.transportationMeansId" @change="changeTransportationMeans"
-                         placeholder="请选择物流方式">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
-              </el-select>
+            <el-form-item label="合同名称">
+              {{form.purchaseContractName}}
             </el-form-item>
-            <el-form-item label="供货厂商" prop="supplierId">
-              <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.supplierId" @change="changeSupplier">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                  <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    <span class="pull-right" style="color: #999">
-                     <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
-                    </span>
-                  </div>
-                  <div style="overflow: hidden">
-                  <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.manufacturerCode}}
-                  </span>
-                  </div>
-
-                </el-option>
-              </el-select>
+            <el-form-item label="合同编号">
+              {{form.purchaseContractNo}}
             </el-form-item>
-            <el-form-item label="物流商"
-                          v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <oms-input v-model="form.logisticsProviderId" placeholder="请输入物流商"></oms-input>
+            <el-form-item label="物流方式">
+              <dict :dict-group="'transportationMeans'" :dict-key="form.transportationMeansId"></dict>
             </el-form-item>
-            <el-form-item label="提货地址"
-                          :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
-                          v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
-              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in supplierWarehouses">
-                  <span class="pull-left">{{ item.name }}</span>
-                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
-                </el-option>
-              </el-select>
+            <el-form-item label="供货厂商">
+              {{form.supplierName}}
             </el-form-item>
-
-            <el-form-item label="运输条件" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
-                          v-show="showContent.isShowOtherContent">
-              <el-select type="text" v-model="form.transportationCondition" placeholder="请选择运输条件">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationConditionList"></el-option>
-              </el-select>
+            <el-form-item label="物流商" v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
+              {{form.logisticsProviderId}}
+            </el-form-item>
+            <el-form-item label="提货地址" v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
+              {{form.pickUpWarehouseName}}
+            </el-form-item>
+            <el-form-item label="运输条件" v-show="showContent.isShowOtherContent">
+              <dict :dict-group="'transportationCondition'" :dict-key="form.transportationCondition"></dict>
             </el-form-item>
             <el-form-item label="物流中心">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
-              </el-select>
+              {{form.centreName}}
             </el-form-item>
-            <el-form-item label="疾控仓库地址" prop="transportationAddress">
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in cdcWarehouses">
-                  <span class="pull-left">{{ item.name }}</span>
-                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
-                </el-option>
-              </el-select>
+            <el-form-item label="疾控仓库地址">
+              {{form.transportationAddressName}}
             </el-form-item>
             <el-form-item label="是否进口">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.importedFlag"></el-switch>
+              {{form.importedFlag | formatStatus}}
             </el-form-item>
-            <el-form-item :label="showContent.expectedTimeLabel"
-                          :prop=" showContent.isShowOtherContent?'expectedTime':'' "
-                          v-show="showContent.isShowOtherContent">
-              <el-date-picker v-model="form.expectedTime" placeholder="请选择预计入库时间" format="yyyy-MM-dd"
-                              @change="changeExpectedTime">
-              </el-date-picker>
+            <el-form-item label="是否生效">
+              {{form.availabilityStatus | formatStatus}}
             </el-form-item>
             <el-form-item label="备注">
-              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
-                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+              {{form.remark}}
             </el-form-item>
             <el-form-item label-width="120px">
-              <el-button type="primary" @click="index++">添加货品</el-button>
+              <el-button type="primary" @click="index++">查看货品</el-button>
             </el-form-item>
           </el-form>
         </div>
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
 
-          <div class="oms-form order-product-box">
-            <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
-              <el-form-item label="产品" prop="orgGoodsId">
-                <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
-                           :remote-method="searchProduct" :clearable="true" :loading="loading"
-                           popper-class="order-good-selects"
-                           @change="getGoodDetail">
-                  <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
-                             :label="item.orgGoodsDto.name"
-                             :value="item.orgGoodsDto.id">
-                    <div style="overflow: hidden">
-                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                      <el-tag type="success" v-show="item.list.length"
-                              style="line-height: 22px;margin-left: 20px;height: 20px">
-                        组合
-                      </el-tag>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-                      </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice
-                        }}</span>
-                      </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </el-form-item>
-              <el-form-item label="产品数量" class="productItem-info" prop="amount">
-                <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
-                  <template slot="append">
-                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                  </template>
-                </oms-input>
-              </el-form-item>
-              <el-form-item label="单价" class="productItem-info" prop="unitPrice">
-                <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
-                           @blur="formatPrice">
-                  <template slot="prepend">¥</template>
-                </oms-input>
-              </el-form-item>
-            </el-form>
-            <div class="product-info-fix clearfix">
-              <el-row>
-                <el-col :span="12">
-                  <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
-                    {{product.fixInfo.goodsDto.smallPacking}}/
-                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                  </oms-row>
-                  <oms-row label="货品编号" :span="8">
-                    {{product.fixInfo.goodsNo}}
-                  </oms-row>
-                  <oms-row label="供货厂商" :span="8">
-                    {{product.fixInfo.salesFirmName}}
-                  </oms-row>
-                  <oms-row label="批准文号" :span="8">
-                    {{product.fixInfo.goodsDto.approvalNumber}}
-                  </oms-row>
-                  <oms-row label="是否OTC" :span="8">
-                    <span v-show="product.orgGoodsId">{{product.fixInfo.goodsDto.goodsOtc | formatStatus}}</span>
-                  </oms-row>
-                </el-col>
-                <el-col :span="12">
-                  <span v-show="accessoryList.length">【组合货品】</span>
-                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
-                       <span style="margin-right: 10px">{{acce.name}}</span>
-                      <span style="margin-right: 10px"
-                            v-show="acce.procurementPrice">¥ {{ acce.procurementPrice | formatMoney }}</span>
-                       <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
-                       <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
-                  </span>
-                </el-col>
-              </el-row>
-            </div>
-          </div>
-
-          <oms-form-row label="" :span="4">
-            <el-button type="primary" @click="addProduct">加入订单</el-button>
-          </oms-form-row>
           <div class="product-list-detail">
             <h3 style="background: #13ce66;color: #fff">已选货品</h3>
             <table class="table">
@@ -423,7 +321,6 @@
                 <th>货品单价</th>
                 <th>货品数量</th>
                 <th>金额</th>
-                <th>操作</th>
               </tr>
               </thead>
               <tbody>
@@ -434,28 +331,18 @@
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
                 </td>
-                <td class="ar">
+                <td>
                   <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
                   <span v-if="!Number(product.unitPrice)">-</span>
                 </td>
-                <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
+                <td>{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar">
+                <td>
                   <span v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney
                     }}</span>
                   <span v-if="!Number(product.unitPrice)">-</span>
-                </td>
-                <td class="goods-btn">
-                  <div v-show="defaultIndex === 2">
-                    <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
-                      class="iconfont icon-edit"></i> 编辑</a>
-                  </div>
-                  <div>
-                    <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
-                      class="iconfont icon-delete"></i> 删除</a>
-                  </div>
                 </td>
               </tr>
               <tr>
@@ -475,11 +362,13 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, InWork } from '@/resources';
+  import {PurchaseContract, LogisticsCenter, http, Address, BaseInfo, InWork} from './../../../../resources';
   import utils from '@/tools/utils';
+  import Dict from '../../../common/dict.vue';
 
   export default {
-    name: 'addForm',
+    components: {Dict},
+    name: 'showForm',
     loading: false,
     props: {
       type: {
@@ -498,20 +387,6 @@
       orderId: String
     },
     data: function () {
-
-      let checkOrderNumber = (rule, value, callback) => {
-        if (value === '') {
-          callback();
-        } else {
-          let re = /^[^\u4e00-\u9fa5]{0,}$/;
-          if (!re.test(value)) {
-            callback(new Error('请输入正确的订单号'));
-          } else {
-            callback();
-          }
-        }
-      };
-
       return {
         loading: false,
         idNotify: true,
@@ -532,6 +407,9 @@
         searchProductList: [],
         filterProductList: [],
         form: {
+          'purchaseContractNo': '',
+          'purchaseContractName': '',
+          'availabilityStatus': true,
           'orgId': '',
           'customerId': '',
           'bizType': '0',
@@ -543,7 +421,6 @@
           'importedFlag': '',
           'orgRelation': '',
           'logisticsCentreId': '',
-          'thirdPartyNumber': '',
           'expectedTime': '',
           'detailDtoList': [],
           'supplierId': '',
@@ -551,13 +428,11 @@
           'pickUpAddress': ''
         },
         rules: {
-          orderNo: [
-            {required: true, message: '请输入货主订单编号', trigger: 'blur'},
-            {validator: checkOrderNumber}
+          purchaseContractName: [
+            {required: true, message: '请输入采购合同名称', trigger: 'blur'}
           ],
-          thirdPartyNumber: [
-            {required: true, message: '请输入来源订单编号', trigger: 'blur'},
-            {validator: checkOrderNumber}
+          purchaseContractNo: [
+            {required: true, message: '请输入采购合同编号', trigger: 'blur'}
           ],
           supplierId: [
             {required: true, message: '请选择供货厂商', trigger: 'change'}
@@ -602,7 +477,7 @@
         index: 0,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '添加货品', key: 1}
+          {name: '查看货品', key: 1}
         ],
         orgList: [],
         customerList: [],
@@ -659,7 +534,7 @@
           }
         });
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -694,7 +569,7 @@
       this.initForm();
     },
     methods: {
-      createOrderInfo () {
+      createOrderInfo() {
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
         if (!orgGoodsId) return;
@@ -734,9 +609,9 @@
 //          });
         });
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
-        InWork.queryOrderDetail(this.orderId).then(res => {
+        PurchaseContract.queryContractDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
           this.resetForm();
           this.isStorageData = true;
@@ -749,7 +624,7 @@
           });
         });
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
@@ -766,8 +641,6 @@
         }
       },
       resetForm: function () {// 重置表单
-        this.$refs['orderAddForm'].resetFields();
-        this.$refs['orderGoodsAddForm'].resetFields();
         this.form.supplierId = '';
         this.form.actualConsignee = '';
         this.form.logisticsProviderId = '';
@@ -788,7 +661,7 @@
         this.index = value;
       },
       doClose: function () {
-        this.$emit('close');
+        this.$emit('right-close');
       },
       filterOrg: function (query) {// 过滤来源单位
         let orgId = this.form.orgId;
@@ -829,7 +702,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -910,7 +783,6 @@
         if (this.form.transportationMeansId === '2') {
           Address.queryAddress(val, {
             deleteFlag: false,
-//                warehouseType: 0,
             orgId: val,
             auditedStatus: '1'
           }).then(res => {
@@ -941,7 +813,7 @@
           this.$notify({
             duration: 2000,
             title: '证照信息过期',
-            message: msg + '证照信息已过期,无法创建订单',
+            message: msg + '证照信息已过期,无法创建合同',
             type: 'error'
           });
         });
@@ -1015,7 +887,7 @@
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
-      addProduct: function () {// 货品加入到订单
+      addProduct: function () {// 货品加入到合同
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,
@@ -1073,13 +945,7 @@
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         this.searchProduct();
       },
-      editItem (item) {
-//        this.filterProductList = [];
-//        this.searchProductList = [];
-//        this.searchProductList.push({
-//          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
-//          list: []
-//        });
+      editItem(item) {
         this.filterProductList.push({
           orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []
@@ -1090,77 +956,48 @@
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
         this.remove(item);
       },
-      onSubmit: function () {// 提交表单
-        let self = this;
-        this.changeExpectedTime(this.expectedTime);
-        this.$refs['orderAddForm'].validate((valid) => {
-          if (!valid || this.doing) {
-            this.index = 0;
-            return false;
-          }
-          let saveData = JSON.parse(JSON.stringify(self.form));
-          if (saveData.detailDtoList.length === 0) {
-            this.$notify({
+      synchroOrder: function () {
+        this.$confirm('确认对采购合同《' + this.form.purchaseContractName + '》进行同步信息操作?', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          PurchaseContract.synchroContract(this.orderId).then(() => {
+            this.$notify.success({
               duration: 2000,
-              message: '请添加订单产品',
-              type: 'warning'
+              title: '成功',
+              message: '同步采购合同《' + this.form.purchaseContractName + '》的信息成功'
             });
-            return false;
-          }
-          saveData.detailDtoList.forEach(item => {
-            delete item.fixInfo;
-            delete item.mainOrgId;
-            delete item.isCombination;
-            delete item.orgGoodsDto;
+            this.$emit('change', this.form);
+            this.$emit('right-close');
+          }).catch(error => {
+            this.$notify.error({
+              duration: 2000,
+              message: error.response.data && error.response.data.msg || '同步采购合同《' + this.form.purchaseContractName + '》的信息失败'
+            });
           });
-          this.doing = true;
-          if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
-          if (saveData.id) {
-            erpOrder.updateOrder(saveData.id, saveData).then(res => {
-              this.resetForm();
-              this.$notify({
-                duration: 2000,
-                message: '编辑采购订单成功',
-                type: 'success'
-              });
-              self.$emit('change');
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('close');
-              });
-            }).catch(error => {
-              this.doing = false;
-              this.$notify({
-                duration: 2000,
-                title: '编辑采购订单失败',
-                message: error.response.data.msg,
-                type: 'error'
-              });
+        });
+      },
+      createOrder: function () {
+        this.$confirm('确认按照采购合同《' + this.form.purchaseContractName + '》的信息批量生成采购订单?', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          PurchaseContract.batchCreateOrder(this.orderId).then(() => {
+            this.$notify.success({
+              duration: 2000,
+              title: '成功',
+              message: '批量生成采购订单成功'
             });
-          } else {
-            erpOrder.save(saveData).then(res => {
-              this.resetForm();
-              this.$notify({
-                duration: 2000,
-                message: '新增采购订单成功',
-                type: 'success'
-              });
-              self.$emit('change', res.data);
-              window.localStorage.removeItem(this.saveKey);
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('close');
-              });
-            }).catch(error => {
-              this.doing = false;
-              this.$notify({
-                duration: 2000,
-                title: '新增采购订单失败',
-                message: error.response.data.msg,
-                type: 'error'
-              });
+            this.$emit('change', this.form);
+            this.$emit('right-close');
+          }).catch(error => {
+            this.$notify.error({
+              duration: 2000,
+              message: error.response.data && error.response.data.msg || '批量生成采购订单失败'
             });
-          }
+          });
         });
       }
     }

@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui/lib/notification';
+import { Notification } from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -234,6 +234,9 @@ export const DictGroup = resource('/dictGroup', http, {
   }
 });
 
+// 物料管理
+export const material = resource('/material', http, {});
+
 // erp订单
 export const vaccineBills = resource('/factory-reconciliation', http, {});
 
@@ -247,6 +250,31 @@ export const erpOrder = resource('/erp-order', http, {
   },
   cancel (orderId) {
     return http.put(`/erp-order/${orderId}/cancel`);
+  }
+});
+
+/**
+ * 采购合同
+ * @type {the}
+ */
+export const PurchaseContract = resource('/purchase-contract', http, {
+  queryStateNum(params) {
+    return http.get('/purchase-contract/count', {params});
+  },
+  updateOrder(orderId, obj) {
+    return http.put(`/purchase-contract/${orderId}/detail`, obj);
+  },
+  cancel(orderId) {
+    return http.put(`/purchase-contract/${orderId}/cancel`);
+  },
+  queryContractDetail(id) { // 查询订单详细
+    return http.get(`/purchase-contract/${id}`);
+  },
+  batchCreateOrder(id) {// 批量生成采购订单
+    return http.put(`/purchase-contract/${id}/batch/order`);
+  },
+  synchroContract(id) {// 同步采购合同
+    return http.put(`/purchase-contract/${id}/synchro`);
   }
 });
 

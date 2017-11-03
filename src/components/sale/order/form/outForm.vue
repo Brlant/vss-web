@@ -255,7 +255,7 @@
         <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                  label-width="160px" style="padding-right: 20px">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-            <el-form-item label="选择物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
+            <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" placeholder="请选择物流方式"
                          @change="changeTransportationMeans">
@@ -327,7 +327,8 @@
                 @change="changeExpectedTime">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="备注">
+            <material-part @changeRemark="changeRemark"></material-part>
+            <el-form-item label="备注" prop="remark">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
@@ -339,7 +340,7 @@
 
             <div class="oms-form order-product-box">
               <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
-                <el-form-item label="选择产品" prop="orgGoodsId">
+                <el-form-item label="产品" prop="orgGoodsId">
                   <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
                              :remote-method="searchProduct" :clearable="true" :loading="loading"
                              popper-class="order-good-selects"
@@ -532,10 +533,12 @@
 <script>
   import { erpOrder, LogisticsCenter, http, Address, cerpAction, InWork } from '@/resources';
   import utils from '@/tools/utils';
+  import materialPart from '../material.vue';
 
   export default {
     name: 'addForm',
     loading: false,
+    components: {materialPart},
     props: {
       type: {
         type: String,
@@ -624,7 +627,7 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择去向地址', trigger: 'blur'}
+            {required: true, message: '请选择POV仓库', trigger: 'change'}
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
@@ -637,6 +640,9 @@
           ],
           expectedTime: [
             {required: true, message: '请选择日期', trigger: 'change'}
+          ],
+          remark: [
+            {required: true, message: '请输入备注信息', trigger: 'blur'}
           ]
         },
         orderGoodsRules: {
@@ -685,22 +691,22 @@
       };
     },
     computed: {
-      bizTypeList() {
+      bizTypeList () {
         return this.$store.state.dict['bizOutType'];
       },
-      transportationMeansList() {
+      transportationMeansList () {
         return this.$store.state.dict['outTransportMeans'];
       },
-      transportationConditionList() {
+      transportationConditionList () {
         return this.$store.state.dict['transportationCondition'];
       },
-      shipmentPackingUnit() {
+      shipmentPackingUnit () {
         return this.$store.state.dict['shipmentPackingUnit'];
       },
-      measurementUnitList() {
+      measurementUnitList () {
         return this.$store.state.dict['measurementUnit'];
       },
-      orgRelationList() {
+      orgRelationList () {
         return this.$store.state.dict['orgRelation'];
       },
       totalMoney: function () {
@@ -788,10 +794,17 @@
           });
         });
       },
+      changeRemark (form) {
+        if (!this.form.remark) {
+          this.form.remark = form.name + '  数量' + form.count;
+        } else {
+          this.form.remark += '，' + form.name + '  数量' + form.count;
+        }
+      },
       changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
-      formatPrice() {// 格式化单价，保留两位小数
+      formatPrice () {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
       changeExpectedTime: function (date) {// 格式化日期
@@ -871,7 +884,7 @@
           }
         }
       },
-      changeTransportationMeans(val) {// 物流方式改变时
+      changeTransportationMeans (val) {// 物流方式改变时
         switch (val) {
           case '0': {
             this.showContent.expectedTimeLabel = '预计送货时间';
@@ -893,7 +906,7 @@
           this.showContent.expectedTimeLabel = '';
         }
       },
-      changeCustomerId(val) {// POV改变时
+      changeCustomerId (val) {// POV改变时
         if (!this.isStorageData) {// 有缓存时，不重置表单
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
@@ -1033,7 +1046,7 @@
         });
         this.filterProductList = arr;
       },
-      queryBatchNumers() { // 查询货品批次信息
+      queryBatchNumers () { // 查询货品批次信息
         let params = {
           goodsId: this.product.fixInfo.goodsId,
           orgId: this.form.orgId,
@@ -1056,7 +1069,7 @@
           }
         });
       },
-      isChangeValue(item) {
+      isChangeValue (item) {
         item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         if (item.productCount > item.count) {
           this.$notify.warning({
@@ -1066,7 +1079,7 @@
         }
         item.isChecked = item.productCount > 0;
       },
-      isShowName(item) {
+      isShowName (item) {
         let index = this.form.detailDtoList.indexOf(item);
         if (index === 0) {
           return true;
@@ -1084,7 +1097,7 @@
         }
         return !isShow;
       },
-      checkItemAll(item) {
+      checkItemAll (item) {
         item.lots.forEach(l => {
           l.isChecked = item.isCheckedAll;
         });

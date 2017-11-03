@@ -231,13 +231,13 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">{{ defaultIndex === 2 ? '编辑采购订单' : '新增采购订单'}}</h2>
+        <h2 class="clearfix right-title">{{ defaultIndex === 2 ? '编辑采购合同' : '新增采购合同'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存订单</el-button>
+            <el-button type="success" @click="onSubmit">保存</el-button>
           </li>
         </ul>
       </div>
@@ -247,6 +247,12 @@
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
+            <el-form-item label="合同名称" prop="purchaseContractName">
+              <oms-input type="text" v-model="form.purchaseContractName" placeholder="请输入采购合同名称"></oms-input>
+            </el-form-item>
+            <el-form-item label="合同编号" prop="purchaseContractNo">
+              <oms-input type="text" v-model="form.purchaseContractNo" placeholder="请输入采购合同编号"></oms-input>
+            </el-form-item>
             <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" @change="changeTransportationMeans"
@@ -270,13 +276,29 @@
                     <span>系统代码</span> {{org.manufacturerCode}}
                   </span>
                   </div>
-
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <oms-input v-model="form.logisticsProviderId" placeholder="请输入物流商"></oms-input>
+              <oms-input type="text" v-model="form.logisticsProviderId" placeholder="请输入物流商名称"></oms-input>
+              <!--<el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"-->
+              <!--:clearable="true"-->
+              <!--v-model="form.logisticsProviderId">-->
+              <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList">-->
+              <!--<div style="overflow: hidden">-->
+              <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
+              <!--<span class="pull-right" style="color: #999">-->
+              <!--<dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>-->
+              <!--</span>-->
+              <!--</div>-->
+              <!--<div style="overflow: hidden">-->
+              <!--<span class="select-other-info pull-left">-->
+              <!--<span>系统代码</span> {{org.manufacturerCode}}-->
+              <!--</span>-->
+              <!--</div>-->
+              <!--</el-option>-->
+              <!--</el-select>-->
             </el-form-item>
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
@@ -313,12 +335,10 @@
               <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
                          v-model="form.importedFlag"></el-switch>
             </el-form-item>
-            <el-form-item :label="showContent.expectedTimeLabel"
-                          :prop=" showContent.isShowOtherContent?'expectedTime':'' "
-                          v-show="showContent.isShowOtherContent">
-              <el-date-picker v-model="form.expectedTime" placeholder="请选择预计入库时间" format="yyyy-MM-dd"
-                              @change="changeExpectedTime">
-              </el-date-picker>
+            <el-form-item label="是否生效">
+              <el-switch v-model="form.availabilityStatus" on-text="是" off-text="否" on-color="#13ce66"
+                         off-color="#ff4949">
+              </el-switch>
             </el-form-item>
             <el-form-item label="备注">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
@@ -412,7 +432,7 @@
           </div>
 
           <oms-form-row label="" :span="4">
-            <el-button type="primary" @click="addProduct">加入订单</el-button>
+            <el-button type="primary" @click="addProduct">加入合同</el-button>
           </oms-form-row>
           <div class="product-list-detail">
             <h3 style="background: #13ce66;color: #fff">已选货品</h3>
@@ -434,15 +454,15 @@
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
                 </td>
-                <td class="ar">
+                <td>
                   <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
                   <span v-if="!Number(product.unitPrice)">-</span>
                 </td>
-                <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
+                <td>{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar">
+                <td>
                   <span v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney
                     }}</span>
                   <span v-if="!Number(product.unitPrice)">-</span>
@@ -475,7 +495,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, InWork } from '@/resources';
+  import {PurchaseContract, LogisticsCenter, http, Address, BaseInfo, InWork} from './../../../../resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -498,20 +518,6 @@
       orderId: String
     },
     data: function () {
-
-      let checkOrderNumber = (rule, value, callback) => {
-        if (value === '') {
-          callback();
-        } else {
-          let re = /^[^\u4e00-\u9fa5]{0,}$/;
-          if (!re.test(value)) {
-            callback(new Error('请输入正确的订单号'));
-          } else {
-            callback();
-          }
-        }
-      };
-
       return {
         loading: false,
         idNotify: true,
@@ -532,6 +538,9 @@
         searchProductList: [],
         filterProductList: [],
         form: {
+          'purchaseContractNo': '',
+          'purchaseContractName': '',
+          'availabilityStatus': true,
           'orgId': '',
           'customerId': '',
           'bizType': '0',
@@ -543,7 +552,6 @@
           'importedFlag': '',
           'orgRelation': '',
           'logisticsCentreId': '',
-          'thirdPartyNumber': '',
           'expectedTime': '',
           'detailDtoList': [],
           'supplierId': '',
@@ -551,13 +559,11 @@
           'pickUpAddress': ''
         },
         rules: {
-          orderNo: [
-            {required: true, message: '请输入货主订单编号', trigger: 'blur'},
-            {validator: checkOrderNumber}
+          purchaseContractName: [
+            {required: true, message: '请输入采购合同名称', trigger: 'blur'}
           ],
-          thirdPartyNumber: [
-            {required: true, message: '请输入来源订单编号', trigger: 'blur'},
-            {validator: checkOrderNumber}
+          purchaseContractNo: [
+            {required: true, message: '请输入采购合同编号', trigger: 'blur'}
           ],
           supplierId: [
             {required: true, message: '请选择供货厂商', trigger: 'change'}
@@ -659,7 +665,7 @@
           }
         });
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -694,7 +700,7 @@
       this.initForm();
     },
     methods: {
-      createOrderInfo () {
+      createOrderInfo() {
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
         if (!orgGoodsId) return;
@@ -734,9 +740,9 @@
 //          });
         });
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
-        InWork.queryOrderDetail(this.orderId).then(res => {
+        PurchaseContract.queryContractDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
           this.resetForm();
           this.isStorageData = true;
@@ -749,7 +755,7 @@
           });
         });
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
@@ -788,7 +794,7 @@
         this.index = value;
       },
       doClose: function () {
-        this.$emit('close');
+        this.$emit('right-close');
       },
       filterOrg: function (query) {// 过滤来源单位
         let orgId = this.form.orgId;
@@ -829,7 +835,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -941,7 +947,7 @@
           this.$notify({
             duration: 2000,
             title: '证照信息过期',
-            message: msg + '证照信息已过期,无法创建订单',
+            message: msg + '证照信息已过期,无法创建合同',
             type: 'error'
           });
         });
@@ -1015,7 +1021,7 @@
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
-      addProduct: function () {// 货品加入到订单
+      addProduct: function () {// 货品加入到合同
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,
@@ -1073,13 +1079,7 @@
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         this.searchProduct();
       },
-      editItem (item) {
-//        this.filterProductList = [];
-//        this.searchProductList = [];
-//        this.searchProductList.push({
-//          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
-//          list: []
-//        });
+      editItem(item) {
         this.filterProductList.push({
           orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []
@@ -1102,7 +1102,7 @@
           if (saveData.detailDtoList.length === 0) {
             this.$notify({
               duration: 2000,
-              message: '请添加订单产品',
+              message: '请添加合同产品',
               type: 'warning'
             });
             return false;
@@ -1116,46 +1116,46 @@
           this.doing = true;
           if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
           if (saveData.id) {
-            erpOrder.updateOrder(saveData.id, saveData).then(res => {
+            PurchaseContract.updateOrder(saveData.id, saveData).then(res => {
               this.resetForm();
               this.$notify({
                 duration: 2000,
-                message: '编辑采购订单成功',
+                message: '编辑采购合同成功',
                 type: 'success'
               });
               self.$emit('change');
               this.$nextTick(() => {
                 this.doing = false;
-                this.$emit('close');
+                this.$emit('right-close');
               });
             }).catch(error => {
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '编辑采购订单失败',
+                title: '编辑采购合同失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
             });
           } else {
-            erpOrder.save(saveData).then(res => {
+            PurchaseContract.save(saveData).then(res => {
               this.resetForm();
               this.$notify({
                 duration: 2000,
-                message: '新增采购订单成功',
+                message: '新增采购合同成功',
                 type: 'success'
               });
               self.$emit('change', res.data);
               window.localStorage.removeItem(this.saveKey);
               this.$nextTick(() => {
                 this.doing = false;
-                this.$emit('close');
+                this.$emit('right-close');
               });
             }).catch(error => {
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '新增采购订单失败',
+                title: '新增采购合同失败',
                 message: error.response.data.msg,
                 type: 'error'
               });

@@ -111,9 +111,9 @@
             <i class="iconfont icon-search"></i> 筛选查询
           </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <perm label="return-manager-add">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="iconfont icon-plus"></i> </a>添加
+            <perm label="purchasing-contract-add">
+                  <a href="#" class="btn-circle" @click.prevent=""><i
+                    class="iconfont icon-plus"></i> </a>添加
             </perm>
           </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
@@ -125,16 +125,8 @@
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="货主订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="物流方式" :span="6">
-                <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
-                  <el-option :value="item.key" :key="item.key" :label="item.label"
-                             v-for="item in transportationMeansList"></el-option>
-                </el-select>
+              <oms-form-row label="合同名称/编号" :span="8">
+                <oms-input type="text" v-model="searchCondition.keyWord" placeholder="请输入合同名称/编号"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
@@ -154,19 +146,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="预计出库时间" :span="8">
-                <el-col :span="24">
-                  <el-date-picker
-                    v-model="expectedTime"
-                    type="daterange"
-                    placeholder="请选择">
-                  </el-date-picker>
-                </el-col>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="4">
-              <oms-form-row label="" :span="3">
+            <el-col :span="6">
+              <oms-form-row label="" :span="6">
                 <el-button type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
@@ -178,7 +159,7 @@
 
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4' }"
+             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
@@ -187,12 +168,10 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="filters.state === '0' ? 5: 7">货主/订单号</el-col>
-          <el-col :span="filters.state === '0' ? 4: 5">业务类型</el-col>
-          <el-col :span="5">供货厂商</el-col>
-          <el-col :span="4">时间</el-col>
-          <el-col :span="3">状态</el-col>
-          <el-col :span="3" v-if="filters.state === '0'">操作</el-col>
+          <el-col :span="8">编号/合同名称</el-col>
+          <el-col :span="8">供货厂商</el-col>
+          <el-col :span="4">创建时间</el-col>
+          <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -207,41 +186,32 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
-               :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
+          <div class="order-list-item" v-for="item in orderList" @click.prevent="showContract(item)"
+               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.state === '0' ? 5: 7">
+              <el-col :span="8" class="pt10">
                 <div class="f-grey">
-                  {{item.orderNo }}
+                  {{item.no }}
                 </div>
                 <div>
-                  {{item.orgName }}
+                  {{item.name }}
                 </div>
               </el-col>
-              <el-col :span="filters.state === '0' ? 4: 5">
-                <div>
-                  <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
-                </div>
-              </el-col>
-              <el-col :span="5" class="pt10">
+              <el-col :span="8" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
-                <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
-                <div>预计出库：{{ item.expectedTime | date }}</div>
-              </el-col>
-              <el-col :span="3">
-                <div class="vertical-center">
-                  {{getOrderStatus(item)}}
+                <div>
+                  {{item.createTime | date }}
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state === '0' ">
-                <perm label="return-manager-edit">
-                  <span @click.stop.prevent="editOrder(item)">
+              <el-col :span="4" class="opera-btn">
+                <perm label="purchasing-contract-edit">
+                   <span @click.stop.prevent="editContract(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="iconfont icon-edit"></i></a>
-                  编辑
-                 </span>
+                    编辑
+                  </span>
                 </perm>
               </el-col>
             </el-row>
@@ -249,6 +219,7 @@
           </div>
         </div>
       </div>
+
     </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
@@ -257,64 +228,49 @@
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
-                class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
-      <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
-                 @close="resetRightBox"></show-form>
+    <page-right :show="showItemRight" class="specific-part-z-index" @right-close="resetRightBox"
+                :css="{'width':'1000px','padding':0}">
+      <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
+                :action="action"
+                @right-close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
-                @close="resetRightBox"></add-form>
-    </page-right>
-    <page-right :show="showPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <receipt @close="resetRightBox" :orderId="currentOrderId"></receipt>
+    <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
+                :css="{'width':'1000px','padding':0}">
+      <show-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
+                 :action="action"
+                 @right-close="resetRightBox"></show-form>
     </page-right>
   </div>
 </template>
 <script>
   import utils from '@/tools/utils';
-  import showForm from './show.order.out.vue';
-  import addForm from './form/outForm.vue';
-  import receipt from './receipt.vue';
-  import { Order, BaseInfo, erpOrder } from '@/resources';
+  import addForm from './form/InForm.vue';
+  import showForm from './form/showForm.vue';
+  import {Order, BaseInfo, PurchaseContract} from '@/resources';
 
   export default {
     components: {
-      showForm, addForm, receipt
+      addForm, showForm
     },
     data: function () {
       return {
         loadingData: true,
         showItemRight: false,
-        showPart: false,
         showDetail: false,
         showSearch: false,
         orderList: [],
         filters: {
-          type: 1,
-          state: '0',
-          searchType: 1,
-          orderNo: '',
-          logisticsProviderId: '',
-          expectedStartTime: '',
-          expectedEndTime: '',
-          bizType: '1',
-          transportationMeansId: '',
-          transactOrgId: '',
-          thirdPartyNumber: '',
-          deleteFlag: false
+          availabilityStatus: true
         },
         searchCondition: {
-          orderNo: '',
-          logisticsProviderId: '',
-          expectedStartTime: '',
-          expectedEndTime: '',
-          transportationMeansId: '',
-          transactOrgId: '',
-          thirdPartyNumber: ''
+          keyWord: '',
+          transactOrgId: ''
         },
         expectedTime: '',
-        orgType: utils.outReturnOrderType,
+        orgType: {
+          0: {'title': '正常', 'num': '', 'availabilityStatus': true},
+          1: {'title': '停用', 'num': '', 'availabilityStatus': false}
+        },
         activeStatus: 0,
         currentOrderId: '',
         orgList: [], // 来源单位列表
@@ -327,23 +283,27 @@
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
         user: {},
-        state: ''
+        state: '',
+        purchase: {}
       };
     },
-    mounted () {
+    mounted() {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
-      if (orderId && orderId !== 'list') {
-        this.currentOrderId = orderId;
-        this.showDetail = true;
+      if (orderId === 'add') {
+        this.add();
+        this.purchase = {
+          id: this.$route.query.id,
+          count: this.$route.query.count
+        };
       }
     },
     computed: {
       transportationMeansList: function () {
-        return this.$store.state.dict['outTransportMeans'];
+        return this.$store.state.dict['transportationMeans'];
       },
       bizInTypes: function () {
-        return this.$store.state.dict['bizOutType'];
+        return this.$store.state.dict['bizInType'];
       }
     },
     watch: {
@@ -355,9 +315,17 @@
       }
     },
     methods: {
-      showPartItem (item) {
+      editContract(item) {
+        this.action = 'edit';
         this.currentOrderId = item.id;
-        this.showPart = true;
+        this.showItemRight = true;
+        this.defaultIndex = 2;
+      },
+      showContract(item) {
+        this.action = 'watch';
+        this.currentOrderId = item.id;
+        this.showDetail = true;
+        this.defaultIndex = 2;
       },
       getOrderStatus: function (order) {
         let state = '';
@@ -372,35 +340,22 @@
         this.searchCondition.expectedStartTime = this.formatTime(this.expectedTime[0]);
         this.searchCondition.expectedEndTime = this.formatTime(this.expectedTime[1]);
         Object.assign(this.filters, this.searchCondition);
+        this.getOrderList(1);
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          orderNo: '',
-          logisticsProviderId: '',
-          expectedStartTime: '',
-          expectedEndTime: '',
-          transportationMeansId: '',
-          transactOrgId: '',
-          thirdPartyNumber: ''
+          keyWord: '',
+          transactOrgId: ''
         };
-        this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
-      },
-      editOrder (item) {
-        this.action = 'edit';
-        this.currentOrderId = item.id;
-        this.showItemRight = true;
-        this.defaultIndex = 2;
+        this.getOrderList(1);
       },
       resetRightBox: function () {
         this.showDetail = false;
         this.showItemRight = false;
         this.defaultIndex = 0;
         this.action = '';
-        this.showPart = false;
-        // this.getOrderList(this.pager.currentPage);
-        this.$router.push('/purchase/rejected/list');
       },
       add: function () {
         this.showItemRight = true;
@@ -428,9 +383,9 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         });
-        erpOrder.query(param).then(res => {
+        PurchaseContract.query(param).then(res => {
           this.orderList = res.data.list;
-//          this.pager.count = res.data.count;
+//            this.pager.count = res.data.count;
           if (this.orderList.length === this.pager.pageSize) {
             this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
           }
@@ -438,7 +393,7 @@
         });
         this.queryStatusNum(param);
       },
-      refreshOrder () {
+      refreshOrder() {
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
@@ -452,73 +407,22 @@
           this.orgList = res.data;
         });
       },
-      filterLogistics: function (query) {// 过滤物流提供方
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          this.searchCondition.logisticsProviderId = '';
-          this.logisticsList = [];
-          return;
-        }
-        BaseInfo.queryOrgByValidReation(orgId, {keyWord: query, relation: '3'}).then(res => {
-          this.logisticsList = res.data;
-        });
-      },
-      filterListColor: function (index) {// 过滤左边列表边角颜色
+      filterListColor: function (flag) {// 过滤左边列表边角颜色
         let status = -1;
-        for (let key in this.orgType) {
-          if (this.orgType[key].state === index) {
-            status = key;
-          }
+        if (flag) {
+          status = 0;
+        }
+        if (!flag) {
+          status = 1;
         }
         return status;
       },
-      orgChange: function () {
-        this.searchCondition.transactOrgId = '';
-        this.orgList = [];
-        this.filterOrg();
-        this.filterLogistics();
-      },
       queryStatusNum: function (params) {
-        erpOrder.queryStateNum(params).then(res => {
+        PurchaseContract.queryStateNum(params).then(res => {
           let data = res.data;
-          this.orgType[0].num = this.obtionStatusNum(data['out-pend-confirm']);
-          this.orgType[1].num = this.obtionStatusNum(data['out-pend-check']);
-          this.orgType[2].num = this.obtionStatusNum(data['out-pend-execute']);
-          this.orgType[3].num = this.obtionStatusNum(data['out-pov-receipt']);
-          this.orgType[4].num = this.obtionStatusNum(data['out-complete']);
-          this.orgType[5].num = this.obtionStatusNum(data['out-cancel']);
+          this.orgType[0].num = this.obtionStatusNum(data['invalid']);
+          this.orgType[1].num = this.obtionStatusNum(data['valid']);
         });
-      },
-      getTimeTitle: function (item) {
-        let title = '';
-        switch (item.transportationMeansId) {
-          case '0': {
-            title = '预计送货：';
-            if (item.bizType === '1') {
-              title = '预计出库：';
-            }
-            break;
-          }
-          case '1': {
-            title = '预计提货：';
-            break;
-          }
-          case '2': {
-            title = '预计发货：';
-            break;
-          }
-        }
-        if (item.bizType === '2') {
-          title = '';
-        }
-        return title;
-      },
-      isLock: function (item) { // 判断是不是被锁定
-        let isLock = false;
-        if (item.lockFlag && item.lockMan !== this.user.userId) {
-          isLock = true;
-        }
-        return isLock;
       },
       obtionStatusNum: function (num) {
         if (typeof num !== 'number') {
@@ -526,23 +430,9 @@
         }
         return num;
       },
-      remove: function (order) {
-        Order.delete(order.id).then(() => {
-          this.getOrderList();
-        });
-      },
-      showItem: function (order) {
-        this.currentOrderId = order.id;
-        this.state = order.state;
-        this.showDetail = true;
-        this.$router.push(`/purchase/rejected/${order.id}`);
-      },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;
-        this.filters.state = item.state;
-      },
-      advancedQuery: function () {
-        this.showSearch = !this.showSearch;
+        this.filters.availabilityStatus = item.availabilityStatus;
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';

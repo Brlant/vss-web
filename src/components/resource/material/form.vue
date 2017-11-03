@@ -225,7 +225,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">新增应付账单</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -236,14 +236,11 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="收款方" prop="povId">
-              <el-select placeholder="请选择收款方" v-model="form.remitteeId" filterable remote clearable
-                         @click.native="queryOrgs('')"
-                         :remote-method="queryOrgs">
-                <el-option :label="item.name" :value="item.id" :key="item.id"
-                           v-for="item in orgs">
-                </el-option>
-              </el-select>
+            <el-form-item label="物料名称" prop="name">
+              <oms-input v-model="form.name" placeholder="请输入物料名称"></oms-input>
+            </el-form-item>
+            <el-form-item label="选择物料描述" prop="parameters">
+              <oms-input v-model="form.parameters" placeholder="请输入物料描述"></oms-input>
             </el-form-item>
           </el-form>
         </div>
@@ -252,47 +249,76 @@
   </div>
 </template>
 <script>
-  import {BaseInfo, pay} from '@/resources';
+  import { material } from '@/resources';
 
   export default {
-    data() {
+    props: {
+      formItem: Object
+    },
+    data () {
       return {
         form: {
-          remitteeId: ''
+          name: '',
+          parameters: ''
         },
         rules: {
-          remitteeId: {required: true, message: '请选择收款方', trigger: 'change'}
+          name: {required: true, message: '请输入物料名称', trigger: 'blur'},
+          parameters: {required: true, message: '请输入物料描述', trigger: 'blur'}
         },
-        orgs: [] // 订单列表
+        doing: false,
+        title: '添加物料'
       };
     },
+    watch: {
+      formItem (val) {
+        if (val.id) {
+          Object.assign(this.form, val);
+          this.title = '编辑物料';
+        } else {
+          this.form = {
+            name: '',
+            parameters: ''
+          };
+          this.title = '添加物料';
+        }
+      }
+    },
     methods: {
-      queryOrgs(query) {
-        this.orgs = [];
-        let params = {
-          keyWord: query,
-          relation: '1'
-        };
-        BaseInfo.queryOrgByValidReation(this.$store.state.user.userCompanyAddress, params).then(res => {
-          this.orgs = res.data;
-        });
-      },
-      onSubmit() {
+      onSubmit () {
         this.$refs['d-form'].validate((valid) => {
-          if (!valid) {
+          if (!valid || this.doing) {
             return false;
           }
-          pay.save(this.form).then(() => {
-            this.$notify.success({
-              message: '收款方添加成功'
+          this.doing = true;
+          if (this.form.id) {
+            material.update(this.form.id, this.form).then(() => {
+              this.$notify.success({
+                message: '编辑物料成功'
+              });
+              this.$refs['d-form'].resetFields();
+              this.$emit('refresh');
+              this.doing = false;
+            }).catch(error => {
+              this.doing = false;
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '编辑物料失败'
+              });
             });
-            this.$refs['d-form'].resetFields();
-            this.$emit('refresh');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '收款方添加失败'
+          } else {
+            material.save(this.form).then(() => {
+              this.$notify.success({
+                message: '添加物料成功'
+              });
+              this.doing = false;
+              this.$refs['d-form'].resetFields();
+              this.$emit('refresh');
+            }).catch(error => {
+              this.doing = false;
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '添加物料失败'
+              });
             });
-          });
+          }
         });
       }
     }

@@ -248,7 +248,7 @@
                 <el-radio :label="2">二类疫苗</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="选择CDC" prop="cdcId">
+            <el-form-item label="CDC" prop="cdcId">
               <el-select placeholder="请选择CDC" v-model="form.cdcId" clearable>
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
@@ -273,7 +273,7 @@
           <el-form ref="orderGoodsForm" :rules="goodsRules" :model="product" @submit.prevent="onSubmit"
                    onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="选择疫苗" prop="orgGoodsId">
+            <el-form-item label="疫苗" prop="orgGoodsId">
               <el-select v-model="product.orgGoodsId" filterable placeholder="请输入关键字搜索产品" :clearable="true"
                          :loading="loading" popper-class="order-good-selects"
                          @change="getGoodDetail">
@@ -383,7 +383,7 @@
                   <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
                 <td class="goods-btn">
-                  <div v-show="index === 2">
+                  <div v-show="index === 2 || index === 3">
                     <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
                       class="iconfont icon-edit"></i> 编辑</a>
                   </div>
@@ -504,6 +504,8 @@
         this.currentList = [];
         if (val === 2) {
           this.editOrderInfo();
+        } else if (val === 3) {
+          this.addOrderInfo();
         } else {
           this.resetForm();
           this.form.id = null;
@@ -512,7 +514,6 @@
     },
     methods: {
       editOrderInfo () {
-
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
           return {
             amount: m.applyCount,
@@ -524,6 +525,25 @@
         });
         this.form = {
           id: this.currentOrder.id,
+          cdcId: this.currentOrder.cdcId,
+          demandTime: this.currentOrder.demandTime,
+          type: Number(this.currentOrder.vaccineSign),
+          warehouseId: this.currentOrder.warehouseId,
+          detailDtoList: orgDetailGoods
+        };
+//        this.form = JSON.parse(JSON.stringify(this.currentOrder));
+      },
+      addOrderInfo () {
+        let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
+          return {
+            amount: m.applyCount,
+            measurementUnit: m.unit,
+            orgGoodsId: m.orgGoodsId,
+            orgGoodsName: m.goodsName,
+            unitPrice: m.price
+          };
+        });
+        this.form = {
           cdcId: this.currentOrder.cdcId,
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.vaccineSign),
