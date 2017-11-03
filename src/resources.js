@@ -272,6 +272,9 @@ export const PurchaseContract = resource('/purchase-contract', http, {
   },
   batchCreateOrder(id) {// 批量生成采购订单
     return http.put(`/purchase-contract/${id}/batch/order`);
+  },
+  synchroContract(id) {// 同步采购合同
+    return http.put(`/purchase-contract/${id}/synchro`);
   }
 });
 
