@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui/lib/notification';
+import { Notification } from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -233,6 +233,9 @@ export const DictGroup = resource('/dictGroup', http, {
     });
   }
 });
+
+// 物料管理
+export const material = resource('/material', http, {});
 
 // erp订单
 export const vaccineBills = resource('/factory-reconciliation', http, {});

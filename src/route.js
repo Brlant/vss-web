@@ -208,7 +208,7 @@ const route = [
           {
             path: '/finance/supplier',
             component: resolve => require(['./components/finance/vaccine/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '疫苗厂商入库明细查询', perm: 'vaccine-vendor-reconciliation'}
+            meta: {moduleId: 'finance', title: '疫苗厂商入库明细', perm: 'vaccine-vendor-reconciliation'}
           },
           {
             path: '/finance/org',
@@ -315,6 +315,11 @@ const route = [
             path: '/logistics/cost',
             component: resolve => require(['./components/resource/logistics/cost.vue'], resolve),
             meta: {moduleId: 'resource', title: '物流费管理', perm: 'cerp-logistics-cost'}
+          },
+          {
+            path: '/resource/material',
+            component: resolve => require(['./components/resource/material/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '物料管理', perm: 'material-manager'}
           }
         ]
       }
