@@ -248,8 +248,13 @@
           </li>
           <div class="btn-submit-save">
             <perm label="purchasing-contract-add">
-              <div style="margin-bottom: 10px">
+              <div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">
                 <el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>
+              </div>
+            </perm>
+            <perm label="purchasing-contract-edit">
+              <div style="margin-bottom: 10px" v-if="form.purchaseContractIsUsed">
+                <el-button type="success" @click="synchroOrder" style="width: 150px">同步采购合同</el-button>
               </div>
             </perm>
             <div style="margin-bottom: 10px">
@@ -363,7 +368,7 @@
 
   export default {
     components: {Dict},
-    name: 'addForm',
+    name: 'showForm',
     loading: false,
     props: {
       type: {
@@ -472,7 +477,7 @@
         index: 0,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '添加货品', key: 1}
+          {name: '查看货品', key: 1}
         ],
         orgList: [],
         customerList: [],
@@ -951,8 +956,30 @@
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
         this.remove(item);
       },
+      synchroOrder: function () {
+        this.$confirm('确认对采购合同《' + this.form.purchaseContractName + '》进行同步信息操作?', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          PurchaseContract.synchroContract(this.orderId).then(() => {
+            this.$notify.success({
+              duration: 2000,
+              title: '成功',
+              message: '同步采购合同《' + this.form.purchaseContractName + '》的信息成功'
+            });
+            this.$emit('change', this.form);
+            this.$emit('right-close');
+          }).catch(error => {
+            this.$notify.error({
+              duration: 2000,
+              message: error.response.data && error.response.data.msg || '同步采购合同《' + this.form.purchaseContractName + '》的信息失败'
+            });
+          });
+        });
+      },
       createOrder: function () {
-        this.$confirm('确认按照采购合同《"' + this.form.purchaseContractName + '"》的信息批量生成采购订单?', '', {
+        this.$confirm('确认按照采购合同《' + this.form.purchaseContractName + '》的信息批量生成采购订单?', '', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'warning'
