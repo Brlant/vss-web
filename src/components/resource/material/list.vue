@@ -118,7 +118,8 @@
               </el-col>
             </el-row>
             <div v-else="" class="order-list-body flex-list-dom">
-              <div class="order-list-item order-list-item-bg" v-for="item in materials" :key="">
+              <div class="order-list-item order-list-item-bg" v-for="item in materials"
+                   :class="[{'active':currentId==item.id}]">
                 <el-row>
                   <el-col :span="6" class="R pt10">
                     <span>
@@ -186,7 +187,8 @@
           currentPage: 1,
           count: 0,
           pageSize: 15
-        }
+        },
+        currentId: ''
       };
     },
     mounted () {
@@ -226,6 +228,7 @@
         this.showPart = true;
       },
       edit (item) {
+        this.currentId = item.id;
         this.form = item;
         this.showPart = true;
       },
