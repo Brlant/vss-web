@@ -261,22 +261,7 @@
     watch: {
       filters: {
         handler: function () {
-          if (this.filters.orgId === '' && this.filters.batchNumber === '' && this.filters.goodsId === '') {
-            this.$notify.info({
-              title: '提示',
-              message: '请输入查询条件查询批号文件'
-            });
-            return;
-          } else {
-//            if (this.filters.batchNumber === '') {
-//              this.$notify.info({
-//                title: '提示',
-//                message: '请输入查询需要查询的批号'
-//              });
-//              return;
-//            }
             this.getBatcheNumbers();
-          }
         },
         deep: true
       }

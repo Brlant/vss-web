@@ -281,8 +281,8 @@
             <el-form-item label="供货厂商">
               {{form.supplierName}}
             </el-form-item>
-            <el-form-item label="物流商选择" v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              {{form.logisticsProviderName}}
+            <el-form-item label="物流商" v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
+              {{form.logisticsProviderId}}
             </el-form-item>
             <el-form-item label="提货地址" v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
               {{form.pickUpWarehouseName}}

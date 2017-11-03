@@ -264,9 +264,10 @@
     </header>
     <div class="main-nav" :style="'width:'+menuWidth">
       <div class="menu-wrap" :style="isCollapse?'':'overflow-y:auto;'">
-        <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="true">
+        <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="false"
+                 :default-openeds="defaultOpenMenus">
           <template v-for="item in menu">
-            <el-submenu :index="item.path" :key="menu.path" v-if="item.subMenu.length>0">
+            <el-submenu :index="item.path" :key="item.meta.moduleId" v-if="item.subMenu.length>0">
               <template slot="title">
                 <i :class="'iconfont icon-'+item.meta.icon"></i>
                 <span slot="title">{{item.meta.title}}</span>
@@ -275,7 +276,7 @@
                 {{child.meta.title}}
               </el-menu-item>
             </el-submenu>
-            <el-menu-item :index="item.path" v-else>
+            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else>
               <span v-if="item.path">
                   <i :class="'iconfont icon-'+item.meta.icon"></i>
                   <span slot="title">{{item.meta.title}}</span>
@@ -301,7 +302,7 @@
 </template>
 
 <script>
-  import { Auth, cerpAction } from '../../resources';
+  import {Auth, cerpAction} from '../../resources';
   import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';
@@ -311,7 +312,7 @@
       omsUploadPicture
     },
     props: ['toRoute', 'level'],
-    data () {
+    data() {
       return {
         activeId: this.getGroupId(),
         logo_pic: logo_pic,
@@ -323,7 +324,8 @@
           {color: '#fff', background: '#3f51b5', name: '工业蓝'},
           {color: '#fff', background: '#ff5722', name: '活跃橙'}
         ],
-        skin: {}
+        skin: {},
+        defaultOpenMenus: []
       };
     },
     computed: {
@@ -340,8 +342,7 @@
         menuArr.forEach(item => {
           item.children.forEach(i => {
             i.path = i.path.replace(/:id/, 'list');
-          });
-          item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
+          });item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
           }
         );
         return menuArr;
@@ -349,10 +350,10 @@
       activePath: function () {
         return this.$route.path;
       },
-      orgName () {
+      orgName() {
         return this.$store.state.orgName;
       },
-      weChatInfo () {
+      weChatInfo() {
         return this.$store.state.weChatInfo;
       }
     },
@@ -383,7 +384,7 @@
         window.localStorage.setItem('lastUrl', window.location.href);
         Auth.logout().then(() => {
           window.localStorage.setItem('userId', this.$store.state.user.userId);
-//          window.localStorage.removeItem('user');
+          //          window.localStorage.removeItem('user');
           return this.$router.replace('/login');
         });
       },
@@ -399,10 +400,10 @@
         this.skin = skin;
         window.localStorage.setItem('skin', JSON.stringify(skin));
       },
-      filterLevel (level) {
+      filterLevel(level) {
         return level === 1 ? '市CDC' : level === 2 ? '区CDC' : level === 3 ? 'POV' : '';
       },
-      unbind () {
+      unbind() {
         this.$confirm('是否解除绑定的微信？', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -432,12 +433,19 @@
       this.isCollapse = !!isCollapse;
       this.$store.commit('changeBodyLeft', this.isCollapse);
       /*
-      if (skin) {
-        this.skin = JSON.parse(skin);
-      } else {
-        this.skin = this.skinList[0];
-      }
-      */
+       if (skin) {
+       this.skin = JSON.parse(skin);
+       } else {
+       this.skin = this.skinList[0];
+       }
+       */
+      let defaultOpenMenus = [];
+      this.$route.matched.forEach(item => {
+        if (item.path) {
+          defaultOpenMenus.push(item.path);
+        }
+      });
+      this.defaultOpenMenus = defaultOpenMenus;
 
     }
   };
