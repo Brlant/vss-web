@@ -132,6 +132,7 @@
               <thead>
               <tr>
                 <th>订单号</th>
+                <th>货品名称</th>
                 <th>单据金额</th>
                 <th>实付金额</th>
                 <th>创建时间</th>
@@ -155,6 +156,9 @@
                   :class="{active:orderId === row.orderId}">
                 <td>
                   {{row.orderNo}}
+                </td>
+                <td width="150px">
+                  {{row.goodsName}}
                 </td>
                 <td>
                   <span v-show="row.billAmount">
