@@ -176,7 +176,7 @@
               </el-col>
               <el-col :span="4" class="R pt10">
                     <span>
-                      {{ item.amount }}
+                       ￥{{ item.amount | formatMoney}}
                     </span>
               </el-col>
               <el-col :span="2" class="R pt10">
@@ -224,7 +224,7 @@
     data () {
       return {
         loadingData: true,
-        showSearch: false,
+        showSearch: true,
         showPart: false,
         invoices: [],
         filters: {
@@ -275,6 +275,13 @@
           this.invoices = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+        });
+        this.queryCount(params);
+      },
+      queryCount (params) {
+        invoiceManage.queryCount(params).then(res => {
+          this.orgType[0].num = res.data['non-payment'];
+          this.orgType[1].num = res.data['paid'];
         });
       },
       filterOrg: function (query) {// 过滤供货商

@@ -221,13 +221,26 @@
   }
 
   .btn-submit-save {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    text-align: center;
-    padding: 15px;
+    margin-top: 150px;
+  }
+
+  .invoice-list {
+    margin-left: 30px;
+    .show-item {
+      border-bottom: 1px solid #f1f1f1;
+      line-height: 20px;
+      .el-row {
+        align-items: center;
+        .el-col {
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    }
+  }
+
+  .mb0 {
+    margin-bottom: 0;
   }
 </style>
 
@@ -235,45 +248,78 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">审核付款申请</h2>
-        <div class="btn-submit-save">
-          <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" type="warning" @click="audited" native-type="submit">审核通过
-            </el-button>
-          </div>
-          <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" type="warning" @click="notAudited" native-type="submit">
-              审核不通过
-            </el-button>
-          </div>
-        </div>
+        <h2 class="clearfix right-title">付款申请详情</h2>
       </div>
       <div class="content-right min-gutter">
-        <h3>审核付款作业申请</h3>
+        <h3>付款申请详情</h3>
         <div>
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="付款单据编号">
+            <el-form-item label="付款单据编号" class="mb0">
               {{form.no }}
             </el-form-item>
-            <el-form-item label="付款类型">
+            <el-form-item label="付款类型" class="mb0">
               {{billPayType(form.billPayType)}}
             </el-form-item>
-            <el-form-item label="付款单位">
+            <el-form-item label="付款单位" class="mb0">
               {{form.orgName }}
             </el-form-item>
-            <el-form-item label="付款方式">
+            <el-form-item label="付款方式" class="mb0">
               <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
             </el-form-item>
-            <el-form-item label="付款金额">
+            <el-form-item label="付款金额" class="mb0">
               ¥ {{form.amount | formatMoney}}
             </el-form-item>
-            <el-form-item label="付款说明">
+            <el-form-item label="付款说明" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="审批意见">
-              <oms-input type="textarea" v-model="form.auditOpinion" placeholder="请输入备注信息"
+            <el-form-item label="付款单位发票" labelWidth="126px" class="mb0">
+            </el-form-item>
+            <ul class="show-list invoice-list" v-show="form.invoiceList && form.invoiceList.length">
+              <li class="show-item" style="background: #f1f1f1">
+                <el-row type="flex">
+                  <el-col :span="12">发票号 </el-col>
+                  <el-col :span="12">金额 </el-col>
+                </el-row>
+              </li>
+              <li class="show-item" v-for="item in form.invoiceList">
+                <el-row type="flex">
+                  <el-col :span="12"> {{ item.invoiceNumber }}</el-col>
+                  <el-col :span="12"> ￥{{ item.amount | formatMoney}}</el-col>
+                </el-row>
+              </li>
+            </ul>
+            <el-form-item label="付款明细" class="mb0"></el-form-item>
+            <ul class="show-list invoice-list"
+                v-show="form.reconciliationDetailList && form.reconciliationDetailList.length">
+              <li class="show-item" style="background: #f1f1f1">
+                <el-row type="flex">
+                  <el-col :span="8">货品名称 </el-col>
+                  <el-col :span="6">订单号 </el-col>
+                  <el-col :span="5">金额 </el-col>
+                  <el-col :span="5">创建时间 </el-col>
+                </el-row>
+              </li>
+              <li class="show-item" v-for="item in form.reconciliationDetailList">
+                <el-row type="flex">
+                  <el-col :span="8">{{ item.goodsName }} </el-col>
+                  <el-col :span="6">{{ item.orderNo }} </el-col>
+                  <el-col :span="5"> ￥{{item.billAmount | formatMoney}} </el-col>
+                  <el-col :span="5">{{ item.createTime | date }} </el-col>
+                </el-row>
+              </li>
+            </ul>
+            <el-form-item label="审批意见" style="margin-top: 10px">
+              <oms-input v-if="form.status==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+              <span v-if="form.status!=='0'">{{ form.auditOpinion ? form.auditOpinion : '无' }}</span>
+            </el-form-item>
+            <el-form-item style="margin-top: 10px" v-if="form.status==='0'">
+              <el-button style="width: 100px" :plain="true" type="success" @click="audited" native-type="submit">审核通过
+              </el-button>
+              <el-button style="width: 100px" :plain="true" type="danger" @click="notAudited" native-type="submit">
+                审核不通过
+              </el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -285,16 +331,11 @@
 <script>
   import {http, Address, BaseInfo, pay, BillPayable} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
-
   export default {
     name: 'auditForm',
     loading: false,
     props: {
-      formItem: {
-        type: Object,
-        default: {},
-        required: true
-      },
+      detailId: '',
       action: {
         type: String,
         default: ''
@@ -303,7 +344,7 @@
     data: function () {
       return {
         loading: false,
-        form: this.formItem,
+        form: {},
         payableTotalAmount: '',
         practicalTotalAmount: '',
         notTotalAmount: '',
@@ -315,13 +356,19 @@
     },
     computed: {},
     watch: {
-      formItem: function (val) {
-        this.form = Object.assign({}, val);
+      detailId: function (val) {
+        if (!val) return;
+        this.queryDetail(val);
       }
     },
     mounted: function () {
     },
     methods: {
+      queryDetail (key) {
+        http.get(`/bill-payable/${key}`).then(res => {
+          this.form = res.data;
+        });
+      },
       billPayType: function (value) {
         let title = '';
         if (value === '0') {
