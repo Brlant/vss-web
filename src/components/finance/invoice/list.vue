@@ -176,7 +176,7 @@
               </el-col>
               <el-col :span="4" class="R pt10">
                     <span>
-                      {{ item.amount }}
+                       ￥{{ item.amount | formatMoney}}
                     </span>
               </el-col>
               <el-col :span="2" class="R pt10">

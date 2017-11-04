@@ -1,5 +1,6 @@
 <style lang="less" scoped>
   @import "../../../assets/mixins";
+
   .el-form .el-select {
     display: block;
   }
@@ -41,12 +42,6 @@
     margin: 20px 0;
   }
 
-  .tr-right {
-    cursor: pointer;
-    &:hover, &.active {
-      background: @dialog-left-bg;
-    }
-  }
 </style>
 <template>
   <div>
@@ -114,18 +109,38 @@
                 </oms-row>
               </el-row>
             </div>
-            <div style="overflow: hidden">
-              <span style="font-size: 14px" class="pull-left">【应付款明细】</span>
-              <span class="pull-right" style="margin-top: 8px">
-               <span class="btn-search-toggle open" v-show="showSearch">
-                  <single-input v-model="filterRights.keyWord" placeholder="请输入订单号搜索"
-                                :showFocus="showSearch"></single-input>
-                  <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
-               </span>
-               <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                  <i class="iconfont icon-search"></i>
-               </a>
-            </span>
+            <div>
+              <!--<span style="font-size: 14px" >【应付款明细】</span>-->
+              <el-row style="margin-top: 10px">
+                <el-col :span="9">
+                  <oms-form-row label="货品名称" :span="6">
+                    <oms-input v-model="searchCondition.goodsName"></oms-input>
+                  </oms-form-row>
+                </el-col>
+                <el-col :span="8">
+                  <oms-form-row label="创建时间" :span="8">
+                    <el-date-picker
+                      v-model="createTimes"
+                      type="daterange"
+                      placeholder="请选择" format="yyyy-MM-dd">
+                    </el-date-picker>
+                  </oms-form-row>
+                </el-col>
+                <el-col :span="7" class="text-right">
+                  <el-button type="primary" @click="searchInOrder">查询</el-button>
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                </el-col>
+              </el-row>
+              <!--<span class="pull-right" style="margin-top: 8px">-->
+              <!--<span class="btn-search-toggle open" v-show="showSearch">-->
+              <!--<single-input v-model="filterRights.keyWord" placeholder="请输入订单号搜索"-->
+              <!--:showFocus="showSearch"></single-input>-->
+              <!--<i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>-->
+              <!--</span>-->
+              <!--<a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">-->
+              <!--<i class="iconfont icon-search"></i>-->
+              <!--</a>-->
+              <!--</span>-->
             </div>
             <table class="table "
                    style="margin-top: 10px">
@@ -152,12 +167,12 @@
                   </div>
                 </td>
               </tr>
-              <tr v-else="" v-for="row in payDetails" @click="showDetail(row)" class="tr-right"
+              <tr v-else="" v-for="row in payDetails"
                   :class="{active:orderId === row.orderId}">
                 <td>
                   {{row.orderNo}}
                 </td>
-                <td width="150px">
+                <td width="180px">
                   {{row.goodsName}}
                 </td>
                 <td>
@@ -208,12 +223,14 @@
 
 </template>
 <script>
-  import { pay } from '@/resources';
+  import { pay, OrgGoods } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.in.vue';
   export default {
-    components: {addForm, leftForm, showDetail},
+    components: {
+      addForm, leftForm, showDetail
+    },
     data: function () {
       return {
         loadingData: false,
@@ -227,8 +244,16 @@
           keyWord: ''
         },
         filterRights: {
-          keyWord: ''
+          goodsName: '',
+          createStartTime: '',
+          createEndTime: ''
         },
+        searchCondition: {
+          goodsName: '',
+          createStartTime: '',
+          createEndTime: ''
+        },
+        createTimes: '',
         action: 'add',
         pager: {
           currentPage: 1,
@@ -247,7 +272,8 @@
         payDetails: [], // 疫苗列表
         index: 0,
         orderId: '',
-        currentDetail: {}
+        currentDetail: {},
+        orgGoods: []
       };
     },
     computed: {
@@ -347,6 +373,21 @@
           this.pager.count = res.data.count;
         });
       },
+      searchInOrder: function () {// 搜索
+        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
+        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
+        Object.assign(this.filterRights, this.searchCondition);
+      },
+      resetSearchForm: function () {// 重置表单
+        let temp = {
+          goodsName: '',
+          createStartTime: '',
+          createEndTime: ''
+        };
+        this.createTimes = '';
+        Object.assign(this.searchCondition, temp);
+        Object.assign(this.filterRights, temp);
+      },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
       },
@@ -368,6 +409,9 @@
       },
       onSubmit () {
         this.getOrgsList();
+      },
+      formatTime: function (date) {
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }
   };
