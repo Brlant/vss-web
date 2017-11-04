@@ -118,6 +118,10 @@
       margin-bottom: 10px;
     }
   }
+
+  .d-table-col-wrap {
+    overflow: auto;
+  }
 </style>
 <template>
   <div>
