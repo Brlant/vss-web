@@ -55,7 +55,7 @@
           <th width="30px">操作</th>
           <th style="width: 240px">货品名称</th>
           <th>订单号</th>
-          <th>单据金额</th>
+          <th>应付金额</th>
           <th>创建时间</th>
         </tr>
         </thead>
@@ -102,7 +102,7 @@
         <tr>
           <th style="width: 300px">货品名称</th>
           <th>订单号</th>
-          <th>单据金额</th>
+          <th>应付金额</th>
           <th>创建时间</th>
           <th>操作</th>
         </tr>

@@ -110,27 +110,22 @@
               </el-row>
             </div>
             <div>
-              <!--<span style="font-size: 14px" >【应付款明细】</span>-->
-              <el-row style="margin-top: 10px">
-                <el-col :span="9">
-                  <oms-form-row label="货品名称" :span="6">
-                    <oms-input v-model="searchCondition.goodsName"></oms-input>
-                  </oms-form-row>
-                </el-col>
-                <el-col :span="8">
-                  <oms-form-row label="创建时间" :span="8">
-                    <el-date-picker
-                      v-model="createTimes"
-                      type="daterange"
-                      placeholder="请选择" format="yyyy-MM-dd">
-                    </el-date-picker>
-                  </oms-form-row>
-                </el-col>
-                <el-col :span="7" class="text-right">
+              <el-form ref="payForm" :inline="true">
+                <el-form-item label="货品名称">
+                  <oms-input v-model="searchCondition.goodsName"></oms-input>
+                </el-form-item>
+                <el-form-item label="创建时间">
+                  <el-date-picker
+                    v-model="createTimes"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item>
                   <el-button type="primary" @click="searchInOrder">查询</el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                </el-col>
-              </el-row>
+                </el-form-item>
+              </el-form>
               <!--<span class="pull-right" style="margin-top: 8px">-->
               <!--<span class="btn-search-toggle open" v-show="showSearch">-->
               <!--<single-input v-model="filterRights.keyWord" placeholder="请输入订单号搜索"-->
@@ -148,7 +143,7 @@
               <tr>
                 <th>订单号</th>
                 <th>货品名称</th>
-                <th>单据金额</th>
+                <th>应付金额</th>
                 <th>实付金额</th>
                 <th>创建时间</th>
                 <th>状态</th>
