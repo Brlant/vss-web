@@ -224,7 +224,7 @@
     data () {
       return {
         loadingData: true,
-        showSearch: false,
+        showSearch: true,
         showPart: false,
         invoices: [],
         filters: {
