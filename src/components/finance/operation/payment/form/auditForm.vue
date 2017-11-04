@@ -249,17 +249,6 @@
     <div class="content-part">
       <div class="content-left">
         <h2 class="clearfix right-title">付款申请详情</h2>
-        <div class="btn-submit-save" v-if="form.status==='0'">
-          <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" :plain="true" type="success" @click="audited" native-type="submit">审核通过
-            </el-button>
-          </div>
-          <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" :plain="true" type="danger" @click="notAudited" native-type="submit">
-              审核不通过
-            </el-button>
-          </div>
-        </div>
       </div>
       <div class="content-right min-gutter">
         <h3>付款申请详情</h3>
@@ -284,7 +273,7 @@
             <el-form-item label="付款说明" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="付款单位发票" class="mb0">
+            <el-form-item label="付款单位发票" labelWidth="126px" class="mb0">
             </el-form-item>
             <ul class="show-list invoice-list" v-show="form.invoiceList && form.invoiceList.length">
               <li class="show-item" style="background: #f1f1f1">
@@ -321,8 +310,16 @@
               </li>
             </ul>
             <el-form-item label="审批意见" style="margin-top: 10px">
-              <oms-input type="textarea" v-model="form.auditOpinion" placeholder="请输入备注信息"
+              <oms-input v-if="form.status==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+              <span v-if="form.status!=='0'">{{ form.auditOpinion ? form.auditOpinion : '无' }}</span>
+            </el-form-item>
+            <el-form-item style="margin-top: 10px" v-if="form.status==='0'">
+              <el-button style="width: 100px" :plain="true" type="success" @click="audited" native-type="submit">审核通过
+              </el-button>
+              <el-button style="width: 100px" :plain="true" type="danger" @click="notAudited" native-type="submit">
+                审核不通过
+              </el-button>
             </el-form-item>
           </el-form>
         </div>

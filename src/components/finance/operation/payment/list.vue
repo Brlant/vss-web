@@ -258,14 +258,14 @@
                   <!--审核-->
                   <!--</span>-->
                   <!--</perm>-->
-                  <perm label="payment-payable-allotment">
-                    <span @click.stop="allotmentBill(item)" v-if="item.status==='1'">
-                        <a @click.pervent="" class="btn-circle btn-opera">
-                          <i class="iconfont icon-edit"></i>
-                        </a>
-                       分配
-                      </span>
-                  </perm>
+                  <!--<perm label="payment-payable-allotment">-->
+                  <!--<span @click.stop="allotmentBill(item)" v-if="item.status==='1'">-->
+                  <!--<a @click.pervent="" class="btn-circle btn-opera">-->
+                  <!--<i class="iconfont icon-edit"></i>-->
+                  <!--</a>-->
+                  <!--分配-->
+                  <!--</span>-->
+                  <!--</perm>-->
                 </div>
               </el-col>
             </el-row>
