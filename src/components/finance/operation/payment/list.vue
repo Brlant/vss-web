@@ -214,7 +214,8 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in billList"
-               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]">
+               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]"
+               @click.stop="showItem(item)">
             <el-row>
               <el-col :span="4">
                 <div>
@@ -249,14 +250,14 @@
               </el-col>
               <el-col :span="3" class="opera-btn">
                 <div>
-                  <perm label="payment-payable-audit">
-                    <span @click.stop="audit(item)" v-if="item.status==='0'">
-                        <a @click.pervent="" class="btn-circle btn-opera">
-                          <i class="iconfont icon-verify"></i>
-                        </a>
-                       审核
-                    </span>
-                  </perm>
+                  <!--<perm label="payment-payable-audit">-->
+                  <!--<span @click.stop="showItem(item)" v-if="item.status==='0'">-->
+                  <!--<a @click.pervent="" class="btn-circle btn-opera">-->
+                  <!--<i class="iconfont icon-verify"></i>-->
+                  <!--</a>-->
+                  <!--审核-->
+                  <!--</span>-->
+                  <!--</perm>-->
                   <perm label="payment-payable-allotment">
                     <span @click.stop="allotmentBill(item)" v-if="item.status==='1'">
                         <a @click.pervent="" class="btn-circle btn-opera">
@@ -280,9 +281,9 @@
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'750px','padding':0}"
+    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
-      <audit-form :formItem="billInfo" @change="onSubmit" @right-close="resetRightBox"></audit-form>
+      <audit-form :detailId="billInfo.id" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form @change="onSubmit" @right-close="resetRightBox"></add-form>
@@ -402,7 +403,7 @@
         this.showItemRight = true;
         this.defaultIndex = 1;
       },
-      audit: function (item) {
+      showItem: function (item) {
         this.showDetail = true;
         this.billInfo = item;
       },

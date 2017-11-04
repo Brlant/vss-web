@@ -352,7 +352,11 @@ export const Order = resource('/order', http, {
  *发票信息
  * @type {the}
  */
-export const invoiceManage = resource('/invoice/', http, {});
+export const invoiceManage = resource('/invoice/', http, {
+  queryCount (params) {
+    return http.get('/invoice/count', {params});
+  }
+});
 /**
  *
  * @type {the}

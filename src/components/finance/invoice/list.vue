@@ -276,6 +276,13 @@
           this.pager.count = res.data.count;
           this.loadingData = false;
         });
+        this.queryCount(params);
+      },
+      queryCount (params) {
+        invoiceManage.queryCount(params).then(res => {
+          this.orgType[0].num = res.data['non-payment'];
+          this.orgType[1].num = res.data['paid'];
+        });
       },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.$store.state.user.userCompanyAddress;
