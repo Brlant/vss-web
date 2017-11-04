@@ -194,11 +194,11 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="4">付款单据编号</el-col>
           <el-col :span="3">付款类型</el-col>
-          <el-col :span="3">付款单位</el-col>
+          <el-col :span="5">付款单位</el-col>
           <el-col :span="2">付款方式</el-col>
           <el-col :span="4">付款金额</el-col>
-          <el-col :span="5">付款说明</el-col>
-          <el-col :span="3">操作</el-col>
+          <el-col :span="6">付款说明</el-col>
+          <!--<el-col :span="3">操作</el-col>-->
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -227,7 +227,7 @@
                   {{billPayType(item.billPayType)}}
                 </div>
               </el-col>
-              <el-col :span="3" class="pt10">
+              <el-col :span="5" class="pt10">
                 <div class="f-grey">
                   {{item.orgNo }}
                 </div>
@@ -243,31 +243,31 @@
                   <span v-if="item.amount">¥</span> {{item.amount | formatMoney}}
                 </div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="6">
                 <div>
                   {{item.explain}}
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn">
-                <div>
-                  <!--<perm label="payment-payable-audit">-->
-                  <!--<span @click.stop="showItem(item)" v-if="item.status==='0'">-->
-                  <!--<a @click.pervent="" class="btn-circle btn-opera">-->
-                  <!--<i class="iconfont icon-verify"></i>-->
-                  <!--</a>-->
-                  <!--审核-->
-                  <!--</span>-->
-                  <!--</perm>-->
-                  <!--<perm label="payment-payable-allotment">-->
-                  <!--<span @click.stop="allotmentBill(item)" v-if="item.status==='1'">-->
-                  <!--<a @click.pervent="" class="btn-circle btn-opera">-->
-                  <!--<i class="iconfont icon-edit"></i>-->
-                  <!--</a>-->
-                  <!--分配-->
-                  <!--</span>-->
-                  <!--</perm>-->
-                </div>
-              </el-col>
+              <!--<el-col :span="3" class="opera-btn">-->
+              <!--<div>-->
+              <!--&lt;!&ndash;<perm label="payment-payable-audit">&ndash;&gt;-->
+              <!--&lt;!&ndash;<span @click.stop="showItem(item)" v-if="item.status==='0'">&ndash;&gt;-->
+              <!--&lt;!&ndash;<a @click.pervent="" class="btn-circle btn-opera">&ndash;&gt;-->
+              <!--&lt;!&ndash;<i class="iconfont icon-verify"></i>&ndash;&gt;-->
+              <!--&lt;!&ndash;</a>&ndash;&gt;-->
+              <!--&lt;!&ndash;审核&ndash;&gt;-->
+              <!--&lt;!&ndash;</span>&ndash;&gt;-->
+              <!--&lt;!&ndash;</perm>&ndash;&gt;-->
+              <!--&lt;!&ndash;<perm label="payment-payable-allotment">&ndash;&gt;-->
+              <!--&lt;!&ndash;<span @click.stop="allotmentBill(item)" v-if="item.status==='1'">&ndash;&gt;-->
+              <!--&lt;!&ndash;<a @click.pervent="" class="btn-circle btn-opera">&ndash;&gt;-->
+              <!--&lt;!&ndash;<i class="iconfont icon-edit"></i>&ndash;&gt;-->
+              <!--&lt;!&ndash;</a>&ndash;&gt;-->
+              <!--&lt;!&ndash;分配&ndash;&gt;-->
+              <!--&lt;!&ndash;</span>&ndash;&gt;-->
+              <!--&lt;!&ndash;</perm>&ndash;&gt;-->
+              <!--</div>-->
+              <!--</el-col>-->
             </el-row>
             <div class="order-list-item-bg"></div>
           </div>
