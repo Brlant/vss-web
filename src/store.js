@@ -16,7 +16,8 @@ const state = {
   bodySize: {left: '180px'},
   orgName: '',
   weChatInfo: {},
-  bodyHeight: 0
+  bodyHeight: 0,
+  orgLevel: ''
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -88,6 +89,9 @@ const mutations = {
   },
   setBodyHeight (state, data) {
     state.bodyHeight = data;
+  },
+  initOrgLevel (state, data) {
+    state.orgLevel = data;
   }
 };
 

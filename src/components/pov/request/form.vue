@@ -248,7 +248,7 @@
                 <el-radio :label="2">二类疫苗</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="选择CDC" prop="cdcId">
+            <el-form-item label="CDC" prop="cdcId">
               <el-select placeholder="请选择CDC" v-model="form.cdcId" clearable>
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
@@ -273,7 +273,7 @@
           <el-form ref="orderGoodsForm" :rules="goodsRules" :model="product" @submit.prevent="onSubmit"
                    onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="选择疫苗" prop="orgGoodsId">
+            <el-form-item label="疫苗" prop="orgGoodsId">
               <el-select v-model="product.orgGoodsId" filterable placeholder="请输入关键字搜索产品" :clearable="true"
                          :loading="loading" popper-class="order-good-selects"
                          @change="getGoodDetail">

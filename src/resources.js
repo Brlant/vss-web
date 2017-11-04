@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui/lib/notification';
+import { Notification } from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -234,6 +234,9 @@ export const DictGroup = resource('/dictGroup', http, {
   }
 });
 
+// 物料管理
+export const material = resource('/material', http, {});
+
 // erp订单
 export const vaccineBills = resource('/factory-reconciliation', http, {});
 
@@ -269,6 +272,9 @@ export const PurchaseContract = resource('/purchase-contract', http, {
   },
   batchCreateOrder(id) {// 批量生成采购订单
     return http.put(`/purchase-contract/${id}/batch/order`);
+  },
+  synchroContract(id) {// 同步采购合同
+    return http.put(`/purchase-contract/${id}/synchro`);
   }
 });
 
@@ -341,6 +347,14 @@ export const Order = resource('/order', http, {
     return http.get('/order/count/', {params});
   }
 });
+
+
+/**
+ *发票信息
+ * @type {the}
+ */
+export const invoiceManage = resource('/invoice/', http, {});
+
 
 /**
  *

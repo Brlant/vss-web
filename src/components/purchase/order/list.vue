@@ -358,7 +358,7 @@
     mounted () {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
-      if (orderId && orderId !== ':id' && orderId !== 'add') {
+      if (orderId && orderId !== 'list' && orderId !== 'add') {
         this.currentOrderId = orderId;
         this.showDetail = true;
       }
@@ -427,7 +427,7 @@
         this.defaultIndex = 0;
         this.action = '';
         // this.getOrderList(this.pager.currentPage);
-        this.$router.push('/purchase/order/:id');
+        this.$router.push('/purchase/order/list');
       },
       add: function () {
         this.showItemRight = true;

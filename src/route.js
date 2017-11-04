@@ -214,6 +214,11 @@ const route = [
             path: '/finance/org',
             component: resolve => require(['./components/finance/logistics/list.vue'], resolve),
             meta: {moduleId: 'finance', title: '物流厂商对账', perm: 'logistics-vendor-reconciliation'}
+          },
+          {
+            path: '/payment/invoice',
+            component: resolve => require(['./components/finance/invoice/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '厂商发票管理', perm: 'invoice-manager'}
           }
           // {
           //   path: '/finance/paying',
@@ -315,6 +320,11 @@ const route = [
             path: '/logistics/cost',
             component: resolve => require(['./components/resource/logistics/cost.vue'], resolve),
             meta: {moduleId: 'resource', title: '物流费管理', perm: 'cerp-logistics-cost'}
+          },
+          {
+            path: '/resource/material',
+            component: resolve => require(['./components/resource/material/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '物料管理', perm: 'supplies-manager'}
           }
         ]
       }

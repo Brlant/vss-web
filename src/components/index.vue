@@ -199,6 +199,7 @@
         cerpAction.queryLevel().then(res => {
           this.level = res.data;
           window.localStorage.setItem('logLevel', res.data);
+          this.$store.commit('initOrgLevel', res.data);
           this.isPermission = res.data === 0;
         });
       },

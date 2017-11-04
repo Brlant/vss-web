@@ -219,13 +219,19 @@
   .ar {
     text-align: right;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 
 <template>
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">新增应付账单</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -236,14 +242,38 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="收款方" prop="povId">
-              <el-select placeholder="请选择收款方" v-model="form.remitteeId" filterable remote clearable
-                         @click.native="queryOrgs('')"
-                         :remote-method="queryOrgs">
-                <el-option :label="item.name" :value="item.id" :key="item.id"
-                           v-for="item in orgs">
+            <el-form-item label="疫苗厂商" prop="factoryId">
+              <el-select filterable remote placeholder="请输入名称搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
+                         v-model="form.factoryId" popperClass="good-selects">
+                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                  <div style="overflow: hidden">
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    <span class="pull-right" style="color: #999">
+                     <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
+                    </span>
+                  </div>
+                  <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.manufacturerCode}}
+                  </span>
+                  </div>
                 </el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="发票号码" prop="invoiceNumber">
+              <oms-input v-model="form.invoiceNumber" placeholder="请输入发票号码"></oms-input>
+            </el-form-item>
+            <el-form-item label="发票类型" prop="type">
+              <el-select type="text" v-model="form.type" placeholder="请输入发票类型">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in invoiceTypes"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="发票金额" prop="amount">
+              <oms-input type="text" placeholder="请输入发票金额" v-model="form.amount" :min="0"
+                         @blur="formatAmount">
+                <template slot="prepend">¥</template>
+              </oms-input>
             </el-form-item>
           </el-form>
         </div>
@@ -252,47 +282,111 @@
   </div>
 </template>
 <script>
-  import {BaseInfo, pay} from '@/resources';
+  import { invoiceManage, BaseInfo } from '@/resources';
+  import utils from '@/tools/utils';
 
   export default {
-    data() {
+    props: {
+      formItem: Object
+    },
+    data () {
       return {
         form: {
-          remitteeId: ''
+          factoryId: '',
+          invoiceNumber: '',
+          type: '',
+          amount: '',
+          status: 0
         },
         rules: {
-          remitteeId: {required: true, message: '请选择收款方', trigger: 'change'}
+          factoryId: {required: true, message: '请选择疫苗厂商', trigger: 'change'},
+          invoiceNumber: {required: true, message: '请输入发票号码', trigger: 'blur'},
+          type: {required: true, message: '请选择发票类型', trigger: 'change'},
+          amount: {required: true, message: '请输入发票金额', trigger: 'blur'}
         },
-        orgs: [] // 订单列表
+        doing: false,
+        title: '添加发票',
+        orgList: []
       };
     },
+    watch: {
+      formItem (val) {
+        if (val.id) {
+          Object.assign(this.form, val);
+          this.title = '编辑发票';
+        } else {
+          this.form = {
+            factoryId: '',
+            invoiceNumber: '',
+            type: '',
+            amount: '',
+            status: 0
+          };
+          this.title = '添加发票';
+          this.$refs['d-form'].resetFields();
+        }
+      }
+    },
+    computed: {
+      invoiceTypes: function () {
+        return this.$store.state.dict['invoiceType'];
+      }
+    },
     methods: {
-      queryOrgs(query) {
-        this.orgs = [];
+      filterOrg: function (query) {// 过滤来源单位
+        let user = this.$store.state.user;
+        let orgId = user ? user.userCompanyAddress : '';
+        if (!orgId) {
+          this.orgList = [];
+          this.form.factoryId = '';
+          return;
+        }
         let params = {
           keyWord: query,
           relation: '1'
         };
-        BaseInfo.queryOrgByValidReation(this.$store.state.user.userCompanyAddress, params).then(res => {
-          this.orgs = res.data;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
-      onSubmit() {
+      formatAmount: function () {// 格式化单价，保留两位小数
+        this.form.amount = utils.autoformatDecimalPoint(this.form.amount);
+      },
+      onSubmit () {
         this.$refs['d-form'].validate((valid) => {
-          if (!valid) {
+          if (!valid || this.doing) {
             return false;
           }
-          pay.save(this.form).then(() => {
-            this.$notify.success({
-              message: '收款方添加成功'
+          this.doing = true;
+          if (this.form.id) {
+            invoiceManage.update(this.form.id, this.form).then(() => {
+              this.$notify.success({
+                message: '编辑发票成功'
+              });
+              this.$refs['d-form'].resetFields();
+              this.$emit('refresh');
+              this.doing = false;
+            }).catch(error => {
+              this.doing = false;
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '编辑发票失败'
+              });
             });
-            this.$refs['d-form'].resetFields();
-            this.$emit('refresh');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '收款方添加失败'
+          } else {
+            invoiceManage.save(this.form).then(() => {
+              this.$notify.success({
+                message: '添加发票成功'
+              });
+              this.doing = false;
+              this.$refs['d-form'].resetFields();
+              this.$emit('refresh');
+            }).catch(error => {
+              this.doing = false;
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '添加发票失败'
+              });
             });
-          });
+          }
         });
       }
     }

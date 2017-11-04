@@ -155,10 +155,11 @@
       },
       initFormValue: function () {
         this.selectOptions = [];
+        this.orgList = [];
         if (this.formItem.id) {
           this.orgList.push({
-            id: this.form.warehouseSourceFirm,
-            name: this.form.warehouseSourceFirmName
+            id: this.formItem.warehouseSourceFirm,
+            name: this.formItem.warehouseSourceFirmName
           });
           this.form = Object.assign({}, this.formItem);
           this.selectOptions.push(this.form.province);

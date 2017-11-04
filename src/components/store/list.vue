@@ -127,10 +127,9 @@
 
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="4">货主</el-col>
-          <el-col :span="4">生产厂商</el-col>
+          <el-col :span="6">货主货品名称</el-col>
+          <el-col :span="6">生产厂商</el-col>
           <el-col :span="3">批号</el-col>
-          <el-col :span="4">货主货品名称</el-col>
           <el-col :span="2">可用数量</el-col>
           <el-col :span="3">实际库存数量</el-col>
           <el-col :span="2">在途库存</el-col>
@@ -153,17 +152,14 @@
                :class="[{'active':currentItemId==item.id}]"
                @click.prevent="showDetail(item)">
             <el-row>
-              <el-col :span="4" class="pt">
-                <span>{{ item.orgName }}</span>
+              <el-col :span="6" class="pt">
+                <span>{{ item.goodsName }}</span>
               </el-col>
-              <el-col :span="4" class="pt">
+              <el-col :span="6" class="pt">
                 <span>{{ item.factoryName }}</span>
               </el-col>
               <el-col :span="3" class="pt">
                 <span>{{ item.batchNumber }}</span>
-              </el-col>
-              <el-col :span="4" class="pt">
-                <span>{{ item.goodsName }}</span>
               </el-col>
               <el-col :span="2" class="pt" align="center">
                 <span>{{ item.availableCount }}</span>
