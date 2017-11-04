@@ -218,7 +218,7 @@ const route = [
           {
             path: '/payment/invoice',
             component: resolve => require(['./components/finance/invoice/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '厂商发票管理', perm: 'payment-payable'}
+            meta: {moduleId: 'finance', title: '厂商发票管理', perm: 'invoice-manager'}
           }
           // {
           //   path: '/finance/paying',
@@ -324,7 +324,7 @@ const route = [
           {
             path: '/resource/material',
             component: resolve => require(['./components/resource/material/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '物料管理', perm: 'material-manager'}
+            meta: {moduleId: 'resource', title: '物料管理', perm: 'supplies-manager'}
           }
         ]
       }
