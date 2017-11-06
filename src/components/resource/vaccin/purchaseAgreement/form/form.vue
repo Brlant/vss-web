@@ -120,6 +120,7 @@
             unitPrice: '',
             amount: '',
             expireTime: '',
+            supplyCompanyId: '',
             availabilityStatus: true
           };
         }
@@ -140,6 +141,7 @@
           this.goodsList.forEach(val => {
             if (val.orgGoodsDto.id === item) {
               this.salesFirmName = val.orgGoodsDto.salesFirmName;
+              this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
             }
           });
         }

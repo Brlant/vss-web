@@ -294,7 +294,7 @@
               {{form.centreName}}
             </el-form-item>
             <el-form-item label="疾控仓库地址">
-              {{form.transportationAddressName}}
+              {{ getWarehouseAddress(form)}}
             </el-form-item>
             <el-form-item label="是否进口">
               {{form.importedFlag | formatStatus}}
@@ -569,6 +569,12 @@
       this.initForm();
     },
     methods: {
+      getWarehouseAddress: function (item) { // 得到仓库地址
+        if (!item.warehouseAddress) {
+          return '';
+        }
+        return utils.formatAddress(item.warehouseProvince, item.warehouseCity, item.warehouseRegion) + '/' + item.warehouseAddress;
+      },
       createOrderInfo() {
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
