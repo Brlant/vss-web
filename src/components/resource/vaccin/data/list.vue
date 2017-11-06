@@ -258,6 +258,7 @@
                 <el-col :span="12">
                   <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
                   <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
+                  <goods-row label="疫苗ID" :span="12">{{ data.goodsDto.id }}</goods-row>
                   <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>
                   <goods-row label="剂型" :span="12">
                     <dict :dict-group="'dosageForm'" :dict-key="data.goodsDto.dosageForm"></dict>
