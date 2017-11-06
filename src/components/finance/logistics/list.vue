@@ -179,7 +179,7 @@
                 {{ item.factoryName }}
               </el-col>
               <el-col :span="4" class="R pt10">
-                {{ item.purchaseCount }}
+                {{ item.receiptCount }}
               </el-col>
               <el-col :span="4" class="R pt10 ">
                 <span v-show="item.price">￥</span>{{ item.price | formatMoney}}
