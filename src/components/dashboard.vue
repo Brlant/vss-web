@@ -11,14 +11,21 @@
       background: @card-box-border-color*1.05;
     }
     .card-box-body {
-      padding: 5px 20px;
+      overflow-x: hidden;
+      padding: 0;
       background: #fff;
       .el-row {
         border-bottom: 1px solid @card-box-border-color;
-        padding-top: 8px;
-        padding-bottom: 6px;
+        padding-top: 5px;
+        padding-bottom: 4px;
         &:last-child {
           border-bottom: 0;
+        }
+      }
+      .list-item {
+        cursor: pointer;
+        &:hover {
+          background: #f5f5f5
         }
       }
     }
@@ -40,6 +47,7 @@
 
   .no-info {
     font-size: 12px;
+    padding: 10px 20px;
   }
 
   .exception-list {
@@ -56,7 +64,7 @@
           暂无异常订单
         </div>
         <el-row v-else="" v-for="(item, index) in orderList" :key="item.id" type="flex" :gutter="15"
-                class="exception-list" @click.native="$router.push(`/purchase/order/${item.id}`)">
+                class="list-item exception-list" @click.native="$router.push(`/purchase/order/${item.id}`)">
           <el-col :span="4">
             {{ item.createTime | date}}
           </el-col>
@@ -76,7 +84,9 @@
         <div v-if="!requirementList.length" class="no-info">
           暂无接种点要货需求单
         </div>
-        <el-row v-else="" v-for="(item, index) in requirementList" :key="item.id" type="flex" :gutter="15">
+        <el-row v-else="" class="list-item" v-for="(item, index) in requirementList" :key="item.id" type="flex"
+                :gutter="15"
+                @click.native="goUrl('http://www.baidu.com')">
           <el-col :span="4">
             {{ item.applyTime | date}}
           </el-col>
@@ -114,7 +124,7 @@
 
 </template>
 <script>
-  import { Order, pullSignal } from '@/resources';
+  import {Order, pullSignal} from '@/resources';
 
   export default {
     data: function () {
@@ -123,27 +133,27 @@
         requirementList: []
       };
     },
-    mounted () {
+    mounted() {
       if (this.level !== 3) {
         this.getOrderList();
       }
       this.getRequirementList();
     },
     computed: {
-      user () {
+      user() {
         return this.$store.state.user;
       },
-      level () {
+      level() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      user () {
+      user() {
         if (this.level !== 3) {
           this.getOrderList();
         }
       },
-      level () {
+      level() {
         this.getRequirementList();
       }
     },
@@ -174,6 +184,9 @@
         pullSignal.query(params).then(res => {
           this.requirementList = res.data.list;
         });
+      },
+      goUrl: function (url) {
+        this.$router.push({path: url});
       }
     }
   };
