@@ -238,11 +238,11 @@
         <h2 class="clearfix right-title">审核收款申请</h2>
         <div class="btn-submit-save">
           <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" type="warning" @click="audited" native-type="submit">审核通过
+            <el-button style="width: 100px" :plain="true" type="warning" @click="audited" native-type="submit">审核通过
             </el-button>
           </div>
           <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" type="warning" @click="notAudited" native-type="submit">
+            <el-button style="width: 100px" :plain="true" type="warning" @click="notAudited" native-type="submit">
               审核不通过
             </el-button>
           </div>
