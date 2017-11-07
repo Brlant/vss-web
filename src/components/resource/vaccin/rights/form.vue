@@ -374,7 +374,7 @@
           pageSize: -1
         });
         cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
+          this.orgList = res.data;
         });
       },
       filterMethod (query, item) {
