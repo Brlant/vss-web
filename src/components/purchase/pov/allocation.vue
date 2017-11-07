@@ -234,6 +234,7 @@
           this.$notify.success({
             message: '提交分配方案成功'
           });
+          this.$router.push('/sale/allocation');
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '提交分配方案失败'
