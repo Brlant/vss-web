@@ -255,6 +255,7 @@
                 :data="orgList"
                 filterable
                 :filter-method="filterMethod"
+                :titles="['未选POV', '已选POV']"
                 class="transfer-list"
               >
               </el-transfer>
