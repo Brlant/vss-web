@@ -235,7 +235,7 @@
         <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
           </li>
         </ul>
       </div>
@@ -310,7 +310,8 @@
         prices: [], // 货品列表
         title: '新增疫苗授权详情',
         orgList: [],
-        unitPrice: ''
+        unitPrice: '',
+        doing: false
       };
     },
     watch: {
@@ -386,6 +387,7 @@
               'povId': this.form.povId,
               'salePriceGroupId': this.form.salePriceGroupId
             };
+            this.doing = true;
             http.put('/vaccine-authorization', obj).then(() => {
               this.$notify.success({
                 message: '修改疫苗授权成功'
@@ -397,8 +399,10 @@
                 povList: [],
                 povId: ''
               };
+              this.doing = false;
               this.$emit('refresh');
             }).catch(error => {
+              this.doing = false;
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '修改疫苗授权失败'
               });
@@ -409,13 +413,16 @@
               'povList': this.form.povList,
               'groupId': this.form.salePriceGroupId
             };
+            this.doing = true;
             VaccineRights.batchSave(obj).then(() => {
               this.$notify.success({
                 message: '添加疫苗授权成功'
               });
               this.$refs['d-form'].resetFields();
               this.$emit('refresh');
+              this.doing = false;
             }).catch(error => {
+              this.doing = false;
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '添加疫苗授权失败'
               });

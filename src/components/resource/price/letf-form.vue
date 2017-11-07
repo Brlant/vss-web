@@ -228,7 +228,7 @@
         <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
           </li>
         </ul>
       </div>
@@ -296,7 +296,8 @@
           orgGoodsId: {required: true, message: '请选择CDC货品', trigger: 'change'}
         },
         goodses: [], // 货品列表
-        title: '新增价格组'
+        title: '新增价格组',
+        doing: false
       };
     },
     watch: {
@@ -340,6 +341,7 @@
           if (!valid) {
             return false;
           }
+          this.doing = true;
           if (this.form.id) {
             BriceGroup.update(this.form.id, this.form).then(() => {
               this.$notify.success({
@@ -347,7 +349,9 @@
               });
               this.$refs['d-form'].resetFields();
               this.$emit('refresh');
+              this.doing = false;
             }).catch(error => {
+              this.doing = false;
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '编辑价格组失败'
               });
@@ -359,7 +363,9 @@
               });
               this.$refs['d-form'].resetFields();
               this.$emit('refresh');
+              this.doing = false;
             }).catch(error => {
+              this.doing = false;
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '添加价格组失败'
               });
