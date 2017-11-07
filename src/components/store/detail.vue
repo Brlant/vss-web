@@ -111,7 +111,7 @@
       };
     },
     watch: {
-      id () {
+      currentItem () {
         this.queryStoreDetails();
       }
     },

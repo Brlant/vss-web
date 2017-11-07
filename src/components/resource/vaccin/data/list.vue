@@ -118,7 +118,7 @@
              v-for="(item,key) in vaccineType"
              @click="changeType(key,item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div class="status-title">{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="d-table">
@@ -258,6 +258,7 @@
                 <el-col :span="12">
                   <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
                   <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
+                  <goods-row label="疫苗ID" :span="12">{{ data.goodsDto.id }}</goods-row>
                   <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>
                   <goods-row label="剂型" :span="12">
                     <dict :dict-group="'dosageForm'" :dict-key="data.goodsDto.dosageForm"></dict>

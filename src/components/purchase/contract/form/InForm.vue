@@ -282,23 +282,6 @@
             <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
               <oms-input type="text" v-model="form.logisticsProviderId" placeholder="请输入物流商名称"></oms-input>
-              <!--<el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"-->
-              <!--:clearable="true"-->
-              <!--v-model="form.logisticsProviderId">-->
-              <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList">-->
-              <!--<div style="overflow: hidden">-->
-              <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
-              <!--<span class="pull-right" style="color: #999">-->
-              <!--<dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>-->
-              <!--</span>-->
-              <!--</div>-->
-              <!--<div style="overflow: hidden">-->
-              <!--<span class="select-other-info pull-left">-->
-              <!--<span>系统代码</span> {{org.manufacturerCode}}-->
-              <!--</span>-->
-              <!--</div>-->
-              <!--</el-option>-->
-              <!--</el-select>-->
             </el-form-item>
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "

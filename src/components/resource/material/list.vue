@@ -91,7 +91,7 @@
                     <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
                         <i class="iconfont icon-search"></i>
                     </a>
-                    <perm label="material-add">
+                    <perm label="supplies-add">
                         <a href="#" class="btn-circle" @click.stop.prevent="add">
                         <i class="iconfont icon-plus"></i>
                         </a>
@@ -139,11 +139,11 @@
                     </span>
                   </el-col>
                   <el-col :span="3" class="R pt10 btn-color">
-                    <perm label="material-update">
+                    <perm label="supplies-update">
                       <a href="#" @click.prevent="edit(item)"><i
                         class="iconfont icon-edit"></i>编辑</a>
                     </perm>
-                    <perm label="material-delete">
+                    <perm label="supplies-delete">
                       <a href="#" @click.prevent="deleteItem(item)"><i
                         class="iconfont icon-delete"></i> 删除</a>
                     </perm>

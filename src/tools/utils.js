@@ -57,9 +57,8 @@ export default {
   },
   paymentOperation: {
     0: {'title': '待审核', status: '0', num: ''},
-    1: {'title': '待分配', status: '1', num: ''},
-    2: {'title': '已完成', status: '2', num: ''},
-    3: {'title': '审核未通过', status: '3', num: ''}
+    1: {'title': '已完成', status: '1', num: ''},
+    2: {'title': '审核未通过', status: '2', num: ''}
   },
   priceGroupType: {
     0: {'title': '可用', availabilityStatus: true, num: ''},
@@ -80,6 +79,10 @@ export default {
   vaccineType: {
     0: {'title': '正常', status: '1', num: ''},
     1: {'title': '停用', status: '0', num: ''}
+  },
+  invoiceType: {
+    0: {'title': '未付款', status: 0, num: ''},
+    1: {'title': '已付款', status: 1, num: ''}
   },
   /**
    * 格式化地址，已省/市/区显示

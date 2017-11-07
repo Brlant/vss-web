@@ -317,7 +317,6 @@
         filters: {
           type: 0,
           state: '6',
-          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
@@ -329,6 +328,7 @@
           deleteFlag: false
         },
         searchCondition: {
+          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
@@ -409,6 +409,7 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
+          searchType: '',
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',

@@ -7,7 +7,7 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="物料数量" style="display: inline-block">
+    <el-form-item label="物料数量" style="display: inline-block" v-if="form.name">
       <oms-input type="number" v-model.number="form.count" :min="0">
       </oms-input>
     </el-form-item>

@@ -126,7 +126,7 @@
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.factoryId" popperClass="good-selects" style="width: 100%">
+                           v-model="searchCondition.supplyCompanyId" popperClass="good-selects" style="width: 100%">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -183,7 +183,7 @@
             <el-row>
               <el-col :span="6">
                 <div class="f-grey">
-                  {{item.orgGoodsId }}
+                  {{item.orgGoodsNo }}
                 </div>
                 <div>
                   {{item.orgGoodsName }}
@@ -191,7 +191,7 @@
               </el-col>
               <el-col :span="6">
                 <div>
-                  {{item.factoryName}}
+                  {{item.supplyCompanyName}}
                 </div>
               </el-col>
               <el-col :span="4" class="pt10">
@@ -264,7 +264,7 @@
         },
         searchCondition: {
           keyWord: '',
-          factoryId: ''
+          supplyCompanyId: ''
         },
         orgList: []
       };
@@ -314,7 +314,7 @@
       resetSearchForm: function () {// 重置表单
         let temp = {
           keyWord: '',
-          factoryId: ''
+          supplyCompanyId: ''
         };
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);

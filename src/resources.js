@@ -349,6 +349,15 @@ export const Order = resource('/order', http, {
 });
 
 /**
+ *发票信息
+ * @type {the}
+ */
+export const invoiceManage = resource('/invoice/', http, {
+  queryCount (params) {
+    return http.get('/invoice/count', {params});
+  }
+});
+/**
  *
  * @type {the}
  */
@@ -539,6 +548,9 @@ export const pay = resource('/accounts-payable', http, {
   },
   queryDetail(id, params) {
     return http.get(`/accounts-payable/${id}/detail`, {params});
+  },
+  queryDetailByfy (id, params) {
+    return http.get(`/accounts-payable/remittee/${id}/detail`, {params});
   },
   addDetail(id, obj) {
     return http.post(`/accounts-payable/${id}/detail`, obj);

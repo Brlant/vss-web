@@ -431,9 +431,8 @@
         BillReceivable.queryStateNum(params).then(res => {
           let data = res.data;
           this.orgType[0].num = this.obtionStatusNum(data['audit']);
-          this.orgType[1].num = this.obtionStatusNum(data['allocated']);
-          this.orgType[2].num = this.obtionStatusNum(data['complete']);
-          this.orgType[3].num = this.obtionStatusNum(data['notAudit']);
+          this.orgType[1].num = this.obtionStatusNum(data['complete']);
+          this.orgType[2].num = this.obtionStatusNum(data['notAudit']);
         });
       },
       obtionStatusNum: function (num) {

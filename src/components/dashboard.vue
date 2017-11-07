@@ -41,6 +41,10 @@
   .no-info {
     font-size: 12px;
   }
+
+  .exception-list {
+    cursor: pointer;
+  }
 </style>
 
 <template>
@@ -51,7 +55,8 @@
         <div v-if="!orderList.length" class="no-info">
           暂无异常订单
         </div>
-        <el-row v-else="" v-for="(item, index) in orderList" :key="item.id" type="flex" :gutter="15">
+        <el-row v-else="" v-for="(item, index) in orderList" :key="item.id" type="flex" :gutter="15"
+                class="exception-list" @click.native="$router.push(`/purchase/order/${item.id}`)">
           <el-col :span="4">
             {{ item.createTime | date}}
           </el-col>

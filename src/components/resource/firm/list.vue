@@ -118,6 +118,10 @@
       margin-bottom: 10px;
     }
   }
+
+  .d-table-col-wrap {
+    overflow: auto;
+  }
 </style>
 <template>
   <div>
@@ -128,7 +132,7 @@
              v-for="(item,key) in firmType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div class="status-title">{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="container d-table">
