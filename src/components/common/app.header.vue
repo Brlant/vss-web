@@ -265,7 +265,7 @@
     <div class="main-nav" :style="'width:'+menuWidth">
       <div class="menu-wrap" :style="isCollapse?'':'overflow-y:auto;'">
         <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="false"
-                 :default-openeds="defaultOpenMenus">
+                 :default-openeds="defaultOpenMenus" style="margin-bottom: 27px">
           <template v-for="item in menu">
             <el-submenu :index="item.path" :key="item.meta.moduleId" v-if="item.subMenu.length>0">
               <template slot="title">

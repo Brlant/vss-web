@@ -84,7 +84,7 @@
       pageSets () {
         let menu = [];
         menu.push({name: '订单详情', key: 0});
-        if (this.state === '3') {
+        if (this.state === '4') {
           menu.push({name: '收货详情', key: 1});
         }
         menu.push({name: '操作日志', key: 2});
