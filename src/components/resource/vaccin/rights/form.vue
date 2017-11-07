@@ -245,18 +245,18 @@
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="100px" style="padding-right: 20px">
             <el-form-item label="POV" v-if="!form.id">
-              <el-transfer
-                v-model="form.povList"
-                :props="{
+              <el-transfer v-loading="loading"
+                           v-model="form.povList"
+                           :props="{
                   key: 'subordinateId',
                   label: 'subordinateName'
                 }"
-                filter-placeholder="请输入名称搜索POV"
-                :data="orgList"
-                filterable
-                :filter-method="filterMethod"
-                :titles="['未选POV', '已选POV']"
-                class="transfer-list"
+                           filter-placeholder="请输入名称搜索POV"
+                           :data="orgList"
+                           filterable
+                           :filter-method="filterMethod"
+                           :titles="['未选POV', '已选POV']"
+                           class="transfer-list"
               >
               </el-transfer>
             </el-form-item>
@@ -311,7 +311,8 @@
         title: '新增疫苗授权详情',
         orgList: [],
         unitPrice: '',
-        doing: false
+        doing: false,
+        loading: false
       };
     },
     watch: {
@@ -373,8 +374,10 @@
           keyWord: query,
           pageSize: -1
         });
+        this.loading = true;
         cerpAction.queryAllPov(params).then(res => {
           this.orgList = res.data;
+          this.loading = false;
         });
       },
       filterMethod (query, item) {
