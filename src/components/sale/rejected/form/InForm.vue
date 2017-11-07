@@ -632,7 +632,8 @@
         cdcWarehouses: [],
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        amount: 0
       };
     },
     computed: {
@@ -717,6 +718,12 @@
       },
       changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+        if (this.product.amount > this.amount) {
+          this.$notify.warning({
+            duration: 2000,
+            message: '输入的产品数量大于库存数量'
+          });
+        }
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -730,6 +737,22 @@
           this.form.logisticsCentreId = this.form.logisticsCentreId
             ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
+      },
+      queryBatchNumers () { // 查询货品批次信息
+        if (!this.form.supplierId || !this.product.fixInfo.goodsId || !this.product.orgGoodsId) {
+          this.amount = 0;
+          return;
+        }
+        let params = {
+          goodsId: this.product.fixInfo.goodsId,
+          orgId: this.form.supplierId,
+          orgGoodsId: this.product.orgGoodsId
+        };
+        http.get('/erp-stock/valid/batch', {params}).then(res => {
+          res.data.forEach(f => {
+            this.amount += Number(f.count);
+          });
+        });
       },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
@@ -951,6 +974,7 @@
             },
             'unitPrice': null
           };
+          this.amount = 0;
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
           return;
@@ -971,6 +995,7 @@
           }
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+        this.queryBatchNumers();
       },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
@@ -979,6 +1004,13 @@
             message: '请先选择产品'
           });
           return false;
+        }
+        if (this.product.amount > this.amount) {
+          this.$notify.warning({
+            duration: 2000,
+            message: '输入的产品数量大于库存数量'
+          });
+          return;
         }
         let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;
