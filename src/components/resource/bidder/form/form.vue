@@ -5,7 +5,7 @@
 </style>
 <template>
   <div>
-    <h2 class="clearfix">{{title}}</h2>
+    <h2 class="clearfix">{{title}}中标疫苗</h2>
     <el-form ref="bidderForm" :model="form" label-width="100px" :rules="rules"
              @submit.prevent="onSubmit()" onsubmit="return false">
       <el-form-item label="疫苗" prop="goodsId">
@@ -16,6 +16,8 @@
                      :label="vaccine.name" v-for="vaccine in vaccineList">
             <div style="overflow: hidden">
               <span class="pull-left">{{vaccine.name}}</span>
+                <el-tag type="success" v-if="vaccine.propertyMap.firstVaccineSign==='1'">一类疫苗</el-tag>
+                <el-tag type="success" v-if="vaccine.propertyMap.firstVaccineSign==='2'">二类疫苗</el-tag>
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
