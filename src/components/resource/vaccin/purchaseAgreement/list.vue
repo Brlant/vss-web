@@ -183,7 +183,7 @@
             <el-row>
               <el-col :span="6">
                 <div class="f-grey">
-                  {{item.orgGoodsId }}
+                  {{item.orgGoodsNo }}
                 </div>
                 <div>
                   {{item.orgGoodsName }}
