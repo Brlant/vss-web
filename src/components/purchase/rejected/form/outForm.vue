@@ -1252,7 +1252,9 @@
           orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []
         });
-        this.product.orgGoodsId = item.orgGoodsId;
+        setTimeout(() => {
+          this.product.orgGoodsId = item.orgGoodsId;
+        }, 1000);
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
