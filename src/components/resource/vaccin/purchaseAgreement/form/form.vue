@@ -142,7 +142,7 @@
             if (val.orgGoodsDto.id === item) {
               this.salesFirmName = val.orgGoodsDto.salesFirmName;
               this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
-              this.form.unitPrice = utils.autoformatDecimalPoint(val.orgGoodsDto.procurementPrice);
+              this.form.unitPrice = utils.autoformatDecimalPoint(val.orgGoodsDto.procurementPrice.toString());
             }
           });
         }
