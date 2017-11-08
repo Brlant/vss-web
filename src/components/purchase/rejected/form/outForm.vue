@@ -673,7 +673,8 @@
         batchNumbers: [], // 货品批号列表
         selectBatchNumbers: [], // 已经选择的货品批号
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        requestTime: ''
       };
     },
     computed: {
@@ -965,7 +966,12 @@
         let params = {
           keyWord: query
         };
+        let rTime = Date.now();
+        this.requestTime = rTime;
         http.get(`purchase-agreement/${this.form.customerId}/valid/org-goods`, {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
@@ -1252,9 +1258,7 @@
           orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []
         });
-        setTimeout(() => {
-          this.product.orgGoodsId = item.orgGoodsId;
-        }, 1000);
+        this.product.orgGoodsId = item.orgGoodsId;
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;

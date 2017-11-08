@@ -623,7 +623,8 @@
         cdcWarehouses: [],
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        requestTime: ''
       };
     },
     computed: {
@@ -954,7 +955,12 @@
         let params = {
           keyWord: query
         };
+        let rTime = Date.now();
+        this.requestTime = rTime;
         http.get(`purchase-agreement/${this.form.supplierId}/valid/org-goods`, {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();

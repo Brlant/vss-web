@@ -633,7 +633,8 @@
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
-        amount: 0
+        amount: 0,
+        requestTime: ''
       };
     },
     computed: {
@@ -934,7 +935,12 @@
           povId: this.form.supplierId,
           keyWord: query
         };
+        let rTime = Date.now();
+        this.requestTime = rTime;
         http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
