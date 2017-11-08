@@ -688,7 +688,8 @@
         selectBatchNumbers: [], // 已经选择的货品批号
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
-        requestTime: ''
+        requestTime: '',
+        editItemProduct: {}
       };
     },
     computed: {
@@ -1012,6 +1013,7 @@
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
           this.batchNumbers = [];
+          this.editItemProduct = {};
           return;
         }
 
@@ -1059,7 +1061,7 @@
           orgGoodsId: this.product.orgGoodsId
         };
         http.get('/erp-stock/valid/batch', {params}).then(res => {
-          if (res.data.length) {
+          if (res.data.length || this.editItemProduct.batchNumberId) {
             res.data.forEach(f => {
               f.isChecked = false;
               f.productCount = '';
@@ -1072,8 +1074,32 @@
               lots: []
             });
             this.batchNumbers[0].lots = res.data || [];
+            if (this.editItemProduct.batchNumberId) {
+              this.changeBatchNumbers(this.batchNumbers[0].lots);
+            }
           }
         });
+      },
+      changeBatchNumbers (lots) {
+        if (!lots.length) {
+          lots.push({
+            id: this.editItemProduct.batchNumberId,
+            no: this.editItemProduct.no,
+            productCount: this.editItemProduct.amount,
+            count: this.editItemProduct.amount,
+            productionDate: this.editItemProduct.productionDate,
+            expirationDate: this.editItemProduct.expiryDate,
+            isChecked: true
+          });
+        } else {
+          lots.forEach(i => {
+            if (i.id === this.editItemProduct.batchNumberId) {
+              i.productCount = this.editItemProduct.amount;
+              i.count = i.count + this.editItemProduct.amount;
+              i.isChecked = true;
+            }
+          });
+        }
       },
       isChangeValue (item) {
         item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
@@ -1283,6 +1309,7 @@
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.editItemProduct = JSON.parse(JSON.stringify(item));
         this.remove(item);
       },
       onSubmit: function () {// 提交表单
