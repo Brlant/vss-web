@@ -196,7 +196,7 @@
               </el-col>
               <el-col :span="4" class="pt10">
                 <div>
-                  <span v-if="item.unitPrice">￥</span>{{item.unitPrice}}
+                  <span v-if="item.unitPrice">￥</span>{{item.unitPrice | formatMoney}}
                 </div>
               </el-col>
               <el-col :span="4">

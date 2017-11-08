@@ -249,7 +249,7 @@
               <el-col :span="3">
                 <div class="vertical-center">
                   {{getOrderStatus(item)}}
-                  <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
+                  <el-tag type="danger" v-show="item.exceptionFlag">异常({{ item.exceptionCount}})</el-tag>
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn" v-if="filters.state === '6' ">
@@ -448,6 +448,7 @@
         this.queryStatusNum(param);
       },
       refreshOrder () {
+        this.currentOrderId = '';
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商

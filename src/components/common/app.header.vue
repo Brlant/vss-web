@@ -276,15 +276,13 @@
                 {{child.meta.title}}
               </el-menu-item>
             </el-submenu>
-            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else>
-              <span v-if="item.path">
-                  <i :class="'iconfont icon-'+item.meta.icon"></i>
-                  <span slot="title">{{item.meta.title}}</span>
-              </span>
-              <span v-if="!item.path" @click="$router.push('/')">
-                  <i :class="'iconfont icon-'+item.meta.icon"></i>
-                  <span slot="title">{{item.meta.title}}</span>
-              </span>
+            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else-if="item.path">
+              <i :class="'iconfont icon-'+item.meta.icon"></i>
+              <span slot="title">{{item.meta.title}}</span>
+            </el-menu-item>
+            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else="!item.path" @click="$router.push('/')">
+              <i :class="'iconfont icon-'+item.meta.icon"></i>
+              <span slot="title">{{item.meta.title}}</span>
             </el-menu-item>
           </template>
         </el-menu>

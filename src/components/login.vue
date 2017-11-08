@@ -86,11 +86,13 @@
       });
     },
     methods: {
-      done() {
+      done () {
         this.$refs['loginForm'].validate((valid) => {
           if (valid) {
             this.btnString = '登陆中..';
             this.loading = true;
+            this.user.orgCode = this.trim(this.user.orgCode);
+            this.user.username = this.trim(this.user.username);
             Auth.login(this.user).then(response => {
               let userId = window.localStorage.getItem('userId');
               this.$store.commit('initUser', response.data);
@@ -130,6 +132,9 @@
       },
       isFocusIndex () {
         this.isFocus = !this.user.orgCode ? 1 : !this.user.username ? 2 : !this.user.password ? 3 : '';
+      },
+      trim: function (str) {
+        return str.replace(/(^\s*)|(\s*$)/g, '');
       },
       queryWeChat () {
         cerpAction.queryWeChatInfo().then(res => {

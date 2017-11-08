@@ -240,7 +240,7 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存订单</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存订单</el-button>
           </li>
         </ul>
       </div>
@@ -673,7 +673,9 @@
         batchNumbers: [], // 货品批号列表
         selectBatchNumbers: [], // 已经选择的货品批号
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        requestTime: '',
+        editItemProduct: {}
       };
     },
     computed: {
@@ -965,7 +967,12 @@
         let params = {
           keyWord: query
         };
+        let rTime = Date.now();
+        this.requestTime = rTime;
         http.get(`purchase-agreement/${this.form.customerId}/valid/org-goods`, {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
@@ -990,6 +997,7 @@
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
           this.batchNumbers = [];
+          this.editItemProduct = {};
           return;
         }
 
@@ -1038,7 +1046,7 @@
           orgGoodsId: this.product.orgGoodsId
         };
         http.get('/erp-stock/valid/batch', {params}).then(res => {
-          if (res.data.length) {
+          if (res.data.length || this.editItemProduct.batchNumberId) {
             res.data.forEach(f => {
               f.isChecked = false;
               f.productCount = '';
@@ -1051,8 +1059,32 @@
               lots: []
             });
             this.batchNumbers[0].lots = res.data || [];
+            if (this.editItemProduct.batchNumberId) {
+              this.changeBatchNumbers(this.batchNumbers[0].lots);
+            }
           }
         });
+      },
+      changeBatchNumbers (lots) {
+        if (!lots.length) {
+          lots.push({
+            id: this.editItemProduct.batchNumberId,
+            no: this.editItemProduct.no,
+            productCount: this.editItemProduct.amount,
+            count: this.editItemProduct.amount,
+            productionDate: this.editItemProduct.productionDate,
+            expirationDate: this.editItemProduct.expiryDate,
+            isChecked: true
+          });
+        } else {
+          lots.forEach(i => {
+            if (i.id === this.editItemProduct.batchNumberId) {
+              i.productCount = this.editItemProduct.amount;
+              i.count = i.count + this.editItemProduct.amount;
+              i.isChecked = true;
+            }
+          });
+        }
       },
       isChangeValue (item) {
         item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
@@ -1256,6 +1288,7 @@
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.editItemProduct = JSON.parse(JSON.stringify(item));
         this.remove(item);
       },
       onSubmit: function () {// 提交表单

@@ -69,7 +69,7 @@
           </div>
         </div>
         <div class="btn-submit-save">
-          <el-button type="primary" @click="onSubmit">保存</el-button>
+          <el-button type="primary" @click="onSubmit" :disabled="doing">保存</el-button>
         </div>
       </div>
       <div class="content-right content-padding">
