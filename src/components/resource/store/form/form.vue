@@ -55,7 +55,7 @@
       <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949" v-model="form.default"></el-switch>
     </el-form-item>
     <el-form-item label-width="120px">
-      <el-button type="primary" @click="onSubmit('storeform')">保存</el-button>
+      <el-button type="primary" @click="onSubmit('storeform')" :disabled="doing">保存</el-button>
       <el-button @click="doClose">取消</el-button>
     </el-form-item>
   </el-form>

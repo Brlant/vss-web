@@ -61,7 +61,7 @@
                    v-model="form.availabilityStatus"></el-switch>
       </el-form-item>
       <el-form-item label-width="100px">
-        <el-button type="primary" @click="onSubmit('bidderForm')" native-type="submit">保存</el-button>
+        <el-button type="primary" @click="onSubmit('bidderForm')" native-type="submit" :disabled="doing">保存</el-button>
         <el-button @click="doClose">取消</el-button>
       </el-form-item>
     </el-form>

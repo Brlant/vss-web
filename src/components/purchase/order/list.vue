@@ -478,6 +478,7 @@
         this.queryStatusNum(param);
       },
       refreshOrder () {
+        this.currentOrderId = '';
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商

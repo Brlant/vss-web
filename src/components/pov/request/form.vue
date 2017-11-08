@@ -234,7 +234,7 @@
         <h2 class="clearfix right-title" style="font-size: 16px">新增要货申请单</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存申请单</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存申请单</el-button>
           </li>
         </ul>
       </div>
