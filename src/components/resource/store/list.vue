@@ -168,7 +168,7 @@
         let warehouseType = '';
         if (this.data.warehouseType === '0') {
           warehouseType = '物流公司仓库';
-        } else {
+        } else if ((this.data.warehouseType === '1')) {
           warehouseType = '本地仓库';
         }
         return warehouseType;
