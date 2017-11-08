@@ -147,7 +147,7 @@
                     {{currentOrder.auditTime| date}}
                   </oms-row>
                   <oms-row label="关联CDC销售订单">
-                    {{currentOrder.orderId}}
+                    {{currentOrder.orderNo}}
                   </oms-row>
                   <oms-row label="需求单状态">
                     {{ formatStatus(currentOrder.status)}}

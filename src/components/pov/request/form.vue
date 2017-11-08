@@ -474,7 +474,8 @@
 
         },
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        requestTime: ''
       };
     },
     computed: {
@@ -567,7 +568,12 @@
       searchProduct: function () {
         this.searchProductList = [];
         if (!this.form.cdcId) return;
+        let rTime = Date.now();
+        this.requestTime = rTime;
         VaccineRights.queryVaccineByPov(this.$store.state.user.userCompanyAddress, {cdcId: this.form.cdcId}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data;
           this.$nextTick(function () {
             this.filterProducts();
