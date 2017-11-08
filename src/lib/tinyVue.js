@@ -63,8 +63,8 @@ import CollapseItem from 'element-ui/lib/collapse-item';
 import Cascader from 'element-ui/lib/cascader';
 import ColorPicker from 'element-ui/lib/color-picker';
 import Transfer from 'element-ui/lib/transfer';
-import locale from 'element-ui/src/locale';
-import CollapseTransition from 'element-ui/src/transitions/collapse-transition';
+import locale from 'element-ui/lib/locale';
+import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 
 import remove from '../components/common/remove.vue';
 import forbid from '../components/common/forbid.vue';
