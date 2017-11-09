@@ -68,17 +68,17 @@
                 <el-select filterable remote placeholder="请输入关键字搜索货主货品" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects">
-                  <el-option :value="org.orgGoodsDto.id" :key="org.orgGoodsDto.id" :label="org.orgGoodsDto.name"
+                  <el-option :value="org.id" :key="org.id" :label="org.goodsName"
                              v-for="org in orgGoods">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{org.orgGoodsDto.name}}</span>
+                      <span class="pull-left">{{org.goodsName}}</span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.orgGoodsDto.goodsNo">货品编号</span>  {{org.orgGoodsDto.goodsNo}}
+                        v-show="org.goodsNo">货品编号</span>  {{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.orgGoodsDto.salesFirmName">供货厂商</span>  {{ org.orgGoodsDto.salesFirmName }}
+                        v-show="org.saleFirmName">供货厂商</span>  {{ org.saleFirmName }}
                       </span>
                     </div>
                   </el-option>
@@ -195,7 +195,7 @@
 </template>
 <script>
   //  import order from '../../../tools/orderList';
-  import { BaseInfo, OrgGoods, erpStock } from '@/resources';
+  import { BaseInfo, OrgGoods, erpStock, http } from '@/resources';
   import detail from './detail.vue';
   export default {
     components: {detail},
@@ -291,7 +291,7 @@
           orgId: orgId,
           keyWord: query
         });
-        OrgGoods.query(params).then(res => {
+        http.get('/erp-stock/goods', {params}).then(res => {
           this.orgGoods = res.data.list;
         });
       },
