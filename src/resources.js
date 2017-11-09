@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui/lib/notification';
+import {Notification} from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -354,8 +354,6 @@ export const Order = resource('/order', http, {
  * @type {the}
  */
 export const invoiceManage = resource('/invoice/', http, {});
-
-
 /**
  *
  * @type {the}

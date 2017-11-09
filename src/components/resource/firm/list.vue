@@ -334,7 +334,7 @@
               <div v-show="businessRelationItem.followOrg.licenses.length>0">
                 <el-row style="margin-bottom: 0">
                   <el-col :span="3" class="text-right">
-                    <h3>客户证照</h3>
+                    <h3>单位证照</h3>
                   </el-col>
                 </el-row>
                 <div class="base-pic-list">
