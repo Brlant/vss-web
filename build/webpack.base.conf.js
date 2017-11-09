@@ -1,19 +1,19 @@
-var path = require('path')
-var utils = require('./utils')
-var config = require('../config')
-var vueLoaderConfig = require('./vue-loader.conf')
+var path = require('path');
+var utils = require('./utils');
+var config = require('../config');
+var vueLoaderConfig = require('./vue-loader.conf');
 const webpack = require('webpack');
 var os = require('os');
 var HappyPack = require('happypack');
 var happyThreadPool = HappyPack.ThreadPool({size: os.cpus().length});
 
-function resolve (dir) {
-  return path.join(__dirname, '..', dir)
+function resolve(dir) {
+  return path.join(__dirname, '..', dir);
 }
 
 module.exports = {
   entry: {
-    app:  ["babel-polyfill", './src/main.js']
+    app: ['babel-polyfill', './src/main.js']
   },
   output: {
     path: config.build.assetsRoot,
@@ -92,7 +92,7 @@ module.exports = {
       minChunks: (module, count) => (
         count >= 2    // 当一个模块被重复引用2次或以上的时候单独打包起来。
       )
-    }),
-  ],
-}
+    })
+  ]
+};
 

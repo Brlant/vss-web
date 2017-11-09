@@ -5,14 +5,16 @@
     width: 550px;
     padding: 30px;
     &.pr-animation {
-      transition: 0.2s transform ease-in-out;
-      transform: translateX(100%);
+      /*transition: 0.2s transform ease-in-out;*/
+      /*transform: translateX(100%);*/
+      display: none;
     }
     &.pr-no-animation {
       display: none;
     }
     &.on {
       &.pr-animation {
+        display: block;
         transform: translateX(0);
       }
       &.pr-no-animation {

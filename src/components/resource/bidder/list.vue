@@ -89,9 +89,9 @@
     width: 90px;
   }
 
-  .order-list-item {
-    cursor: pointer;
-  }
+  /*.order-list-item {*/
+  /*cursor: pointer;*/
+  /*}*/
 
   .pt10 {
     padding-top: 10px;

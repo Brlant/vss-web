@@ -293,7 +293,6 @@
         filters: {
           type: 1,
           state: '0',
-          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
@@ -305,6 +304,7 @@
           deleteFlag: false
         },
         searchCondition: {
+          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
@@ -375,6 +375,7 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
+          searchType: '',
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
@@ -439,6 +440,7 @@
         this.queryStatusNum(param);
       },
       refreshOrder () {
+        this.currentOrderId = '';
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商

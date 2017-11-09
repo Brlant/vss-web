@@ -258,7 +258,7 @@
               <el-col :span="3">
                 <div>
                   {{getOrderStatus(item)}}
-                  <el-tag type="danger" v-show="item.exceptionFlag">异常</el-tag>
+                  <el-tag type="danger" v-show="item.exceptionFlag">异常({{ item.exceptionCount}})</el-tag>
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn" v-if="filters.state === '6' ">
@@ -317,7 +317,6 @@
         filters: {
           type: 0,
           state: '6',
-          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
@@ -329,6 +328,7 @@
           deleteFlag: false
         },
         searchCondition: {
+          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
@@ -409,6 +409,7 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
+          searchType: '',
           orderNo: '',
           logisticsProviderId: '',
           expectedStartTime: '',
@@ -477,6 +478,7 @@
         this.queryStatusNum(param);
       },
       refreshOrder () {
+        this.currentOrderId = '';
         this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商

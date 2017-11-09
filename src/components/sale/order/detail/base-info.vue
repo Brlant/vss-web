@@ -86,7 +86,7 @@
             </el-select>
           </el-form-item>
           <material-part @changeRemark="changeRemark"></material-part>
-          <el-form-item label="备注" prop="remark">
+          <el-form-item label="备注">
             <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </el-form-item>

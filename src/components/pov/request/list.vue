@@ -31,17 +31,19 @@
       width: 100%;
     }
   }
+
   .oms-row {
     font-size: 14px;
     margin-bottom: 10px;
   }
+
   .content-body {
     margin: 20px 0;
   }
 </style>
 <template>
   <div>
-    <div class="container" >
+    <div class="container">
       <div class="order-list-status container">
         <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
              v-for="(item,key) in requestType" @click="checkStatus(item, key)">
@@ -130,7 +132,7 @@
                     {{currentOrder.applyTime | date}}
                   </oms-row>
                   <oms-row label="需求时间">
-                    {{currentOrder.demandTime| date}}
+                    {{currentOrder.demandTime | date}}
                   </oms-row>
                   <oms-row label="POV仓库">
                     {{currentOrder.warehouseName}}
@@ -144,10 +146,10 @@
                     {{currentOrder.auditManName}}
                   </oms-row>
                   <oms-row label="审批时间">
-                    {{currentOrder.auditTime| date}}
+                    {{currentOrder.auditTime | date}}
                   </oms-row>
                   <oms-row label="关联CDC销售订单">
-                    {{currentOrder.orderId}}
+                    {{currentOrder.orderNo}}
                   </oms-row>
                   <oms-row label="需求单状态">
                     {{ formatStatus(currentOrder.status)}}
@@ -156,7 +158,8 @@
               </el-row>
             </div>
             <span style="font-size: 14px">【要货明细】</span>
-            <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}" style="margin-top: 10px">
+            <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}"
+                   style="margin-top: 10px">
               <thead>
               <tr>
                 <th style="width: 300px">货品名称</th>
@@ -207,6 +210,7 @@
   import utils from '../../../tools/utils';
   import { pullSignal } from '@/resources';
   import addForm from './form.vue';
+
   export default {
     components: {addForm},
     data: function () {
@@ -296,7 +300,13 @@
             this.showTypeList = res.data.list;
           }
           if (this.showTypeList.length !== 0) {
-            this.currentItem = res.data.list[0];
+            if (this.$route.query.id) {
+              let ary = this.showTypeList.filter(f => f.id === this.$route.query.id);
+              this.currentItem = ary.length ? ary[0] : res.data.list[0];
+              this.$router.push('/pov/request');
+            } else {
+              this.currentItem = res.data.list[0];
+            }
             this.getDetail();
           } else {
             this.currentItem = Object.assign({'id': ''});

@@ -107,7 +107,7 @@
               </el-row>
               <div v-else="" class="order-list-body flex-list-dom">
                 <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
-                     :class="[{'active':currentItemId==item.id}]">
+                     :class="[{'active':currentItemId==item.id}]" style="max-height: 500px;overflow-y: auto">
                   <el-row>
                     <el-col :span="10" class="R pt">
                       <span>{{ item.povName }}</span>

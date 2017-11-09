@@ -107,33 +107,49 @@
           <div v-else="" class="d-table-col-wrap">
             <div class="content-body clearfix">
               <el-row>
-                <oms-row label="POV" :span="5">
-                  {{currentItem.payerName}}
+                <oms-row label="收款方" :span="5">
+                  {{currentItem.remitteeName}}
                 </oms-row>
-                <oms-row label="应收款总额" :span="5">
+                <oms-row label="应付款总额" :span="5">
                   <span v-show="currentItem.payableTotal">￥{{currentItem.payableTotal | formatMoney}}</span>
                 </oms-row>
               </el-row>
             </div>
-            <div style="overflow: hidden">
-              <span style="font-size: 14px" class="pull-left">【应收款明细】</span>
-              <span class="pull-right" style="margin-top: 8px">
-               <span class="btn-search-toggle open" v-show="showSearch">
-                  <single-input v-model="filterRights.keyWord" placeholder="请输入订单号搜索"
-                                :showFocus="showSearch"></single-input>
-                  <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
-               </span>
-               <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                  <i class="iconfont icon-search"></i>
-               </a>
-            </span>
+            <div>
+              <el-form ref="payForm" :inline="true">
+                <el-form-item label="货品名称">
+                  <oms-input v-model="searchCondition.goodsName"></oms-input>
+                </el-form-item>
+                <el-form-item label="创建时间">
+                  <el-date-picker
+                    v-model="createTimes"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" @click="searchInOrder">查询</el-button>
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                </el-form-item>
+              </el-form>
+              <!--<span class="pull-right" style="margin-top: 8px">-->
+              <!--<span class="btn-search-toggle open" v-show="showSearch">-->
+              <!--<single-input v-model="filterRights.keyWord" placeholder="请输入订单号搜索"-->
+              <!--:showFocus="showSearch"></single-input>-->
+              <!--<i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>-->
+              <!--</span>-->
+              <!--<a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">-->
+              <!--<i class="iconfont icon-search"></i>-->
+              <!--</a>-->
+              <!--</span>-->
             </div>
-            <table class="table"
+            <table class="table "
                    style="margin-top: 10px">
               <thead>
               <tr>
                 <th>订单号</th>
-                <th>单据金额</th>
+                <th>货品名称</th>
+                <th>应收金额</th>
                 <th>实收金额</th>
                 <th>创建时间</th>
                 <th>状态</th>
@@ -152,19 +168,22 @@
                   </div>
                 </td>
               </tr>
-              <tr v-else="" v-for="row in receiptDetails" @click="showDetail(row)" class="tr-right"
+              <tr v-else="" v-for="row in receiptDetails"
                   :class="{active:orderId === row.orderId}">
                 <td>
                   {{row.orderNo}}
                 </td>
+                <td width="180px">
+                  {{row.goodsName}}
+                </td>
                 <td>
-                    <span v-show="row.billAmount">
+                  <span v-show="row.billAmount">
                     ￥{{row.billAmount | formatMoney}}
                   </span>
                 </td>
                 <td>
                   <span v-show="row.prepaidAccounts">
-                    <span v-show="row.prepaidAccounts"> ￥{{row.prepaidAccounts}}</span>
+                    ￥{{row.prepaidAccounts | formatMoney}}
                   </span>
                 </td>
                 <td>
@@ -225,8 +244,16 @@
           keyWord: ''
         },
         filterRights: {
-          keyWord: ''
+          goodsName: '',
+          createStartTime: '',
+          createEndTime: ''
         },
+        searchCondition: {
+          goodsName: '',
+          createStartTime: '',
+          createEndTime: ''
+        },
+        createTimes: '',
         action: 'add',
         pager: {
           currentPage: 1,
@@ -283,9 +310,9 @@
         if (status) {
           let title = '';
           if (status === '0') {
-            title = '未付清';
+            title = '未收款';
           } else if (status === '1') {
-            title = '已付清';
+            title = '已收款';
           }
           return title;
         }
@@ -345,6 +372,21 @@
           this.pager.count = res.data.count;
         });
       },
+      searchInOrder: function () {// 搜索
+        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
+        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
+        Object.assign(this.filterRights, this.searchCondition);
+      },
+      resetSearchForm: function () {// 重置表单
+        let temp = {
+          goodsName: '',
+          createStartTime: '',
+          createEndTime: ''
+        };
+        this.createTimes = '';
+        Object.assign(this.searchCondition, temp);
+        Object.assign(this.filterRights, temp);
+      },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
       },
@@ -372,6 +414,9 @@
       edit (row) {
         this.form = row;
         this.showRight = true;
+      },
+      formatTime: function (date) {
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       onSubmit () {
         this.getOrgsList();

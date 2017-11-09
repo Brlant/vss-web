@@ -92,6 +92,7 @@
         padding: 0 20px;
         display: block;
       }
+
     }
 
     .min-gutter {
@@ -102,6 +103,7 @@
         font-size: 12px
       }
     }
+
   }
 
   .el-form .el-select {
@@ -113,6 +115,27 @@
     > tbody > tr > td, > thead > tr > th {
       padding: 5px;
     }
+  }
+
+  .list-style {
+    cursor: pointer;
+    padding: 10px;
+    text-align: center;
+    span {
+      display: inline-block;
+      padding: 8px 35px;
+    }
+    &.active {
+      span {
+        background-color: @activeColor;
+        border-radius: 20px;
+        color: @activeColorFont
+      }
+    }
+    &:hover {
+      background: #dee9eb
+    }
+
   }
 
   .order-product-box {
@@ -227,6 +250,9 @@
       <div class="content-left">
         <h2 class="clearfix right-title">新增付款申请</h2>
         <ul>
+          <li class="list-style" v-for="item in productListSet" @click="index = item.key"
+              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
+          </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
           </li>
@@ -235,7 +261,7 @@
       <div class="content-right min-gutter">
         <h3>新增付款作业申请</h3>
 
-        <div>
+        <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
             <el-form-item label="付款类型" prop="billPayType">
@@ -247,7 +273,8 @@
             <el-form-item label="疫苗厂商" prop="orgId" v-if="form.billPayType==='0'">
               <el-select filterable remote placeholder="请输入关键字搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" @change="setAccountsPayableId">
-                <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName" v-for="org in orgList">
+                <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
+                           v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.remitteeName}}</span>
                     <span class="pull-right" style="color: #999">
@@ -279,14 +306,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="应付总金额" v-if="form.orgId">
-              ¥ {{payableTotalAmount | formatMoney }}
-            </el-form-item>
-            <el-form-item label="实付总金额" v-if="form.orgId">
-              ¥ {{practicalTotalAmount | formatMoney }}
-            </el-form-item>
-            <el-form-item label="未付总金额" v-if="form.orgId">
-              ¥ {{notTotalAmount | formatMoney }}
+            <el-form-item label="厂商发票" v-show="form.orgId" prop="invoiceIdList">
+              <invoice-part :factoryId="form.orgId" @changeAmount="changeAmount"></invoice-part>
             </el-form-item>
             <el-form-item label="付款方式" prop="payType">
               <el-select placeholder="请选择付款方式" v-model="form.payType">
@@ -294,7 +315,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="金额" prop="amount">
-              <oms-input type="text" v-model="form.amount" @blur="formatPrice" placeholder="请输入金额,最多保留两位小数">
+              <oms-input type="text" v-model="form.amount" @blur="formatPrice" placeholder="请输入金额,最多保留两位小数" disabled>
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
@@ -304,16 +325,19 @@
             </el-form-item>
           </el-form>
         </div>
-
+        <div class="hide-content" v-bind:class="{'show-content' : index==1}">
+          <pay-detail :selectPayments="selectPayments" :factoryId="form.orgId"></pay-detail>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import {http, Address, BaseInfo, pay, BillPayable} from '../../../../../resources';
+  import { http, Address, BaseInfo, pay, BillPayable } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
-
+  import payDetail from './payDetail.vue';
+  import invoicePart from './invoice.vue';
   export default {
     name: 'addForm',
     loading: false,
@@ -330,6 +354,10 @@
         type: String,
         default: ''
       }
+    },
+    components: {
+      payDetail,
+      invoicePart
     },
     data: function () {
       let checkAmount = (rule, value, callback) => {
@@ -352,7 +380,9 @@
           explain: '',
           amount: '',
           billPayType: '',
-          accountsPayableId: ''
+          accountsPayableId: '',
+          invoiceIdList: [],
+          reconciliationIdList: []
         },
         payableTotalAmount: '',
         practicalTotalAmount: '',
@@ -367,6 +397,9 @@
           supplierId: [
             {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
+          invoiceIdList: [
+            {required: true, type: 'array', message: '请选择厂商发票', trigger: 'change'}
+          ],
           amount: [
             {required: true, message: '请输入金额', trigger: 'blur'},
             {validator: checkAmount, trigger: 'blur'}
@@ -374,7 +407,13 @@
         },
         orgList: [],
         logisticsList: [],
-        doing: false
+        doing: false,
+        productListSet: [
+          {name: '基本信息', key: 0},
+          {name: '添加付款明细', key: 1}
+        ],
+        index: 0,
+        selectPayments: []
       };
     },
     computed: {
@@ -420,7 +459,8 @@
         }
       }
     },
-    mounted: function () {},
+    mounted: function () {
+    },
     methods: {
       setAccountsPayableId: function () {
         if (this.form.orgId) {
@@ -444,6 +484,8 @@
       },
       changeBillPayType: function () {
         this.form.orgId = '';
+        this.form.invoiceIdList = [];
+        this.form.reconciliationIdList = [];
         this.orgList = [];
         this.logisticsList = [];
         if (this.form.billPayType === '0') {
@@ -453,6 +495,10 @@
           this.filterLogistics();
         }
       },
+      changeAmount (invoiceIds, amount) {
+        this.form.invoiceIdList = invoiceIds;
+        this.form.amount = amount.toString();
+      },
       resetForm: function () {// 重置表单
         this.$refs['addForm'].resetFields();
         this.payableTotalAmount = '';
@@ -461,7 +507,7 @@
         this.orgList = [];
         this.logisticsList = [];
       },
-      formatPrice() {// 格式化单价，保留两位小数
+      formatPrice () {// 格式化单价，保留两位小数
         this.form.amount = utils.autoformatDecimalPoint(this.form.amount);
       },
       doClose: function () {
@@ -509,26 +555,11 @@
             return false;
           }
         }
-        if (this.notTotalAmount === 0) {
-          this.$notify({
-            duration: 2000,
-            message: '该笔订单已经付清,无需进行付款作业',
-            type: 'warning'
-          });
-          return false;
-        }
-        if (this.form.amount > this.notTotalAmount) {
-          this.$notify({
-            duration: 2000,
-            message: '输入的金额必须小于等于未付款总金额',
-            type: 'warning'
-          });
-          return false;
-        }
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.doing = true;
           }
+          this.form.reconciliationIdList = this.selectPayments.map(m => m.id);
           BillPayable.save(this.form).then(res => {
             this.resetForm();
             this.$notify({

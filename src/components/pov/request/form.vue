@@ -234,7 +234,7 @@
         <h2 class="clearfix right-title" style="font-size: 16px">新增要货申请单</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存申请单</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存申请单</el-button>
           </li>
         </ul>
       </div>
@@ -474,7 +474,9 @@
 
         },
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        requestTime: '',
+        doing: false
       };
     },
     computed: {
@@ -567,7 +569,12 @@
       searchProduct: function () {
         this.searchProductList = [];
         if (!this.form.cdcId) return;
+        let rTime = Date.now();
+        this.requestTime = rTime;
         VaccineRights.queryVaccineByPov(this.$store.state.user.userCompanyAddress, {cdcId: this.form.cdcId}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data;
           this.$nextTick(function () {
             this.filterProducts();

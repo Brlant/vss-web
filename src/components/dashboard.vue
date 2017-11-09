@@ -11,14 +11,21 @@
       background: @card-box-border-color*1.05;
     }
     .card-box-body {
-      padding: 5px 20px;
+      overflow-x: hidden;
+      padding: 0;
       background: #fff;
       .el-row {
         border-bottom: 1px solid @card-box-border-color;
-        padding-top: 8px;
-        padding-bottom: 6px;
+        padding-top: 5px;
+        padding-bottom: 4px;
         &:last-child {
           border-bottom: 0;
+        }
+      }
+      .list-item {
+        cursor: pointer;
+        &:hover {
+          background: #f5f5f5
         }
       }
     }
@@ -40,6 +47,11 @@
 
   .no-info {
     font-size: 12px;
+    padding: 10px 20px;
+  }
+
+  .exception-list {
+    cursor: pointer;
   }
 </style>
 
@@ -51,7 +63,8 @@
         <div v-if="!orderList.length" class="no-info">
           暂无异常订单
         </div>
-        <el-row v-else="" v-for="(item, index) in orderList" :key="item.id" type="flex" :gutter="15">
+        <el-row v-else="" v-for="(item, index) in orderList" :key="item.id" type="flex" :gutter="15"
+                class="list-item exception-list" @click.native="$router.push(`/purchase/order/${item.id}`)">
           <el-col :span="4">
             {{ item.createTime | date}}
           </el-col>
@@ -71,7 +84,9 @@
         <div v-if="!requirementList.length" class="no-info">
           暂无接种点要货需求单
         </div>
-        <el-row v-else="" v-for="(item, index) in requirementList" :key="item.id" type="flex" :gutter="15">
+        <el-row v-else="" class="list-item" v-for="(item, index) in requirementList" :key="item.id" type="flex"
+                :gutter="15"
+                @click.native="goUrl(item)">
           <el-col :span="4">
             {{ item.applyTime | date}}
           </el-col>
@@ -169,6 +184,13 @@
         pullSignal.query(params).then(res => {
           this.requirementList = res.data.list;
         });
+      },
+      goUrl: function (item) {
+        if (this.level === 3) {
+          this.$router.push({path: '/pov/request', query: {id: item.id}});
+        } else {
+          this.$router.push({path: '/sale/pov', query: {id: item.id}});
+        }
       }
     }
   };

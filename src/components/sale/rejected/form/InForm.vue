@@ -244,7 +244,7 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存订单</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存订单</el-button>
           </li>
         </ul>
       </div>
@@ -632,7 +632,9 @@
         cdcWarehouses: [],
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        amount: 0,
+        requestTime: ''
       };
     },
     computed: {
@@ -717,6 +719,12 @@
       },
       changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+        if (this.product.amount > this.amount) {
+          this.$notify.warning({
+            duration: 2000,
+            message: '输入的产品数量大于库存数量'
+          });
+        }
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -730,6 +738,22 @@
           this.form.logisticsCentreId = this.form.logisticsCentreId
             ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
+      },
+      queryBatchNumers () { // 查询货品批次信息
+        if (!this.form.supplierId || !this.product.fixInfo.goodsId || !this.product.orgGoodsId) {
+          this.amount = 0;
+          return;
+        }
+        let params = {
+          goodsId: this.product.fixInfo.goodsId,
+          orgId: this.form.supplierId,
+          orgGoodsId: this.product.orgGoodsId
+        };
+        http.get('/erp-stock/valid/batch', {params}).then(res => {
+          res.data.forEach(f => {
+            this.amount += Number(f.count);
+          });
+        });
       },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
@@ -911,7 +935,12 @@
           povId: this.form.supplierId,
           keyWord: query
         };
+        let rTime = Date.now();
+        this.requestTime = rTime;
         http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
@@ -951,6 +980,7 @@
             },
             'unitPrice': null
           };
+          this.amount = 0;
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
           return;
@@ -971,6 +1001,7 @@
           }
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+        this.queryBatchNumers();
       },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
@@ -979,6 +1010,13 @@
             message: '请先选择产品'
           });
           return false;
+        }
+        if (this.product.amount > this.amount) {
+          this.$notify.warning({
+            duration: 2000,
+            message: '输入的产品数量大于库存数量'
+          });
+          return;
         }
         let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;

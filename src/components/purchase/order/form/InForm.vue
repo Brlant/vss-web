@@ -237,7 +237,7 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存订单</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存订单</el-button>
           </li>
         </ul>
       </div>
@@ -623,7 +623,8 @@
         cdcWarehouses: [],
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        requestTime: ''
       };
     },
     computed: {
@@ -954,7 +955,12 @@
         let params = {
           keyWord: query
         };
+        let rTime = Date.now();
+        this.requestTime = rTime;
         http.get(`purchase-agreement/${this.form.supplierId}/valid/org-goods`, {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();

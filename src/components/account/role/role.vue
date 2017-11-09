@@ -50,7 +50,7 @@
              v-for="(item,key) in orgType"
              @click="filters.usableStatus=item.usableStatus">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<!--<span class="status-num">{{item.num}}</span>--></div>
+          <div class="status-title">{{item.title}}<!--<span class="status-num">{{item.num}}</span>--></div>
         </div>
       </div>
       <div class="container d-table">

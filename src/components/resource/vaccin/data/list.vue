@@ -118,7 +118,7 @@
              v-for="(item,key) in vaccineType"
              @click="changeType(key,item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div class="status-title">{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="d-table">
@@ -146,10 +146,10 @@
               <ul class="show-list">
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                     :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
-                  <perm label="vaccine-info-delete">
-                    <oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'
-                                class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>
-                  </perm>
+                  <!--<perm label="vaccine-info-delete">-->
+                  <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'-->
+                  <!--class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>-->
+                  <!--</perm>-->
                   <div class="id-part">
                     <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
                     <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
@@ -181,9 +181,9 @@
                     <el-button @click="enableRelation" v-show="data.status == '0'"><i class="iconfont icon-start"></i> 启用</el-button>
                     <el-button @click="forbid" v-show="data.status == '1' "><i
                       class="iconfont icon-stop"></i> 停用</el-button>
-                    <perm label="vaccine-info-delete">
-                       <el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>
-                    </perm>
+                    <!--<perm label="vaccine-info-delete">-->
+                    <!--<el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>-->
+                    <!--</perm>-->
                   </perm>
                 </el-button-group>
             </span>
@@ -258,6 +258,7 @@
                 <el-col :span="12">
                   <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
                   <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
+                  <goods-row label="疫苗ID" :span="12">{{ data.goodsDto.id }}</goods-row>
                   <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>
                   <goods-row label="剂型" :span="12">
                     <dict :dict-group="'dosageForm'" :dict-key="data.goodsDto.dosageForm"></dict>

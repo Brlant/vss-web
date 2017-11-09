@@ -42,6 +42,7 @@
       border: 0;
     }
   }
+
 </style>
 <template>
   <div>
@@ -133,7 +134,7 @@
         </div>
       </div>
     </div>
-    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
       <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="refreshDetails"
                 @close="resetRightBox"></add-form>
     </page-right>

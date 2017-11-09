@@ -226,6 +226,7 @@
       height: 70px;
     }
   }
+
 </style>
 
 <template>
@@ -235,30 +236,29 @@
         <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
           </li>
         </ul>
       </div>
       <div class="content-right min-gutter">
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
-                   label-width="160px" style="padding-right: 20px">
-            <el-form-item label="POV" prop="povList" v-if="!form.id">
-              <el-select filterable remote placeholder="请输入关键字搜索POV" multiple :remote-method="filterPOV"
-                         :clearable="true"
-                         v-model="form.povList" popper-class="good-selects">
-                <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                           v-for="org in orgList">
-                  <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
-                  </div>
-                  <div style="overflow: hidden">
-                  <span class="select-other-info pull-left" v-if="org.subordinateCode">
-                    <span>系统代码</span> {{org.subordinateCode}}
-                  </span>
-                  </div>
-                </el-option>
-              </el-select>
+                   label-width="100px" style="padding-right: 20px">
+            <el-form-item label="POV" v-if="!form.id">
+              <el-transfer v-loading="loading"
+                           v-model="form.povList"
+                           :props="{
+                  key: 'subordinateId',
+                  label: 'subordinateName'
+                }"
+                           filter-placeholder="请输入名称搜索POV"
+                           :data="orgList"
+                           filterable
+                           :filter-method="filterMethod"
+                           :titles="['未选POV', '已选POV']"
+                           class="transfer-list"
+              >
+              </el-transfer>
             </el-form-item>
             <el-form-item label="POV" prop="povId" v-if="form.id">
               <span>{{ formItem.povName }}</span>
@@ -310,7 +310,9 @@
         prices: [], // 货品列表
         title: '新增疫苗授权详情',
         orgList: [],
-        unitPrice: ''
+        unitPrice: '',
+        doing: false,
+        loading: false
       };
     },
     watch: {
@@ -337,6 +339,7 @@
           };
           this.title = '新增疫苗授权详情';
         }
+        this.filterPOV();
       }
     },
     methods: {
@@ -368,11 +371,17 @@
 //          return false;
 //        }
         let params = Object.assign({}, {
-          keyWord: query
+          keyWord: query,
+          pageSize: -1
         });
+        this.loading = true;
         cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
+          this.orgList = res.data;
+          this.loading = false;
         });
+      },
+      filterMethod (query, item) {
+        return item.subordinateName.indexOf(query) > -1;
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {
@@ -386,6 +395,7 @@
               'povId': this.form.povId,
               'salePriceGroupId': this.form.salePriceGroupId
             };
+            this.doing = true;
             http.put('/vaccine-authorization', obj).then(() => {
               this.$notify.success({
                 message: '修改疫苗授权成功'
@@ -397,25 +407,37 @@
                 povList: [],
                 povId: ''
               };
+              this.doing = false;
               this.$emit('refresh');
             }).catch(error => {
+              this.doing = false;
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '修改疫苗授权失败'
               });
             });
           } else {
+            if (!this.form.povList.length) {
+              this.$notify.info({
+                duration: 2000,
+                message: '请先选择POV'
+              });
+              return false;
+            }
             let obj = {
               'orgGoodsId': this.currentItem.orgGoodsId,
               'povList': this.form.povList,
               'groupId': this.form.salePriceGroupId
             };
+            this.doing = true;
             VaccineRights.batchSave(obj).then(() => {
               this.$notify.success({
                 message: '添加疫苗授权成功'
               });
               this.$refs['d-form'].resetFields();
               this.$emit('refresh');
+              this.doing = false;
             }).catch(error => {
+              this.doing = false;
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '添加疫苗授权失败'
               });
