@@ -475,7 +475,8 @@
         },
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
-        requestTime: ''
+        requestTime: '',
+        doing: false
       };
     },
     computed: {
