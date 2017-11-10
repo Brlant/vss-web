@@ -316,10 +316,10 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item label="是否进口">-->
-            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
-            <!--v-model="form.importedFlag"></el-switch>-->
-            <!--</el-form-item>-->
+            <el-form-item label="是否合格">
+              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
+                         v-model="form.qualifiedFlag"></el-switch>
+            </el-form-item>
             <el-form-item :label="showContent.expectedTimeLabel"
                           :prop=" showContent.isShowOtherContent?'expectedTime':'' "
                           v-show="showContent.isShowOtherContent">
@@ -549,7 +549,7 @@
           'transportationCondition': '',
           'transportationMeansId': '1',
           'pickUpAddress': '',
-          'importedFlag': '',
+          'qualifiedFlag': true,
           'orgRelation': '',
           'logisticsCentreId': '',
           'thirdPartyNumber': '',
