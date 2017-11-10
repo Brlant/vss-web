@@ -158,9 +158,17 @@
         <tbody>
         <tr v-for="item in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
           <td width="70px">
-            <img v-if="item.orgGoodsDto.goodsDto.photo" :src="item.orgGoodsDto.goodsDto.photo "
-                 class="product-img">
-            <img v-else :src="'../../../../static/img/userpic.png'" class="product-img">
+            <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
+                        effect="light" placement="right">
+              <img :src="item.orgGoodsDto.goodsDto.photo "
+                   class="product-img">
+              <img slot="content" :src="item.orgGoodsDto.goodsDto.photo "
+                   class="product-img">
+            </el-tooltip>
+            <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
+              <img :src="'../../../../static/img/userpic.png'" class="product-img">
+              <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
+            </el-tooltip>
           </td>
           <td width="160px">
             <div>
