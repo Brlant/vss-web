@@ -85,12 +85,28 @@
                 :dict-key="getPackageType(batchNumber)"></dict>
         </td>
         <td colspan="3">
-          {{ batchNumber.packageCount ? batchNumber.packageCount : 0}}
-          <dict :dict-group="'shipmentPackingUnit'" :dict-key="getPackageUint(batchNumber,item)"></dict>
+          <div v-show="batchNumber.largePackageCount || batchNumber.largeNonconformityCount">
+            <div v-show="batchNumber.largePackageCount">
+              <span style="letter-spacing:1em;margin-right: -1em">合格</span>{{ batchNumber.largePackageCount}}
+              <dict :dict-group="'shipmentPackingUnit'" :dict-key="getPackageUint(batchNumber,item)"></dict>
+            </div>
+            <div v-show="batchNumber.largeNonconformityCount">
+              不合格{{ batchNumber.largeNonconformityCount}}
+              <dict :dict-group="'shipmentPackingUnit'" :dict-key="getPackageUint(batchNumber,item)"></dict>
+            </div>
+          </div>
         </td>
         <td colspan="3">
-          {{ batchNumber.basicPackingCount ? batchNumber.basicPackingCount : 0 }}
-          <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
+          <div v-show="batchNumber.smallPackageCount || batchNumber.smallNonconformityCount">
+            <div v-show="batchNumber.smallPackageCount">
+              <span style="letter-spacing:1em;margin-right: -1em">合格</span>{{ batchNumber.smallPackageCount}}
+              <dict :dict-group="'shipmentPackingUnit'" :dict-key="getPackageUint(batchNumber,item)"></dict>
+            </div>
+            <div v-show="batchNumber.smallNonconformityCount">
+              不合格{{ batchNumber.smallNonconformityCount}}
+              <dict :dict-group="'shipmentPackingUnit'" :dict-key="getPackageUint(batchNumber,item)"></dict>
+            </div>
+          </div>
         </td>
       </tr>
       <tr>
