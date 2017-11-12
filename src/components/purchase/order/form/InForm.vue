@@ -681,10 +681,10 @@
           this.form.id = null;
         }
       },
-      form: {
-        handler: 'autoSave',
-        deep: true
-      },
+//      form: {
+//        handler: 'autoSave',
+//        deep: true
+//      },
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       }
@@ -692,7 +692,7 @@
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
       this.filterLogisticsCenter();
-      this.initForm();
+//      this.initForm();
     },
     methods: {
       createOrderInfo () {

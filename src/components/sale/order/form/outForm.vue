@@ -744,23 +744,23 @@
           this.form.id = null;
         }
         this.filterAddress();
-      },
-      form: {
-        handler: 'autoSave',
-        deep: true
       }
+//      form: {
+//        handler: 'autoSave',
+//        deep: true
+//      }
     },
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
 //      this.filterLogisticsCenter();
 //      this.filterAddress();
-      let oldForm = window.localStorage.getItem(this.saveKey);
-      if (oldForm) {
-        this.form = Object.assign({}, this.form, JSON.parse(oldForm));
+//      let oldForm = window.localStorage.getItem(this.saveKey);
+//      if (oldForm) {
+//        this.form = Object.assign({}, this.form, JSON.parse(oldForm));
 //        this.form.logisticsCentreId = this.form.logisticsCentreId
 //          ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
-      }
+//      }
     },
     methods: {
       autoSave: function () {

@@ -1,7 +1,7 @@
 <style lang="less" scoped>
   @import "../../../../assets/mixins.less";
 
-  @leftWidth: 220px;
+  @leftWidth: 200px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -220,12 +220,6 @@
     text-align: right;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: 540px;
-    }
-  }
-
   .goods-btn {
     a:hover {
       color: @activeColor;
@@ -237,8 +231,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="padding: 0">
-          {{ defaultIndex === 2 ? '编辑CDC销售退货订单' : '新增CDC销售退货订单'}}</h2>
+        <h2 class="clearfix right-title">{{ defaultIndex === 2 ? '编辑调拨入库' : '新增调拨入库'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -262,40 +255,21 @@
                            v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="POV" prop="supplierId">
-              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.supplierId" @change="changeSupplier" popper-class="good-selects">
-                <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                           v-for="org in orgList">
-                  <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
-                  </div>
-                  <div style="overflow: hidden">
-                  <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.subordinateCode}}
-                  </span>
-                  </div>
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="物流商选择"
+            <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
-                         :clearable="true"
-                         v-model="form.logisticsProviderId">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
-              </el-select>
+              <oms-input v-model="form.logisticsProviderId" placeholder="请输入物流商"></oms-input>
             </el-form-item>
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
-                          v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
-              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable :clearable="true">
+                          v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
+              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in supplierWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
+
             <el-form-item label="运输条件" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationCondition" placeholder="请选择运输条件">
@@ -316,17 +290,15 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="是否合格">
+            <el-form-item label="是否进口">
               <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.qualifiedFlag"></el-switch>
+                         v-model="form.importedFlag"></el-switch>
             </el-form-item>
             <el-form-item :label="showContent.expectedTimeLabel"
                           :prop=" showContent.isShowOtherContent?'expectedTime':'' "
                           v-show="showContent.isShowOtherContent">
-              <el-date-picker
-                v-model="form.expectedTime"
-                placeholder="请选择预计入库时间" format="yyyy-MM-dd"
-                @change="changeExpectedTime">
+              <el-date-picker v-model="form.expectedTime" placeholder="请选择预计入库时间" format="yyyy-MM-dd"
+                              @change="changeExpectedTime">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="备注">
@@ -350,26 +322,24 @@
                   <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
                              :label="item.orgGoodsDto.name"
                              :value="item.orgGoodsDto.id">
-                    <div>
-                      <div style="overflow: hidden">
-                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                        <el-tag type="success" v-show="item.list.length"
-                                style="line-height: 22px;margin-left: 20px;height: 20px">
-                          组合
-                        </el-tag>
-                      </div>
-                      <div style="overflow: hidden">
-                        <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-                        </span>
-                        <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.sellPrice">销售价格 ￥{{ item.orgGoodsDto.sellPrice
-                          }}</span>
-                        </span>
-                        <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
-                        </span>
-                      </div>
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      <el-tag type="success" v-show="item.list.length"
+                              style="line-height: 22px;margin-left: 20px;height: 20px">
+                        组合
+                      </el-tag>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice
+                        }}</span>
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                      </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -410,10 +380,10 @@
                 </el-col>
                 <el-col :span="12">
                   <span v-show="accessoryList.length">【组合货品】</span>
-                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
+                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
                        <span style="margin-right: 10px">{{acce.name}}</span>
-                        <span style="margin-right: 10px"
-                              v-show="acce.sellPrice">¥ {{ acce.sellPrice | formatMoney }}</span>
+                      <span style="margin-right: 10px"
+                            v-show="acce.procurementPrice">¥ {{ acce.procurementPrice | formatMoney }}</span>
                        <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
@@ -453,8 +423,9 @@
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar"><span
-                  v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                <td class="ar">
+                  <span v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney
+                    }}</span>
                   <span v-if="!Number(product.unitPrice)">-</span>
                 </td>
                 <td class="goods-btn">
@@ -485,7 +456,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, cerpAction, InWork } from '@/resources';
+  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, InWork } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -504,6 +475,7 @@
         type: String,
         default: ''
       },
+      purchase: Object,
       orderId: String
     },
     data: function () {
@@ -543,13 +515,13 @@
         form: {
           'orgId': '',
           'customerId': '',
-          'bizType': '1',
+          'bizType': '3',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '',
           'transportationMeansId': '1',
-          'pickUpAddress': '',
-          'qualifiedFlag': true,
+          'transportationAddress': '',
+          'importedFlag': '',
           'orgRelation': '',
           'logisticsCentreId': '',
           'thirdPartyNumber': '',
@@ -557,7 +529,7 @@
           'detailDtoList': [],
           'supplierId': '',
           'remark': '',
-          transportationAddress: ''
+          'pickUpAddress': ''
         },
         rules: {
           orderNo: [
@@ -569,16 +541,16 @@
             {validator: checkOrderNumber}
           ],
           supplierId: [
-            {required: true, message: '请选择POV', trigger: 'change'}
+            {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
-          pickUpAddress: [
-            {required: true, message: '请选择提货地址', trigger: 'change'}
-          ],
           transportationAddress: [
             {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+          ],
+          pickUpAddress: [
+            {required: true, message: '请选择提货地址', trigger: 'change'}
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
@@ -621,7 +593,7 @@
         LogisticsCenter: [],
         doing: false,
         isSupplierOrOrg: false, // 是不是货主或业务单位
-        saveKey: 'inSaleOrderForm',
+        saveKey: 'inOrderForm',
         isStorageData: true, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
@@ -633,7 +605,6 @@
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
-        amount: 0,
         requestTime: ''
       };
     },
@@ -676,9 +647,14 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
-        this.filterOrg();
-        this.filterLogistics();
+//        this.filterOrg();
+//        this.filterLogistics();
+        this.searchProduct();
+        this.filterAddress();
         this.checkLicence(this.form.orgId);
+        if (this.purchase.id) {
+          this.createOrderInfo();
+        }
         if (val === 2) {
           this.editOrderInfo();
         } else {
@@ -686,7 +662,6 @@
           this.form.state = '';
           this.form.id = null;
         }
-        this.filterAddress();
       },
 //      form: {
 //        handler: 'autoSave',
@@ -702,6 +677,46 @@
 //      this.initForm();
     },
     methods: {
+      createOrderInfo () {
+        this.form.detailDtoList = [];
+        let orgGoodsId = this.purchase.id;
+        if (!orgGoodsId) return;
+        http.get(`/purchase-agreement/org-goods/${orgGoodsId}`).then(res => {
+          this.form.transportationMeansId = '1';
+          this.form.transportationCondition = '0';
+          this.form.remark = '';
+          if (!res.data.orgGoodsDto.salesFirm) return;
+          this.orgList.push({
+            id: res.data.orgGoodsDto.salesFirm,
+            name: res.data.orgGoodsDto.salesFirmName,
+            relationList: []
+          });
+
+          this.form.supplierId = res.data.orgGoodsDto.salesFirm;
+          this.$nextTick(() => {
+            this.filterProductList.push({
+              orgGoodsDto: res.data.orgGoodsDto || {},
+              list: []
+            });
+            this.product.orgGoodsId = res.data.orgGoodsDto.id;
+            this.product.fixInfo = res.data.orgGoodsDto;
+            let price = res.data.orgGoodsDto.procurementPrice;
+            this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
+            this.product.measurementUnit = res.data.orgGoodsDto.goodsDto.measurementUnit;
+            this.accessoryList = res.data.list;
+            this.product.amount = Math.abs(this.purchase.count);
+          });
+//          this.$nextTick(() => {
+//            this.form.detailDtoList.push({
+//              amount: Math.abs(this.purchase.count),
+//              orgGoodsId: orgGoodsId,
+//              orgGoodsName: res.data.orgGoodsDto.name,
+//              unitPrice: res.data.orgGoodsDto.procurementPrice,
+//              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
+//            });
+//          });
+        });
+      },
       editOrderInfo () {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
@@ -719,12 +734,6 @@
       },
       changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
-        if (this.product.amount > this.amount) {
-          this.$notify.warning({
-            duration: 2000,
-            message: '输入的产品数量大于库存数量'
-          });
-        }
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -738,22 +747,6 @@
           this.form.logisticsCentreId = this.form.logisticsCentreId
             ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
-      },
-      queryBatchNumers () { // 查询货品批次信息
-        if (!this.form.supplierId || !this.product.fixInfo.goodsId || !this.product.orgGoodsId) {
-          this.amount = 0;
-          return;
-        }
-        let params = {
-          goodsId: this.product.fixInfo.goodsId,
-          orgId: this.form.supplierId,
-          orgGoodsId: this.product.orgGoodsId
-        };
-        http.get('/erp-stock/valid/batch', {params}).then(res => {
-          res.data.forEach(f => {
-            this.amount += Number(f.count);
-          });
-        });
       },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
@@ -781,11 +774,23 @@
         this.$emit('close');
       },
       filterOrg: function (query) {// 过滤来源单位
-        let params = Object.assign({}, {
-          keyWord: query
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
+        let orgId = this.form.orgId;
+        let bizType = this.form.bizType;
+        if (!orgId || !bizType) {
+          this.orgList = [];
+          this.form.supplierId = '';
+          return;
+        }
+//        let relation = '';
+//        if (bizType === '0') relation = '0';
+//        if (bizType === '1') relation = '1';
+//        if (!relation) return;
+        let params = {
+          keyWord: query,
+          relation: '1'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       filterLogistics: function (query) {// 过滤物流商
@@ -814,8 +819,10 @@
           auditedStatus: '1'
         }).then(res => {
           this.cdcWarehouses = res.data;
+          this.supplierWarehouses = res.data;
           let defaultStore = res.data.filter(item => item.default);
           this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
+
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
@@ -880,10 +887,9 @@
           this.supplierWarehouses = [];
           this.form.pickUpAddress = '';
           this.product.orgGoodsId = '';
+          this.form.detailDtoList = [];
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
-          this.form.detailDtoList = [];
-          this.product.orgGoodsId = '';
         }
         if (!val) return;
         if (this.form.transportationMeansId === '2') {
@@ -898,14 +904,18 @@
             this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
           });
         }
-        this.checkLicence(val);
         this.searchProduct();
+        this.checkLicence(val);
       },
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.pickUpAddress = '';
           this.form.logisticsProviderId = '';
           this.form.supplierId = '';
+        }
+        this.form.pickUpAddress = '';
+        if (this.form.transportationMeansId === '2') {
+          this.form.pickUpAddress = this.from.this.form.transportationAddress;
         }
       },
       checkLicence: function (val) {// 校验单位和货主证照是否过期
@@ -926,18 +936,17 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.supplierId || !this.form.orgId) {
+        if (!this.form.orgId) {
           this.searchProductList = [];
           return;
         }
         let params = {
-          cdcId: this.form.orgId,
-          povId: this.form.supplierId,
+          orgId: this.form.orgId,
           keyWord: query
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
+        http.get('/org/goods/valid', {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }
@@ -980,7 +989,6 @@
             },
             'unitPrice': null
           };
-          this.amount = 0;
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
           return;
@@ -988,7 +996,7 @@
         this.searchProductList.forEach(item => {
           if (item.orgGoodsDto.id === OrgGoodsId) {
             this.product.fixInfo = item.orgGoodsDto;
-            let price = item.orgGoodsDto.sellPrice;
+            let price = item.orgGoodsDto.procurementPrice;
             this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
             this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
             this.accessoryList = item.list;
@@ -1001,7 +1009,6 @@
           }
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-        this.queryBatchNumers();
       },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
@@ -1010,13 +1017,6 @@
             message: '请先选择产品'
           });
           return false;
-        }
-        if (this.product.amount > this.amount) {
-          this.$notify.warning({
-            duration: 2000,
-            message: '输入的产品数量大于库存数量'
-          });
-          return;
         }
         let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;
@@ -1035,7 +1035,7 @@
                   isCombination: true,
                   orgGoodsId: m.accessory,
                   orgGoodsName: m.name,
-                  unitPrice: m.sellPrice ? m.sellPrice : 0,
+                  unitPrice: m.procurementPrice ? m.procurementPrice : 0,
                   amount: amount,
                   measurementUnit: m.accessoryGoods.measurementUnit,
                   packingCount: null,
@@ -1076,7 +1076,7 @@
 //          list: []
 //        });
         this.filterProductList.push({
-          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+          orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []
         });
         this.product.orgGoodsId = item.orgGoodsId;
@@ -1115,7 +1115,7 @@
               this.resetForm();
               this.$notify({
                 duration: 2000,
-                message: '编辑销售退货订单成功',
+                message: '编辑采购订单成功',
                 type: 'success'
               });
               self.$emit('change');
@@ -1127,7 +1127,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '编辑销售退货订单失败',
+                title: '编辑采购订单失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
@@ -1137,7 +1137,7 @@
               this.resetForm();
               this.$notify({
                 duration: 2000,
-                message: '新增销售退货订单成功',
+                message: '新增采购订单成功',
                 type: 'success'
               });
               self.$emit('change', res.data);
@@ -1150,7 +1150,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '新增销售退货订单失败',
+                title: '新增采购订单失败',
                 message: error.response.data.msg,
                 type: 'error'
               });

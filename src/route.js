@@ -82,6 +82,11 @@ const route = [
             path: '/purchase/agreement',
             component: resolve => require(['./components/resource/vaccin/purchaseAgreement/list.vue'], resolve),
             meta: {moduleId: 'resource', title: '采购协议', perm: 'vaccine-info'}
+          },
+          {
+            path: '/purchase/allotment/:id',
+            component: resolve => require(['./components/purchase/allotment/list.vue'], resolve),
+            meta: {moduleId: 'purchase', title: '调拨入库', perm: 'return-manager'}
           }
         ]
       },
