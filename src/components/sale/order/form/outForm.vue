@@ -240,7 +240,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="padding: 0">{{ defaultIndex === 2 ? '编辑CDC销售订单' : '新增CDC销售订单'}}</h2>
+        <h2 class="clearfix right-title" style="padding: 0">{{ getTitle() }}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -552,7 +552,8 @@
         type: Number,
         default: 0
       },
-      orderId: String
+      orderId: String,
+      vaccineType: String
     },
 
     data: function () {
@@ -763,6 +764,9 @@
 //      }
     },
     methods: {
+      getTitle () {
+        return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}销售订单`;
+      },
       autoSave: function () {
         if (!this.form.id) {
           window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
@@ -981,6 +985,7 @@
         let params = {
           cdcId: this.form.orgId,
           povId: this.form.customerId,
+          vaccineType: this.vaccineType,
           keyWord: query
         };
         let rTime = Date.now();

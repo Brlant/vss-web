@@ -265,7 +265,7 @@
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
-                @close="resetRightBox"></add-form>
+                @close="resetRightBox" :vaccineType="vaccineType"></add-form>
     </page-right>
   </div>
 </template>
@@ -341,6 +341,9 @@
       },
       bizInTypes: function () {
         return this.$store.state.dict['bizOutType'];
+      },
+      vaccineType () {
+        return this.$route.meta.type;
       }
     },
     watch: {
@@ -349,6 +352,9 @@
           this.getOrderList(1);
         },
         deep: true
+      },
+      vaccineType () {
+        this.getOrderList(1);
       }
     },
     methods: {
@@ -398,7 +404,7 @@
         this.action = '';
         this.showPart = false;
         // this.getOrderList(this.pager.currentPage);
-        this.$router.push('/sale/order/list');
+        this.$router.push('list');
       },
       add: function () {
         this.showItemRight = true;
@@ -418,7 +424,8 @@
         this.loadingData = true;
         param = Object.assign({}, this.filters, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.pager.pageSize,
+          goodsType: this.vaccineType === '1' ? '0' : '1'
         });
         erpOrder.query(param).then(res => {
           this.orderList = res.data.list;
@@ -524,7 +531,7 @@
         this.currentOrderId = order.id;
         this.state = order.state;
         this.showDetail = true;
-        this.$router.push(`/sale/order/${order.id}`);
+        this.$router.push(`${order.id}`);
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

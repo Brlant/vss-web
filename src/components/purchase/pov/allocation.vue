@@ -182,7 +182,7 @@
   </div>
 </template>
 <script>
-  import { demandAssignment } from '@/resources';
+  import { demandAssignment, OrgGoods } from '@/resources';
   import allotForm from './form.vue';
 
   export default {
@@ -236,11 +236,27 @@
         });
       },
       goTo (item) {
-        this.$notify.success({
-          message: '即将跳转到采购订单'
+        OrgGoods.queryOneGoods(item.orgGoodsId).then(res => {
+          let type = res.data.orgGoodsDto.goodsDto.propertyMap.firstVaccineSign;
+          if (type === '1') {
+            this.$notify.success({
+              message: '即将跳转到一类苗采购订单'
+            });
+            this.$router.push({
+              path: '/purchase/order/one/class/add',
+              query: {id: item.orgGoodsId, count: item.balanceAmount}
+            });
+          } else {
+            this.$notify.success({
+              message: '即将跳转到二类苗采购订单'
+            });
+            this.$router.push({
+              path: '/purchase/order/two/class/add',
+              query: {id: item.orgGoodsId, count: item.balanceAmount}
+            });
+          }
         });
 //        this.$router.push('/purchase/order/add');
-        this.$router.push({path: '/purchase/order/add', query: {id: item.orgGoodsId, count: item.balanceAmount}});
       },
       submit () {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);

@@ -32,7 +32,7 @@
         margin: 0;
       }
       > h2 {
-        padding: 0 45px;
+        padding: 0;
         margin: 0;
         font-size: 18px;
         font-weight: bold;
@@ -231,7 +231,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">{{ defaultIndex === 2 ? '编辑采购订单' : '新增采购订单'}}</h2>
+        <h2 class="clearfix right-title">{{ getTitle()}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -495,7 +495,8 @@
         default: ''
       },
       purchase: Object,
-      orderId: String
+      orderId: String,
+      vaccineType: String
     },
     data: function () {
 
@@ -695,6 +696,9 @@
 //      this.initForm();
     },
     methods: {
+      getTitle () {
+        return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}采购订单`;
+      },
       createOrderInfo () {
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
@@ -953,11 +957,13 @@
           return;
         }
         let params = {
-          keyWord: query
+          vaccineType: this.vaccineType,
+          keyWord: query,
+          factoryId: this.form.supplierId
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        http.get(`purchase-agreement/${this.form.supplierId}/valid/org-goods`, {params: params}).then(res => {
+        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }

@@ -965,11 +965,12 @@
           return;
         }
         let params = {
-          keyWord: query
+          keyWord: query,
+          factoryId: this.form.supplierId
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        http.get(`purchase-agreement/${this.form.customerId}/valid/org-goods`, {params: params}).then(res => {
+        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }

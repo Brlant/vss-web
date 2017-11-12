@@ -830,9 +830,10 @@
           return;
         }
         let params = {
-          keyWord: query
+          keyWord: query,
+          factoryId: this.form.supplierId
         };
-        http.get(`purchase-agreement/${this.form.supplierId}/valid/org-goods`, {params: params}).then(res => {
+        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();

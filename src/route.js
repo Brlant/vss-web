@@ -64,9 +64,14 @@ const route = [
           //   meta: {moduleId: 'purchase', title: '分配中订单', perm: 'cerp-create-wave'}
           // },
           {
-            path: '/purchase/order/:id',
+            path: '/purchase/order/one/class/:id',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '采购订单', perm: 'purchasing-order'}
+            meta: {moduleId: 'purchase', title: '一类苗采购订单', perm: 'purchasing-order', type: '1'}
+          },
+          {
+            path: '/purchase/order/two/class/:id',
+            component: resolve => require(['./components/purchase/order/list.vue'], resolve),
+            meta: {moduleId: 'purchase', title: '二类苗采购订单', perm: 'purchasing-order', type: '2'}
           },
           {
             path: '/purchase/contract',
@@ -96,9 +101,14 @@ const route = [
         meta: {moduleId: 'sale', title: 'CDC销售', icon: 'sale', perm: 'sales-business'},
         children: [
           {
-            path: '/sale/order/:id',
+            path: '/sale/order/one/class/:id',
             component: resolve => require(['./components/sale/order/list.vue'], resolve),
-            meta: {moduleId: 'sale', title: '销售订单', perm: 'sales-order'}
+            meta: {moduleId: 'sale', title: '一类苗销售订单', perm: 'sales-order', type: '1'}
+          },
+          {
+            path: '/sale/order/two/class/:id',
+            component: resolve => require(['./components/sale/order/list.vue'], resolve),
+            meta: {moduleId: 'sale', title: '二类苗销售订单', perm: 'sales-order', type: '2'}
           },
           {
             path: '/sale/rejected/:id',

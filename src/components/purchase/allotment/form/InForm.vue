@@ -936,17 +936,12 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.orgId) {
-          this.searchProductList = [];
-          return;
-        }
         let params = {
-          orgId: this.form.orgId,
           keyWord: query
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        http.get('/org/goods/valid', {params: params}).then(res => {
+        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }

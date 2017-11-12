@@ -138,23 +138,23 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="供货厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.transactOrgId" popperClass="good-selects">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                    <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="供货厂商" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"-->
+            <!--v-model="searchCondition.transactOrgId" popperClass="good-selects">-->
+            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
+            <!--</div>-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="select-other-info pull-left">-->
+            <!--<span>系统代码</span> {{org.manufacturerCode}}-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--</el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
             <!--<el-col :span="8">-->
             <!--<oms-form-row label="物流商" :span="6">-->
             <!--<el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"-->
@@ -206,12 +206,11 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
+          <el-col :span="filters.state === '6' ? 8: 11">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="filters.state === '6' ? 5: 6">供货厂商</el-col>
           <el-col :span="4">时间</el-col>
-          <el-col :span="3">状态</el-col>
-          <el-col :span="3" v-if="filters.state === '6'">操作</el-col>
+          <el-col :span="4">状态</el-col>
+          <el-col :span="4" v-if="filters.state === '6'">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -229,7 +228,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.state === '6' ? 5: 7">
+              <el-col :span="filters.state === '6' ? 8: 11">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -242,9 +241,9 @@
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
-                <div>{{item.transactOrgName }}</div>
-              </el-col>
+              <!--<el-col :span="filters.state === '6' ? 5: 6" class="pt10">-->
+              <!--<div>{{item.transactOrgName }}</div>-->
+              <!--</el-col>-->
               <el-col :span="4">
                 <div>
                   <span style="letter-spacing:2em;margin-right: -2em">下单</span>
@@ -255,13 +254,13 @@
                   ：{{ item.expectedTime | date}}
                 </div>
               </el-col>
-              <el-col :span="3">
+              <el-col :span="4">
                 <div>
                   {{getOrderStatus(item)}}
                   <el-tag type="danger" v-show="item.exceptionFlag">异常({{ item.exceptionCount}})</el-tag>
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state === '6' ">
+              <el-col :span="4" class="opera-btn" v-if="filters.state === '6' ">
                 <perm label="purchasing-order-edit">
                    <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
