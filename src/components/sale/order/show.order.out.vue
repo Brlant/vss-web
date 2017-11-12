@@ -24,18 +24,21 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
-            <perm label="sales-order-confirm" v-show="currentOrder.state === '0' ">
+            <perm :label="vaccineType === '1'?'sales-order-confirm': 'second-vaccine-sales-order-confirm' "
+                  v-show="currentOrder.state === '0' ">
               <el-button type="primary" @click="check">确认订单</el-button>
             </perm>
           </li>
 
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="sales-order-audit" v-show="currentOrder.state === '1' ">
+            <perm :label="vaccineType === '1'?'sales-order-audit': 'second-vaccine-sales-order-audit' "
+                  v-show="currentOrder.state === '1' ">
               <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="sales-order-confirm" v-show="currentOrder.state === '0' || currentOrder.state === '1'">
+            <perm :label="vaccineType === '1'?'sales-order-confirm': 'second-vaccine-sales-order-confirm' "
+                  v-show="currentOrder.state === '0' || currentOrder.state === '1'">
               <el-button type="primary" @click="cancel">取消订单</el-button>
             </perm>
           </li>

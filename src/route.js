@@ -71,7 +71,7 @@ const route = [
           {
             path: '/purchase/order/two/class/:id',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '二类苗采购订单', perm: 'purchasing-order', type: '2'}
+            meta: {moduleId: 'purchase', title: '二类苗采购订单', perm: 'second-vaccine-purchasing-order', type: '2'}
           },
           {
             path: '/purchase/contract',
@@ -108,7 +108,7 @@ const route = [
           {
             path: '/sale/order/two/class/:id',
             component: resolve => require(['./components/sale/order/list.vue'], resolve),
-            meta: {moduleId: 'sale', title: '二类苗销售订单', perm: 'sales-order', type: '2'}
+            meta: {moduleId: 'sale', title: '二类苗销售订单', perm: 'second-vaccine-sales-order', type: '2'}
           },
           {
             path: '/sale/rejected/:id',
