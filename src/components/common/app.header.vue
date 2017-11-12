@@ -243,7 +243,7 @@
                       <div class="menu-usr-part-phone">{{user.userAccount}}</div>
                     </div>
                   </div>
-                  <div class="last-login">上次登录时间:{{user.userLastLoginTime | date}}</div>
+                  <div class="last-login">上次登录时间:{{user.userLastLoginTime | time}}</div>
                   <div class="wechat-info" v-if="weChatInfo.nickname">
                     <img v-if="weChatInfo.avatarUrl" class="weChat-img" :src="weChatInfo.avatarUrl">
                     <span class="wechat-nick"
