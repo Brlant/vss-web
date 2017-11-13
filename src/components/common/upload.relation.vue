@@ -56,7 +56,7 @@
       },
       multiple: {
         type: Boolean,
-        default: false
+        default: true
       },
       uploadName: {
         type: String,

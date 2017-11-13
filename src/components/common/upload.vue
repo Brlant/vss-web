@@ -50,7 +50,7 @@
       },
       multiple: {
         type: Boolean,
-        default: false
+        default: true
       }
     },
 
