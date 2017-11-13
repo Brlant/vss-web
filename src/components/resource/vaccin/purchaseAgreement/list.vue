@@ -105,10 +105,9 @@
       <i class="iconfont icon-search"></i> 筛选查询
       </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addType">
-      <perm label="purchasing-order-add">
-      <a href="#" class="btn-circle" @click.prevent=""><i
-        class="iconfont icon-plus"></i> </a>添加
-      </perm>
+        <perm label="purchase-agreement-add">
+          <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>添加
+        </perm>
       </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
       <i class="el-icon-arrow-up"></i>
