@@ -316,10 +316,10 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item label="是否进口">-->
-            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
-            <!--v-model="form.importedFlag"></el-switch>-->
-            <!--</el-form-item>-->
+            <el-form-item label="是否合格">
+              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
+                         v-model="form.qualifiedFlag"></el-switch>
+            </el-form-item>
             <el-form-item :label="showContent.expectedTimeLabel"
                           :prop=" showContent.isShowOtherContent?'expectedTime':'' "
                           v-show="showContent.isShowOtherContent">
@@ -549,7 +549,7 @@
           'transportationCondition': '',
           'transportationMeansId': '1',
           'pickUpAddress': '',
-          'importedFlag': '',
+          'qualifiedFlag': true,
           'orgRelation': '',
           'logisticsCentreId': '',
           'thirdPartyNumber': '',
@@ -633,7 +633,8 @@
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
-        amount: 0
+        amount: 0,
+        requestTime: ''
       };
     },
     computed: {
@@ -687,10 +688,10 @@
         }
         this.filterAddress();
       },
-      form: {
-        handler: 'autoSave',
-        deep: true
-      },
+//      form: {
+//        handler: 'autoSave',
+//        deep: true
+//      },
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       }
@@ -698,7 +699,7 @@
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
       this.filterLogisticsCenter();
-      this.initForm();
+//      this.initForm();
     },
     methods: {
       editOrderInfo () {
@@ -934,7 +935,12 @@
           povId: this.form.supplierId,
           keyWord: query
         };
+        let rTime = Date.now();
+        this.requestTime = rTime;
         http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();

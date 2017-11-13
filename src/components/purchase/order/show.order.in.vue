@@ -25,12 +25,14 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
-            <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
+            <perm :label="vaccineType === '1'?'purchasing-order-audit': 'second-vaccine-purchasing-order-audit' "
+                  v-show="currentOrder.state === '6' ">
               <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
+            <perm :label="vaccineType === '1'?'purchasing-order-audit': 'second-vaccine-purchasing-order-audit' "
+                  v-show="currentOrder.state === '6' ">
               <el-button type="primary" @click="cancel">取消订单</el-button>
             </perm>
           </li>
@@ -65,7 +67,8 @@
       orderId: {
         type: String
       },
-      state: String
+      state: String,
+      vaccineType: String
     },
     data () {
       return {
@@ -101,8 +104,8 @@
     },
     methods: {
       queryOrderDetail () {
-        this.currentOrder = {};
         if (!this.orderId) return false;
+        this.currentOrder = {};
         InWork.queryOrderDetail(this.orderId).then(res => {
           res.data.state = res.data.erpStatus;
           this.currentOrder = res.data;

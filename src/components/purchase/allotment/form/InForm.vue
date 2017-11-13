@@ -32,7 +32,7 @@
         margin: 0;
       }
       > h2 {
-        padding: 0;
+        padding: 0 45px;
         margin: 0;
         font-size: 18px;
         font-weight: bold;
@@ -231,7 +231,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">{{ getTitle()}}</h2>
+        <h2 class="clearfix right-title">{{ defaultIndex === 2 ? '编辑调拨入库' : '新增调拨入库'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -253,25 +253,6 @@
                          placeholder="请选择物流方式">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
                            v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="供货厂商" prop="supplierId">
-              <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.supplierId" @change="changeSupplier">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                  <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    <span class="pull-right" style="color: #999">
-                     <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
-                    </span>
-                  </div>
-                  <div style="overflow: hidden">
-                  <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.manufacturerCode}}
-                  </span>
-                  </div>
-
-                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="物流商"
@@ -495,8 +476,7 @@
         default: ''
       },
       purchase: Object,
-      orderId: String,
-      vaccineType: String
+      orderId: String
     },
     data: function () {
 
@@ -535,7 +515,7 @@
         form: {
           'orgId': '',
           'customerId': '',
-          'bizType': '0',
+          'bizType': '3',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '',
@@ -667,8 +647,9 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
-        this.filterOrg();
-        this.filterLogistics();
+//        this.filterOrg();
+//        this.filterLogistics();
+        this.searchProduct();
         this.filterAddress();
         this.checkLicence(this.form.orgId);
         if (this.purchase.id) {
@@ -696,9 +677,6 @@
 //      this.initForm();
     },
     methods: {
-      getTitle () {
-        return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}采购订单`;
-      },
       createOrderInfo () {
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
@@ -841,8 +819,10 @@
           auditedStatus: '1'
         }).then(res => {
           this.cdcWarehouses = res.data;
+          this.supplierWarehouses = res.data;
           let defaultStore = res.data.filter(item => item.default);
           this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
+
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
@@ -933,6 +913,10 @@
           this.form.logisticsProviderId = '';
           this.form.supplierId = '';
         }
+        this.form.pickUpAddress = '';
+        if (this.form.transportationMeansId === '2') {
+          this.form.pickUpAddress = this.from.this.form.transportationAddress;
+        }
       },
       checkLicence: function (val) {// 校验单位和货主证照是否过期
         if (!val || !this.action) return;
@@ -952,14 +936,8 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.supplierId) {
-          this.searchProductList = [];
-          return;
-        }
         let params = {
-          vaccineType: this.vaccineType,
-          keyWord: query,
-          factoryId: this.form.supplierId
+          keyWord: query
         };
         let rTime = Date.now();
         this.requestTime = rTime;

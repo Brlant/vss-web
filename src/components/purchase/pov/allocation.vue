@@ -60,10 +60,11 @@
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="5">疫苗</el-col>
-          <el-col :span="3">需求数</el-col>
-          <el-col :span="3">库存数</el-col>
-          <el-col :span="4">库存差额</el-col>
-          <el-col :span="4">调配后剩余库存</el-col>
+          <el-col :span="4">销售厂商</el-col>
+          <el-col :span="2">需求数</el-col>
+          <el-col :span="2">库存数</el-col>
+          <el-col :span="3">库存差额</el-col>
+          <el-col :span="3">调配后剩余库存</el-col>
           <el-col :span="2">状态</el-col>
           <el-col :span="3">操作</el-col>
         </el-row>
@@ -84,27 +85,46 @@
                :class="[{'active':currentItemId==item.id}]">
             <el-row>
               <el-col :span="5" class="R pt">
-                <span>{{ item.goodsName }}</span>
+                <div>
+                  <el-tooltip class="item" effect="dark" content="疫苗名称" placement="right">
+                    <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
+                  </el-tooltip>
+                </div>
+                <div>
+                  <el-tooltip class="item" effect="dark" content="生产厂商" placement="right">
+                    <span style="font-size: 12px;color:#999">{{ item.productFactory }}</span>
+                  </el-tooltip>
+                </div>
+                <div>
+                  <el-tooltip class="item" effect="dark" content="货品规格" placement="right">
+                    <span style="font-size: 12px;">{{ item.specification }}</span>
+                  </el-tooltip>
+                </div>
               </el-col>
-              <el-col :span="3" class="pt">
+              <el-col :span="4" class="pt">
+                <span>
+                  {{ item.saleFactory }}
+                </span>
+              </el-col>
+              <el-col :span="2" class="pt">
                 <span>
                   {{ item.requiredQuantity }}
                   <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
-              <el-col :span="3" class="pt">
+              <el-col :span="2" class="pt">
                 <span>
                   {{ item.inventoryQuantity }}
                   <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
-              <el-col :span="4" class="pt">
+              <el-col :span="3" class="pt">
                 <span>
                   {{ item.balanceAmount }}
                   <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
-              <el-col :span="4" class="pt">
+              <el-col :span="3" class="pt">
                 <span>
                   {{ item.resultAmount }}
                   <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
@@ -162,7 +182,7 @@
   </div>
 </template>
 <script>
-  import { demandAssignment } from '@/resources';
+  import { demandAssignment, OrgGoods } from '@/resources';
   import allotForm from './form.vue';
 
   export default {
@@ -216,11 +236,27 @@
         });
       },
       goTo (item) {
-        this.$notify.success({
-          message: '即将跳转到采购订单'
+        OrgGoods.queryOneGoods(item.orgGoodsId).then(res => {
+          let type = res.data.orgGoodsDto.goodsDto.propertyMap.firstVaccineSign;
+          if (type === '1') {
+            this.$notify.success({
+              message: '即将跳转到一类苗采购订单'
+            });
+            this.$router.push({
+              path: '/purchase/order/one/class/add',
+              query: {id: item.orgGoodsId, count: item.balanceAmount}
+            });
+          } else {
+            this.$notify.success({
+              message: '即将跳转到二类苗采购订单'
+            });
+            this.$router.push({
+              path: '/purchase/order/two/class/add',
+              query: {id: item.orgGoodsId, count: item.balanceAmount}
+            });
+          }
         });
 //        this.$router.push('/purchase/order/add');
-        this.$router.push({path: '/purchase/order/add', query: {id: item.orgGoodsId, count: item.balanceAmount}});
       },
       submit () {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);

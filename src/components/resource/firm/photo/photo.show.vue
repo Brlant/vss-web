@@ -20,7 +20,7 @@
 </style>
 <template>
   <div>
-    <h2 class="clearfix">客户证照</h2>
+    <h2 class="clearfix">单位证照</h2>
     <oms-row label="名称" :span="6">
       {{formItem.name}}
     </oms-row>

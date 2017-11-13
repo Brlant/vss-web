@@ -264,6 +264,13 @@
             item.isChecked = false;
           });
           this.demandList = res.data.list;
+          if (this.$route.query.id) {
+            let ary = this.demandList.filter(f => f.id === this.$route.query.id);
+            if (ary.length) {
+              this.showDetail(ary[0]);
+              this.$router.push('/sale/pov');
+            }
+          }
           this.pager.count = res.data.count;
           this.loadingData = false;
           this.queryCount();

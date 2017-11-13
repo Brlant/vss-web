@@ -3,6 +3,7 @@
   .content-part {
     .content-left {
       width: @leftWidth;
+      text-align: center;
     }
     .content-right {
       > h3 {
@@ -18,18 +19,18 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">销售退货详情</h2>
+        <h2 class="clearfix right-title">采购订单详情</h2>
         <ul>
           <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
-            <perm label="sales-return-audit" v-show="currentOrder.state === '6' ">
+            <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
               <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="sales-order-confirm" v-show="currentOrder.state === '6'">
+            <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
               <el-button type="primary" @click="cancel">取消订单</el-button>
             </perm>
           </li>
@@ -50,9 +51,10 @@
 <script>
   import basicInfo from './detail/base-info.vue';
   import receiptDetail from './detail/receipt-detail.vue';
+  import batchNumbers from './detail/batch.number.vue';
+  import exceptionInfo from './detail/exception.info.vue';
+
   import log from '@/components/common/order.log.vue';
-  import batchNumbers from '../../purchase/order/detail/batch.number.vue';
-  import exceptionInfo from '../../purchase/order/detail/exception.info.vue';
   import { InWork, http, erpOrder } from '@/resources';
 
   export default {
@@ -72,13 +74,6 @@
         title: ''
       };
     },
-    watch: {
-      orderId () {
-        this.index = 0;
-        this.title = '订单详情';
-        this.queryOrderDetail();
-      }
-    },
     computed: {
       pageSets () {
         let menu = [];
@@ -97,10 +92,17 @@
         return menu;
       }
     },
+    watch: {
+      orderId () {
+        this.index = 0;
+        this.title = '订单详情';
+        this.queryOrderDetail();
+      }
+    },
     methods: {
       queryOrderDetail () {
-        if (!this.orderId) return false;
         this.currentOrder = {};
+        if (!this.orderId) return false;
         InWork.queryOrderDetail(this.orderId).then(res => {
           res.data.state = res.data.erpStatus;
           this.currentOrder = res.data;

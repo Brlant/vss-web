@@ -793,7 +793,7 @@ export const InWork = resource('/stock-in', http, {
 // 货主货品
 export const OrgGoods = resource('/org/goods', http, {
   queryOneGoods: (id) => {
-    return http.get('/orgs/goods/' + id, {});
+    return http.get('/org/goods/' + id, {});
   },
   check: (id, obj) => {
     return http.put('/org/goods/' + id + '/check', obj);

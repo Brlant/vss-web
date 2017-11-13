@@ -86,7 +86,7 @@
         </div>
         <el-row v-else="" class="list-item" v-for="(item, index) in requirementList" :key="item.id" type="flex"
                 :gutter="15"
-                @click.native="goUrl('http://www.baidu.com')">
+                @click.native="goUrl(item)">
           <el-col :span="4">
             {{ item.applyTime | date}}
           </el-col>
@@ -124,7 +124,7 @@
 
 </template>
 <script>
-  import {Order, pullSignal} from '@/resources';
+  import { Order, pullSignal } from '@/resources';
 
   export default {
     data: function () {
@@ -133,27 +133,27 @@
         requirementList: []
       };
     },
-    mounted() {
+    mounted () {
       if (this.level !== 3) {
         this.getOrderList();
       }
       this.getRequirementList();
     },
     computed: {
-      user() {
+      user () {
         return this.$store.state.user;
       },
-      level() {
+      level () {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      user() {
+      user () {
         if (this.level !== 3) {
           this.getOrderList();
         }
       },
-      level() {
+      level () {
         this.getRequirementList();
       }
     },
@@ -185,8 +185,12 @@
           this.requirementList = res.data.list;
         });
       },
-      goUrl: function (url) {
-        this.$router.push({path: url});
+      goUrl: function (item) {
+        if (this.level === 3) {
+          this.$router.push({path: '/pov/request', query: {id: item.id}});
+        } else {
+          this.$router.push({path: '/sale/pov', query: {id: item.id}});
+        }
       }
     }
   };

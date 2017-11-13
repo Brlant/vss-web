@@ -111,7 +111,7 @@
             <i class="iconfont icon-search"></i> 筛选查询
           </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <perm label="sales-order-add">
+            <perm :label="vaccineType === '1'?'sales-order-add': 'second-vaccine-sales-order-add' ">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="iconfont icon-plus"></i> </a>添加
             </perm>
@@ -237,7 +237,7 @@
             </div>
           </el-col>
           <el-col :span="2" class="opera-btn" v-if="filters.state === '0' ">
-            <perm label="sales-order-edit">
+            <perm :label="vaccineType === '1'?'sales-order-edit': 'second-vaccine-sales-order-edit' ">
               <span @click.stop.prevent="editOrder(item)">
                 <a href="#" class="btn-circle" @click.prevent=""><i
                   class="iconfont icon-edit"></i></a>
@@ -261,11 +261,11 @@
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
-                 @close="resetRightBox"></show-form>
+                 @close="resetRightBox" :vaccineType="vaccineType"></show-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
-                @close="resetRightBox"></add-form>
+                @close="resetRightBox" :vaccineType="vaccineType"></add-form>
     </page-right>
   </div>
 </template>
@@ -341,6 +341,9 @@
       },
       bizInTypes: function () {
         return this.$store.state.dict['bizOutType'];
+      },
+      vaccineType () {
+        return this.$route.meta.type;
       }
     },
     watch: {
@@ -349,6 +352,9 @@
           this.getOrderList(1);
         },
         deep: true
+      },
+      vaccineType () {
+        this.getOrderList(1);
       }
     },
     methods: {
@@ -398,7 +404,7 @@
         this.action = '';
         this.showPart = false;
         // this.getOrderList(this.pager.currentPage);
-        this.$router.push('/sale/order/list');
+        this.$router.push('list');
       },
       add: function () {
         this.showItemRight = true;
@@ -418,7 +424,8 @@
         this.loadingData = true;
         param = Object.assign({}, this.filters, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.pager.pageSize,
+          goodsType: this.vaccineType === '1' ? '0' : '1'
         });
         erpOrder.query(param).then(res => {
           this.orderList = res.data.list;
@@ -524,7 +531,7 @@
         this.currentOrderId = order.id;
         this.state = order.state;
         this.showDetail = true;
-        this.$router.push(`/sale/order/${order.id}`);
+        this.$router.push(`${order.id}`);
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

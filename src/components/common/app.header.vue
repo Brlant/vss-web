@@ -243,7 +243,7 @@
                       <div class="menu-usr-part-phone">{{user.userAccount}}</div>
                     </div>
                   </div>
-                  <div class="last-login">上次登录时间:{{user.userLastLoginTime | date}}</div>
+                  <div class="last-login">上次登录时间:{{user.userLastLoginTime | time}}</div>
                   <div class="wechat-info" v-if="weChatInfo.nickname">
                     <img v-if="weChatInfo.avatarUrl" class="weChat-img" :src="weChatInfo.avatarUrl">
                     <span class="wechat-nick"
@@ -276,15 +276,13 @@
                 {{child.meta.title}}
               </el-menu-item>
             </el-submenu>
-            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else>
-              <span v-if="item.path">
-                  <i :class="'iconfont icon-'+item.meta.icon"></i>
-                  <span slot="title">{{item.meta.title}}</span>
-              </span>
-              <span v-if="!item.path" @click="$router.push('/')">
-                  <i :class="'iconfont icon-'+item.meta.icon"></i>
-                  <span slot="title">{{item.meta.title}}</span>
-              </span>
+            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else-if="item.path">
+              <i :class="'iconfont icon-'+item.meta.icon"></i>
+              <span slot="title">{{item.meta.title}}</span>
+            </el-menu-item>
+            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else="!item.path" @click="$router.push('/')">
+              <i :class="'iconfont icon-'+item.meta.icon"></i>
+              <span slot="title">{{item.meta.title}}</span>
             </el-menu-item>
           </template>
         </el-menu>

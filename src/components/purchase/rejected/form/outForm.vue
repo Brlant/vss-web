@@ -673,7 +673,9 @@
         batchNumbers: [], // 货品批号列表
         selectBatchNumbers: [], // 已经选择的货品批号
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        requestTime: '',
+        editItemProduct: {}
       };
     },
     computed: {
@@ -729,22 +731,22 @@
           this.form.id = null;
         }
         this.filterAddress();
-      },
-      form: {
-        handler: 'autoSave',
-        deep: true
       }
+//      form: {
+//        handler: 'autoSave',
+//        deep: true
+//      }
     },
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
 //      this.filterLogisticsCenter();
-      let oldForm = window.localStorage.getItem(this.saveKey);
-      if (oldForm) {
-        this.form = Object.assign({}, this.form, JSON.parse(oldForm));
+//      let oldForm = window.localStorage.getItem(this.saveKey);
+//      if (oldForm) {
+//        this.form = Object.assign({}, this.form, JSON.parse(oldForm));
 //        this.form.logisticsCentreId = this.form.logisticsCentreId
 //          ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
-      }
+//      }
     },
     methods: {
       autoSave: function () {
@@ -963,9 +965,15 @@
           return;
         }
         let params = {
-          keyWord: query
+          keyWord: query,
+          factoryId: this.form.supplierId
         };
-        http.get(`purchase-agreement/${this.form.customerId}/valid/org-goods`, {params: params}).then(res => {
+        let rTime = Date.now();
+        this.requestTime = rTime;
+        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
           this.searchProductList = res.data.list;
           this.$nextTick(function () {
             this.filterProducts();
@@ -990,6 +998,7 @@
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
           this.batchNumbers = [];
+          this.editItemProduct = {};
           return;
         }
 
@@ -1038,7 +1047,7 @@
           orgGoodsId: this.product.orgGoodsId
         };
         http.get('/erp-stock/valid/batch', {params}).then(res => {
-          if (res.data.length) {
+          if (res.data.length || this.editItemProduct.batchNumberId) {
             res.data.forEach(f => {
               f.isChecked = false;
               f.productCount = '';
@@ -1051,8 +1060,32 @@
               lots: []
             });
             this.batchNumbers[0].lots = res.data || [];
+            if (this.editItemProduct.batchNumberId) {
+              this.changeBatchNumbers(this.batchNumbers[0].lots);
+            }
           }
         });
+      },
+      changeBatchNumbers (lots) {
+        if (!lots.length) {
+          lots.push({
+            id: this.editItemProduct.batchNumberId,
+            no: this.editItemProduct.no,
+            productCount: this.editItemProduct.amount,
+            count: this.editItemProduct.amount,
+            productionDate: this.editItemProduct.productionDate,
+            expirationDate: this.editItemProduct.expiryDate,
+            isChecked: true
+          });
+        } else {
+          lots.forEach(i => {
+            if (i.id === this.editItemProduct.batchNumberId) {
+              i.productCount = this.editItemProduct.amount;
+              i.count = i.count + this.editItemProduct.amount;
+              i.isChecked = true;
+            }
+          });
+        }
       },
       isChangeValue (item) {
         item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
@@ -1252,12 +1285,11 @@
           orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []
         });
-        setTimeout(() => {
-          this.product.orgGoodsId = item.orgGoodsId;
-        }, 1000);
+        this.product.orgGoodsId = item.orgGoodsId;
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.editItemProduct = JSON.parse(JSON.stringify(item));
         this.remove(item);
       },
       onSubmit: function () {// 提交表单
