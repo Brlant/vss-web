@@ -60,7 +60,7 @@
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="5">疫苗</el-col>
-          <el-col :span="4">销售厂商</el-col>
+          <el-col :span="4">供货厂商</el-col>
           <el-col :span="2">需求数</el-col>
           <el-col :span="2">库存数</el-col>
           <el-col :span="3">库存差额</el-col>
