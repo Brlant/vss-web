@@ -67,7 +67,8 @@
       orderId: {
         type: String
       },
-      state: String
+      state: String,
+      vaccineType: String
     },
     data () {
       return {

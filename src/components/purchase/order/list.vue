@@ -287,7 +287,7 @@
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
-                 @close="resetRightBox"></show-form>
+                 @close="resetRightBox" :vaccineType="vaccineType"></show-form>
     </page-right>
     <page-right :show="showItemRight" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">

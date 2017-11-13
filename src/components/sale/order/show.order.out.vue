@@ -47,7 +47,7 @@
       <div class="content-right content-padding">
         <h3>{{ title }}</h3>
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index" :isCheck="isCheck"
-                    @checkPass="checkPass"></basic-info>
+                    @checkPass="checkPass" :vaccineType="vaccineType"></basic-info>
         <receipt :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt>
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
       </div>
@@ -66,7 +66,8 @@
       orderId: {
         type: String
       },
-      state: String
+      state: String,
+      vaccineType: String
     },
     data () {
       return {

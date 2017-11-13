@@ -327,7 +327,7 @@
                 @change="changeExpectedTime">
               </el-date-picker>
             </el-form-item>
-            <material-part @changeRemark="changeRemark"></material-part>
+            <material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>
             <el-form-item label="备注">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
