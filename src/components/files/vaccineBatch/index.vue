@@ -93,8 +93,8 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="生产厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索厂商" :remote-method="filterFactory" :clearable="true"
+              <oms-form-row label="生产企业" :span="6">
+                <el-select filterable remote placeholder="请输入关键字搜索生产企业" :remote-method="filterFactory" :clearable="true"
                            v-model="searchWord.orgId" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
                     <div style="overflow: hidden">
@@ -302,7 +302,8 @@
       filterFactory(query) { // 查询厂商
         let params = {
           deleteFlag: false,
-          keyWord: query
+          keyWord: query,
+          orgRelationType: 'Manufacture'
         };
         BaseInfo.query(params).then(res => {
           this.factories = res.data.list;
