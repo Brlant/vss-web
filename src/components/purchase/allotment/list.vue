@@ -111,7 +111,7 @@
             <i class="iconfont icon-search"></i> 筛选查询
           </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <perm label="purchasing-order-add">
+            <perm label="allocating-order-add">
                   <a href="#" class="btn-circle" @click.prevent=""><i
                     class="iconfont icon-plus"></i> </a>添加
             </perm>
@@ -261,7 +261,7 @@
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn" v-if="filters.state === '6' ">
-                <perm label="purchasing-order-edit">
+                <perm label="allocating-order-edit">
                    <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="iconfont icon-edit"></i></a>

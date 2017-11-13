@@ -91,7 +91,7 @@ const route = [
           {
             path: '/purchase/allotment/:id',
             component: resolve => require(['./components/purchase/allotment/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '调拨入库', perm: 'return-manager'}
+            meta: {moduleId: 'purchase', title: '调拨入库', perm: 'allocating-order'}
           }
         ]
       },

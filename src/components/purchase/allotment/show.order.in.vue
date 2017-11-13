@@ -25,12 +25,12 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
-            <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
+            <perm label="allocating-order-audit" v-show="currentOrder.state === '6' ">
               <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="purchasing-order-audit" v-show="currentOrder.state === '6' ">
+            <perm label="allocating-order-audit" v-show="currentOrder.state === '6' ">
               <el-button type="primary" @click="cancel">取消订单</el-button>
             </perm>
           </li>
