@@ -45,6 +45,8 @@
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
         <receipt :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt>
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
+        <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
+
       </div>
     </div>
   </div>
@@ -54,9 +56,10 @@
   import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
   import { InWork, http, erpOrder } from '@/resources';
+  import orderAttachment from '@/components/common/order/out.order.attachment.vue';
 
   export default {
-    components: {basicInfo, log, receipt},
+    components: {basicInfo, log, receipt, orderAttachment},
     props: {
       orderId: {
         type: String
@@ -80,10 +83,15 @@
     computed: {
       pageSets () {
         let menu = [];
+        let perms = this.$store.state.permissions || [];
+
         menu.push({name: '订单详情', key: 0});
 //        if (this.state === '3') {
 //          menu.push({name: '收货详情', key: 1});
 //        }
+        if (perms.includes('order-document-watch')) {
+          menu.push({name: '附件管理', key: 3});
+        }
         menu.push({name: '操作日志', key: 2});
         return menu;
       }
