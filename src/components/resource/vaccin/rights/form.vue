@@ -263,7 +263,7 @@
             <el-form-item label="POV" prop="povId" v-if="form.id">
               <span>{{ formItem.povName }}</span>
             </el-form-item>
-            <el-form-item label="选择价格组" prop="salePriceGroupId">
+            <el-form-item label="选择价格组" prop="salePriceGroupId" v-if="orgLevel !==1 ">
               <el-select filterable remote placeholder="请输入关键字搜索价格组" :remote-method="filterPriceGroup" :clearable="true"
                          v-model="form.salePriceGroupId"
                          @change="changeSelect" @click.native="filterPriceGroup('')">
@@ -340,6 +340,11 @@
           this.title = '新增疫苗授权详情';
         }
         this.filterPOV();
+      }
+    },
+    computed: {
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     methods: {

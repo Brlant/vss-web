@@ -54,7 +54,7 @@
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
               class="iconfont icon-search"></i> </a>
           </span>
-            采购协议疫苗列表
+            {{ orgLevel === 1 ? '货主疫苗列表' : '采购协议疫苗' }}列表
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
@@ -113,9 +113,9 @@
             </tr>
             </tbody>
             <tbody>
-            <tr v-for="row in dataRows">
+            <tr v-for="row in dataRows" :keys="row.id">
               <td>
-                {{row.povName}}
+                {{ row.povName }}
               </td>
               <td>
                 ￥{{row.price ? row.price : 0 }}
@@ -191,6 +191,9 @@
     computed: {
       bodyHeight: function () {
         return this.$store.state.bodyHeight;
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     mounted () {
@@ -214,27 +217,53 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
-        this.typePager.currentPage = pageNo;
-        let params = Object.assign({}, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          keyWord: this.typeTxt
-        });
-        PurchaseAgreement.queryValidVaccin(params).then(res => {
-          if (isContinue) {
-            this.showTypeList = this.showTypeList.concat(res.data.list);
-          } else {
-            this.showTypeList = res.data.list;
-            if (this.showTypeList.length !== 0) {
-              this.currentItem = res.data.list[0];
-              this.orgName = this.showTypeList[0].orgGoodsName;
-              this.getPageList();
+        if (this.orgLevel === 1) {
+          this.typePager.currentPage = pageNo;
+          let params = Object.assign({}, {
+            pageNo: pageNo,
+            pageSize: this.pager.pageSize,
+            keyWord: this.typeTxt,
+            deleteFlag: false,
+            status: '1'
+          });
+          Vaccine.query(params).then(res => {
+            if (isContinue) {
+              this.showTypeList = this.showTypeList.concat(res.data.list);
             } else {
-              this.currentItem = Object.assign({'id': ''});
+              this.showTypeList = res.data.list;
+              if (this.showTypeList.length !== 0) {
+                this.currentItem = res.data.list[0];
+                this.orgName = this.showTypeList[0].orgGoodsName;
+                this.getPageList();
+              } else {
+                this.currentItem = Object.assign({'id': ''});
+              }
             }
-          }
-          this.typePager.totalPage = res.data.totalPage;
-        });
+            this.typePager.totalPage = res.data.totalPage;
+          });
+        } else {
+          this.typePager.currentPage = pageNo;
+          let params = Object.assign({}, {
+            pageNo: pageNo,
+            pageSize: this.pager.pageSize,
+            keyWord: this.typeTxt
+          });
+          PurchaseAgreement.queryValidVaccin(params).then(res => {
+            if (isContinue) {
+              this.showTypeList = this.showTypeList.concat(res.data.list);
+            } else {
+              this.showTypeList = res.data.list;
+              if (this.showTypeList.length !== 0) {
+                this.currentItem = res.data.list[0];
+                this.orgName = this.showTypeList[0].orgGoodsName;
+                this.getPageList();
+              } else {
+                this.currentItem = Object.assign({'id': ''});
+              }
+            }
+            this.typePager.totalPage = res.data.totalPage;
+          });
+        }
       },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
