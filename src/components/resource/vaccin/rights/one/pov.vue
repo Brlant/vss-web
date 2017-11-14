@@ -131,9 +131,9 @@
                 ￥{{row.price ? row.price : 0 }}
               </td>
               <td>
-                <perm label="vaccine-authorization-update">
-                  <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
-                </perm>
+                <!--<perm label="vaccine-authorization-update">-->
+                <!--<a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>-->
+                <!--</perm>-->
                 <perm label="vaccine-authorization-delete">
                   <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="iconfont icon-delete"></i>删除</a>
                 </perm>
@@ -242,7 +242,7 @@
           deleteFlag: false,
           status: '1'
         });
-        Vaccine.query(params).then(res => {
+        this.$http.get('/vaccine-info/first-vaccine/valid/org-goods', {params}).then(res => {
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
