@@ -237,7 +237,7 @@
       },
       goTo (item) {
         OrgGoods.queryOneGoods(item.orgGoodsId).then(res => {
-          let type = res.data.orgGoodsDto.goodsDto.propertyMap.firstVaccineSign;
+          let type = res.data.orgGoodsDto.goodsDto.vaccineSign;
           if (type === '1') {
             this.$notify.success({
               message: '即将跳转到一类苗采购订单'
