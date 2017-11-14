@@ -97,11 +97,13 @@
         <td colspan="3">
           <div v-show="batchNumber.largePackageCount || batchNumber.largeNonconformityCount">
             <div v-show="batchNumber.largePackageCount">
-              <span style="letter-spacing:1em;margin-right: -1em">合格</span>{{ batchNumber.largePackageCount}}
+              <el-tag type="success">合格</el-tag>
+              {{ batchNumber.largePackageCount}}
               <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.largeUnit"></dict>
             </div>
-            <div v-show="batchNumber.largeNonconformityCount">
-              不合格{{ batchNumber.largeNonconformityCount}}
+            <div style="padding: 5px 0 " v-show="batchNumber.largeNonconformityCount">
+              <el-tag type="warning">不合格</el-tag>
+              {{ batchNumber.largeNonconformityCount}}
               <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.largeUnit"></dict>
             </div>
           </div>
@@ -109,11 +111,13 @@
         <td colspan="3">
           <div v-show="batchNumber.smallPackageCount || batchNumber.smallNonconformityCount">
             <div v-show="batchNumber.smallPackageCount">
-              <span style="letter-spacing:1em;margin-right: -1em">合格</span>{{ batchNumber.smallPackageCount}}
+              <el-tag type="success">合格</el-tag>
+              {{ batchNumber.smallPackageCount}}
               <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.smallUnit"></dict>
             </div>
-            <div v-show="batchNumber.smallNonconformityCount">
-              不合格{{ batchNumber.smallNonconformityCount}}
+            <div style="padding: 5px 0 " v-show="batchNumber.smallNonconformityCount">
+              <el-tag type="warning">不合格</el-tag>
+              {{ batchNumber.smallNonconformityCount}}
               <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.smallUnit"></dict>
             </div>
           </div>

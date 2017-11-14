@@ -130,7 +130,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <oms-row label="疾控仓库地址" :span="3">
+          <oms-row label="疾控仓库地址" :span="4">
             <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
           </oms-row>
         </el-row>
@@ -238,7 +238,7 @@
     },
     data () {
       return {
-        span: 6,
+        span: 8,
         warehouses: [],
         LogisticsCenter: [],
         rules: {
