@@ -435,7 +435,7 @@
           let params = {
             keyWord: keyWord
           };
-          http.get('vaccine-info/first-vaccine/valid', params).then(res => {
+          http.get('vaccine-info/first-vaccine/valid', {params}).then(res => {
             this.goodsList = res.data.list;
             if (this.action === 'edit') {
               let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);

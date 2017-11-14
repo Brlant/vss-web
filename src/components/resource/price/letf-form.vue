@@ -329,7 +329,7 @@
           keyWord: query,
           deleteFlag: false
         });
-        Vaccine.query(params).then(res => {
+        this.$http.get('/vaccine-info/second-vaccine/valid/org-goods', {params}).then(res => {
           this.goodses = res.data.list;
         });
       },

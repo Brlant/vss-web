@@ -266,7 +266,7 @@
             pageSize: this.pager.pageSize,
             keyWord: this.typeTxt
           });
-          PurchaseAgreement.queryValidVaccin(params).then(res => {
+          this.$http.get('/purchase-agreement/valid/second-vaccine/pager', {params}).then(res => {
             if (isContinue) {
               this.showTypeList = this.showTypeList.concat(res.data.list);
             } else {
