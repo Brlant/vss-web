@@ -123,14 +123,21 @@
               <th>操作</th>
             </tr>
             </thead>
-            <tbody v-if="dataRows.length === 0">
+            <tbody v-if="loadingData">
+            <tr>
+              <td colspan="3" class="text-center">
+                <oms-loading :loading="loadingData"></oms-loading>
+              </td>
+            </tr>
+            </tbody>
+            <tbody v-else-if="dataRows.length === 0">
             <tr>
               <td colspan="3" class="text-center">
                 <div class="empty-info">暂无信息</div>
               </td>
             </tr>
             </tbody>
-            <tbody>
+            <tbody v-else="">
             <tr v-for="row in dataRows" :keys="row.id">
               <td>
                 {{ row.povName }}
@@ -150,10 +157,18 @@
             </tbody>
           </table>
         </div>
+        <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
+            :current-page="pager.currentPage">
+          </el-pagination>
+        </div>
       </div>
     </div>
+
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
-      <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="refreshDetails"
+      <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="getPageList"
                 @close="resetRightBox"></add-form>
     </page-right>
   </div>
@@ -168,6 +183,7 @@
     },
     data: function () {
       return {
+        loadingData: false,
         showRight: false,
         showTypeSearch: false,
         showSearch: false,
@@ -186,7 +202,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20,
+          pageSize: 10,
           totalPage: 1
         },
         typePager: {
@@ -252,7 +268,7 @@
               if (this.showTypeList.length !== 0) {
                 this.currentItem = res.data.list[0];
                 this.orgName = this.showTypeList[0].orgGoodsName;
-                this.getPageList();
+                this.getPageList(1);
               } else {
                 this.currentItem = Object.assign({'id': ''});
               }
@@ -274,7 +290,7 @@
               if (this.showTypeList.length !== 0) {
                 this.currentItem = res.data.list[0];
                 this.orgName = this.showTypeList[0].orgGoodsName;
-                this.getPageList();
+                this.getPageList(1);
               } else {
                 this.currentItem = Object.assign({'id': ''});
               }
@@ -307,15 +323,23 @@
           this.filterPOVs();
         });
       },
-      getPageList: function () {
+      getPageList: function (pageNo) {
         this.dataRows = [];
+        this.pager.currentPage = pageNo;
         if (!this.currentItem.orgGoodsId) return;
-        VaccineRights.queryPovByVaccine(this.currentItem.orgGoodsId).then(res => {
-          this.dataRows = res.data;
+        this.loadingData = true;
+        let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        });
+        VaccineRights.queryPovByVaccine(this.currentItem.orgGoodsId, params).then(res => {
+          this.dataRows = res.data.list;
+          this.pager.count = res.data.count;
+          this.loadingData = false;
         });
       },
       refreshDetails () {
-        this.getPageList();
+        this.getPageList(1);
         this.showRight = false;
       },
       removeVaccine: function (item) {
@@ -325,7 +349,7 @@
           type: 'warning'
         }).then(() => {
           VaccineRights.deleteVaccine(item.id).then(() => {
-            this.getPageList();
+            this.getPageList(1);
             this.$notify.success({
               message: '已成功删除疫苗'
             });
@@ -358,7 +382,7 @@
             message: '授权疫苗成功'
           });
           this.povId = '';
-          this.getPageList();
+          this.getPageList(1);
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '授权疫苗失败'
@@ -368,7 +392,7 @@
       showType: function (item) {
         this.orgName = item.orgGoodsName;
         this.currentItem = item;
-        this.getPageList();
+        this.getPageList(1);
       },
       add () {
         this.formPara = {};
