@@ -42,6 +42,9 @@
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
         <receipt :orderId="currentOrder.id" v-show="index === 1" :index="index"></receipt>
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
+        <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
+        <relevance-code :currentOrder="currentOrder" :index="index" type="1" v-show="index === 8"></relevance-code>
+
       </div>
     </div>
   </div>
@@ -51,9 +54,11 @@
   import log from '@/components/common/order.log.vue';
   import receipt from './receipt-detail.vue';
   import { InWork, http } from '@/resources';
+  import orderAttachment from '@/components/common/order/out.order.attachment.vue';
+  import relevanceCode from '@/components/common/order/relevance.code.vue';
 
   export default {
-    components: {basicInfo, log, receipt},
+    components: {basicInfo, log, receipt, orderAttachment, relevanceCode},
     props: {
       orderId: {
         type: String
@@ -77,10 +82,15 @@
     computed: {
       pageSets () {
         let menu = [];
+        let perms = this.$store.state.permissions || [];
         menu.push({name: '订单详情', key: 0});
         if (this.currentOrder.state === '4') {
           menu.push({name: '收货详情', key: 1});
         }
+        if (perms.includes('order-document-watch')) {
+          menu.push({name: '附件管理', key: 3});
+        }
+        menu.push({name: '关联追溯码', key: 8});
         menu.push({name: '操作日志', key: 2});
         return menu;
       }
