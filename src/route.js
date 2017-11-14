@@ -322,9 +322,14 @@ const route = [
             meta: {moduleId: 'resource', title: '疫苗价格组', perm: 'sale-price-group'}
           },
           {
-            path: '/resource/vaccin/pov',
-            component: resolve => require(['./components/resource/vaccin/rights/pov.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗授权', perm: 'vaccine-authorization'}
+            path: '/resource/one/vaccin/pov',
+            component: resolve => require(['./components/resource/vaccin/rights/one/pov.vue'], resolve),
+            meta: {moduleId: 'resource', title: '一类疫苗授权', perm: 'vaccine-authorization'}
+          },
+          {
+            path: '/resource/two/vaccin/pov',
+            component: resolve => require(['./components/resource/vaccin/rights/two/pov.vue'], resolve),
+            meta: {moduleId: 'resource', title: '二类疫苗授权', perm: 'vaccine-authorization'}
           },
           {
             path: '/resource/store',

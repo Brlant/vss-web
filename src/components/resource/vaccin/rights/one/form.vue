@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-  @import "../../../../assets/mixins.less";
+  @import "../../../../../assets/mixins.less";
 
   @leftWidth: 220px;
 
@@ -263,22 +263,6 @@
             <el-form-item label="POV" prop="povId" v-if="form.id">
               <span>{{ formItem.povName }}</span>
             </el-form-item>
-            <el-form-item label="选择价格组" prop="salePriceGroupId" v-if="orgLevel !==1 ">
-              <el-select filterable remote placeholder="请输入关键字搜索价格组" :remote-method="filterPriceGroup" :clearable="true"
-                         v-model="form.salePriceGroupId"
-                         @change="changeSelect" @click.native="filterPriceGroup('')">
-                <el-option :value="item.id" :key="item.id" :label="item.name"
-                           v-for="item in prices">
-                  <div style="overflow: hidden">
-                    <span class="pull-left">{{item.name}}</span>
-                    <span class="pull-right">销售单价 ￥{{item.unitPrice}}</span>
-                  </div>
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="单价" v-if="unitPrice">
-              <span>￥{{ unitPrice }}</span>
-            </el-form-item>
           </el-form>
         </div>
       </div>
@@ -342,39 +326,8 @@
         this.filterPOV();
       }
     },
-    computed: {
-      orgLevel () {
-        return this.$store.state.orgLevel;
-      }
-    },
     methods: {
-      formatPrice: function () {// 格式化单价，保留两位小数
-        this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
-      },
-      changeSelect (val) {
-        if (!val) {
-          this.unitPrice = '';
-        }
-        let ary = this.prices.filter(f => f.id === val);
-        this.unitPrice = ary.length ? ary[0].unitPrice : '';
-      },
-      filterPriceGroup: function (query) {// 过滤POV
-        if (!query && this.prices.length && this.form.salePriceGroupId) {
-          return false;
-        }
-        let params = Object.assign({}, {
-          keyWord: query,
-          orgGoodsId: this.currentItem.orgGoodsId,
-          availabilityStatus: true
-        });
-        BriceGroup.query(params).then(res => {
-          this.prices = res.data.list;
-        });
-      },
       filterPOV: function (query) {// 过滤POV
-//        if (!query && this.orgList.length && this.form.povId) {
-//          return false;
-//        }
         let params = Object.assign({}, {
           keyWord: query,
           pageSize: -1
@@ -396,9 +349,8 @@
           if (this.form.id) {
             let obj = {
               'id': this.form.id,
-              'orgGoodsId': this.currentItem.orgGoodsId,
-              'povId': this.form.povId,
-              'salePriceGroupId': this.form.salePriceGroupId
+              'orgGoodsId': this.currentItem.orgGoodsDto.id,
+              'povId': this.form.povId
             };
             this.doing = true;
             http.put('/vaccine-authorization', obj).then(() => {
@@ -429,9 +381,8 @@
               return false;
             }
             let obj = {
-              'orgGoodsId': this.currentItem.orgGoodsId,
-              'povList': this.form.povList,
-              'groupId': this.form.salePriceGroupId
+              'orgGoodsId': this.currentItem.orgGoodsDto.id,
+              'povList': this.form.povList
             };
             this.doing = true;
             VaccineRights.batchSave(obj).then(() => {

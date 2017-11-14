@@ -54,33 +54,18 @@
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
               class="iconfont icon-search"></i> </a>
           </span>
-            {{ orgLevel === 1 ? '货主疫苗列表' : '采购协议疫苗' }}列表
+            货主疫苗列表
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
-          <div v-if="!currentItem.id" class="empty-info">
+          <div v-if="!showTypeList.length" class="empty-info">
             暂无信息
           </div>
           <div v-else>
-            <ul class="show-list" v-if="orgLevel !== 1">
-              <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
-                  :class="{'active':item.id==currentItem.id}">
-                <div class="id-part">
-                  组织疫苗ID {{item.orgGoodsId }}
-                </div>
-                <div>
-                  {{item.orgGoodsName }}
-                </div>
-              </li>
-            </ul>
-            <ul class="show-list" v-if="orgLevel === 1">
+            <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                   :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
-                <!--<perm label="vaccine-info-delete">-->
-                <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'-->
-                <!--class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>-->
-                <!--</perm>-->
                 <div class="id-part">
                   <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
                   <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
@@ -168,7 +153,7 @@
     </div>
 
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
-      <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="getPageList"
+      <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="refreshDetails"
                 @close="resetRightBox"></add-form>
     </page-right>
   </div>
@@ -177,6 +162,7 @@
 <script>
   import addForm from './form.vue';
   import { cerpAction, Vaccine, VaccineRights, PurchaseAgreement } from '@/resources';
+
   export default {
     components: {
       addForm
@@ -225,9 +211,6 @@
     computed: {
       bodyHeight: function () {
         return this.$store.state.bodyHeight;
-      },
-      orgLevel () {
-        return this.$store.state.orgLevel;
       }
     },
     mounted () {
@@ -251,53 +234,29 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
-        if (this.orgLevel === 1) {
-          this.typePager.currentPage = pageNo;
-          let params = Object.assign({}, {
-            pageNo: pageNo,
-            pageSize: this.pager.pageSize,
-            keyWord: this.typeTxt,
-            deleteFlag: false,
-            status: '1'
-          });
-          Vaccine.query(params).then(res => {
-            if (isContinue) {
-              this.showTypeList = this.showTypeList.concat(res.data.list);
+        this.typePager.currentPage = pageNo;
+        let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize,
+          keyWord: this.typeTxt,
+          deleteFlag: false,
+          status: '1'
+        });
+        Vaccine.query(params).then(res => {
+          if (isContinue) {
+            this.showTypeList = this.showTypeList.concat(res.data.list);
+          } else {
+            this.showTypeList = res.data.list;
+            if (this.showTypeList.length !== 0) {
+              this.currentItem = res.data.list[0];
+              this.orgName = this.showTypeList[0].orgGoodsDto.name;
+              this.getPageList(1);
             } else {
-              this.showTypeList = res.data.list;
-              if (this.showTypeList.length !== 0) {
-                this.currentItem = res.data.list[0];
-                this.orgName = this.showTypeList[0].orgGoodsName;
-                this.getPageList(1);
-              } else {
-                this.currentItem = Object.assign({'id': ''});
-              }
+              this.currentItem = Object.assign({'id': ''});
             }
-            this.typePager.totalPage = res.data.totalPage;
-          });
-        } else {
-          this.typePager.currentPage = pageNo;
-          let params = Object.assign({}, {
-            pageNo: pageNo,
-            pageSize: this.pager.pageSize,
-            keyWord: this.typeTxt
-          });
-          this.$http.get('/purchase-agreement/valid/second-vaccine/pager', {params}).then(res => {
-            if (isContinue) {
-              this.showTypeList = this.showTypeList.concat(res.data.list);
-            } else {
-              this.showTypeList = res.data.list;
-              if (this.showTypeList.length !== 0) {
-                this.currentItem = res.data.list[0];
-                this.orgName = this.showTypeList[0].orgGoodsName;
-                this.getPageList(1);
-              } else {
-                this.currentItem = Object.assign({'id': ''});
-              }
-            }
-            this.typePager.totalPage = res.data.totalPage;
-          });
-        }
+          }
+          this.typePager.totalPage = res.data.totalPage;
+        });
       },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
@@ -326,13 +285,14 @@
       getPageList: function (pageNo) {
         this.dataRows = [];
         this.pager.currentPage = pageNo;
-        if (!this.currentItem.orgGoodsId) return;
+        let orgId = this.currentItem.orgGoodsDto.id;
+        if (!orgId) return;
         this.loadingData = true;
         let params = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         });
-        VaccineRights.queryPovByVaccine(this.currentItem.orgGoodsId, params).then(res => {
+        VaccineRights.queryPovByVaccine(orgId, params).then(res => {
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
@@ -362,7 +322,7 @@
       },
       bindVaccinePOV () {
         let form = {
-          'orgGoodsId': this.currentItem.orgGoodsId,
+          'orgGoodsId': this.currentItem.orgGoodsDto.id,
           'povId': this.povId
         };
         if (!form.povId) {
@@ -390,7 +350,7 @@
         });
       },
       showType: function (item) {
-        this.orgName = item.orgGoodsName;
+        this.orgName = item.orgGoodsDto.name;
         this.currentItem = item;
         this.getPageList(1);
       },
