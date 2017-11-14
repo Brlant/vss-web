@@ -63,7 +63,7 @@
             暂无信息
           </div>
           <div v-else>
-            <ul class="show-list">
+            <ul class="show-list" v-if="orgLevel !== 1">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id==currentItem.id}">
                 <div class="id-part">
@@ -71,6 +71,24 @@
                 </div>
                 <div>
                   {{item.orgGoodsName }}
+                </div>
+              </li>
+            </ul>
+            <ul class="show-list" v-if="orgLevel === 1">
+              <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
+                  :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
+                <!--<perm label="vaccine-info-delete">-->
+                <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'-->
+                <!--class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>-->
+                <!--</perm>-->
+                <div class="id-part">
+                  <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
+                  <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
+                  </el-tag>
+                  <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">注册证照过期</el-tag>
+                </div>
+                <div>
+                  <span>{{item.orgGoodsDto.name}}</span>
                 </div>
               </li>
             </ul>
