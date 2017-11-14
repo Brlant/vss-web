@@ -43,6 +43,9 @@
         <exception-info :currentOrder="currentOrder" v-show="index === 3" :orderId="orderId"
                         :index="index"></exception-info>
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
+        <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 5"></order-attachment>
+        <relevance-code :currentOrder="currentOrder" :index="index" type="0" v-show="index === 8"></relevance-code>
+
       </div>
     </div>
   </div>
@@ -54,10 +57,12 @@
   import batchNumbers from '../../purchase/order/detail/batch.number.vue';
   import exceptionInfo from '../../purchase/order/detail/exception.info.vue';
   import { InWork, http, erpOrder } from '@/resources';
+  import orderAttachment from '@/components/common/order/in.order.attachment.vue';
+  import relevanceCode from '@/components/common/order/relevance.code.vue';
 
   export default {
     components: {
-      basicInfo, receiptDetail, log, batchNumbers, exceptionInfo
+      basicInfo, receiptDetail, log, batchNumbers, exceptionInfo, orderAttachment, relevanceCode
     },
     props: {
       orderId: {
@@ -93,6 +98,10 @@
         if (perms.includes('batch-number-manager')) {
           menu.push({name: '批号相关', key: 4});
         }
+        if (perms.includes('order-document-watch')) {
+          menu.push({name: '附件管理', key: 5});
+        }
+        menu.push({name: '关联追溯码', key: 8});
         menu.push({name: '操作日志', key: 2});
         return menu;
       }

@@ -40,17 +40,16 @@
     <table class="product-detail-list">
       <tbody>
       <tr>
-        <td colspan="2" width="120px" class="t-head">货品</td>
-        <td colspan="2" width="120px" class="t-head">生产厂商</td>
+        <td colspan="3" width="180px" class="t-head">货品</td>
+        <td colspan="3" width="180px" class="t-head">生产厂商</td>
         <td colspan="2" width="120px" class="t-head">批号</td>
         <td colspan="2" width="120px" class="t-head">生产日期</td>
         <td colspan="2" width="120px" class="t-head">有效期</td>
         <td colspan="2" width="120px" class="t-head">整件数</td>
-        <td colspan="2" width="120px" class="t-head">散件数</td>
         <td colspan="2" width="120px" class="t-head">合计数量</td>
       </tr>
       <tr v-for="item in details">
-        <td colspan="2">
+        <td colspan="3">
           <div>
             <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
               <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
@@ -62,7 +61,7 @@
             </el-tooltip>
           </div>
         </td>
-        <td colspan="2">
+        <td colspan="3">
           {{item.productFactory}}
         </td>
         <td colspan="2">{{ item.batchNumber || '无' }}</td>
@@ -79,7 +78,6 @@
             小包装 {{ item.smallPackageCount }}
           </div>
         </td>
-        <td colspan="2">{{ item.bulkCount }}</td>
         <td colspan="2">
           {{ item.aggregateQuantity }}
         </td>

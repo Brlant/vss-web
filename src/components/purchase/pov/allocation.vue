@@ -59,13 +59,13 @@
       </div>
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="5">疫苗</el-col>
-          <el-col :span="4">销售厂商</el-col>
-          <el-col :span="2">需求数</el-col>
-          <el-col :span="2">库存数</el-col>
-          <el-col :span="3">库存差额</el-col>
-          <el-col :span="3">调配后剩余库存</el-col>
-          <el-col :span="2">状态</el-col>
+          <el-col :span="status === 0 ? 5 : 7">疫苗</el-col>
+          <el-col :span="status === 0 ? 4 : 6">供货厂商</el-col>
+          <el-col :span="status === 0 ? 2 : 4">需求数</el-col>
+          <el-col :span="status === 0 ? 2 : 4">库存数</el-col>
+          <el-col :span="3" v-show="status === 0">库存差额</el-col>
+          <el-col :span="3" v-show="status === 0">调配后剩余库存</el-col>
+          <el-col :span="2" v-show="status === 0">状态</el-col>
           <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -84,7 +84,7 @@
           <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
                :class="[{'active':currentItemId==item.id}]">
             <el-row>
-              <el-col :span="5" class="R pt">
+              <el-col :span="status === 0 ? 5 : 7" class="R pt">
                 <div>
                   <el-tooltip class="item" effect="dark" content="疫苗名称" placement="right">
                     <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
@@ -101,36 +101,36 @@
                   </el-tooltip>
                 </div>
               </el-col>
-              <el-col :span="4" class="pt">
+              <el-col :span="status === 0 ? 4 : 6" class="pt">
                 <span>
                   {{ item.saleFactory }}
                 </span>
               </el-col>
-              <el-col :span="2" class="pt">
+              <el-col :span="status === 0 ? 2 : 4" class="pt">
                 <span>
                   {{ item.requiredQuantity }}
                   <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
-              <el-col :span="2" class="pt">
+              <el-col :span="status === 0 ? 2 : 4" class="pt">
                 <span>
                   {{ item.inventoryQuantity }}
                   <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
-              <el-col :span="3" class="pt">
+              <el-col :span="3" class="pt" v-show="status === 0">
                 <span>
                   {{ item.balanceAmount }}
                   <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
-              <el-col :span="3" class="pt">
+              <el-col :span="3" class="pt" v-show="status === 0">
                 <span>
                   {{ item.resultAmount }}
                   <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
-              <el-col :span="2" class="pt">
+              <el-col :span="2" class="pt" v-show="status === 0">
                 <span v-show="item.resultAmount>-1 ">
                   <i class="iconfont icon-correct color-blue"></i>
                   正常
@@ -156,7 +156,7 @@
                 </span>
                 </div>
                 <div>
-                  <span @click.prevent="goTo(item)" v-show="item.balanceAmount < 0 ">
+                  <span @click.prevent="goTo(item)" v-show="item.balanceAmount < 0 && status === 0 ">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="iconfont icon-link"></i></a>
                   采购订单

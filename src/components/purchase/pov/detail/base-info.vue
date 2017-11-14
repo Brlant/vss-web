@@ -89,7 +89,7 @@
         <th>单价</th>
         <th>申请数量</th>
         <th>申请金额</th>
-        <th>分配数量</th>
+        <th v-show="currentItem.status === 4">分配数量</th>
       </tr>
       </thead>
       <tbody>
@@ -111,7 +111,7 @@
           <span v-if="row.applyMoney">￥{{row.applyMoney | formatMoney}}</span>
           <span v-if="!row.applyMoney">-</span>
         </td>
-        <td>
+        <td v-show="currentItem.status === 4">
           {{row.actualCount}}
         </td>
       </tr>
