@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui/lib/notification';
+import {Notification} from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -673,6 +673,10 @@ export const VaccineRights = resource('/vaccine-authorization', http, {
   },
   batchSave (obj) {
     return http.post('/vaccine-authorization/batch', obj);
+  },
+  // 查询pov某一类型的疫苗信息
+  queryPovVaccineByType(params) {
+    return http.get('/vaccine-authorization/pov/vaccine', {params});
   }
 });
 
