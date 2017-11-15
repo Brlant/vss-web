@@ -139,7 +139,7 @@
             </tbody>
           </table>
         </div>
-        <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+        <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
           <el-pagination
             layout="prev, pager, next"
             :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
@@ -202,7 +202,8 @@
         orgList: [],
         showOrgList: [],
         povId: '',
-        formPara: {}
+        formPara: {},
+        nowTime: ''
       };
     },
     computed: {
@@ -237,7 +238,10 @@
           pageSize: this.pager.pageSize,
           keyWord: this.typeTxt
         });
+        let nowTime = new Date();
+        this.nowTime = nowTime;
         this.$http.get('/purchase-agreement/valid/second-vaccine/pager', {params}).then(res => {
+          if (this.nowTime > nowTime) return;
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {

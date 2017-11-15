@@ -142,7 +142,7 @@
             </tbody>
           </table>
         </div>
-        <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+        <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
           <el-pagination
             layout="prev, pager, next"
             :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
@@ -205,7 +205,8 @@
         orgList: [],
         showOrgList: [],
         povId: '',
-        formPara: {}
+        formPara: {},
+        nowTime: ''
       };
     },
     computed: {
@@ -242,7 +243,10 @@
           deleteFlag: false,
           status: '1'
         });
+        let nowTime = new Date();
+        this.nowTime = nowTime;
         this.$http.get('/vaccine-info/first-vaccine/valid/org-goods', {params}).then(res => {
+          if (this.nowTime > nowTime) return;
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
