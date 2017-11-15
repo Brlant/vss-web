@@ -43,7 +43,7 @@
             <dict :dict-group="'bizInType'" :dict-key="currentOrder.bizType"></dict>
           </oms-row>
           <oms-row label="下单时间">
-            <span class="goods-span">{{currentOrder.createTime | date}}</span>
+            <span class="goods-span">{{currentOrder.createTime | time}}</span>
           </oms-row>
           <oms-row label="物流方式">
             <dict :dict-group="'transportationMeans'" :dict-key="currentOrder.transportationMeansId"></dict>

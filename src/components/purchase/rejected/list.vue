@@ -188,9 +188,9 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="filters.state === '0' ? 5: 7">货主/订单号</el-col>
-          <el-col :span="filters.state === '0' ? 4: 5">业务类型</el-col>
+          <el-col :span="filters.state === '0' ? 3: 5">业务类型</el-col>
           <el-col :span="5">供货厂商</el-col>
-          <el-col :span="4">时间</el-col>
+          <el-col :span="5">时间</el-col>
           <el-col :span="3">状态</el-col>
           <el-col :span="3" v-if="filters.state === '0'">操作</el-col>
         </el-row>
@@ -218,7 +218,7 @@
                   {{item.orgName }}
                 </div>
               </el-col>
-              <el-col :span="filters.state === '0' ? 4: 5">
+              <el-col :span="filters.state === '0' ? 3: 5">
                 <div>
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
@@ -226,8 +226,8 @@
               <el-col :span="5" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
-              <el-col :span="4">
-                <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
+              <el-col :span="5">
+                <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | time }}</div>
                 <div>预计出库：{{ item.expectedTime | date }}</div>
               </el-col>
               <el-col :span="3">
