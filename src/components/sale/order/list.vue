@@ -211,7 +211,7 @@
       <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
            :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
         <el-row>
-          <el-col :span="6">
+          <el-col :span="filters.state === '0' ? 5: 6">
             <div class="f-grey">
               {{item.orderNo }}
             </div>
@@ -224,11 +224,11 @@
               <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
             </div>
           </el-col>
-          <el-col :span="6">
+          <el-col :span="filters.state === '0' ? 5: 6">
             <div>{{item.transactOrgName }}</div>
           </el-col>
           <el-col :span="5">
-            <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
+            <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | time }}</div>
             <div>预计送货：{{ item.expectedTime | date }}</div>
           </el-col>
           <el-col :span="3">

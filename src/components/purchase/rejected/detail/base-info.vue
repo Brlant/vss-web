@@ -49,7 +49,7 @@
               <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
             <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | date}}</span>
+              <span class="goods-span">{{currentOrder.createTime | time}}</span>
             </oms-row>
             <oms-row label="预计出库时间" v-show="currentOrder.expectedTime">
               <span class="goods-span">{{currentOrder.expectedTime | date}}</span>

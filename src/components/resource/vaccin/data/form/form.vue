@@ -243,7 +243,7 @@
   </div>
 </template>
 <script>
-  import {Vaccine, BaseInfo, SuccessfulBidder} from '@/resources';
+  import { Vaccine, BaseInfo, SuccessfulBidder, Goods, http } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -330,6 +330,12 @@
           tilet = '修改';
         }
         return tilet;
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
+      },
+      user () {
+        return this.$store.state.user;
       }
     },
     watch: {
@@ -425,23 +431,42 @@
         }
       },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
-        let params = {
-          keyWord: keyWord,
-          availabilityStatus: true
-        };
-        SuccessfulBidder.queryInfo(params).then(res => {
-          this.goodsList = res.data;
-          if (this.action === 'edit') {
-            let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
-            if (!isExist) {
-              this.goodsList.push({
-                id: this.form.goodsDto.id,
-                name: this.form.goodsDto.name
-              });
+        if (this.orgLevel === 1) {
+          let params = {
+            keyWord: keyWord
+          };
+          http.get('vaccine-info/first-vaccine/valid', {params}).then(res => {
+            this.goodsList = res.data.list;
+            if (this.action === 'edit') {
+              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
+              if (!isExist) {
+                this.goodsList.push({
+                  id: this.form.goodsDto.id,
+                  name: this.form.goodsDto.name
+                });
+              }
             }
-          }
-          this.getGoodsType(this.form.goodsId);
-        });
+            this.getGoodsType(this.form.goodsId);
+          });
+        } else {
+          let params = {
+            keyWord: keyWord,
+            availabilityStatus: true
+          };
+          SuccessfulBidder.queryInfo(params).then(res => {
+            this.goodsList = res.data;
+            if (this.action === 'edit') {
+              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
+              if (!isExist) {
+                this.goodsList.push({
+                  id: this.form.goodsDto.id,
+                  name: this.form.goodsDto.name
+                });
+              }
+            }
+            this.getGoodsType(this.form.goodsId);
+          });
+        }
       },
       queryCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {

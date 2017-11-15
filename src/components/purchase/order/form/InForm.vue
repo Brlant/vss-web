@@ -651,6 +651,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     watch: {
@@ -952,26 +955,47 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.supplierId) {
-          this.searchProductList = [];
-          return;
-        }
-        let params = {
-          vaccineType: this.vaccineType,
-          keyWord: query,
-          factoryId: this.form.supplierId
-        };
-        let rTime = Date.now();
-        this.requestTime = rTime;
-        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-          if (this.requestTime > rTime) {
+        if (this.orgLevel === 1) {
+          if (!this.form.supplierId) {
+            this.searchProductList = [];
             return;
           }
-          this.searchProductList = res.data.list;
-          this.$nextTick(function () {
-            this.filterProducts();
+          let params = {
+            keyWord: query
+          };
+          let rTime = Date.now();
+          this.requestTime = rTime;
+          http.get(`/vaccine-info/${this.form.supplierId}/first-vaccine/valid`, {params: params}).then(res => {
+            if (this.requestTime > rTime) {
+              return;
+            }
+            this.searchProductList = res.data.list;
+            this.$nextTick(function () {
+              this.filterProducts();
+            });
           });
-        });
+        } else {
+          if (!this.form.supplierId) {
+            this.searchProductList = [];
+            return;
+          }
+          let params = {
+            vaccineType: this.vaccineType,
+            keyWord: query,
+            factoryId: this.form.supplierId
+          };
+          let rTime = Date.now();
+          this.requestTime = rTime;
+          http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+            if (this.requestTime > rTime) {
+              return;
+            }
+            this.searchProductList = res.data.list;
+            this.$nextTick(function () {
+              this.filterProducts();
+            });
+          });
+        }
       },
       filterProducts: function () {
         let arr = [];

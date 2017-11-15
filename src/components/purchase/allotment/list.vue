@@ -206,9 +206,9 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="filters.state === '6' ? 8: 11">货主/订单号</el-col>
+          <el-col :span="filters.state === '6' ? 7: 11">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="4">时间</el-col>
+          <el-col :span="5">时间</el-col>
           <el-col :span="4">状态</el-col>
           <el-col :span="4" v-if="filters.state === '6'">操作</el-col>
         </el-row>
@@ -228,7 +228,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.state === '6' ? 8: 11">
+              <el-col :span="filters.state === '6' ? 7: 11">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -244,10 +244,10 @@
               <!--<el-col :span="filters.state === '6' ? 5: 6" class="pt10">-->
               <!--<div>{{item.transactOrgName }}</div>-->
               <!--</el-col>-->
-              <el-col :span="4">
+              <el-col :span="5">
                 <div>
                   <span style="letter-spacing:2em;margin-right: -2em">下单</span>
-                  ：{{item.createTime | date }}
+                  ：{{item.createTime | time }}
                 </div>
                 <div>
                   <span>预计入库</span>

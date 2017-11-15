@@ -266,7 +266,7 @@
                    label-width="100px" style="padding-right: 20px">
             <el-form-item label="付款类型" prop="billPayType">
               <el-select type="text" v-model="form.billPayType" placeholder="请选择付款类型" @change="changeBillPayType">
-                <el-option :value="'0'" :key="'0'" :label="'疫苗厂商付款'"></el-option>
+                <el-option :value="'0'" :key="'0'" :label="'疫苗厂商付款'" v-show="orgLevel !== 1"></el-option>
                 <el-option :value="'1'" :key="'1'" :label="'物流厂商付款'"></el-option>
               </el-select>
             </el-form-item>
@@ -338,6 +338,7 @@
   import utils from '../../../../../tools/utils';
   import payDetail from './payDetail.vue';
   import invoicePart from './invoice.vue';
+
   export default {
     name: 'addForm',
     loading: false,
@@ -427,6 +428,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     watch: {

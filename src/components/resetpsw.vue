@@ -56,6 +56,18 @@
           }
         }
       };
+      let checkPasswd = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          let rl = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
+          if (!rl.test(this.user.password)) {
+            callback('新密码必须包含数字、大写字母,小写字母,至少8-16个字符');
+          } else {
+            callback();
+          }
+        }
+      };
       return {
         user: {oldPassword: '', password: '', password2: ''},
         loading: false,
@@ -65,7 +77,8 @@
             {required: true, message: '请输入原密码', trigger: 'blur'}
           ],
           password: [
-            {required: true, message: '请输入新密码', trigger: 'blur'}
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: checkPasswd, trigger: 'blur'}
           ],
           password2: [
             {required: true, message: '请输入确认密码', trigger: 'blur'},

@@ -414,6 +414,7 @@
         </div>
       </div>
     </div>
+
     <page-right :show="showRight" @right-close="resetRightBox">
       <goods-part :formItem="form" :action="action" :userStatus="1" @close="showRight=false" :actionType="showRight"
                   @change="onSubmit"></goods-part>

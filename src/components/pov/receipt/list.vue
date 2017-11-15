@@ -62,9 +62,9 @@
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span=" filters.status === '3' ? 5 : 6">货主/订单号</el-col>
-          <el-col :span="4">业务类型</el-col>
+          <el-col :span="3">业务类型</el-col>
           <el-col :span="filters.status === '3' ? 5 : 6">POV</el-col>
-          <el-col :span="filters.status === '3' ? 4 : 5">时间</el-col>
+          <el-col :span="filters.status === '3' ? 5 : 6">时间</el-col>
           <el-col :span="3">状态</el-col>
           <el-col :span="3" v-if="filters.status === '3'">操作</el-col>
         </el-row>
@@ -92,7 +92,7 @@
                   {{item.orgName }}
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="3">
                 <div class="vertical-center">
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
@@ -100,8 +100,8 @@
               <el-col :span="filters.status === '3' ? 5 : 6">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
-              <el-col :span="filters.status === '3' ? 4 : 5">
-                <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | date }}</div>
+              <el-col :span="filters.status === '3' ? 5 : 6">
+                <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | time }}</div>
                 <div>预计送货：{{ item.expectedTime | date }}</div>
               </el-col>
               <el-col :span="3">

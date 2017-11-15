@@ -1,5 +1,5 @@
 <style lang="less" scoped>
-  @import "../../../assets/mixins.less";
+  @import "../../../../../assets/mixins.less";
 
   @leftWidth: 220px;
 
@@ -219,6 +219,14 @@
   .ar {
     text-align: right;
   }
+
+  .good-selects {
+    .el-select-dropdown__item {
+      width: 520px;
+      height: 70px;
+    }
+  }
+
 </style>
 
 <template>
@@ -235,38 +243,41 @@
       <div class="content-right min-gutter">
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
-                   label-width="160px" style="padding-right: 20px">
-            <el-form-item label="价格组名称" prop="name">
-              <oms-input type="text" placeholder="请输入价格组名称" v-model="form.name"></oms-input>
+                   label-width="100px" style="padding-right: 20px">
+            <el-form-item label="POV" v-if="!form.id">
+              <el-transfer v-loading="loading"
+                           v-model="form.povList"
+                           :props="{
+                  key: 'subordinateId',
+                  label: 'subordinateName'
+                }"
+                           filter-placeholder="请输入名称搜索POV"
+                           :data="orgList"
+                           filterable
+                           :filter-method="filterMethod"
+                           :titles="['未选POV', '已选POV']"
+                           class="transfer-list"
+              >
+              </el-transfer>
             </el-form-item>
-            <el-form-item label="选择CDC货品" prop="orgGoodsId">
-              <el-select filterable remote placeholder="请输入关键字搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
-                         v-model="form.orgGoodsId">
-                <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
-                           v-for="item in goodses">
+            <el-form-item label="POV" prop="povId" v-if="form.id">
+              <span>{{ formItem.povName }}</span>
+            </el-form-item>
+            <el-form-item label="选择价格组" prop="salePriceGroupId">
+              <el-select filterable remote placeholder="请输入关键字搜索价格组" :remote-method="filterPriceGroup" :clearable="true"
+                         v-model="form.salePriceGroupId"
+                         @change="changeSelect" @click.native="filterPriceGroup('')">
+                <el-option :value="item.id" :key="item.id" :label="item.name"
+                           v-for="item in prices">
                   <div style="overflow: hidden">
-                    <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                  </div>
-                  <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-                      </span>
-                    <span class="select-other-info pull-left"><span
-                      v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
-                      </span>
+                    <span class="pull-left">{{item.name}}</span>
+                    <span class="pull-right">销售单价 ￥{{item.unitPrice}}</span>
                   </div>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="单价" prop="unitPrice">
-              <oms-input type="text" placeholder="请输入单价" v-model="form.unitPrice" :min="0"
-                         @blur="formatPrice">
-                <template slot="prepend">¥</template>
-              </oms-input>
-            </el-form-item>
-            <el-form-item label="是否可用">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.availabilityStatus"></el-switch>
+            <el-form-item label="单价" v-if="unitPrice">
+              <span>￥{{ unitPrice }}</span>
             </el-form-item>
           </el-form>
         </div>
@@ -275,91 +286,152 @@
   </div>
 </template>
 <script>
-  import { Vaccine, BriceGroup } from '@/resources';
+  import { Vaccine, BriceGroup, cerpAction, VaccineRights, http } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
     props: {
-      formItem: Object
+      formItem: Object,
+      currentItem: Object
     },
     data () {
       return {
         form: {
-          name: '',
           orgGoodsId: '',
-          unitPrice: '',
-          availabilityStatus: true
+          salePriceGroupId: '',
+          povList: [],
+          povId: ''
         },
         rules: {
-          name: {required: true, message: '请输入价格组名称', trigger: 'blur'},
-          unitPrice: {required: true, message: '请输入单价', trigger: 'blur'},
-          orgGoodsId: {required: true, message: '请选择CDC货品', trigger: 'change'}
+          salePriceGroupId: {required: true, message: '请选择价格组', trigger: 'change'},
+          povList: {required: true, type: 'array', message: '请选择POV', trigger: 'change'},
+          povId: {required: true, message: '请选择价格组', trigger: 'change'}
         },
-        goodses: [], // 货品列表
-        title: '新增价格组',
-        doing: false
+        prices: [], // 货品列表
+        title: '新增疫苗授权详情',
+        orgList: [],
+        unitPrice: '',
+        doing: false,
+        loading: false
       };
     },
     watch: {
       formItem (val) {
+        this.$refs['d-form'].resetFields();
         if (val.id) {
-          this.goodses.push({
-            orgGoodsDto: {
-              id: val.orgGoodsId,
-              name: val.goodsName
-            }
+          this.title = '编辑疫苗授权详情';
+          this.orgList.push({
+            subordinateId: val.povId,
+            subordinateName: val.povName
+          });
+          this.prices.push({
+            id: val.salePriceGroupId,
+            name: val.salePriceGroupName
           });
           this.form = val;
-          this.form.unitPrice = this.form.unitPrice ? this.form.unitPrice.toString() : '';
-          this.title = '编辑价格组';
+          this.form.povList = [];
         } else {
           this.form = {
-            name: '',
             orgGoodsId: '',
-            unitPrice: '',
-            availabilityStatus: true
+            salePriceGroupId: '',
+            povList: [],
+            povId: ''
           };
-          this.title = '新增价格组';
+          this.title = '新增疫苗授权详情';
         }
+        this.filterPOV();
       }
     },
     methods: {
-      getGoodsList: function (query) {
-        let params = Object.assign({}, {
-          keyWord: query,
-          deleteFlag: false
-        });
-        this.$http.get('/vaccine-info/second-vaccine/valid/org-goods', {params}).then(res => {
-          this.goodses = res.data.list;
-        });
-      },
       formatPrice: function () {// 格式化单价，保留两位小数
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
+      },
+      changeSelect (val) {
+        if (!val) {
+          this.unitPrice = '';
+        }
+        let ary = this.prices.filter(f => f.id === val);
+        this.unitPrice = ary.length ? ary[0].unitPrice : '';
+      },
+      filterPriceGroup: function (query) {// 过滤POV
+        if (!query && this.prices.length && this.form.salePriceGroupId) {
+          return false;
+        }
+        let params = Object.assign({}, {
+          keyWord: query,
+          orgGoodsId: this.currentItem.orgGoodsId,
+          availabilityStatus: true
+        });
+        BriceGroup.query(params).then(res => {
+          this.prices = res.data.list;
+        });
+      },
+      filterPOV: function (query) {// 过滤POV
+//        if (!query && this.orgList.length && this.form.povId) {
+//          return false;
+//        }
+        let params = Object.assign({}, {
+          keyWord: query,
+          pageSize: -1
+        });
+        this.loading = true;
+        cerpAction.queryAllPov(params).then(res => {
+          this.orgList = res.data;
+          this.loading = false;
+        });
+      },
+      filterMethod (query, item) {
+        return item.subordinateName.indexOf(query) > -1;
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;
           }
-          this.doing = true;
           if (this.form.id) {
-            BriceGroup.update(this.form.id, this.form).then(() => {
+            let obj = {
+              'id': this.form.id,
+              'orgGoodsId': this.currentItem.orgGoodsId,
+              'povId': this.form.povId,
+              'salePriceGroupId': this.form.salePriceGroupId
+            };
+            this.doing = true;
+            http.put('/vaccine-authorization', obj).then(() => {
               this.$notify.success({
-                message: '编辑价格组成功'
+                message: '修改疫苗授权成功'
               });
-              this.$refs['d-form'].resetFields();
-              this.$emit('refresh');
+//              this.$refs['d-form'].resetFields();
+              this.form = {
+                orgGoodsId: '',
+                salePriceGroupId: '',
+                povList: [],
+                povId: ''
+              };
               this.doing = false;
+              this.$emit('refresh');
             }).catch(error => {
               this.doing = false;
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '编辑价格组失败'
+                message: error.response.data && error.response.data.msg || '修改疫苗授权失败'
               });
             });
           } else {
-            BriceGroup.save(this.form).then(() => {
+            if (!this.form.povList.length) {
+              this.$notify.info({
+                duration: 2000,
+                message: '请先选择POV'
+              });
+              return false;
+            }
+            let obj = {
+              'orgGoodsId': this.currentItem.orgGoodsId,
+              'povList': this.form.povList,
+              'groupId': this.form.salePriceGroupId
+            };
+            this.doing = true;
+            VaccineRights.batchSave(obj).then(() => {
               this.$notify.success({
-                message: '添加价格组成功'
+                message: '添加疫苗授权成功'
               });
               this.$refs['d-form'].resetFields();
               this.$emit('refresh');
@@ -367,7 +439,7 @@
             }).catch(error => {
               this.doing = false;
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '添加价格组失败'
+                message: error.response.data && error.response.data.msg || '添加疫苗授权失败'
               });
             });
           }

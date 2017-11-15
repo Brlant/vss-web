@@ -59,7 +59,7 @@
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
-          <div v-if="!currentItem.id" class="empty-info">
+          <div v-if="!showTypeList.length" class="empty-info">
             暂无信息
           </div>
           <div v-else>
@@ -105,17 +105,24 @@
               <th>操作</th>
             </tr>
             </thead>
-            <tbody v-if="dataRows.length === 0">
+            <tbody v-if="loadingData">
+            <tr>
+              <td colspan="3" class="text-center">
+                <oms-loading :loading="loadingData"></oms-loading>
+              </td>
+            </tr>
+            </tbody>
+            <tbody v-else-if="dataRows.length === 0">
             <tr>
               <td colspan="3" class="text-center">
                 <div class="empty-info">暂无信息</div>
               </td>
             </tr>
             </tbody>
-            <tbody>
-            <tr v-for="row in dataRows">
+            <tbody v-else="">
+            <tr v-for="row in dataRows" :keys="row.id">
               <td>
-                {{row.povName}}
+                {{ row.povName }}
               </td>
               <td>
                 ￥{{row.price ? row.price : 0 }}
@@ -132,8 +139,16 @@
             </tbody>
           </table>
         </div>
+        <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
+          <el-pagination
+            layout="prev, pager, next"
+            :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
+            :current-page="pager.currentPage">
+          </el-pagination>
+        </div>
       </div>
     </div>
+
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
       <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="refreshDetails"
                 @close="resetRightBox"></add-form>
@@ -144,12 +159,14 @@
 <script>
   import addForm from './form.vue';
   import { cerpAction, Vaccine, VaccineRights, PurchaseAgreement } from '@/resources';
+
   export default {
     components: {
       addForm
     },
     data: function () {
       return {
+        loadingData: false,
         showRight: false,
         showTypeSearch: false,
         showSearch: false,
@@ -168,7 +185,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20,
+          pageSize: 10,
           totalPage: 1
         },
         typePager: {
@@ -185,7 +202,8 @@
         orgList: [],
         showOrgList: [],
         povId: '',
-        formPara: {}
+        formPara: {},
+        nowTime: ''
       };
     },
     computed: {
@@ -220,7 +238,10 @@
           pageSize: this.pager.pageSize,
           keyWord: this.typeTxt
         });
-        PurchaseAgreement.queryValidVaccin(params).then(res => {
+        let nowTime = new Date();
+        this.nowTime = nowTime;
+        this.$http.get('/purchase-agreement/valid/second-vaccine/pager', {params}).then(res => {
+          if (this.nowTime > nowTime) return;
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
@@ -228,7 +249,7 @@
             if (this.showTypeList.length !== 0) {
               this.currentItem = res.data.list[0];
               this.orgName = this.showTypeList[0].orgGoodsName;
-              this.getPageList();
+              this.getPageList(1);
             } else {
               this.currentItem = Object.assign({'id': ''});
             }
@@ -260,15 +281,24 @@
           this.filterPOVs();
         });
       },
-      getPageList: function () {
+      getPageList: function (pageNo) {
         this.dataRows = [];
-        if (!this.currentItem.orgGoodsId) return;
-        VaccineRights.queryPovByVaccine(this.currentItem.orgGoodsId).then(res => {
-          this.dataRows = res.data;
+        this.pager.currentPage = pageNo;
+        let orgId = this.currentItem.orgGoodsId;
+        if (!orgId) return;
+        this.loadingData = true;
+        let params = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        });
+        VaccineRights.queryPovByVaccine(orgId, params).then(res => {
+          this.dataRows = res.data.list;
+          this.pager.count = res.data.count;
+          this.loadingData = false;
         });
       },
       refreshDetails () {
-        this.getPageList();
+        this.getPageList(1);
         this.showRight = false;
       },
       removeVaccine: function (item) {
@@ -278,7 +308,7 @@
           type: 'warning'
         }).then(() => {
           VaccineRights.deleteVaccine(item.id).then(() => {
-            this.getPageList();
+            this.getPageList(1);
             this.$notify.success({
               message: '已成功删除疫苗'
             });
@@ -311,7 +341,7 @@
             message: '授权疫苗成功'
           });
           this.povId = '';
-          this.getPageList();
+          this.getPageList(1);
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '授权疫苗失败'
@@ -321,7 +351,7 @@
       showType: function (item) {
         this.orgName = item.orgGoodsName;
         this.currentItem = item;
-        this.getPageList();
+        this.getPageList(1);
       },
       add () {
         this.formPara = {};

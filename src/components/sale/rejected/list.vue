@@ -198,9 +198,9 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
-          <el-col :span="4">业务类型</el-col>
+          <el-col :span="3">业务类型</el-col>
           <el-col :span="filters.state === '6' ? 5: 6">POV</el-col>
-          <el-col :span="4">时间</el-col>
+          <el-col :span="5">时间</el-col>
           <el-col :span="3">状态</el-col>
           <el-col :span="3" v-if="filters.state === '6'">操作</el-col>
         </el-row>
@@ -239,7 +239,7 @@
               <el-col :span="4">
                 <div>
                   <span style="letter-spacing:2em;margin-right: -2em">下单</span>
-                  ：{{item.createTime | date }}
+                  ：{{item.createTime | time }}
                 </div>
                 <div>
                   <span>预计入库</span>
