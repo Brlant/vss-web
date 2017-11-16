@@ -317,6 +317,16 @@ const route = [
             meta: {moduleId: 'resource', title: '货主疫苗资料', perm: 'vaccine-info'}
           },
           {
+            path: '/resource/pov/first-vaccin/list',
+            component: resolve => require(['./components/resource/vaccin/pov/first/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: 'pov授权一类疫苗', perm: 'pov-first-authorization-vaccine'}
+          },
+          {
+            path: '/resource/pov/second-vaccin/list',
+            component: resolve => require(['./components/resource/vaccin/pov/second/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: 'pov授权二类疫苗', perm: 'pov-second-authorization-vaccine'}
+          },
+          {
             path: '/resource/vaccin/price',
             component: resolve => require(['./components/resource/price/list.vue'], resolve),
             meta: {moduleId: 'resource', title: '疫苗价格组', perm: 'sale-price-group'}
