@@ -247,8 +247,8 @@
               </el-col>
               <el-col :span="5">
                 <div>
-                  <span style="letter-spacing:2em;margin-right: -2em">下单</span>
-                  ：{{item.createTime | time }}
+                  <span>下单</span>
+                  ：{{item.createTime | minute }}
                 </div>
                 <div>
                   <span>预计入库</span>

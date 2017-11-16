@@ -227,7 +227,7 @@
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="5">
-                <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | time }}</div>
+                <div>下单：{{item.createTime | minute }}</div>
                 <div>预计出库：{{ item.expectedTime | date }}</div>
               </el-col>
               <el-col :span="3">
