@@ -319,12 +319,12 @@ const route = [
           {
             path: '/resource/pov/first-vaccin/list',
             component: resolve => require(['./components/resource/vaccin/pov/first/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: 'pov授权一类疫苗', perm: 'pov-first-authorization-vaccine'}
+            meta: {moduleId: 'resource', title: '被授权一类疫苗', perm: 'pov-first-authorization-vaccine'}
           },
           {
             path: '/resource/pov/second-vaccin/list',
             component: resolve => require(['./components/resource/vaccin/pov/second/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: 'pov授权二类疫苗', perm: 'pov-second-authorization-vaccine'}
+            meta: {moduleId: 'resource', title: '被授权二类疫苗', perm: 'pov-second-authorization-vaccine'}
           },
           {
             path: '/resource/vaccin/price',
