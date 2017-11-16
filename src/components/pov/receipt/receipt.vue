@@ -77,11 +77,17 @@
         <div v-for="(item, key) in productList" v-show="key === activeKey">
           <el-form :ref=" 'form' + key" :model="item" :rules="rules" label-width="160px"
                    style="padding-right: 20px">
-            <el-form-item label="整件数量">
-              <oms-input type="text" placeholder="请输入整件数量" v-model.number="item.largePackageCount"></oms-input>
+            <el-form-item label="货品名称" style="margin-bottom: 5px">
+              <span>{{ item.name }}</span>
             </el-form-item>
-            <el-form-item label="散件数量">
-              <oms-input type="text" placeholder="请输入散件数量" v-model.number="item.bulkCount"></oms-input>
+            <el-form-item label="批号" style="margin-bottom: 5px">
+              <span>{{ item.batchNumber }}</span>
+            </el-form-item>
+            <el-form-item label="大包装数量">
+              <oms-input type="text" placeholder="请输入大包装数量" v-model.number="item.largePackageCount"></oms-input>
+            </el-form-item>
+            <el-form-item label="小包装数量">
+              <oms-input type="text" placeholder="请输入小包装数量" v-model.number="item.smallPackageCount"></oms-input>
             </el-form-item>
           </el-form>
         </div>
