@@ -107,14 +107,29 @@
                   <div v-show="i.largePackageAmount">
                     大包装{{i.largePackageAmount}}
                     <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.largePackageUnit"></dict>
+                    ({{ i.largePackageSize }}
+                    <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.largePackageUnit"></dict>
+                    )
                   </div>
                   <div v-show="i.mediumPackageAmount">
                     中包装{{i.mediumPackageAmount}}
                     <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.mediumPackageUnit"></dict>
+                    ({{ i.mediumPackageSize }}
+                    <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.mediumPackageUnit"></dict>
+                    )
                   </div>
                   <div v-show="i.bulkCount">
                     小包装{{i.bulkCount}}
                     <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.smallPackageUnit"></dict>
+                    ({{ i.smallPackageSize }}
+                    <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.smallPackageUnit"></dict>
+                    )
                   </div>
                 </td>
                 <td width="80px">
