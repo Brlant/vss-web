@@ -88,13 +88,10 @@
               <tr>
                 <td width="240px">货品</td>
                 <td width="160px">批号</td>
-                <td width="160px">数量</td>
-                <td width="80px">合计数量</td>
+                <td width="160px">追溯码数量</td>
+                <td width="80px">合计货品数量</td>
               </tr>
             </table>
-          </td>
-          <td width="100px">
-            核对结果
           </td>
         </tr>
         <tr>
@@ -139,12 +136,10 @@
               </tr>
             </table>
           </td>
-          <td width="100px" :colspan="codes.length" style="border-left: 1px solid #ddd;text-align: center">
-            {{isCheck ? '通过' : '不通过'}}
-          </td>
         </tr>
         </tbody>
       </table>
+
       <div style="margin-bottom: 10px; margin-top: 20px;overflow: hidden">
        <span class="pull-right">
            <span class="btn-search-toggle open" v-show="showSearch">
