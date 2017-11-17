@@ -45,10 +45,11 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row label="" :span="2">
-                <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
-                  {{ isLoading ? '导出中...' : '导出Excel' }}
-                </el-button>
-                <!--<el-button native-type="reset" @click="resetSearchForm">重置</el-button>-->
+                <perm lable="inventory-form-export">
+                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                    {{ isLoading ? '导出中...' : '导出Excel' }}
+                  </el-button>
+                </perm>
               </oms-form-row>
             </el-col>
           </el-row>
