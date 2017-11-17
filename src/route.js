@@ -377,7 +377,7 @@ const route = [
           {
             path: '/report/sale',
             component: resolve => require(['./components/report/sale.vue'], resolve),
-            meta: {moduleId: 'report', title: '销售明细表', perm: 'sale-detail-form-manage'}
+            meta: {moduleId: 'report', title: '销售明细表', perm: 'sale-detail-form-manager'}
           },
           {
             path: '/report/out',
