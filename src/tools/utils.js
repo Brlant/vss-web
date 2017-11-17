@@ -283,12 +283,21 @@ export default {
     return count > 0;
   },
   download (src, fileName) {
-    let $a = document.createElement('a');
+    let $a;
+    let fileLink = document.getElementById('fileDownLoadDom');
+    if (!fileLink) {
+      $a = document.createElement('a');
+      $a.setAttribute('target', '_blank');
+      $a.setAttribute('class', 'min-div');
+      fileLink = document.createElement('span');
+      fileLink.setAttribute('id', 'fileDownLoadDom');
+      $a.appendChild(fileLink);
+      document.getElementsByTagName('body')[0].appendChild($a);
+    } else {
+      $a = fileLink.parentNode;
+    }
     $a.setAttribute('href', src);
     $a.setAttribute('download', fileName);
-
-    let evObj = document.createEvent('MouseEvents');
-    evObj.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, true, false, 0, null);
-    $a.dispatchEvent(evObj);
+    fileLink.click();
   }
 };
