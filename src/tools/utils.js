@@ -118,7 +118,7 @@ export default {
    * 实时动态强制更改用户录入
    * @param th
    */
-  format2DecimalPoint(val) {
+  format2DecimalPoint (val) {
     let th = val.toString();
     const regStrs = [
       ['^0(\\d+)$', '$1'], // 禁止录入整数部分两位以上，但首位为0
@@ -281,5 +281,14 @@ export default {
       });
     }
     return count > 0;
+  },
+  download (src, fileName) {
+    let $a = document.createElement('a');
+    $a.setAttribute('href', src);
+    $a.setAttribute('download', fileName);
+
+    let evObj = document.createEvent('MouseEvents');
+    evObj.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, true, false, 0, null);
+    $a.dispatchEvent(evObj);
   }
 };

@@ -357,19 +357,40 @@ const route = [
             meta: {moduleId: 'resource', title: '物料管理', perm: 'supplies-manager'}
           }
         ]
-      }
+      },
       // {
       //   path: '/trace',
       //   component: () => import('./components/trace/list.vue'),
       //   meta: {moduleId: 'report', title: '追溯管理', icon: 'trace', perm: 'show'},
       //   children: []
       // },
-      // {
-      //   path: '/report',
-      //   component: () => import('./components/report/list.vue'),
-      //   meta: {moduleId: 'report', title: '报表管理', icon: 'report', perm: 'show'},
-      //   children: []
-      // }
+      {
+        path: '/report',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'report', title: '报表管理', icon: 'report', perm: 'material-manager'},
+        children: [
+          {
+            path: '/report/purchase',
+            component: resolve => require(['./components/report/purchase.vue'], resolve),
+            meta: {moduleId: 'report', title: '采购明细表', perm: 'material-manager'}
+          },
+          {
+            path: '/report/sale',
+            component: resolve => require(['./components/report/sale.vue'], resolve),
+            meta: {moduleId: 'report', title: '销售明细表', perm: 'material-manager'}
+          },
+          {
+            path: '/report/out',
+            component: resolve => require(['./components/report/out.vue'], resolve),
+            meta: {moduleId: 'report', title: '出货一览表', perm: 'material-manager'}
+          },
+          {
+            path: '/report/repertory',
+            component: resolve => require(['./components/report/repertory.vue'], resolve),
+            meta: {moduleId: 'report', title: '库存盘点表', perm: 'material-manager'}
+          }
+        ]
+      }
     ]
   },
   {

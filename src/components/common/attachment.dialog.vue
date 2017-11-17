@@ -70,17 +70,7 @@
 </template>
 <script>
   import {http} from '../../resources';
-
-  function download(src, fileName) {
-    let $a = document.createElement('a');
-    $a.setAttribute('href', src);
-    $a.setAttribute('download', fileName);
-
-    let evObj = document.createEvent('MouseEvents');
-    evObj.initMouseEvent('click', true, true, window, 0, 0, 0, 0, 0, false, false, true, false, 0, null);
-    $a.dispatchEvent(evObj);
-  }
-
+  import utils from '@/tools/utils';
   export default {
     data() {
       return {
@@ -135,7 +125,7 @@
         if (this.type === 'image' || this.type === 'doc') {
           this.dialogVisible = true;
         } else {
-          download(this.Attachment.attachmentStoragePath, this.Attachment.attachmentFileName);
+          utils.download(this.Attachment.attachmentStoragePath, this.Attachment.attachmentFileName);
           /* let fileLink = document.getElementById("fileDownLoadRap");
            fileLink.parentNode.setAttribute("href", this.Attachment.attachmentStoragePath);
            fileLink.click();*/
