@@ -67,7 +67,8 @@
               <oms-form-row label="货主货品" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索货主货品" :remote-method="filterOrgGoods"
                            :clearable="true"
-                           v-model="searchWord.orgGoodsId" popper-class="good-selects">
+                           v-model="searchWord.orgGoodsId" popper-class="good-selects"
+                           @click.native.once="filterOrgGoods('')">
                   <el-option :value="org.id" :key="org.id" :label="org.goodsName"
                              v-for="org in orgGoods">
                     <div style="overflow: hidden">
@@ -93,7 +94,8 @@
             <el-col :span="8">
               <oms-form-row label="生产厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字生产厂商" :remote-method="filterFactory" :clearable="true"
-                           v-model="searchWord.factoryId" popperClass="good-selects">
+                           v-model="searchWord.factoryId" popperClass="good-selects"
+                           @click.native.once="filterFactory('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>

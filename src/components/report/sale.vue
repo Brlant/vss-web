@@ -46,7 +46,7 @@
             <el-col :span="8">
               <oms-form-row label="客户" :span="6">
                 <el-select filterable remote placeholder="请输入名称搜索客户" :remote-method="filterPOV" :clearable="true"
-                           v-model="searchWord.suppliers" popperClass="good-selects">
+                           v-model="searchWord.suppliers" @click.native.once="filterPOV('')" popperClass="good-selects">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                              v-for="org in orgList">
                     <div style="overflow: hidden">
