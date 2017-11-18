@@ -17,7 +17,11 @@ const state = {
   orgName: '',
   weChatInfo: {},
   bodyHeight: 0,
-  orgLevel: ''
+  orgLevel: '',
+  print: {
+    isPrinting: false,
+    text: '拼命导出中'
+  }
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -92,6 +96,10 @@ const mutations = {
   },
   initOrgLevel (state, data) {
     state.orgLevel = data;
+  },
+  initPrint (state, data) {
+    data.text = data.text ? data.text : '拼命导出中';
+    state.print = data;
   }
 };
 

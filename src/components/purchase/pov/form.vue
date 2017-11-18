@@ -133,7 +133,7 @@
                 </div>
                 <div v-show="status === 0">
                   <el-row
-                    style="height: 64px;background: #f1f1f1;margin-left: -5px;margin-right: -5px;padding-top: 20px">
+                    style="height: 64px;background: #f1f1f1;margin-left: -5px;margin-right: -5px;">
                     <el-col :span="12"></el-col>
                     <el-col :span="4">
                       <span style="font-size: 16px">需求总计

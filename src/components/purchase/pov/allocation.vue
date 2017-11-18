@@ -159,7 +159,7 @@
                   <span @click.prevent="goTo(item)" v-show="item.balanceAmount < 0 && status === 0 ">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="iconfont icon-link"></i></a>
-                  采购订单
+                  生成采购订单
                   </span>
                 </div>
               </el-col>

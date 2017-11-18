@@ -70,7 +70,7 @@
               <oms-form-row label="" :span="6">
                 <perm label="sale-detail-form-export">
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
-                    {{ isLoading ? '导出中...' : '导出Excel' }}
+                    导出Excel
                   </el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 </perm>
@@ -109,11 +109,14 @@
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true});
         this.$http.get('/erp-statement/sale-detail/export', {params}).then(res => {
           utils.download(res.data.path, '销售明细表');
           this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false});
         }).catch(error => {
           this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });

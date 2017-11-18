@@ -47,7 +47,7 @@
               <oms-form-row label="" :span="2">
                 <perm lable="inventory-form-export">
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
-                    {{ isLoading ? '导出中...' : '导出Excel' }}
+                    导出Excel
                   </el-button>
                 </perm>
               </oms-form-row>
@@ -82,11 +82,14 @@
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true});
         this.$http.get('', {params}).then(res => {
           utils.download(res.data.path, '库存盘点表');
           this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false});
         }).catch(error => {
           this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });

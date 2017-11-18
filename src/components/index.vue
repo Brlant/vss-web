@@ -102,6 +102,7 @@
     </div>
     <!--<app-footer></app-footer>-->
     <attachmentDialog></attachmentDialog>
+    <print-dialog></print-dialog>
     <a href="#" target="_blank" class="min-div"><span id="fileDownLoadRap"></span></a>
 
     <div class="cdc-shade" v-if="isPermission">
@@ -117,12 +118,14 @@
   import { Auth, DictGroup, cerpAccess, cerpAction, Access, BaseInfo } from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
+  import printDialog from './common/print.loading.vue';
 
   export default {
     components: {
       AppHeader,
       AppFooter,
-      attachmentDialog
+      attachmentDialog,
+      printDialog
     },
     data: () => ({
       transitionName: 'slide-left',
