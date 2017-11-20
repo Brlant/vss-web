@@ -45,7 +45,7 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row label="" :span="2">
-                <perm lable="inventory-form-export">
+                <perm label="inventory-form-export">
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                     导出Excel
                   </el-button>
@@ -83,8 +83,8 @@
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: 'repertory'});
-        this.$http.get('', {params}).then(res => {
-          utils.download(res.data.path, '库存盘点表');
+        this.$http.get('/erp-statement/stock-detail/export', {params}).then(res => {
+          utils.download(res.data.path, '二类苗库存盘点表');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: 'repertory'});
         }).catch(error => {

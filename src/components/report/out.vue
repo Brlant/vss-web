@@ -83,7 +83,7 @@
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: 'out'});
-        this.$http.get('', {params}).then(res => {
+        this.$http.get('/erp-statement/out-warehouse/export', {params}).then(res => {
           utils.download(res.data.path, '出库一览表');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: 'out'});
