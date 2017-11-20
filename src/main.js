@@ -24,7 +24,10 @@ Vue.filter('time', function (dateTime) {
   if (!dateTime) return '';
   return moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
 });
-
+Vue.filter('minute', function (dateTime) {
+  if (!dateTime) return '';
+  return moment(dateTime).format('YYYY-MM-DD HH:mm');
+});
 Vue.filter('formatStatus', function (key) {
   let reStr;
   let arr = {

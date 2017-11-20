@@ -84,7 +84,7 @@
         <div class="d-table-col-wrap">
           <h2 class="clearfix">
               <span class="pull-right">
-                  <perm label="vaccine-authorization-add">
+                  <perm label="second-vaccine-authorization-add">
                     <el-button @click="add(currentItem)"><i
                       class="iconfont icon-plus"></i>添加</el-button>
                   </perm>
@@ -128,10 +128,10 @@
                 ￥{{row.price ? row.price : 0 }}
               </td>
               <td>
-                <perm label="vaccine-authorization-update">
+                <perm label="second-vaccine-authorization-update">
                   <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
                 </perm>
-                <perm label="vaccine-authorization-delete">
+                <perm label="second-vaccine-authorization-delete">
                   <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="iconfont icon-delete"></i>删除</a>
                 </perm>
               </td>

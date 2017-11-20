@@ -141,7 +141,8 @@
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.transactOrgId" popperClass="good-selects">
+                           v-model="searchCondition.transactOrgId" popperClass="good-selects"
+                           @click.native.once="filterOrg('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -247,8 +248,8 @@
               </el-col>
               <el-col :span="5">
                 <div>
-                  <span style="letter-spacing:2em;margin-right: -2em">下单</span>
-                  ：{{item.createTime | time }}
+                  <span>下单</span>
+                  ：{{item.createTime | minute }}
                 </div>
                 <div>
                   <span>预计入库</span>

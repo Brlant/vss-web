@@ -293,11 +293,11 @@
             <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
-            <el-form-item label="疾控仓库地址" prop="logisticsCentreId">
-              <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">-->
+            <el-form-item label="疾控仓库地址" prop="orgAddress">
+              <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.logisticsCentreId" filterable :clearable="true">
+              <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
@@ -586,7 +586,7 @@
           transportationAddress: '',
           importedFlag: false,
           orgRelation: '',
-          logisticsCentreId: '',
+          orgAddress: '',
           sameBatchNumber: false,
           actualConsignee: '',
           'thirdPartyNumber': '',
@@ -621,7 +621,7 @@
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
-          logisticsCentreId: [
+          orgAddress: [
             {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
           ],
           transportationCondition: [
@@ -744,8 +744,8 @@
 //      let oldForm = window.localStorage.getItem(this.saveKey);
 //      if (oldForm) {
 //        this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-//        this.form.logisticsCentreId = this.form.logisticsCentreId
-//          ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
+//        this.form.orgAddress = this.form.orgAddress
+//          ? this.form.orgAddress : window.localStorage.getItem('orgAddress');
 //      }
     },
     methods: {
@@ -764,7 +764,7 @@
         this.form.customerId = '';
         this.form.transportationAddress = '';
         this.form.actualConsignee = '';
-        this.form.logisticsCentreId = '';
+        this.form.orgAddress = '';
       },
       editOrderInfo () {
         if (!this.orderId) return;
@@ -939,7 +939,7 @@
         }).then(res => {
           this.LogisticsCenter = res.data;
           let defaultStore = res.data.filter(item => item.default);
-          this.form.logisticsCentreId = defaultStore.length ? defaultStore[0].id : '';
+          this.form.orgAddress = defaultStore.length ? defaultStore[0].id : '';
         });
       },
       checkLicence: function (val) {// 检查货主/单位证照是否过期

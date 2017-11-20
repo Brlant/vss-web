@@ -88,13 +88,10 @@
               <tr>
                 <td width="240px">货品</td>
                 <td width="160px">批号</td>
-                <td width="160px">数量</td>
-                <td width="80px">合计数量</td>
+                <td width="160px">追溯码数量</td>
+                <td width="80px">合计货品数量</td>
               </tr>
             </table>
-          </td>
-          <td width="100px">
-            核对结果
           </td>
         </tr>
         <tr>
@@ -107,14 +104,29 @@
                   <div v-show="i.largePackageAmount">
                     大包装{{i.largePackageAmount}}
                     <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.largePackageUnit"></dict>
+                    ({{ i.largePackageSize }}
+                    <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.largePackageUnit"></dict>
+                    )
                   </div>
                   <div v-show="i.mediumPackageAmount">
                     中包装{{i.mediumPackageAmount}}
                     <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.mediumPackageUnit"></dict>
+                    ({{ i.mediumPackageSize }}
+                    <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.mediumPackageUnit"></dict>
+                    )
                   </div>
                   <div v-show="i.bulkCount">
                     小包装{{i.bulkCount}}
                     <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.smallPackageUnit"></dict>
+                    ({{ i.smallPackageSize }}
+                    <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.smallPackageUnit"></dict>
+                    )
                   </div>
                 </td>
                 <td width="80px">
@@ -124,12 +136,10 @@
               </tr>
             </table>
           </td>
-          <td width="100px" :colspan="codes.length" style="border-left: 1px solid #ddd;text-align: center">
-            {{isCheck ? '通过' : '不通过'}}
-          </td>
         </tr>
         </tbody>
       </table>
+
       <div style="margin-bottom: 10px; margin-top: 20px;overflow: hidden">
        <span class="pull-right">
            <span class="btn-search-toggle open" v-show="showSearch">

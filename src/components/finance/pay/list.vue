@@ -176,7 +176,7 @@
                   </span>
                 </td>
                 <td>
-                  <span v-show="row.prepaidAccounts">
+                  <span>
                     ￥{{row.prepaidAccounts | formatMoney}}
                   </span>
                 </td>

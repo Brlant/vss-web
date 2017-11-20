@@ -140,7 +140,8 @@
             <el-col :span="8">
               <oms-form-row label="POV" :span="6">
                 <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.transactOrgId" popperClass="good-selects">
+                           v-model="searchCondition.transactOrgId" popperClass="good-selects"
+                           @click.native.once="filterOrg('')">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                              v-for="org in orgList" popper-class="good-selects">
                     <div style="overflow: hidden">
@@ -228,7 +229,7 @@
             <div>{{item.transactOrgName }}</div>
           </el-col>
           <el-col :span="5">
-            <div>下&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;单：{{item.createTime | time }}</div>
+            <div>下单：{{item.createTime | minute }}</div>
             <div>预计送货：{{ item.expectedTime | date }}</div>
           </el-col>
           <el-col :span="3">

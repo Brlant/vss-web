@@ -41,7 +41,7 @@
               <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
             </oms-row>
             <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | time}}</span>
+              <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
@@ -119,7 +119,7 @@
               <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
             <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | time}}</span>
+              <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
             <oms-row :label="getTimeTitle(currentOrder)" v-show="currentOrder.expectedTime">
               <span class="goods-span">{{currentOrder.expectedTime | date}}</span>

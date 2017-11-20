@@ -109,7 +109,7 @@
         <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1">
           <perm label="demand-assignment-add" class="opera-btn">
             <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
-              class="iconfont icon-wave"></i></a><span class="wave-title"> 需求分配</span></span>
+              class="iconfont icon-wave"></i></a><span class="wave-title"> 分配需求</span></span>
           </perm>
        </span>
       </div>
