@@ -114,25 +114,27 @@
                 <el-select filterable remote placeholder="请输入关键字搜索疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects">
-                  <el-option :value="good.id" :key="good.id" :label="good.name"
+                  <el-option :value="good.orgGoodsDto.goodsId" :key="good.orgGoodsDto.goodsId"
+                             :label="good.orgGoodsDto.name"
                              v-for="good in orgGoods">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{good.name}}</span>
+                      <span class="pull-left">{{good.orgGoodsDto.name}}</span>
                     </div>
                     <div style="overflow: hidden">
                     <span class="select-other-info pull-left"><span
-                      v-show="good.id">货品ID</span>  {{good.id}}
+                      v-show="good.orgGoodsDto.id">货品ID</span>  {{good.orgGoodsDto.id}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="good.specifications">货品规格</span>  {{good.specifications}}
+                        v-show="good.orgGoodsDto.goodsDto.specifications">货品规格</span>  {{good.orgGoodsDto.goodsDto.specifications}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="good.approvalNumber">批准文号</span>  {{good.approvalNumber}}
+                        v-show="good.orgGoodsDto.goodsDto.approvalNumber">批准文号</span>  {{good.orgGoodsDto.goodsDto.approvalNumber}}
                       </span>
                     </div>
                     <div style="overflow: hidden">
                   <span class="select-other-info pull-left"><span
-                    v-show="good.factoryName">生产厂商</span>  {{ good.factoryName }}
+                    v-show="good.orgGoodsDto.goodsDto.factoryName">生产厂商</span>  {{ good.orgGoodsDto.goodsDto.factoryName
+                    }}
                   </span>
                     </div>
                   </el-option>
@@ -169,7 +171,12 @@
         <!--<oms-loading :loading="loadingData"></oms-loading>-->
         <!--</el-col>-->
         <!--</el-row>-->
-        <el-row v-if="batches.length == 0">
+        <el-row v-if="loadingData">
+          <el-col :span="24">
+            <oms-loading :loading="loadingData"></oms-loading>
+          </el-col>
+        </el-row>
+        <el-row v-if="!loadingData&&batches.length == 0">
           <el-col :span="24">
             <div class="empty-info">
               暂无信息
@@ -232,6 +239,7 @@
         showFlag: false,
         showSearch: true,
         showDetailPart: false,
+        loadingData: true,
         batches: [],
         filters: {
           orgId: '',
@@ -269,15 +277,13 @@
     methods: {
       getBatcheNumbers() { // 得到批次列表
 //        this.pager.currentPage = pageNo;
-//        if (this.filter.orgId !== '' || this.filter.batchNumber !== '' || this.filter.goodsId !== '') {
+        this.loadingData = true;
         let params = Object.assign({}, this.filters);
-//        this.loadingData = true;
         BatchNumber.query(params).then(res => {
           this.batches = res.data;
+          this.loadingData = false;
 //          this.pager.count = res.data.count;
-//          this.loadingData = false;
         });
-//        }
       },
       showDetail(item) {
         this.currentItemId = item.id;
@@ -287,8 +293,17 @@
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
-        this.showFlag = true;
-        Object.assign(this.filters, this.searchWord);
+        if (this.searchWord.orgId !== '' || this.searchWord.goodsId !== '' || this.searchWord.batchNumber !== '') {
+          this.showFlag = true;
+          Object.assign(this.filters, this.searchWord);
+          this.getBatcheNumbers();
+        } else {
+          this.$notify.info({
+            message: '请选择查询条件'
+          });
+          this.loadingData = false;
+          return;
+        }
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
@@ -297,7 +312,9 @@
           goodsId: ''
         };
         Object.assign(this.searchWord, temp);
-        Object.assign(this.filters, temp);
+        this.batches = [];
+        this.showFlag = false;
+//        Object.assign(this.filters, temp);
       },
       filterFactory(query) { // 查询厂商
         let params = {
@@ -312,10 +329,12 @@
       filterOrgGoods(query) {
         this.orgGoods = [];
         let params = Object.assign({}, {
-          deleteFlag: false,
-          keyWord: query
+          pageNo: 1,
+          pageSize: 20,
+          keyWord: query,
+          deleteFlag: false
         });
-        Vaccine.queryAvaliableVaccine(params).then(res => {
+        Vaccine.query(params).then(res => {
           this.orgGoods = res.data.list;
         });
       }
