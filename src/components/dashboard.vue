@@ -64,7 +64,7 @@
           暂无异常订单
         </div>
         <el-row v-else="" v-for="(item, index) in orderList" :key="item.id" type="flex" :gutter="15"
-                class="list-item exception-list" @click.native="$router.push(`/purchase/order/${item.id}`)">
+                class="list-item exception-list" @click.native="goToOrderUrl(item)">
           <el-col :span="4">
             {{ item.createTime | date}}
           </el-col>
@@ -190,6 +190,13 @@
           this.$router.push({path: '/pov/request', query: {id: item.id}});
         } else {
           this.$router.push({path: '/sale/pov', query: {id: item.id}});
+        }
+      },
+      goToOrderUrl (item) {
+        if (this.level === 1) {
+          this.$router.push(`purchase/order/one/class/${item.id}`);
+        } else {
+          this.$router.push(`purchase/order/two/class/${item.id}`);
         }
       }
     }
