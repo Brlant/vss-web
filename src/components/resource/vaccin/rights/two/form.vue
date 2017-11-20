@@ -227,6 +227,11 @@
     }
   }
 
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 
 <template>
@@ -263,14 +268,16 @@
             <el-form-item label="POV" prop="povId" v-if="form.id">
               <span>{{ formItem.povName }}</span>
             </el-form-item>
-            <el-form-item label="选择销售价格组" prop="salePriceGroupId">
-              <el-select filterable remote placeholder="请输入关键字搜索销售价格组" :remote-method="filterPriceGroup" :clearable="true"
+            <el-form-item label="授权疫苗和销售价格" prop="salePriceGroupId" labelWidth="200px">
+              <el-select filterable remote placeholder="请输入关键字搜索授权疫苗和销售价格" :remote-method="filterPriceGroup"
+                         :clearable="true"
                          v-model="form.salePriceGroupId"
                          @change="changeSelect" @click.native="filterPriceGroup('')">
                 <el-option :value="item.id" :key="item.id" :label="item.name"
                            v-for="item in prices">
                   <div style="overflow: hidden">
                     <span class="pull-left">{{item.name}}</span>
+                    <span class="pull-left" style="margin-left: 20px">疫苗名称  {{item.goodsName}}</span>
                     <span class="pull-right">销售单价 ￥{{item.unitPrice}}</span>
                   </div>
                 </el-option>
@@ -308,7 +315,7 @@
           povId: {required: true, message: '请选择销售价格组', trigger: 'change'}
         },
         prices: [], // 货品列表
-        title: '新增疫苗授权详情',
+        title: '新增疫苗授权',
         orgList: [],
         unitPrice: '',
         doing: false,
@@ -319,7 +326,7 @@
       formItem (val) {
         this.$refs['d-form'].resetFields();
         if (val.id) {
-          this.title = '编辑疫苗授权详情';
+          this.title = '编辑疫苗授权';
           this.orgList.push({
             subordinateId: val.povId,
             subordinateName: val.povName
@@ -337,7 +344,7 @@
             povList: [],
             povId: ''
           };
-          this.title = '新增疫苗授权详情';
+          this.title = '新增疫苗授权';
         }
         this.filterPOV();
       }

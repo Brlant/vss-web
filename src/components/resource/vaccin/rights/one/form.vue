@@ -292,7 +292,7 @@
           povId: {required: true, message: '请选择销售价格组', trigger: 'change'}
         },
         prices: [], // 货品列表
-        title: '新增疫苗授权详情',
+        title: '新增疫苗授权',
         orgList: [],
         unitPrice: '',
         doing: false,
@@ -303,7 +303,7 @@
       formItem (val) {
         this.$refs['d-form'].resetFields();
         if (val.id) {
-          this.title = '编辑疫苗授权详情';
+          this.title = '编辑疫苗授权';
           this.orgList.push({
             subordinateId: val.povId,
             subordinateName: val.povName
@@ -321,7 +321,7 @@
             povList: [],
             povId: ''
           };
-          this.title = '新增疫苗授权详情';
+          this.title = '新增疫苗授权';
         }
         this.filterPOV();
       }

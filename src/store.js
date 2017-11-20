@@ -18,10 +18,7 @@ const state = {
   weChatInfo: {},
   bodyHeight: 0,
   orgLevel: '',
-  print: {
-    isPrinting: false,
-    text: '拼命导出中'
-  }
+  prints: []
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -99,7 +96,19 @@ const mutations = {
   },
   initPrint (state, data) {
     data.text = data.text ? data.text : '拼命导出中';
-    state.print = data;
+    let isHas = false;
+    let index = -1;
+    state.prints.forEach((item, dd) => {
+      if (item.moduleId === data.moduleId) {
+        isHas = true;
+        index = dd;
+      }
+    });
+    if (isHas) {
+      state.prints.splice(index, 1, data);
+    } else {
+      state.prints.push(data);
+    }
   }
 };
 
