@@ -287,7 +287,7 @@
       filterOrg: function (query) {// 过滤供货商
         let params = {
           deleteFlag: false,
-          keyWord: query
+          keyWord: query, orgRelationType: 'Manufacture'
         };
         BaseInfo.query(params).then(res => {
           this.orgList = res.data.list;
