@@ -247,10 +247,10 @@
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="合同名称" prop="purchaseContractName">
+            <el-form-item label="合同名称">
               <oms-input type="text" v-model="form.purchaseContractName" placeholder="请输入采购合同名称"></oms-input>
             </el-form-item>
-            <el-form-item label="合同编号" prop="purchaseContractNo">
+            <el-form-item label="合同编号">
               <oms-input type="text" v-model="form.purchaseContractNo" placeholder="请输入采购合同编号"></oms-input>
             </el-form-item>
             <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
