@@ -327,7 +327,7 @@
           pageSize: this.pager.pageSize,
           type: this.type
         }, this.filters);
-        this.loadingData = true;
+//        this.loadingData = true;
         http.get(`/code/${this.currentOrder.id}/trace-code`, {params}).then(res => {
           this.traceCodes = res.data.list;
 //          this.pager.count = res.data.count;
