@@ -175,11 +175,11 @@
             <!--</oms-form-row>-->
             <!--</el-col>-->
             <el-col :span="8">
-              <oms-form-row label="预计入库时间" :span="8">
+              <oms-form-row label="下单时间" :span="6">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
-                    type="daterange"
+                    type="datetimerange"
                     placeholder="请选择" format="yyyy-MM-dd">
                   </el-date-picker>
                 </el-col>
@@ -320,8 +320,8 @@
           state: '6',
           orderNo: '',
           logisticsProviderId: '',
-          expectedStartTime: '',
-          expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           bizType: '0',
           transportationMeansId: '',
           transactOrgId: '',
@@ -332,8 +332,8 @@
           searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
-          expectedStartTime: '',
-          expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: ''
@@ -410,8 +410,8 @@
         return state;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.expectedStartTime = this.formatTime(this.expectedTime[0]);
-        this.searchCondition.expectedEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchCondition.createStartTime = this.formatTime(this.expectedTime[0]);
+        this.searchCondition.createEndTime = this.formatTime(this.expectedTime[1]);
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
@@ -419,8 +419,8 @@
           searchType: '',
           orderNo: '',
           logisticsProviderId: '',
-          expectedStartTime: '',
-          expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: ''
@@ -569,7 +569,7 @@
         this.showSearch = !this.showSearch;
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
       }
     }
   };
