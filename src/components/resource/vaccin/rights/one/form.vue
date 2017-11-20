@@ -287,9 +287,9 @@
           povId: ''
         },
         rules: {
-          salePriceGroupId: {required: true, message: '请选择价格组', trigger: 'change'},
+          salePriceGroupId: {required: true, message: '请选择销售价格组', trigger: 'change'},
           povList: {required: true, type: 'array', message: '请选择POV', trigger: 'change'},
-          povId: {required: true, message: '请选择价格组', trigger: 'change'}
+          povId: {required: true, message: '请选择销售价格组', trigger: 'change'}
         },
         prices: [], // 货品列表
         title: '新增疫苗授权详情',

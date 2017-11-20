@@ -329,7 +329,7 @@ const route = [
           {
             path: '/resource/vaccin/price',
             component: resolve => require(['./components/resource/price/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗价格组', perm: 'sale-price-group'}
+            meta: {moduleId: 'resource', title: '疫苗销售价格组', perm: 'sale-price-group'}
           },
           {
             path: '/resource/one/vaccin/pov',
