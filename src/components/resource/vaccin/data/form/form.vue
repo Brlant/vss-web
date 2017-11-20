@@ -409,7 +409,8 @@
         let param = {
           deleteFlag: false,
           keyWord: query,
-          auditedStatus: '1'
+          auditedStatus: '1',
+          orgRelationType: 'Manufacture'
         };
         BaseInfo.query(param).then(res => {
           this.orgList = res.data.list;
