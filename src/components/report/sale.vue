@@ -109,14 +109,14 @@
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true});
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: 'sale'});
         this.$http.get('/erp-statement/sale-detail/export', {params}).then(res => {
           utils.download(res.data.path, '销售明细表');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: 'sale'});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: 'sale'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });

@@ -1,11 +1,10 @@
 <style>
   .print-dialog {
     position: fixed;
-    top: 0;
-    left: 0;
+    top: 90px;
+    left: 180px;
     right: 0;
     bottom: 0;
-    z-index: 10000;
   }
 </style>
 <template>
@@ -16,7 +15,17 @@
   export default {
     computed: {
       print () {
-        return this.$store.state.print;
+        let obj = {};
+        let prints = this.$store.state.prints;
+        if (!prints.length) return {};
+        if (this.$route.meta.moduleId !== 'report') return {};
+        let ary = this.$route.path.split('/');
+        prints.forEach(item => {
+          if (item.moduleId === ary[ary.length - 1]) {
+            obj = item;
+          }
+        });
+        return obj;
       }
     }
   };
