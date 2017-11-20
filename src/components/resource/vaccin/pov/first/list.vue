@@ -129,7 +129,7 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="iconfont icon-search"></i> </a>
                 </span>
-              疫苗资料
+              被授权一类疫苗
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
@@ -192,6 +192,9 @@
                   <goods-row label="疫苗名称" :span="8">
                     {{ data.name}}
                   </goods-row>
+                  <goods-row label="POV采购价格" :span="8">
+                    <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
+                  </goods-row>
                   <!--<goods-row label="疫苗分类" :span="8">-->
                   <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
                   <!--</goods-row>-->
@@ -201,23 +204,8 @@
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
-                  <goods-row label="中标价格" :span="8">
-                    <span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}
-                  </goods-row>
-                  <goods-row label="采购价格" :span="8">
-                    <span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}
-                  </goods-row>
                   <goods-row label="供货厂商" :span="8">
                     {{ data.salesFirmName }}
-                  </goods-row>
-                  <goods-row label="销售价格" :span="8">
-                    <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
-                  </goods-row>
-                  <goods-row label="库存上限" :span="8">
-                    {{ data.inventoryUpperLimit }}
-                  </goods-row>
-                  <goods-row label="库存下限" :span="8">
-                    {{ data.inventoryLowerLimit }}
                   </goods-row>
                   <goods-row label="是否组合" :span="8" v-show="data.goodsIsCombination">
                     {{ data.goodsIsCombination | formatStatus}}
