@@ -151,7 +151,7 @@
             </h2>
             <div class="content-body clearfix" style="margin-top: 0;margin-bottom: 0">
               <el-row>
-                <oms-row label="价格组名称" :span="5">
+                <oms-row label="销售价格组名称" :span="5">
                   {{currentItem.name}}
                 </oms-row>
                 <oms-row label="货品名称" :span="5">
@@ -482,19 +482,19 @@
         this.showLeft = true;
       },
       deletePriceGroup (item) {
-        this.$confirm('是否删除价格组"' + item.name + '"?', '', {
+        this.$confirm('是否删除销售价格组"' + item.name + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           BriceGroup.delete(item.id).then(res => {
             this.$notify.success({
-              message: `删除价格组${item.name}成功`
+              message: `删除销售价格组${item.name}成功`
             });
             this.getOrgsList(1);
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || `删除价格组${item.name}失败`
+              message: error.response.data && error.response.data.msg || `删除销售价格组${item.name}失败`
             });
           });
         });
