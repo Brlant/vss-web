@@ -390,9 +390,10 @@
       filterVaccine: function (query) {
         let params = Object.assign({}, {
           deleteFlag: false,
+          vaccineSign: '2',
           keyWord: query
         });
-        http.get('/vaccine-info/valid', {params}).then(res => {
+        http.get('/goods', {params}).then(res => {
           this.vaccineList = res.data.list;
         });
       },
@@ -401,11 +402,12 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          orgName: '',
-          factoryName: '',
-          year: ''
+          goodsId: '',
+          year: '',
+          availabilityStatus: true
         };
         Object.assign(this.searchCondition, temp);
+        this.getPageList(1);
       },
       searchPage() {
         this.showFlag = true;
