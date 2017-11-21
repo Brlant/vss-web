@@ -23,6 +23,10 @@
   .el-table {
     width: inherit;
   }
+
+  .opera-btn-group {
+    margin: 10px 0;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -66,13 +70,13 @@
           </el-row>
         </el-form>
       </div>
+      <el-table :data="dataList" class="header-list"
+                :header-row-class-name="'headerClass'" v-loading="loadingData" height="400">
+        <template v-for="item in firstLine">
+          <el-table-column :prop="item.key" :label="item.name"></el-table-column>
+        </template>
+      </el-table>
     </div>
-    <el-table :data="dataList" class="header-list"
-              :header-row-class-name="'headerClass'" v-loading="loadingData">
-      <template v-for="item in firstLine">
-        <el-table-column :prop="item.key" :label="item.name"></el-table-column>
-      </template>
-    </el-table>
   </div>
 </template>
 <script>

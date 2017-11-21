@@ -19,6 +19,10 @@
   .loading-ht {
     height: 300px;
   }
+
+  .opera-btn-group {
+    margin: 10px 0;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -88,18 +92,18 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" style="width: 100%;" class="header-list"
-                :header-row-class-name="'headerClass'" v-loading="loadingData">
-        <el-table-column prop="orderNo" label="订单编号" width="160"></el-table-column>
-        <el-table-column prop="createTime" label="业务日期" width="90"></el-table-column>
-        <el-table-column prop="suppliersName" label="供应商" width="150"></el-table-column>
-        <el-table-column prop="orgName" label="保管账" width="150"></el-table-column>
-        <el-table-column prop="orgGoodsName" label="货品名称" width="150"></el-table-column>
-        <el-table-column prop="count" label="数量" width="80"></el-table-column>
-        <el-table-column prop="price" label="进货单价" width="100"></el-table-column>
-        <el-table-column prop="totalMoney" label="金额" width="100"></el-table-column>
-        <el-table-column prop="batchNumber" label="批号" width="100"></el-table-column>
-        <el-table-column prop="expirationDate" label="有效期至" width="90"></el-table-column>
+      <el-table :data="reportList" class="header-list"
+                :header-row-class-name="'headerClass'" v-loading="loadingData" height="400">
+        <el-table-column prop="orderNo" label="订单编号"></el-table-column>
+        <el-table-column prop="createTime" label="业务日期"></el-table-column>
+        <el-table-column prop="suppliersName" label="供应商"></el-table-column>
+        <el-table-column prop="orgName" label="保管账"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="货品名称"></el-table-column>
+        <el-table-column prop="count" label="数量"></el-table-column>
+        <el-table-column prop="price" label="进货单价"></el-table-column>
+        <el-table-column prop="totalMoney" label="金额"></el-table-column>
+        <el-table-column prop="batchNumber" label="批号"></el-table-column>
+        <el-table-column prop="expirationDate" label="有效期至"></el-table-column>
       </el-table>
     </div>
 

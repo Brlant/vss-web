@@ -15,6 +15,10 @@
       width: auto;
     }
   }
+
+  .opera-btn-group {
+    margin: 10px 0;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -58,19 +62,19 @@
           </el-row>
         </el-form>
       </div>
-
+      <el-table :data="reportList" class="header-list"
+                :header-row-class-name="'headerClass'" v-loading="loadingData" height="400">
+        <el-table-column prop="goodsName" label="疫苗名称"></el-table-column>
+        <el-table-column prop="restStockCount" label="期前库存"></el-table-column>
+        <el-table-column prop="purchaseCount" label="进苗数量"></el-table-column>
+        <el-table-column prop="saleCount" label="发苗数量"></el-table-column>
+        <el-table-column prop="saleReturnCount" label="退区数量"></el-table-column>
+        <el-table-column prop="purchaseReturnCount" label="退厂家数量"></el-table-column>
+        <el-table-column prop="scarpCount" label="报损数量"></el-table-column>
+        <el-table-column prop="endStockCount" label="期末库存"></el-table-column>
+      </el-table>
     </div>
-    <el-table :data="reportList" style="width: 100%;" class="header-list"
-              :header-row-class-name="'headerClass'" v-loading="loadingData">
-      <el-table-column prop="goodsName" label="疫苗名称" width="313"></el-table-column>
-      <el-table-column prop="restStockCount" label="期前库存" width="110"></el-table-column>
-      <el-table-column prop="purchaseCount" label="进苗数量" width="110"></el-table-column>
-      <el-table-column prop="saleCount" label="发苗数量" width="110"></el-table-column>
-      <el-table-column prop="saleReturnCount" label="退区数量" width="110"></el-table-column>
-      <el-table-column prop="purchaseReturnCount" label="退厂家数量" width="110"></el-table-column>
-      <el-table-column prop="scarpCount" label="报损数量" width="110"></el-table-column>
-      <el-table-column prop="endStockCount" label="期末库存" width="110"></el-table-column>
-    </el-table>
+
   </div>
 </template>
 <script>
