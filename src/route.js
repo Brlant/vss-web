@@ -312,9 +312,14 @@ const route = [
             meta: {moduleId: 'resource', title: '中标疫苗', perm: 'successful-bidder-vaccine'}
           },
           {
-            path: '/resource/vaccin/list',
-            component: resolve => require(['./components/resource/vaccin/data/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '货主疫苗资料', perm: 'vaccine-info'}
+            path: '/resource/first-vaccin/list',
+            component: resolve => require(['./components/resource/vaccin/firstVaccin/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '货主一类疫苗资料', perm: 'first-vaccine-info'}
+          },
+          {
+            path: '/resource/second-vaccin/list',
+            component: resolve => require(['./components/resource/vaccin/secondVaccin/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '货主二类疫苗资料', perm: 'second-vaccine-info'}
           },
           {
             path: '/resource/pov/first-vaccin/list',

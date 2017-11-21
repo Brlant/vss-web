@@ -109,7 +109,7 @@
 </style>
 <template>
   <div>
-    <h2 class="clearfix">{{showTitle}}货主疫苗资料</h2>
+    <h2 class="clearfix">{{showTitle}}货主二类疫苗资料</h2>
     <el-form ref="goodSForm" :model="form" :rules="rules" label-width="120px" @submit.prevent="onSubmit('goodSForm')"
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
@@ -432,24 +432,24 @@
         }
       },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
-        if (this.orgLevel === 1) {
-          let params = {
-            keyWord: keyWord
-          };
-          http.get('vaccine-info/first-vaccine/valid', {params}).then(res => {
-            this.goodsList = res.data.list;
-            if (this.action === 'edit') {
-              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
-              if (!isExist) {
-                this.goodsList.push({
-                  id: this.form.goodsDto.id,
-                  name: this.form.goodsDto.name
-                });
-              }
-            }
-            this.getGoodsType(this.form.goodsId);
-          });
-        } else {
+//        if (this.orgLevel === 1) {
+//          let params = {
+//            keyWord: keyWord
+//          };
+//          http.get('vaccine-info/first-vaccine/valid', {params}).then(res => {
+//            this.goodsList = res.data.list;
+//            if (this.action === 'edit') {
+//              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
+//              if (!isExist) {
+//                this.goodsList.push({
+//                  id: this.form.goodsDto.id,
+//                  name: this.form.goodsDto.name
+//                });
+//              }
+//            }
+//            this.getGoodsType(this.form.goodsId);
+//          });
+//        } else {
           let params = {
             keyWord: keyWord,
             availabilityStatus: true
@@ -467,7 +467,7 @@
             }
             this.getGoodsType(this.form.goodsId);
           });
-        }
+//        }
       },
       queryCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {

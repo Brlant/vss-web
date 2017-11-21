@@ -649,6 +649,12 @@ export const Vaccine = resource('/vaccine-info', http, {
   queryVaccineDetail: (id) => {
     return http.get('/vaccine-info/' + id, {});
   },
+  queryFirstVaccine: (params) => {
+    return http.get('/vaccine-info/first', {params});
+  },
+  querySecondVaccine: (params) => {
+    return http.get('/vaccine-info/second', {params});
+  },
   queryAvaliableVaccine: (params) => {
     return http.get('/vaccine-info/page', {params});
   },
