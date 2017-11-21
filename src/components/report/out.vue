@@ -69,7 +69,9 @@
     </div>
     <el-table :data="dataList" class="header-list"
               :header-row-class-name="'headerClass'" v-loading="loadingData">
-      <el-table-column :prop="item.key" :label="item.name" v-for="item in firstLine" :keys="item.key"></el-table-column>
+      <template v-for="item in firstLine">
+        <el-table-column :prop="item.key" :label="item.name"></el-table-column>
+      </template>
     </el-table>
   </div>
 </template>
