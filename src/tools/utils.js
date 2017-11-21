@@ -118,7 +118,7 @@ export default {
    * 实时动态强制更改用户录入
    * @param th
    */
-  format2DecimalPoint (val) {
+  format2DecimalPoint(val) {
     let th = val.toString();
     const regStrs = [
       ['^0(\\d+)$', '$1'], // 禁止录入整数部分两位以上，但首位为0
@@ -250,7 +250,7 @@ export default {
     }
     return label;
   },
-  changeTotalNumber (amount, smallPacking) {
+  changeTotalNumber(amount, smallPacking) {
     if (!smallPacking) return;
     let number = Number(amount);
     let remainder = number % smallPacking;
@@ -271,7 +271,7 @@ export default {
     });
     return re;
   },
-  isCheckPackage (count) {
+  isCheckPackage(count) {
     if (!count || count < 0) {
       this.$notify({
         duration: 2000,
@@ -282,22 +282,17 @@ export default {
     }
     return count > 0;
   },
-  download (src, fileName) {
-    let $a;
-    let fileLink = document.getElementById('fileDownLoadDom');
-    if (!fileLink) {
-      $a = document.createElement('a');
-      $a.setAttribute('target', '_blank');
-      $a.setAttribute('class', 'min-div');
-      fileLink = document.createElement('span');
-      fileLink.setAttribute('id', 'fileDownLoadDom');
-      $a.appendChild(fileLink);
-      document.getElementsByTagName('body')[0].appendChild($a);
-    } else {
-      $a = fileLink.parentNode;
-    }
+
+  download(src, fileName) {
+    let $a = document.createElement('a');
     $a.setAttribute('href', src);
     $a.setAttribute('download', fileName);
+    let fileLink = document.createElement('span');
+    fileLink.setAttribute('style', 'cursor: pointer; -webkit-tap-highlight-color: transparent');
+    $a.appendChild(fileLink);
+    let body = document.getElementsByTagName('body')[0];
+    body.appendChild($a);
     fileLink.click();
+    body.removeChild($a);
   }
 };
