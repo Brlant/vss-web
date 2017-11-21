@@ -233,13 +233,16 @@
       <div class="content-left">
         <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
+          <li class="list-style" v-for="item in productListSet" @click="index = item.key"
+              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
+          </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
           </li>
         </ul>
       </div>
       <div class="content-right min-gutter">
-        <div class="hide-content show-content">
+        <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="疫苗厂商" prop="factoryId">
@@ -270,12 +273,15 @@
               </el-select>
             </el-form-item>
             <el-form-item label="发票金额" prop="amount">
-              <oms-input type="text" placeholder="请输入发票金额" v-model="form.amount" :min="0"
-                         @blur="formatAmount">
+              <oms-input type="text" placeholder="选择发票明细后，自动计算总和" v-model="form.amount" :min="0"
+                         @blur="formatAmount" disabled>
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
           </el-form>
+        </div>
+        <div class="hide-content" v-bind:class="{'show-content' : index==1}">
+          <pay-detail :selectPayments="selectPayments" :factoryId="form.factoryId" :amount="form.amount"></pay-detail>
         </div>
       </div>
     </div>
@@ -284,8 +290,12 @@
 <script>
   import { invoiceManage, BaseInfo } from '@/resources';
   import utils from '@/tools/utils';
+  import payDetail from './payDetail.vue';
 
   export default {
+    components: {
+      payDetail
+    },
     props: {
       formItem: Object
     },
@@ -306,7 +316,13 @@
         },
         doing: false,
         title: '添加发票',
-        orgList: []
+        orgList: [],
+        productListSet: [
+          {name: '基本信息', key: 0},
+          {name: '关联发票明细', key: 1}
+        ],
+        index: 0,
+        selectPayments: []
       };
     },
     watch: {
@@ -325,6 +341,13 @@
           this.title = '添加发票';
           this.$refs['d-form'].resetFields();
         }
+      },
+      selectPayments (val) {
+        let amount = 0;
+        val.forEach(i => {
+          amount += Number(i.billAmount);
+        });
+        this.form.amount = utils.autoformatDecimalPoint(amount.toString());
       }
     },
     computed: {
