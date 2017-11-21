@@ -109,7 +109,7 @@
 </style>
 <template>
   <div>
-    <h2 class="clearfix">{{showTitle}}货主疫苗资料</h2>
+    <h2 class="clearfix">{{showTitle}}货主一类类疫苗资料</h2>
     <el-form ref="goodSForm" :model="form" :rules="rules" label-width="120px" @submit.prevent="onSubmit('goodSForm')"
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
@@ -140,7 +140,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="供货厂商" prop="salesFirm">
-        <el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg"
+        <el-select filterable remote placeholder="请输入关键字搜供货厂商" :remote-method="filterOrg"
                    :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)"
                    popperClass="good-selects">
           <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -243,7 +243,7 @@
   </div>
 </template>
 <script>
-  import { Vaccine, BaseInfo, SuccessfulBidder, Goods, http } from '@/resources';
+  import {Vaccine, BaseInfo, SuccessfulBidder, Goods, http} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -318,10 +318,10 @@
       this.filterOrg();
     },
     computed: {
-      typeId () {
+      typeId() {
         return this.$store.state.dict['typeId'];
       },
-      storageCondition () {
+      storageCondition() {
         return this.$store.state.dict['storageCondition'];
       },
       showTitle() {
@@ -331,10 +331,10 @@
         }
         return tilet;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
@@ -432,42 +432,46 @@
         }
       },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
-        if (this.orgLevel === 1) {
-          let params = {
-            keyWord: keyWord
-          };
-          http.get('vaccine-info/first-vaccine/valid', {params}).then(res => {
-            this.goodsList = res.data.list;
-            if (this.action === 'edit') {
-              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
-              if (!isExist) {
-                this.goodsList.push({
-                  id: this.form.goodsDto.id,
-                  name: this.form.goodsDto.name
-                });
-              }
+//        if (this.orgLevel === 1) {
+        let params = {
+          keyWord: keyWord,
+          vaccineSign: '1',
+          deleteFlag: false,
+          auditedStatus: '1',
+          state: 0
+        };
+        Goods.query(params).then(res => {
+          this.goodsList = res.data.list;
+          if (this.action === 'edit') {
+            let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
+            if (!isExist) {
+              this.goodsList.push({
+                id: this.form.goodsDto.id,
+                name: this.form.goodsDto.name
+              });
             }
-            this.getGoodsType(this.form.goodsId);
-          });
-        } else {
-          let params = {
-            keyWord: keyWord,
-            availabilityStatus: true
-          };
-          SuccessfulBidder.queryInfo(params).then(res => {
-            this.goodsList = res.data;
-            if (this.action === 'edit') {
-              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
-              if (!isExist) {
-                this.goodsList.push({
-                  id: this.form.goodsDto.id,
-                  name: this.form.goodsDto.name
-                });
-              }
-            }
-            this.getGoodsType(this.form.goodsId);
-          });
-        }
+          }
+          this.getGoodsType(this.form.goodsId);
+        });
+//        } else {
+//          let params = {
+//            keyWord: keyWord,
+//            availabilityStatus: true
+//          };
+//          SuccessfulBidder.queryInfo(params).then(res => {
+//            this.goodsList = res.data;
+//            if (this.action === 'edit') {
+//              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
+//              if (!isExist) {
+//                this.goodsList.push({
+//                  id: this.form.goodsDto.id,
+//                  name: this.form.goodsDto.name
+//                });
+//              }
+//            }
+//            this.getGoodsType(this.form.goodsId);
+//          });
+//        }
       },
       queryCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {
@@ -516,7 +520,7 @@
           });
         }
       },
-      filtersCombinationGoods () {// 过滤已有的组织疫苗和本身
+      filtersCombinationGoods() {// 过滤已有的组织疫苗和本身
         let array = [];
         let isNotSame = false;
         this.invariantOtherGoodslist.forEach(tItem => {
@@ -545,12 +549,12 @@
           }
         });
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice);
         this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice);
         this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice);
       },
-      remove () {
+      remove() {
         this.$confirm('确认删除该信息?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

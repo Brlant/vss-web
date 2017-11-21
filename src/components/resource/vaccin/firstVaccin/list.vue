@@ -126,7 +126,7 @@
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
             <h2 class="header">
                 <span class="pull-right">
-                  <perm label="vaccine-info-add">
+                  <perm label="first-vaccine-info-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
                         <i class="iconfont icon-plus"></i>
                       </a>
@@ -134,7 +134,7 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="iconfont icon-search"></i> </a>
                 </span>
-              货主疫苗资料
+              货主一类疫苗资料
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -146,7 +146,7 @@
               <ul class="show-list">
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                     :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
-                  <!--<perm label="vaccine-info-delete">-->
+                  <!--<perm label="first-vaccine-info-delete">-->
                   <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'-->
                   <!--class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>-->
                   <!--</perm>-->
@@ -176,12 +176,17 @@
             <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
-                  <perm label="vaccine-info-update">
+                  <perm label="first-vaccine-info-update">
                     <el-button @click="edit"><i class="iconfont icon-edit"></i> 编辑</el-button>
+                  </perm>
+                   <perm label="first-vaccine-info-start">
                     <el-button @click="enableRelation" v-show="data.status == '0'"><i class="iconfont icon-start"></i> 启用</el-button>
+                   </perm>
+                   <perm label="first-vaccine-info-stop">
                     <el-button @click="forbid" v-show="data.status == '1' "><i
                       class="iconfont icon-stop"></i> 停用</el-button>
-                    <!--<perm label="vaccine-info-delete">-->
+                   </perm>
+                   <!--<perm label="first-vaccine-info-delete">-->
                     <!--<el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>-->
                     <!--</perm>-->
                   </perm>
@@ -518,8 +523,9 @@
           pageSize: this.typePager.pageSize,
           keyWord: this.typeTxt,
           deleteFlag: false
+
         }, this.filters);
-        Vaccine.query(params).then(res => {
+        Vaccine.queryFirstVaccine(params).then(res => {
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
