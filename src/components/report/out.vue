@@ -46,6 +46,9 @@
             <el-col :span="6">
               <oms-form-row label="" :span="2">
                 <perm label="shipment-form-export">
+                  <el-button type="primary" @click="search" :disabled="isLoading">
+                    查询
+                  </el-button>
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                     导出Excel
                   </el-button>
@@ -55,9 +58,11 @@
           </el-row>
         </el-form>
       </div>
-
     </div>
-
+    <el-table v-show="reportList.length" :data="reportList" style="width: 100%;" class="header-list"
+              :header-row-class-name="'headerClass'" v-loading="loadingData">
+      <!--<el-table-column :prop="item.key" :label="item.value" width="150" v-for="item in mapHeader"></el-table-column>-->
+    </el-table>
   </div>
 </template>
 <script>
@@ -67,6 +72,9 @@
   export default {
     data () {
       return {
+        loadingData: false,
+        reportList: [],
+        mapHeader: {},
         showSearch: true,
         searchWord: {
           createStartTime: '',
@@ -94,6 +102,11 @@
             message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
+      },
+      search: function () {// 搜索
+        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
+        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        let params = Object.assign({}, this.searchWord);
       },
       resetSearchForm: function () {
         this.searchWord = {

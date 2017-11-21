@@ -259,7 +259,7 @@
             </perm>
             <perm label="purchasing-contract-edit">
               <div style="margin-bottom: 10px">
-                <el-button :plain="true" type="success" @click="exportExcel" style="width: 150px">导出Excel</el-button>
+                <el-button :plain="true" type="success" @click="exportExcel" style="width: 150px">导出Word</el-button>
               </div>
             </perm>
             <div style="margin-bottom: 10px">
@@ -1014,7 +1014,7 @@
       },
       exportExcel () {
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/purchase/contract'});
-        this.$http.get(`/contract-print/contract-print/${this.orderId}`).then(res => {
+        this.$http.get(`/contract-print/${this.orderId}`).then(res => {
           utils.download(res.data, '采购合同');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/purchase/contract'});

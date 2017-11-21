@@ -924,3 +924,24 @@
     border: none;
   }
 }
+
+.header-list {
+  &.el-table th {
+    background-color: #f1f1f1;
+    div {
+      background-color: #f1f1f1;
+    }
+  }
+  &.el-table {
+    .cell, & th > div {
+      padding-left: 5px;
+      padding-right: 5px;
+    }
+  }
+  .el-loading-mask {
+    z-index: 900;
+  }
+  &.el-table th > .cell {
+    line-height: 20px;
+  }
+}
