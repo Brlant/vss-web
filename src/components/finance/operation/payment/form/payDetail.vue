@@ -28,6 +28,16 @@
       height: 70px;
     }
   }
+
+  .el-form--inline .el-form-item {
+    margin-right: 0;
+  }
+
+  .create-date {
+    .el-date-editor--datetimerange.el-input {
+      width: 310px;
+    }
+  }
 </style>
 <template>
   <div>
@@ -35,16 +45,15 @@
       <el-form-item label="货品名称">
         <oms-input v-model="searchCondition.goodsName"></oms-input>
       </el-form-item>
-      <el-form-item label="创建时间">
+      <el-form-item label="创建时间" style="width: 380px" class="create-date">
         <el-date-picker
           v-model="createTimes"
-          type="daterange"
-          placeholder="请选择" format="yyyy-MM-dd">
+          type="datetimerange"
+          placeholder="请选择">
         </el-date-picker>
       </el-form-item>
       <el-form-item>
         <el-button type="primary" @click="searchInOrder">查询</el-button>
-        <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
       </el-form-item>
     </el-form>
     <div class="product-list-detail">
@@ -81,7 +90,7 @@
             <span v-if="!Number(product.billAmount)">-</span>
           </td>
           <td>
-            {{product.createTime | date }}
+            {{product.createTime | minute }}
           </td>
         </tr>
         </tbody>
@@ -120,7 +129,7 @@
             <span v-if="!Number(product.billAmount)">-</span>
           </td>
           <td>
-            {{product.createTime | date }}
+            {{product.createTime | minute }}
           </td>
           <td class="goods-btn">
             <a href="#" @click.prevent="remove(product)"><i
@@ -213,7 +222,7 @@
         Object.assign(this.filterRights, temp);
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
       },
       add (item) {
         let index = this.selectPayments.indexOf(item);

@@ -202,7 +202,7 @@
               </el-col>
               <el-col :span="4">
                 <div>
-                  {{item.createTime | date }}
+                  {{item.createTime | minute }}
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">

@@ -77,7 +77,7 @@
                     查询
                   </el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                  <el-button :plain="true" type="success" @click="exportFile">
                     导出Excel
                   </el-button>
                 </perm>

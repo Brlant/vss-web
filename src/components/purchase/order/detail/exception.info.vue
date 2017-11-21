@@ -58,7 +58,7 @@
                 <oms-row :span="8" label="创建人">{{exception.creatorName}} </oms-row>
               </el-col>
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="创建时间">{{exception.createTime | time}} </oms-row>
+                <oms-row :span="8" label="创建时间">{{exception.createTime | minute}} </oms-row>
               </el-col>
               <el-col :span="12" class="mb-15" v-show="exception.verifyTime">
                 <oms-row :span="8" label="确认人">{{exception.verifierName}} </oms-row>
@@ -155,7 +155,7 @@
                 <oms-row :span="8" label="创建人">{{exception.creatorName}} </oms-row>
               </el-col>
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="创建时间">{{exception.createTime | time}} </oms-row>
+                <oms-row :span="8" label="创建时间">{{exception.createTime | minute}} </oms-row>
               </el-col>
               <oms-row :span="4" label="拒收原因" class="mb-15">{{exception.description}} </oms-row>
               <el-col :span="12" class="mb-15">
