@@ -60,8 +60,7 @@
       </div>
 
     </div>
-    <div class="empty-info" v-show="!reportList.length">暂无信息</div>
-    <el-table v-show="reportList.length" :data="reportList" style="width: 100%;" class="header-list"
+    <el-table :data="reportList" style="width: 100%;" class="header-list"
               :header-row-class-name="'headerClass'" v-loading="loadingData">
       <el-table-column prop="goodsName" label="疫苗名称" width="313"></el-table-column>
       <el-table-column prop="restStockCount" label="期前库存" width="110"></el-table-column>
@@ -115,8 +114,10 @@
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
+        this.loadingData = true;
         this.$http.get('/erp-statement/stock-detail', {params}).then(res => {
           this.reportList = res.data;
+          this.loadingData = false;
         });
       },
       resetSearchForm: function () {

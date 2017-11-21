@@ -69,7 +69,7 @@
             <el-col :span="10">
               <oms-form-row label="" :span="6">
                 <perm label="sale-detail-form-export">
-                  <el-button type="primary" @click="search" :disabled="isLoading">
+                  <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
                   </el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -82,8 +82,7 @@
           </el-row>
         </el-form>
       </div>
-      <div class="empty-info" v-show="!reportList.length">暂无信息</div>
-      <el-table v-show="reportList.length" :data="reportList" style="width: 100%;" class="header-list"
+      <el-table :data="reportList" style="width: 100%;" class="header-list"
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="orderNo" label="货主订单号" width="160"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" width="90"></el-table-column>
@@ -145,6 +144,7 @@
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
+        this.loadingData = true;
         this.$http.get('/erp-statement/sale-detail', {params}).then(res => {
           this.reportList = res.data.map(m => {
             m.createTime = this.formatTime(m.createTime);
@@ -154,6 +154,7 @@
             m.totalMoney = `￥${m.totalMoney}`;
             return m;
           });
+          this.loadingData = false;
         });
       },
       resetSearchForm: function () {

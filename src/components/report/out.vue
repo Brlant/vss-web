@@ -54,7 +54,7 @@
             <el-col :span="6">
               <oms-form-row label="" :span="2">
                 <perm label="shipment-form-export">
-                  <el-button type="primary" @click="search" :disabled="isLoading">
+                  <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
                   </el-button>
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
@@ -67,11 +67,9 @@
         </el-form>
       </div>
     </div>
-    <div class="empty-info" v-if="!outReport.map || outReport.map && !outReport.map.firstLine.length ">暂无信息</div>
-    <el-table v-if="outReport.map && outReport.map.firstLine.length" :data="outReport.map.data" class="header-list"
+    <el-table :data="dataList" class="header-list"
               :header-row-class-name="'headerClass'" v-loading="loadingData">
-      <el-table-column :prop="item.key" :label="item.name" v-for="item in outReport.map.firstLine"
-                       :keys="item"></el-table-column>
+      <el-table-column :prop="item.key" :label="item.name" v-for="item in firstLine" :keys="item.key"></el-table-column>
     </el-table>
   </div>
 </template>
@@ -84,6 +82,8 @@
       return {
         loadingData: false,
         outReport: {},
+        firstLine: [],
+        dataList: [],
         showSearch: true,
         searchWord: {
           createStartTime: '',
@@ -124,8 +124,11 @@
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
+        this.loadingData = true;
         this.$http.get('/erp-statement/out-warehouse', {params}).then(res => {
-          this.outReport = res.data;
+          this.firstLine = res.data.map && res.data.map.firstLine || [];
+          this.dataList = res.data.map && res.data.map.data || [];
+          this.loadingData = false;
         });
       },
       resetSearchForm: function () {
