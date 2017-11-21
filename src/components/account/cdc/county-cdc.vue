@@ -101,7 +101,8 @@
               <el-col :span="6" class="text-right">
                   <span >
                     <span class="btn-search-toggle open" v-show="showSearch">
-                        <single-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showSearch"></single-input>
+                        <single-input v-model="filters.keyWord" placeholder="请输入名称搜索"
+                                      :showFocus="showSearch"></single-input>
                         <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
                     </span>
                     <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">

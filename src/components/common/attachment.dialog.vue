@@ -126,9 +126,7 @@
           this.dialogVisible = true;
         } else {
           utils.download(this.Attachment.attachmentStoragePath, this.Attachment.attachmentFileName);
-          /* let fileLink = document.getElementById("fileDownLoadRap");
-           fileLink.parentNode.setAttribute("href", this.Attachment.attachmentStoragePath);
-           fileLink.click();*/
+          this.$store.commit('closeAttachmentDialog');
         }
       },
       getType: function () {

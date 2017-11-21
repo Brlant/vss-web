@@ -265,7 +265,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="POV" prop="customerId">
-              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterPOV" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                            v-for="org in orgList">
@@ -341,7 +341,7 @@
             <div class="oms-form order-product-box">
               <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
                 <el-form-item label="产品" prop="orgGoodsId">
-                  <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
+                  <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                              :remote-method="searchProduct" :clearable="true" :loading="loading"
                              popper-class="order-good-selects"
                              @change="getGoodDetail">

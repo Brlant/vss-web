@@ -143,7 +143,7 @@
       <div style="margin-bottom: 10px; margin-top: 20px;overflow: hidden">
        <span class="pull-right">
            <span class="btn-search-toggle open" v-show="showSearch">
-              <single-input v-model="filters.code" placeholder="请输入关键字搜索" :showFocus="showSearch"></single-input>
+              <single-input v-model="filters.code" placeholder="请输入名称搜索" :showFocus="showSearch"></single-input>
               <i class="oms-font oms-font-search" @click.stop="showSearch=(!showSearch)"></i>
            </span>
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">

@@ -65,7 +65,7 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row label="POV" :span="6">
-                <el-select placeholder="请输入关键字搜索POV" v-model="searchWord.povId" filterable remote
+                <el-select placeholder="请输入名称搜索POV" v-model="searchWord.povId" filterable remote
                            :remote-method="filterOrg" :clearable="true" popperClass="good-selects">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                              v-for="org in orgList">

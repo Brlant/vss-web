@@ -82,14 +82,14 @@
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: 'repertory'});
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/repertory'});
         this.$http.get('/erp-statement/stock-detail/export', {params}).then(res => {
           utils.download(res.data.path, '二类苗库存盘点表');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: 'repertory'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/repertory'});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: 'repertory'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/repertory'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });

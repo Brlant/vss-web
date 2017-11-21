@@ -66,7 +66,7 @@
             角色管理
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
-            <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+            <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
           <div v-if="!currentItem.title" class="empty-info">
             暂无信息

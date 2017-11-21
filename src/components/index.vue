@@ -103,7 +103,6 @@
     <!--<app-footer></app-footer>-->
     <attachmentDialog></attachmentDialog>
     <print-dialog></print-dialog>
-    <a href="#" target="_blank" class="min-div"><span id="fileDownLoadRap"></span></a>
 
     <div class="cdc-shade" v-if="isPermission">
       <el-button class="btn" type="primary" @click="queryRoles">我是市CDC</el-button>

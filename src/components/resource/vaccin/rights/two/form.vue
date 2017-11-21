@@ -222,13 +222,6 @@
 
   .good-selects {
     .el-select-dropdown__item {
-      width: 520px;
-      height: 70px;
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
       width: auto;
     }
   }
@@ -249,6 +242,9 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="100px" style="padding-right: 20px">
+            <el-form-item label="授权疫苗">
+              <span>{{ currentItem.orgGoodsName }}</span>
+            </el-form-item>
             <el-form-item label="POV" v-if="!form.id">
               <el-transfer v-loading="loading"
                            v-model="form.povList"
@@ -268,24 +264,26 @@
             <el-form-item label="POV" prop="povId" v-if="form.id">
               <span>{{ formItem.povName }}</span>
             </el-form-item>
-            <el-form-item label="授权疫苗和销售价格" prop="salePriceGroupId" labelWidth="200px">
-              <el-select filterable remote placeholder="请输入关键字搜索授权疫苗和销售价格" :remote-method="filterPriceGroup"
+            <el-form-item label="销售价格" prop="salePriceGroupId">
+              <el-select filterable remote placeholder="请输入名称搜索销售价格" :remote-method="filterPriceGroup"
                          :clearable="true"
                          v-model="form.salePriceGroupId"
-                         @change="changeSelect" @click.native="filterPriceGroup('')">
-                <el-option :value="item.id" :key="item.id" :label="item.name"
+                         @change="changeSelect" @click.native="filterPriceGroup('')" popperClass="good-selects">
+                <el-option :value="item.id" :key="item.id" :label="'￥' +item.unitPrice"
                            v-for="item in prices">
                   <div style="overflow: hidden">
                     <span class="pull-left">{{item.name}}</span>
-                    <span class="pull-left" style="margin-left: 20px">疫苗名称  {{item.goodsName}}</span>
-                    <span class="pull-right">销售单价 ￥{{item.unitPrice}}</span>
+                  </div>
+                  <div style="overflow: hidden">
+                    <span class="pull-left">疫苗名称:  {{item.goodsName}}</span>
+                    <span class="pull-right">销售单价: ￥{{item.unitPrice}}</span>
                   </div>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="单价" v-if="unitPrice">
-              <span>￥{{ unitPrice }}</span>
-            </el-form-item>
+            <!--<el-form-item label="单价" v-if="unitPrice">-->
+            <!--<span>￥{{ unitPrice }}</span>-->
+            <!--</el-form-item>-->
           </el-form>
         </div>
       </div>
@@ -310,9 +308,9 @@
           povId: ''
         },
         rules: {
-          salePriceGroupId: {required: true, message: '请选择销售价格组', trigger: 'change'},
+          salePriceGroupId: {required: true, message: '请选择销售价格', trigger: 'change'},
           povList: {required: true, type: 'array', message: '请选择POV', trigger: 'change'},
-          povId: {required: true, message: '请选择销售价格组', trigger: 'change'}
+          povId: {required: true, message: '请选择销售价格', trigger: 'change'}
         },
         prices: [], // 货品列表
         title: '新增疫苗授权',

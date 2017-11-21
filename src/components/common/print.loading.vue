@@ -17,11 +17,8 @@
       print () {
         let obj = {};
         let prints = this.$store.state.prints;
-        if (!prints.length) return {};
-        if (this.$route.meta.moduleId !== 'report') return {};
-        let ary = this.$route.path.split('/');
         prints.forEach(item => {
-          if (item.moduleId === ary[ary.length - 1]) {
+          if (item.moduleId === this.$route.path) {
             obj = item;
           }
         });

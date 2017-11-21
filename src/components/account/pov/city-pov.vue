@@ -78,7 +78,7 @@
               CDC列表
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
-              <oms-input v-model="filterCDCs.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+              <oms-input v-model="filterCDCs.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!cdcs.length" class="empty-info">
               暂无信息
@@ -122,7 +122,7 @@
               <el-col :span="11" class="text-right">
                 <span>
                   <span class="btn-search-toggle open" v-show="showSearch">
-                    <single-input v-model="filterPOVs.keyWord" placeholder="请输入关键字搜索"
+                    <single-input v-model="filterPOVs.keyWord" placeholder="请输入名称搜索"
                                   :showFocus="showSearch"></single-input>
                     <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
                   </span>

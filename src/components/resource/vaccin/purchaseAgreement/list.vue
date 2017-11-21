@@ -124,7 +124,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplyCompanyId" popperClass="good-selects" style="width: 100%">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">

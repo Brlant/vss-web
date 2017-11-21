@@ -257,6 +257,11 @@
                 <el-button type="success" @click="synchroOrder" style="width: 150px">同步采购合同</el-button>
               </div>
             </perm>
+            <perm label="purchasing-contract-edit">
+              <div style="margin-bottom: 10px">
+                <el-button :plain="true" type="success" @click="exportExcel" style="width: 150px">导出Excel</el-button>
+              </div>
+            </perm>
             <div style="margin-bottom: 10px">
               <el-button @click="$emit('right-close')" style="width: 150px">关闭</el-button>
             </div>
@@ -1004,6 +1009,20 @@
               duration: 2000,
               message: error.response.data && error.response.data.msg || '批量生成采购订单失败'
             });
+          });
+        });
+      },
+      exportExcel () {
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/purchase/contract'});
+        this.$http.get(`/contract-print/contract-print/${this.orderId}`).then(res => {
+          utils.download(res.data, '采购合同');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/purchase/contract'});
+        }).catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/purchase/contract'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
       }

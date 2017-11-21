@@ -151,7 +151,7 @@
                 </span>
             </h2>
             <div class="search-left-box clearfix" v-show="showTypeSearch">
-              <oms-input v-model="filters.keyWord" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+              <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="loadingListData">
               <oms-loading :loading="loadingListData"></oms-loading>
@@ -362,7 +362,7 @@
                @submit.prevent="onSubmit('relationForm')" onsubmit="return false">
         <h2 class="clearfix">添加厂商</h2>
         <el-form-item label="往来单位" prop="followOrgId">
-          <el-select placeholder="请输入关键字搜索厂商" remote :remote-method="queryOtherBusiness" :clearable="true"
+          <el-select placeholder="请输入名称搜索厂商" remote :remote-method="queryOtherBusiness" :clearable="true"
                      v-model="form.followOrgId"
                      filterable popper-class="good-selects">
             <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in orgList"

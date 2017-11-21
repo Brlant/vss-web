@@ -57,7 +57,7 @@
             采购协议疫苗列表
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
-            <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+            <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
           <div v-if="!showTypeList.length" class="empty-info">
             暂无信息
@@ -67,7 +67,7 @@
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id==currentItem.id}">
                 <div class="id-part">
-                  组织疫苗ID {{item.orgGoodsId }}
+                  疫苗编号 {{item.orgGoodsNo }}
                 </div>
                 <div>
                   {{item.orgGoodsName }}

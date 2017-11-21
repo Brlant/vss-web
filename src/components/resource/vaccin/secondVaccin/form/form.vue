@@ -140,7 +140,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="供货厂商" prop="salesFirm">
-        <el-select filterable remote placeholder="请输入关键字搜供货厂商" :remote-method="filterOrg"
+        <el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg"
                    :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)"
                    popperClass="good-selects">
           <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">

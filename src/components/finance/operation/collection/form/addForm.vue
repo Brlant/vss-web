@@ -239,7 +239,7 @@
           <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
             <el-form-item label="POV" prop="orgId">
-              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" @change="setAccountsPayableId">
                 <el-option :value="org.payerId" :key="org.payerId" :label="org.payerName" v-for="org in orgList">
                   <div style="overflow: hidden">

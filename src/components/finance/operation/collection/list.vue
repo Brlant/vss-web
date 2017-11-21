@@ -143,7 +143,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="付款单位" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.orgId">
                     <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                       <div style="overflow: hidden">

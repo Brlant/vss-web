@@ -263,7 +263,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="POV" prop="supplierId">
-              <el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterOrg" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier" popper-class="good-selects">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                            v-for="org in orgList">
@@ -280,7 +280,7 @@
             </el-form-item>
             <el-form-item label="物流商选择"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"
+              <el-select filterable remote placeholder="请输入名称搜索物流商" :remote-method="filterLogistics"
                          :clearable="true"
                          v-model="form.logisticsProviderId">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
@@ -343,7 +343,7 @@
           <div class="oms-form order-product-box">
             <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
               <el-form-item label="产品" prop="orgGoodsId">
-                <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
+                <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                            :remote-method="searchProduct" :clearable="true" :loading="loading"
                            popper-class="order-good-selects"
                            @change="getGoodDetail">
