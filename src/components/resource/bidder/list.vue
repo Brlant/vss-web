@@ -401,11 +401,12 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          orgName: '',
-          factoryName: '',
-          year: ''
+          goodsId: '',
+          year: '',
+          availabilityStatus: true
         };
         Object.assign(this.searchCondition, temp);
+        this.getPageList(1);
       },
       searchPage() {
         this.showFlag = true;
