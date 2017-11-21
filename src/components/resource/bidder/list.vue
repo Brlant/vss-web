@@ -390,9 +390,10 @@
       filterVaccine: function (query) {
         let params = Object.assign({}, {
           deleteFlag: false,
+          vaccineSign: '2',
           keyWord: query
         });
-        http.get('/vaccine-info/valid', {params}).then(res => {
+        http.get('/goods', {params}).then(res => {
           this.vaccineList = res.data.list;
         });
       },

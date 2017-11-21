@@ -15,6 +15,10 @@
       width: auto;
     }
   }
+
+  .loading-ht {
+    height: 300px;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -71,7 +75,7 @@
             <el-col :span="10">
               <oms-form-row label="" :span="6">
                 <perm label="purchasing-detail-form-export">
-                  <el-button type="primary" @click="search" :disabled="isLoading">
+                  <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
                   </el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -84,18 +88,18 @@
           </el-row>
         </el-form>
       </div>
-      <el-table v-show="reportList.length" :data="reportList" style="width: 100%;" class="header-list"
+      <el-table :data="reportList" style="width: 100%;" class="header-list"
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
-        <el-table-column prop="orgName" label="订单编号" width="150"></el-table-column>
-        <el-table-column prop="orgName" label="业务日期" width="150"></el-table-column>
-        <el-table-column prop="orgName" label="供应商" width="150"></el-table-column>
+        <el-table-column prop="orderNo" label="订单编号" width="160"></el-table-column>
+        <el-table-column prop="createTime" label="业务日期" width="90"></el-table-column>
+        <el-table-column prop="suppliersName" label="供应商" width="150"></el-table-column>
         <el-table-column prop="orgName" label="保管账" width="150"></el-table-column>
-        <el-table-column prop="orgName" label="货品名称" width="150"></el-table-column>
-        <el-table-column prop="orgName" label="数量" width="150"></el-table-column>
-        <el-table-column prop="orgName" label="进货单价" width="150"></el-table-column>
-        <el-table-column prop="orgName" label="金额" width="150"></el-table-column>
-        <el-table-column prop="orgName" label="批号" width="150"></el-table-column>
-        <el-table-column prop="orgName" label="有效期至" width="150"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="货品名称" width="150"></el-table-column>
+        <el-table-column prop="count" label="数量" width="80"></el-table-column>
+        <el-table-column prop="price" label="进货单价" width="100"></el-table-column>
+        <el-table-column prop="totalMoney" label="金额" width="100"></el-table-column>
+        <el-table-column prop="batchNumber" label="批号" width="100"></el-table-column>
+        <el-table-column prop="expirationDate" label="有效期至" width="90"></el-table-column>
       </el-table>
     </div>
 
@@ -145,6 +149,17 @@
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
+        this.loadingData = true;
+        this.$http.get('/erp-statement/purchase-detail', {params}).then(res => {
+          this.reportList = res.data.map(m => {
+            m.createTime = this.formatTime(m.createTime);
+            m.expirationDate = this.formatTime(m.expirationDate);
+            m.price = `￥${m.price}`;
+            m.totalMoney = `￥${m.totalMoney}`;
+            return m;
+          });
+          this.loadingData = false;
+        });
       },
       resetSearchForm: function () {
         this.searchWord = {
@@ -154,6 +169,7 @@
           createEndTime: ''
         };
         this.bizDateAry = '';
+        this.search();
       },
       filterOrg: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;

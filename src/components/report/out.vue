@@ -15,6 +15,14 @@
       width: auto;
     }
   }
+
+  .el-table__body-wrapper, .el-table__footer-wrapper, .el-table__header-wrapper {
+    width: auto;
+  }
+
+  .el-table {
+    width: inherit;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -46,7 +54,7 @@
             <el-col :span="6">
               <oms-form-row label="" :span="2">
                 <perm label="shipment-form-export">
-                  <el-button type="primary" @click="search" :disabled="isLoading">
+                  <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
                   </el-button>
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
@@ -59,9 +67,11 @@
         </el-form>
       </div>
     </div>
-    <el-table v-show="reportList.length" :data="reportList" style="width: 100%;" class="header-list"
+    <el-table :data="dataList" class="header-list"
               :header-row-class-name="'headerClass'" v-loading="loadingData">
-      <!--<el-table-column :prop="item.key" :label="item.value" width="150" v-for="item in mapHeader"></el-table-column>-->
+      <template v-for="item in firstLine">
+        <el-table-column :prop="item.key" :label="item.name"></el-table-column>
+      </template>
     </el-table>
   </div>
 </template>
@@ -73,8 +83,9 @@
     data () {
       return {
         loadingData: false,
-        reportList: [],
-        mapHeader: {},
+        outReport: {},
+        firstLine: [],
+        dataList: [],
         showSearch: true,
         searchWord: {
           createStartTime: '',
@@ -83,6 +94,14 @@
         bizDateAry: '',
         isLoading: false
       };
+    },
+    computed: {
+      currentWidth () {
+        let length = this.outReport.map && this.outReport.map.firstLine.length || 0;
+        if (!length) return 150;
+        if (length > 0 && length < 8) return `${1080 / length}`;
+        if (length > 7) return 150;
+      }
     },
     methods: {
       exportFile: function () {
@@ -107,6 +126,12 @@
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
+        this.loadingData = true;
+        this.$http.get('/erp-statement/out-warehouse', {params}).then(res => {
+          this.firstLine = res.data.map && res.data.map.firstLine || [];
+          this.dataList = res.data.map && res.data.map.data || [];
+          this.loadingData = false;
+        });
       },
       resetSearchForm: function () {
         this.searchWord = {
