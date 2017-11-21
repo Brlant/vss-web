@@ -400,6 +400,7 @@
   import { BaseInfo, Vendor } from '@/resources';
   import utils from '@/tools/utils';
   import photoShow from './photo/photo.show.vue';
+  import qs from 'qs';
 
   export default {
     components: {photoShow},
@@ -548,9 +549,10 @@
           deleteFlag: false,
           status: '1',
           keyWord: keyWord,
-          orgAuditStatus: '1'
+          orgAuditStatus: '1',
+          orgRelationTypeList: ['Manufacture', 'Supplier']
         };
-        BaseInfo.query(params).then(res => {
+        BaseInfo.queryByOrgRelationTypeList(params).then(res => {
           this.orgList = res.data.list;
         });
       },

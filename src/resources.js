@@ -825,6 +825,16 @@ export const Goods = resource('/goods', http, {
 
 // 货主-基本信息
 export const BaseInfo = resource('/orgs', http, {
+  // 根据组织机构关系类型列表分页查询组织信息
+  queryByOrgRelationTypeList: (params) => {
+    return http({
+      url: '/orgs/relationType',
+      params,
+      paramsSerializer(params) {
+        return qs.stringify(params, {indices: false});
+      }
+    });
+  },
   // 查询数量
   queryStateNum: (params) => {
     return http.get('/orgs/count', {params});

@@ -143,11 +143,12 @@
       }
     },
     methods: {
-      getOrgs: function (query) {// 过滤销售商商名称列表
+      getOrgs: function (query) {// 过滤物流公司名称列表
         let params = {
           deleteFlag: false,
           keyWord: query,
-          auditedStatus: '1'
+          auditedStatus: '1',
+          orgRelationType: 'LogisticCorp'
         };
         BaseInfo.query(params).then(res => {
           this.orgList = res.data.list;

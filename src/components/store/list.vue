@@ -280,7 +280,8 @@
       filterFactory (query) { // 生产厂商
         let params = {
           deleteFlag: false,
-          keyWord: query
+          keyWord: query,
+          orgRelationType: 'Manufacture'
         };
         BaseInfo.query(params).then(res => {
           this.factories = res.data.list;
