@@ -140,7 +140,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.transactOrgId" popperClass="good-selects"
                            @click.native.once="filterOrg('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -158,7 +158,7 @@
             </el-col>
             <!--<el-col :span="8">-->
             <!--<oms-form-row label="物流商" :span="6">-->
-            <!--<el-select filterable remote placeholder="请输入关键字搜索物流商" :remote-method="filterLogistics"-->
+            <!--<el-select filterable remote placeholder="请输入名称搜索物流商" :remote-method="filterLogistics"-->
             <!--:clearable="true"-->
             <!--v-model="searchCondition.logisticsProviderId" popperClass="good-selects">-->
             <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList">-->

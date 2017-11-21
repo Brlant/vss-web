@@ -28,7 +28,7 @@
             账号分配
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
-            <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+            <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
           <div v-if="!currentItem.id" class="empty-info">
             暂无信息
@@ -52,7 +52,7 @@
         <div class="d-table-col-wrap">
          <span class="pull-right" style="margin-top: 8px">
            <span class="btn-search-toggle open" v-show="showSearch">
-              <single-input v-model="keyTxt" placeholder="请输入关键字搜索" :showFocus="showSearch"></single-input>
+              <single-input v-model="keyTxt" placeholder="请输入名称搜索" :showFocus="showSearch"></single-input>
               <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
            </span>
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">

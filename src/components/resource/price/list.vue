@@ -168,7 +168,7 @@
             <div style="overflow: hidden;margin-bottom: 5px">
               <!--<el-row>-->
               <!--<el-col :span="12" class="search-input" style="padding-right: 10px">-->
-              <!--<el-select filterable remote placeholder="请输入关键字搜索POV" :remote-method="filterPOV" :clearable="true"-->
+              <!--<el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterPOV" :clearable="true"-->
               <!--v-model="povId" @click.native="filterPOV('')">-->
               <!--<el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"-->
               <!--v-for="org in showOrgList">-->

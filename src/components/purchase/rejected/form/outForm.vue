@@ -259,7 +259,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="供货厂商" prop="customerId">
-              <el-select filterable remote placeholder="请输入关键字搜索供货厂商" :remote-method="filterOrg" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -336,7 +336,7 @@
             <div class="oms-form order-product-box">
               <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
                 <el-form-item label="产品" prop="orgGoodsId">
-                  <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入关键字搜索产品"
+                  <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                              :remote-method="searchProduct" :clearable="true" :loading="loading"
                              popper-class="order-good-selects"
                              @change="getGoodDetail">

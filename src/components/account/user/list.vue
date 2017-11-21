@@ -15,7 +15,7 @@
       <div class="d-table-right">
         <span class="pull-right">
           <span class="btn-search-toggle open" v-show="showSearch">
-            <single-input v-model="filters.keyWord" placeholder="请输入关键字搜索"
+            <single-input v-model="filters.keyWord" placeholder="请输入名称搜索"
                           :showFocus="showSearch"></single-input>
             <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
           </span>

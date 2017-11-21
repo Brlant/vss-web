@@ -271,7 +271,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="疫苗厂商" prop="orgId" v-if="form.billPayType==='0'">
-              <el-select filterable remote placeholder="请输入关键字搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" @change="setAccountsPayableId">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
                            v-for="org in orgList">
@@ -289,7 +289,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="物流厂商" v-if="form.billPayType==='1'" prop="orgId">
-              <el-select filterable remote placeholder="请输入关键字搜索物流厂商" :remote-method="filterLogistics" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索物流厂商" :remote-method="filterLogistics" :clearable="true"
                          v-model="form.orgId" @change="setAccountsPayableId">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
                            v-for="org in orgList">

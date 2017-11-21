@@ -94,7 +94,7 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row label="生产企业" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索生产企业" :remote-method="filterFactory" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索生产企业" :remote-method="filterFactory" :clearable="true"
                            v-model="searchWord.orgId" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
                     <div style="overflow: hidden">
@@ -111,7 +111,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="疫苗" :span="6">
-                <el-select filterable remote placeholder="请输入关键字搜索疫苗" :remote-method="filterOrgGoods"
+                <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects">
                   <el-option :value="good.orgGoodsDto.goodsId" :key="good.orgGoodsDto.goodsId"

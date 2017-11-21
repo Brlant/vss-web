@@ -274,7 +274,7 @@
                    onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="疫苗" prop="orgGoodsId">
-              <el-select v-model="product.orgGoodsId" filterable placeholder="请输入关键字搜索产品" :clearable="true"
+              <el-select v-model="product.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
                          :loading="loading" popper-class="order-good-selects"
                          @change="getGoodDetail">
 

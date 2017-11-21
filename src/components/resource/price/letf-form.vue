@@ -240,7 +240,7 @@
               <oms-input type="text" placeholder="请输入销售价格组名称" v-model="form.name"></oms-input>
             </el-form-item>
             <el-form-item label="选择CDC货品" prop="orgGoodsId">
-              <el-select filterable remote placeholder="请输入关键字搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
                          v-model="form.orgGoodsId">
                 <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                            v-for="item in goodses">

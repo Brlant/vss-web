@@ -132,7 +132,7 @@
               被授权二类疫苗
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
-              <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
+              <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="showTypeList.length == 0" class="empty-info">
               暂无信息
