@@ -68,20 +68,35 @@
                 <el-input v-model="searchWord.batchNumber" placeholder="请输入货主订单号"></el-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="10">
               <oms-form-row label="" :span="6">
                 <perm label="purchasing-detail-form-export">
+                  <el-button type="primary" @click="search" :disabled="isLoading">
+                    查询
+                  </el-button>
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                     导出Excel
                   </el-button>
-                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 </perm>
               </oms-form-row>
             </el-col>
           </el-row>
         </el-form>
       </div>
-
+      <el-table v-show="reportList.length" :data="reportList" style="width: 100%;" class="header-list"
+                :header-row-class-name="'headerClass'" v-loading="loadingData">
+        <el-table-column prop="orgName" label="订单编号" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="业务日期" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="供应商" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="保管账" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="货品名称" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="数量" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="进货单价" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="金额" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="批号" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="有效期至" width="150"></el-table-column>
+      </el-table>
     </div>
 
   </div>
@@ -93,6 +108,8 @@
   export default {
     data () {
       return {
+        loadingData: false,
+        reportList: [],
         showSearch: true,
         searchWord: {
           suppliers: '',
@@ -124,6 +141,11 @@
           });
         });
       },
+      search: function () {// 搜索
+        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
+        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        let params = Object.assign({}, this.searchWord);
+      },
       resetSearchForm: function () {
         this.searchWord = {
           suppliers: '',
@@ -133,7 +155,6 @@
         };
         this.bizDateAry = '';
       },
-      // remote search factories
       filterOrg: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) return;

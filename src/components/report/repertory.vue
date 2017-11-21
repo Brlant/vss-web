@@ -46,6 +46,9 @@
             <el-col :span="6">
               <oms-form-row label="" :span="2">
                 <perm label="inventory-form-export">
+                  <el-button type="primary" @click="search" :disabled="isLoading">
+                    查询
+                  </el-button>
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                     导出Excel
                   </el-button>
@@ -57,7 +60,17 @@
       </div>
 
     </div>
-
+    <el-table v-show="reportList.length" :data="reportList" style="width: 100%;" class="header-list"
+              :header-row-class-name="'headerClass'" v-loading="loadingData">
+      <el-table-column prop="orgName" label="疫苗名称" width="150"></el-table-column>
+      <el-table-column prop="orgName" label="期前库存" width="150"></el-table-column>
+      <el-table-column prop="orgName" label="进苗数量" width="150"></el-table-column>
+      <el-table-column prop="orgName" label="发苗数量" width="150"></el-table-column>
+      <el-table-column prop="orgName" label="退区数量" width="150"></el-table-column>
+      <el-table-column prop="orgName" label="退厂家数量" width="150"></el-table-column>
+      <el-table-column prop="orgName" label="报损数量" width="150"></el-table-column>
+      <el-table-column prop="orgName" label="期末库存" width="150"></el-table-column>
+    </el-table>
   </div>
 </template>
 <script>
@@ -67,6 +80,8 @@
   export default {
     data () {
       return {
+        loadingData: false,
+        reportList: [],
         showSearch: true,
         searchWord: {
           createStartTime: '',
@@ -94,6 +109,11 @@
             message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
+      },
+      search: function () {// 搜索
+        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
+        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        let params = Object.assign({}, this.searchWord);
       },
       resetSearchForm: function () {
         this.searchWord = {
