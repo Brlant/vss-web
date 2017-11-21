@@ -122,7 +122,7 @@
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="item.id">货品ID</span>  {{item.id}}
+                  v-show="item.code">货品编号</span>  {{item.code}}
                 </span>
               <span class="select-other-info pull-left"><span
                 v-show="item.specifications">货品规格</span>  {{item.specifications}}
@@ -207,7 +207,7 @@
               </div>
               <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.goodsId">平台货品ID</span>  {{item.orgGoodsDto.goodsId}}
+                v-show="item.orgGoodsDto.goodsDto.code">平台货品编号</span>  {{item.orgGoodsDto.goodsDto.code}}
               </span>
                 <span class="select-other-info pull-left"><span
                   v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}

@@ -21,7 +21,7 @@
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="vaccine.id">货品ID</span>  {{vaccine.id}}
+                  v-show="vaccine.code">货品编号</span>  {{vaccine.code}}
                 </span>
               <span class="select-other-info pull-left"><span
                 v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
