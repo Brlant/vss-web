@@ -55,7 +55,7 @@
           <div v-else>
             <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                      @submit.prevent="done" onsubmit="return false">
-              <el-form-item label="货主编号" prop="orgCode">
+              <el-form-item label="系统代码" prop="orgCode">
                 <el-input v-model="user.orgCode"></el-input>
               </el-form-item>
               <el-form-item label="账号" prop="account">
