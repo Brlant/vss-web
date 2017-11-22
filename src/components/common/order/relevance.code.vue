@@ -75,71 +75,10 @@
 </style>
 <template>
   <div>
-    <div v-if="!codes.length" class="empty-info">
+    <div v-if="!traceCodes.length" class="empty-info">
       暂无追溯码信息
     </div>
     <div v-else="">
-      <oms-loading v-if="loadingDetailData" :loading="loadingDetailData"></oms-loading>
-      <table v-else-if="codes.length" class="clearfix product-code-list" width="100%">
-        <tbody>
-        <tr class="t-head">
-          <td>
-            <table width="100%" cellpadding="0" cellspacing="0" border="0" frame="void">
-              <tr>
-                <td width="240px">货品</td>
-                <td width="160px">批号</td>
-                <td width="160px">追溯码数量</td>
-                <td width="80px">合计货品数量</td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        <tr>
-          <td>
-            <table width="100%" cellpadding="0" cellspacing="0" border="0" frame="void">
-              <tr v-for="i in codes">
-                <td width="240px">{{i.goodsName}}</td>
-                <td width="160px">{{i.batchNumber}}</td>
-                <td width="160px">
-                  <div v-show="i.largePackageAmount">
-                    大包装{{i.largePackageAmount}}
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.largePackageUnit"></dict>
-                    ({{ i.largePackageSize }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
-                    /
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.largePackageUnit"></dict>
-                    )
-                  </div>
-                  <div v-show="i.mediumPackageAmount">
-                    中包装{{i.mediumPackageAmount}}
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.mediumPackageUnit"></dict>
-                    ({{ i.mediumPackageSize }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
-                    /
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.mediumPackageUnit"></dict>
-                    )
-                  </div>
-                  <div v-show="i.bulkCount">
-                    小包装{{i.bulkCount}}
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.smallPackageUnit"></dict>
-                    ({{ i.smallPackageSize }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
-                    /
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="i.smallPackageUnit"></dict>
-                    )
-                  </div>
-                </td>
-                <td width="80px">
-                  {{i.total}}
-                  <dict :dict-group="'measurementUnit'" :dict-key="i.measurementUnit"></dict>
-                </td>
-              </tr>
-            </table>
-          </td>
-        </tr>
-        </tbody>
-      </table>
-
       <div style="margin-bottom: 10px; margin-top: 20px;overflow: hidden">
        <span class="pull-right">
            <span class="btn-search-toggle open" v-show="showSearch">
@@ -251,7 +190,6 @@
     watch: {
       index (val) {
         if (val !== 8) return;
-        this.queryCodes();
         this.files = [];
         this.getTraceCodes(1);
 //        this.queryAttachment();
