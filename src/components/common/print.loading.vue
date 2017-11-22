@@ -1,10 +1,11 @@
-<style>
+<style scoped="">
   .print-dialog {
     position: fixed;
     top: 90px;
     left: 180px;
     right: 0;
     bottom: 0;
+    z-index: 10000;
   }
 </style>
 <template>
