@@ -140,7 +140,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="供货厂商" prop="salesFirm">
-        <el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg"
+        <el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg" @click.native="filterOrg('')"
                    :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)"
                    popperClass="good-selects">
           <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -315,7 +315,6 @@
     },
     props: ['formItem', 'action', 'actionType', 'usedStatus'],
     mounted: function () {
-      this.filterOrg();
     },
     computed: {
       typeId () {
@@ -405,15 +404,17 @@
         }
       },
       filterOrg: function (query) {
-        // 查询可用的货主列表
-        let param = {
-          deleteFlag: false,
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          return;
+        }
+        // 查询供货厂商
+        let params = {
           keyWord: query,
-          auditedStatus: '1',
-          orgRelationTypeList: ['Manufacture', 'Supplier']
+          relation: '1'
         };
-        BaseInfo.queryByOrgRelationTypeList(param).then(res => {
-          this.orgList = res.data.list;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
           if (this.action === 'edit') {
             let isExist = this.orgList.some(item => this.form.orgList.id === item.id);
             if (!isExist) {

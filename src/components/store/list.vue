@@ -283,13 +283,16 @@
         Object.assign(this.filters, temp);
       },
       filterFactory (query) { // 生产厂商
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          return;
+        }
+        // 过滤来源单位
         let params = {
-          deleteFlag: false,
-          keyWord: query,
-          orgRelationType: 'Manufacture'
+          keyWord: query
         };
-        BaseInfo.query(params).then(res => {
-          this.factories = res.data.list;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.factories = res.data;
         });
       },
       filterOrgGoods (query) {
