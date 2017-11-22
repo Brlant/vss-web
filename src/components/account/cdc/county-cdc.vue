@@ -92,10 +92,10 @@
               </el-col>
               <el-col :span="10" style="padding-left: 10px">
                 <perm label="erp-bind-cdc-add">
-                  <el-button type="primary" @click="bindDistrict">绑定CDC</el-button>
+                  <el-button type="primary" @click="bindDistrict" :disabled="doing">绑定CDC</el-button>
                 </perm>
                 <perm label="erp-bind-cdc-batch-add" style="margin-left: 20px">
-                  <el-button type="primary" @click="bindAll">一键绑定区CDC和POV</el-button>
+                  <el-button type="primary" @click="bindAll" :disabled="doing">一键绑定区CDC和POV</el-button>
                 </perm>
               </el-col>
               <el-col :span="6" class="text-right">
@@ -177,7 +177,8 @@
           currentPage: 1,
           count: 0,
           pageSize: 15
-        }
+        },
+        doing: false
       };
     },
     mounted () {
@@ -199,13 +200,19 @@
           });
           return;
         }
+        this.doing = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/cdc', text: '正在绑定'});
         cerpAccess.bindDistrict(this.orgId).then(() => {
           this.$notify.success({
             message: '绑定CDC成功'
           });
           this.orgId = '';
+          this.doing = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '正在绑定'});
           this.getCDCPage();
         }).catch(error => {
+          this.doing = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '正在绑定'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '绑定CDC失败'
           });
@@ -217,12 +224,18 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
+          this.doing = true;
+          this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/cdc', text: '正在绑定'});
           cerpAccess.bindAllCdcAndPov().then(() => {
             this.$notify.success({
               message: '一键绑定成功'
             });
+            this.doing = false;
+            this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '正在绑定'});
             this.getCDCPage();
           }).catch(error => {
+            this.doing = false;
+            this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '正在绑定'});
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '一键绑定失败'
             });

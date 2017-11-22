@@ -186,7 +186,7 @@ const route = [
           {
             path: '/store/request',
             component: resolve => require(['./components/store/list.vue'], resolve),
-            meta: {moduleId: 'store', title: '库存查询', perm: 'cerp-stock-query'}
+            meta: {moduleId: 'store', title: '即时库存查询', perm: 'cerp-stock-query'}
           }
           // {
           //   path: '/store/bad',

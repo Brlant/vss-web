@@ -401,6 +401,13 @@
               'salePriceGroupId': this.form.salePriceGroupId
             };
             this.doing = true;
+            this.$store.commit('initPrint', {
+              isPrinting: true,
+              moduleId: '/resource/two/vaccin/pov',
+              text: '正在疫苗授权',
+              top: '50px',
+              left: '0'
+            });
             http.put('/vaccine-authorization', obj).then(() => {
               this.$notify.success({
                 message: '修改疫苗授权成功'
@@ -412,10 +419,24 @@
                 povList: [],
                 povId: ''
               };
-              this.doing = false;
+              this.doing = true;
+              this.$store.commit('initPrint', {
+                isPrinting: false,
+                moduleId: '/resource/two/vaccin/pov',
+                text: '正在疫苗授权',
+                top: '50px',
+                left: '0'
+              });
               this.$emit('refresh');
             }).catch(error => {
               this.doing = false;
+              this.$store.commit('initPrint', {
+                isPrinting: false,
+                moduleId: '/resource/two/vaccin/pov',
+                text: '正在疫苗授权',
+                top: '50px',
+                left: '0'
+              });
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '修改疫苗授权失败'
               });
@@ -434,6 +455,13 @@
               'groupId': this.form.salePriceGroupId
             };
             this.doing = true;
+            this.$store.commit('initPrint', {
+              isPrinting: true,
+              moduleId: '/resource/two/vaccin/pov',
+              text: '正在疫苗授权',
+              top: '50px',
+              left: '0'
+            });
             VaccineRights.batchSave(obj).then(() => {
               this.$notify.success({
                 message: '添加疫苗授权成功'
@@ -441,8 +469,22 @@
               this.$refs['d-form'].resetFields();
               this.$emit('refresh');
               this.doing = false;
+              this.$store.commit('initPrint', {
+                isPrinting: false,
+                moduleId: '/resource/two/vaccin/pov',
+                text: '正在疫苗授权',
+                top: '50px',
+                left: '0'
+              });
             }).catch(error => {
               this.doing = false;
+              this.$store.commit('initPrint', {
+                isPrinting: false,
+                moduleId: '/resource/two/vaccin/pov',
+                text: '正在疫苗授权',
+                top: '50px',
+                left: '0'
+              });
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '添加疫苗授权失败'
               });

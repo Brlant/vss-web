@@ -202,7 +202,7 @@
       'typeTxt': function () {
         this.dataRows = [];
         this.orgName = '';
-        this.getOrgsList();
+        this.getOrgsList(1);
       },
       'keyTxt': function () {
         this.getPageList(1);
