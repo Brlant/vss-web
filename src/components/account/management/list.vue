@@ -14,6 +14,10 @@
   .d-table-col-wrap {
     overflow: auto;
   }
+
+  .minor-part {
+    color: #999;
+  }
 </style>
 <template>
   <div>
@@ -37,6 +41,9 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id==currentItem.id}">
+                <div class="minor-part" v-show="item.subordinateCode">
+                  系统代码{{item.subordinateCode }}
+                </div>
                 <div>
                   {{item.subordinateName }}
                 </div>

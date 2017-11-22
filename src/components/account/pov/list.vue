@@ -63,6 +63,10 @@
       width: auto;
     }
   }
+
+  .minor-part {
+    color: #999;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -87,6 +91,9 @@
               <ul class="show-list">
                 <li v-for="item in cdcs" :keys="item.id" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==cdcItem.id}">
+                  <div class="minor-part" v-show="item.subordinateCode">
+                    系统代码{{item.subordinateCode }}
+                  </div>
                   <div>
                     {{item.subordinateName }}
                   </div>
@@ -154,9 +161,8 @@
               <div class="order-list-item order-list-item-bg" v-for="item in povs" :key="">
                 <el-row>
                   <el-col :span="20" class="R pt10">
-                      <span>
-                      {{ item.subordinateName }}
-                      </span>
+                    <div class="minor-part">系统代码{{ item.subordinateCode }}</div>
+                    <div>{{ item.subordinateName }}</div>
                   </el-col>
                   <el-col :span="4" class="R pt10">
                     <perm label="erp-bind-pov-delete">

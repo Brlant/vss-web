@@ -63,6 +63,10 @@
       width: auto;
     }
   }
+
+  .minor-part {
+    color: #999;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -133,9 +137,12 @@
               <div class="order-list-item order-list-item-bg" v-for="item in CDCs" :key="">
                 <el-row>
                   <el-col :span="20" class="R pt10">
-                    <span>
+                    <div class="minor-part" v-show="item.subordinateCode">
+                      系统代码{{item.subordinateCode }}
+                    </div>
+                    <div>
                       {{ item.subordinateName }}
-                    </span>
+                    </div>
                   </el-col>
                   <el-col :span="4" class="R pt10">
                     <perm label="erp-bind-cdc-delete">
