@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui/lib/notification';
+import { Notification } from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -355,6 +355,9 @@ export const Order = resource('/order', http, {
 export const invoiceManage = resource('/invoice/', http, {
   queryCount (params) {
     return http.get('/invoice/count', {params});
+  },
+  save (obj) {
+    return http.post('/invoice/request', obj);
   }
 });
 /**

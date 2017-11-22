@@ -131,11 +131,11 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="6">货主货品名称</el-col>
           <el-col :span="6">生产厂商</el-col>
-          <el-col :span="3">批号</el-col>
-          <el-col :span="2">可用数量</el-col>
-          <el-col :span="3">实际库存数量</el-col>
-          <el-col :span="2">在途库存</el-col>
-          <el-col :span="2">有效期</el-col>
+          <el-col :span=" orgLevel === 3 ? 4: 3">批号</el-col>
+          <el-col :span="2" v-show="orgLevel !== 3">可用数量</el-col>
+          <el-col :span="orgLevel === 3 ? 4 : 3">实际库存数量</el-col>
+          <el-col :span="2" v-show="orgLevel !== 3">在途库存</el-col>
+          <el-col :span="orgLevel === 3 ? 4 : 2">有效期</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -160,19 +160,19 @@
               <el-col :span="6" class="pt">
                 <span>{{ item.factoryName }}</span>
               </el-col>
-              <el-col :span="3" class="pt">
+              <el-col :span=" orgLevel === 3 ? 4: 3" class="pt">
                 <span>{{ item.batchNumber }}</span>
               </el-col>
-              <el-col :span="2" class="pt" align="center">
+              <el-col :span="2" class="pt" v-show="orgLevel !== 3" align="center">
                 <span>{{ item.availableCount }}</span>
               </el-col>
-              <el-col :span="3">
+              <el-col :span=" orgLevel === 3 ? 4: 3">
                 <div><span class="align-word">合格</span>：{{ item.qualifiedCount }}</div>
               </el-col>
-              <el-col :span="2" class="pt" align="center">
+              <el-col :span="2" v-show="orgLevel !== 3" class="pt" align="center">
                 <span>{{ item.transitCount }}</span>
               </el-col>
-              <el-col :span="2" class="pt" align="center">
+              <el-col :span=" orgLevel === 3 ? 4: 2" class="pt" align="center">
                 <span>{{ item.expiryDate | date }}</span>
               </el-col>
             </el-row>
@@ -233,6 +233,11 @@
     },
     mounted () {
       this.getBatches(1);
+    },
+    computed: {
+      orgLevel () {
+        return this.$store.state.orgLevel;
+      }
     },
     watch: {
       filters: {

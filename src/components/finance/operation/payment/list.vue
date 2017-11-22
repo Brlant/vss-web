@@ -148,7 +148,7 @@
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="付款单据编号" :span="6">
+              <oms-form-row label="付款单据编号" :span="7">
                 <oms-input type="text" v-model="searchCondition.keyWord" placeholder="请输入付款单据编号"></oms-input>
               </oms-form-row>
             </el-col>
