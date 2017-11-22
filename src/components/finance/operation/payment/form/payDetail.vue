@@ -38,6 +38,10 @@
       width: 310px;
     }
   }
+
+  .minor-part {
+    color: #999;
+  }
 </style>
 <template>
   <div>
@@ -109,27 +113,31 @@
       <table class="table">
         <thead>
         <tr>
-          <th style="width: 300px">货品名称</th>
-          <th>订单号</th>
-          <th>应付金额</th>
+          <th style="width: 300px">订单号/货品名称</th>
           <th>创建时间</th>
+          <th>应付金额</th>
+          <th>本次付款金额</th>
           <th>操作</th>
         </tr>
         </thead>
         <tbody>
         <tr v-for="product in selectPayments">
           <td>
-            <span>{{product.goodsName}}</span>
-          </td>
-          <td>
-            <span>{{product.orderNo}}</span>
-          </td>
-          <td class="ar">
-            <span v-show="Number(product.billAmount)">¥{{product.billAmount | formatMoney}}</span>
-            <span v-if="!Number(product.billAmount)">-</span>
+            <span class="minor-part">{{product.orderNo}}</span>
+            <div>{{product.goodsName}}</div>
           </td>
           <td>
             {{product.createTime | minute }}
+          </td>
+          <td class="ar">
+            <span v-show="Number(product.billAmount)">¥{{product.billAmount | formatMoney}}</span>
+          </td>
+          <td>
+            <el-input v-model="product.payment" style="width: 150px" @blur="paymentChange(product)">
+              <template slot="prepend">
+                <span>¥</span>
+              </template>
+            </el-input>
           </td>
           <td class="goods-btn">
             <a href="#" @click.prevent="remove(product)"><i
@@ -144,10 +152,11 @@
 </template>
 <script>
   import { pay } from '@/resources';
-
+  import utils from '@/tools/utils';
   export default {
     props: {
       selectPayments: Array,
+      billPayType: '',
       factoryId: ''
     },
     data () {
@@ -198,10 +207,14 @@
         this.loadingData = true;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize
+          pageSize: this.pager.pageSize,
+          billPayType: this.billPayType
         }, this.filterRights);
         pay.queryDetailByfy(this.factoryId, params).then(res => {
           this.loadingData = false;
+          res.data.list.forEach(item => {
+            item.payment = utils.autoformatDecimalPoint(item.billAmount ? item.billAmount.toString() : '0');
+          });
           this.payments = res.data.list;
           this.pager.count = res.data.count;
         });
@@ -223,6 +236,15 @@
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+      },
+      paymentChange (item) {
+        if (item.payment > item.billAmount) {
+          this.$notify.info({
+            message: '输入的金额大于应付金额，已经帮您调整到与应付金额相等'
+          });
+          item.payment = item.billAmount;
+        }
+        item.payment = utils.autoformatDecimalPoint(item.payment ? item.payment.toString() : '0');
       },
       add (item) {
         let index = this.selectPayments.indexOf(item);
