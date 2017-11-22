@@ -9,7 +9,9 @@
   }
 </style>
 <template>
-  <div class="print-dialog" v-if="print.isPrinting" v-loading="print.isPrinting"
+  <div class="print-dialog" v-if="print.isPrinting"
+       :style="{top: typeof print.top === 'string' ? print.top : '90px',left: typeof print.left === 'string' ? print.left :'180px'}"
+       v-loading="print.isPrinting"
        :element-loading-text="print.text"></div>
 </template>
 <script>

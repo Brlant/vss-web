@@ -201,15 +201,18 @@
           return;
         }
         this.doing = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/cdc', text: '正在绑定'});
         cerpAccess.bindDistrict(this.orgId).then(() => {
           this.$notify.success({
             message: '绑定CDC成功'
           });
           this.orgId = '';
           this.doing = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '正在绑定'});
           this.getCDCPage();
         }).catch(error => {
           this.doing = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '正在绑定'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '绑定CDC失败'
           });
@@ -222,17 +225,17 @@
           type: 'warning'
         }).then(() => {
           this.doing = true;
-          this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/cdc', text: '拼命加载中'});
+          this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/cdc', text: '正在绑定'});
           cerpAccess.bindAllCdcAndPov().then(() => {
             this.$notify.success({
               message: '一键绑定成功'
             });
             this.doing = false;
-            this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '拼命加载中'});
+            this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '正在绑定'});
             this.getCDCPage();
           }).catch(error => {
             this.doing = false;
-            this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '拼命加载中'});
+            this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '正在绑定'});
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '一键绑定失败'
             });

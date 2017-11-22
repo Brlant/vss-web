@@ -286,10 +286,12 @@
             <el-form-item label="供货厂商">
               {{form.supplierName}}
             </el-form-item>
-            <el-form-item label="物流商" v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
+            <el-form-item label="物流商"
+                          v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
               {{form.logisticsProviderId}}
             </el-form-item>
-            <el-form-item label="提货地址" v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
+            <el-form-item label="提货地址" v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' "
+                          :clearable="true">
               {{form.pickUpWarehouseName}}
             </el-form-item>
             <el-form-item label="运输条件" v-show="showContent.isShowOtherContent">
@@ -367,7 +369,7 @@
 </template>
 
 <script>
-  import {PurchaseContract, LogisticsCenter, http, Address, BaseInfo, InWork} from './../../../../resources';
+  import { PurchaseContract, LogisticsCenter, http, Address, BaseInfo, InWork } from './../../../../resources';
   import utils from '@/tools/utils';
   import Dict from '../../../common/dict.vue';
 
@@ -539,7 +541,7 @@
           }
         });
       },
-      defaultIndex(val) {
+      defaultIndex (val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -580,7 +582,7 @@
         }
         return utils.formatAddress(item.warehouseProvince, item.warehouseCity, item.warehouseRegion) + '/' + item.warehouseAddress;
       },
-      createOrderInfo() {
+      createOrderInfo () {
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
         if (!orgGoodsId) return;
@@ -620,7 +622,7 @@
 //          });
         });
       },
-      editOrderInfo() {
+      editOrderInfo () {
         if (!this.orderId) return;
         PurchaseContract.queryContractDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -635,7 +637,7 @@
           });
         });
       },
-      changeNumber() {
+      changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
@@ -713,7 +715,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress() {
+      filterAddress () {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -957,7 +959,7 @@
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         this.searchProduct();
       },
-      editItem(item) {
+      editItem (item) {
         this.filterProductList.push({
           orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []
@@ -1013,14 +1015,18 @@
         });
       },
       exportExcel () {
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/purchase/contract'});
+        this.$store.commit('initPrint', {
+          isPrinting: true, moduleId: '/purchase/contract', top: '50px'
+        });
         this.$http.get(`/contract-print/${this.orderId}`).then(res => {
           utils.download(res.data, '采购合同');
-          this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/purchase/contract'});
+          this.$store.commit('initPrint', {
+            isPrinting: false, moduleId: '/purchase/contract', top: '50px'
+          });
         }).catch(error => {
-          this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/purchase/contract'});
+          this.$store.commit('initPrint', {
+            isPrinting: false, moduleId: '/purchase/contract', top: '50px'
+          });
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });

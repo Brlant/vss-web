@@ -330,9 +330,6 @@
                   <oms-row label="批准文号" :span="8">
                     {{product.fixInfo.goodsDto.approvalNumber}}
                   </oms-row>
-                  <oms-row label="是否OTC" :span="8">
-                    <span v-show="product.orgGoodsId">{{product.fixInfo.goodsDto.goodsOtc | formatStatus}}</span>
-                  </oms-row>
                 </el-col>
                 <el-col :span="12">
                   <span v-show="accessoryList.length">【组合疫苗】</span>

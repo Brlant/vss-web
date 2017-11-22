@@ -247,13 +247,16 @@
           return;
         }
         let cdcId = this.cdcItem.subordinateId;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/citypov', text: '正在绑定'});
         cerpAccess.bindPov(cdcId, this.orgId).then(() => {
           this.$notify.success({
             message: '绑定POV成功'
           });
           this.orgId = '';
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/citypov', text: '正在绑定'});
           this.getPovPage(1);
         }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/citypov', text: '正在绑定'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '绑定POV失败'
           });
