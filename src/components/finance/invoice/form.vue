@@ -313,7 +313,7 @@
           factoryId: {required: true, message: '请选择疫苗厂商', trigger: 'change'},
           invoiceNumber: {required: true, message: '请输入发票号码', trigger: 'blur'},
           type: {required: true, message: '请选择发票类型', trigger: 'change'},
-          amount: {required: true, message: '请输入发票金额', trigger: 'blur'}
+          amount: {required: true, message: '请选择付款明细，自动计算发票金额', trigger: 'blur'}
         },
         doing: false,
         title: '添加发票',
@@ -348,7 +348,7 @@
         val.forEach(i => {
           amount += Number(i.billAmount);
         });
-        this.form.amount = utils.autoformatDecimalPoint(amount.toString());
+        this.form.amount = amount ? utils.autoformatDecimalPoint(amount.toString()) : '';
         this.form.detailList = val.map(m => m.id);
       }
     },

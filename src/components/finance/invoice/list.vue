@@ -71,6 +71,10 @@
       color: @activeColor;
     }
   }
+
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -157,7 +161,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in invoices"
-               :class="[{'active':currentId==item.id}]">
+               :class="[{'active':currentId==item.id}]" @click="showDetailPart(item)">
             <el-row>
               <el-col :span="5" class="R pt10">
                     <span>
@@ -186,12 +190,12 @@
               </el-col>
               <el-col :span="3" class="R pt10 btn-color">
                 <div v-if="item.status === 0">
-                  <perm label="invoice-update">
-                    <a href="#" @click.prevent="edit(item)"><i
-                      class="iconfont icon-edit"></i>编辑</a>
-                  </perm>
+                  <!--<perm label="invoice-update">-->
+                  <!--<a href="#" @click.prevent="edit(item)"><i-->
+                  <!--class="iconfont icon-edit"></i>编辑</a>-->
+                  <!--</perm>-->
                   <perm label="payment-payable">
-                    <a href="#" @click.prevent="deleteItem(item)"><i
+                    <a href="#" @click.prevent.stop="deleteItem(item)"><i
                       class="iconfont invoice-delete"></i> 删除</a>
                   </perm>
                 </div>
@@ -212,20 +216,26 @@
                 :css="{'width':'1000px','padding':0}">
       <form-part :formItem="form" @close="resetRightBox" @refresh="refresh"></form-part>
     </page-right>
+    <page-right :show="showDetail" @right-close="resetRightBox"
+                :css="{'width':'1000px','padding':0}">
+      <detail-part :currentId="currentId" @close="resetRightBox" @refresh="refresh"
+                   :showDetail="showDetail"></detail-part>
+    </page-right>
   </div>
 </template>
 <script>
   import { invoiceManage, BaseInfo } from '@/resources';
   import formPart from './form.vue';
   import utils from '@/tools/utils';
-
+  import detailPart from './detail.vue';
   export default {
-    components: {formPart},
+    components: {formPart, detailPart},
     data () {
       return {
         loadingData: true,
         showSearch: true,
         showPart: false,
+        showDetail: false,
         invoices: [],
         filters: {
           deleteFlag: false,
@@ -263,6 +273,7 @@
     methods: {
       resetRightBox: function () {
         this.showPart = false;
+        this.showDetail = false;
       },
       getMaPage (pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
@@ -307,6 +318,10 @@
         this.currentId = item.id;
         this.form = item;
         this.showPart = true;
+      },
+      showDetailPart (item) {
+        this.currentId = item.id;
+        this.showDetail = true;
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;
