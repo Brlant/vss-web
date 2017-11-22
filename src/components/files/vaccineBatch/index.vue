@@ -94,8 +94,9 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row label="生产企业" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索生产企业" :remote-method="filterFactory" :clearable="true"
-                           v-model="searchWord.orgId" popperClass="good-selects">
+                <el-select filterable remote placeholder="请输入名称搜索生产企业" :remote-method="filterFactory"
+                           @click.native="filterOrg('')"
+                           :clearable="true" v-model="searchWord.orgId" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -263,7 +264,6 @@
       };
     },
     mounted() {
-      this.filterFactory();
       this.filterOrgGoods();
     },
     watch: {
@@ -317,13 +317,16 @@
 //        Object.assign(this.filters, temp);
       },
       filterFactory(query) { // 查询厂商
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          return;
+        }
+        // 过滤来源单位
         let params = {
-          deleteFlag: false,
-          keyWord: query,
-          orgRelationType: 'Manufacture'
+          keyWord: query
         };
-        BaseInfo.query(params).then(res => {
-          this.factories = res.data.list;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.factories = res.data;
         });
       },
       filterOrgGoods(query) {

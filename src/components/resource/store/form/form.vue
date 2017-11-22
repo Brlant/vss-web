@@ -20,8 +20,8 @@
       </el-select>
     </el-form-item>
     <el-form-item label="所属物流公司" prop="warehouseSourceFirm" v-if="form.warehouseType==='0'">
-      <el-select filterable remote placeholder="请输入名称搜索物流公司" :remote-method="getOrgs" :clearable="true"
-                 v-model="form.warehouseSourceFirm" popper-class="good-selects">
+      <el-select filterable remote placeholder="请输入名称搜索物流公司" :remote-method="getOrgs" @click.native="getOrgs('')"
+                 :clearable="true" v-model="form.warehouseSourceFirm" popper-class="good-selects">
         <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
           <div style="overflow: hidden">
             <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -143,15 +143,27 @@
       }
     },
     methods: {
-      getOrgs: function (query) {// 过滤物流公司名称列表
+      getOrgs: function (query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          return;
+        }
+        // 过滤物流公司名称列表
         let params = {
-          deleteFlag: false,
           keyWord: query,
-          auditedStatus: '1',
-          orgRelationType: 'LogisticCorp'
+          relation: '3'
         };
-        BaseInfo.query(params).then(res => {
-          this.orgList = res.data.list;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
+          if (this.action === 'edit') {
+            let isExist = this.orgList.some(item => this.form.orgList.id === item.id);
+            if (!isExist) {
+              this.orgList.push({
+                id: this.form.salesFirm,
+                name: this.form.salesFirmName
+              });
+            }
+          }
         });
       },
       initFormValue: function () {

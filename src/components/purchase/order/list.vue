@@ -496,7 +496,7 @@
           this.orgList = [];
           return;
         }
-        BaseInfo.queryOrgByReation(orgId, {keyWord: query}).then(res => {
+        BaseInfo.queryOrgByReation(orgId, {keyWord: query, relation: '1'}).then(res => {
           this.orgList = res.data;
         });
       },

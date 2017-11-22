@@ -285,13 +285,17 @@
     },
     methods: {
       filterOrg: function (query) {// 过滤供货商
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          return;
+        }
+        // 查询供货厂商
         let params = {
-          deleteFlag: false,
           keyWord: query,
-          orgRelationTypeList: ['Manufacture', 'Supplier']
+          relation: '1'
         };
-        BaseInfo.queryByOrgRelationTypeList(params).then(res => {
-          this.orgList = res.data.list;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       queryStatusNum: function (params) {

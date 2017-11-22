@@ -143,7 +143,9 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="收款单位" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg"
+                           @click.native="filterOrg('')"
+                           :clearable="true"
                            v-model="searchCondition.orgId">
                     <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                       <div style="overflow: hidden">
@@ -323,7 +325,6 @@
     },
     mounted() {
       this.getBillList(1);
-      this.filterOrg();
     },
     computed: {
       transportationMeansList: function () {
@@ -342,12 +343,17 @@
       }
     },
     methods: {
-      filterOrg: function (query) {// 过滤来源单位
-        let param = {
+      filterOrg: function (query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          return;
+        }
+        // 过滤来源单位
+        let params = {
           keyWord: query
         };
-        BaseInfo.query(param).then(res => {
-          this.orgList = res.data.list;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       billPayType: function (value) {
