@@ -102,10 +102,15 @@
         if (value === '') {
           callback(new Error('请输入密码'));
         } else {
-          if (self.resetUser.password2 !== '') {
-            this.$refs.resetForm.validateField('password2');
+          let rl = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
+          if (!rl.test(this.user.password)) {
+            callback('新密码必须包含数字、大写字母,小写字母,至少8-16个字符');
+          } else {
+            if (self.resetUser.password2 !== '') {
+              this.$refs.resetForm.validateField('password2');
+            }
+            callback();
           }
-          callback();
         }
       };
       let validatePass2 = (rule, value, callback) => {
