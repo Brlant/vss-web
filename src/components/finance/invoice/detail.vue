@@ -18,9 +18,9 @@
 <template>
   <div>
     <div class="content-part">
-      <h3>发票详情</h3>
       <div class="content-right min-gutter">
-        <el-row style="margin-bottom:0">
+        <h3>发票详情</h3>
+        <el-row>
           <el-col :span="12">
             <oms-row label="疫苗厂商" :span="span">
               {{info.factoryName}}
@@ -41,7 +41,7 @@
             </oms-row>
           </el-col>
         </el-row>
-        <el-row style="margin-bottom:0">
+        <el-row>
 
         </el-row>
       </div>
@@ -49,11 +49,31 @@
   </div>
 </template>
 <script>
+  import { invoiceManage } from '@/resources';
   export default {
+    props: {
+      currentId: String,
+      showDetail: Boolean
+    },
     data () {
       return {
+        span: 8,
         info: {}
       };
+    },
+    watch: {
+      currentId (val) {
+        if (!val) return;
+        if (!this.showDetail) return;
+        this.queryDetail();
+      }
+    },
+    methods: {
+      queryDetail () {
+        invoiceManage.get(this.currentId).then(res => {
+          this.info = res.data;
+        });
+      }
     }
   };
 </script>
