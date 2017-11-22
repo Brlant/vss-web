@@ -234,7 +234,7 @@
                   建立日期：
                 </el-col>
                 <el-col :span="8">
-                  {{ businessRelationItem.followOrg.orgDto.createTime | date}}
+                  {{ businessRelationItem.followOrg.orgDto.createTime | minute}}
                 </el-col>
               </el-row>
               <el-row>

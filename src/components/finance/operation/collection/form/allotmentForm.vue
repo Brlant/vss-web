@@ -316,7 +316,7 @@
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">货主订单号 {{item.orderNo}}</span>
                       <span class="pull-right" style="color: #999">
-                        <span>创建时间</span> {{item.createTime | date}}
+                        <span>创建时间</span> {{item.createTime | minute}}
                       </span>
                     </div>
                     <div style="overflow: hidden">
@@ -346,7 +346,7 @@
                     {{billOrder.orderNo}}
                   </oms-row>
                   <oms-row label="创建时间" :span="8">
-                    {{billOrder.createTime | date}}
+                    {{billOrder.createTime | minute}}
                   </oms-row>
                   <oms-row label="单据金额" :span="8">
                     ¥ {{billOrder.billAmount | formatMoney}}

@@ -1,5 +1,5 @@
 <style lang="less">
-  @import "../../../../../assets/mixins.less";
+  @import "../../../assets/mixins.less";
 
   .product-list-detail {
     margin-top: 20px;
@@ -105,7 +105,10 @@
       </div>
     </div>
     <div class="product-list-detail" v-show="selectPayments.length">
-      <h3 style="background: #f1f1f1">付款明细(已选择)</h3>
+      <h3 style="background: #f1f1f1;overflow: hidden">
+        <span style="float: left">付款明细(已选择)</span>
+        <span style="float: right">发票金额：￥{{ amount | formatMoney }}</span>
+      </h3>
       <table class="table">
         <thead>
         <tr>
@@ -113,7 +116,7 @@
           <th>订单号</th>
           <th>应付金额</th>
           <th>创建时间</th>
-          <th>操作</th>
+          <th width="60px">操作</th>
         </tr>
         </thead>
         <tbody>
@@ -148,7 +151,8 @@
   export default {
     props: {
       selectPayments: Array,
-      factoryId: ''
+      factoryId: String,
+      amount: String
     },
     data () {
       return {

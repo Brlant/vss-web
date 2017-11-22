@@ -305,7 +305,7 @@
                   <el-col :span="8">{{ item.goodsName }} </el-col>
                   <el-col :span="6">{{ item.orderNo }} </el-col>
                   <el-col :span="5"> ￥{{item.billAmount | formatMoney}} </el-col>
-                  <el-col :span="5">{{ item.createTime | date }} </el-col>
+                  <el-col :span="5">{{ item.createTime | minute }} </el-col>
                 </el-row>
               </li>
             </ul>

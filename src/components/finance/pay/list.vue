@@ -42,6 +42,9 @@
     margin: 20px 0;
   }
 
+  .el-form--inline .el-form-item {
+    margin-right: 0;
+  }
 </style>
 <template>
   <div>
@@ -117,13 +120,13 @@
                 <el-form-item label="创建时间">
                   <el-date-picker
                     v-model="createTimes"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
+                    type="datetimerange"
+                    placeholder="请选择">
                   </el-date-picker>
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" @click="searchInOrder">查询</el-button>
-                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                  <!--<el-button native-type="reset" @click="resetSearchForm">重置</el-button>-->
                 </el-form-item>
               </el-form>
               <!--<span class="pull-right" style="margin-top: 8px">-->
@@ -143,9 +146,9 @@
               <tr>
                 <th>订单号</th>
                 <th>货品名称</th>
+                <th>创建时间</th>
                 <th>应付金额</th>
                 <th>实付金额</th>
-                <th>创建时间</th>
                 <th>状态</th>
               </tr>
               </thead>
@@ -171,6 +174,9 @@
                   {{row.goodsName}}
                 </td>
                 <td>
+                  {{row.createTime | minute }}
+                </td>
+                <td>
                   <span v-show="row.billAmount">
                     ￥{{row.billAmount | formatMoney}}
                   </span>
@@ -179,9 +185,6 @@
                   <span>
                     ￥{{row.prepaidAccounts | formatMoney}}
                   </span>
-                </td>
-                <td>
-                  {{row.createTime | date }}
                 </td>
                 <td>
                   {{statusTitle(row.status)}}
@@ -406,7 +409,7 @@
         this.getOrgsList();
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
       }
     }
   };
