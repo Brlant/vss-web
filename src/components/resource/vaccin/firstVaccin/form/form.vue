@@ -410,9 +410,9 @@
           deleteFlag: false,
           keyWord: query,
           auditedStatus: '1',
-          orgRelationType: 'Manufacture'
+          orgRelationTypeList: ['Manufacture', 'Supplier']
         };
-        BaseInfo.query(param).then(res => {
+        BaseInfo.queryByOrgRelationTypeList(param).then(res => {
           this.orgList = res.data.list;
           if (this.action === 'edit') {
             let isExist = this.orgList.some(item => this.form.orgList.id === item.id);
