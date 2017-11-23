@@ -288,7 +288,7 @@
         </el-menu>
       </div>
       <div class="change-collapse" @click="changeMenuCollapse">
-        <f-a :name="isCollapse?'collapse':'spread'"></f-a>
+        <f-a :name="isCollapse?'spread':'collapse'"></f-a>
       </div>
     </div>
     <h4 class="position-nav">

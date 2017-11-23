@@ -319,7 +319,7 @@
             unitPrice: '',
             availabilityStatus: true
           };
-          this.title = '新增销售价格组';
+          this.title = '新增二类疫苗销售价格组';
         }
       }
     },
