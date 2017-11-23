@@ -363,6 +363,7 @@
         if (!query && this.prices.length && this.form.salePriceGroupId) {
           return false;
         }
+        if (!this.currentItem.orgGoodsId) return false;
         let params = Object.assign({}, {
           keyWord: query,
           orgGoodsId: this.currentItem.orgGoodsId,

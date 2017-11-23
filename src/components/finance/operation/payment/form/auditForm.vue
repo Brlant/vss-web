@@ -292,7 +292,7 @@
             </el-form-item>
             <el-form-item label="付款明细" class="mb0"></el-form-item>
             <ul class="show-list invoice-list"
-                v-show="form.reconciliationDetailList && form.reconciliationDetailList.length">
+                v-if="form.reconciliationDetailList && form.reconciliationDetailList.length">
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
                   <el-col :span="8">货品名称 </el-col>
