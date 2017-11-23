@@ -23,15 +23,12 @@
             <span class="pull-left">{{item.orgGoodsDto.name}}</span>
           </div>
           <div style="overflow: hidden">
-            <span class="select-other-info pull-left"><span
-              v-show="item.orgGoodsDto.goodsDto.code">平台货品编号</span>  {{item.orgGoodsDto.goodsDto.code}}
-            </span>
-            <span class="select-other-info pull-left"><span
-              v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-            </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                      </span>
             <span class="select-other-info pull-left"><span
               v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
-            </span>
+                      </span>
           </div>
         </el-option>
       </el-select>
