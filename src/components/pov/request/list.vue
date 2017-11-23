@@ -180,11 +180,9 @@
                 </td>
                 <td>
                   {{row.applyCount}}
-                  （
                   <dict
                     :dict-group="'measurementUnit'"
                     :dict-key="row.unit"></dict>
-                  ）
                 </td>
                 <td>
                   <span v-if="row.applyMoney">￥{{row.applyMoney | formatMoney}}</span>

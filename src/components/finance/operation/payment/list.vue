@@ -289,21 +289,17 @@
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
       <add-form @change="onSubmit" @right-close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showAllotmentRight" @right-close="resetRightBox" :css="{'width':'750px','padding':0}">
-      <allotment-form :formItem="billInfo" @change="onSubmit" @right-close="resetRightBox"></allotment-form>
-    </page-right>
   </div>
 </template>
 <script>
   import utils from '../../../../tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import allotmentForm from './form/allotmentForm.vue';
   import {BillPayable, pay, BaseInfo} from '../../../../resources';
 
   export default {
     components: {
-      auditForm, addForm, allotmentForm
+      auditForm, addForm
     },
     data: function () {
       return {

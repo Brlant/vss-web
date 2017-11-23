@@ -234,7 +234,8 @@
         <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing" :loading="doing">{{ doing ? '正在授权' : '保存' }}
+            </el-button>
           </li>
         </ul>
       </div>
@@ -362,6 +363,7 @@
         if (!query && this.prices.length && this.form.salePriceGroupId) {
           return false;
         }
+        if (!this.currentItem.orgGoodsId) return false;
         let params = Object.assign({}, {
           keyWord: query,
           orgGoodsId: this.currentItem.orgGoodsId,
@@ -401,42 +403,20 @@
               'salePriceGroupId': this.form.salePriceGroupId
             };
             this.doing = true;
-            this.$store.commit('initPrint', {
-              isPrinting: true,
-              moduleId: '/resource/two/vaccin/pov',
-              text: '正在疫苗授权',
-              top: '50px',
-              left: '0'
-            });
             http.put('/vaccine-authorization', obj).then(() => {
               this.$notify.success({
                 message: '修改疫苗授权成功'
               });
-//              this.$refs['d-form'].resetFields();
               this.form = {
                 orgGoodsId: '',
                 salePriceGroupId: '',
                 povList: [],
                 povId: ''
               };
-              this.doing = true;
-              this.$store.commit('initPrint', {
-                isPrinting: false,
-                moduleId: '/resource/two/vaccin/pov',
-                text: '正在疫苗授权',
-                top: '50px',
-                left: '0'
-              });
+              this.doing = false;
               this.$emit('refresh');
             }).catch(error => {
               this.doing = false;
-              this.$store.commit('initPrint', {
-                isPrinting: false,
-                moduleId: '/resource/two/vaccin/pov',
-                text: '正在疫苗授权',
-                top: '50px',
-                left: '0'
-              });
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '修改疫苗授权失败'
               });
@@ -455,13 +435,6 @@
               'groupId': this.form.salePriceGroupId
             };
             this.doing = true;
-            this.$store.commit('initPrint', {
-              isPrinting: true,
-              moduleId: '/resource/two/vaccin/pov',
-              text: '正在疫苗授权',
-              top: '50px',
-              left: '0'
-            });
             VaccineRights.batchSave(obj).then(() => {
               this.$notify.success({
                 message: '添加疫苗授权成功'
@@ -469,22 +442,8 @@
               this.$refs['d-form'].resetFields();
               this.$emit('refresh');
               this.doing = false;
-              this.$store.commit('initPrint', {
-                isPrinting: false,
-                moduleId: '/resource/two/vaccin/pov',
-                text: '正在疫苗授权',
-                top: '50px',
-                left: '0'
-              });
             }).catch(error => {
               this.doing = false;
-              this.$store.commit('initPrint', {
-                isPrinting: false,
-                moduleId: '/resource/two/vaccin/pov',
-                text: '正在疫苗授权',
-                top: '50px',
-                left: '0'
-              });
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '添加疫苗授权失败'
               });

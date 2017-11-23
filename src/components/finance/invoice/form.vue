@@ -343,13 +343,16 @@
           this.$refs['d-form'].resetFields();
         }
       },
-      selectPayments (val) {
-        let amount = 0;
-        val.forEach(i => {
-          amount += Number(i.billAmount);
-        });
-        this.form.amount = amount ? utils.autoformatDecimalPoint(amount.toString()) : '';
-        this.form.detailList = val.map(m => m.id);
+      selectPayments: {
+        handler (val) {
+          let amount = 0;
+          val.forEach(i => {
+            amount += Number(i.billAmount);
+          });
+          this.form.amount = amount ? utils.autoformatDecimalPoint(amount.toString()) : '';
+          this.form.detailList = val.map(m => m.id);
+        },
+        deep: true
       }
     },
     computed: {

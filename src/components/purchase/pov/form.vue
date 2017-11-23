@@ -115,7 +115,7 @@
                     <el-col :span="7" class="pt">
                       <span>
                         {{ item.applyCount }}
-                        <dict :dict-group="'shipmentPackingUnit'" :dict-key="currentItem.mixUnit"></dict>
+                        <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                     </el-col>
                     <el-col :span="7" class="pt">
@@ -124,7 +124,7 @@
                         <el-input v-show="status === 0 " v-model.number="item.actualCount"
                                   @blur="submit(item)">
                           <template slot="append">
-                            <dict :dict-group="'shipmentPackingUnit'" :dict-key="currentItem.mixUnit"></dict>
+                            <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                           </template>
                         </el-input>
                       </perm>
@@ -138,20 +138,20 @@
                     <el-col :span="4">
                       <span style="font-size: 16px">需求总计
                         {{ currentItem.requiredQuantity }}
-                       <dict :dict-group="'shipmentPackingUnit'" :dict-key="currentItem.mixUnit"></dict>
+                       <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                     </el-col>
                     <el-col :span="4">
                       <span style="font-size: 16px">库存数量
                         {{ currentItem.inventoryQuantity }}
-                        <dict :dict-group="'shipmentPackingUnit'" :dict-key="currentItem.mixUnit"></dict>
+                        <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                     </el-col>
                     <el-col :span="4">
                       <el-tooltip class="item" effect="dark" content="库存数量减去已经分配的数量" placement="right">
                         <span style="font-size: 16px">剩余差额 <span>
                           {{ currentItem.resultAmount}}
-                         <dict :dict-group="'shipmentPackingUnit'" :dict-key="currentItem.mixUnit"></dict>
+                         <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                         </span></span>
                       </el-tooltip>
                     </el-col>

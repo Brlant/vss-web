@@ -259,7 +259,9 @@
             </perm>
             <perm label="purchasing-contract-edit">
               <div style="margin-bottom: 10px">
-                <el-button :plain="true" type="success" @click="exportExcel" style="width: 150px">导出Word</el-button>
+                <el-button :plain="true" type="success" @click="exportExcel" style="width: 150px" :loading="isPrinting"
+                           :disabled="isPrinting">{{ isPrinting ? '打印中' : '打印合同' }}
+                </el-button>
               </div>
             </perm>
             <div style="margin-bottom: 10px">
@@ -505,7 +507,8 @@
         cdcWarehouses: [],
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        isPrinting: false
       };
     },
     computed: {
@@ -1015,18 +1018,12 @@
         });
       },
       exportExcel () {
-        this.$store.commit('initPrint', {
-          isPrinting: true, moduleId: '/purchase/contract', top: '50px'
-        });
+        this.isPrinting = true;
         this.$http.get(`/contract-print/${this.orderId}`).then(res => {
           utils.download(res.data, '采购合同');
-          this.$store.commit('initPrint', {
-            isPrinting: false, moduleId: '/purchase/contract', top: '50px'
-          });
+          this.isPrinting = false;
         }).catch(error => {
-          this.$store.commit('initPrint', {
-            isPrinting: false, moduleId: '/purchase/contract', top: '50px'
-          });
+          this.isPrinting = false;
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });

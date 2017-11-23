@@ -109,7 +109,10 @@
       </div>
     </div>
     <div class="product-list-detail" v-show="selectPayments.length">
-      <h3 style="background: #f1f1f1">付款明细(已选择)</h3>
+      <h3 style="background: #f1f1f1;overflow: hidden">
+        <span style="float: left">付款明细(已选择)</span>
+        <span style="float: right">总付款金额：￥{{ amount | formatMoney }}</span>
+      </h3>
       <table class="table">
         <thead>
         <tr>
@@ -153,11 +156,13 @@
 <script>
   import { pay } from '@/resources';
   import utils from '@/tools/utils';
+
   export default {
     props: {
       selectPayments: Array,
       billPayType: '',
-      factoryId: ''
+      factoryId: '',
+      amount: ''
     },
     data () {
       return {
@@ -194,6 +199,11 @@
         if (!val) return;
         this.queryPayments(1);
       },
+      billPayType () {
+        this.payments = [];
+        if (!this.factoryId) return;
+        this.queryPayments(1);
+      },
       filterRights: {
         handler: function () {
           this.queryPayments(1);
@@ -207,10 +217,12 @@
         this.loadingData = true;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          billPayType: this.billPayType
+          pageSize: this.pager.pageSize
         }, this.filterRights);
-        pay.queryDetailByfy(this.factoryId, params).then(res => {
+        let url = this.billPayType === '1'
+          ? `/accounts-payable/remittee/${this.factoryId}/detail/invoice`
+          : `/accounts-payable/remittee/${this.factoryId}/detail/no-invoice`;
+        this.$http.get(url, {params}).then(res => {
           this.loadingData = false;
           res.data.list.forEach(item => {
             item.payment = utils.autoformatDecimalPoint(item.billAmount ? item.billAmount.toString() : '0');

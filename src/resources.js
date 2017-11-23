@@ -519,6 +519,9 @@ export const BillPayable = resource('/bill-payable', http, {
   },
   queryStateNum: (params) => {
     return http.get('/bill-payable/count', {params});
+  },
+  save (obj) {
+    return http.post('/bill-payable/request', obj);
   }
 });
 

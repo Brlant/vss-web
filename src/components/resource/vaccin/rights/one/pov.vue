@@ -86,7 +86,7 @@
       <div class="d-table-right">
         <div class="d-table-col-wrap">
           <h2 class="clearfix">
-              <span class="pull-right">
+              <span class="pull-right" v-show="showTypeList.length">
                   <perm label="first-vaccine-authorization-add">
                     <el-button @click="add(currentItem)"><i
                       class="iconfont icon-plus"></i>添加</el-button>
