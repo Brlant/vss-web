@@ -247,7 +247,8 @@
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="疫苗厂商" prop="factoryId">
               <el-select filterable remote placeholder="请输入名称搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.factoryId" popperClass="good-selects" @change="selectPayments = []">
+                         v-model="form.factoryId" popperClass="good-selects" @change="selectPayments = []"
+                         @click.native.once="filterOrg('')">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>

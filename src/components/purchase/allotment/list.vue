@@ -427,7 +427,7 @@
         this.defaultIndex = 0;
         this.action = '';
         // this.getOrderList(this.pager.currentPage);
-        this.$router.push('/purchase/allotment/list');
+        this.$router.push('/store/allotment/list');
       },
       add: function () {
         this.showItemRight = true;
@@ -550,7 +550,7 @@
         this.currentOrderId = order.id;
         this.state = order.state;
         this.showDetail = true;
-        this.$router.push(`/purchase/allotment/${order.id}`);
+        this.$router.push(`/store/allotment/${order.id}`);
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

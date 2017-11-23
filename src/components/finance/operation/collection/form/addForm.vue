@@ -227,6 +227,9 @@
       <div class="content-left">
         <h2 class="clearfix right-title">新增收款申请</h2>
         <ul>
+          <li class="list-style" v-for="item in productListSet" @click="index = item.key"
+              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
+          </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
           </li>
@@ -235,34 +238,25 @@
       <div class="content-right min-gutter">
         <h3>新增收款作业申请</h3>
 
-        <div>
+        <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
             <el-form-item label="接种点" prop="orgId">
               <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.orgId" @change="setAccountsPayableId">
-                <el-option :value="org.payerId" :key="org.payerId" :label="org.payerName" v-for="org in orgList">
+                         v-model="form.orgId" popper-class="good-selects" @change="setAccountsPayableId"
+                         @click.native.once="filterOrg('')">
+                <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                           v-for="org in orgList">
                   <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.payerName}}</span>
-                    <span class="pull-right" style="color: #999">
-                  </span>
+                    <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
                   </div>
                   <div style="overflow: hidden">
-                    <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.payerManufacturerCode}}
-                    </span>
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.subordinateCode}}
+                  </span>
                   </div>
                 </el-option>
               </el-select>
-            </el-form-item>
-            <el-form-item label="应收总金额" v-if="form.orgId">
-              ¥ {{payableTotalAmount | formatMoney }}
-            </el-form-item>
-            <el-form-item label="实收总金额" v-if="form.orgId">
-              ¥ {{practicalTotalAmount | formatMoney }}
-            </el-form-item>
-            <el-form-item label="未收总金额" v-if="form.orgId">
-              ¥ {{notTotalAmount | formatMoney }}
             </el-form-item>
             <el-form-item label="收款方式" prop="payType">
               <el-select placeholder="请选择收款方式" v-model="form.payType">
@@ -270,7 +264,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="金额" prop="amount">
-              <oms-input type="text" v-model="form.amount" @blur="formatPrice" placeholder="请输入金额,最多保留两位小数">
+              <oms-input type="text" v-model="form.amount" placeholder="请选择付款明细，自动计算总额" disabled>
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
@@ -280,15 +274,19 @@
             </el-form-item>
           </el-form>
         </div>
-
+        <div class="hide-content" v-bind:class="{'show-content' : index==1}">
+          <pay-detail :selectPayments="selectPayments"
+                      :factoryId="form.orgId" :amount="form.amount"></pay-detail>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import {http, Address, BaseInfo, receivable, BillReceivable} from '../../../../../resources';
+  import { http, Address, BaseInfo, receivable, BillReceivable, cerpAction } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
+  import payDetail from './payDetail.vue';
 
   export default {
     name: 'addForm',
@@ -307,18 +305,10 @@
         default: ''
       }
     },
+    components: {
+      payDetail
+    },
     data: function () {
-      let checkAmount = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入金额,最多保留两位小数'));
-        } else {
-          if (this.form.amount > this.notTotalAmount) {
-            callback(new Error('输入的金额必须小于等于未收款总金额'));
-          } else {
-            callback();
-          }
-        }
-      };
       return {
         loading: false,
         form: {
@@ -328,7 +318,8 @@
           explain: '',
           amount: '',
           billPayType: '',
-          accountsPayableId: ''
+          accountsPayableId: '',
+          relationList: []
         },
         payableTotalAmount: '',
         practicalTotalAmount: '',
@@ -340,46 +331,45 @@
           payType: [
             {required: true, message: '请选择收款方式', trigger: 'change'}
           ],
-          supplierId: [
-            {required: true, message: '请选择供货厂商', trigger: 'change'}
+          orgId: [
+            {required: true, message: '请选择POV', trigger: 'change'}
           ],
           amount: [
-            {required: true, message: '请输入金额', trigger: 'blur'},
-            {validator: checkAmount, trigger: 'blur'}
+            {required: true, message: '请选择付款明细，自动计算总额', trigger: 'blur'}
           ]
         },
         orgList: [],
         logisticsList: [],
-        doing: false
+        doing: false,
+        productListSet: [
+          {name: '基本信息', key: 0},
+          {name: '收款明细', key: 1}
+        ],
+        index: 0,
+        selectPayments: []
       };
     },
     computed: {
       PaymentMethod: function () {
         return this.$store.state.dict['PaymentMethod'];
-      },
-      totalMoney: function () {
-        let totalMoney = 0.00;
-        if (!this.form.detailDtoList.length) return totalMoney;
-        this.form.detailDtoList.forEach(item => {
-          totalMoney += item.amount * item.unitPrice;
-        });
-        return totalMoney;
       }
     },
     watch: {
-      'form.orgId': function () {
-        if (this.form.orgId) {
-            this.filterOrg();
-            this.orgList.forEach(val => {
-              if (this.form.orgId === val.payerId) {
-                receivable.getAmountInfo(val.id).then(res => {
-                  this.payableTotalAmount = res.data.payableTotalAmount;
-                  this.practicalTotalAmount = res.data.practicalTotalAmount;
-                  this.notTotalAmount = res.data.notTotalAmount;
-                });
-              }
-            });
-        }
+      selectPayments: {
+        handler (val) {
+          let amount = 0;
+          val.forEach(i => {
+            amount += Number(i.payment);
+          });
+          this.form.amount = amount ? utils.autoformatDecimalPoint(amount.toString()) : '';
+          this.form.relationList = val.map(m => {
+            return {
+              reconciliationId: m.id,
+              paidMoney: m.payment
+            };
+          });
+        },
+        deep: true
       }
     },
     mounted: function () {
@@ -388,12 +378,12 @@
     methods: {
       setAccountsPayableId: function () {
         if (this.form.orgId) {
-            this.filterOrg();
-            this.orgList.forEach(val => {
-              if (this.form.orgId === val.remitteeId) {
-                this.form.accountsPayableId = val.id;
-              }
-            });
+          this.filterOrg();
+          this.orgList.forEach(val => {
+            if (this.form.orgId === val.remitteeId) {
+              this.form.accountsPayableId = val.id;
+            }
+          });
         }
       },
       changeBillPayType: function () {
@@ -409,8 +399,9 @@
         this.notTotalAmount = '';
         this.orgList = [];
         this.logisticsList = [];
+        this.form.relationList = [];
       },
-      formatPrice() {// 格式化单价，保留两位小数
+      formatPrice () {// 格式化单价，保留两位小数
         this.form.amount = utils.autoformatDecimalPoint(this.form.amount);
       },
       doClose: function () {
@@ -418,44 +409,18 @@
       },
       filterOrg: function (query) {// 过滤来源单位
         let params = Object.assign({}, {
-          pageNo: 1,
-          pageSize: 20,
           keyWord: query
         });
-        receivable.query(params).then(res => {
+        cerpAction.queryAllPov(params).then(res => {
           this.orgList = res.data.list;
         });
       },
       onSubmit: function () {// 提交表单
-        let self = this;
-        if (this.form.orgId === '') {
-            this.$notify({
-              duration: 2000,
-              message: '请选择POV',
-              type: 'warning'
-            });
-            return false;
-        }
-        if (this.notTotalAmount === 0) {
-          this.$notify({
-            duration: 2000,
-            message: '该笔订单已经付清,无需进行付款作业',
-            type: 'warning'
-          });
-          return false;
-        }
-        if (this.form.amount > this.notTotalAmount) {
-          this.$notify({
-            duration: 2000,
-            message: '输入的金额必须小于等于未收款总金额',
-            type: 'warning'
-          });
-          return false;
-        }
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
-            this.doing = true;
+            return;
           }
+          this.doing = true;
           BillReceivable.save(this.form).then(res => {
             this.resetForm();
             this.$notify({
@@ -463,7 +428,7 @@
               message: '新增收款作业申请成功',
               type: 'success'
             });
-            self.$emit('change', res.data);
+            this.$emit('change', res.data);
             this.$nextTick(() => {
               this.doing = false;
               this.$emit('right-close');

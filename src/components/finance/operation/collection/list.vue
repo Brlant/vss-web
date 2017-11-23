@@ -114,6 +114,11 @@
     }
   }
 
+  .good-selects {
+    .el-select-dropdown__item {
+      width: auto;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -143,20 +148,19 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="收款单位" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg"
-                           @click.native="filterOrg('')"
-                           :clearable="true"
-                           v-model="searchCondition.orgId">
-                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                      <div style="overflow: hidden">
-                        <span class="pull-left" style="clear: right">{{org.name}}</span>
-                        <span class="pull-right" style="color: #999"></span>
-                      </div>
-                      <div style="overflow: hidden">
-                        <span class="select-other-info pull-left">
-                          <span>系统代码</span> {{org.manufacturerCode}}
-                        </span>
-                      </div>
+                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
+                           v-model="searchCondition.orgId" popper-class="good-selects"
+                           @click.native.once="filterOrg('')">
+                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                             v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.subordinateCode}}
+                  </span>
+                    </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
@@ -183,13 +187,11 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="4">收款单据编号</el-col>
-          <el-col :span="3">收款类型</el-col>
-          <el-col :span="3">收款单位</el-col>
+          <el-col :span="5">收款单据编号</el-col>
+          <el-col :span="6">收款单位</el-col>
           <el-col :span="2">收款方式</el-col>
           <el-col :span="4">收款金额</el-col>
-          <el-col :span="5">收款说明</el-col>
-          <el-col :span="3">操作</el-col>
+          <el-col :span="7">收款说明</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -205,19 +207,15 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in billList"
-               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]">
+               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]"
+               @click.stop="audit(item)">
             <el-row>
-              <el-col :span="4">
+              <el-col :span="5">
                 <div>
                   {{item.no }}
                 </div>
               </el-col>
-              <el-col :span="3">
-                <div>
-                  {{billPayType(item.billPayType)}}
-                </div>
-              </el-col>
-              <el-col :span="3" class="pt10">
+              <el-col :span="6" class="pt10">
                 <div class="f-grey">
                   {{item.orgNo }}
                 </div>
@@ -233,29 +231,9 @@
                   <span v-if="item.amount">¥</span> {{item.amount | formatMoney}}
                 </div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="7">
                 <div>
                   {{item.explain}}
-                </div>
-              </el-col>
-              <el-col :span="3" class="opera-btn">
-                <div>
-                  <perm label="payment-receivable-audit">
-                    <span @click.stop="audit(item)" v-if="item.status==='0'">
-                        <a @click.pervent="" class="btn-circle btn-opera">
-                          <i class="el-icon-t-verify"></i>
-                        </a>
-                       审核
-                      </span>
-                  </perm>
-                  <perm label="payment-receivable-allotment">
-                    <span @click.stop="allotmentBill(item)" v-if="item.status==='1'">
-                        <a @click.pervent="" class="btn-circle btn-opera">
-                          <i class="el-icon-t-edit"></i>
-                        </a>
-                       分配
-                      </span>
-                  </perm>
                 </div>
               </el-col>
             </el-row>
@@ -271,15 +249,12 @@
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'750px','padding':0}"
+    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
       <audit-form :formItem="billInfo" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'750px','padding':0}">
+    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
       <add-form @change="onSubmit" @right-close="resetRightBox"></add-form>
-    </page-right>
-    <page-right :show="showAllotmentRight" @right-close="resetRightBox" :css="{'width':'750px','padding':0}">
-      <allotment-form :formItem="billInfo" @change="onSubmit" @right-close="resetRightBox"></allotment-form>
     </page-right>
   </div>
 </template>
@@ -287,12 +262,11 @@
   import utils from '../../../../tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import allotmentForm from './form/allotmentForm.vue';
-  import {BillReceivable, receivable, BaseInfo} from '../../../../resources';
+  import { BillReceivable, receivable, BaseInfo, cerpAction } from '../../../../resources';
 
   export default {
     components: {
-      auditForm, addForm, allotmentForm
+      auditForm, addForm
     },
     data: function () {
       return {
@@ -312,7 +286,7 @@
           orgId: ''
         },
         expectedTime: '',
-        orgType: utils.paymentOperation,
+        orgType: utils.receiptOperation,
         activeStatus: 0,
         currentId: '',
         pager: {
@@ -344,26 +318,12 @@
     },
     methods: {
       filterOrg: function (query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          return;
-        }
-        // 过滤来源单位
-        let params = {
+        let params = Object.assign({}, {
           keyWord: query
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.orgList = res.data;
         });
-      },
-      billPayType: function (value) {
-        let title = '';
-        if (value === '0') {
-          title = '疫苗厂商收款';
-        } else {
-          title = '物流厂商收款';
-        }
-        return title;
+        cerpAction.queryAllPov(params).then(res => {
+          this.orgList = res.data.list;
+        });
       },
       getOrderStatus: function (order) {
         let state = '';

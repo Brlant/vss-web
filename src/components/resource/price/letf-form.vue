@@ -32,7 +32,7 @@
         margin: 0;
       }
       > h2 {
-        padding: 0 45px;
+        padding: 0 0;
         margin: 0;
         font-size: 18px;
         font-weight: bold;
@@ -235,9 +235,9 @@
       <div class="content-right min-gutter">
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
-                   label-width="160px" style="padding-right: 20px">
-            <el-form-item label="销售价格组名称" prop="name">
-              <oms-input type="text" placeholder="请输入销售价格组名称" v-model="form.name"></oms-input>
+                   label-width="180px" style="padding-right: 20px">
+            <el-form-item label="二类疫苗销售价格组名称" prop="name">
+              <oms-input type="text" placeholder="请输入二类疫苗销售价格组名称" v-model="form.name"></oms-input>
             </el-form-item>
             <el-form-item label="选择CDC货品" prop="orgGoodsId">
               <el-select filterable remote placeholder="请输入名称搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
@@ -291,12 +291,12 @@
           availabilityStatus: true
         },
         rules: {
-          name: {required: true, message: '请输入销售价格组名称', trigger: 'blur'},
+          name: {required: true, message: '请输入二类疫苗销售价格组名称', trigger: 'blur'},
           unitPrice: {required: true, message: '请输入单价', trigger: 'blur'},
           orgGoodsId: {required: true, message: '请选择CDC货品', trigger: 'change'}
         },
         goodses: [], // 货品列表
-        title: '新增销售价格组',
+        title: '新增二类疫苗销售价格组',
         doing: false
       };
     },
@@ -311,7 +311,7 @@
           });
           this.form = val;
           this.form.unitPrice = this.form.unitPrice ? this.form.unitPrice.toString() : '';
-          this.title = '编辑销售价格组';
+          this.title = '编辑二类疫苗销售价格组';
         } else {
           this.form = {
             name: '',
@@ -319,7 +319,7 @@
             unitPrice: '',
             availabilityStatus: true
           };
-          this.title = '新增销售价格组';
+          this.title = '新增二类疫苗销售价格组';
         }
       }
     },
@@ -345,7 +345,7 @@
           if (this.form.id) {
             BriceGroup.update(this.form.id, this.form).then(() => {
               this.$notify.success({
-                message: '编辑销售价格组成功'
+                message: '编辑二类疫苗销售价格组成功'
               });
               this.$refs['d-form'].resetFields();
               this.$emit('refresh');
@@ -353,13 +353,13 @@
             }).catch(error => {
               this.doing = false;
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '编辑销售价格组失败'
+                message: error.response.data && error.response.data.msg || '编辑二类疫苗销售价格组失败'
               });
             });
           } else {
             BriceGroup.save(this.form).then(() => {
               this.$notify.success({
-                message: '添加销售价格组成功'
+                message: '添加二类疫苗销售价格组成功'
               });
               this.$refs['d-form'].resetFields();
               this.$emit('refresh');
@@ -367,7 +367,7 @@
             }).catch(error => {
               this.doing = false;
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '添加销售价格组失败'
+                message: error.response.data && error.response.data.msg || '添加二类疫苗销售价格组失败'
               });
             });
           }

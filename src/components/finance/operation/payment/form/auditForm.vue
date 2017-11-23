@@ -273,26 +273,30 @@
             <el-form-item label="付款说明" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="付款明细" class="mb0"></el-form-item>
-            <!--<ul class="show-list invoice-list"-->
-            <!--v-if="form.reconciliationDetailList && form.reconciliationDetailList.length">-->
-            <!--<li class="show-item" style="background: #f1f1f1">-->
-            <!--<el-row type="flex">-->
-            <!--<el-col :span="8">货品名称 </el-col>-->
-            <!--<el-col :span="6">订单号 </el-col>-->
-            <!--<el-col :span="5">金额 </el-col>-->
-            <!--<el-col :span="5">创建时间 </el-col>-->
-            <!--</el-row>-->
-            <!--</li>-->
-            <!--<li class="show-item" v-for="item in form.reconciliationDetailList">-->
-            <!--<el-row type="flex">-->
-            <!--<el-col :span="8">{{ item.goodsName }} </el-col>-->
-            <!--<el-col :span="6">{{ item.orderNo }} </el-col>-->
-            <!--<el-col :span="5"> ￥{{item.billAmount | formatMoney}} </el-col>-->
-            <!--<el-col :span="5">{{ item.createTime | minute }} </el-col>-->
-            <!--</el-row>-->
-            <!--</li>-->
-            <!--</ul>-->
+            <el-form-item label="付款明细" class="mb0">
+              <span v-show="!form.detailList.length">无</span>
+            </el-form-item>
+            <ul class="show-list invoice-list"
+                v-show="form.detailList.length">
+              <li class="show-item" style="background: #f1f1f1">
+                <el-row type="flex">
+                  <el-col :span="6">货品名称 </el-col>
+                  <el-col :span="5">订单号 </el-col>
+                  <el-col :span="5">创建时间 </el-col>
+                  <el-col :span="4">应付金额 </el-col>
+                  <el-col :span="4">本次已付金额 </el-col>
+                </el-row>
+              </li>
+              <li class="show-item" v-for="item in form.detailList">
+                <el-row type="flex">
+                  <el-col :span="6">{{ item.goodsName }} </el-col>
+                  <el-col :span="5">{{ item.orderNo }} </el-col>
+                  <el-col :span="5">{{ item.createTime | minute }} </el-col>
+                  <el-col :span="4"> ￥{{item.totalMoney | formatMoney}} </el-col>
+                  <el-col :span="4"> ￥{{item.paidMoney | formatMoney}} </el-col>
+                </el-row>
+              </li>
+            </ul>
             <el-form-item label="审批意见" style="margin-top: 10px">
               <oms-input v-show="form.status ==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
