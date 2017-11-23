@@ -277,7 +277,7 @@ const route = [
           {
             path: '/account/pov',
             component: resolve => require(['./components/account/pov/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '区CDC绑定POV', perm: 'erp-bind-pov-manager'}
+            meta: {moduleId: 'account', title: '绑定下属接种点', perm: 'erp-bind-pov-manager'}
           },
           {
             path: '/account/management',

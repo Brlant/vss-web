@@ -69,7 +69,7 @@
         <div class="d-table-col-wrap">
           <div class="pov-info">
             <el-row class="clearfix font-bold" style="font-weight: 500;font-size: 14px">
-              <el-col :span="2" >POV名称:</el-col>
+              <el-col :span="2">接种点名称:</el-col>
               <el-col :span="10"> {{ orgName }}</el-col>
             </el-row>
           </div>
