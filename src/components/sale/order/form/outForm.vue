@@ -264,7 +264,7 @@
                            v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="POV" prop="customerId">
+            <el-form-item label="接种点" prop="customerId">
               <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterPOV" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"

@@ -64,7 +64,7 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="POV" :span="6">
+              <oms-form-row label="接种点" :span="6">
                 <el-select placeholder="请输入名称搜索POV" v-model="searchWord.povId" filterable remote
                            :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
                            popperClass="good-selects">
@@ -120,7 +120,7 @@
             <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
           </el-col>
           <el-col :span="filters.status === 1 ? 6: 7">POV要货申请ID</el-col>
-          <el-col :span="7">POV</el-col>
+          <el-col :span="7">接种点</el-col>
           <el-col :span="3">需求产生时间</el-col>
           <el-col :span="3">需求时间</el-col>
           <el-col :span="4">操作</el-col>

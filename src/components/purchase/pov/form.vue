@@ -89,7 +89,7 @@
           <div class="container">
             <div class="order-list clearfix ">
               <el-row class="order-list-header" :gutter="10">
-                <el-col :span="10">POV</el-col>
+                <el-col :span="10">接种点</el-col>
                 <el-col :span="7">需求数</el-col>
                 <el-col :span="7">分配数量</el-col>
               </el-row>
