@@ -113,30 +113,21 @@
             <el-col :span="8">
               <oms-form-row label="疫苗" :span="6">
                 <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterOrgGoods"
-                           :clearable="true" @click.native.once="filterOrgGoods('')"
-                           v-model="searchWord.goodsId" popper-class="good-selects">
-                  <el-option :value="good.orgGoodsDto.goodsId" :key="good.orgGoodsDto.goodsId"
-                             :label="good.orgGoodsDto.name"
-                             v-for="good in orgGoods">
+                           :clearable="true"
+                           v-model="searchWord.goodsId" popper-class="good-selects"
+                           @click.native.once="filterOrgGoods('')">
+                  <el-option :value="org.goodsId" :key="org.id" :label="org.goodsName"
+                             v-for="org in orgGoods">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{good.orgGoodsDto.name}}</span>
+                      <span class="pull-left">{{org.goodsName}}</span>
                     </div>
                     <div style="overflow: hidden">
-                    <span class="select-other-info pull-left"><span
-                      v-show="good.orgGoodsDto.goodsNo">货品编号</span>  {{good.orgGoodsDto.goodsNo}}
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.goodsNo">货品编号</span>  {{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="good.orgGoodsDto.goodsDto.specifications">货品规格</span>  {{good.orgGoodsDto.goodsDto.specifications}}
+                        v-show="org.saleFirmName">供货厂商</span>  {{ org.saleFirmName }}
                       </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="good.orgGoodsDto.goodsDto.approvalNumber">批准文号</span>  {{good.orgGoodsDto.goodsDto.approvalNumber}}
-                      </span>
-                    </div>
-                    <div style="overflow: hidden">
-                  <span class="select-other-info pull-left"><span
-                    v-show="good.orgGoodsDto.goodsDto.factoryName">生产厂商</span>  {{ good.orgGoodsDto.goodsDto.factoryName
-                    }}
-                  </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -283,7 +274,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filters);
-        BatchNumber.query(params).then(res => {
+        this.$http.get('/erp-batch', {params}).then(res => {
           this.batches = res.data.list;
           this.loadingData = false;
           this.pager.count = res.data.count;
@@ -336,13 +327,15 @@
       },
       filterOrgGoods (query) {
         this.orgGoods = [];
+        let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           pageNo: 1,
           pageSize: 20,
+          orgId: orgId,
           keyWord: query,
           deleteFlag: false
         });
-        Vaccine.query(params).then(res => {
+        this.$http.get('/erp-stock/goods', {params}).then(res => {
           this.orgGoods = res.data.list;
         });
       }
