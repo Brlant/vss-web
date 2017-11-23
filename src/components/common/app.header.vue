@@ -112,7 +112,7 @@
     bottom: 0;
     left: 0;
     z-index: 1;
-    width: 180px;
+    width: 200px;
     .menu-wrap {
       max-height: 100%;
       > .el-menu > li {
@@ -288,7 +288,7 @@
         </el-menu>
       </div>
       <div class="change-collapse" @click="changeMenuCollapse">
-        <i class="iconfont" :class="{'icon-collapse':!isCollapse,'icon-spread':isCollapse}"></i>
+        <f-a :name="isCollapse?'collapse':'spread'"></f-a>
       </div>
     </div>
     <h4 class="position-nav">
