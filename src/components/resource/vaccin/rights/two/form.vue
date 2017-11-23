@@ -246,7 +246,7 @@
             <el-form-item label="授权疫苗">
               <span>{{ currentItem.orgGoodsName }}</span>
             </el-form-item>
-            <el-form-item label="POV" v-if="!form.id">
+            <el-form-item label="接种点" v-if="!form.id">
               <el-transfer v-loading="loading"
                            v-model="form.povList"
                            :props="{
@@ -262,7 +262,7 @@
               >
               </el-transfer>
             </el-form-item>
-            <el-form-item label="POV" prop="povId" v-if="form.id">
+            <el-form-item label="接种点" prop="povId" v-if="form.id">
               <span>{{ formItem.povName }}</span>
             </el-form-item>
             <el-form-item label="销售价格" prop="salePriceGroupId">

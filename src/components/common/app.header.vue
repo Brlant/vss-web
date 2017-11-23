@@ -399,7 +399,7 @@
         window.localStorage.setItem('skin', JSON.stringify(skin));
       },
       filterLevel(level) {
-        return level === 1 ? '市CDC' : level === 2 ? '区CDC' : level === 3 ? 'POV' : '';
+        return level === 1 ? '市CDC' : level === 2 ? '区CDC' : level === 3 ? '接种点' : '';
       },
       unbind() {
         this.$confirm('是否解除绑定的微信？', '', {

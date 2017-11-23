@@ -262,7 +262,7 @@
                            v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="POV" prop="supplierId">
+            <el-form-item label="接种点" prop="supplierId">
               <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier" popper-class="good-selects">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"

@@ -272,10 +272,22 @@
               {{form.explain}}
             </el-form-item>
             <el-form-item label="审批意见">
-              <oms-input type="textarea" v-model="form.auditOpinion" placeholder="请输入备注信息"
+              <oms-input v-show="form.status ==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+              <span v-show="form.status!=='0'">{{ form.auditOpinion ? form.auditOpinion : '无' }}</span>
+            </el-form-item>
+            <el-form-item style="margin-top: 10px">
+              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"
+                         native-type="submit">审核通过
+              </el-button>
+              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="danger"
+                         @click="notAudited"
+                         native-type="submit">
+                审核不通过
+              </el-button>
             </el-form-item>
           </el-form>
+
         </div>
       </div>
     </div>
