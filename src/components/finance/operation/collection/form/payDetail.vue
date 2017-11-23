@@ -80,8 +80,9 @@
         </tr>
         <tr v-for="product in showPayments">
           <td class="goods-btn" width="30px">
-            <a href="#" @click.prevent="add(product)"><i
-              class="iconfont icon-plus"></i></a>
+            <a href="#" @click.prevent="add(product)">
+              <f-a name="plus"></f-a>
+            </a>
           </td>
           <td>
             <span>{{product.goodsName}}</span>
@@ -142,9 +143,10 @@
               </template>
             </el-input>
           </td>
-          <td class="goods-btn">
-            <a href="#" @click.prevent="remove(product)"><i
-              class="iconfont icon-delete"></i> 删除</a>
+          <td class="goods-btn" style="width: 60px">
+            <a href="#" @click.prevent="remove(product)">
+              <f-a name="delete"></f-a>
+              删除</a>
           </td>
         </tr>
         </tbody>
@@ -172,7 +174,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20
+          pageSize: 5
         },
         filterRights: {
           goodsName: '',
@@ -218,7 +220,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filterRights);
-        this.$http.get('/sdkoo1', {params}).then(res => {
+        this.$http.get(`/accounts-receivable/payer/${this.factoryId}/detail`, {params}).then(res => {
           this.loadingData = false;
           res.data.list.forEach(item => {
             item.payment = utils.autoformatDecimalPoint(item.billAmount ? item.billAmount.toString() : '0');

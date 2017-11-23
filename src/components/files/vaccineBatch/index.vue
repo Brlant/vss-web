@@ -95,7 +95,7 @@
             <el-col :span="8">
               <oms-form-row label="生产企业" :span="6">
                 <el-select filterable remote placeholder="请输入名称搜索生产企业" :remote-method="filterFactory"
-                           @click.native="filterFactory('')"
+                           @click.native.once="filterFactory('')"
                            :clearable="true" v-model="searchWord.orgId" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
                     <div style="overflow: hidden">
@@ -113,7 +113,7 @@
             <el-col :span="8">
               <oms-form-row label="疫苗" :span="6">
                 <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterOrgGoods"
-                           :clearable="true"
+                           :clearable="true" @click.native.once="filterOrgGoods('')"
                            v-model="searchWord.goodsId" popper-class="good-selects">
                   <el-option :value="good.orgGoodsDto.goodsId" :key="good.orgGoodsDto.goodsId"
                              :label="good.orgGoodsDto.name"
@@ -213,13 +213,13 @@
 
       </div>
 
-      <!--<div class="text-center" v-show="pager.count>pager.pageSize">-->
-      <!--<el-pagination-->
-      <!--layout="prev, pager, next"-->
-      <!--:total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"-->
-      <!--:current-page="pager.currentPage">-->
-      <!--</el-pagination>-->
-      <!--</div>-->
+      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatcheNumbers"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
     </div>
 
     <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
@@ -229,12 +229,12 @@
 </template>
 <script>
   //  import order from '../../../tools/orderList';
-  import {BatchNumber, BaseInfo, Vaccine} from '../../../resources';
+  import { BatchNumber, BaseInfo, Vaccine } from '../../../resources';
   import detail from './detail.vue';
 
   export default {
     components: {detail},
-    data() {
+    data () {
       return {
 //        loadingData: true,
         showFlag: false,
@@ -255,48 +255,52 @@
         factories: [], // 厂商列表
         orgList: [], // 货主列表,
         orgGoods: [],
-//        pager: {
-//          currentPage: 1,
-//          count: 0,
-//          pageSize: 20
-//        },
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 10
+        },
         currentItemId: ''
       };
     },
-    mounted() {
+    mounted () {
       this.filterOrgGoods();
     },
     watch: {
       filters: {
         handler: function () {
-            this.getBatcheNumbers();
+          this.getBatcheNumbers(1);
         },
         deep: true
       }
     },
     methods: {
-      getBatcheNumbers() { // 得到批次列表
-//        this.pager.currentPage = pageNo;
+      getBatcheNumbers (pageNo) { // 得到批次列表
+        this.batches = [];
+        this.pager.currentPage = pageNo;
         this.loadingData = true;
-        let params = Object.assign({}, this.filters);
+        let params = Object.assign({
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        }, this.filters);
         BatchNumber.query(params).then(res => {
-          this.batches = res.data;
+          this.batches = res.data.list;
           this.loadingData = false;
-//          this.pager.count = res.data.count;
+          this.pager.count = res.data.count;
         });
       },
-      showDetail(item) {
+      showDetail (item) {
         this.currentItemId = item.id;
         this.showDetailPart = true;
       },
-      resetRightBox() {
+      resetRightBox () {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
 //        if (this.searchWord.orgId !== '' || this.searchWord.goodsId !== '' || this.searchWord.batchNumber !== '') {
-          this.showFlag = true;
-          Object.assign(this.filters, this.searchWord);
-          this.getBatcheNumbers();
+        this.showFlag = true;
+        Object.assign(this.filters, this.searchWord);
+        this.getBatcheNumbers(1);
 //        } else {
 //          this.$notify.info({
 //            message: '请选择查询条件'
@@ -316,7 +320,7 @@
         this.showFlag = false;
 //        Object.assign(this.filters, temp);
       },
-      filterFactory(query) { // 查询厂商
+      filterFactory (query) { // 查询厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
@@ -330,7 +334,7 @@
           this.factories = res.data.list;
         });
       },
-      filterOrgGoods(query) {
+      filterOrgGoods (query) {
         this.orgGoods = [];
         let params = Object.assign({}, {
           pageNo: 1,

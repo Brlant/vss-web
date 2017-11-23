@@ -198,7 +198,7 @@
                   <!--</perm>-->
                   <perm label="payment-payable">
                     <a href="#" @click.prevent.stop="deleteItem(item)"><i
-                      class="iconfont invoice-delete"></i> 删除</a>
+                      class="ele-icon-t-delete"></i> 删除</a>
                   </perm>
                 </div>
               </el-col>

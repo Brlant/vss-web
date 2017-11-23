@@ -76,8 +76,9 @@
         </tr>
         <tr v-for="product in showPayments">
           <td class="goods-btn" width="30px">
-            <a href="#" @click.prevent="add(product)"><i
-              class="el-icon-t-plus"></i></a>
+            <a href="#" @click.prevent="add(product)">
+              <f-a name="plus"></f-a>
+            </a>
           </td>
           <td>
             <span>{{product.goodsName}}</span>
@@ -134,9 +135,10 @@
           <td>
             {{product.createTime | minute }}
           </td>
-          <td class="goods-btn">
-            <a href="#" @click.prevent="remove(product)"><i
-              class="el-icon-t-delete"></i> 删除</a>
+          <td class="goods-btn" style="width: 60px">
+            <a href="#" @click.prevent="remove(product)">
+              <f-a name="delete"></f-a>
+              删除</a>
           </td>
         </tr>
         </tbody>
@@ -163,7 +165,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20
+          pageSize: 5
         },
         filterRights: {
           goodsName: '',

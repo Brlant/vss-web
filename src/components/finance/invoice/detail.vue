@@ -53,7 +53,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <div class="product-list-detail" v-if=form.list>
+          <div class="product-list-detail" v-if="info.list">
             <h3 style="background: #f1f1f1;overflow: hidden">
               <span style="float: left">付款明细</span>
             </h3>
@@ -67,14 +67,14 @@
               </tr>
               </thead>
               <tbody>
-              <tr v-for="product in list">
+              <tr v-for="product in info.list">
                 <td>
                   <span>{{product.goodsName}}</span>
                 </td>
                 <td>
                   <span>{{product.orderNo}}</span>
                 </td>
-                <td class="ar">
+                <td>
                   <span v-show="Number(product.billAmount)">¥{{product.billAmount | formatMoney}}</span>
                   <span v-if="!Number(product.billAmount)">-</span>
                 </td>
@@ -105,6 +105,7 @@
     },
     watch: {
       currentId (val) {
+        this.info = {};
         if (!val) return;
         if (!this.showDetail) return;
         this.queryDetail();

@@ -309,17 +309,6 @@
       payDetail
     },
     data: function () {
-      let checkAmount = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入金额,最多保留两位小数'));
-        } else {
-          if (this.form.amount > this.notTotalAmount) {
-            callback(new Error('输入的金额必须小于等于未收款总金额'));
-          } else {
-            callback();
-          }
-        }
-      };
       return {
         loading: false,
         form: {
@@ -346,8 +335,7 @@
             {required: true, message: '请选择POV', trigger: 'change'}
           ],
           amount: [
-            {required: true, message: '请输入金额', trigger: 'blur'},
-            {validator: checkAmount, trigger: 'blur'}
+            {required: true, message: '请选择付款明细，自动计算总额', trigger: 'blur'}
           ]
         },
         orgList: [],
