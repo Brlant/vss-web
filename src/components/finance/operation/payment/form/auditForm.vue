@@ -221,7 +221,13 @@
   }
 
   .btn-submit-save {
-    margin-top: 150px;
+    position: absolute;
+    bottom: 50px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+    padding: 15px;
   }
 
   .invoice-list {
@@ -249,6 +255,17 @@
     <div class="content-part">
       <div class="content-left">
         <h2 class="clearfix right-title">付款申请详情</h2>
+        <div class="btn-submit-save">
+          <div style="margin-bottom: 10px">
+            <el-button style="width: 100px" :plain="true" type="success" @click="audited" native-type="submit">审核通过
+            </el-button>
+          </div>
+          <div style="margin-bottom: 10px">
+            <el-button style="width: 100px" :plain="true" type="danger" @click="notAudited" native-type="submit">
+              审核不通过
+            </el-button>
+          </div>
+        </div>
       </div>
       <div class="content-right min-gutter">
         <h3>付款申请详情</h3>
@@ -273,22 +290,6 @@
             <el-form-item label="付款说明" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="付款单位发票" labelWidth="126px" class="mb0">
-            </el-form-item>
-            <ul class="show-list invoice-list" v-show="form.invoiceList && form.invoiceList.length">
-              <li class="show-item" style="background: #f1f1f1">
-                <el-row type="flex">
-                  <el-col :span="12">发票号 </el-col>
-                  <el-col :span="12">金额 </el-col>
-                </el-row>
-              </li>
-              <li class="show-item" v-for="item in form.invoiceList">
-                <el-row type="flex">
-                  <el-col :span="12"> {{ item.invoiceNumber }}</el-col>
-                  <el-col :span="12"> ￥{{ item.amount | formatMoney}}</el-col>
-                </el-row>
-              </li>
-            </ul>
             <el-form-item label="付款明细" class="mb0"></el-form-item>
             <ul class="show-list invoice-list"
                 v-show="form.reconciliationDetailList && form.reconciliationDetailList.length">
@@ -309,18 +310,18 @@
                 </el-row>
               </li>
             </ul>
-            <el-form-item label="审批意见" style="margin-top: 10px">
-              <oms-input v-if="form.status==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
-                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
-              <span v-if="form.status!=='0'">{{ form.auditOpinion ? form.auditOpinion : '无' }}</span>
-            </el-form-item>
-            <el-form-item style="margin-top: 10px" v-if="form.status==='0'">
-              <el-button style="width: 100px" :plain="true" type="success" @click="audited" native-type="submit">审核通过
-              </el-button>
-              <el-button style="width: 100px" :plain="true" type="danger" @click="notAudited" native-type="submit">
-                审核不通过
-              </el-button>
-            </el-form-item>
+            <!--<el-form-item label="审批意见" style="margin-top: 10px">-->
+            <!--<oms-input v-if="form.status==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"-->
+            <!--:autosize="{ minRows: 2, maxRows: 5}"></oms-input>-->
+            <!--<span v-if="form.status!=='0'">{{ form.auditOpinion ? form.auditOpinion : '无' }}</span>-->
+            <!--</el-form-item>-->
+            <!--<el-form-item style="margin-top: 10px" v-if="form.status==='0'">-->
+            <!--<el-button style="width: 100px" :plain="true" type="success" @click="audited" native-type="submit">审核通过-->
+            <!--</el-button>-->
+            <!--<el-button style="width: 100px" :plain="true" type="danger" @click="notAudited" native-type="submit">-->
+            <!--审核不通过-->
+            <!--</el-button>-->
+            <!--</el-form-item>-->
           </el-form>
         </div>
       </div>

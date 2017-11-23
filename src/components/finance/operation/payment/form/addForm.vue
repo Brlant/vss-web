@@ -321,7 +321,6 @@
   import { http, Address, BaseInfo, pay, BillPayable } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
   import payDetail from './payDetail.vue';
-  import invoicePart from './invoice.vue';
   export default {
     name: 'addForm',
     loading: false,
@@ -340,8 +339,7 @@
       }
     },
     components: {
-      payDetail,
-      invoicePart
+      payDetail
     },
     data: function () {
       return {

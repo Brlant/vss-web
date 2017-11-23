@@ -56,10 +56,10 @@ export default {
     5: {'title': '取消订单', state: '5', num: ''}
   },
   paymentOperation: {
-    0: {'title': '待审查', status: '0', num: ''},
+    0: {'title': '待审核', status: '0', num: ''},
     1: {'title': '待复核', status: '1', num: ''},
     2: {'title': '已完成', status: '2', num: ''},
-    3: {'title': '审查未通过', status: '3', num: ''}
+    3: {'title': '审核未通过', status: '3', num: ''}
   },
   priceGroupType: {
     0: {'title': '可用', availabilityStatus: true, num: ''},
