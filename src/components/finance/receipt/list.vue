@@ -62,12 +62,12 @@
             <h2 class="header">
             <span class="pull-right">
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                  class="iconfont icon-search"></i> </a>
+                  class="el-icon-t-search"></i> </a>
             </span>
               <!--<span class="pull-right" style="margin-right: 8px">-->
               <!--<perm label="accounts-receivable-add">-->
               <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
-              <!--<i class="iconfont icon-plus"></i>-->
+              <!--<i class="el-icon-t-plus"></i>-->
               <!--</a>-->
               <!--</perm>-->
               <!--</span>-->
@@ -101,7 +101,7 @@
           <!--<span class="pull-right" style="margin-right: 8px">-->
           <!--<perm label="accounts-receivable-detail-add">-->
           <!--<a href="#" class="btn-circle" @click.stop.prevent="add">-->
-          <!--<i class="iconfont icon-plus"></i>-->
+          <!--<i class="el-icon-t-plus"></i>-->
           <!--</a>-->
           <!--</perm>-->
           <!--</span>-->
@@ -140,10 +140,10 @@
               <!--<span class="btn-search-toggle open" v-show="showSearch">-->
               <!--<single-input v-model="filterRights.keyWord" placeholder="请输入订单号搜索"-->
               <!--:showFocus="showSearch"></single-input>-->
-              <!--<i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>-->
+              <!--<i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>-->
               <!--</span>-->
               <!--<a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">-->
-              <!--<i class="iconfont icon-search"></i>-->
+              <!--<i class="el-icon-t-search"></i>-->
               <!--</a>-->
               <!--</span>-->
             </div>

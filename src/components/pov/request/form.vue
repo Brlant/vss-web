@@ -382,10 +382,10 @@
                 <td class="goods-btn">
                   <div v-show="index === 2 || index === 3">
                     <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
-                      class="iconfont icon-edit"></i> 编辑</a>
+                      class="el-icon-t-edit"></i> 编辑</a>
                   </div>
                   <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination">
-                    <i class="iconfont icon-delete"></i> 删除</a>
+                    <i class="el-icon-t-delete"></i> 删除</a>
                 </td>
               </tr>
               <tr>

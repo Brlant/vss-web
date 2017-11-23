@@ -73,14 +73,14 @@
                 <perm :label="currentAttachmentRight.remove">
                    <span class="attachment-delete" @click.stop="deleteAttachMentManageItem(item)"
                          v-show="isShowDeleteButton">
-                     <i class="iconfont icon-delete"></i>
+                     <i class="el-icon-t-delete"></i>
                     </span>
                 </perm>
                 <perm :label="currentAttachmentRight.download">
               <span class="attachment-delete">
                 <a class="download-link" :href="item.attachmentStoragePath" @click.stop=""
                    :download="item.attachmentFileName">
-                  <i class="iconfont icon-download"></i>
+                  <i class="el-icon-t-download"></i>
                 </a>
               </span>
                 </perm>
@@ -106,13 +106,13 @@
           {{ item.attachmentFileName }}
           <perm :label="currentAttachmentRight.remove">
               <span class="attachment-span" @click.stop="deleteAttachMentManageItem(item)">
-                 <i class="iconfont icon-delete"></i>
+                 <i class="el-icon-t-delete"></i>
               </span>
           </perm>
           <span class="attachment-span">
               <a class="download-link" :href="item.attachmentStoragePath "
                  :download="item.attachmentFileName" @click.stop="">
-                <i class="iconfont icon-download"></i>
+                <i class="el-icon-t-download"></i>
               </a>
          </span>
         </li>

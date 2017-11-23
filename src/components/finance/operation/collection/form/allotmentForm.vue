@@ -381,7 +381,7 @@
                   <td>
                     <span v-show="item.amount">¥</span>{{item.amount | formatMoney}}
                   </td>
-                  <td><a href="#" @click.prevent="remove(item)"><i class="iconfont icon-delete"></i> 删除</a></td>
+                  <td><a href="#" @click.prevent="remove(item)"><i class="el-icon-t-delete"></i> 删除</a></td>
                 </tr>
                 <tr>
                   <td></td>

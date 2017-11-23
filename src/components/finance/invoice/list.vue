@@ -82,12 +82,12 @@
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
           <span class="">
-            <i class="iconfont icon-search"></i> 筛选查询
+            <i class="el-icon-t-search"></i> 筛选查询
           </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="invoice-add">
                   <a href="#" class="btn-circle" @click.prevent=""><i
-                    class="iconfont icon-plus"></i> </a>添加
+                    class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
@@ -194,7 +194,7 @@
                 <div v-if="item.status === 0">
                   <!--<perm label="invoice-update">-->
                   <!--<a href="#" @click.prevent="edit(item)"><i-->
-                  <!--class="iconfont icon-edit"></i>编辑</a>-->
+                  <!--class="el-icon-t-edit"></i>编辑</a>-->
                   <!--</perm>-->
                   <perm label="payment-payable">
                     <a href="#" @click.prevent.stop="deleteItem(item)"><i

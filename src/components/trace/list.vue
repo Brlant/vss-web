@@ -15,7 +15,7 @@
 
     <Timeline>
       <TimelineItem color="blue">
-        <i class="iconfont icon-home1" slot="dot"></i>
+        <i class="el-icon-t-home1" slot="dot"></i>
         <div class="date-line">
           <h3>2017-06-17 <span>12:12:12</span></h3>
           <p><span>发布里程碑版本</span></p>
@@ -24,7 +24,7 @@
       </TimelineItem>
 
       <TimelineItem color="red">
-        <i class="iconfont icon-edit" slot="dot"></i>
+        <i class="el-icon-t-edit" slot="dot"></i>
         <div class="date-line">
           <h3>2017-06-17 <span>12:12:12</span></h3>
           <p><span>发布里程碑版本</span></p>
@@ -32,7 +32,7 @@
 
       </TimelineItem>
       <TimelineItem color="green">
-        <i class="iconfont icon-edit" slot="dot"></i>
+        <i class="el-icon-t-edit" slot="dot"></i>
         <div class="date-line">
           <h3>2017-06-17 <span>12:12:12</span></h3>
           <p><span>发布里程碑版本</span></p>

@@ -132,11 +132,11 @@
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
           <span class="">
-            <i class="iconfont icon-search"></i> 筛选查询
+            <i class="el-icon-t-search"></i> 筛选查询
           </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="payment-payable-add">
-                  <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>添加
+                  <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
@@ -248,7 +248,7 @@
               <!--&lt;!&ndash;<perm label="payment-payable-audit">&ndash;&gt;-->
               <!--&lt;!&ndash;<span @click.stop="showItem(item)" v-if="item.status==='0'">&ndash;&gt;-->
               <!--&lt;!&ndash;<a @click.pervent="" class="btn-circle btn-opera">&ndash;&gt;-->
-              <!--&lt;!&ndash;<i class="iconfont icon-verify"></i>&ndash;&gt;-->
+              <!--&lt;!&ndash;<i class="el-icon-t-verify"></i>&ndash;&gt;-->
               <!--&lt;!&ndash;</a>&ndash;&gt;-->
               <!--&lt;!&ndash;审核&ndash;&gt;-->
               <!--&lt;!&ndash;</span>&ndash;&gt;-->
@@ -256,7 +256,7 @@
               <!--&lt;!&ndash;<perm label="payment-payable-allotment">&ndash;&gt;-->
               <!--&lt;!&ndash;<span @click.stop="allotmentBill(item)" v-if="item.status==='1'">&ndash;&gt;-->
               <!--&lt;!&ndash;<a @click.pervent="" class="btn-circle btn-opera">&ndash;&gt;-->
-              <!--&lt;!&ndash;<i class="iconfont icon-edit"></i>&ndash;&gt;-->
+              <!--&lt;!&ndash;<i class="el-icon-t-edit"></i>&ndash;&gt;-->
               <!--&lt;!&ndash;</a>&ndash;&gt;-->
               <!--&lt;!&ndash;分配&ndash;&gt;-->
               <!--&lt;!&ndash;</span>&ndash;&gt;-->

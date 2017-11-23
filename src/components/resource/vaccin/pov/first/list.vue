@@ -127,7 +127,7 @@
             <h2 class="header">
                 <span class="pull-right">
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                      class="iconfont icon-search"></i> </a>
+                      class="el-icon-t-search"></i> </a>
                 </span>
               被授权一类疫苗
             </h2>
@@ -143,7 +143,7 @@
                     :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
                   <!--<perm label="vaccine-info-delete">-->
                   <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'-->
-                  <!--class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>-->
+                  <!--class="hover-show"><i class="el-icon-t-delete"></i></oms-remove>-->
                   <!--</perm>-->
                   <div class="id-part">
                     <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>

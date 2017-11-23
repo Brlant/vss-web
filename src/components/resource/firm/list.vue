@@ -144,10 +144,10 @@
               <span class="pull-right">
                    <perm label="manufacturer-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType"><i
-                        class="iconfont icon-plus"></i> </a>
+                        class="el-icon-t-plus"></i> </a>
                    </perm>
                       <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                        class="iconfont icon-search"></i> </a>
+                        class="el-icon-t-search"></i> </a>
                 </span>
             </h2>
             <div class="search-left-box clearfix" v-show="showTypeSearch">
@@ -190,25 +190,25 @@
               <span class="pull-right">
                  <!--<perm label="org-relation-edit">-->
                 <!--<a href="#" @click.prevent="edit" class="margin-left"><i-->
-                <!--class="iconfont icon-edit"></i>编辑</a>-->
+                <!--class="el-icon-t-edit"></i>编辑</a>-->
                 <!--<a href="#" @click.prevent="forbid" class="margin-left"-->
                 <!--v-show="businessRelationItem.status  == '0' "><i-->
-                <!--class="iconfont icon-forbidden"></i>停用</a>-->
+                <!--class="el-icon-t-forbidden"></i>停用</a>-->
                 <!--<a href="#" @click.prevent="enableRelation" class="margin-left"-->
                 <!--v-show="businessRelationItem.status == '1' "><i-->
-                <!--class="iconfont icon-start"></i>启用</a>-->
+                <!--class="el-icon-t-start"></i>启用</a>-->
                 <!--</perm>-->
                 <el-button-group>
                   <perm label="manufacturer-update">
-                    <el-button @click="edit"><i class="iconfont icon-edit"></i>编辑</el-button>
+                    <el-button @click="edit"><i class="el-icon-t-edit"></i>编辑</el-button>
                   </perm>
                   <perm label="manufacturer-stop">
                       <el-button @click="forbid" v-show="businessRelationItem.status  == '0' "><i
-                        class="iconfont icon-stop"></i>停用</el-button>
+                        class="el-icon-t-stop"></i>停用</el-button>
                   </perm>
                   <perm label="manufacturer-start">
                         <el-button @click="enableRelation" v-show="businessRelationItem.status == '1' "><i
-                          class="iconfont icon-start"></i>启用</el-button>
+                          class="el-icon-t-start"></i>启用</el-button>
                   </perm>
                 </el-button-group>
               </span>

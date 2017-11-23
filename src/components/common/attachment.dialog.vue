@@ -58,7 +58,7 @@
       </div>
       <div class="img-tools" v-if="type=='image'" @click.stop="stop">
 
-        <el-button type="default" @click.stop="changeZ(1)"><i class="iconfont icon-rotate"></i>
+        <el-button type="default" @click.stop="changeZ(1)"><i class="el-icon-t-rotate"></i>
         </el-button>
 
       </div>

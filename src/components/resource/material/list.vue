@@ -86,14 +86,14 @@
                    <span class="btn-search-toggle open" v-show="showSearch">
                       <single-input v-model="filters.keyWord" placeholder="请输入物料名称查询"
                                     :showFocus="showSearch"></single-input>
-                      <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+                      <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
                   </span>
                     <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                        <i class="iconfont icon-search"></i>
+                        <i class="el-icon-t-search"></i>
                     </a>
                     <perm label="supplies-add">
                         <a href="#" class="btn-circle" @click.stop.prevent="add">
-                        <i class="iconfont icon-plus"></i>
+                        <i class="el-icon-t-plus"></i>
                         </a>
                     </perm>
                  </span>
@@ -141,11 +141,11 @@
                   <el-col :span="3" class="R pt10 btn-color">
                     <perm label="supplies-update">
                       <a href="#" @click.prevent="edit(item)"><i
-                        class="iconfont icon-edit"></i>编辑</a>
+                        class="el-icon-t-edit"></i>编辑</a>
                     </perm>
                     <perm label="supplies-delete">
                       <a href="#" @click.prevent="deleteItem(item)"><i
-                        class="iconfont icon-delete"></i> 删除</a>
+                        class="el-icon-t-delete"></i> 删除</a>
                     </perm>
                   </el-col>
                 </el-row>

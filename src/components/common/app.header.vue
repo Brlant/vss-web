@@ -269,7 +269,7 @@
           <template v-for="item in menu">
             <el-submenu :index="item.path" :key="item.meta.moduleId" v-if="item.subMenu.length>0">
               <template slot="title">
-                <i :class="'iconfont icon-'+item.meta.icon"></i>
+                <i :class="'el-icon-t-'+item.meta.icon"></i>
                 <span slot="title">{{item.meta.title}}</span>
               </template>
               <el-menu-item :index="child.path" v-for="child in item.subMenu" :key="child.path">
@@ -277,11 +277,11 @@
               </el-menu-item>
             </el-submenu>
             <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else-if="item.path">
-              <i :class="'iconfont icon-'+item.meta.icon"></i>
+              <i :class="'el-icon-t-'+item.meta.icon"></i>
               <span slot="title">{{item.meta.title}}</span>
             </el-menu-item>
             <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else="!item.path" @click="$router.push('/')">
-              <i :class="'iconfont icon-'+item.meta.icon"></i>
+              <i :class="'el-icon-t-'+item.meta.icon"></i>
               <span slot="title">{{item.meta.title}}</span>
             </el-menu-item>
           </template>

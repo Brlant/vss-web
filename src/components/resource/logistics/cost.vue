@@ -92,13 +92,13 @@
                 <perm label="cerp-logistics-cost-add">
                   <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add"
                         v-if="cost.id===''">
-                    <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>
+                    <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-plus"></i> </a>
                   </span>
                 </perm>
                 <perm label="cerp-logistics-cost-update">
                       <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="edit"
                             v-if="cost.id!==''">
-                    <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-edit"></i> </a>
+                    <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-edit"></i> </a>
                   </span>
                 </perm>
               </div>
@@ -123,13 +123,13 @@
                 <perm label="cerp-logistics-cost-add">
                   <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addSecond"
                         v-if="secondCost.id===''">
-                    <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>
+                    <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-plus"></i> </a>
                   </span>
                 </perm>
                 <perm label="cerp-logistics-cost-update">
                   <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="editSecond"
                         v-if="secondCost.id!==''">
-                    <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-edit"></i> </a>
+                    <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-edit"></i> </a>
                   </span>
                 </perm>
               </div>

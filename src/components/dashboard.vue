@@ -103,19 +103,19 @@
     <!--<el-row type="flex" :gutter="25" class="home-btn-banner">-->
     <!--<el-col :span="8">-->
     <!--<el-button class="home-btn-wrap" type="info">-->
-    <!--<i class="iconfont icon-picking"></i>-->
+    <!--<i class="el-icon-t-picking"></i>-->
     <!--快速拣货-->
     <!--</el-button>-->
     <!--</el-col>-->
     <!--<el-col :span="8">-->
     <!--<el-button class="home-btn-wrap" type="warning">-->
-    <!--<i class="iconfont icon-picking"></i>-->
+    <!--<i class="el-icon-t-picking"></i>-->
     <!--快速拣货-->
     <!--</el-button>-->
     <!--</el-col>-->
     <!--<el-col :span="8">-->
     <!--<el-button class="home-btn-wrap" type="success">-->
-    <!--<i class="iconfont icon-picking"></i>-->
+    <!--<i class="el-icon-t-picking"></i>-->
     <!--快速拣货-->
     <!--</el-button>-->
     <!--</el-col>-->
