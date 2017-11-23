@@ -141,7 +141,7 @@
             </el-col>
             <el-col :span="4">
               <oms-form-row label="" :span="3">
-                <el-button type="primary" @click="searchInOrder">查询</el-button>
+                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
             </el-col>
@@ -158,8 +158,8 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="6">疫苗名称</el-col>
-          <el-col :span="6">供货厂商</el-col>
+          <el-col :span="8">疫苗名称</el-col>
+          <el-col :span="4">供货厂商</el-col>
           <el-col :span="4">采购单价</el-col>
           <el-col :span="4">协议采购数量</el-col>
           <el-col :span="4">协议有效时间</el-col>
@@ -180,7 +180,7 @@
           <div class="order-list-item" v-for="item in showTypeList" @click="edit(item)"
                :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentItem.id==item.id}]">
             <el-row>
-              <el-col :span="6">
+              <el-col :span="8">
                 <div class="f-grey">
                   {{item.orgGoodsNo }}
                 </div>
@@ -188,7 +188,7 @@
                   {{item.orgGoodsName }}
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="4">
                 <div>
                   {{item.supplyCompanyName}}
                 </div>
