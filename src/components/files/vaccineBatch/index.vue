@@ -95,7 +95,7 @@
             <el-col :span="8">
               <oms-form-row label="生产企业" :span="6">
                 <el-select filterable remote placeholder="请输入名称搜索生产企业" :remote-method="filterFactory"
-                           @click.native="filterOrg('')"
+                           @click.native="filterFactory('')"
                            :clearable="true" v-model="searchWord.orgId" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
                     <div style="overflow: hidden">
@@ -293,17 +293,17 @@
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
-        if (this.searchWord.orgId !== '' || this.searchWord.goodsId !== '' || this.searchWord.batchNumber !== '') {
+//        if (this.searchWord.orgId !== '' || this.searchWord.goodsId !== '' || this.searchWord.batchNumber !== '') {
           this.showFlag = true;
           Object.assign(this.filters, this.searchWord);
           this.getBatcheNumbers();
-        } else {
-          this.$notify.info({
-            message: '请选择查询条件'
-          });
-          this.loadingData = false;
-          return;
-        }
+//        } else {
+//          this.$notify.info({
+//            message: '请选择查询条件'
+//          });
+//          this.loadingData = false;
+//          return;
+//        }
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
@@ -323,10 +323,11 @@
         }
         // 过滤来源单位
         let params = {
-          keyWord: query
+          keyWord: query,
+          orgRelationTypeList: ['Manufacture', 'Supplier']
         };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.factories = res.data;
+        BaseInfo.queryByOrgRelationTypeList(params).then(res => {
+          this.factories = res.data.list;
         });
       },
       filterOrgGoods(query) {

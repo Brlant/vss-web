@@ -513,8 +513,6 @@
                 BaseInfo.queryBaseInfo(factoryId).then(res => {
                   this.orgList = [];
                   this.orgList.push(res.data.orgDto);
-                  this.form.salesFirm = res.data.orgDto.id;
-                  this.form.salesFirmName = res.data.orgDto.name;
                 });
               }
             }
