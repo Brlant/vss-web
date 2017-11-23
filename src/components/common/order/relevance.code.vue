@@ -189,6 +189,7 @@
     },
     watch: {
       index (val) {
+        this.filters.code = '';
         if (val !== 8) return;
         this.files = [];
         this.getTraceCodes(1);
