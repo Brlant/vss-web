@@ -113,7 +113,7 @@
                 <perm label="pov-receipt-manager">
                   <span @click.stop="showPart(item)">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
-                      class="iconfont icon-allot"></i></a>
+                      class="el-icon-t-allot"></i></a>
                     收货
                   </span>
                 </perm>

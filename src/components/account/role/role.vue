@@ -58,10 +58,10 @@
           <h2 class="header">
                 <span class="pull-right">
                   <perm label="access-role-add">
-                    <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="iconfont icon-plus"></i> </a>
+                    <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="el-icon-t-plus"></i> </a>
                   </perm>
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                      class="iconfont icon-search"></i> </a>
+                      class="el-icon-t-search"></i> </a>
                 </span>
             角色管理
           </h2>
@@ -78,7 +78,7 @@
                 <perm label="access-role-delete">
                   <oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'
                               class="hover-show"><i
-                    class="iconfont icon-delete"></i></oms-remove>
+                    class="el-icon-t-delete"></i></oms-remove>
                 </perm>
                 <div class="id-part">
                   {{item.name }}
@@ -100,23 +100,23 @@
                <el-button-group>
                  <perm label="access-role-edit">
                    <el-button @click="edit()">
-                     <i class="iconfont icon-edit"></i>
+                     <i class="el-icon-t-edit"></i>
                      编辑
                    </el-button>
                  </perm>
                 <perm label="access-role-stop">
                   <el-button @click="forbid()" v-show="resData.usableStatus == 1">
-                    <i class="iconfont icon-forbidden"></i>
+                    <i class="el-icon-t-forbidden"></i>
                     停用
                   </el-button>
                 </perm>
                  <perm label="access-role-start">
                    <el-button @click="useNormal()" v-show="resData.usableStatus == 0">
-                     <i class="iconfont icon-start"></i>启用
+                     <i class="el-icon-t-start"></i>启用
                    </el-button>
                  </perm>
                 <perm label="access-role-delete">
-                   <el-button @click="remove()"><i class="iconfont icon-delete"></i>删除</el-button>
+                   <el-button @click="remove()"><i class="el-icon-t-delete"></i>删除</el-button>
                 </perm>
                 </el-button-group>
               </span>

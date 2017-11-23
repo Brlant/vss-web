@@ -107,10 +107,10 @@
                     <span class="btn-search-toggle open" v-show="showSearch">
                         <single-input v-model="filters.keyWord" placeholder="请输入名称搜索"
                                       :showFocus="showSearch"></single-input>
-                        <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+                        <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
                     </span>
                     <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                        <i class="iconfont icon-search"></i>
+                        <i class="el-icon-t-search"></i>
                     </a>
                  </span>
               </el-col>
@@ -147,7 +147,7 @@
                   <el-col :span="4" class="R pt10">
                     <perm label="erp-bind-cdc-delete">
                       <a href="#" @click.prevent="deleteItem(item)"><i
-                        class="iconfont icon-delete"></i> 删除</a>
+                        class="el-icon-t-delete"></i> 删除</a>
                     </perm>
                   </el-col>
                 </el-row>

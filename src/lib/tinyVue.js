@@ -47,6 +47,7 @@ import Icon from 'element-ui/lib/icon';
 import Row from 'element-ui/lib/row';
 import Col from 'element-ui/lib/col';
 // import Upload from 'element-ui/lib/upload';
+
 import Progress from 'element-ui/lib/progress';
 import Spinner from 'element-ui/lib/spinner';
 import Message from 'element-ui/lib/message';
@@ -80,6 +81,7 @@ import omsInput from '../components/common/input.oms.vue';
 import singleInput from '../components/common/input.single.oms.vue';
 import omsLoading from '../components/common/oms.loading.vue';
 import ElForm from '../components/common/form/src/form.vue';
+import fa from '../components/common/fa.vue';
 
 const tinyVue = [
   Pagination,
@@ -154,7 +156,8 @@ const tinyVue = [
   omsInput,
   singleInput,
   omsLoading,
-  ElForm
+  ElForm,
+  fa
 ];
 
 const install = function (Vue, opts = {}) {

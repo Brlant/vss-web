@@ -132,11 +132,11 @@
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
           <span class="">
-            <i class="iconfont icon-search"></i> 筛选查询
+            <i class="el-icon-t-search"></i> 筛选查询
           </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="payment-payable-add">
-                  <a href="#" class="btn-circle" @click.prevent=""><i class="iconfont icon-plus"></i> </a>添加
+                  <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
@@ -193,9 +193,8 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="4">付款单据编号</el-col>
-          <el-col :span="3">付款类型</el-col>
-          <el-col :span="5">付款单位</el-col>
+          <el-col :span="5">付款单据编号</el-col>
+          <el-col :span="7">付款单位</el-col>
           <el-col :span="2">付款方式</el-col>
           <el-col :span="4">付款金额</el-col>
           <el-col :span="6">付款说明</el-col>
@@ -218,17 +217,12 @@
                :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]"
                @click.stop="showItem(item)">
             <el-row>
-              <el-col :span="4">
+              <el-col :span="5">
                 <div>
                   {{item.no }}
                 </div>
               </el-col>
-              <el-col :span="3">
-                <div>
-                  {{billPayType(item.billPayType)}}
-                </div>
-              </el-col>
-              <el-col :span="5" class="pt10">
+              <el-col :span="7" class="pt10">
                 <div class="f-grey">
                   {{item.orgNo }}
                 </div>
@@ -254,7 +248,7 @@
               <!--&lt;!&ndash;<perm label="payment-payable-audit">&ndash;&gt;-->
               <!--&lt;!&ndash;<span @click.stop="showItem(item)" v-if="item.status==='0'">&ndash;&gt;-->
               <!--&lt;!&ndash;<a @click.pervent="" class="btn-circle btn-opera">&ndash;&gt;-->
-              <!--&lt;!&ndash;<i class="iconfont icon-verify"></i>&ndash;&gt;-->
+              <!--&lt;!&ndash;<i class="el-icon-t-verify"></i>&ndash;&gt;-->
               <!--&lt;!&ndash;</a>&ndash;&gt;-->
               <!--&lt;!&ndash;审核&ndash;&gt;-->
               <!--&lt;!&ndash;</span>&ndash;&gt;-->
@@ -262,7 +256,7 @@
               <!--&lt;!&ndash;<perm label="payment-payable-allotment">&ndash;&gt;-->
               <!--&lt;!&ndash;<span @click.stop="allotmentBill(item)" v-if="item.status==='1'">&ndash;&gt;-->
               <!--&lt;!&ndash;<a @click.pervent="" class="btn-circle btn-opera">&ndash;&gt;-->
-              <!--&lt;!&ndash;<i class="iconfont icon-edit"></i>&ndash;&gt;-->
+              <!--&lt;!&ndash;<i class="el-icon-t-edit"></i>&ndash;&gt;-->
               <!--&lt;!&ndash;</a>&ndash;&gt;-->
               <!--&lt;!&ndash;分配&ndash;&gt;-->
               <!--&lt;!&ndash;</span>&ndash;&gt;-->
@@ -443,8 +437,9 @@
         BillPayable.queryStateNum(params).then(res => {
           let data = res.data;
           this.orgType[0].num = this.obtionStatusNum(data['audit']);
-          this.orgType[1].num = this.obtionStatusNum(data['complete']);
-          this.orgType[2].num = this.obtionStatusNum(data['notAudit']);
+          this.orgType[1].num = this.obtionStatusNum(data['review']);
+          this.orgType[2].num = this.obtionStatusNum(data['complete']);
+          this.orgType[3].num = this.obtionStatusNum(data['notAudit']);
         });
       },
 

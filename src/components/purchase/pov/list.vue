@@ -53,7 +53,7 @@
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
           <span class="">
-            <i class="iconfont icon-search"></i> 筛选查询
+            <i class="el-icon-t-search"></i> 筛选查询
           </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
@@ -110,7 +110,7 @@
         <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1">
           <perm label="demand-assignment-add" class="opera-btn">
             <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
-              class="iconfont icon-wave"></i></a><span class="wave-title"> 分配需求</span></span>
+              class="el-icon-t-wave"></i></a><span class="wave-title"> 分配需求</span></span>
           </perm>
        </span>
       </div>
@@ -163,7 +163,7 @@
               <el-col :span="4" class="opera-btn">
                 <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="iconfont icon-detail"></i></a>
+                      class="el-icon-t-detail"></i></a>
                   查看详情
                 </span>
               </el-col>

@@ -40,7 +40,7 @@
           <h2 class="header">
           <span class="pull-right">
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                class="iconfont icon-search"></i> </a>
+                class="el-icon-t-search"></i> </a>
           </span>
             POV列表
           </h2>
@@ -92,10 +92,10 @@
                 <!--<span class="btn-search-toggle open" v-show="showSearch">-->
                 <!--<single-input v-model="keyWord" placeholder="请输入名称搜索"-->
                 <!--:showFocus="showSearch"></single-input>-->
-                <!--<i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>-->
+                <!--<i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>-->
                 <!--</span>-->
                 <!--<a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">-->
-                <!--<i class="iconfont icon-search"></i>-->
+                <!--<i class="el-icon-t-search"></i>-->
                 <!--</a>-->
                 <!--</span>-->
                 <!--</span>-->
@@ -131,7 +131,7 @@
               </td>
               <td>
                 <perm label="show">
-                  <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="iconfont icon-delete"></i>删除</a>
+                  <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="el-icon-t-delete"></i>删除</a>
                 </perm>
               </td>
             </tr>

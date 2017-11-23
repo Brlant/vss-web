@@ -44,7 +44,7 @@
 <template>
   <div class="page-right-wrap">
     <div class="page-right-part" :class="[{'on':show},partClass]" :style="style">
-      <div class="right-close-icon" @click="close"><i class="iconfont icon-remove"></i></div>
+      <div class="right-close-icon" @click="close"><i class="el-icon-t-remove"></i></div>
       <slot @right-close="close"></slot>
     </div>
     <div class="page-right-part-bg" @click="close" v-show="show"></div>

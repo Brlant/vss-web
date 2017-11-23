@@ -128,11 +128,11 @@
                 <span class="pull-right">
                   <perm label="first-vaccine-info-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
-                        <i class="iconfont icon-plus"></i>
+                        <i class="el-icon-t-plus"></i>
                       </a>
                   </perm>
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                      class="iconfont icon-search"></i> </a>
+                      class="el-icon-t-search"></i> </a>
                 </span>
               货主一类疫苗资料
             </h2>
@@ -148,7 +148,7 @@
                     :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
                   <!--<perm label="first-vaccine-info-delete">-->
                   <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'-->
-                  <!--class="hover-show"><i class="iconfont icon-delete"></i></oms-remove>-->
+                  <!--class="hover-show"><i class="el-icon-t-delete"></i></oms-remove>-->
                   <!--</perm>-->
                   <div class="id-part">
                     <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
@@ -177,17 +177,17 @@
             <span class="pull-right">
                  <el-button-group>
                   <perm label="first-vaccine-info-update">
-                    <el-button @click="edit"><i class="iconfont icon-edit"></i> 编辑</el-button>
+                    <el-button @click="edit"><i class="el-icon-t-edit"></i> 编辑</el-button>
                   </perm>
                    <perm label="first-vaccine-info-start">
-                    <el-button @click="enableRelation" v-show="data.status == '0'"><i class="iconfont icon-start"></i> 启用</el-button>
+                    <el-button @click="enableRelation" v-show="data.status == '0'"><i class="el-icon-t-start"></i> 启用</el-button>
                    </perm>
                    <perm label="first-vaccine-info-stop">
                     <el-button @click="forbid" v-show="data.status == '1' "><i
-                      class="iconfont icon-stop"></i> 停用</el-button>
+                      class="el-icon-t-stop"></i> 停用</el-button>
                    </perm>
                    <!--<perm label="first-vaccine-info-delete">-->
-                    <!--<el-button @click="remove"><i class="iconfont icon-remove"></i> 删除</el-button>-->
+                    <!--<el-button @click="remove"><i class="el-icon-t-remove"></i> 删除</el-button>-->
                     <!--</perm>-->
                   </perm>
                 </el-button-group>

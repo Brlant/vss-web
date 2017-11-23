@@ -88,12 +88,12 @@
             <h2 class="header">
             <span class="pull-right">
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                  class="iconfont icon-search"></i> </a>
+                  class="el-icon-t-search"></i> </a>
             </span>
               <span class="pull-right" style="margin-right: 8px">
                 <perm label="sale-price-group-add">
                   <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
-                  <i class="iconfont icon-plus"></i>
+                  <i class="el-icon-t-plus"></i>
                   </a>
                 </perm>
               </span>
@@ -127,7 +127,7 @@
           <!--<span class="pull-right" style="margin-right: 8px">-->
           <!--<perm label="accounts-receivable-detail-add">-->
           <!--<a href="#" class="btn-circle" @click.stop.prevent="add">-->
-          <!--<i class="iconfont icon-plus"></i>-->
+          <!--<i class="el-icon-t-plus"></i>-->
           <!--</a>-->
           <!--</perm>-->
           <!--</span>-->
@@ -140,11 +140,11 @@
                   <el-button-group>
                     <perm label="sale-price-group-edit">
                       <el-button @click="edit(currentItem)"><i
-                        class="iconfont icon-edit"></i>编辑</el-button>
+                        class="el-icon-t-edit"></i>编辑</el-button>
                     </perm>
                     <perm label="sale-price-group-delete">
                       <el-button @click="deletePriceGroup(currentItem)"><i
-                        class="iconfont icon-stop"></i>删除</el-button>
+                        class="el-icon-t-stop"></i>删除</el-button>
                     </perm>
                   </el-button-group>
                 </span>
@@ -188,10 +188,10 @@
                      <span class="btn-search-toggle open" v-show="showSearch">
                         <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入POV名称搜索"
                                       :showFocus="showSearch"></single-input>
-                        <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+                        <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
                      </span>
                      <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                          <i class="iconfont icon-search"></i>
+                          <i class="el-icon-t-search"></i>
                        </a>
 
                   </span>
@@ -223,7 +223,7 @@
                 </td>
                 <!--<td>-->
                 <!--<perm label="sale-price-group-pov-delete">-->
-                <!--<a href="#" @click.stop.prevent="removePov(row)"><i class="iconfont icon-delete"></i>删除</a>-->
+                <!--<a href="#" @click.stop.prevent="removePov(row)"><i class="el-icon-t-delete"></i>删除</a>-->
                 <!--</perm>-->
                 <!--</td>-->
               </tr>

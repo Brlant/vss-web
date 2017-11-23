@@ -80,7 +80,7 @@
        <span class="pull-right">
            <span class="btn-search-toggle open" v-show="showSearch">
               <single-input v-model="filters.code" placeholder="请输入追溯码搜索" :showFocus="showSearch"></single-input>
-              <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+              <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
            </span>
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
               <i class="icon-font icon-search"></i>

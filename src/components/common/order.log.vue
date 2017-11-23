@@ -28,7 +28,7 @@
       </div>
       <template v-for="(log,index) in orderLogList">
         <TimelineItem color="green" v-if="log.showDate">
-          <i class="iconfont icon-home1" slot="dot"></i>
+          <i class="el-icon-t-home1" slot="dot"></i>
           <h3><span>{{log.dateWeek}}</span></h3>
         </TimelineItem>
         <TimelineItem color="grey">

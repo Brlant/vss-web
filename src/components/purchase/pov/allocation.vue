@@ -132,11 +132,11 @@
               </el-col>
               <el-col :span="2" class="pt" v-show="status === 0">
                 <span v-show="item.resultAmount>-1 ">
-                  <i class="iconfont icon-correct color-blue"></i>
+                  <i class="el-icon-t-correct color-blue"></i>
                   正常
                 </span>
                 <span v-show="item.resultAmount<0 ">
-                  <i class="iconfont icon-warning color-red"></i>
+                  <i class="el-icon-t-warning color-red"></i>
                   库存不足
                 </span>
               </el-col>
@@ -144,21 +144,21 @@
                 <div class="mb5">
                     <span @click.prevent="showPart(item)" v-show="status === 0 ">
                       <a href="#" class="btn-circle" @click.prevent=""><i
-                        class="iconfont icon-detail"></i></a>
+                        class="el-icon-t-detail"></i></a>
                     手动分配
                     </span>
                 </div>
                 <div class="mb5">
                   <span @click.prevent="showPart(item)" v-show="status === 1 ">
                     <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="iconfont icon-detail"></i></a>
+                      class="el-icon-t-detail"></i></a>
                   查看详情
                 </span>
                 </div>
                 <div>
                   <span @click.prevent="goTo(item)" v-show="item.balanceAmount < 0 && status === 0 ">
                     <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="iconfont icon-link"></i></a>
+                      class="el-icon-t-link"></i></a>
                   生成采购订单
                   </span>
                 </div>

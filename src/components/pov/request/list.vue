@@ -53,7 +53,7 @@
         <span class="pull-right" style="margin-top: 8px">
            <perm label="pull-signal-add">
              <a href="#" class="btn-circle" @click.stop.prevent="add">
-                <i class="iconfont icon-plus"></i>
+                <i class="el-icon-t-plus"></i>
             </a>
            </perm>
        </span>
@@ -64,7 +64,7 @@
             <h2 class="header">
           <span class="pull-right">
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                class="iconfont icon-search"></i> </a>
+                class="el-icon-t-search"></i> </a>
           </span>
               要货申请单列表
             </h2>
@@ -103,21 +103,21 @@
                 <el-button-group>
                    <perm label="pull-signal-add">
                         <el-button @click="addOrder()"><i
-                          class="iconfont icon-reset"></i> 再次要货
+                          class="el-icon-t-reset"></i> 再次要货
                         </el-button>
                     </perm>
                     <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
                       <el-button @click="audited()"><i
-                        class="iconfont icon-verify"></i>审核</el-button>
+                        class="el-icon-t-verify"></i>审核</el-button>
                     </perm>
                     <perm label="pull-signal-edit" v-show="currentOrder.status === 0">
                       <el-button @click="editOrder()"><i
-                        class="iconfont icon-edit"></i>编辑</el-button>
+                        class="el-icon-t-edit"></i>编辑</el-button>
                     </perm>
 
                     <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
                       <el-button @click="cancel()"><i
-                        class="iconfont icon-verify"></i>取消</el-button>
+                        class="el-icon-t-verify"></i>取消</el-button>
                     </perm>
                 </el-button-group>
               </span>

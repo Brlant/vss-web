@@ -52,7 +52,7 @@
           <h2 class="header">
           <span class="pull-right">
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
-              class="iconfont icon-search"></i> </a>
+              class="el-icon-t-search"></i> </a>
           </span>
             采购协议疫苗列表
           </h2>
@@ -86,7 +86,7 @@
               <span class="pull-right" v-show="showTypeList.length">
                   <perm label="second-vaccine-authorization-add">
                     <el-button @click="add(currentItem)"><i
-                      class="iconfont icon-plus"></i>添加</el-button>
+                      class="el-icon-t-plus"></i>添加</el-button>
                   </perm>
               </span>
           </h2>
@@ -129,10 +129,10 @@
               </td>
               <td>
                 <perm label="second-vaccine-authorization-update">
-                  <a href="#" @click.stop.prevent="edit(row)"><i class="iconfont icon-edit"></i>编辑</a>
+                  <a href="#" @click.stop.prevent="edit(row)"><i class="el-icon-t-edit"></i>编辑</a>
                 </perm>
                 <perm label="second-vaccine-authorization-delete">
-                  <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="iconfont icon-delete"></i>删除</a>
+                  <a href="#" @click.stop.prevent="removeVaccine(row)"><i class="el-icon-t-delete"></i>删除</a>
                 </perm>
               </td>
             </tr>

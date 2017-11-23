@@ -20,7 +20,7 @@
       <perm :label="perm">
         <a :href="attachment.attachmentStoragePath "
            class="download-link pull-right" :download="attachment.attachmentFileName" @click.stop="">
-          <i class="iconfont icon-download"></i>
+          <i class="el-icon-t-download"></i>
         </a>
       </perm>
     </li>

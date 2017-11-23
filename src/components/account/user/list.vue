@@ -17,14 +17,14 @@
           <span class="btn-search-toggle open" v-show="showSearch">
             <single-input v-model="filters.keyWord" placeholder="请输入名称搜索"
                           :showFocus="showSearch"></single-input>
-            <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
+            <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
           </span>
           <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-              <i class="iconfont icon-search"></i>
+              <i class="el-icon-t-search"></i>
           </a>
           <perm label="erp-user-add">
                 <a href="#" class="btn-circle" @click.stop.prevent="add">
-                    <i class="iconfont icon-plus"></i>
+                    <i class="el-icon-t-plus"></i>
                 </a>
           </perm>
         </span>
@@ -73,13 +73,13 @@
             <td class="list-op">
               <perm label="erp-user-edit">
                 <a href="#" @click.stop.prevent="edit(row)"><i
-                  class="iconfont icon-edit"></i>编辑</a>
+                  class="el-icon-t-edit"></i>编辑</a>
 
                 <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用用户\""+row.name+"\"?"' v-show="row.status==1">
-                  <i class="iconfont icon-forbidden"></i>停用
+                  <i class="el-icon-t-forbidden"></i>停用
                 </oms-forbid>
                 <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用用户\""+row.name+"\"?"'
-                            v-show="row.status==2"><i class="iconfont icon-start" v-show="!row.adminFlag"></i>启用
+                            v-show="row.status==2"><i class="el-icon-t-start" v-show="!row.adminFlag"></i>启用
                 </oms-forbid>
               </perm>
             </td>
