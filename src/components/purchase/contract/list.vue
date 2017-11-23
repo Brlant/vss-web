@@ -131,7 +131,9 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="供货厂商" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg"
+                           @click.native="filterOrg('')"
+                           :clearable="true"
                            v-model="searchCondition.transactOrgId" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
@@ -403,7 +405,7 @@
             this.orgList = [];
             return;
         }
-        BaseInfo.queryOrgByReation(orgId, {keyWord: query}).then(res => {
+        BaseInfo.queryOrgByReation(orgId, {keyWord: query, relation: '1'}).then(res => {
           this.orgList = res.data;
         });
       },
