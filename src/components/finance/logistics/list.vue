@@ -108,7 +108,9 @@
             <!--</el-col>-->
             <el-col :span="8">
               <oms-form-row label="物流厂商" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索厂商" :remote-method="filterFactory" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索厂商" :remote-method="filterFactory"
+                           @click.native="filterFactory('')"
+                           :clearable="true"
                            v-model="filters.factoryId" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
                     <div style="overflow: hidden">

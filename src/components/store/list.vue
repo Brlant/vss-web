@@ -289,10 +289,11 @@
         }
         // 过滤来源单位
         let params = {
-          keyWord: query
+          keyWord: query,
+          orgRelationTypeList: ['Manufacture', 'Supplier']
         };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.factories = res.data;
+        BaseInfo.queryByOrgRelationTypeList(params).then(res => {
+          this.factories = res.data.list;
         });
       },
       filterOrgGoods (query) {
