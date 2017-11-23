@@ -932,8 +932,10 @@
         }
         Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId}).then(res => {
           this.warehouses = res.data || [];
-          let fs = this.warehouses.filter(i => i.default)[0];
-          this.form.transportationAddress = fs && fs.id || '';
+          if (!this.isStorageData) {
+            let fs = this.warehouses.filter(i => i.default)[0];
+            this.form.transportationAddress = fs && fs.id || '';
+          }
         });
       },
       filterAddress () {
