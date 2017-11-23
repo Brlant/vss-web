@@ -75,22 +75,19 @@
 </style>
 <template>
   <div>
-    <div v-if="!traceCodes.length" class="empty-info">
-      暂无追溯码信息
-    </div>
-    <div v-else="">
+    <div>
       <div style="margin-bottom: 10px; margin-top: 20px;overflow: hidden">
        <span class="pull-right">
            <span class="btn-search-toggle open" v-show="showSearch">
-              <single-input v-model="filters.code" placeholder="请输入名称搜索" :showFocus="showSearch"></single-input>
-              <i class="oms-font oms-font-search" @click.stop="showSearch=(!showSearch)"></i>
+              <single-input v-model="filters.code" placeholder="请输入追溯码搜索" :showFocus="showSearch"></single-input>
+              <i class="iconfont icon-search" @click.stop="showSearch=(!showSearch)"></i>
            </span>
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-              <i class="oms-font oms-font-search"></i>
+              <i class="icon-font icon-search"></i>
            </a>
       </span>
       </div>
-      <div class="order-list clearfix">
+      <div class="order-list clearfix" v-loading="loadingData">
 
         <el-row class="order-list-header t-head" style="margin:0" :gutter="10">
           <el-col :span="8">追溯码</el-col>
@@ -98,12 +95,7 @@
           <el-col :span="5">批号</el-col>
           <el-col :span="3">包装类型</el-col>
         </el-row>
-        <el-row v-if="loadingData">
-          <el-col :span="24">
-            <oms-loading :loading="loadingData"></oms-loading>
-          </el-col>
-        </el-row>
-        <el-row v-else-if="!traceCodes.length">
+        <el-row v-if="!traceCodes.length">
           <el-col :span="24">
             <div class="empty-info">
               暂无信息
@@ -266,7 +258,7 @@
           pageSize: this.pager.pageSize,
           type: this.type
         }, this.filters);
-//        this.loadingData = true;
+        this.loadingData = true;
         http.get(`/code/${this.currentOrder.id}/trace-code`, {params}).then(res => {
           this.traceCodes = res.data.list;
 //          this.pager.count = res.data.count;
