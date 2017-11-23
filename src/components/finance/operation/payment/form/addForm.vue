@@ -254,7 +254,7 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
           </li>
         </ul>
       </div>
@@ -297,7 +297,7 @@
                 <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in PaymentMethod"/>
               </el-select>
             </el-form-item>
-            <el-form-item label="金额" prop="amount">
+            <el-form-item label="付款金额" prop="amount">
               <oms-input type="text" v-model="form.amount" @blur="formatPrice" placeholder="请选择付款明细，自动计算总额" disabled>
                 <template slot="prepend">¥</template>
               </oms-input>
@@ -310,7 +310,7 @@
         </div>
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
           <pay-detail :selectPayments="selectPayments" :billPayType="form.billPayType"
-                      :factoryId="form.orgId"></pay-detail>
+                      :factoryId="form.orgId" :amount="form.amount"></pay-detail>
         </div>
       </div>
     </div>
@@ -353,7 +353,7 @@
           explain: '',
           amount: '',
           billPayType: '1',
-          reconciliationIdList: []
+          relationList: []
         },
         rules: {
           billPayType: [
@@ -384,27 +384,34 @@
       PaymentMethod: function () {
         return this.$store.state.dict['PaymentMethod'];
       },
-      totalMoney: function () {
-        let totalMoney = 0.00;
-        if (!this.form.detailDtoList.length) return totalMoney;
-        this.form.detailDtoList.forEach(item => {
-          totalMoney += item.amount * item.unitPrice;
-        });
-        return totalMoney;
-      },
       orgLevel () {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-
+      selectPayments: {
+        handler (val) {
+          let amount = 0;
+          val.forEach(i => {
+            amount += Number(i.payment);
+          });
+          this.form.amount = amount ? utils.autoformatDecimalPoint(amount.toString()) : '';
+          this.form.relationList = val.map(m => {
+            return {
+              reconciliationId: m.id,
+              paidMoney: m.payment
+            };
+          });
+        },
+        deep: true
+      }
     },
     mounted: function () {
     },
     methods: {
       changeBillPayType: function () {
         this.form.orgId = '';
-        this.form.reconciliationIdList = [];
+        this.form.relationList = [];
         this.orgList = [];
         this.logisticsList = [];
       },
@@ -432,9 +439,9 @@
       onSubmit: function () {// 提交表单
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
-            this.doing = true;
+            return;
           }
-          this.form.reconciliationIdList = this.selectPayments.map(m => m.id);
+          this.doing = true;
           BillPayable.save(this.form).then(res => {
             this.resetForm();
             this.$notify({
