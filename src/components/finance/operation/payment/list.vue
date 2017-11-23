@@ -286,7 +286,7 @@
                 class="order-detail-info" partClass="pr-no-animation">
       <audit-form :detailId="billInfo.id" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
       <add-form @change="onSubmit" @right-close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showAllotmentRight" @right-close="resetRightBox" :css="{'width':'750px','padding':0}">
