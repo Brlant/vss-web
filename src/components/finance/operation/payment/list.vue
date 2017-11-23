@@ -193,9 +193,8 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="4">付款单据编号</el-col>
-          <el-col :span="3">付款类型</el-col>
-          <el-col :span="5">付款单位</el-col>
+          <el-col :span="5">付款单据编号</el-col>
+          <el-col :span="7">付款单位</el-col>
           <el-col :span="2">付款方式</el-col>
           <el-col :span="4">付款金额</el-col>
           <el-col :span="6">付款说明</el-col>
@@ -218,17 +217,12 @@
                :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]"
                @click.stop="showItem(item)">
             <el-row>
-              <el-col :span="4">
+              <el-col :span="5">
                 <div>
                   {{item.no }}
                 </div>
               </el-col>
-              <el-col :span="3">
-                <div>
-                  {{billPayType(item.billPayType)}}
-                </div>
-              </el-col>
-              <el-col :span="5" class="pt10">
+              <el-col :span="7" class="pt10">
                 <div class="f-grey">
                   {{item.orgNo }}
                 </div>
@@ -443,8 +437,9 @@
         BillPayable.queryStateNum(params).then(res => {
           let data = res.data;
           this.orgType[0].num = this.obtionStatusNum(data['audit']);
-          this.orgType[1].num = this.obtionStatusNum(data['complete']);
-          this.orgType[2].num = this.obtionStatusNum(data['notAudit']);
+          this.orgType[1].num = this.obtionStatusNum(data['review']);
+          this.orgType[2].num = this.obtionStatusNum(data['complete']);
+          this.orgType[3].num = this.obtionStatusNum(data['notAudit']);
         });
       },
 

@@ -252,7 +252,7 @@
                 <el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>
               </div>
             </perm>
-            <perm label="purchasing-contract-edit">
+            <perm label="purchasing-contract-export">
               <div style="margin-bottom: 10px" v-if="form.purchaseContractIsUsed">
                 <el-button type="success" @click="synchroOrder" style="width: 150px">同步采购合同</el-button>
               </div>

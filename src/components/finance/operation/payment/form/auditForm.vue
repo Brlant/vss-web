@@ -255,29 +255,12 @@
     <div class="content-part">
       <div class="content-left">
         <h2 class="clearfix right-title">付款申请详情</h2>
-        <div class="btn-submit-save">
-          <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" :plain="true" type="success" @click="audited" native-type="submit">审核通过
-            </el-button>
-          </div>
-          <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" :plain="true" type="danger" @click="notAudited" native-type="submit">
-              审核不通过
-            </el-button>
-          </div>
-        </div>
       </div>
       <div class="content-right min-gutter">
         <h3>付款申请详情</h3>
         <div>
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="付款单据编号" class="mb0">
-              {{form.no }}
-            </el-form-item>
-            <el-form-item label="付款类型" class="mb0">
-              {{billPayType(form.billPayType)}}
-            </el-form-item>
             <el-form-item label="付款单位" class="mb0">
               {{form.orgName }}
             </el-form-item>
@@ -291,37 +274,44 @@
               {{form.explain}}
             </el-form-item>
             <el-form-item label="付款明细" class="mb0"></el-form-item>
-            <ul class="show-list invoice-list"
-                v-if="form.reconciliationDetailList && form.reconciliationDetailList.length">
-              <li class="show-item" style="background: #f1f1f1">
-                <el-row type="flex">
-                  <el-col :span="8">货品名称 </el-col>
-                  <el-col :span="6">订单号 </el-col>
-                  <el-col :span="5">金额 </el-col>
-                  <el-col :span="5">创建时间 </el-col>
-                </el-row>
-              </li>
-              <li class="show-item" v-for="item in form.reconciliationDetailList">
-                <el-row type="flex">
-                  <el-col :span="8">{{ item.goodsName }} </el-col>
-                  <el-col :span="6">{{ item.orderNo }} </el-col>
-                  <el-col :span="5"> ￥{{item.billAmount | formatMoney}} </el-col>
-                  <el-col :span="5">{{ item.createTime | minute }} </el-col>
-                </el-row>
-              </li>
-            </ul>
-            <!--<el-form-item label="审批意见" style="margin-top: 10px">-->
-            <!--<oms-input v-if="form.status==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"-->
-            <!--:autosize="{ minRows: 2, maxRows: 5}"></oms-input>-->
-            <!--<span v-if="form.status!=='0'">{{ form.auditOpinion ? form.auditOpinion : '无' }}</span>-->
-            <!--</el-form-item>-->
-            <!--<el-form-item style="margin-top: 10px" v-if="form.status==='0'">-->
-            <!--<el-button style="width: 100px" :plain="true" type="success" @click="audited" native-type="submit">审核通过-->
-            <!--</el-button>-->
-            <!--<el-button style="width: 100px" :plain="true" type="danger" @click="notAudited" native-type="submit">-->
-            <!--审核不通过-->
-            <!--</el-button>-->
-            <!--</el-form-item>-->
+            <!--<ul class="show-list invoice-list"-->
+            <!--v-if="form.reconciliationDetailList && form.reconciliationDetailList.length">-->
+            <!--<li class="show-item" style="background: #f1f1f1">-->
+            <!--<el-row type="flex">-->
+            <!--<el-col :span="8">货品名称 </el-col>-->
+            <!--<el-col :span="6">订单号 </el-col>-->
+            <!--<el-col :span="5">金额 </el-col>-->
+            <!--<el-col :span="5">创建时间 </el-col>-->
+            <!--</el-row>-->
+            <!--</li>-->
+            <!--<li class="show-item" v-for="item in form.reconciliationDetailList">-->
+            <!--<el-row type="flex">-->
+            <!--<el-col :span="8">{{ item.goodsName }} </el-col>-->
+            <!--<el-col :span="6">{{ item.orderNo }} </el-col>-->
+            <!--<el-col :span="5"> ￥{{item.billAmount | formatMoney}} </el-col>-->
+            <!--<el-col :span="5">{{ item.createTime | minute }} </el-col>-->
+            <!--</el-row>-->
+            <!--</li>-->
+            <!--</ul>-->
+            <el-form-item label="审批意见" style="margin-top: 10px">
+              <oms-input v-show="form.status ==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+              <span v-show="form.status!=='0'">{{ form.auditOpinion ? form.auditOpinion : '无' }}</span>
+            </el-form-item>
+            <el-form-item style="margin-top: 10px">
+              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"
+                         native-type="submit">审核通过
+              </el-button>
+              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="danger"
+                         @click="notAudited"
+                         native-type="submit">
+                审核不通过
+              </el-button>
+              <el-button v-show="form.status ==='1'" style="width: 100px" :plain="true" type="danger" @click="review"
+                         native-type="submit">
+                通过复核
+              </el-button>
+            </el-form-item>
           </el-form>
         </div>
       </div>
@@ -330,8 +320,9 @@
 </template>
 
 <script>
-  import {http, Address, BaseInfo, pay, BillPayable} from '../../../../../resources';
+  import { http, Address, BaseInfo, pay, BillPayable } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
+
   export default {
     name: 'auditForm',
     loading: false,
@@ -370,15 +361,6 @@
           this.form = res.data;
         });
       },
-      billPayType: function (value) {
-        let title = '';
-        if (value === '0') {
-          title = '疫苗厂商付款';
-        } else {
-          title = '物流厂商付款';
-        }
-        return title;
-      },
       resetForm: function () {// 重置表单
         this.$refs['auditForm'].resetFields();
         this.payableTotalAmount = '';
@@ -397,7 +379,8 @@
           type: 'warning'
         }).then(() => {
           BillPayable.auditInfo(this.form.id, {
-            auditOpinion: this.form.auditOpinion}).then(() => {
+            auditOpinion: this.form.auditOpinion
+          }).then(() => {
             this.$notify.success({
               duration: 2000,
               title: '成功',
@@ -431,6 +414,28 @@
             this.$notify.error({
               duration: 2000,
               message: this.form.orgName + '的付款作业申请的审核未通过失败'
+            });
+          });
+        });
+      },
+      review: function () {
+        this.$confirm('确认通过对' + this.form.orgName + '的付款作业的复核?', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.put(`/bill-payable/review/${this.form.id}`).then(() => {
+            this.$notify.success({
+              duration: 2000,
+              title: '成功',
+              message: this.form.orgName + '的付款作业申请的复核未通过'
+            });
+            this.$emit('change', this.form);
+            this.$emit('right-close');
+          }).catch(() => {
+            this.$notify.error({
+              duration: 2000,
+              message: this.form.orgName + '的付款作业申请的复核未通过失败'
             });
           });
         });
