@@ -45,10 +45,21 @@
   .el-form--inline .el-form-item {
     margin-right: 0;
   }
+
+  .order-list-status .status-item {
+    cursor: default;
+  }
 </style>
 <template>
   <div>
     <div class="container">
+      <div class="order-list-status container" style="margin-bottom:20px">
+        <div class="status-item active"
+             v-for="(item,key) in orgType">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+        </div>
+      </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
@@ -271,7 +282,11 @@
         index: 0,
         orderId: '',
         currentDetail: {},
-        orgGoods: []
+        orgGoods: [],
+        orgType: {
+          0: {title: '待付总额', num: ''},
+          1: {title: '已付总额', num: ''}
+        }
       };
     },
     computed: {
