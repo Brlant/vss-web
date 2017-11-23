@@ -207,7 +207,8 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in billList"
-               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]">
+               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]"
+               @click.stop="audit(item)">
             <el-row>
               <el-col :span="5">
                 <div>
@@ -248,11 +249,11 @@
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'750px','padding':0}"
+    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
       <audit-form :formItem="billInfo" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
       <add-form @change="onSubmit" @right-close="resetRightBox"></add-form>
     </page-right>
   </div>

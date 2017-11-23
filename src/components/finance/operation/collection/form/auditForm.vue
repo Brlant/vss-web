@@ -229,6 +229,26 @@
     text-align: center;
     padding: 15px;
   }
+
+  .invoice-list {
+    margin-left: 30px;
+    margin-bottom: 10px;
+    .show-item {
+      border-bottom: 1px solid #f1f1f1;
+      line-height: 20px;
+      .el-row {
+        align-items: center;
+        .el-col {
+          padding-left: 5px;
+          padding-right: 5px;
+        }
+      }
+    }
+  }
+
+  .mb0 {
+    margin-bottom: 0;
+  }
 </style>
 
 <template>
@@ -236,58 +256,48 @@
     <div class="content-part">
       <div class="content-left">
         <h2 class="clearfix right-title">审核收款申请</h2>
-        <div class="btn-submit-save">
-          <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" :plain="true" type="warning" @click="audited" native-type="submit">审核通过
-            </el-button>
-          </div>
-          <div style="margin-bottom: 10px">
-            <el-button style="width: 100px" :plain="true" type="warning" @click="notAudited" native-type="submit">
-              审核不通过
-            </el-button>
-          </div>
-        </div>
       </div>
       <div class="content-right min-gutter">
         <h3>审核收款作业申请</h3>
         <div>
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="收款单据编号">
+            <el-form-item label="收款单据编号" class="mb0">
               {{form.no }}
             </el-form-item>
-            <el-form-item label="收款类型">
-              {{billPayType(form.billPayType)}}
-            </el-form-item>
-            <el-form-item label="收款单位">
+            <el-form-item label="收款单位" class="mb0">
               {{form.orgName }}
             </el-form-item>
-            <el-form-item label="收款方式">
+            <el-form-item label="收款方式" class="mb0">
               <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
             </el-form-item>
-            <el-form-item label="收款金额">
+            <el-form-item label="收款金额" class="mb0">
               ¥ {{form.amount | formatMoney}}
             </el-form-item>
-            <el-form-item label="收款说明">
+            <el-form-item label="收款说明" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="付款明细" class="mb0"></el-form-item>
+            <el-form-item label="付款明细" class="mb0">
+              <span v-show="!form.detailList.length">无</span>
+            </el-form-item>
             <ul class="show-list invoice-list"
-                v-if="form.list">
+                v-show="form.detailList.length">
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
-                  <el-col :span="8">货品名称 </el-col>
-                  <el-col :span="6">订单号 </el-col>
-                  <el-col :span="5">金额 </el-col>
+                  <el-col :span="6">货品名称 </el-col>
+                  <el-col :span="5">订单号 </el-col>
                   <el-col :span="5">创建时间 </el-col>
+                  <el-col :span="4">应收金额 </el-col>
+                  <el-col :span="4">本次已收金额 </el-col>
                 </el-row>
               </li>
-              <li class="show-item" v-for="item in form.list">
+              <li class="show-item" v-for="item in form.detailList">
                 <el-row type="flex">
-                  <el-col :span="8">{{ item.goodsName }} </el-col>
-                  <el-col :span="6">{{ item.orderNo }} </el-col>
-                  <el-col :span="5"> ￥{{item.billAmount | formatMoney}} </el-col>
+                  <el-col :span="6">{{ item.goodsName }} </el-col>
+                  <el-col :span="5">{{ item.orderNo }} </el-col>
                   <el-col :span="5">{{ item.createTime | minute }} </el-col>
+                  <el-col :span="4"> ￥{{item.totalMoney | formatMoney}} </el-col>
+                  <el-col :span="4"> ￥{{item.paidMoney | formatMoney}} </el-col>
                 </el-row>
               </li>
             </ul>
@@ -315,7 +325,7 @@
 </template>
 
 <script>
-  import {http, Address, BaseInfo, receivable, BillReceivable} from '../../../../../resources';
+  import { http, Address, BaseInfo, receivable, BillReceivable } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
 
   export default {
@@ -335,7 +345,9 @@
     data: function () {
       return {
         loading: false,
-        form: this.formItem,
+        form: {
+          detailList: []
+        },
         payableTotalAmount: '',
         practicalTotalAmount: '',
         notTotalAmount: '',
@@ -348,20 +360,16 @@
     computed: {},
     watch: {
       formItem: function (val) {
-        this.form = Object.assign({}, val);
+        if (!val.id) return;
+        this.queryDetail(val.id);
       }
     },
-    mounted: function () {
-    },
+
     methods: {
-      billPayType: function (value) {
-        let title = '';
-        if (value === '0') {
-          title = '疫苗厂商收款';
-        } else {
-          title = '物流厂商收款';
-        }
-        return title;
+      queryDetail (key) {
+        http.get(`/bill-receivable/${key}`).then(res => {
+          this.form = res.data;
+        });
       },
       resetForm: function () {// 重置表单
         this.$refs['auditForm'].resetFields();
@@ -381,7 +389,8 @@
           type: 'warning'
         }).then(() => {
           BillReceivable.auditInfo(this.form.id, {
-            auditOpinion: this.form.auditOpinion}).then(() => {
+            auditOpinion: this.form.auditOpinion
+          }).then(() => {
             this.$notify.success({
               duration: 2000,
               title: '成功',
