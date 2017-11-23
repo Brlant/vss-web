@@ -109,25 +109,25 @@
               <el-col :span="status === 0 ? 2 : 4" class="pt">
                 <span>
                   {{ item.requiredQuantity }}
-                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
+                  <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
               <el-col :span="status === 0 ? 2 : 4" class="pt">
                 <span>
                   {{ item.inventoryQuantity }}
-                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
+                  <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
               <el-col :span="3" class="pt" v-show="status === 0">
                 <span>
                   {{ item.balanceAmount }}
-                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
+                  <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
               <el-col :span="3" class="pt" v-show="status === 0">
                 <span>
                   {{ item.resultAmount }}
-                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="item.mixUnit"></dict>
+                  <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
               </el-col>
               <el-col :span="2" class="pt" v-show="status === 0">
