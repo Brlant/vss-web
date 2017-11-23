@@ -63,7 +63,7 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span=" filters.status === '3' ? 5 : 6">货主/订单号</el-col>
           <el-col :span="3">业务类型</el-col>
-          <el-col :span="filters.status === '3' ? 5 : 6">POV</el-col>
+          <el-col :span="filters.status === '3' ? 5 : 6">接种点</el-col>
           <el-col :span="filters.status === '3' ? 5 : 6">时间</el-col>
           <el-col :span="3">状态</el-col>
           <el-col :span="3" v-if="filters.status === '3'">操作</el-col>

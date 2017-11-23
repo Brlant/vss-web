@@ -32,7 +32,7 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="POV" :span="span">
+            <oms-row label="接种点" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
           </el-col>
@@ -101,7 +101,7 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="POV" :span="span">
+            <oms-row label="接种点" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
             <oms-row label="POV仓库" :span="span">

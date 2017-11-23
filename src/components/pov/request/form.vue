@@ -248,7 +248,7 @@
                 <el-radio :label="2">二类疫苗</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="CDC" prop="cdcId">
+            <el-form-item label="疾控中心" prop="cdcId">
               <el-select placeholder="请选择CDC" v-model="form.cdcId" clearable>
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>

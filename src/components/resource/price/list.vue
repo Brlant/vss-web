@@ -199,7 +199,7 @@
             <table class="table">
               <thead>
               <tr class="tr-header">
-                <th>POV</th>
+                <th>接种点</th>
                 <!--<th>操作</th>-->
               </tr>
               </thead>
