@@ -541,6 +541,9 @@ export const BillReceivable = resource('/bill-receivable', http, {
   },
   queryStateNum: (params) => {
     return http.get('/bill-receivable/count', {params});
+  },
+  save (obj) {
+    return http.post('/bill-receivable/request', obj);
   }
 });
 
