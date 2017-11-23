@@ -83,7 +83,7 @@
               <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
            </span>
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-              <i class="icon-font icon-search"></i>
+              <f-a name="search"></f-a>
            </a>
       </span>
       </div>
