@@ -15,6 +15,7 @@
     <h2 class="clearfix">{{showTitle}}疫苗采购协议</h2>
     <el-form-item label="疫苗" prop="orgGoodsId" class="search-input">
       <el-select placeholder="请选择疫苗" v-model="form.orgGoodsId" filterable remote :remote-method="getOmsGoods"
+                 @click.native="getOmsGoods('')"
                  :clearable="true" popper-class="good-selects" @change="setSalesFirmName(form.orgGoodsId)">
         <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                    v-for="item in goodsList">
