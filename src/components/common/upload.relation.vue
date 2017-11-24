@@ -26,7 +26,7 @@
 </template>
 
 <script>
-  import { OmsAttachment } from '../../resources';
+  import {OmsAttachment, http} from '../../resources';
   import UploadList from '@/components/common/upload.file.list.vue';
   import OmsElUpload from './upload/src/index.vue';
 
@@ -106,9 +106,11 @@
       changeFile: function (file, fileList) {
         if (file.response) {
           file.attachmentId = file.response.attachmentId;
-          file.attachmentFileName = file.response.fileName;
+          file.name = file.attachmentFileName = file.response.original;
+          file.url = file.attachmentStoragePath = file.response.url;
         }
         this.$emit('change', fileList);
+        this.fileLists = fileList;
       },
       submitUpload() {
         this.$refs.upload.submit();
@@ -128,12 +130,12 @@
         });
       },
       handlePreview(file) {
-        this.$store.commit('changeAttachment', file.attachmentId);
+        this.$store.commit('changeAttachment', {currentId: file.attachmentId, attachmentList: this.fileLists});
       },
       beforeAvatarUpload(file) {
         this.uploadingFiles.push(file);
       },
-      success(response, file) {
+      success(response, file, fileList) {
         this.uploadingFiles = this.uploadingFiles.filter(item => item.uid !== file.uid);
         if (response) {
           this.$notify.success({
@@ -154,7 +156,7 @@
           message: '上传附件失败' + err
         });
       },
-      showProgress(event, file) {
+      showProgress(event, file, fileList) {
         let index = -1;
         for (let i = 0, len = this.uploadingFiles.length; i < len; i++) {
           if (file.uid === this.uploadingFiles[i].uid) {
