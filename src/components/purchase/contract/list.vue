@@ -122,7 +122,7 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="合同名称/编号" :span="8">

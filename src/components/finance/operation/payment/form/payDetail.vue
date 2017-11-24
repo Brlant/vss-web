@@ -45,7 +45,7 @@
 </style>
 <template>
   <div>
-    <el-form ref="payForm" :inline="true">
+    <el-form ref="payForm" :inline="true" onsubmit="return false">
       <el-form-item label="货品名称">
         <oms-input v-model="searchCondition.goodsName"></oms-input>
       </el-form-item>
