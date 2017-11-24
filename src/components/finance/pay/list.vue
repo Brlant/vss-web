@@ -52,12 +52,8 @@
 
   .status-item {
     width: 160px;
-    .title {
-      text-align: center;
-    }
     > div span.status-num {
       display: block;
-      text-align: center;
       font-size: 18px;
     }
   }
