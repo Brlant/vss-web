@@ -90,7 +90,7 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form class="advanced-query-form">
+        <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="生产企业" :span="6">
