@@ -103,7 +103,7 @@
           <table class="table " :class="{'table-hover':dataRows.length !== 0}" style="margin-top: 10px">
             <thead>
             <tr class="tr-header">
-              <th>POV</th>
+              <th>接种点</th>
               <th>销售价格</th>
               <th>操作</th>
             </tr>
@@ -307,7 +307,7 @@
         this.showRight = false;
       },
       removeVaccine: function (item) {
-        this.$confirm('是否删除POV"' + item.povName + '"?', '', {
+        this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

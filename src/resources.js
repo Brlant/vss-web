@@ -386,7 +386,7 @@ export const Batch = resource('/stock-batch', http, {});
  * 批号对象
  * @type {the}
  */
-export const BatchNumber = resource('/batch-number', http, {});
+export const BatchNumber = resource('/erp-batch', http, {});
 
 /**
  * 波次作业
@@ -541,6 +541,9 @@ export const BillReceivable = resource('/bill-receivable', http, {
   },
   queryStateNum: (params) => {
     return http.get('/bill-receivable/count', {params});
+  },
+  save (obj) {
+    return http.post('/bill-receivable/request', obj);
   }
 });
 

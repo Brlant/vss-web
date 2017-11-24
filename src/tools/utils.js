@@ -5,7 +5,7 @@ export default {
   requestType: {
     0: {'title': '所有', status: null, num: ''},
     1: {'title': '待审批', status: 0, num: ''},
-    2: {'title': '待CDC处理', status: 1, num: ''},
+    2: {'title': '待疾控处理', status: 1, num: ''},
     3: {'title': '待生成订单', status: 2, num: ''},
     4: {'title': '已分配', status: 4, num: ''},
     5: {'title': '已取消', status: 3, num: ''}
@@ -60,6 +60,11 @@ export default {
     1: {'title': '待复核', status: '1', num: ''},
     2: {'title': '已完成', status: '2', num: ''},
     3: {'title': '审核未通过', status: '3', num: ''}
+  },
+  receiptOperation: {
+    0: {'title': '待审核', status: '0', num: ''},
+    1: {'title': '已完成', status: '1', num: ''},
+    2: {'title': '审核未通过', status: '3', num: ''}
   },
   priceGroupType: {
     0: {'title': '可用', availabilityStatus: true, num: ''},

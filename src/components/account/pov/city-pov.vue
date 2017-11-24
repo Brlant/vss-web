@@ -79,7 +79,7 @@
               <a href="#" class="btn-circle" @click.prevent="showTypeSearch=!showTypeSearch"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-              CDC列表
+              疾控列表
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="filterCDCs.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -106,7 +106,7 @@
           <div>
             <el-row>
               <el-col :span="10" class="search-input">
-                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrgs"
+                <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrgs"
                            :clearable="true"
                            v-model="orgId" popper-class="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList">
@@ -123,7 +123,7 @@
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
                 <perm label="erp-bind-city-pov-add">
-                  <el-button type="primary" @click="bindDistrict">绑定POV</el-button>
+                  <el-button type="primary" @click="bindDistrict">绑定接种点</el-button>
                 </perm>
               </el-col>
               <el-col :span="11" class="text-right">
@@ -142,7 +142,7 @@
           </div>
           <div class="order-list clearfix" style="margin-top: 10px">
             <el-row class="order-list-header" :gutter="10">
-              <el-col :span="20">POV名称</el-col>
+              <el-col :span="20">接种点名称</el-col>
               <el-col :span="4">操作</el-col>
             </el-row>
             <el-row v-if="loadingData">
@@ -248,7 +248,7 @@
       bindDistrict () {
         if (!this.orgId) {
           this.$notify.info({
-            message: '请选择POV'
+            message: '请选择接种点'
           });
           return;
         }
@@ -256,7 +256,7 @@
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/citypov', text: '正在绑定'});
         cerpAccess.bindPov(cdcId, this.orgId).then(() => {
           this.$notify.success({
-            message: '绑定POV成功'
+            message: '绑定接种点成功'
           });
           this.orgId = '';
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/citypov', text: '正在绑定'});
@@ -264,7 +264,7 @@
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/citypov', text: '正在绑定'});
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '绑定POV失败'
+            message: error.response.data && error.response.data.msg || '绑定接种点失败'
           });
         });
       },
@@ -302,7 +302,7 @@
         this.getPovPage();
       },
       deleteItem (item) {
-        this.$confirm('是否删除POV "' + item.subordinateName + '"?', '', {
+        this.$confirm('是否删除接种点 "' + item.subordinateName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

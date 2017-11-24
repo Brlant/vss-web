@@ -246,23 +246,23 @@
             <el-form-item label="授权疫苗">
               <span>{{ currentItem.orgGoodsName }}</span>
             </el-form-item>
-            <el-form-item label="POV" v-if="!form.id">
+            <el-form-item label="接种点" v-if="!form.id">
               <el-transfer v-loading="loading"
                            v-model="form.povList"
                            :props="{
                   key: 'subordinateId',
                   label: 'subordinateName'
                 }"
-                           filter-placeholder="请输入名称搜索POV"
+                           filter-placeholder="请输入名称搜索接种点"
                            :data="orgList"
                            filterable
                            :filter-method="filterMethod"
-                           :titles="['未选POV', '已选POV']"
+                           :titles="['未选接种点', '已选接种点']"
                            class="transfer-list"
               >
               </el-transfer>
             </el-form-item>
-            <el-form-item label="POV" prop="povId" v-if="form.id">
+            <el-form-item label="接种点" prop="povId" v-if="form.id">
               <span>{{ formItem.povName }}</span>
             </el-form-item>
             <el-form-item label="销售价格" prop="salePriceGroupId">
@@ -310,7 +310,7 @@
         },
         rules: {
           salePriceGroupId: {required: true, message: '请选择销售价格', trigger: 'change'},
-          povList: {required: true, type: 'array', message: '请选择POV', trigger: 'change'},
+          povList: {required: true, type: 'array', message: '请选择接种点', trigger: 'change'},
           povId: {required: true, message: '请选择销售价格', trigger: 'change'}
         },
         prices: [], // 货品列表
@@ -425,7 +425,7 @@
             if (!this.form.povList.length) {
               this.$notify.info({
                 duration: 2000,
-                message: '请先选择POV'
+                message: '请先选择接种点'
               });
               return false;
             }

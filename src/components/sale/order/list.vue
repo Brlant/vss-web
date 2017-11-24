@@ -138,8 +138,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="POV" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row label="接种点" :span="6">
+                <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.transactOrgId" popperClass="good-selects"
                            @click.native.once="filterOrg('')">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
@@ -191,7 +191,7 @@
     <el-row class="order-list-header" :gutter="10">
       <el-col :span="filters.state === '0' ? 5: 6">货主/订单号</el-col>
       <el-col :span="4">业务类型</el-col>
-      <el-col :span="filters.state === '0' ? 5: 6">POV</el-col>
+      <el-col :span="filters.state === '0' ? 5: 6">接种点</el-col>
       <el-col :span="5">时间</el-col>
       <el-col :span="3">状态</el-col>
       <el-col :span="2" class="opera-btn" v-if="filters.state === '0' ">操作</el-col>

@@ -13,7 +13,7 @@ const state = {
   roleList: {},
   attachmentDialog: {attachmentId: 0, open: false},
   form: {},
-  bodySize: {left: '180px'},
+  bodySize: {left: '200px'},
   orgName: '',
   weChatInfo: {},
   bodyHeight: 0,
@@ -82,7 +82,7 @@ const mutations = {
     Object.assign(state.bodySize, data);
   },
   changeBodyLeft(state, isSmall) {
-    state.bodySize.left = isSmall ? '64px' : '180px';
+    state.bodySize.left = isSmall ? '64px' : '200px';
     window.localStorage.setItem('bodyLeft', state.bodySize.left);
   },
   initOrgName (state, data) {
