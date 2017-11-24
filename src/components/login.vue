@@ -9,7 +9,7 @@
       <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part-s clearfix">
         <div class="m-logo">疾病预防控制中心疫苗管理系统</div>
-        <div class="e-logo">疾控中心 Vaccine Management System</div>
+        <div class="e-logo">CDC Vaccine Management System</div>
       </div>
       <el-card class="box-card ">
         <div style="padding:0 20px">
