@@ -56,7 +56,7 @@
   </el-form>
 </template>
 <script>
-  import { Access } from '../../../../resources';
+  import { System } from '../../../../resources';
 
   export default {
     props: {
@@ -275,8 +275,8 @@
 
           this.form.permissionList = rolelist;
           if (this.action === 'add') {
-            this.form.objectId = 'wms-system';
-            Access.save(this.form).then(() => {
+            this.form.objectId = 'cerp-system';
+            System.save(this.form).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
@@ -292,7 +292,7 @@
               this.doing = false;
             });
           } else {
-            Access.update(this.form.id, this.form).then(() => {
+            System.update(this.form.id, this.form).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,

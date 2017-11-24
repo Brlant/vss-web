@@ -77,11 +77,11 @@
             <ul class="show-list">
               <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                   :class="{'active':item.id===currentItem.id}">
-                <perm label="access-role-delete">
-                  <oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'
-                              class="hover-show"><i
-                    class="el-icon-t-delete"></i></oms-remove>
-                </perm>
+                <!--<perm label="access-role-delete">-->
+                  <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'-->
+                              <!--class="hover-show"><i-->
+                    <!--class="el-icon-t-delete"></i></oms-remove>-->
+                <!--</perm>-->
                 <div class="id-part">
                   {{item.name }}
                 </div>
@@ -117,9 +117,9 @@
                      <i class="el-icon-t-start"></i>启用
                    </el-button>
                  </perm>
-                <perm label="access-role-delete">
-                   <el-button @click="remove()"><i class="el-icon-t-delete"></i>删除</el-button>
-                </perm>
+                <!--<perm label="access-role-delete">-->
+                   <!--<el-button @click="remove()"><i class="el-icon-t-delete"></i>删除</el-button>-->
+                <!--</perm>-->
                 </el-button-group>
               </span>
             </h2>
@@ -186,7 +186,7 @@
   </div>
 </template>
 <script>
-  import { Access } from '../../../resources';
+  import { System } from '../../../resources';
   import roleForm from './form/form.vue';
 
   export default {
@@ -239,7 +239,7 @@
           deleteFlag: false,
           objectId: 'cerp-system'
         }, this.filters);
-        Access.querySystemAccess(param).then(res => {
+        System.querySystemAccess(param).then(res => {
           this.showTypeList = res.data.list;
           this.typeList = res.data.list;
           this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);
@@ -248,7 +248,7 @@
       },
       queryRoleDetail: function (id) {
         if (!id) return;
-        Access.getRoleDetail(id).then(res => {
+        System.getRoleDetail(id).then(res => {
           this.resData = res.data;
         });
       },
@@ -286,7 +286,7 @@
         }).then(() => {
           let itemTemp = JSON.parse(JSON.stringify(this.resData));
           itemTemp.usableStatus = 0;
-          Access.update(itemTemp.id, itemTemp).then(() => {
+          System.update(itemTemp.id, itemTemp).then(() => {
             this.resData.usableStatus = 0;
             this.getPageList();
             this.$notify.success({
@@ -304,7 +304,7 @@
         }).then(() => {
           let itemTemp = JSON.parse(JSON.stringify(this.resData));
           itemTemp.usableStatus = 1;
-          Access.update(itemTemp.id, itemTemp).then(() => {
+          System.update(itemTemp.id, itemTemp).then(() => {
             this.resData.usableStatus = 1;
             this.getPageList();
             this.$notify.success({
@@ -320,7 +320,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          Access.delete(this.resData.id).then(() => {
+          System.delete(this.resData.id).then(() => {
             this.getPageList();
             this.$notify.success({
               title: '成功',
@@ -330,7 +330,7 @@
         });
       },
       removeType: function (item) {
-        Access.delete(item.id).then(() => {
+        System.delete(item.id).then(() => {
           this.getPageList();
           this.$notify.success({
             title: '成功',
