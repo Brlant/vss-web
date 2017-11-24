@@ -232,6 +232,8 @@
 
   .invoice-list {
     margin-left: 30px;
+    max-height: 300px;
+    overflow: auto;
     .show-item {
       border-bottom: 1px solid #f1f1f1;
       line-height: 20px;
@@ -271,13 +273,13 @@
               ¥ {{form.amount | formatMoney}}
             </el-form-item>
             <el-form-item label="付款说明" class="mb0">
-              {{form.explain}}
+              {{form.explain}}if
             </el-form-item>
             <el-form-item label="付款明细" class="mb0">
-              <span v-show="!form.detailList.length">无</span>
+              <span v-if="!form.detailList.length">无</span>
             </el-form-item>
             <ul class="show-list invoice-list"
-                v-show="form.detailList.length">
+                v-if="form.detailList.length">
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
                   <el-col :span="6">货品名称 </el-col>
@@ -340,7 +342,9 @@
     data: function () {
       return {
         loading: false,
-        form: {},
+        form: {
+          detailList: []
+        },
         payableTotalAmount: '',
         practicalTotalAmount: '',
         notTotalAmount: '',
@@ -353,6 +357,9 @@
     computed: {},
     watch: {
       detailId: function (val) {
+        this.form = {
+          detailList: []
+        };
         if (!val) return;
         this.queryDetail(val);
       }

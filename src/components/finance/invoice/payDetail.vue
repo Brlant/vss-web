@@ -57,7 +57,7 @@
       </el-form-item>
     </el-form>
     <div class="product-list-detail">
-      <h3 style="background: #f1f1f1">付款明细(未选择)</h3>
+      <h3 style="background: #f1f1f1">未选明细</h3>
       <table class="table">
         <thead>
         <tr>
@@ -107,7 +107,7 @@
     </div>
     <div class="product-list-detail" v-show="selectPayments.length">
       <h3 style="background: #f1f1f1;overflow: hidden">
-        <span style="float: left">付款明细(已选择)</span>
+        <span style="float: left">已选明细</span>
         <span style="float: right">发票金额：￥{{ amount | formatMoney }}</span>
       </h3>
       <table class="table">

@@ -233,6 +233,8 @@
   .invoice-list {
     margin-left: 30px;
     margin-bottom: 10px;
+    max-height: 300px;
+    overflow: auto;
     .show-item {
       border-bottom: 1px solid #f1f1f1;
       line-height: 20px;
@@ -360,6 +362,9 @@
     computed: {},
     watch: {
       formItem: function (val) {
+        this.form = {
+          detailList: []
+        };
         if (!val.id) return;
         this.queryDetail(val.id);
       }
