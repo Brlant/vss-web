@@ -11,7 +11,7 @@ const state = {
   permissions: [],
   permList: {},
   roleList: {},
-  attachmentDialog: {attachmentId: 0, open: false},
+  attachmentDialog: {attachmentId: 0, open: false, attachmentList: []},
   form: {},
   bodySize: {left: '200px'},
   orgName: '',
@@ -35,7 +35,7 @@ const mutations = {
 
     }
   },
-  initWeChatInfo (state, data) {
+  initWeChatInfo(state, data) {
     try {
       if (typeof data === 'object') {
         window.localStorage.setItem('weChatInfo', JSON.stringify(data));
@@ -66,10 +66,18 @@ const mutations = {
     state.permList = data;
   },
   changeAttachment(state, data) {
-    if (state.attachmentDialog.attachmentId === data) {
+    let currentId;
+    if (typeof data === 'object') {
+      currentId = data.currentId;
+      state.attachmentDialog.attachmentList = data.attachmentList;
+    } else {
+      currentId = data;
+      state.attachmentDialog.attachmentList = [];
+    }
+    if (state.attachmentDialog.attachmentId === currentId) {
       state.attachmentDialog.open = true;
     } else {
-      state.attachmentDialog.attachmentId = data;
+      state.attachmentDialog.attachmentId = currentId;
     }
   },
   openAttachmentDialog(state) {
@@ -85,16 +93,16 @@ const mutations = {
     state.bodySize.left = isSmall ? '64px' : '200px';
     window.localStorage.setItem('bodyLeft', state.bodySize.left);
   },
-  initOrgName (state, data) {
+  initOrgName(state, data) {
     state.orgName = data;
   },
-  setBodyHeight (state, data) {
+  setBodyHeight(state, data) {
     state.bodyHeight = data;
   },
-  initOrgLevel (state, data) {
+  initOrgLevel(state, data) {
     state.orgLevel = data;
   },
-  initPrint (state, data) {
+  initPrint(state, data) {
     data.text = data.text ? data.text : '拼命导出中';
     let isHas = false;
     let index = -1;
