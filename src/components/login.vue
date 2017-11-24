@@ -15,7 +15,7 @@
         <div style="padding:0 20px">
           <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                    @submit.prevent="done" onsubmit="return false">
-            <el-form-item label="组织编号" prop="orgCode">
+            <el-form-item label="系统代码" prop="orgCode">
               <oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>
             </el-form-item>
             <el-form-item label="用户名" prop="username">
@@ -75,7 +75,7 @@
         isFocus: -1,
         rules: {
           orgCode: [
-            {required: true, message: '请输入组织编号', trigger: 'blur'}
+            {required: true, message: '请输入系统代码', trigger: 'blur'}
           ],
           username: [
             {required: true, message: '请输入用户名', trigger: 'blur'}

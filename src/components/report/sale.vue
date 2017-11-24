@@ -71,6 +71,39 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row label="货主货品" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+                           :clearable="true"
+                           v-model="searchWord.orgGoodsId" popper-class="good-selects"
+                           @click.native.once="filterOrgGoods('')">
+                  <el-option :value="org.id" :key="org.id" :label="org.goodsName"
+                             v-for="org in orgGoods">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{org.goodsName}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.goodsNo">货品编号</span>  {{org.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.saleFirmName">供货厂商</span>  {{ org.saleFirmName }}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="批号" :span="5">
+                <el-select v-model="searchWord.batchNumberId" filterable clearable remote
+                           :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号"
+                           @click.native.once="filterBatchNumber('')">
+                  <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
+                             :label="item.batchNumber"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="1">
                 <perm label="sale-detail-form-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
@@ -105,7 +138,7 @@
   </div>
 </template>
 <script>
-  import { cerpAction } from '@/resources';
+  import { cerpAction, http } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -118,9 +151,13 @@
           suppliers: '',
           orderNo: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          batchNumberId: '',
+          orgGoodsId: ''
         },
         orgList: [],
+        orgGoods: [],
+        batchNumberList: [],
         bizDateAry: '',
         isLoading: false
       };
@@ -166,7 +203,9 @@
           suppliers: '',
           orderNo: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          batchNumberId: '',
+          orgGoodsId: ''
         };
         this.bizDateAry = '';
       },
@@ -176,6 +215,22 @@
         });
         cerpAction.queryAllPov(params).then(res => {
           this.orgList = res.data.list;
+        });
+      },
+      filterBatchNumber (query) {
+        this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
+          this.batchNumberList = res.data.list;
+        });
+      },
+      filterOrgGoods (query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        let params = Object.assign({}, {
+          deleteFlag: false,
+          orgId: orgId,
+          keyWord: query
+        });
+        http.get('/erp-stock/goods', {params}).then(res => {
+          this.orgGoods = res.data.list;
         });
       },
       formatTime: function (date) {

@@ -97,6 +97,12 @@
     },
     methods: {
       exportFile: function () {
+        if (!this.bizDateAry || !this.bizDateAry.length) {
+          this.$notify.info({
+            message: '请选择业务日期'
+          });
+          return;
+        }
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
@@ -115,6 +121,12 @@
         });
       },
       search: function () {// 搜索
+        if (!this.bizDateAry || !this.bizDateAry.length) {
+          this.$notify.info({
+            message: '请选择业务日期'
+          });
+          return;
+        }
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);

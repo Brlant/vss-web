@@ -190,11 +190,7 @@
     },
     filters: {
       formatRole: function (list) {
-        let value = '';
-        if (list.length > 0) {
-          value = list[0].title;
-        }
-        return value;
+        return list.map(m => m.title).join('，');
       }
     },
     computed: {
@@ -330,21 +326,8 @@
         this.currentItem = item;
       },
       itemChange: function (item) {
-        if (this.action === 'add') {
-          this.getPageList(1);
-          this.showRight = false;
-        } else {
-          if (item.adminFlag) {
-            this.getPageList(1);
-            this.showRight = false;
-            return;
-          }
-          let index = this.dataRows.indexOf(this.oldItem);
-          if (index !== -1) {
-            this.dataRows.splice(index, 1, item);
-          }
-          this.showRight = false;
-        }
+        this.getPageList(1);
+        this.showRight = false;
       },
       formatStatus: function (value) {
         if (!value) return '';

@@ -59,7 +59,7 @@
                 <el-input v-model="user.orgCode"></el-input>
               </el-form-item>
               <el-form-item label="账号" prop="account">
-                <el-input v-model="user.account"></el-input>
+                <el-input v-model="user.account" placeholder="手机号/邮箱/用户名"></el-input>
               </el-form-item>
               <el-form-item label="验证码" prop="code">
                 <div style="display:flex">
@@ -77,8 +77,8 @@
                 <el-button type="primary" @click="done" style="width:50%;" native-type="submit" :disabled="loading">
                   {{btnString}}
                 </el-button>
-                <el-button style="width:50%;">
-                  <router-link to="/login" style="display: block">返回登录</router-link>
+                <el-button style="width:50%;" @click="$router.push('/login')">
+                  返回登录
                 </el-button>
               </el-button-group>
             </el-form>
@@ -142,6 +142,9 @@
         showCode: false,
         btnString: '提交',
         rules: {
+          orgCode: [
+            {required: true, message: '请输入系统代码', trigger: 'blur'}
+          ],
           account: [
             {required: true, message: '请输入账号'}
           ],
