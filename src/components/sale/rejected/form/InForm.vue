@@ -238,7 +238,7 @@
     <div class="content-part">
       <div class="content-left">
         <h2 class="clearfix right-title" style="padding: 0">
-          {{ defaultIndex === 2 ? '编辑CDC销售退货订单' : '新增CDC销售退货订单'}}</h2>
+          {{ defaultIndex === 2 ? '编辑疾控销售退货订单' : '新增疾控销售退货订单'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -263,7 +263,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="接种点" prop="supplierId">
-              <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier" popper-class="good-selects">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                            v-for="org in orgList">
@@ -569,7 +569,7 @@
             {validator: checkOrderNumber}
           ],
           supplierId: [
-            {required: true, message: '请选择POV', trigger: 'change'}
+            {required: true, message: '请选择接种点', trigger: 'change'}
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
@@ -722,7 +722,7 @@
         if (this.product.amount > this.amount) {
           this.$notify.warning({
             duration: 2000,
-            message: '输入的产品数量大于POV的库存数量'
+            message: '输入的产品数量大于接种点的库存数量'
           });
         }
       },

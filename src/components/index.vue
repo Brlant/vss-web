@@ -105,7 +105,7 @@
     <print-dialog></print-dialog>
 
     <div class="cdc-shade" v-if="isPermission">
-      <el-button class="btn" type="primary" @click="queryRoles">我是市CDC</el-button>
+      <el-button class="btn" type="primary" @click="queryRoles">我是市疾控</el-button>
     </div>
   </div>
 
@@ -193,7 +193,7 @@
         }).catch((error) => {
           this.loading = true;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '绑定市CDC出错'
+            message: error.response.data && error.response.data.msg || '绑定市疾控出错'
           });
         });
       },

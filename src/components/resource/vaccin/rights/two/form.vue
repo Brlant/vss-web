@@ -253,11 +253,11 @@
                   key: 'subordinateId',
                   label: 'subordinateName'
                 }"
-                           filter-placeholder="请输入名称搜索POV"
+                           filter-placeholder="请输入名称搜索接种点"
                            :data="orgList"
                            filterable
                            :filter-method="filterMethod"
-                           :titles="['未选POV', '已选POV']"
+                           :titles="['未选接种点', '已选接种点']"
                            class="transfer-list"
               >
               </el-transfer>
@@ -310,7 +310,7 @@
         },
         rules: {
           salePriceGroupId: {required: true, message: '请选择销售价格', trigger: 'change'},
-          povList: {required: true, type: 'array', message: '请选择POV', trigger: 'change'},
+          povList: {required: true, type: 'array', message: '请选择接种点', trigger: 'change'},
           povId: {required: true, message: '请选择销售价格', trigger: 'change'}
         },
         prices: [], // 货品列表
@@ -425,7 +425,7 @@
             if (!this.form.povList.length) {
               this.$notify.info({
                 duration: 2000,
-                message: '请先选择POV'
+                message: '请先选择接种点'
               });
               return false;
             }

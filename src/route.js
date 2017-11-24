@@ -44,17 +44,17 @@ const route = [
           // {
           //   path: '/purchase/pov',
           //   component: resolve => require(['./components/common/parent-route.vue'], resolve),
-          //   meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'demand-assignment'},
+          //   meta: {moduleId: 'purchase', title: '接种点要货需求分配', perm: 'demand-assignment'},
           //   children: [
           //     {
           //       path: '',
           //       component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
-          //       meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'demand-assignment-query'}
+          //       meta: {moduleId: 'purchase', title: '接种点要货需求分配', perm: 'demand-assignment-query'}
           //     },
           //     {
           //       path: '/purchase/pov/allocation',
           //       component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-          //       meta: {moduleId: 'purchase', title: 'POV要货需求分配', perm: 'demand-assignment-update'}
+          //       meta: {moduleId: 'purchase', title: '接种点要货需求分配', perm: 'demand-assignment-update'}
           //     }
           //   ]
           // },
@@ -164,7 +164,7 @@ const route = [
       {
         path: '/pov',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'pov', title: 'POV业务', icon: 'vaccine', perm: 'pov-business'},
+        meta: {moduleId: 'pov', title: '接种点业务', icon: 'vaccine', perm: 'pov-business'},
         children: [
           {
             path: '/pov/request',
@@ -176,16 +176,6 @@ const route = [
             component: resolve => require(['./components/pov/receipt/list.vue'], resolve),
             meta: {moduleId: 'pov', title: '收货订单', perm: 'pov-receipt-manager'}
           }
-          // {
-          //   path: '/pov/store',
-          //   component: resolve => require(['./components/pov/store/list.vue'], resolve),
-          //   meta: {moduleId: 'pov', title: 'POV库存管理', perm: 'pov-stock-manage'}
-          // },
-          // {
-          //   path: '/pov/scan',
-          //   component: resolve => require(['./components/pov/scan/list.vue'], resolve),
-          //   meta: {moduleId: 'pov', title: 'POV注射扫码', perm: 'pov-injection-scan'}
-          // }
         ]
       },
       {
@@ -282,17 +272,17 @@ const route = [
           {
             path: '/account/cdc',
             component: resolve => require(['./components/account/cdc/county-cdc.vue'], resolve),
-            meta: {moduleId: 'account', title: '管理区CDC', perm: 'erp-bind-cdc'}
+            meta: {moduleId: 'account', title: '管理区疾控', perm: 'erp-bind-cdc'}
           },
           {
             path: '/account/citypov',
             component: resolve => require(['./components/account/pov/city-pov.vue'], resolve),
-            meta: {moduleId: 'account', title: '市CDC绑定POV', perm: 'erp-bind-city-pov'}
+            meta: {moduleId: 'account', title: '市疾控绑定接种点', perm: 'erp-bind-city-pov'}
           },
           {
             path: '/account/pov',
             component: resolve => require(['./components/account/pov/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '区CDC绑定POV', perm: 'erp-bind-pov-manager'}
+            meta: {moduleId: 'account', title: '绑定下属接种点', perm: 'erp-bind-pov-manager'}
           },
           {
             path: '/account/management',
