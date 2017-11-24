@@ -130,7 +130,7 @@
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="疫苗" :span="6">
+              <oms-form-row label="疫苗" :span="4">
                 <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterVaccine"
                            :clearable="true"
                            v-model="searchCondition.goodsId" popper-class="good-selects">
@@ -172,7 +172,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="5">
-              <oms-form-row label="" :span="6">
+              <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchPage">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>

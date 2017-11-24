@@ -15,7 +15,7 @@
   <el-row class="oms-form-row">
     <el-col :span="span" class="text-right col-label"><span v-show="isRequire" class="red"
                                                             style="margin-right: 3px">*</span><span
-      style="padding-right:5px;" v-show="label">{{label}}:</span>
+      style="padding-right:5px;" v-show="label">{{label}}</span>
     </el-col>
     <el-col :span="24-span">
       <slot></slot>

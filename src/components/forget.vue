@@ -103,8 +103,8 @@
           callback(new Error('请输入密码'));
         } else {
           let rl = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
-          if (!rl.test(this.user.password)) {
-            callback('新密码必须包含数字、大写字母,小写字母,至少8-16个字符');
+          if (!rl.test(self.resetUser.password)) {
+            callback('密码必须为8~16个字符，且包含数字、大写字母、小写字母');
           } else {
             if (self.resetUser.password2 !== '') {
               this.$refs.resetForm.validateField('password2');
@@ -130,7 +130,7 @@
             {required: true, message: '请输入短信验证码', trigger: 'blur'}
           ],
           password: [
-            {validator: validatePass, required: true}
+            {validator: validatePass, required: true, trigger: 'blur'}
           ],
           password2: [
             {validator: validatePass2, required: true, trigger: 'blur'}

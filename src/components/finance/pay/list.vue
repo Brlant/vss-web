@@ -65,6 +65,12 @@
   .order-list-status .status-item.active, .order-list-status .status-item:hover {
     height: 40px;
   }
+
+  .payForm {
+    .el-form-item {
+      margin-bottom: 10px;
+    }
+  }
 </style>
 <template>
   <div>
@@ -143,7 +149,7 @@
               </el-row>
             </div>
             <div>
-              <el-form ref="payForm" :inline="true" onsubmit="return false">
+              <el-form class="payForm" ref="payForm" :inline="true" onsubmit="return false">
                 <el-form-item label="货品名称">
                   <oms-input v-model="searchCondition.goodsName"></oms-input>
                 </el-form-item>
@@ -156,7 +162,7 @@
                 </el-form-item>
                 <el-form-item>
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
-                  <!--<el-button native-type="reset" @click="resetSearchForm">重置</el-button>-->
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 </el-form-item>
               </el-form>
               <!--<span class="pull-right" style="margin-top: 8px">-->

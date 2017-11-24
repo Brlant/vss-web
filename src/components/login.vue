@@ -9,7 +9,7 @@
       <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part-s clearfix">
         <div class="m-logo">疾病预防控制中心疫苗管理系统</div>
-        <div class="e-logo">疾控中心 Vaccine Management System</div>
+        <div class="e-logo">CDC Vaccine Management System</div>
       </div>
       <el-card class="box-card ">
         <div style="padding:0 20px">
@@ -19,10 +19,11 @@
               <oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>
             </el-form-item>
             <el-form-item label="用户名" prop="username">
-              <oms-input v-model="user.username" :showFocus="isFocus === 2"></oms-input>
+              <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"></oms-input>
             </el-form-item>
             <el-form-item label="密码" style="position:relative" prop="password">
-              <oms-input v-model="user.password" :showFocus="isFocus === 3" type="password"></oms-input>
+              <oms-input v-model="user.password" :showFocus="isFocus === 3" type="password"
+                         placeholder="请输入密码"></oms-input>
               <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>
             </el-form-item>
             <el-form-item label="验证码" v-show="showCode">

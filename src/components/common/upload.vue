@@ -2,7 +2,7 @@
   <div>
     <upload-list :list-type="type" :files=uploadingFiles v-if="!showFileList"
                  style="padding-bottom:10px;" @remove="cancelUpload"></upload-list>
-    <el-upload
+    <oms-el-upload
       class="upload-demo"
       ref="upload"
       name="file"
@@ -18,10 +18,11 @@
       :show-file-list="showFileList"
       :multiple="multiple"
       :on-progress="showProgress"
-      :data="uploadData">
+      :data="uploadData"
+      :formData="formData">
       <el-button slot="trigger" size="small" type="primary">选取文件</el-button>
       <!--<div slot="tip" class="el-upload__tip">只能上传jpg/png文件，且不超过500kb</div>-->
-    </el-upload>
+    </oms-el-upload>
 
   </div>
 </template>
@@ -29,10 +30,14 @@
 <script>
   import {http, OmsAttachment} from '../../resources';
   import UploadList from '@/components/common/upload.file.list.vue';
+  import OmsElUpload from './upload/src/index.vue';
 
   export default {
     name: 'omsUpload',
-    components: {UploadList},
+    components: {
+      OmsElUpload,
+      UploadList
+    },
     props: {
       fileList: {
         type: Array,
@@ -51,6 +56,9 @@
       multiple: {
         type: Boolean,
         default: true
+      },
+      formData: {
+        type: Object
       }
     },
 
@@ -61,9 +69,11 @@
         dialogVisible: false,
         uploadData: {},
         uploadUrl: '/omsAttachment',
-        uploadingFiles: []
+        uploadingFiles: [],
+        currentList: []
       };
     },
+
     watch: {
       fileList: function (val) {
         val.forEach(file => {
@@ -78,9 +88,11 @@
       changeFile: function (file, fileList) {
         if (file.response) {
           file.attachmentId = file.response.attachmentId;
-          file.attachmentFileName = file.response.fileName;
+          file.name = file.attachmentFileName = file.response.original;
+          file.url = file.attachmentStoragePath = file.response.url;
         }
         this.$emit('change', fileList);
+        this.fileLists = fileList;
       },
       submitUpload() {
         this.$refs.upload.submit();
@@ -102,9 +114,10 @@
           });
         });
         this.$emit('change', fileList);
+        this.fileLists = fileList;
       },
       handlePreview(file) {
-        this.$store.commit('changeAttachment', file.attachmentId);
+        this.$store.commit('changeAttachment', {currentId: file.attachmentId, attachmentList: this.fileLists});
       },
       beforeAvatarUpload(file) {
         const isLt10M = file.size / 1024 / 1024 < 10;
@@ -115,20 +128,21 @@
           });
           return false;
         }
-        let data = {objectId: '', objectType: '', fileName: file.name};
-        return http.post('/qingstor/pre', data).then(res => {
-          this.uploadUrl = res.data.apiUrl;
-          this.uploadData = {
-            policy: res.data.policy,
-            access_key_id: res.data.accessKeyId,
-            signature: res.data.signature,
-            key: res.data.key,
-            redirect: res.data.redirect
-          };
-          this.uploadingFiles.push(file);
-        });
+        // 如果上传的是图片类型文件，则进行过滤
+        if (this.type === 'picture') {
+          if (file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png') {
+
+          } else {
+            this.$notify.error({
+              duration: 2000,
+              message: '请上传文件格式为JPG/JPEG/PNG的图片!'
+            });
+            return false;
+          }
+        }
+        this.uploadingFiles.push(file);
       },
-      success(response, file) {
+      success(response, file, fileList) {
         this.uploadingFiles = this.uploadingFiles.filter(item => item.uid !== file.uid);
         if (response) {
           this.$notify.success({
@@ -148,7 +162,7 @@
           message: '上传附件失败' + err
         });
       },
-      showProgress(event, file) {
+      showProgress(event, file, fileList) {
         let index = -1;
         for (let i = 0, len = this.uploadingFiles.length; i < len; i++) {
           if (file.uid === this.uploadingFiles[i].uid) {
@@ -164,6 +178,5 @@
         this.uploadingFiles = this.uploadingFiles.filter(item => item.uid !== file.uid);
       }
     }
-
   };
 </script>

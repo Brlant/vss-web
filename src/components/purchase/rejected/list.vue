@@ -156,7 +156,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="预计出库时间" :span="8">
+              <oms-form-row label="预计出库时间" :span="7">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"

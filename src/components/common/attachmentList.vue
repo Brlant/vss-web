@@ -14,7 +14,7 @@
   }
 </style>
 <template>
-  <ul class="show-list" v-if="attachmentList.length!==0">
+  <ul class="show-list">
     <li class="list-item" v-for="attachment in attachmentList" @click="handlePreview(attachment)">
       {{attachment.attachmentFileName}}
       <perm :label="perm">
@@ -25,9 +25,6 @@
       </perm>
     </li>
   </ul>
-  <div v-else="" style="padding-left: 20px">
-    <span>无附件</span>
-  </div>
 </template>
 <script>
   import {OmsAttachment} from '../../resources';
@@ -67,7 +64,7 @@
         });
       },
       handlePreview(file) {
-        this.$store.commit('changeAttachment', file.attachmentId);
+        this.$store.commit('changeAttachment', {currentId: file.attachmentId, attachmentList: this.attachmentList});
       }
     },
     mounted() {
