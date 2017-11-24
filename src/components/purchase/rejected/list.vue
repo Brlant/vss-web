@@ -188,7 +188,7 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="filters.state === '0' ? 5: 7">货主/订单号</el-col>
+          <el-col :span="filters.state === '0' ? 5: 6">货主/订单号</el-col>
           <el-col :span="filters.state === '0' ? 3: 5">业务类型</el-col>
           <el-col :span="5">供货厂商</el-col>
           <el-col :span="5">时间</el-col>
@@ -211,7 +211,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.state === '0' ? 5: 7">
+              <el-col :span="filters.state === '0' ? 5: 6">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
