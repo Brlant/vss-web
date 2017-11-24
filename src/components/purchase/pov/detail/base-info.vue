@@ -84,7 +84,6 @@
     <table class="table table-hover" style="margin-top: 10px">
       <thead>
       <tr>
-        <th>要货申请ID</th>
         <th>货品名称</th>
         <th>单价</th>
         <th>申请数量</th>
@@ -94,9 +93,7 @@
       </thead>
       <tbody>
       <tr v-for="row in currentOrder.detailDtoList">
-        <td>
-          {{row.id}}
-        </td>
+
         <td>
           {{row.goodsName}}
         </td>

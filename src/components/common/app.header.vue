@@ -224,8 +224,10 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>-->
-            <el-tag type="gray" v-show="level">{{ filterLevel(level) }}</el-tag>
-            <span class="org-title">{{orgName}}</span>
+            <span v-show="level !== 1">
+              <el-tag type="gray" v-show="level">{{ filterLevel(level) }}</el-tag>
+              <span class="org-title">{{orgName}}</span>
+            </span>
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
                 <img v-if="user.userIcon" :src="user.userIcon">
