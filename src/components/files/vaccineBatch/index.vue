@@ -274,7 +274,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filters);
-        this.$http.get('/erp-batch', {params}).then(res => {
+        this.$http.get('/batch-number/pager', {params}).then(res => {
           this.batches = res.data.list;
           this.loadingData = false;
           this.pager.count = res.data.count;
