@@ -249,8 +249,8 @@
               <el-transfer v-loading="loading"
                            v-model="form.povList"
                            :props="{
-                  key: 'subordinateId',
-                  label: 'subordinateName'
+                  key: 'followOrgId',
+                  label: 'followOrgName'
                 }"
                            filter-placeholder="请输入名称搜索接种点"
                            :data="orgList"
@@ -306,8 +306,8 @@
         if (val.id) {
           this.title = '编辑疫苗授权';
           this.orgList.push({
-            subordinateId: val.povId,
-            subordinateName: val.povName
+            followOrgId: val.povId,
+            followOrgName: val.povName
           });
           this.prices.push({
             id: val.salePriceGroupId,
@@ -330,17 +330,16 @@
     methods: {
       filterPOV: function (query) {// 过滤POV
         let params = Object.assign({}, {
-          keyWord: query,
-          pageSize: -1
+          keyWord: query
         });
         this.loading = true;
-        cerpAction.queryAllPov(params).then(res => {
+        this.$http.get('erp-org/customer', {params}).then(res => {
           this.orgList = res.data;
           this.loading = false;
         });
       },
       filterMethod (query, item) {
-        return item.subordinateName.indexOf(query) > -1;
+        return item.followOrgName && item.followOrgName.indexOf(query) > -1;
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {
