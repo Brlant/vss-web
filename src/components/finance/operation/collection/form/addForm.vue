@@ -370,6 +370,19 @@
           });
         },
         deep: true
+      },
+      defaultIndex (val) {
+        this.form = {
+          type: '1',
+          payType: '',
+          orgId: '',
+          explain: '',
+          amount: '',
+          billPayType: '',
+          accountsPayableId: '',
+          relationList: []
+        };
+        this.$refs['addForm'].resetFields();
       }
     },
     mounted: function () {

@@ -295,6 +295,11 @@ const route = [
             meta: {moduleId: 'account', title: '角色管理', perm: 'access-role-manager'}
           },
           {
+            path: '/account/system',
+            component: resolve => require(['./components/account/system/list.vue'], resolve),
+            meta: {moduleId: 'account', title: '系统角色管理', perm: 'access-role-watch'}
+          },
+          {
             path: '/account/user',
             component: resolve => require(['./components/account/user/list.vue'], resolve),
             meta: {moduleId: 'account', title: '用户管理', perm: 'erp-user-manager'}

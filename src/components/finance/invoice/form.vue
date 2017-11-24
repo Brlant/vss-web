@@ -314,14 +314,14 @@
           factoryId: {required: true, message: '请选择疫苗厂商', trigger: 'change'},
           invoiceNumber: {required: true, message: '请输入发票号码', trigger: 'blur'},
           type: {required: true, message: '请选择发票类型', trigger: 'change'},
-          amount: {required: true, message: '请选择付款明细，自动计算发票金额', trigger: 'blur'}
+          amount: {required: true, message: '请选择发票明细，自动计算发票金额', trigger: 'blur'}
         },
         doing: false,
         title: '添加发票',
         orgList: [],
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '关联发票明细', key: 1}
+          {name: '发票明细', key: 1}
         ],
         index: 0,
         selectPayments: []
