@@ -249,13 +249,13 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="疾控中心" prop="cdcId">
-              <el-select placeholder="请选择CDC" v-model="form.cdcId" clearable>
+              <el-select placeholder="请选择疾控" v-model="form.cdcId" clearable>
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="POV仓库" prop="warehouseId">
-              <el-select placeholder="请选择POV仓库" v-model="form.warehouseId" filterable clearable>
+            <el-form-item label="接种点仓库" prop="warehouseId">
+              <el-select placeholder="请选择接种点仓库" v-model="form.warehouseId" filterable clearable>
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
                 </el-option>
               </el-select>
@@ -449,13 +449,13 @@
         },
         rules: {
           warehouseId: [
-            {required: true, message: '请选择POV仓库', trigger: 'change'}
+            {required: true, message: '请选择接种点仓库', trigger: 'change'}
           ],
           type: [
             {required: true, type: 'number', message: '请选择疫苗标志', trigger: 'change'}
           ],
           cdcId: [
-            {required: true, message: '请选择CDC', trigger: 'change'}
+            {required: true, message: '请选择疾控', trigger: 'change'}
           ],
           demandTime: [
             {required: true, message: '请选择需求时间', trigger: 'change'}

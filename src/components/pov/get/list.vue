@@ -42,7 +42,7 @@
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-            POV列表
+            接种点列表
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -69,7 +69,7 @@
         <div class="d-table-col-wrap">
           <div class="pov-info">
             <el-row class="clearfix font-bold" style="font-weight: 500;font-size: 14px">
-              <el-col :span="2" >POV名称:</el-col>
+              <el-col :span="2">接种点名称:</el-col>
               <el-col :span="10"> {{ orgName }}</el-col>
             </el-row>
           </div>

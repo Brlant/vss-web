@@ -265,7 +265,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="接种点" prop="customerId">
-              <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterPOV" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
                            v-for="org in orgList">
@@ -280,9 +280,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="POV仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
+            <el-form-item label="接种点仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
                           v-show="showContent.isShowOtherContent" :clearable="true">
-              <el-select placeholder="请选择POV仓库" v-model="form.transportationAddress" filterable clearable
+              <el-select placeholder="请选择接种点仓库" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress" :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -619,7 +619,7 @@
             {required: true, message: '请选择货主', trigger: 'change'}
           ],
           customerId: [
-            {required: true, message: '请选择POV', trigger: 'change'}
+            {required: true, message: '请选择接种点', trigger: 'change'}
           ],
           bizType: [
             {required: true, message: '请选择业务类型', trigger: 'change'}
@@ -628,7 +628,7 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择POV仓库', trigger: 'change'}
+            {required: true, message: '请选择接种点仓库', trigger: 'change'}
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
@@ -684,7 +684,7 @@
           isShowCustomerId: true, // 是否显示POV
           expectedTimeLabel: '预计出库时间'
         },
-        warehouses: [], // POV仓库列表
+        warehouses: [], // 接种点仓库列表
         batchNumbers: [], // 货品批号列表
         selectBatchNumbers: [], // 已经选择的货品批号
         changeTotalNumber: utils.changeTotalNumber,

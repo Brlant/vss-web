@@ -60,7 +60,7 @@
           <oms-row label="需求时间">
             {{currentOrder.demandTime | date}}
           </oms-row>
-          <oms-row label="POV仓库">
+          <oms-row label="接种点仓库">
             {{currentOrder.warehouseName}}
           </oms-row>
         </el-col>
@@ -74,7 +74,7 @@
           <oms-row label="审批时间">
             {{currentOrder.auditTime | date}}
           </oms-row>
-          <oms-row label="关联CDC销售订单">
+          <oms-row label="关联疾控销售订单">
             {{currentOrder.orderNo}}
           </oms-row>
         </el-col>
@@ -84,7 +84,6 @@
     <table class="table table-hover" style="margin-top: 10px">
       <thead>
       <tr>
-        <th>要货申请ID</th>
         <th>货品名称</th>
         <th>单价</th>
         <th>申请数量</th>
@@ -94,9 +93,7 @@
       </thead>
       <tbody>
       <tr v-for="row in currentOrder.detailDtoList">
-        <td>
-          {{row.id}}
-        </td>
+
         <td>
           {{row.goodsName}}
         </td>

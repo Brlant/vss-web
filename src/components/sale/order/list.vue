@@ -122,7 +122,7 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="货主订单号" :span="6">
@@ -139,7 +139,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="接种点" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.transactOrgId" popperClass="good-selects"
                            @click.native.once="filterOrg('')">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"

@@ -122,7 +122,7 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="货主订单号" :span="6">
@@ -427,7 +427,7 @@
         this.defaultIndex = 0;
         this.action = '';
         // this.getOrderList(this.pager.currentPage);
-        this.$router.push('/purchase/allotment/list');
+        this.$router.push('/store/allotment/list');
       },
       add: function () {
         this.showItemRight = true;
@@ -550,7 +550,7 @@
         this.currentOrderId = order.id;
         this.state = order.state;
         this.showDetail = true;
-        this.$router.push(`/purchase/allotment/${order.id}`);
+        this.$router.push(`/store/allotment/${order.id}`);
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

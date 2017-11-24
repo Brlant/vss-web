@@ -97,7 +97,7 @@
                   </a>
                 </perm>
               </span>
-              疫苗销售价格组
+              二类苗销售价格组
             </h2>
             <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -168,7 +168,7 @@
             <div style="overflow: hidden;margin-bottom: 5px">
               <!--<el-row>-->
               <!--<el-col :span="12" class="search-input" style="padding-right: 10px">-->
-              <!--<el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterPOV" :clearable="true"-->
+              <!--<el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV" :clearable="true"-->
               <!--v-model="povId" @click.native="filterPOV('')">-->
               <!--<el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"-->
               <!--v-for="org in showOrgList">-->
@@ -177,7 +177,7 @@
               <!--</el-col>-->
               <!--<el-col :span="3">-->
               <!--<perm label="sale-price-group-pov-bind">-->
-              <!--<el-button type="primary" @click="bindPov">绑定POV</el-button>-->
+              <!--<el-button type="primary" @click="bindPov">绑定接种点</el-button>-->
               <!--</perm>-->
               <!--</el-col>-->
               <!--<el-col :span="24">-->
@@ -186,7 +186,7 @@
               <!--</el-row>-->
               <span class="pull-right">
                      <span class="btn-search-toggle open" v-show="showSearch">
-                        <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入POV名称搜索"
+                        <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入接种点名称搜索"
                                       :showFocus="showSearch"></single-input>
                         <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
                      </span>
@@ -406,36 +406,36 @@
         };
         if (!this.povId) {
           this.$notify.info({
-            message: '请选择POV'
+            message: '请选择接种点'
           });
           return;
         }
         BriceGroupPov.save(form).then(() => {
           this.$notify.success({
-            message: '绑定POV成功'
+            message: '绑定接种点成功'
           });
           this.povId = '';
           this.getDetail(1);
         }).catch(error => {
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '绑定POV失败'
+            message: error.response.data && error.response.data.msg || '绑定接种点失败'
           });
         });
       },
       removePov (item) {
-        this.$confirm('是否删除POV"' + item.povName + '"?', '', {
+        this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           BriceGroupPov.delete(item.id).then(res => {
             this.$notify.success({
-              message: `删除POV${item.povName}成功`
+              message: `删除接种点${item.povName}成功`
             });
             this.getDetail(1);
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || `删除POV${item.povName}失败`
+              message: error.response.data && error.response.data.msg || `删除接种点${item.povName}失败`
             });
           });
         });

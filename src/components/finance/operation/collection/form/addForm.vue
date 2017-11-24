@@ -242,7 +242,7 @@
           <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
             <el-form-item label="接种点" prop="orgId">
-              <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
+              <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" popper-class="good-selects" @change="setAccountsPayableId"
                          @click.native.once="filterOrg('')">
                 <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
@@ -309,17 +309,6 @@
       payDetail
     },
     data: function () {
-      let checkAmount = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入金额,最多保留两位小数'));
-        } else {
-          if (this.form.amount > this.notTotalAmount) {
-            callback(new Error('输入的金额必须小于等于未收款总金额'));
-          } else {
-            callback();
-          }
-        }
-      };
       return {
         loading: false,
         form: {
@@ -343,11 +332,10 @@
             {required: true, message: '请选择收款方式', trigger: 'change'}
           ],
           orgId: [
-            {required: true, message: '请选择POV', trigger: 'change'}
+            {required: true, message: '请选择接种点', trigger: 'change'}
           ],
           amount: [
-            {required: true, message: '请输入金额', trigger: 'blur'},
-            {validator: checkAmount, trigger: 'blur'}
+            {required: true, message: '请选择付款明细，自动计算总额', trigger: 'blur'}
           ]
         },
         orgList: [],
@@ -382,6 +370,19 @@
           });
         },
         deep: true
+      },
+      defaultIndex (val) {
+        this.form = {
+          type: '1',
+          payType: '',
+          orgId: '',
+          explain: '',
+          amount: '',
+          billPayType: '',
+          accountsPayableId: '',
+          relationList: []
+        };
+        this.$refs['addForm'].resetFields();
       }
     },
     mounted: function () {

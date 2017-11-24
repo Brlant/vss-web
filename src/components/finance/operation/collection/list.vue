@@ -139,7 +139,7 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="付款单据编号" :span="7">
@@ -148,7 +148,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="收款单位" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.orgId" popper-class="good-selects"
                            @click.native.once="filterOrg('')">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
@@ -207,7 +207,8 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in billList"
-               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]">
+               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]"
+               @click.stop="audit(item)">
             <el-row>
               <el-col :span="5">
                 <div>
@@ -248,12 +249,12 @@
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'750px','padding':0}"
+    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
       <audit-form :formItem="billInfo" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form @change="onSubmit" @right-close="resetRightBox"></add-form>
+    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
+      <add-form @change="onSubmit" @right-close="resetRightBox" :defaultIndex="defaultIndex"></add-form>
     </page-right>
   </div>
 </template>
@@ -293,7 +294,8 @@
           count: 0,
           pageSize: 20
         },
-        billInfo: {}
+        billInfo: {},
+        defaultIndex: -1
       };
     },
     mounted() {
@@ -352,6 +354,7 @@
         this.showAllotmentRight = false;
         this.action = '';
         this.billInfo = {};
+        this.defaultIndex = -1;
       },
       add: function () {
         this.showItemRight = true;

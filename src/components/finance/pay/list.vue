@@ -45,10 +45,37 @@
   .el-form--inline .el-form-item {
     margin-right: 0;
   }
+
+  .order-list-status .status-item {
+    cursor: default;
+  }
+
+  .status-item {
+    width: 160px;
+    .title {
+      text-align: center;
+    }
+    > div span.status-num {
+      display: block;
+      text-align: center;
+      font-size: 18px;
+    }
+  }
+
+  .order-list-status .status-item.active, .order-list-status .status-item:hover {
+    height: 40px;
+  }
 </style>
 <template>
   <div>
     <div class="container">
+      <div class="order-list-status container" style="margin-bottom:20px">
+        <div class="status-item active"
+             v-for="(item,key) in orgType">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div class="title">{{item.title}}<span class="status-num">￥{{item.num | formatMoney }}</span></div>
+        </div>
+      </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
@@ -108,12 +135,15 @@
                   {{currentItem.remitteeName}}
                 </oms-row>
                 <oms-row label="应付款总额" :span="5">
-                  <span v-show="currentItem.payableTotal">￥{{currentItem.payableTotal | formatMoney}}</span>
+                  <span>￥{{currentItem.payableTotal | formatMoney}}</span>
+                </oms-row>
+                <oms-row label="已付款总额" :span="5">
+                  <span>￥{{(currentItem.paidTotal ? currentItem.paidTotal : 0) | formatMoney}}</span>
                 </oms-row>
               </el-row>
             </div>
             <div>
-              <el-form ref="payForm" :inline="true">
+              <el-form ref="payForm" :inline="true" onsubmit="return false">
                 <el-form-item label="货品名称">
                   <oms-input v-model="searchCondition.goodsName"></oms-input>
                 </el-form-item>
@@ -271,7 +301,11 @@
         index: 0,
         orderId: '',
         currentDetail: {},
-        orgGoods: []
+        orgGoods: [],
+        orgType: {
+          0: {title: '应付总额', num: ''},
+          1: {title: '已付总额', num: ''}
+        }
       };
     },
     computed: {
@@ -284,6 +318,7 @@
     },
     mounted () {
       this.getOrgsList(1);
+      this.queryTotalMoney();
     },
     watch: {
       filters: {
@@ -346,6 +381,12 @@
           }
           this.typePager.totalPage = res.data.totalPage;
 
+        });
+      },
+      queryTotalMoney () {
+        this.$http.get('/accounts-payable/statistics').then(res => {
+          this.orgType[0].num = res.data['totalMoney'];
+          this.orgType[1].num = res.data['paidMoney'];
         });
       },
       refresh () {

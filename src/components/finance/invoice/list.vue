@@ -96,7 +96,7 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="发票号码" :span="6">
@@ -198,7 +198,7 @@
                   <!--</perm>-->
                   <perm label="payment-payable">
                     <a href="#" @click.prevent.stop="deleteItem(item)"><i
-                      class="iconfont invoice-delete"></i> 删除</a>
+                      class="ele-icon-t-delete"></i> 删除</a>
                   </perm>
                 </div>
               </el-col>

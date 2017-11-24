@@ -41,7 +41,7 @@
 </style>
 <template>
   <div>
-    <el-form ref="payForm" :inline="true">
+    <el-form ref="payForm" :inline="true" onsubmit="return false">
       <el-form-item label="货品名称">
         <oms-input v-model="searchCondition.goodsName"></oms-input>
       </el-form-item>
@@ -57,7 +57,7 @@
       </el-form-item>
     </el-form>
     <div class="product-list-detail">
-      <h3 style="background: #f1f1f1">付款明细(未选择)</h3>
+      <h3 style="background: #f1f1f1">未选明细</h3>
       <table class="table">
         <thead>
         <tr>
@@ -76,8 +76,9 @@
         </tr>
         <tr v-for="product in showPayments">
           <td class="goods-btn" width="30px">
-            <a href="#" @click.prevent="add(product)"><i
-              class="el-icon-t-plus"></i></a>
+            <a href="#" @click.prevent="add(product)">
+              <f-a name="plus"></f-a>
+            </a>
           </td>
           <td>
             <span>{{product.goodsName}}</span>
@@ -106,7 +107,7 @@
     </div>
     <div class="product-list-detail" v-show="selectPayments.length">
       <h3 style="background: #f1f1f1;overflow: hidden">
-        <span style="float: left">付款明细(已选择)</span>
+        <span style="float: left">已选明细</span>
         <span style="float: right">发票金额：￥{{ amount | formatMoney }}</span>
       </h3>
       <table class="table">
@@ -134,9 +135,10 @@
           <td>
             {{product.createTime | minute }}
           </td>
-          <td class="goods-btn">
-            <a href="#" @click.prevent="remove(product)"><i
-              class="el-icon-t-delete"></i> 删除</a>
+          <td class="goods-btn" style="width: 60px">
+            <a href="#" @click.prevent="remove(product)">
+              <f-a name="delete"></f-a>
+              删除</a>
           </td>
         </tr>
         </tbody>
@@ -163,7 +165,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20
+          pageSize: 5
         },
         filterRights: {
           goodsName: '',

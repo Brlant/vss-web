@@ -12,7 +12,7 @@
 </style>
 <template>
   <el-form ref="form" :rules="rules" :model="form" label-width="120px" class="demo-ruleForm">
-    <h2 class="clearfix">{{showTitle}}疫苗采购协议</h2>
+    <h2 class="clearfix">{{showTitle}}区二类疫苗</h2>
     <el-form-item label="疫苗" prop="orgGoodsId" class="search-input">
       <el-select placeholder="请选择疫苗" v-model="form.orgGoodsId" filterable remote :remote-method="getOmsGoods"
                  @click.native="getOmsGoods('')"
@@ -200,28 +200,28 @@
                 this.$notify.success({
                   duration: 2000,
                   name: '成功',
-                  message: '新增疫苗采购协议成功'
+                  message: '新增区二类疫苗成功'
                 });
                 this.doing = false;
                 this.$emit('change', res.data);
                 this.$emit('right-close');
               }).catch(error => {
                 this.$notify.error({
-                  message: error.response.data && error.response.data.msg || '新增疫苗采购协议失败'
+                  message: error.response.data && error.response.data.msg || '新增区二类疫苗失败'
                 });
               });
             } else {
               PurchaseAgreement.update(this.form.id, this.form).then(res => {
                 this.$notify.success({
                   name: '成功',
-                  message: '修改疫苗采购协议信息成功'
+                  message: '修改区二类疫苗信息成功'
                 });
                 this.doing = false;
                 this.$emit('change', res.data);
                 this.$emit('right-close');
               }).catch(error => {
                 this.$notify.error({
-                  message: error.response.data && error.response.data.msg || '修改疫苗采购协议信息失败'
+                  message: error.response.data && error.response.data.msg || '修改区二类疫苗信息失败'
                 });
                 this.doing = false;
               });

@@ -78,7 +78,7 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
             <!--<el-col :span="8">-->
             <!--<oms-form-row label="订单号" :span="6">-->
@@ -86,8 +86,8 @@
             <!--</oms-form-row>-->
             <!--</el-col>-->
             <!--<el-col :span="8">-->
-            <!--<oms-form-row label="CDC货品" :span="6">-->
-            <!--<el-select filterable remote placeholder="请输入名称搜索CDC货品" :remote-method="getGoodsList" :clearable="true"-->
+            <!--<oms-form-row label="疾控货品" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入名称搜索疾控货品" :remote-method="getGoodsList" :clearable="true"-->
             <!--v-model="filters.orgGoodsId" popper-class="good-selects">-->
             <!--<el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"-->
             <!--v-for="item in goodses">-->

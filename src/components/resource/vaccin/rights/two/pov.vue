@@ -54,7 +54,7 @@
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
               class="el-icon-t-search"></i> </a>
           </span>
-            采购协议疫苗列表
+            区二类疫苗目录
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -302,7 +302,7 @@
         this.showRight = false;
       },
       removeVaccine: function (item) {
-        this.$confirm('是否删除POV"' + item.povName + '"?', '', {
+        this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

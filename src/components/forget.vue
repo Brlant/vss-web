@@ -104,7 +104,7 @@
         } else {
           let rl = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
           if (!rl.test(this.user.password)) {
-            callback('新密码必须包含数字、大写字母,小写字母,至少8-16个字符');
+            callback('密码必须为8~16个字符，且包含数字、大写字母、小写字母');
           } else {
             if (self.resetUser.password2 !== '') {
               this.$refs.resetForm.validateField('password2');

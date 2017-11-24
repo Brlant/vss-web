@@ -224,12 +224,14 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>-->
-            <el-tag type="gray" v-show="level">{{ filterLevel(level) }}</el-tag>
-            <span class="org-title">{{orgName}}</span>
+            <span v-show="level !== 1">
+              <el-tag type="gray" v-show="level">{{ filterLevel(level) }}</el-tag>
+              <span class="org-title">{{orgName}}</span>
+            </span>
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
                 <img v-if="user.userIcon" :src="user.userIcon">
-                <img v-else src="/static/img/logo_user_default.png"> {{user.userName}}
+                <img v-else src="/static/img/logo_user_default.png">{{user.userName}}
                 <i class="el-icon-caret-bottom"></i>
               </div>
               <el-dropdown-menu class="top-right-user-dropdown" slot="dropdown">
@@ -288,7 +290,7 @@
         </el-menu>
       </div>
       <div class="change-collapse" @click="changeMenuCollapse">
-        <f-a :name="isCollapse?'collapse':'spread'"></f-a>
+        <f-a :name="isCollapse?'spread':'collapse'"></f-a>
       </div>
     </div>
     <h4 class="position-nav">
@@ -399,7 +401,7 @@
         window.localStorage.setItem('skin', JSON.stringify(skin));
       },
       filterLevel(level) {
-        return level === 1 ? '市CDC' : level === 2 ? '区CDC' : level === 3 ? '接种点' : '';
+        return level === 1 ? '市疾控' : level === 2 ? '区疾控' : level === 3 ? '接种点' : '';
       },
       unbind() {
         this.$confirm('是否解除绑定的微信？', '', {

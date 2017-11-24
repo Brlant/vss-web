@@ -247,7 +247,8 @@
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="疫苗厂商" prop="factoryId">
               <el-select filterable remote placeholder="请输入名称搜索疫苗厂商" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.factoryId" popperClass="good-selects" @change="selectPayments = []">
+                         v-model="form.factoryId" popperClass="good-selects" @change="selectPayments = []"
+                         @click.native.once="filterOrg('')">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -313,14 +314,14 @@
           factoryId: {required: true, message: '请选择疫苗厂商', trigger: 'change'},
           invoiceNumber: {required: true, message: '请输入发票号码', trigger: 'blur'},
           type: {required: true, message: '请选择发票类型', trigger: 'change'},
-          amount: {required: true, message: '请选择付款明细，自动计算发票金额', trigger: 'blur'}
+          amount: {required: true, message: '请选择发票明细，自动计算发票金额', trigger: 'blur'}
         },
         doing: false,
         title: '添加发票',
         orgList: [],
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '关联发票明细', key: 1}
+          {name: '发票明细', key: 1}
         ],
         index: 0,
         selectPayments: []
