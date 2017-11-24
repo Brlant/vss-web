@@ -297,7 +297,7 @@ const route = [
           {
             path: '/account/system',
             component: resolve => require(['./components/account/system/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '系统角色管理', perm: 'access-role-watch'}
+            meta: {moduleId: 'account', title: '系统角色管理', perm: 'erp-system-manager'}
           },
           {
             path: '/account/user',
