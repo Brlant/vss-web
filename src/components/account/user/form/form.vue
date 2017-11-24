@@ -18,7 +18,7 @@
         <oms-input type="text" v-model="form.email" placeholder="请输入邮箱"></oms-input>
       </el-form-item>
       <el-form-item label="用户角色" v-if="!form.adminFlag">
-        <el-select placeholder="请选择用户角色" v-model="roleId" filterable :clearable="true">
+        <el-select placeholder="请选择用户角色" v-model="form.list" multiple filterable clearable>
           <el-option :label="item.title" :value="item.id" :key="item.id" v-for="item in roleSelect"></el-option>
         </el-select>
       </el-form-item>
@@ -91,7 +91,12 @@
       };
       return {
         roleId: '',
-        form: this.formItem,
+        form: {
+          name: '',
+          phone: '',
+          email: '',
+          list: []
+        },
         rules: {
           name: [
             {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -106,6 +111,9 @@
           ],
           roleId: [
             {required: true, message: '请输入用户角色', trigger: 'blur'}
+          ],
+          list: [
+            {required: true, type: 'array', message: '请选择用户角色', trigger: 'blur'}
           ]
         },
         roleSelect: [],
@@ -121,13 +129,17 @@
       this.getRoleSelect();
     },
     watch: {
-      formItem: function () {
-        this.form = this.formItem;// this.formItem;
-        this.roleId = '';
-        if (this.formItem.list.length > 0) {
-          if (this.formItem.list.length) {
-            this.roleId = this.formItem.list[0]['roleId'];
-          }
+      formItem: function (val) {
+        if (val.id) {
+          this.form = this.formItem;
+          this.form.list = this.formItem.list.map(m => m.roleId);
+        } else {
+          this.form = {
+            name: '',
+            phone: '',
+            email: '',
+            list: []
+          };
         }
       },
       showRight: function (val) {
@@ -155,7 +167,11 @@
               title = item.title;
             }
           });
-          self.form.list = [{roleId: this.roleId, title: title}];
+          self.form.list = self.form.list.map(m => {
+            return {
+              roleId: m
+            };
+          });
           self.form.orgId = this.user.userCompanyAddress;
           self.form.objectId = 'cerp-system';
           if (this.action === 'add') {

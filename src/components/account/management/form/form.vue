@@ -18,7 +18,7 @@
         <oms-input type="text" v-model="form.email" placeholder="请输入"></oms-input>
       </el-form-item>
       <el-form-item label="用户角色" v-if="!form.adminFlag">
-        <el-select placeholder="请选择用户角色" v-model="roleId" filterable :clearable="true">
+        <el-select placeholder="请选择用户角色" v-model="form.list" multiple filterable :clearable="true">
           <el-option :label="item.title" :value="item.id" :key="item.id" v-for="item in roleSelect"></el-option>
         </el-select>
       </el-form-item>
@@ -58,7 +58,7 @@
         default: true
       }
     },
-    mounted() {
+    mounted () {
 
     },
     data: function () {
@@ -120,11 +120,17 @@
       };
     },
     watch: {
-      formItem: function () {
-        this.form = this.formItem;
-        this.roleId = '';
-        if (this.formItem.list.length) {
-          this.roleId = this.formItem.list[0]['roleId'];
+      formItem: function (val) {
+        if (val.id) {
+          this.form = this.formItem;
+          this.form.list = this.formItem.list.map(m => m.roleId);
+        } else {
+          this.form = {
+            name: '',
+            phone: '',
+            email: '',
+            list: []
+          };
         }
       },
       'orgId': function () {
@@ -143,7 +149,8 @@
           this.roleSelect = [];
           return;
         }
-        http.get(`/oms/access/orgs/${orgId}/self`).then(res => {
+        let params = {objectId: 'cerp-system'};
+        http.get(`/oms/access/orgs/${orgId}/self`, {params}).then(res => {
           this.roleSelect = res.data.list;
         });
       },
@@ -160,7 +167,11 @@
               title = item.title;
             }
           });
-          self.form.list = [{roleId: this.roleId, title: title}];
+          self.form.list = self.form.list.map(m => {
+            return {
+              roleId: m
+            };
+          });
           self.form.objectId = 'cerp-system';
           if (this.action === 'add') {
             OrgUser.save(self.form).then(() => {
