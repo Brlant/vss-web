@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui/lib/notification';
+import {Notification} from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -131,6 +131,9 @@ export const Access = resource('/oms/access', http, {
   queryERPAccess: (params) => {
     return http.get('/erp-access/orgs/self/', {params});
   },
+  querySystemAccess: (params) => {
+    return http.get('/oms/access/', {params});
+  },
   save: (obj) => {
     return http.post('/erp-access', obj);
   }
@@ -245,10 +248,10 @@ export const erpOrder = resource('/erp-order', http, {
   queryStateNum(params) {
     return http.get('/erp-order/count', {params});
   },
-  updateOrder (orderId, obj) {
+  updateOrder(orderId, obj) {
     return http.put(`/erp-order/${orderId}/detail`, obj);
   },
-  cancel (orderId) {
+  cancel(orderId) {
     return http.put(`/erp-order/${orderId}/cancel`);
   }
 });
@@ -353,10 +356,10 @@ export const Order = resource('/order', http, {
  * @type {the}
  */
 export const invoiceManage = resource('/invoice/', http, {
-  queryCount (params) {
+  queryCount(params) {
     return http.get('/invoice/count', {params});
   },
-  save (obj) {
+  save(obj) {
     return http.post('/invoice/request', obj);
   }
 });
@@ -495,7 +498,7 @@ export const povReceipt = resource('/erp-receipt', http, {
   queryWasks(params) {
     return http.get('/erp-receipt/order', {params});
   },
-  queryWaskGoods (orderId) {
+  queryWaskGoods(orderId) {
     return http.get(`/erp-receipt/order/${orderId}/goods`);
   },
   save(id, obj) {
@@ -520,7 +523,7 @@ export const BillPayable = resource('/bill-payable', http, {
   queryStateNum: (params) => {
     return http.get('/bill-payable/count', {params});
   },
-  save (obj) {
+  save(obj) {
     return http.post('/bill-payable/request', obj);
   }
 });
@@ -542,7 +545,7 @@ export const BillReceivable = resource('/bill-receivable', http, {
   queryStateNum: (params) => {
     return http.get('/bill-receivable/count', {params});
   },
-  save (obj) {
+  save(obj) {
     return http.post('/bill-receivable/request', obj);
   }
 });
@@ -558,7 +561,7 @@ export const pay = resource('/accounts-payable', http, {
   queryDetail(id, params) {
     return http.get(`/accounts-payable/${id}/detail`, {params});
   },
-  queryDetailByfy (id, params) {
+  queryDetailByfy(id, params) {
     return http.get(`/accounts-payable/remittee/${id}/detail`, {params});
   },
   addDetail(id, obj) {
@@ -686,7 +689,7 @@ export const VaccineRights = resource('/vaccine-authorization', http, {
   deleteVaccine(id) {
     return http.put(`/vaccine-authorization/detail/${id}`);
   },
-  batchSave (obj) {
+  batchSave(obj) {
     return http.post('/vaccine-authorization/batch', obj);
   },
   // 查询pov某一类型的疫苗信息
@@ -755,10 +758,10 @@ export const cerpAction = resource('/outbound/count', http, {
   queryOnCDCs() {
     return http.get('/erp-org/superior');
   },
-  queryWeChatInfo () {
+  queryWeChatInfo() {
     return http.get('/erp-org/user/wechat');
   },
-  unBindWeChat () {
+  unBindWeChat() {
     return http.put('/erp-org/unbind/wechat');
   }
 });
