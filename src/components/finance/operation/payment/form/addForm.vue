@@ -321,6 +321,7 @@
   import { http, Address, BaseInfo, pay, BillPayable } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
   import payDetail from './payDetail.vue';
+
   export default {
     name: 'addForm',
     loading: false,
@@ -372,7 +373,7 @@
         doing: false,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '添加付款明细', key: 1}
+          {name: '付款明细', key: 1}
         ],
         index: 0,
         selectPayments: []
@@ -402,6 +403,18 @@
           });
         },
         deep: true
+      },
+      defaultIndex (val) {
+        this.form = {
+          type: '0',
+          payType: '',
+          orgId: '',
+          explain: '',
+          amount: '',
+          billPayType: '1',
+          relationList: []
+        };
+        this.$refs['addForm'].resetFields();
       }
     },
     mounted: function () {

@@ -281,7 +281,7 @@
       <audit-form :detailId="billInfo.id" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
-      <add-form @change="onSubmit" @right-close="resetRightBox"></add-form>
+      <add-form @change="onSubmit" @right-close="resetRightBox" :defaultIndex="defaultIndex"></add-form>
     </page-right>
   </div>
 </template>
@@ -320,7 +320,8 @@
           pageSize: 20
         },
         billInfo: {},
-        orgList: []
+        orgList: [],
+        defaultIndex: -1
       };
     },
     mounted() {
@@ -393,6 +394,7 @@
         this.showAllotmentRight = false;
         this.action = '';
         this.billInfo = {};
+        this.defaultIndex = -1;
       },
       add: function () {
         this.showItemRight = true;
