@@ -64,7 +64,7 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="接种点" :span="6">
+              <oms-form-row label="接种点" :span="4">
                 <el-select placeholder="请输入名称搜索接种点" v-model="searchWord.povId" filterable remote
                            :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
                            popperClass="good-selects">
@@ -83,7 +83,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="需求时间" :span="6">
+              <oms-form-row label="需求时间" :span="5">
                 <el-date-picker
                   type="daterange"
                   v-model="demandTime"
@@ -92,7 +92,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="" :span="6">
+              <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>

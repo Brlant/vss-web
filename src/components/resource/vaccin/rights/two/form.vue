@@ -388,7 +388,7 @@
         });
       },
       filterMethod (query, item) {
-        return item.subordinateName.indexOf(query) > -1;
+        return item.followOrgName && item.subordinateName.indexOf(query) > -1;
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {

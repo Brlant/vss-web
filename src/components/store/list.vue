@@ -64,7 +64,7 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="货主货品" :span="6">
+              <oms-form-row label="货主货品" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
@@ -87,12 +87,12 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="批号" :span="6">
+              <oms-form-row label="批号" :span="5">
                 <el-input v-model="searchWord.keyWord" placeholder="请输入批号"></el-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="生产厂商" :span="6">
+              <oms-form-row label="生产厂商" :span="5">
                 <el-select filterable remote placeholder="请输入名称生产厂商" :remote-method="filterFactory" :clearable="true"
                            v-model="searchWord.factoryId" popperClass="good-selects"
                            @click.native.once="filterFactory('')">
@@ -110,14 +110,14 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="近效期天数" :span="7">
+              <oms-form-row label="近效期天数" :span="6">
                 <oms-input type="number" v-model.number="searchWord.nearTermDays" :min="0" placeholder="请输入近效期天数">
                   <template slot="append">天</template>
                 </oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="" :span="6">
+              <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>

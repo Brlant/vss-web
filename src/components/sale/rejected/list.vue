@@ -138,7 +138,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="接种点" :span="6">
+              <oms-form-row label="接种点" :span="4">
                 <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.transactOrgId" popperClass="good-selects"
                            @click.native.once="filterOrg('')">
@@ -166,7 +166,7 @@
             <!--</oms-form-row>-->
             <!--</el-col>-->
             <el-col :span="8">
-              <oms-form-row label="预计入库时间" :span="8">
+              <oms-form-row label="预计入库时间" :span="7">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
@@ -177,7 +177,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="" :span="6">
+              <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>

@@ -64,7 +64,7 @@
       </div>
       <el-table :data="reportList" class="header-list"
                 :header-row-class-name="'headerClass'" v-loading="loadingData" height="400">
-        <el-table-column prop="goodsName" label="疫苗名称"></el-table-column>
+        <el-table-column prop="goodsName" label="疫苗名称" width="160"></el-table-column>
         <el-table-column prop="restStockCount" label="期前库存"></el-table-column>
         <el-table-column prop="purchaseCount" label="进苗数量"></el-table-column>
         <el-table-column prop="saleCount" label="发苗数量"></el-table-column>
@@ -97,6 +97,12 @@
     },
     methods: {
       exportFile: function () {
+        if (!this.bizDateAry || !this.bizDateAry.length) {
+          this.$notify.info({
+            message: '请选择业务日期'
+          });
+          return;
+        }
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
@@ -115,6 +121,12 @@
         });
       },
       search: function () {// 搜索
+        if (!this.bizDateAry || !this.bizDateAry.length) {
+          this.$notify.info({
+            message: '请选择业务日期'
+          });
+          return;
+        }
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);

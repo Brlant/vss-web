@@ -93,7 +93,7 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="生产企业" :span="6">
+              <oms-form-row label="生产企业" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索生产企业" :remote-method="filterFactory"
                            @click.native.once="filterFactory('')"
                            :clearable="true" v-model="searchWord.orgId" popperClass="good-selects">
@@ -111,7 +111,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="疫苗" :span="6">
+              <oms-form-row label="疫苗" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects"
@@ -139,7 +139,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="" :span="6">
+              <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
