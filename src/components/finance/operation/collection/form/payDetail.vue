@@ -12,9 +12,9 @@
     }
   }
 
-  .ar {
-    text-align: right;
-  }
+  /*.ar {*/
+  /*text-align: right;*/
+  /*}*/
 
   .goods-btn {
     a:hover {
@@ -68,7 +68,7 @@
           <th width="30px">操作</th>
           <th style="width: 240px">货品名称</th>
           <th>订单号</th>
-          <th>应付金额</th>
+          <th>待收金额</th>
           <th>创建时间</th>
         </tr>
         </thead>
@@ -90,9 +90,8 @@
           <td>
             <span>{{product.orderNo}}</span>
           </td>
-          <td class="ar">
-            <span v-show="Number(product.billAmount)">¥{{product.billAmount | formatMoney}}</span>
-            <span v-if="!Number(product.billAmount)">-</span>
+          <td>
+            <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
           </td>
           <td>
             {{product.createTime | minute }}
@@ -112,15 +111,15 @@
     <div class="product-list-detail" v-show="selectPayments.length">
       <h3 style="background: #f1f1f1;overflow: hidden">
         <span style="float: left">已选明细</span>
-        <span style="float: right">总付款金额：￥{{ amount | formatMoney }}</span>
+        <span style="float: right">总收款金额：￥{{ amount | formatMoney }}</span>
       </h3>
       <table class="table">
         <thead>
         <tr>
-          <th style="width: 300px">订单号/货品名称</th>
+          <th style="width: 260px">订单号/货品名称</th>
           <th>创建时间</th>
-          <th>应付金额</th>
-          <th>本次付款金额</th>
+          <th>待收金额</th>
+          <th>本次收款金额</th>
           <th>操作</th>
         </tr>
         </thead>
@@ -133,11 +132,11 @@
           <td>
             {{product.createTime | minute }}
           </td>
-          <td class="ar">
-            <span v-show="Number(product.billAmount)">¥{{product.billAmount | formatMoney}}</span>
+          <td>
+            <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
           </td>
           <td>
-            <el-input v-model="product.payment" style="width: 150px" @blur="paymentChange(product)">
+            <el-input v-model="product.payment" style="width: 150px" @change="paymentChange(product)">
               <template slot="prepend">
                 <span>¥</span>
               </template>
@@ -212,6 +211,16 @@
         deep: true
       }
     },
+    filters: {
+      formatCount (val) {
+        if (!val) return '0.00';
+        if (typeof val === 'string') {
+          return val;
+        } else if (typeof val === 'number') {
+          return val.toFixed(2);
+        }
+      }
+    },
     methods: {
       queryPayments (pageNo) {
         this.pager.currentPage = pageNo;
@@ -223,7 +232,8 @@
         this.$http.get(`/accounts-receivable/payer/${this.factoryId}/detail`, {params}).then(res => {
           this.loadingData = false;
           res.data.list.forEach(item => {
-            item.payment = utils.autoformatDecimalPoint(item.billAmount ? item.billAmount.toString() : '0');
+            let count = item.billAmount - item.prepaidAccounts;
+            item.payment = utils.autoformatDecimalPoint(count ? count.toString() : '0');
           });
           this.payments = res.data.list;
           this.pager.count = res.data.count;
@@ -248,11 +258,11 @@
         return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
       },
       paymentChange (item) {
-        if (item.payment > item.billAmount) {
+        if (item.payment > (item.billAmount - item.prepaidAccounts)) {
           this.$notify.info({
-            message: '输入的金额大于应付金额，已经帮您调整到与应付金额相等'
+            message: '输入的金额大于待收金额，请修改本次收款金额，否则无法添加收款申请'
           });
-          item.payment = item.billAmount;
+          return;
         }
         item.payment = utils.autoformatDecimalPoint(item.payment ? item.payment.toString() : '0');
       },

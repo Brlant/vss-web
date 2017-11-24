@@ -264,8 +264,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="发票号码" prop="invoiceNumber">
-              <oms-input v-model="form.invoiceNumber" placeholder="请输入发票号码"></oms-input>
+            <el-form-item label="发票号码">
+              <oms-input type="textarea" v-model="form.invoiceNumber" placeholder="请输入发票号码"></oms-input>
             </el-form-item>
             <el-form-item label="发票类型" prop="type">
               <el-select type="text" v-model="form.type" placeholder="请输入发票类型">

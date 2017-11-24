@@ -224,7 +224,7 @@
               </el-col>
               <el-col :span="7" class="pt10">
                 <div class="f-grey">
-                  {{item.orgNo }}
+                  系统代码{{item.orgNo }}
                 </div>
                 <div>{{item.orgName }}</div>
               </el-col>

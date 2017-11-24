@@ -276,7 +276,7 @@
             </el-form-item>
             <el-form-item label="厂商" prop="orgId">
               <el-select filterable remote placeholder="请输入名称搜索厂商" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.orgId">
+                         v-model="form.orgId" @click.native.once="filterOrg('')">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
                            v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -448,6 +448,13 @@
         });
       },
       onSubmit: function () {// 提交表单
+        let isQualified = this.selectPayments.some(s => s.payment > (s.billAmount - s.prepaidAccounts));
+        if (isQualified) {
+          this.$notify.info({
+            message: '付款明细中，存在本次付款金额大于待付金额的明细，请调整后，再进行保存'
+          });
+          return;
+        }
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
             return;

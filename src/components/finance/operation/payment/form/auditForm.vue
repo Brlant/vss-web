@@ -273,7 +273,7 @@
               ¥ {{form.amount | formatMoney}}
             </el-form-item>
             <el-form-item label="付款说明" class="mb0">
-              {{form.explain}}if
+              {{form.explain}}
             </el-form-item>
             <el-form-item label="付款明细" class="mb0">
               <span v-if="!form.detailList.length">无</span>
@@ -282,19 +282,17 @@
                 v-if="form.detailList.length">
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
-                  <el-col :span="6">货品名称 </el-col>
-                  <el-col :span="5">订单号 </el-col>
-                  <el-col :span="5">创建时间 </el-col>
-                  <el-col :span="4">应付金额 </el-col>
-                  <el-col :span="4">本次已付金额 </el-col>
+                  <el-col :span="8">货品名称 </el-col>
+                  <el-col :span="6">订单号 </el-col>
+                  <el-col :span="6">创建时间 </el-col>
+                  <el-col :span="4">本次付款金额 </el-col>
                 </el-row>
               </li>
               <li class="show-item" v-for="item in form.detailList">
                 <el-row type="flex">
-                  <el-col :span="6">{{ item.goodsName }} </el-col>
-                  <el-col :span="5">{{ item.orderNo }} </el-col>
-                  <el-col :span="5">{{ item.createTime | minute }} </el-col>
-                  <el-col :span="4"> ￥{{item.totalMoney | formatMoney}} </el-col>
+                  <el-col :span="8">{{ item.goodsName }} </el-col>
+                  <el-col :span="6">{{ item.orderNo }} </el-col>
+                  <el-col :span="6">{{ item.createTime | minute }} </el-col>
                   <el-col :span="4"> ￥{{item.paidMoney | formatMoney}} </el-col>
                 </el-row>
               </li>
