@@ -107,7 +107,7 @@
             <!--</oms-form-row>-->
             <!--</el-col>-->
             <el-col :span="8">
-              <oms-form-row label="物流厂商" :span="6">
+              <oms-form-row label="物流厂商" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索厂商" :remote-method="filterFactory"
                            @click.native="filterFactory('')"
                            :clearable="true"
@@ -135,7 +135,7 @@
             <!--</oms-form-row>-->
             <!--</el-col>-->
             <el-col :span="8">
-              <el-row class="text-center">
+              <el-row style="text-align: left;padding-left: 20px">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </el-row>

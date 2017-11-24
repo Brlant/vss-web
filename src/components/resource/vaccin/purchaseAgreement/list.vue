@@ -118,12 +118,12 @@
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="疫苗名称" :span="6">
+              <oms-form-row label="疫苗名称" :span="5">
                 <oms-input type="text" v-model="searchCondition.keyWord" placeholder="请输入疫苗名称"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货厂商" :span="6">
+              <oms-form-row label="供货厂商" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplyCompanyId" popperClass="good-selects" style="width: 100%">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">

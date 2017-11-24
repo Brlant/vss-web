@@ -129,8 +129,8 @@
                 <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="物流方式" :span="6">
+            <el-col :span="6">
+              <oms-form-row label="物流方式" :span="7">
                 <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
                              v-for="item in transportationMeansList">
@@ -173,8 +173,8 @@
             <!--</el-select>-->
             <!--</oms-form-row>-->
             <!--</el-col>-->
-            <el-col :span="8">
-              <oms-form-row label="预计入库时间" :span="8">
+            <el-col :span="10">
+              <oms-form-row label="预计入库时间" :span="7">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
@@ -185,7 +185,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="" :span="6">
+              <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>

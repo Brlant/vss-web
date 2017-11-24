@@ -99,12 +99,12 @@
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="发票号码" :span="6">
+              <oms-form-row label="发票号码" :span="5">
                 <oms-input type="text" v-model="searchCondition.invoiceNumber" placeholder="请输入货主订单号"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货厂商" :span="6">
+              <oms-form-row label="供货厂商" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg"
                            @click.native="filterOrg('')"
                            :clearable="true"
@@ -123,7 +123,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="" :span="6">
+              <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
