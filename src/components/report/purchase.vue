@@ -41,7 +41,7 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="业务日期" :span="8">
+              <oms-form-row label="业务日期" :span="5">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
@@ -52,7 +52,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货商" :span="6">
+              <oms-form-row label="供货商" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索供货商" :remote-method="filterOrg" :clearable="true"
                            v-model="searchWord.suppliers" popperClass="good-selects" @click.native.once="filterOrg('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -76,8 +76,8 @@
                 <el-input v-model="searchWord.batchNumber" placeholder="请输入货主订单号"></el-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="10">
-              <oms-form-row label="" :span="6">
+            <el-col :span="8">
+              <oms-form-row label="" :span="1">
                 <perm label="purchasing-detail-form-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
                     查询

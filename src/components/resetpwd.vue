@@ -37,19 +37,34 @@
 
   export default {
     name: 'resetpwd',
-    data: () => ({
-      user: {password: '', code: ''},
-      loading: false,
-      showInfo: false,
-      codeUrl: '',
-      showCode: false,
-      btnString: '提交',
-      rules: {
-        password: [
-          {required: true, message: '请输入新密码', trigger: 'blur'}
-        ]
-      }
-    }),
+    data: function () {
+      let checkPasswd = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入密码'));
+        } else {
+          let rl = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
+          if (!rl.test(this.user.password)) {
+            callback('密码必须为8~16个字符，且包含数字、大写字母、小写字母');
+          } else {
+            callback();
+          }
+        }
+      };
+      return {
+        user: {password: '', code: ''},
+        loading: false,
+        showInfo: false,
+        codeUrl: '',
+        showCode: false,
+        btnString: '提交',
+        rules: {
+          password: [
+            {required: true, message: '请输入新密码', trigger: 'blur'},
+            {validator: checkPasswd, trigger: 'blur'}
+          ]
+        }
+      };
+    },
     methods: {
       done() {
         this.$refs['loginForm'].validate((valid) => {
