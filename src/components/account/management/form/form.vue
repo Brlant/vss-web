@@ -151,7 +151,7 @@
         }
         let params = {objectId: 'cerp-system'};
         http.get(`/oms/access/orgs/${orgId}/self`, {params}).then(res => {
-          this.roleSelect = res.data.list;
+          this.roleSelect = res.data;
         });
       },
       onSubmit: function (formName) {
