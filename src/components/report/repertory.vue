@@ -64,7 +64,7 @@
       </div>
       <el-table :data="reportList" class="header-list"
                 :header-row-class-name="'headerClass'" v-loading="loadingData" height="400">
-        <el-table-column prop="goodsName" label="疫苗名称"></el-table-column>
+        <el-table-column prop="goodsName" label="疫苗名称" width="160"></el-table-column>
         <el-table-column prop="restStockCount" label="期前库存"></el-table-column>
         <el-table-column prop="purchaseCount" label="进苗数量"></el-table-column>
         <el-table-column prop="saleCount" label="发苗数量"></el-table-column>
