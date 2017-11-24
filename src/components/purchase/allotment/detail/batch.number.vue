@@ -3,6 +3,49 @@
     margin-left: 10px;
     border-right: 2px solid #eee;
   }
+
+  .content-part {
+    .content-right {
+      > h3 {
+        left: 0;
+      }
+      left: 0;
+      padding-left: 100px;
+      padding-right: 100px;
+    }
+  }
+
+  .tr-bg {
+    background: #eeeeee;
+  }
+
+  .qp-box {
+    margin-bottom: 40px;
+    padding: 20px;
+    box-shadow: 4px 4px 2px 0 #ddd;
+  }
+
+  .base-pic-list {
+    padding-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+    .base-pic-item {
+      border: 1px solid #eee;
+      position: relative;
+      cursor: pointer;
+      width: 180px;
+      margin: 5px;
+      padding: 10px;
+      font-size: 12px;
+      img {
+        width: 180px;
+        height: 180px;
+        display: block;
+        background: #ccc;
+
+      }
+    }
+  }
 </style>
 <template>
   <div>
@@ -19,27 +62,103 @@
           {{ item.no }}
         </h3>
         <div v-show="isShow(item)">
-          <attachment-show label="药检报告" :orderAttachment="item.attachmentMap.drugControlReports"
-                           :currentOrder="currentOrder"
-                           objectType="" :objectId="item.batchNumberId"
-                           :attachmentRight="attachmentRight"
-                           :isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>
+          <div class="qp-box">
+            <el-row>
+              <h2>
+                药检报告
+              </h2>
+              <div>
+                <div class="base-pic-list">
+                  <div v-for=" attachment in item.attachmentMap.drugControlReports" class="base-pic-item">
+                    <div @click="watchPhoto(item.attachmentMap.drugControlReports)">
+                      <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    </div>
+                  </div>
+                </div>
+                <attachment-lists :attachmentIdList="drugControlReportIdList" :objectId="item.batchNumberId"
+                                  :objectType="'drugControlReport'"
+                                  :permission="'show'"></attachment-lists>
+              </div>
+            </el-row>
+          </div>
+          <div class="qp-box">
+            <el-row>
+              <h2>
+                批签发
+              </h2>
+              <div>
+                <div class="base-pic-list">
+                  <div v-for=" attachment in item.attachmentMap.batchReleases" class="base-pic-item">
+                    <div @click="watchPhoto(item.attachmentMap.batchReleases)">
+                      <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    </div>
+                  </div>
+                </div>
+                <attachment-lists :attachmentIdList="batchReleaseIdList" :objectId="item.batchNumberId"
+                                  :objectType="'batchRelease'"
+                                  :permission="'show'"></attachment-lists>
+              </div>
+            </el-row>
+          </div>
+          <div class="qp-box">
+            <el-row>
+              <h2>
+                进口注册证
+              </h2>
+              <div>
+                <div class="base-pic-list">
+                  <div v-for=" attachment in item.attachmentMap.importCertificates" class="base-pic-item">
+                    <div @click="watchPhoto(item.attachmentMap.importCertificates)">
+                      <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    </div>
+                  </div>
+                </div>
+                <attachment-lists :attachmentIdList="importCertificateIdList" :objectId="item.batchNumberId"
+                                  :objectType="'importCertificate'"
+                                  :permission="'show'"></attachment-lists>
+              </div>
+            </el-row>
+          </div>
+          <div class="qp-box">
+            <el-row>
+              <h2>
+                通关单
+              </h2>
+              <div>
+                <div class="base-pic-list">
+                  <div v-for=" attachment in item.attachmentMap.customsPass" class="base-pic-item">
+                    <div @click="watchPhoto(item.attachmentMap.customsPass)">
+                      <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    </div>
+                  </div>
+                </div>
+                <attachment-lists :attachmentIdList="customsPassIdList" :objectId="item.batchNumberId"
+                                  :objectType="'customsPass'"
+                                  :permission="'show'"></attachment-lists>
+              </div>
+            </el-row>
+          </div>
+          <!--<attachment-show label="药检报告" :orderAttachment="item.attachmentMap.drugControlReports"-->
+          <!--:currentOrder="currentOrder"-->
+          <!--objectType="" :objectId="item.batchNumberId"-->
+          <!--:attachmentRight="attachmentRight"-->
+          <!--:isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>-->
 
-          <attachment-show label="批签发" :orderAttachment="item.attachmentMap.batchReleases" :currentOrder="currentOrder"
-                           objectType="" :objectId="item.batchNumberId"
-                           :attachmentRight="attachmentRight"
-                           :isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>
+          <!--<attachment-show label="批签发" :orderAttachment="item.attachmentMap.batchReleases" :currentOrder="currentOrder"-->
+          <!--objectType="" :objectId="item.batchNumberId"-->
+          <!--:attachmentRight="attachmentRight"-->
+          <!--:isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>-->
 
-          <attachment-show label="进口注册证" :orderAttachment="item.attachmentMap.importCertificates"
-                           :currentOrder="currentOrder"
-                           objectType="" :objectId="item.batchNumberId"
-                           :attachmentRight="attachmentRight"
-                           :isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>
+          <!--<attachment-show label="进口注册证" :orderAttachment="item.attachmentMap.importCertificates"-->
+          <!--:currentOrder="currentOrder"-->
+          <!--objectType="" :objectId="item.batchNumberId"-->
+          <!--:attachmentRight="attachmentRight"-->
+          <!--:isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>-->
 
-          <attachment-show label="通关单" :orderAttachment="item.attachmentMap.customsPass" :currentOrder="currentOrder"
-                           objectType="" :objectId="item.batchNumberId"
-                           :attachmentRight="attachmentRight"
-                           :isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>
+          <!--<attachment-show label="通关单" :orderAttachment="item.attachmentMap.customsPass" :currentOrder="currentOrder"-->
+          <!--objectType="" :objectId="item.batchNumberId"-->
+          <!--:attachmentRight="attachmentRight"-->
+          <!--:isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>-->
         </div>
         <div v-show="!isShow(item)">
           暂无附件信息
@@ -51,10 +170,11 @@
 <script>
   import { http } from '@/resources';
   import attachmentShow from './attachmentShow.vue';
+  import attachmentLists from './../../../common/attachmentList.vue';
 
   export default {
     components: {
-      attachmentShow
+      attachmentShow, attachmentLists
     },
     props: {
       currentOrder: {
@@ -71,6 +191,10 @@
     },
     data () {
       return {
+        drugControlReportIdList: {},
+        batchReleaseIdList: {},
+        importCertificateIdList: {},
+        customsPassIdList: {},
         loadingData: true,
         batchNumbers: [],
         attachmentRight: {// 附件管理权限
@@ -106,6 +230,14 @@
       }
     },
     methods: {
+      watchPhoto(item) {
+        if (item.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item[0].attachmentId,
+            attachmentList: item
+          });
+        }
+      },
       isShow (item) {
         return item.attachmentMap.drugControlReports.length || item.attachmentMap.batchReleases.length ||
           item.attachmentMap.importCertificates.length || item.attachmentMap.customsPass.length;
