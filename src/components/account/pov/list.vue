@@ -325,7 +325,7 @@
         this.getPovPage();
       },
       deleteItem (item) {
-        this.$confirm('是否删除POV "' + item.subordinateName + '"?', '', {
+        this.$confirm('是否删除接种点 "' + item.subordinateName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

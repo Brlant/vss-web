@@ -226,7 +226,7 @@
         });
       },
       bindAll () {
-        this.$confirm('是否一键绑定区疾控和POV', '', {
+        this.$confirm('是否一键绑定区疾控和接种点', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

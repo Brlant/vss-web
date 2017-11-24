@@ -186,7 +186,7 @@
               <!--</el-row>-->
               <span class="pull-right">
                      <span class="btn-search-toggle open" v-show="showSearch">
-                        <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入POV名称搜索"
+                        <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入接种点名称搜索"
                                       :showFocus="showSearch"></single-input>
                         <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
                      </span>

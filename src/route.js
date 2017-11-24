@@ -164,7 +164,7 @@ const route = [
       {
         path: '/pov',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'pov', title: 'POV业务', icon: 'vaccine', perm: 'pov-business'},
+        meta: {moduleId: 'pov', title: '接种点业务', icon: 'vaccine', perm: 'pov-business'},
         children: [
           {
             path: '/pov/request',
@@ -176,16 +176,6 @@ const route = [
             component: resolve => require(['./components/pov/receipt/list.vue'], resolve),
             meta: {moduleId: 'pov', title: '收货订单', perm: 'pov-receipt-manager'}
           }
-          // {
-          //   path: '/pov/store',
-          //   component: resolve => require(['./components/pov/store/list.vue'], resolve),
-          //   meta: {moduleId: 'pov', title: 'POV库存管理', perm: 'pov-stock-manage'}
-          // },
-          // {
-          //   path: '/pov/scan',
-          //   component: resolve => require(['./components/pov/scan/list.vue'], resolve),
-          //   meta: {moduleId: 'pov', title: 'POV注射扫码', perm: 'pov-injection-scan'}
-          // }
         ]
       },
       {
