@@ -150,8 +150,14 @@
     },
     methods: {
       getRoleSelect: function () {
-        Access.queryERPAccess().then(res => {
-          this.roleSelect = res.data.list;
+        let orgId = this.user.userCompanyAddress;
+        if (!orgId) {
+          this.roleSelect = [];
+          return;
+        }
+        let params = {objectId: 'cerp-system'};
+        this.$http.get(`/erp-access/orgs/${orgId}/self`, {params}).then(res => {
+          this.roleSelect = res.data;
         });
       },
       onSubmit: function (formName) {
