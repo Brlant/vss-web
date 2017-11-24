@@ -148,7 +148,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="收款单位" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrg" :clearable="true"
+                <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.orgId" popper-class="good-selects"
                            @click.native.once="filterOrg('')">
                   <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"

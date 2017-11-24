@@ -302,7 +302,7 @@
         this.showRight = false;
       },
       removeVaccine: function (item) {
-        this.$confirm('是否删除POV"' + item.povName + '"?', '', {
+        this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

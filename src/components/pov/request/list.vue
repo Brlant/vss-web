@@ -134,7 +134,7 @@
                   <oms-row label="需求时间">
                     {{currentOrder.demandTime | date}}
                   </oms-row>
-                  <oms-row label="POV仓库">
+                  <oms-row label="接种点仓库">
                     {{currentOrder.warehouseName}}
                   </oms-row>
                 </el-col>
@@ -148,7 +148,7 @@
                   <oms-row label="审批时间">
                     {{currentOrder.auditTime | date}}
                   </oms-row>
-                  <oms-row label="关联CDC销售订单">
+                  <oms-row label="关联疾控销售订单">
                     {{currentOrder.orderNo}}
                   </oms-row>
                   <oms-row label="需求单状态">

@@ -79,7 +79,7 @@
               <a href="#" class="btn-circle" @click.prevent="showTypeSearch=!showTypeSearch"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-              CDC列表
+              疾控列表
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="filterCDCs.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -106,7 +106,7 @@
           <div>
             <el-row>
               <el-col :span="10" class="search-input">
-                <el-select filterable remote placeholder="请输入名称搜索POV" :remote-method="filterOrgs"
+                <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrgs"
                            :clearable="true"
                            v-model="orgId" popper-class="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList">
@@ -123,7 +123,7 @@
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
                 <perm label="erp-bind-pov-add">
-                  <el-button type="primary" @click="bindDistrict">绑定POV</el-button>
+                  <el-button type="primary" @click="bindDistrict">绑定接种点</el-button>
                 </perm>
               </el-col>
               <el-col :span="11" class="text-right">
@@ -258,7 +258,7 @@
       bindDistrict () {
         if (!this.orgId) {
           this.$notify.info({
-            message: '请选择POV'
+            message: '请选择接种点'
           });
           return;
         }
@@ -266,7 +266,7 @@
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/pov', text: '正在绑定'});
         cerpAccess.bindPov(cdcId, this.orgId).then(() => {
           this.$notify.success({
-            message: '绑定POV成功'
+            message: '绑定接种点成功'
           });
           this.orgId = '';
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/pov', text: '正在绑定'});
@@ -274,7 +274,7 @@
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/pov', text: '正在绑定'});
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '绑定POV失败'
+            message: error.response.data && error.response.data.msg || '绑定接种点失败'
           });
         });
       },
@@ -292,7 +292,7 @@
           this.filterAvaliableCDCs();
         });
       },
-      getCDCPage () { // 得到CDC列表
+      getCDCPage() { // 得到疾控列表
         let params = Object.assign({
           pageNo: 1,
           pageSize: 20

@@ -79,7 +79,7 @@
           <div>
             <el-row>
               <el-col :span="8" class="search-input">
-                <el-select filterable remote placeholder="请输入名称搜索CDC" :remote-method="filterOrgs"
+                <el-select filterable remote placeholder="请输入名称搜索疾控" :remote-method="filterOrgs"
                            :clearable="true"
                            v-model="orgId" filterable popper-class="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList">
@@ -96,10 +96,10 @@
               </el-col>
               <el-col :span="10" style="padding-left: 10px">
                 <perm label="erp-bind-cdc-add">
-                  <el-button type="primary" @click="bindDistrict" :disabled="doing">绑定CDC</el-button>
+                  <el-button type="primary" @click="bindDistrict" :disabled="doing">绑定疾控</el-button>
                 </perm>
                 <perm label="erp-bind-cdc-batch-add" style="margin-left: 20px">
-                  <el-button type="primary" @click="bindAll" :disabled="doing">一键绑定区CDC和POV</el-button>
+                  <el-button type="primary" @click="bindAll" :disabled="doing">一键绑定区疾控和接种点</el-button>
                 </perm>
               </el-col>
               <el-col :span="6" class="text-right">
@@ -118,7 +118,7 @@
           </div>
           <div class="order-list clearfix " style="margin-top: 10px">
             <el-row class="order-list-header" :gutter="10">
-              <el-col :span="20">CDC名称</el-col>
+              <el-col :span="20">疾控名称</el-col>
               <el-col :span="4">操作</el-col>
             </el-row>
             <el-row v-if="loadingData">
@@ -203,7 +203,7 @@
       bindDistrict () {
         if (!this.orgId) {
           this.$notify.info({
-            message: '请选择CDC'
+            message: '请选择疾控'
           });
           return;
         }
@@ -211,7 +211,7 @@
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/cdc', text: '正在绑定'});
         cerpAccess.bindDistrict(this.orgId).then(() => {
           this.$notify.success({
-            message: '绑定CDC成功'
+            message: '绑定疾控成功'
           });
           this.orgId = '';
           this.doing = false;
@@ -221,12 +221,12 @@
           this.doing = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/cdc', text: '正在绑定'});
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '绑定CDC失败'
+            message: error.response.data && error.response.data.msg || '绑定疾控失败'
           });
         });
       },
       bindAll () {
-        this.$confirm('是否一键绑定区CDC和POV', '', {
+        this.$confirm('是否一键绑定区疾控和POV', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
@@ -277,7 +277,7 @@
         });
       },
       deleteItem (item) {
-        this.$confirm('是否删除CDC "' + item.subordinateName + '"?', '', {
+        this.$confirm('是否删除疾控 "' + item.subordinateName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

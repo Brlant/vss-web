@@ -192,7 +192,7 @@
                   <goods-row label="疫苗名称" :span="8">
                     {{ data.name}}
                   </goods-row>
-                  <goods-row label="POV采购价格" :span="8">
+                  <goods-row label="接种点采购价格" :span="8">
                     <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
                   </goods-row>
                   <!--<goods-row label="疫苗分类" :span="8">-->

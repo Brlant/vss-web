@@ -239,8 +239,8 @@
             <el-form-item label="二类疫苗销售价格组名称" prop="name">
               <oms-input type="text" placeholder="请输入二类疫苗销售价格组名称" v-model="form.name"></oms-input>
             </el-form-item>
-            <el-form-item label="选择CDC货品" prop="orgGoodsId">
-              <el-select filterable remote placeholder="请输入名称搜索CDC货品" :remote-method="getGoodsList" :clearable="true"
+            <el-form-item label="选择疾控货品" prop="orgGoodsId">
+              <el-select filterable remote placeholder="请输入名称搜索疾控货品" :remote-method="getGoodsList" :clearable="true"
                          v-model="form.orgGoodsId">
                 <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                            v-for="item in goodses">
@@ -293,7 +293,7 @@
         rules: {
           name: {required: true, message: '请输入二类疫苗销售价格组名称', trigger: 'blur'},
           unitPrice: {required: true, message: '请输入单价', trigger: 'blur'},
-          orgGoodsId: {required: true, message: '请选择CDC货品', trigger: 'change'}
+          orgGoodsId: {required: true, message: '请选择疾控货品', trigger: 'change'}
         },
         goodses: [], // 货品列表
         title: '新增二类疫苗销售价格组',
