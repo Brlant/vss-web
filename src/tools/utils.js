@@ -30,8 +30,8 @@ export default {
     3: {'title': '已取消', status: 3, num: ''}
   },
   waveType: {
-    0: {'title': '未完成', status: 0, num: ''},
-    1: {'title': '已完成', status: 1, num: ''}
+    0: {'title': '未分配', status: 0, num: ''},
+    1: {'title': '已分配', status: 1, num: ''}
   },
   inOrderType: {
     0: {'title': '待审单', state: '6', num: ''},

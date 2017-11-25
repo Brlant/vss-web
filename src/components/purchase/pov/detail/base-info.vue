@@ -51,7 +51,7 @@
       </el-row>
       <el-row v-else="">
         <el-col :span="8">
-          <oms-row label="要货申请ID">
+          <oms-row label="要货申请编号">
             {{currentOrder.id }}
           </oms-row>
           <oms-row label="申请时间">

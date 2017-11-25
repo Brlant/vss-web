@@ -119,8 +119,8 @@
           <el-col :span="1" v-show="filters.status === 1">
             <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
           </el-col>
-          <el-col :span="filters.status === 1 ? 3: 4">接种点要货申请编号</el-col>
-          <el-col :span="8">接种点</el-col>
+          <el-col :span="filters.status === 1 ? 4: 5">接种点要货申请编号</el-col>
+          <el-col :span="7">接种点</el-col>
           <el-col :span="3">到货需求日期</el-col>
           <el-col :span="5">需求单创建时间</el-col>
           <el-col :span="4">操作</el-col>
@@ -146,12 +146,12 @@
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
               </el-col>
-              <el-col :span="filters.status === 1 ? 3: 4" class="R pt10">
+              <el-col :span="filters.status === 1 ? 4: 5" class="R pt10">
                 <span>
                   {{ item.id }}
                 </span>
               </el-col>
-              <el-col :span="8" class="pt">
+              <el-col :span="7" class="pt">
                 <span>{{ item.povName }}</span>
               </el-col>
               <el-col :span="3" class="pt">
