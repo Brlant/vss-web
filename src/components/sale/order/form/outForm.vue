@@ -390,8 +390,11 @@
                 <el-row>
                   <el-col :span="12">
                     <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
-                      {{product.fixInfo.goodsDto.smallPacking}}/
+                      {{product.fixInfo.goodsDto.smallPacking}}
                       <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                      /
+                      <dict :dict-group="'shipmentPackingUnit'"
+                            :dict-key="product.fixInfo.goodsDto.smallPackageUnit"></dict>
                     </oms-row>
                     <oms-row label="货品编号" :span="8">
                       {{product.fixInfo.goodsNo}}
