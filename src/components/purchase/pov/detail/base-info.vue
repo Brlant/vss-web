@@ -55,10 +55,10 @@
             {{currentOrder.id }}
           </oms-row>
           <oms-row label="申请时间">
-            {{currentOrder.applyTime | date}}
+            {{currentOrder.applyTime | time}}
           </oms-row>
           <oms-row label="需求时间">
-            {{currentOrder.demandTime | date}}
+            {{currentOrder.demandTime | time}}
           </oms-row>
           <oms-row label="接种点仓库">
             {{currentOrder.warehouseName}}
@@ -72,7 +72,7 @@
             {{currentOrder.auditManName}}
           </oms-row>
           <oms-row label="审批时间">
-            {{currentOrder.auditTime | date}}
+            {{currentOrder.auditTime | time}}
           </oms-row>
           <oms-row label="关联疾控销售订单">
             {{currentOrder.orderNo}}
