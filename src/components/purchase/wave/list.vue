@@ -63,8 +63,8 @@
       </div>
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="7">创建人</el-col>
-          <el-col :span="7">创建时间</el-col>
+          <el-col :span="8">创建人</el-col>
+          <el-col :span="4">创建时间</el-col>
           <el-col :span="4">状态</el-col>
           <el-col :span="6">操作</el-col>
         </el-row>
@@ -84,10 +84,10 @@
           <div class="order-list-item" v-for="item in allocationList"
                :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]">
             <el-row>
-              <el-col :span="7" class="R pt">
+              <el-col :span="8" class="R pt">
                 <span>{{ item.createName }}</span>
               </el-col>
-              <el-col :span="7" class="pt">
+              <el-col :span="4" class="pt">
                 <span>{{ item.createTime | minute}}</span>
               </el-col>
               <el-col :span="4" class="pt">
@@ -95,16 +95,18 @@
               </el-col>
               <el-col :span="6" class="opera-btn">
                 <div v-show="item.status === 0">
+                  <div>
                   <span @click.prevent="purchase(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-link"></i></a>
                   规划采购
                   </span>
-                  <span @click.prevent="showDetail(item)">
+                   <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-wave"></i></a>
                     疫苗分配
-                  </span>
+                    </span>
+                  </div>
                 </div>
                 <div v-show="item.status === 1">
                   <div>
