@@ -394,12 +394,12 @@
         }).then(() => {
           pullSignal.cancel(item.id).then(() => {
             this.$notify.success({
-              message: '已成功取消申请单'
+              message: '已成功取消需求单'
             });
             this.getDemandList(1);
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '取消申请单失败'
+              message: error.response.data && error.response.data.msg || '取消需求单失败'
             });
           });
         });
