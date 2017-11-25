@@ -393,9 +393,6 @@
                   <oms-row label="批准文号" :span="8">
                     {{product.fixInfo.goodsDto.approvalNumber}}
                   </oms-row>
-                  <oms-row label="是否OTC" :span="8">
-                    <span v-show="product.orgGoodsId">{{product.fixInfo.goodsDto.goodsOtc | formatStatus}}</span>
-                  </oms-row>
                 </el-col>
                 <el-col :span="12">
                   <span v-show="accessoryList.length">【组合货品】</span>
@@ -603,7 +600,7 @@
         index: 0,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '添加货品', key: 1}
+          {name: '货品信息', key: 1}
         ],
         orgList: [],
         customerList: [],
