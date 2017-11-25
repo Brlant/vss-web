@@ -147,7 +147,7 @@
                     <span @click.prevent="showPart(item)" v-show="status === 0 ">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-detail"></i></a>
-                    要货单位分配
+                    要货单位分配明细
                     </span>
                 </div>
                 <div class="mb5">
