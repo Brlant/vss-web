@@ -414,6 +414,8 @@
           billPayType: '1',
           relationList: []
         };
+        this.index = 0;
+        this.selectPayments = [];
         this.$refs['addForm'].resetFields();
       }
     },

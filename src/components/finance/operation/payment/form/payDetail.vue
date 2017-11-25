@@ -100,7 +100,7 @@
         </tr>
         </tbody>
       </table>
-      <div class="text-center" v-show="pager.count>pager.pageSize">
+      <div class="text-center" v-show="pager.count>pager.pageSize && factoryId">
         <el-pagination layout="prev, pager, next"
                        :total="pager.count"
                        :pageSize="pager.pageSize"
