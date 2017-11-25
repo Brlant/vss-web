@@ -25,7 +25,9 @@ export default {
   },
   assignType: {
     0: {'title': '待分配', status: 1, num: ''},
-    1: {'title': '已完成分配', status: 4, num: ''}
+    1: {'title': '待生成订单', status: 2, num: ''},
+    2: {'title': '已完成分配', status: 4, num: ''},
+    3: {'title': '已取消', status: 3, num: ''}
   },
   waveType: {
     0: {'title': '未完成', status: 0, num: ''},

@@ -161,11 +161,20 @@
                 <span>{{ item.demandTime | date }}</span>
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <span @click.prevent="showDetail(item)">
+                <div>
+                  <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-detail"></i></a>
                   查看详情
-                </span>
+                  </span>
+                </div>
+                <div v-show="filters.status === 1">
+                   <span @click.prevent="cancel(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="el-icon-t-verify"></i></a>
+                  取消需求单
+                  </span>
+                </div>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -283,7 +292,9 @@
         }, this.filters);
         pullSignal.queryCount(params).then(res => {
           this.assignType[0].num = res.data['audited'];
-          this.assignType[1].num = res.data['assigned'];
+          this.assignType[1].num = res.data['create-wave'];
+          this.assignType[2].num = res.data['assigned'];
+          this.assignType[3].num = res.data['canceled'];
         });
       },
       filterOrg: function (query) {// 过滤供货商
@@ -373,6 +384,24 @@
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '需求分配失败'
+          });
+        });
+      },
+      cancel (item) {
+        this.$confirm('是否取消"' + item.id + '" 申请单?', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          pullSignal.cancel(item.id).then(() => {
+            this.$notify.success({
+              message: '已成功取消申请单'
+            });
+            this.getDemandList(1);
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '取消申请单失败'
+            });
           });
         });
       },
