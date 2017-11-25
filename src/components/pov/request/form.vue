@@ -561,8 +561,21 @@
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       changeType () {
+        this.product = {
+          'amount': null,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
         this.$refs['orderGoodsForm'].resetFields();
         this.accessoryList = [];
+        this.currentList = [];
+        this.form.detailDtoList = [];
         this.filterProduct();
         this.searchProduct();
       },
