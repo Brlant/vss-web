@@ -248,7 +248,7 @@
       },
       showOrderFormPart (item) {
         OrgGoods.queryOneGoods(item.orgGoodsId).then(res => {
-          this.vaccineSign = res.data.orgGoodsDto.goodsDto.vaccineSign;
+          this.vaccineType = res.data.orgGoodsDto.goodsDto.vaccineSign;
           this.currentItem = item;
           this.currentItemId = item.id;
           this.purchase = {
