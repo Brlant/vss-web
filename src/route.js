@@ -130,17 +130,17 @@ const route = [
           {
             path: '/sale/allocation',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
-            meta: {moduleId: 'sale', title: '接种点疫苗需求分配', perm: 'cerp-create-wave'},
+            meta: {moduleId: 'sale', title: '接种点疫苗需求汇总单', perm: 'cerp-create-wave'},
             children: [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-                meta: {moduleId: 'sale', title: '接种点疫苗需求分配', perm: 'demand-assignment-query'}
+                meta: {moduleId: 'sale', title: '接种点疫苗需求汇总单', perm: 'demand-assignment-query'}
               },
               {
                 path: '/sale/allocation/task',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'sale', title: '接种点疫苗需求分配', perm: 'demand-assignment-update'}
+                meta: {moduleId: 'sale', title: '接种点疫苗需求汇总单', perm: 'demand-assignment-update'}
               }
             ]
           },

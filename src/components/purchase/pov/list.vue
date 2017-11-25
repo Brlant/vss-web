@@ -110,7 +110,7 @@
         <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1">
           <perm label="demand-assignment-add" class="opera-btn">
             <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
-              class="el-icon-t-wave"></i></a><span class="wave-title"> 分配需求</span></span>
+              class="el-icon-t-wave"></i></a><span class="wave-title"> 生成汇总单</span></span>
           </perm>
        </span>
       </div>
@@ -119,10 +119,10 @@
           <el-col :span="1" v-show="filters.status === 1">
             <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
           </el-col>
-          <el-col :span="filters.status === 1 ? 6: 7">接种点要货申请ID</el-col>
-          <el-col :span="7">接种点</el-col>
-          <el-col :span="3">需求产生时间</el-col>
-          <el-col :span="3">需求时间</el-col>
+          <el-col :span="filters.status === 1 ? 5: 6">接种点要货申请编号</el-col>
+          <el-col :span="8">接种点</el-col>
+          <el-col :span="3">到货需求日期</el-col>
+          <el-col :span="3">需求单创建时间</el-col>
           <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -146,19 +146,19 @@
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
               </el-col>
-              <el-col :span="filters.status === 1 ? 6: 7" class="R pt10">
+              <el-col :span="filters.status === 1 ? 5: 6" class="R pt10">
                 <span>
                   {{ item.id }}
                 </span>
               </el-col>
-              <el-col :span="7" class="pt">
+              <el-col :span="8" class="pt">
                 <span>{{ item.povName }}</span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span>{{ item.applyTime | date }}</span>
+                <span>{{ item.demandTime | date }}</span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span>{{ item.demandTime | date }}</span>
+                <span>{{ item.applyTime | time }}</span>
               </el-col>
               <el-col :span="4" class="opera-btn">
                 <div>
