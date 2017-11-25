@@ -66,9 +66,9 @@
           <el-col :span="status === 0 ? 2 : 4">需求数</el-col>
           <el-col :span="status === 0 ? 2 : 4">库存数</el-col>
           <el-col :span="3" v-show="status === 0">库存差额</el-col>
-          <el-col :span="3" v-show="status === 0">调配后剩余库存</el-col>
+          <el-col :span="2" v-show="status === 0">调配后剩余库存</el-col>
           <el-col :span="2" v-show="status === 0">状态</el-col>
-          <el-col :span="3">操作</el-col>
+          <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -147,7 +147,7 @@
                     <span @click.prevent="showPart(item)" v-show="status === 0 ">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-detail"></i></a>
-                    手动分配
+                    要货单位分配明细
                     </span>
                 </div>
                 <div class="mb5">
