@@ -61,12 +61,12 @@
       </div>
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="status === 0 ? 5 : 7">疫苗</el-col>
+          <el-col :span="status === 0 ? 4 : 6">疫苗</el-col>
           <el-col :span="status === 0 ? 4 : 6">供货厂商</el-col>
           <el-col :span="status === 0 ? 2 : 4">需求数</el-col>
           <el-col :span="status === 0 ? 2 : 4">库存数</el-col>
           <el-col :span="3" v-show="status === 0">库存差额</el-col>
-          <el-col :span="2" v-show="status === 0">调配后剩余库存</el-col>
+          <el-col :span="3" v-show="status === 0">调配后剩余库存</el-col>
           <el-col :span="2" v-show="status === 0">状态</el-col>
           <el-col :span="4">操作</el-col>
         </el-row>
@@ -86,7 +86,7 @@
           <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
                :class="[{'active':currentItemId==item.id}]">
             <el-row>
-              <el-col :span="status === 0 ? 5 : 7" class="R pt">
+              <el-col :span="status === 0 ? 4 : 6" class="R pt">
                 <div>
                   <el-tooltip class="item" effect="dark" content="疫苗名称" placement="right">
                     <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
@@ -142,7 +142,7 @@
                   库存不足
                 </span>
               </el-col>
-              <el-col :span="3" class="opera-btn">
+              <el-col :span="4" class="opera-btn">
                 <div class="mb5">
                     <span @click.prevent="showPart(item)" v-show="status === 0 ">
                       <a href="#" class="btn-circle" @click.prevent=""><i
