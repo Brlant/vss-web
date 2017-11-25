@@ -22,6 +22,7 @@
   .qp-box {
     margin-bottom: 40px;
     padding: 20px;
+    margin-left: 40px;
     box-shadow: 4px 4px 2px 0 #ddd;
   }
 
@@ -62,82 +63,94 @@
           {{ item.no }}
         </h3>
         <div v-show="isShow(item)">
-          <div class="qp-box">
-            <el-row>
-              <h2>
-                药检报告
-              </h2>
-              <div>
-                <div class="base-pic-list">
-                  <div v-for=" attachment in item.attachmentMap.drugControlReports" class="base-pic-item">
-                    <div @click="watchPhoto(item.attachmentMap.drugControlReports)">
-                      <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+          <el-row>
+            <el-col :span="12">
+              <div class="qp-box">
+                <el-row>
+                  <h2>
+                    药检报告
+                  </h2>
+                  <div>
+                    <div class="base-pic-list">
+                      <div v-for=" attachment in item.attachmentMap.drugControlReports" class="base-pic-item">
+                        <div @click="watchPhoto(item.attachmentMap.drugControlReports)">
+                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                        </div>
+                      </div>
                     </div>
+                    <attachment-lists :attachmentIdList="drugControlReportIdList" :objectId="item.batchNumberId"
+                                      :objectType="'drugControlReport'"
+                                      :permission="'show'"></attachment-lists>
                   </div>
-                </div>
-                <attachment-lists :attachmentIdList="drugControlReportIdList" :objectId="item.batchNumberId"
-                                  :objectType="'drugControlReport'"
-                                  :permission="'show'"></attachment-lists>
+                </el-row>
               </div>
-            </el-row>
-          </div>
-          <div class="qp-box">
-            <el-row>
-              <h2>
-                批签发
-              </h2>
-              <div>
-                <div class="base-pic-list">
-                  <div v-for=" attachment in item.attachmentMap.batchReleases" class="base-pic-item">
-                    <div @click="watchPhoto(item.attachmentMap.batchReleases)">
-                      <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+            </el-col>
+            <el-col :span="12">
+              <div class="qp-box">
+                <el-row>
+                  <h2>
+                    批签发
+                  </h2>
+                  <div>
+                    <div class="base-pic-list">
+                      <div v-for=" attachment in item.attachmentMap.batchReleases" class="base-pic-item">
+                        <div @click="watchPhoto(item.attachmentMap.batchReleases)">
+                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                        </div>
+                      </div>
                     </div>
+                    <attachment-lists :attachmentIdList="batchReleaseIdList" :objectId="item.batchNumberId"
+                                      :objectType="'batchRelease'"
+                                      :permission="'show'"></attachment-lists>
                   </div>
-                </div>
-                <attachment-lists :attachmentIdList="batchReleaseIdList" :objectId="item.batchNumberId"
-                                  :objectType="'batchRelease'"
-                                  :permission="'show'"></attachment-lists>
+                </el-row>
               </div>
-            </el-row>
-          </div>
-          <div class="qp-box">
-            <el-row>
-              <h2>
-                进口注册证
-              </h2>
-              <div>
-                <div class="base-pic-list">
-                  <div v-for=" attachment in item.attachmentMap.importCertificates" class="base-pic-item">
-                    <div @click="watchPhoto(item.attachmentMap.importCertificates)">
-                      <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <div class="qp-box">
+                <el-row>
+                  <h2>
+                    进口注册证
+                  </h2>
+                  <div>
+                    <div class="base-pic-list">
+                      <div v-for=" attachment in item.attachmentMap.importCertificates" class="base-pic-item">
+                        <div @click="watchPhoto(item.attachmentMap.importCertificates)">
+                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                        </div>
+                      </div>
                     </div>
+                    <attachment-lists :attachmentIdList="importCertificateIdList" :objectId="item.batchNumberId"
+                                      :objectType="'importCertificate'"
+                                      :permission="'show'"></attachment-lists>
                   </div>
-                </div>
-                <attachment-lists :attachmentIdList="importCertificateIdList" :objectId="item.batchNumberId"
-                                  :objectType="'importCertificate'"
-                                  :permission="'show'"></attachment-lists>
+                </el-row>
               </div>
-            </el-row>
-          </div>
-          <div class="qp-box">
-            <el-row>
-              <h2>
-                通关单
-              </h2>
-              <div>
-                <div class="base-pic-list">
-                  <div v-for=" attachment in item.attachmentMap.customsPass" class="base-pic-item">
-                    <div @click="watchPhoto(item.attachmentMap.customsPass)">
-                      <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+            </el-col>
+            <el-col :span="12">
+              <div class="qp-box">
+                <el-row>
+                  <h2>
+                    通关单
+                  </h2>
+                  <div>
+                    <div class="base-pic-list">
+                      <div v-for=" attachment in item.attachmentMap.customsPass" class="base-pic-item">
+                        <div @click="watchPhoto(item.attachmentMap.customsPass)">
+                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                        </div>
+                      </div>
                     </div>
+                    <attachment-lists :attachmentIdList="customsPassIdList" :objectId="item.batchNumberId"
+                                      :objectType="'customsPass'"
+                                      :permission="'show'"></attachment-lists>
                   </div>
-                </div>
-                <attachment-lists :attachmentIdList="customsPassIdList" :objectId="item.batchNumberId"
-                                  :objectType="'customsPass'"
-                                  :permission="'show'"></attachment-lists>
+                </el-row>
               </div>
-            </el-row>
-          </div>
+            </el-col>
+          </el-row>
           <!--<attachment-show label="药检报告" :orderAttachment="item.attachmentMap.drugControlReports"-->
           <!--:currentOrder="currentOrder"-->
           <!--objectType="" :objectId="item.batchNumberId"-->
