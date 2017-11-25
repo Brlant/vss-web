@@ -279,7 +279,7 @@
             <el-form-item label="收款说明" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="付款明细" class="mb0">
+            <el-form-item label="收款明细" class="mb0">
               <span v-show="!form.detailList.length">无</span>
             </el-form-item>
             <ul class="show-list invoice-list"
@@ -289,7 +289,7 @@
                   <el-col :span="8">货品名称 </el-col>
                   <el-col :span="6">订单号 </el-col>
                   <el-col :span="6">创建时间 </el-col>
-                  <el-col :span="4">本次付款金额 </el-col>
+                  <el-col :span="4">本次收款金额 </el-col>
                 </el-row>
               </li>
               <li class="show-item" v-for="item in form.detailList">

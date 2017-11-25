@@ -264,7 +264,7 @@
               </el-select>
             </el-form-item>
             <el-form-item label="金额" prop="amount">
-              <oms-input type="text" v-model="form.amount" placeholder="请选择付款明细，自动计算总额" disabled>
+              <oms-input type="text" v-model="form.amount" placeholder="请选择收款明细，自动计算总额" disabled>
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
@@ -335,7 +335,7 @@
             {required: true, message: '请选择接种点', trigger: 'change'}
           ],
           amount: [
-            {required: true, message: '请选择付款明细，自动计算总额', trigger: 'blur'}
+            {required: true, message: '请选择收款明细，自动计算总额', trigger: 'blur'}
           ]
         },
         orgList: [],
