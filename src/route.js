@@ -103,44 +103,44 @@ const route = [
           {
             path: '/sale/one/vaccin/pov',
             component: resolve => require(['./components/resource/vaccin/rights/one/pov.vue'], resolve),
-            meta: {moduleId: 'resource', title: '一类疫苗接种单位授权', perm: 'first-vaccine-authorization'}
+            meta: {moduleId: 'resource', title: '一类疫苗接种点授权', perm: 'first-vaccine-authorization'}
           },
           {
             path: '/sale/two/vaccin/pov',
             component: resolve => require(['./components/resource/vaccin/rights/two/pov.vue'], resolve),
-            meta: {moduleId: 'resource', title: '二类疫苗接种单位授权', perm: 'second-vaccine-authorization'}
+            meta: {moduleId: 'resource', title: '二类疫苗接种点授权', perm: 'second-vaccine-authorization'}
           },
           {
             path: '/sale/pov',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
-            meta: {moduleId: 'sale', title: '接种单位疫苗要货需求', perm: 'demand-assignment'},
+            meta: {moduleId: 'sale', title: '接种点疫苗要货需求', perm: 'demand-assignment'},
             children: [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
-                meta: {moduleId: 'sale', title: '接种单位疫苗要货需求', perm: 'demand-assignment-query'}
+                meta: {moduleId: 'sale', title: '接种点疫苗要货需求', perm: 'demand-assignment-query'}
               },
               {
                 path: '/sale/pov/allocation',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'sale', title: '接种单位疫苗要货需求', perm: 'demand-assignment-update'}
+                meta: {moduleId: 'sale', title: '接种点疫苗要货需求', perm: 'demand-assignment-update'}
               }
             ]
           },
           {
             path: '/sale/allocation',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
-            meta: {moduleId: 'sale', title: '接种单位疫苗需求分配', perm: 'cerp-create-wave'},
+            meta: {moduleId: 'sale', title: '接种点疫苗需求分配', perm: 'cerp-create-wave'},
             children: [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-                meta: {moduleId: 'sale', title: '接种单位疫苗需求分配', perm: 'demand-assignment-query'}
+                meta: {moduleId: 'sale', title: '接种点疫苗需求分配', perm: 'demand-assignment-query'}
               },
               {
                 path: '/sale/allocation/task',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'sale', title: '接种单位疫苗需求分配', perm: 'demand-assignment-update'}
+                meta: {moduleId: 'sale', title: '接种点疫苗需求分配', perm: 'demand-assignment-update'}
               }
             ]
           },
