@@ -131,11 +131,31 @@ export const Access = resource('/oms/access', http, {
   queryERPAccess: (params) => {
     return http.get('/erp-access/orgs/self/', {params});
   },
+  save: (obj) => {
+    return http.post('/erp-access', obj);
+  }
+});
+
+export const System = resource('/oms/access', http, {
+  getRoleMenus: (orgId) => {
+    return http.get(`/erp-access/org/${orgId}/admin/menus`);
+  },
+  getOrgRoleMenus: (orgId) => {
+    return http.get('/oms/access/org/' + orgId + '/admin/menus');
+  },
+  getOrgRole: (orgId, params) => {
+    params.objectId = 'cerp-system';
+    return http.get('/oms/access/orgs/' + orgId, {params});
+  },
+  getRoleDetail: (roleId) => {
+    return http.get('/oms/access/' + roleId);
+  },
+
   querySystemAccess: (params) => {
     return http.get('/oms/access/', {params});
   },
   save: (obj) => {
-    return http.post('/erp-access', obj);
+    return http.post('/erp-access/system', obj);
   }
 });
 

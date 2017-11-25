@@ -102,7 +102,8 @@
             <el-col :span="8">
               <oms-form-row label="批号" :span="5">
                 <el-select v-model="searchWord.batchNumberId" filterable clearable remote
-                           :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号">
+                           :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号"
+                           @click.native.once="filterBatchNumber('')">
                   <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
                              :label="item.batchNumber"></el-option>
                 </el-select>
@@ -225,7 +226,7 @@
         });
       },
       filterBatchNumber (query) {
-        this.$http.get('/batch-number/pager', {params: {keyWord: query}}).then(res => {
+        this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
           this.batchNumberList = res.data.list;
         });
       },

@@ -172,6 +172,7 @@
               roleId: m
             };
           });
+          self.form.orgId = this.orgId;
           self.form.objectId = 'cerp-system';
           if (this.action === 'add') {
             OrgUser.save(self.form).then(() => {
