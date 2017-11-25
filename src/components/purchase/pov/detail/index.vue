@@ -27,7 +27,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">接种点要货单详情</h2>
+        <h2 class="clearfix right-title">接种点需求单</h2>
         <div class="btn-submit-save">
           <el-button @click="close">关闭</el-button>
         </div>

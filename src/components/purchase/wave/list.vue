@@ -64,9 +64,9 @@
       <div class="order-list clearfix ">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="8">创建人</el-col>
-          <el-col :span="8">创建时间</el-col>
+          <el-col :span="4">创建时间</el-col>
           <el-col :span="4">状态</el-col>
-          <el-col :span="4">操作</el-col>
+          <el-col :span="6">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -87,13 +87,13 @@
               <el-col :span="8" class="R pt">
                 <span>{{ item.createName }}</span>
               </el-col>
-              <el-col :span="8" class="pt">
+              <el-col :span="4" class="pt">
                 <span>{{ item.createTime | minute}}</span>
               </el-col>
               <el-col :span="4" class="pt">
                 <span>{{ item.status === 0 ? '未完成' : '已完成' }}</span>
               </el-col>
-              <el-col :span="4" class="opera-btn">
+              <el-col :span="6" class="opera-btn">
                 <div v-show="item.status === 0">
                   <div>
                   <span @click.prevent="purchase(item)">
@@ -101,8 +101,6 @@
                       class="el-icon-t-link"></i></a>
                   规划采购
                   </span>
-                  </div>
-                  <div>
                    <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-wave"></i></a>

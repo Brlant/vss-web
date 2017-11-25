@@ -140,7 +140,7 @@ const route = [
               {
                 path: '/sale/allocation/task',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'sale', title: '接种点疫苗需求汇总单', perm: 'demand-assignment-update'}
+                meta: {moduleId: 'sale', title: '疫苗需求清单', perm: 'demand-assignment-update'}
               }
             ]
           },
