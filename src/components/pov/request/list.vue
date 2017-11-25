@@ -108,7 +108,7 @@
                     </perm>
                     <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
                       <el-button @click="audited()"><i
-                        class="el-icon-t-verify"></i>审核</el-button>
+                        class="el-icon-t-verify"></i>审批</el-button>
                     </perm>
                     <perm label="pull-signal-edit" v-show="currentOrder.status === 0">
                       <el-button @click="editOrder()"><i

@@ -53,7 +53,9 @@
   <div class="order-page">
     <div class="container">
       <div class="mb-15" style="overflow: hidden">
-        <perm label="submit-allocation-plan">
+        <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/sale/allocation')">返回需求汇总单
+        </el-button>
+        <perm label="submit-allocation-plan" v-show="!$route.query.type">
           <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 ">提交分配方案</el-button>
         </perm>
       </div>
