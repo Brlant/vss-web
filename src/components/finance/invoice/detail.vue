@@ -39,6 +39,9 @@
             <oms-row label="发票号码" :span="span">
               {{info.invoiceNumber}}
             </oms-row>
+            <oms-row label="待付金额" :span="span">
+              ￥{{(info.amount - info.paidAmount) | formatMoney}}
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="发票类型">
@@ -48,7 +51,7 @@
               ￥{{ info.amount | formatMoney}}
             </oms-row>
             <oms-row label="状态">
-              {{ info.status === 0 ? '未付款' : '已付款'}}
+              {{ info.status === 0 ? '未付清' : '已付清'}}
             </oms-row>
           </el-col>
         </el-row>

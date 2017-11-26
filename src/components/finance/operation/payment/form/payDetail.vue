@@ -92,9 +92,6 @@
             <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
           </td>
           <td>
-            <span>¥{{product.prepaidAccounts | formatCount}}</span>
-          </td>
-          <td>
             {{product.createTime | minute }}
           </td>
         </tr>
