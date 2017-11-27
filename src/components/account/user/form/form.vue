@@ -59,7 +59,7 @@
         if (value === '') {
           callback(new Error('请输入邮箱'));
         } else {
-          let re = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/ig;
+          let re = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ig;
           if (!re.test(value)) {
             callback(new Error('请输入正确的邮箱'));
           }
