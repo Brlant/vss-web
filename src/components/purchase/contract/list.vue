@@ -170,9 +170,10 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="8">编号/合同名称</el-col>
+          <el-col :span="4">编号/合同名称</el-col>
           <el-col :span="8">供货厂商</el-col>
           <el-col :span="4">创建时间</el-col>
+          <el-col :span="4">是否生成过采购订单</el-col>
           <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -191,7 +192,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showContract(item)"
                :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="8" class="pt10">
+              <el-col :span="4" class="pt10">
                 <div class="f-grey">
                   {{item.no }}
                 </div>
@@ -205,6 +206,11 @@
               <el-col :span="4">
                 <div>
                   {{item.createTime | minute }}
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div>
+                  {{item.used | formatStatus}}
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
