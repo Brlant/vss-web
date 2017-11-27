@@ -25,11 +25,13 @@ export default {
   },
   assignType: {
     0: {'title': '待分配', status: 1, num: ''},
-    1: {'title': '已完成分配', status: 4, num: ''}
+    1: {'title': '待生成订单', status: 2, num: ''},
+    2: {'title': '已完成分配', status: 4, num: ''},
+    3: {'title': '已取消', status: 3, num: ''}
   },
   waveType: {
-    0: {'title': '未完成', status: 0, num: ''},
-    1: {'title': '已完成', status: 1, num: ''}
+    0: {'title': '未分配', status: 0, num: ''},
+    1: {'title': '已分配', status: 1, num: ''}
   },
   inOrderType: {
     0: {'title': '待审单', state: '6', num: ''},
@@ -87,8 +89,8 @@ export default {
     1: {'title': '停用', status: '0', num: ''}
   },
   invoiceType: {
-    0: {'title': '未付款', status: 0, num: ''},
-    1: {'title': '已付款', status: 1, num: ''}
+    0: {'title': '未付清', status: 0, num: ''},
+    1: {'title': '已付清', status: 1, num: ''}
   },
   /**
    * 格式化地址，已省/市/区显示

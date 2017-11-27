@@ -191,7 +191,7 @@
             m.createTime = this.formatTime(m.createTime);
             m.expirationDate = this.formatTime(m.expirationDate);
             m.arriveDate = this.formatTime(m.arriveDate);
-            m.price = `￥${m.price}`;
+            m.price = m.price ? `￥${m.price}` : '';
             m.totalMoney = `￥${m.totalMoney}`;
             return m;
           });

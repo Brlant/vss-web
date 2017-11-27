@@ -110,7 +110,7 @@
         <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1">
           <perm label="demand-assignment-add" class="opera-btn">
             <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
-              class="el-icon-t-wave"></i></a><span class="wave-title"> 分配需求</span></span>
+              class="el-icon-t-wave"></i></a><span class="wave-title"> 生成汇总单</span></span>
           </perm>
        </span>
       </div>
@@ -119,10 +119,10 @@
           <el-col :span="1" v-show="filters.status === 1">
             <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
           </el-col>
-          <el-col :span="filters.status === 1 ? 6: 7">接种点要货申请ID</el-col>
+          <el-col :span="filters.status === 1 ? 4: 5">接种点要货申请编号</el-col>
           <el-col :span="7">接种点</el-col>
-          <el-col :span="3">需求产生时间</el-col>
-          <el-col :span="3">需求时间</el-col>
+          <el-col :span="3">到货需求日期</el-col>
+          <el-col :span="5">需求单创建时间</el-col>
           <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -146,7 +146,7 @@
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
               </el-col>
-              <el-col :span="filters.status === 1 ? 6: 7" class="R pt10">
+              <el-col :span="filters.status === 1 ? 4: 5" class="R pt10">
                 <span>
                   {{ item.id }}
                 </span>
@@ -155,17 +155,26 @@
                 <span>{{ item.povName }}</span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span>{{ item.applyTime | date }}</span>
-              </el-col>
-              <el-col :span="3" class="pt">
                 <span>{{ item.demandTime | date }}</span>
               </el-col>
+              <el-col :span="5" class="pt">
+                <span>{{ item.applyTime | time }}</span>
+              </el-col>
               <el-col :span="4" class="opera-btn">
-                <span @click.prevent="showDetail(item)">
+                <div>
+                  <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-detail"></i></a>
                   查看详情
-                </span>
+                  </span>
+                </div>
+                <div v-show="filters.status === 1">
+                   <span @click.prevent="cancel(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="el-icon-t-verify"></i></a>
+                  取消需求单
+                  </span>
+                </div>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -189,7 +198,6 @@
   </div>
 </template>
 <script>
-  //  import order from '../../../tools/demandList';
   import { demandAssignment, pullSignal, cerpAction } from '@/resources';
   import utils from '../../../tools/utils';
   import showForm from './detail/index.vue';
@@ -283,7 +291,9 @@
         }, this.filters);
         pullSignal.queryCount(params).then(res => {
           this.assignType[0].num = res.data['audited'];
-          this.assignType[1].num = res.data['assigned'];
+          this.assignType[1].num = res.data['create-wave'];
+          this.assignType[2].num = res.data['assigned'];
+          this.assignType[3].num = res.data['canceled'];
         });
       },
       filterOrg: function (query) {// 过滤供货商
@@ -373,6 +383,24 @@
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '需求分配失败'
+          });
+        });
+      },
+      cancel (item) {
+        this.$confirm('是否取消"' + item.id + '" 申请单?', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          pullSignal.cancel(item.id).then(() => {
+            this.$notify.success({
+              message: '已成功取消需求单'
+            });
+            this.getDemandList(1);
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '取消需求单失败'
+            });
           });
         });
       },

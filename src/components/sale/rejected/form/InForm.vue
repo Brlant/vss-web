@@ -392,8 +392,11 @@
               <el-row>
                 <el-col :span="12">
                   <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
-                    {{product.fixInfo.goodsDto.smallPacking}}/
+                    {{product.fixInfo.goodsDto.smallPacking}}
                     <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'"
+                          :dict-key="product.fixInfo.goodsDto.smallPackageUnit"></dict>
                   </oms-row>
                   <oms-row label="货品编号" :span="8">
                     {{product.fixInfo.goodsNo}}
@@ -403,9 +406,6 @@
                   </oms-row>
                   <oms-row label="批准文号" :span="8">
                     {{product.fixInfo.goodsDto.approvalNumber}}
-                  </oms-row>
-                  <oms-row label="是否OTC" :span="8">
-                    <span v-show="product.orgGoodsId">{{product.fixInfo.goodsDto.goodsOtc | formatStatus}}</span>
                   </oms-row>
                 </el-col>
                 <el-col :span="12">
@@ -611,7 +611,7 @@
         index: 0,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '添加货品', key: 1}
+          {name: '货品信息', key: 1}
         ],
         orgList: [],
         customerList: [],

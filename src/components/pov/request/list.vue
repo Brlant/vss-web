@@ -79,7 +79,7 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    要货申请ID {{item.id }}
+                    要货申请编号 {{item.id }}
                   </div>
                   <div>
                     {{item.povName }}
@@ -108,7 +108,7 @@
                     </perm>
                     <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
                       <el-button @click="audited()"><i
-                        class="el-icon-t-verify"></i>审核</el-button>
+                        class="el-icon-t-verify"></i>审批</el-button>
                     </perm>
                     <perm label="pull-signal-edit" v-show="currentOrder.status === 0">
                       <el-button @click="editOrder()"><i
@@ -125,14 +125,14 @@
             <div class="content-body clearfix">
               <el-row>
                 <el-col :span="8">
-                  <oms-row label="要货申请ID">
+                  <oms-row label="要货申请编号">
                     {{currentOrder.id }}
                   </oms-row>
                   <oms-row label="申请时间">
-                    {{currentOrder.applyTime | date}}
+                    {{currentOrder.applyTime | time}}
                   </oms-row>
                   <oms-row label="需求时间">
-                    {{currentOrder.demandTime | date}}
+                    {{currentOrder.demandTime | time}}
                   </oms-row>
                   <oms-row label="接种点仓库">
                     {{currentOrder.warehouseName}}
@@ -146,7 +146,7 @@
                     {{currentOrder.auditManName}}
                   </oms-row>
                   <oms-row label="审批时间">
-                    {{currentOrder.auditTime | date}}
+                    {{currentOrder.auditTime | time}}
                   </oms-row>
                   <oms-row label="关联疾控销售订单">
                     {{currentOrder.orderNo}}

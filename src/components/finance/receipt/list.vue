@@ -311,8 +311,8 @@
         orderId: '',
         currentDetail: {},
         orgType: {
-          0: {title: '应收总额', num: ''},
-          1: {title: '已收总额', num: ''}
+          0: {title: '已收总额', num: ''},
+          1: {title: '未收总额', num: ''}
         }
       };
     },
@@ -393,8 +393,8 @@
       },
       queryTotalMoney () {
         this.$http.get('/accounts-receivable/statistics').then(res => {
-          this.orgType[0].num = res.data['totalMoney'];
-          this.orgType[1].num = res.data['paidMoney'];
+          this.orgType[0].num = res.data['paidMoney'];
+          this.orgType[1].num = res.data['totalMoney'] - res.data['paidMoney'];
         });
       },
       refresh () {

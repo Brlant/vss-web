@@ -116,10 +116,13 @@
                 </oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <el-button :plain="true" type="success" @click="exportFile">
+                  导出Excel
+                </el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -199,6 +202,7 @@
   //  import order from '../../../tools/orderList';
   import { BaseInfo, OrgGoods, erpStock, http } from '@/resources';
   import detail from './detail.vue';
+  import utils from '@/tools/utils';
   export default {
     components: {detail},
     data () {
@@ -259,6 +263,19 @@
           this.batches = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+        });
+      },
+      exportFile: function () {
+        let params = Object.assign({}, this.filters);
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/store/request'});
+        this.$http.get('/erp-stock/export', {params}).then(res => {
+          utils.download(res.data.path, '即时库存查询');
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/store/request'});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/store/request'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
         });
       },
       showDetail (item) {

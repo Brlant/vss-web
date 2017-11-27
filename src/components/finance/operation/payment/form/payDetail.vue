@@ -12,8 +12,6 @@
     }
   }
 
-
-
   .goods-btn {
     a:hover {
       color: @activeColor;
@@ -64,8 +62,9 @@
         <thead>
         <tr>
           <th width="30px">操作</th>
-          <th style="width: 240px">货品名称</th>
+          <th :style="{width: billPayType === '1' ? '200px' : '260px'}">货品名称</th>
           <th>订单号</th>
+          <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
           <th>待付金额</th>
           <th>创建时间</th>
         </tr>
@@ -88,11 +87,11 @@
           <td>
             <span>{{product.orderNo}}</span>
           </td>
-          <td>
-            <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
+          <td class="break-word" v-show="billPayType === '1'">
+            <span>{{product.invoiceNo ? product.invoiceNo : '无'}}</span>
           </td>
           <td>
-            <span>¥{{product.prepaidAccounts | formatCount}}</span>
+            <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
           </td>
           <td>
             {{product.createTime | minute }}
@@ -100,7 +99,7 @@
         </tr>
         </tbody>
       </table>
-      <div class="text-center" v-show="pager.count>pager.pageSize">
+      <div class="text-center" v-show="pager.count>pager.pageSize && factoryId">
         <el-pagination layout="prev, pager, next"
                        :total="pager.count"
                        :pageSize="pager.pageSize"
@@ -117,8 +116,9 @@
       <table class="table">
         <thead>
         <tr>
-          <th style="width: 260px">订单号/货品名称</th>
+          <th :style="{width: billPayType === '1' ? '180px' : '260px'}">订单号/货品名称</th>
           <th>创建时间</th>
+          <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
           <th>待付金额</th>
           <th>本次付款金额</th>
           <th>操作</th>
@@ -132,6 +132,9 @@
           </td>
           <td>
             {{product.createTime | minute }}
+          </td>
+          <td class="break-word" v-show="billPayType === '1'">
+            {{product.invoiceNo ? product.invoiceNo : '无'}}
           </td>
           <td>
             <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>

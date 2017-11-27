@@ -195,7 +195,7 @@
           this.reportList = res.data.map(m => {
             m.createTime = this.formatTime(m.createTime);
             m.expirationDate = this.formatTime(m.expirationDate);
-            m.price = `￥${m.price}`;
+            m.price = m.price ? `￥${m.price}` : '';
             m.totalMoney = `￥${m.totalMoney}`;
             return m;
           });

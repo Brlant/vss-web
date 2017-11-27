@@ -217,7 +217,7 @@
   }
 
   .ar {
-    text-align: right;
+    text-align: center;
   }
 
   .goods-btn {
@@ -273,7 +273,7 @@
           <el-form ref="orderGoodsForm" :rules="goodsRules" :model="product" @submit.prevent="onSubmit"
                    onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="疫苗" prop="orgGoodsId">
+            <el-form-item label="疫苗">
               <el-select v-model="product.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
                          :loading="loading" popper-class="order-good-selects"
                          @change="getGoodDetail">
@@ -303,7 +303,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="疫苗数量" prop="amount">
+            <el-form-item label="疫苗数量">
               <oms-input type="number" placeholder="请输入申请数量" v-model.number="product.amount" :min="0"
                          @blur="changeNumber">
                 <template slot="append">
@@ -318,8 +318,11 @@
               <el-row>
                 <el-col :span="12">
                   <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
-                    {{product.fixInfo.goodsDto.smallPacking}}/
+                    {{product.fixInfo.goodsDto.smallPacking}}
                     <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'"
+                          :dict-key="product.fixInfo.goodsDto.smallPackageUnit"></dict>
                   </oms-row>
                   <oms-row label="疫苗编号" :span="8">
                     {{product.fixInfo.goodsNo}}
@@ -558,8 +561,21 @@
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       changeType () {
+        this.product = {
+          'amount': null,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
         this.$refs['orderGoodsForm'].resetFields();
         this.accessoryList = [];
+        this.currentList = [];
+        this.form.detailDtoList = [];
         this.filterProduct();
         this.searchProduct();
       },
@@ -654,49 +670,56 @@
         });
       },
       addProduct: function () {// 疫苗加入到订单
-        this.$refs['orderGoodsForm'].validate((valid) => {
-          if (!valid) {
-            return false;
-          }
-          let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-          if (!isCheck) return;
-          this.currentList.forEach((item) => {
-            if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-              this.product.orgGoodsName = item.orgGoodsDto.name;
-              this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
-              item.list.forEach(m => {
-                let amount = Math.ceil(m.proportion * this.product.amount);
-                this.form.detailDtoList.push({
-                  mainOrgId: item.orgGoodsDto.id,
-                  isCombination: true,
-                  orgGoodsId: m.accessory,
-                  orgGoodsName: m.name,
-                  unitPrice: m.unitPrice,
-                  amount: amount,
-                  measurementUnit: m.accessoryGoods.measurementUnit,
-                  packingCount: null,
-                  specificationsId: ''
-                });
+        if (!this.product.orgGoodsId) {
+          this.$notify.info({
+            message: '请选择疫苗'
+          });
+          return;
+        }
+        if (!this.product.amount) {
+          this.$notify.info({
+            message: '请输入疫苗数量'
+          });
+          return;
+        }
+        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+        if (!isCheck) return;
+        this.currentList.forEach((item) => {
+          if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+            this.product.orgGoodsName = item.orgGoodsDto.name;
+            this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
+            item.list.forEach(m => {
+              let amount = Math.ceil(m.proportion * this.product.amount);
+              this.form.detailDtoList.push({
+                mainOrgId: item.orgGoodsDto.id,
+                isCombination: true,
+                orgGoodsId: m.accessory,
+                orgGoodsName: m.name,
+                unitPrice: m.unitPrice,
+                amount: amount,
+                measurementUnit: m.accessoryGoods.measurementUnit,
+                packingCount: null,
+                specificationsId: ''
               });
-            }
-          });
-          this.searchProduct();
-          this.$nextTick(function () {
-            this.product = {
-              'amount': null,
-              'measurementUnit': '',
-              'orgGoodsId': '',
-              'packingCount': null,
-              'specificationsId': '',
-              'fixInfo': {
-                'goodsDto': {}
-              },
-              'unitPrice': null
-            };
-            this.$refs['orderGoodsForm'].resetFields();
-            this.accessoryList = [];
-            this.currentList = [];
-          });
+            });
+          }
+        });
+        this.searchProduct();
+        this.$nextTick(function () {
+          this.product = {
+            'amount': null,
+            'measurementUnit': '',
+            'orgGoodsId': '',
+            'packingCount': null,
+            'specificationsId': '',
+            'fixInfo': {
+              'goodsDto': {}
+            },
+            'unitPrice': null
+          };
+          this.$refs['orderGoodsForm'].resetFields();
+          this.accessoryList = [];
+          this.currentList = [];
         });
       },
       remove: function (item) {
