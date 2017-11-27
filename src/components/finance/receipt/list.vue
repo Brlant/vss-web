@@ -187,7 +187,7 @@
                 <th>货品名称</th>
                 <th>创建时间</th>
                 <th>应收金额</th>
-                <th>实收金额</th>
+                <th>待收金额</th>
                 <th>状态</th>
               </tr>
               </thead>
@@ -222,7 +222,7 @@
                 </td>
                 <td>
                   <span>
-                    ￥{{row.prepaidAccounts | formatMoney}}
+                    ￥{{(row.billAmount - row.prepaidAccounts) | formatMoney}}
                   </span>
                 </td>
                 <td>
@@ -311,8 +311,8 @@
         orderId: '',
         currentDetail: {},
         orgType: {
-          0: {title: '应收总额', num: ''},
-          1: {title: '已收总额', num: ''}
+          0: {title: '已收总额', num: ''},
+          1: {title: '未收总额', num: ''}
         }
       };
     },
@@ -393,8 +393,8 @@
       },
       queryTotalMoney () {
         this.$http.get('/accounts-receivable/statistics').then(res => {
-          this.orgType[0].num = res.data['totalMoney'];
-          this.orgType[1].num = res.data['paidMoney'];
+          this.orgType[0].num = res.data['paidMoney'];
+          this.orgType[1].num = res.data['totalMoney'] - res.data['paidMoney'];
         });
       },
       refresh () {

@@ -14,7 +14,7 @@
       <el-form-item label="手机号码" prop="phone">
         <oms-input type="text" v-model="form.phone" placeholder="请输入手机号码"></oms-input>
       </el-form-item>
-      <el-form-item label="Email">
+      <el-form-item label="Email" prop="email">
         <oms-input type="text" v-model="form.email" placeholder="请输入邮箱"></oms-input>
       </el-form-item>
       <el-form-item label="用户角色" v-if="!form.adminFlag">
@@ -59,7 +59,7 @@
         if (value === '') {
           callback(new Error('请输入邮箱'));
         } else {
-          let re = /^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$/ig;
+          let re = /^\w+([-+.]\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ig;
           if (!re.test(value)) {
             callback(new Error('请输入正确的邮箱'));
           }
@@ -106,7 +106,7 @@
             {validator: checkPhone, trigger: 'blur'}
           ],
           email: [
-            {required: true, message: '请输入邮箱', trigger: 'blur'},
+//            {required: true, message: '请输入邮箱', trigger: 'blur'},
             {validator: checkEmail, trigger: 'blur'}
           ],
           roleId: [
@@ -162,26 +162,24 @@
       },
       onSubmit: function (formName) {
         let self = this;
+        if (this.doing) return;
+        this.doing = true;
         this.$refs[formName].validate((valid) => {
-          if (!valid || this.doing) {
+          if (!valid) {
+            this.doing = false;
             return false;
           }
           this.doing = true;
-          let title = '';
-          this.roleSelect.forEach(item => {
-            if (this.roleId === item.id) {
-              title = item.title;
-            }
-          });
-          self.form.list = self.form.list.map(m => {
+          let formData = JSON.parse(JSON.stringify(this.form));
+          formData.list = self.form.list.map(m => {
             return {
               roleId: m
             };
           });
-          self.form.orgId = this.user.userCompanyAddress;
-          self.form.objectId = 'cerp-system';
+          formData.orgId = this.user.userCompanyAddress;
+          formData.objectId = 'cerp-system';
           if (this.action === 'add') {
-            OrgUser.save(self.form).then(() => {
+            OrgUser.save(formData).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
@@ -197,7 +195,7 @@
               this.doing = false;
             });
           } else {
-            OrgUser.update(self.form.id, self.form).then(() => {
+            OrgUser.update(self.form.id, formData).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,

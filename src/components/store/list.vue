@@ -180,6 +180,26 @@
               </el-col>
             </el-row>
           </div>
+          <el-row class="order-list-item order-list-item-bg" style="background: #f1f1f1">
+            <el-col :span="6" class="pt">
+              <span>合计</span>
+            </el-col>
+            <el-col :span="6" class="pt">
+            </el-col>
+            <el-col :span=" orgLevel === 3 ? 4: 3" class="pt">
+            </el-col>
+            <el-col :span="2" class="pt" v-show="orgLevel !== 3" align="center" style="padding-left: 5px;">
+              <span>{{ totalInfo.availableCount }}</span>
+            </el-col>
+            <el-col :span=" orgLevel === 3 ? 4: 3" style="padding-left: 5px;">
+              <div><span class="align-word">合格</span>：{{ totalInfo.qualifiedCount }}</div>
+            </el-col>
+            <el-col :span="2" v-show="orgLevel !== 3" class="pt" align="center">
+              <span>{{ totalInfo.transitCount }}</span>
+            </el-col>
+            <el-col :span=" orgLevel === 3 ? 4: 2" class="pt" align="center">
+            </el-col>
+          </el-row>
         </div>
 
       </div>
@@ -232,7 +252,8 @@
           pageSize: 20
         },
         currentItemId: '',
-        currentItem: {}
+        currentItem: {},
+        totalInfo: {}
       };
     },
     mounted () {
@@ -253,6 +274,7 @@
     },
     methods: {
       getBatches (pageNo) { // 得到波次列表
+        this.totalInfo = {};
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
@@ -260,7 +282,10 @@
         }, this.filters);
         this.loadingData = true;
         erpStock.query(params).then(res => {
-          this.batches = res.data.list;
+          if (res.data.list.length > 1) {
+            this.batches = res.data.list.filter(f => f.id);
+            this.totalInfo = res.data.list[res.data.list.length - 1];
+          }
           this.pager.count = res.data.count;
           this.loadingData = false;
         });

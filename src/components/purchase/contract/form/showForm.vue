@@ -311,6 +311,9 @@
             <el-form-item label="是否生效">
               {{form.availabilityStatus | formatStatus}}
             </el-form-item>
+            <el-form-item label="是否生成过采购订单">
+              {{form.purchaseContractIsUsed | formatStatus}}
+            </el-form-item>
             <el-form-item label="备注">
               {{form.remark}}
             </el-form-item>

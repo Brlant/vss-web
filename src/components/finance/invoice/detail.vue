@@ -39,6 +39,9 @@
             <oms-row label="发票号码" :span="span">
               {{info.invoiceNumber}}
             </oms-row>
+            <oms-row label="待付金额" :span="span">
+              ￥{{(info.amount - info.paidAmount) | formatMoney}}
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="发票类型">
@@ -48,7 +51,7 @@
               ￥{{ info.amount | formatMoney}}
             </oms-row>
             <oms-row label="状态">
-              {{ info.status === 0 ? '未付款' : '已付款'}}
+              {{ info.status === 0 ? '未付清' : '已付清'}}
             </oms-row>
           </el-col>
         </el-row>
@@ -60,9 +63,10 @@
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 300px">货品名称</th>
+                <th style="width: 250px">货品名称</th>
                 <th>订单号</th>
                 <th>应付金额</th>
+                <th>待付金额</th>
                 <th>创建时间</th>
               </tr>
               </thead>
@@ -77,6 +81,9 @@
                 <td>
                   <span v-show="Number(product.billAmount)">¥{{product.billAmount | formatMoney}}</span>
                   <span v-if="!Number(product.billAmount)">-</span>
+                </td>
+                <td>
+                  <span>¥{{ (product.billAmount - product.prepaidAccounts) | formatMoney}}</span>
                 </td>
                 <td>
                   {{product.createTime | minute }}
