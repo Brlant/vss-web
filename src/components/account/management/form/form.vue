@@ -14,16 +14,16 @@
       <el-form-item label="手机号码" prop="phone">
         <oms-input type="text" v-model="form.phone" placeholder="请输入"></oms-input>
       </el-form-item>
-      <el-form-item label="Email">
+      <el-form-item label="Email" prop="email">
         <oms-input type="text" v-model="form.email" placeholder="请输入"></oms-input>
       </el-form-item>
-      <el-form-item label="用户角色" v-if="!form.adminFlag">
+      <el-form-item label="用户角色" v-if="!form.adminFlag" prop="list">
         <el-select placeholder="请选择用户角色" v-model="form.list" multiple filterable :clearable="true">
           <el-option :label="item.title" :value="item.id" :key="item.id" v-for="item in roleSelect"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label-width="100px">
-        <el-button type="primary" @click="onSubmit('accountform')" native-type="submit">保存</el-button>
+        <el-button type="primary" @click="onSubmit('accountform')" native-type="submit" :disabled="doing">保存</el-button>
         <el-button @click="doClose">取消</el-button>
       </el-form-item>
     </el-form>
@@ -108,11 +108,10 @@
             {validator: checkPhone, trigger: 'blur'}
           ],
           email: [
-            {required: true, message: '请输入邮箱地址', trigger: 'blur'},
             {validator: checkEmail, trigger: 'blur'}
           ],
-          roleId: [
-            {required: true, message: '请输入用户角色', trigger: 'blur'}
+          list: [
+            {required: true, type: 'array', message: '请选择用户角色', trigger: 'blur'}
           ]
         },
         roleSelect: [],
@@ -156,26 +155,24 @@
       },
       onSubmit: function (formName) {
         let self = this;
+        if (this.doing) return;
+        this.doing = true;
         this.$refs[formName].validate((valid) => {
-          if (!valid || this.doing) {
+          if (!valid) {
+            this.doing = false;
             return false;
           }
           this.doing = true;
-          let title = '';
-          this.roleSelect.forEach(item => {
-            if (this.roleId === item.id) {
-              title = item.title;
-            }
-          });
-          self.form.list = self.form.list.map(m => {
+          let formData = JSON.parse(JSON.stringify(this.form));
+          formData.list = self.form.list.map(m => {
             return {
               roleId: m
             };
           });
-          self.form.orgId = this.orgId;
-          self.form.objectId = 'cerp-system';
+          formData.orgId = this.orgId;
+          formData.objectId = 'cerp-system';
           if (this.action === 'add') {
-            OrgUser.save(self.form).then(() => {
+            OrgUser.save(formData).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
@@ -191,14 +188,14 @@
               this.doing = false;
             });
           } else {
-            OrgUser.update(self.form.id, self.form).then(() => {
+            OrgUser.update(self.form.id, formData).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
                 message: '修改货主用户"' + self.form.name + '"成功'
               });
-              self.$emit('change', self.form);
+              self.$emit('change', formData);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
