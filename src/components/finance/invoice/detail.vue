@@ -63,9 +63,10 @@
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 300px">货品名称</th>
+                <th style="width: 250px">货品名称</th>
                 <th>订单号</th>
                 <th>应付金额</th>
+                <th>待付金额</th>
                 <th>创建时间</th>
               </tr>
               </thead>
@@ -80,6 +81,9 @@
                 <td>
                   <span v-show="Number(product.billAmount)">¥{{product.billAmount | formatMoney}}</span>
                   <span v-if="!Number(product.billAmount)">-</span>
+                </td>
+                <td>
+                  <span>¥{{ (product.billAmount - product.prepaidAccounts) | formatMoney}}</span>
                 </td>
                 <td>
                   {{product.createTime | minute }}
