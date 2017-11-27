@@ -132,7 +132,7 @@
                     {{currentOrder.applyTime | time}}
                   </oms-row>
                   <oms-row label="需求时间">
-                    {{currentOrder.demandTime | time}}
+                    {{currentOrder.demandTime | date }}
                   </oms-row>
                   <oms-row label="接种点仓库">
                     {{currentOrder.warehouseName}}

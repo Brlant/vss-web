@@ -191,6 +191,13 @@
               </el-col>
             </el-row>
           </div>
+          <el-row class="order-list-item order-list-item-bg" v-show="bills.length">
+            <el-col :span="6">合计</el-col>
+            <el-col :span="6"></el-col>
+            <el-col :span="4" style="padding-left: 5px">{{ totalBill.count }}</el-col>
+            <el-col :span="4" style="padding-left: 5px">￥{{ totalBill.money | formatMoney }}</el-col>
+            <el-col :span="4"></el-col>
+          </el-row>
         </div>
       </div>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
@@ -205,8 +212,10 @@
 </template>
 <script>
   import { BaseInfo, http, Vaccine } from '@/resources';
+  import ElRow from 'element-ui/packages/row/src/row';
 
   export default {
+    components: {ElRow},
     data () {
       return {
         loadingData: true,
@@ -227,7 +236,8 @@
           count: 0,
           pageSize: 15
         },
-        goodses: []
+        goodses: [],
+        totalBill: {}
       };
     },
     mounted () {
@@ -246,6 +256,13 @@
           this.bills = res.data.list || [];
           this.pager.count = res.data.count;
           this.loadingData = false;
+        });
+        this.queryTotal(params);
+      },
+      queryTotal (params) {
+        this.totalBill = {};
+        http.get('/factory-reconciliation/providers/statistics/', {params}).then(res => {
+          this.totalBill = res.data;
         });
       },
       filterFactory (query) { // 查询厂商
