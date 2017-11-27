@@ -187,7 +187,7 @@
                 <th>货品名称</th>
                 <th>创建时间</th>
                 <th>应收金额</th>
-                <th>实收金额</th>
+                <th>待收金额</th>
                 <th>状态</th>
               </tr>
               </thead>
@@ -222,7 +222,7 @@
                 </td>
                 <td>
                   <span>
-                    ￥{{row.prepaidAccounts | formatMoney}}
+                    ￥{{(row.billAmount - row.prepaidAccounts) | formatMoney}}
                   </span>
                 </td>
                 <td>

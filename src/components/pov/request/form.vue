@@ -231,7 +231,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">新增要货申请单</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">{{ index === 2 ? '编辑' : '新增' }}要货申请单</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit" :disabled="doing">保存申请单</el-button>
@@ -561,21 +561,23 @@
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       changeType () {
-        this.product = {
-          'amount': null,
-          'measurementUnit': '',
-          'orgGoodsId': '',
-          'packingCount': null,
-          'specificationsId': '',
-          'fixInfo': {
-            'goodsDto': {}
-          },
-          'unitPrice': null
-        };
+        if (this.index !== 2) {
+          this.product = {
+            'amount': null,
+            'measurementUnit': '',
+            'orgGoodsId': '',
+            'packingCount': null,
+            'specificationsId': '',
+            'fixInfo': {
+              'goodsDto': {}
+            },
+            'unitPrice': null
+          };
+          this.accessoryList = [];
+          this.currentList = [];
+          this.form.detailDtoList = [];
+        }
         this.$refs['orderGoodsForm'].resetFields();
-        this.accessoryList = [];
-        this.currentList = [];
-        this.form.detailDtoList = [];
         this.filterProduct();
         this.searchProduct();
       },
@@ -651,10 +653,11 @@
         }
         http.get('/org/goods/' + OrgGoodsId).then(res => {
           this.currentList.push(res.data);
+          let currentObj = this.filterProductList.length > 0 ? this.filterProductList[0] : {};
           this.currentList.forEach(item => {
             if (item.orgGoodsDto.id === OrgGoodsId) {
               this.product.fixInfo = item.orgGoodsDto;
-              let sellPrice = item.orgGoodsDto.sellPrice;
+              let sellPrice = currentObj.sellPrice;
               this.product.unitPrice = utils.autoformatDecimalPoint(sellPrice ? sellPrice.toString() : '');
               this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
               this.accessoryList = item.list;

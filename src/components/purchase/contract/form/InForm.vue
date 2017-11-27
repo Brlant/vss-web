@@ -478,7 +478,7 @@
 </template>
 
 <script>
-  import {PurchaseContract, LogisticsCenter, http, Address, BaseInfo, InWork} from './../../../../resources';
+  import { PurchaseContract, LogisticsCenter, http, Address, BaseInfo, InWork } from './../../../../resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -498,7 +498,8 @@
         default: ''
       },
       purchase: Object,
-      orderId: String
+      orderId: String,
+      vaccineType: String
     },
     data: function () {
       return {
@@ -648,7 +649,7 @@
           }
         });
       },
-      defaultIndex(val) {
+      defaultIndex (val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -683,7 +684,9 @@
       this.initForm();
     },
     methods: {
-      createOrderInfo() {
+      createOrderInfo () {
+        this.form.purchaseContractName = '';
+        this.form.purchaseContractNo = '';
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
         if (!orgGoodsId) return;
@@ -723,7 +726,7 @@
 //          });
         });
       },
-      editOrderInfo() {
+      editOrderInfo () {
         if (!this.orderId) return;
         PurchaseContract.queryContractDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -738,7 +741,7 @@
           });
         });
       },
-      changeNumber() {
+      changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
@@ -818,7 +821,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress() {
+      filterAddress () {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -936,20 +939,65 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.supplierId) {
-          this.searchProductList = [];
-          return;
-        }
-        let params = {
-          keyWord: query,
-          factoryId: this.form.supplierId
-        };
-        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-          this.searchProductList = res.data.list;
-          this.$nextTick(function () {
-            this.filterProducts();
+        if (!this.vaccineType) {
+          if (!this.form.supplierId) {
+            this.searchProductList = [];
+            return;
+          }
+          let params = {
+            keyWord: query,
+            factoryId: this.form.supplierId
+          };
+          http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+            this.searchProductList = res.data.list;
+            this.$nextTick(function () {
+              this.filterProducts();
+            });
           });
-        });
+        } else {
+          if (this.orgLevel === 1) {
+            if (!this.form.supplierId) {
+              this.searchProductList = [];
+              return;
+            }
+            let params = {
+              keyWord: query
+            };
+            let rTime = Date.now();
+            this.requestTime = rTime;
+            http.get(`/vaccine-info/${this.form.supplierId}/first-vaccine/valid`, {params: params}).then(res => {
+              if (this.requestTime > rTime) {
+                return;
+              }
+              this.searchProductList = res.data.list;
+              this.$nextTick(function () {
+                this.filterProducts();
+              });
+            });
+          } else {
+            if (!this.form.supplierId) {
+              this.searchProductList = [];
+              return;
+            }
+            let params = {
+              vaccineType: this.vaccineType,
+              keyWord: query,
+              factoryId: this.form.supplierId
+            };
+            let rTime = Date.now();
+            this.requestTime = rTime;
+            http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+              if (this.requestTime > rTime) {
+                return;
+              }
+              this.searchProductList = res.data.list;
+              this.$nextTick(function () {
+                this.filterProducts();
+              });
+            });
+          }
+        }
+
       },
       filterProducts: function () {
         let arr = [];
@@ -1063,7 +1111,7 @@
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         this.searchProduct();
       },
-      editItem(item) {
+      editItem (item) {
         this.filterProductList.push({
           orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []

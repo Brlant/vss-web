@@ -158,10 +158,10 @@
                 </span>
                 </div>
                 <div>
-                  <span @click.prevent="showOrderFormPart(item)" v-show="item.balanceAmount < 0 && status === 0 ">
+                  <span @click.prevent="showOrderFormPart(item)" v-show="$route.query.type">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-link"></i></a>
-                  生成采购订单
+                  生成采购合同
                   </span>
                 </div>
               </el-col>
@@ -185,14 +185,14 @@
                 :css="{'width':'1000px','padding':0}">
       <order-form type="0" :defaultIndex="defaultIndex" :orderId="currentItemId" :purchase="purchase"
                   action="add"
-                  @close="resetRightBox" :vaccineType="vaccineType"></order-form>
+                  @right-close="resetRightBox" :vaccineType="vaccineType"></order-form>
     </page-right>
   </div>
 </template>
 <script>
   import { demandAssignment, OrgGoods } from '@/resources';
   import allotForm from './form.vue';
-  import orderForm from '../order/form/InForm.vue';
+  import orderForm from '../contract/form/InForm.vue';
   export default {
     components: {
       allotForm,
