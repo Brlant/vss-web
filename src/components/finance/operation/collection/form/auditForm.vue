@@ -279,6 +279,12 @@
             <el-form-item label="收款说明" class="mb0">
               {{form.explain}}
             </el-form-item>
+            <el-form-item label="创建人" class="mb0">
+              {{form.createName}}
+            </el-form-item>
+            <el-form-item label="创建时间" class="mb0">
+              {{form.createTime | minute}}
+            </el-form-item>
             <el-form-item label="收款明细" class="mb0">
               <span v-show="!form.detailList.length">无</span>
             </el-form-item>
@@ -304,7 +310,11 @@
             <el-form-item label="审批意见">
               <oms-input v-show="form.status ==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
-              <span v-show="form.status!=='0'">{{ form.auditOpinion ? form.auditOpinion : '无' }}</span>
+              <span v-show="form.status!=='0'">
+                 <span v-show="!form.auditOpinion">无</span>
+                <span v-show="form.auditOpinion">{{ form.auditedName }}   {{ form.auditTime | minute
+                  }}  {{ form.auditOpinion }}</span>
+              </span>
             </el-form-item>
             <el-form-item style="margin-top: 10px">
               <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"

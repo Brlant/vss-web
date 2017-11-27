@@ -263,6 +263,9 @@
         <div>
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
+            <el-form-item label="发票付款" class="mb0">
+              {{form.billPayType === '0' ? '无' : '有' }}
+            </el-form-item>
             <el-form-item label="付款单位" class="mb0">
               {{form.orgName }}
             </el-form-item>
@@ -275,6 +278,12 @@
             <el-form-item label="付款说明" class="mb0">
               {{form.explain}}
             </el-form-item>
+            <el-form-item label="创建人" class="mb0">
+              {{form.createName}}
+            </el-form-item>
+            <el-form-item label="创建时间" class="mb0">
+              {{form.createTime | minute}}
+            </el-form-item>
             <el-form-item label="付款明细" class="mb0">
               <span v-if="!form.detailList.length">无</span>
             </el-form-item>
@@ -282,25 +291,33 @@
                 v-if="form.detailList.length">
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
-                  <el-col :span="8">货品名称 </el-col>
-                  <el-col :span="6">订单号 </el-col>
-                  <el-col :span="6">创建时间 </el-col>
-                  <el-col :span="4">本次付款金额 </el-col>
+                  <el-col :span="form.billPayType === '1' ? 7 : 8">货品名称</el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">订单号</el-col>
+                  <el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">创建时间 </el-col>
+                  <el-col :span="form.billPayType === '1' ? 3 : 4">本次付款金额 </el-col>
                 </el-row>
               </li>
               <li class="show-item" v-for="item in form.detailList">
                 <el-row type="flex">
-                  <el-col :span="8">{{ item.goodsName }} </el-col>
-                  <el-col :span="6">{{ item.orderNo }} </el-col>
-                  <el-col :span="6">{{ item.createTime | minute }} </el-col>
-                  <el-col :span="4"> ￥{{item.paidMoney | formatMoney}} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 7 : 8">{{ item.goodsName }} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.orderNo }} </el-col>
+                  <el-col :span="4" v-show="form.billPayType === '1'" class="break-word">
+                    {{ item.invoiceNo ? item.invoiceNo : '无' }}
+                  </el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.createTime | minute }} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 3 : 4"> ￥{{item.paidMoney | formatMoney}} </el-col>
                 </el-row>
               </li>
             </ul>
             <el-form-item label="审批意见" style="margin-top: 10px">
               <oms-input v-show="form.status ==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
-              <span v-show="form.status!=='0'">{{ form.auditOpinion ? form.auditOpinion : '无' }}</span>
+              <span v-show="form.status!=='0'">
+                <span v-show="!form.auditOpinion">无</span>
+                <span v-show="form.auditOpinion">{{ form.auditedName }}   {{ form.auditTime | minute
+                  }}  {{ form.auditOpinion }}</span>
+              </span>
             </el-form-item>
             <el-form-item style="margin-top: 10px">
               <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"

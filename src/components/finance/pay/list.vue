@@ -305,8 +305,8 @@
         currentDetail: {},
         orgGoods: [],
         orgType: {
-          0: {title: '应付总额', num: ''},
-          1: {title: '已付总额', num: ''}
+          0: {title: '已付总额', num: ''},
+          1: {title: '未付总额', num: ''}
         }
       };
     },
@@ -387,8 +387,8 @@
       },
       queryTotalMoney () {
         this.$http.get('/accounts-payable/statistics').then(res => {
-          this.orgType[0].num = res.data['totalMoney'];
-          this.orgType[1].num = res.data['paidMoney'];
+          this.orgType[0].num = res.data['paidMoney'];
+          this.orgType[1].num = res.data['totalMoney'] - res.data['paidMoney'];
         });
       },
       refresh () {

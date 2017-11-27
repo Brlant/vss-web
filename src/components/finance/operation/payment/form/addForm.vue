@@ -271,6 +271,7 @@
                 off-text="无"
                 on-value="1"
                 off-value="0"
+                @change="changeBillPayType"
               >
               </el-switch>
             </el-form-item>
@@ -423,10 +424,7 @@
     },
     methods: {
       changeBillPayType: function () {
-        this.form.orgId = '';
-        this.form.relationList = [];
-        this.orgList = [];
-        this.logisticsList = [];
+        this.selectPayments = [];
       },
       resetForm: function () {// 重置表单
         this.$refs['addForm'].resetFields();

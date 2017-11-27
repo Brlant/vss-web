@@ -392,19 +392,16 @@
     },
     methods: {
       setAccountsPayableId: function () {
+        this.selectPayments = [];
         if (this.form.orgId) {
           this.filterOrg();
-          this.orgList.forEach(val => {
-            if (this.form.orgId === val.remitteeId) {
-              this.form.accountsPayableId = val.id;
-            }
-          });
         }
       },
       changeBillPayType: function () {
         this.form.orgId = '';
         this.orgList = [];
         this.logisticsList = [];
+        this.selectPayments = [];
         this.filterOrg();
       },
       resetForm: function () {// 重置表单
