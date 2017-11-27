@@ -173,7 +173,7 @@
           <el-col :span="4">编号/合同名称</el-col>
           <el-col :span="8">供货厂商</el-col>
           <el-col :span="4">创建时间</el-col>
-          <el-col :span="4">是否生成过采购订单</el-col>
+          <el-col :span="4">关联采购订单</el-col>
           <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -208,9 +208,15 @@
                   {{item.createTime | minute }}
                 </div>
               </el-col>
-              <el-col :span="4">
-                <div>
-                  {{item.used | formatStatus}}
+              <el-col :span="4" class="opera-btn">
+                <div v-for="order in item.relationList" v-if="item.relationList.length>0">
+                  <span @click.stop.prevent="showOrderForm(order.order,item.id)">
+                    <a href="#" @click.prevent=""></a>
+                    {{order.order.orderNo }}
+                  </span>
+                </div>
+                <div v-if="item.relationList.length===0">
+                  无
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
@@ -248,24 +254,34 @@
                  :action="action"
                  @right-close="resetRightBox"></show-form>
     </page-right>
+    <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
+                class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
+      <order-form :orderId="orderId" :state="state" @refreshOrder="refreshOrder"
+                  @close="resetRightBox" :vaccineType="vaccineType"></order-form>
+    </page-right>
   </div>
 </template>
 <script>
   import utils from '@/tools/utils';
   import addForm from './form/InForm.vue';
   import showForm from './form/showForm.vue';
+  import orderForm from '../order/show.order.in.vue';
   import {Order, BaseInfo, PurchaseContract} from '@/resources';
 
   export default {
     components: {
-      addForm, showForm
+      addForm, showForm, orderForm
     },
     data: function () {
       return {
         loadingData: true,
         showItemRight: false,
         showDetail: false,
+        showOrderRight: false,
         showSearch: false,
+        currentOrderId: '',
+        orderId: '',
+        state: '',
         orderList: [],
         filters: {
           availabilityStatus: true
@@ -280,7 +296,6 @@
           1: {'title': '停用', 'num': '', 'availabilityStatus': false}
         },
         activeStatus: 0,
-        currentOrderId: '',
         orgList: [], // 来源单位列表
         logisticsList: [], // 物流商列表
         pager: {
@@ -291,7 +306,6 @@
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
         user: {},
-        state: '',
         purchase: {}
       };
     },
@@ -312,6 +326,9 @@
       },
       bizInTypes: function () {
         return this.$store.state.dict['bizInType'];
+      },
+      vaccineType() {
+        return this.$route.meta.type;
       }
     },
     watch: {
@@ -320,9 +337,23 @@
           this.getOrderList(1);
         },
         deep: true
+      },
+      vaccineType() {
+        this.getOrderList(1);
       }
     },
     methods: {
+      refreshOrder() {
+        this.currentOrderId = '';
+        this.getOrderList(1);
+      },
+      showOrderForm: function (order, contractId) {
+        this.orderId = order.id;
+        this.showOrderRight = true;
+        this.state = order.state;
+        this.currentOrderId = contractId;
+//        this.$router.push(`${order.id}`);
+      },
       editContract(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
@@ -362,6 +393,7 @@
       resetRightBox: function () {
         this.showDetail = false;
         this.showItemRight = false;
+        this.showOrderRight = false;
         this.defaultIndex = 0;
         this.action = '';
       },
@@ -400,9 +432,6 @@
           this.loadingData = false;
         });
         this.queryStatusNum(param);
-      },
-      refreshOrder() {
-        this.getOrderList(1);
       },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.$store.state.user.userCompanyAddress;
