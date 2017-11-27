@@ -206,7 +206,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filterRights);
-        pay.queryDetailByfy(this.factoryId, params).then(res => {
+        this.$http.get(`/accounts-payable/remittee/${this.factoryId}/detail/no-invoice`, params).then(res => {
           this.loadingData = false;
           this.payments = res.data.list;
           this.pager.count = res.data.count;
