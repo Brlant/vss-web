@@ -82,12 +82,12 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="需求时间" :span="5">
+            <el-col :span="10">
+              <oms-form-row label="到货需求日期" :span="7">
                 <el-date-picker
                   type="daterange"
                   v-model="demandTime"
-                  placeholder="请选择需求时间" format="yyyy-MM-dd">
+                  placeholder="请选择到货需求日期" format="yyyy-MM-dd">
                 </el-date-picker>
               </oms-form-row>
             </el-col>

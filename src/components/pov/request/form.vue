@@ -260,10 +260,11 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="需求时间" prop="demandTime">
+            <el-form-item label="到货需求日期" prop="demandTime">
               <el-date-picker
                 v-model="form.demandTime"
-                placeholder="请选择需求时间" format="yyyy-MM-dd"
+                placeholder="请选择到货需求日期" format="yyyy-MM-dd"
+                :picker-options="pickerOptions0"
                 @change="changeTime">
               </el-date-picker>
             </el-form-item>
@@ -421,6 +422,11 @@
     },
     data: function () {
       return {
+        pickerOptions0: {
+          disabledDate (time) {
+            return new Date(time).getTime() < Date.now();
+          }
+        },
         loading: false,
         product: {
           'amount': '',
@@ -461,7 +467,7 @@
             {required: true, message: '请选择疾控', trigger: 'change'}
           ],
           demandTime: [
-            {required: true, message: '请选择需求时间', trigger: 'change'}
+            {required: true, message: '请选择到货需求日期', trigger: 'change'}
           ]
         },
         goodsRules: {

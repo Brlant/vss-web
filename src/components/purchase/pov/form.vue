@@ -89,9 +89,10 @@
           <div class="container">
             <div class="order-list clearfix ">
               <el-row class="order-list-header" :gutter="10">
-                <el-col :span="10">接种点</el-col>
-                <el-col :span="7">需求数</el-col>
-                <el-col :span="7">分配数量</el-col>
+                <el-col :span="6">接种点</el-col>
+                <el-col :span="6">需求数</el-col>
+                <el-col :span="6">要货时间</el-col>
+                <el-col :span="6">分配数量</el-col>
               </el-row>
               <el-row v-if="loadingData">
                 <el-col :span="24">
@@ -109,16 +110,17 @@
                 <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
                      :class="[{'active':currentItemId==item.id}]" style="max-height: 500px;overflow-y: auto">
                   <el-row>
-                    <el-col :span="10" class="R pt">
+                    <el-col :span="6" class="R pt">
                       <span>{{ item.povName }}</span>
                     </el-col>
-                    <el-col :span="7" class="pt">
+                    <el-col :span="6" class="pt">
                       <span>
                         {{ item.applyCount }}
                         <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                     </el-col>
-                    <el-col :span="7" class="pt">
+                    <el-col :span="6">{{ item.applyTime | minute }}</el-col>
+                    <el-col :span="6" class="pt">
                       <span v-show="status === 1 ">{{item.actualCount}}</span>
                       <perm label="demand-assignment-update">
                         <el-input v-show="status === 0 " v-model.number="item.actualCount"

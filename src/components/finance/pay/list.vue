@@ -133,15 +133,22 @@
           <div v-else="" class="d-table-col-wrap">
             <div class="content-body clearfix">
               <el-row>
-                <oms-row label="收款方" :span="5">
-                  {{currentItem.remitteeName}}
-                </oms-row>
-                <oms-row label="应付款总额" :span="5">
-                  <span>￥{{currentItem.payableTotal | formatMoney}}</span>
-                </oms-row>
-                <oms-row label="已付款总额" :span="5">
-                  <span>￥{{(currentItem.paidTotal ? currentItem.paidTotal : 0) | formatMoney}}</span>
-                </oms-row>
+                <el-col :span="15">
+                  <oms-row label="收款方" :span="6">
+                    {{currentItem.remitteeName}}
+                  </oms-row>
+                  <oms-row label="未付款总额" :span="6">
+                    <span>￥{{(currentItem.paidTotal ? currentItem.payableTotal - currentItem.paidTotal : currentItem.payableTotal) | formatMoney}}</span>
+                  </oms-row>
+                </el-col>
+                <el-col :span="9">
+                  <oms-row label="应付款总额" :span="8">
+                    <span>￥{{currentItem.payableTotal | formatMoney}}</span>
+                  </oms-row>
+                  <oms-row label="已付款总额" :span="8">
+                    <span>￥{{(currentItem.paidTotal ? currentItem.paidTotal : 0) | formatMoney}}</span>
+                  </oms-row>
+                </el-col>
               </el-row>
             </div>
             <div>
@@ -257,8 +264,10 @@
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.in.vue';
+  import ElCol from 'element-ui/packages/col/src/col';
   export default {
     components: {
+      ElCol,
       addForm, leftForm, showDetail
     },
     data: function () {

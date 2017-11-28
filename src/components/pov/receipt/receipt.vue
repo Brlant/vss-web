@@ -138,22 +138,20 @@
     },
     methods: {
       onSubmit () {
-//        let forms = this.productList.map((item, index) => {
-//          return {
-//            name: `form${index}`,
-//            value: item
-//          };
-//        });
-//        for (let i = 0; i < forms.length; i++) {
-//          let v = true;
-//          this.$refs[forms[i].name][0].validate((valid) => {
-//            v = valid;
-//          });
-//          if (!v) {
-//            this.currentItem = forms[i].value;
-//            return;
-//          }
-//        }
+        let isFullReceive = this.productList.every(item => item.largePackageCount !== '' || item.smallPackageCount !== '');
+        if (!isFullReceive) {
+          this.$confirm('没有完全收货，是否确认保存', '', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.save();
+          });
+        } else {
+          this.save();
+        }
+      },
+      save () {
         let obj = {
           list: []
         };
