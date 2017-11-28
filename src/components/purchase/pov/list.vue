@@ -169,11 +169,13 @@
                   </span>
                 </div>
                 <div v-show="filters.status === 1">
-                   <span @click.prevent="cancel(item)">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="el-icon-t-verify"></i></a>
-                  取消需求单
-                  </span>
+                  <perm label="demand-assignment-cancel">
+                     <span @click.prevent="cancel(item)">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="el-icon-t-verify"></i></a>
+                        取消需求单
+                      </span>
+                  </perm>
                 </div>
               </el-col>
             </el-row>
