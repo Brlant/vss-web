@@ -152,9 +152,10 @@
       <div class="order-list clearfix " v-if="showFlag">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="5">疫苗名称</el-col>
-          <el-col :span="6">生产厂商</el-col>
+          <el-col :span="2">规格</el-col>
+          <el-col :span="5">生产厂商</el-col>
           <el-col :span="3">生产日期</el-col>
-          <el-col :span="4">批号</el-col>
+          <el-col :span="3">批号</el-col>
           <el-col :span="4">批签发号</el-col>
           <el-col :span="2">有效期</el-col>
         </el-row>
@@ -183,13 +184,14 @@
               <el-col :span="5" class="pt">
                 <span>{{ item.goodsName }}</span>
               </el-col>
-              <el-col :span="6" class="pt">
+              <el-col :span="2">{{item.goodsSpecifications}}</el-col>
+              <el-col :span="5" class="pt">
                 <span>{{ item.orgName }}</span>
               </el-col>
               <el-col :span="3" class="pt">
                 <span>{{ item.productionDate | date }}</span>
               </el-col>
-              <el-col :span="4" class="pt">
+              <el-col :span="3" class="pt">
                 <span>{{ item.batchNumber }}</span>
               </el-col>
               <el-col :span="4" class="pt">
