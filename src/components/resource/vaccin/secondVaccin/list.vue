@@ -262,7 +262,7 @@
                 <el-col :span="12">
                   <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
                   <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
-                  <goods-row label="疫苗ID" :span="12">{{ data.goodsDto.id }}</goods-row>
+                  <goods-row label="疫苗编号" :span="12">{{ data.goodsDto.code }}</goods-row>
                   <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>
                   <goods-row label="剂型" :span="12">
                     <dict :dict-group="'dosageForm'" :dict-key="data.goodsDto.dosageForm"></dict>
@@ -395,6 +395,17 @@
                   </goods-row>
                 </el-col>
               </el-row>
+              <div class="border-show"></div>
+              <el-row>
+                <el-col :span="4" class="text-right" style="font-size: 12px">
+                  [ 附件 ]
+                </el-col>
+                <el-col :span="12">
+                  <attachment-lists attachmentIdList="" :objectId="data.goodsDto.id"
+                                    :objectType="'goodsDocument'"
+                                    :permission="'goods-attachment-download'"></attachment-lists>
+                </el-col>
+              </el-row>
               <div class="border-show" v-show="combinationList.length>0"></div>
               <el-row v-show="combinationList.length>0">
                 <el-col :span="3" class="text-right" style="font-size: 12px">
@@ -430,9 +441,10 @@
   import {Vaccine} from '@/resources';
   import goodsRow from './goods.row.vue';
   import utils from '@/tools/utils';
+  import attachmentLists from './../../../common/attachmentList.vue';
 
   export default {
-    components: {goodsPart, goodsRow},
+    components: {goodsPart, goodsRow, attachmentLists},
     data: function () {
       return {
         showRight: false,
