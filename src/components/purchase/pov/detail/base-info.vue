@@ -57,7 +57,7 @@
           <oms-row label="申请时间">
             {{currentOrder.applyTime | time}}
           </oms-row>
-          <oms-row label="需求时间">
+          <oms-row label="到货需求日期">
             {{currentOrder.demandTime | date }}
           </oms-row>
           <oms-row label="接种点仓库">
