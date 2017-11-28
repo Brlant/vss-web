@@ -1110,7 +1110,7 @@
               this.resetForm();
               this.$notify({
                 duration: 2000,
-                message: '编辑采购订单成功',
+                message: '编辑调拨入库成功',
                 type: 'success'
               });
               self.$emit('change');
@@ -1122,7 +1122,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '编辑采购订单失败',
+                title: '编辑调拨入库失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
@@ -1132,7 +1132,7 @@
               this.resetForm();
               this.$notify({
                 duration: 2000,
-                message: '新增采购订单成功',
+                message: '新增调拨入库成功',
                 type: 'success'
               });
               self.$emit('change', res.data);
@@ -1145,7 +1145,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '新增采购订单失败',
+                title: '新增调拨入库失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
