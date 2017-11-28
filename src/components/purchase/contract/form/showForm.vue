@@ -1023,7 +1023,7 @@
       exportExcel () {
         this.isPrinting = true;
         this.$http.get(`/contract-print/${this.orderId}`).then(res => {
-          utils.download(res.data, '采购合同');
+          utils.download(res.data.url, '采购合同');
           this.isPrinting = false;
         }).catch(error => {
           this.isPrinting = false;
