@@ -208,8 +208,8 @@
     components: {showForm},
     data () {
       return {
-        loadingData: true,
-        showSearch: false,
+        loadingData: false,
+        showSearch: true,
         showDetailPart: false,
         assignType: utils.assignType,
         activeStatus: 0,
@@ -244,18 +244,20 @@
       }
     },
     mounted () {
-      this.getDemandList(1);
+//      this.getDemandList(1);
     },
     watch: {
       filters: {
         handler: function () {
-          this.getDemandList(1);
+          if (this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0]) {
+            this.getDemandList(1);
+          }
         },
         deep: true
       },
       user (val) {
         if (val.userCompanyAddress) {
-          this.getDemandList(1);
+//          this.getDemandList(1);
         }
       }
     },
@@ -328,9 +330,15 @@
         return status;
       },
       searchInOrder: function () {// 搜索
-        this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
-        this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
-        Object.assign(this.filters, this.searchWord);
+        if (this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0]) {
+          this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
+          this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
+          Object.assign(this.filters, this.searchWord);
+        } else {
+          this.$notify.info({
+            message: '请选择需求到货日期'
+          });
+        }
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
@@ -338,8 +346,13 @@
           demandStartTime: '',
           demandEndTime: ''
         };
+        this.demandTime = '';
+        this.demandList = [];
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
+        Object.keys(this.assignType).forEach(key => {
+          this.assignType[key].num = '';
+        });
       },
       checkAll () { // 全选
         if (this.isCheckAll) {
