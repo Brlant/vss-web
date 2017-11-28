@@ -659,7 +659,8 @@
         }
         http.get('/org/goods/' + OrgGoodsId).then(res => {
           this.currentList.push(res.data);
-          let currentObj = this.filterProductList.length > 0 ? this.filterProductList[0] : {};
+          let ary = this.filterProductList.filter(f => f.orgGoodsId === OrgGoodsId);
+          let currentObj = ary.length > 0 ? ary[0] : '0';
           this.currentList.forEach(item => {
             if (item.orgGoodsDto.id === OrgGoodsId) {
               this.product.fixInfo = item.orgGoodsDto;
@@ -779,17 +780,15 @@
 
           if (saveData.id) {
             pullSignal.update(saveData.id, saveData).then(res => {
-              this.resetForm();
               this.$notify({
                 duration: 2000,
                 message: '编辑要货申请单成功',
                 type: 'success'
               });
               self.$emit('change');
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('close');
-              });
+              this.doing = false;
+              this.$emit('close');
+              this.resetForm();
             }).catch(error => {
               this.doing = false;
               this.$notify({
@@ -801,17 +800,15 @@
             });
           } else {
             pullSignal.save(saveData).then(res => {
-              this.resetForm();
               this.$notify({
                 duration: 2000,
                 message: '新增要货申请单成功',
                 type: 'success'
               });
               self.$emit('change', res.data);
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('close');
-              });
+              this.doing = false;
+              this.$emit('close');
+              this.resetForm();
             }).catch(error => {
               this.doing = false;
               this.$notify({

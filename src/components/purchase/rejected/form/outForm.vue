@@ -1323,17 +1323,15 @@
 
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
-              this.resetForm();
               this.$notify({
                 duration: 2000,
                 message: '编辑销售订单成功',
                 type: 'success'
               });
               self.$emit('change');
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('close');
-              });
+              this.doing = false;
+              this.$emit('close');
+              this.resetForm();
             }).catch(error => {
               this.doing = false;
               this.$notify({
@@ -1345,7 +1343,6 @@
             });
           } else {
             erpOrder.save(saveData).then(res => {
-              this.resetForm();
               this.$notify({
                 duration: 2000,
                 message: '新增销售订单成功',
@@ -1353,10 +1350,9 @@
               });
               window.localStorage.removeItem(this.saveKey);
               self.$emit('change', res.data);
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('close');
-              });
+              this.doing = false;
+              this.$emit('close');
+              this.resetForm();
             }).catch(error => {
               this.doing = false;
               this.$notify({

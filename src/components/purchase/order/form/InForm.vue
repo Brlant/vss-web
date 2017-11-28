@@ -1153,17 +1153,15 @@
           if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
-              this.resetForm();
               this.$notify({
                 duration: 2000,
                 message: '编辑采购订单成功',
                 type: 'success'
               });
               self.$emit('change');
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('close');
-              });
+              this.doing = false;
+              this.$emit('close');
+              this.resetForm();
             }).catch(error => {
               this.doing = false;
               this.$notify({
@@ -1175,7 +1173,6 @@
             });
           } else {
             erpOrder.save(saveData).then(res => {
-              this.resetForm();
               this.$notify({
                 duration: 2000,
                 message: '新增采购订单成功',
@@ -1183,10 +1180,9 @@
               });
               self.$emit('change', res.data);
               window.localStorage.removeItem(this.saveKey);
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('close');
-              });
+              this.doing = false;
+              this.$emit('close');
+              this.resetForm();
             }).catch(error => {
               this.doing = false;
               this.$notify({
