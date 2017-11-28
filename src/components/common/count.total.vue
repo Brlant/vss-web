@@ -1,7 +1,7 @@
 <template>
   <span v-show="list.length" style="font-weight:600;">
      {{title}}:<span v-show="showIcon">￥</span>
-    <span>{{ count }}</span>
+    <span v-if="!showIcon">{{ count }}</span>
     <span v-if="showIcon">{{ count | formatMoney }}</span>
   </span>
 </template>

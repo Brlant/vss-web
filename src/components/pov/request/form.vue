@@ -393,7 +393,9 @@
                 </td>
               </tr>
               <tr>
-                <td colspan="3"></td>
+                <td colspan="3" align="right">
+                  <total-count property="amount" :list="form.detailDtoList"></total-count>
+                </td>
                 <td colspan="2">
                   <span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length &&  Number(totalMoney)">合计:  ¥{{ totalMoney | formatMoney
                     }}
