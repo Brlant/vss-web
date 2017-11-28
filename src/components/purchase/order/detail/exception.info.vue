@@ -278,7 +278,7 @@
       },
       queryAllExceptionList: function () {// 所有异常信息列表
         if (!this.currentOrder.id) return;
-        http.get('/order-exception/orders/' + this.currentOrder.id).then(res => {
+        http.get('/order-exception/orders/' + this.currentOrder.id, {params: {flag: false}}).then(res => {
           res.data.forEach(item => {
             item.showDel = false;
             item.attachmentIdList = [];
