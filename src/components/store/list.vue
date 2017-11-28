@@ -135,8 +135,8 @@
           <el-col :span="6">货主货品名称</el-col>
           <el-col :span="6">生产厂商</el-col>
           <el-col :span=" orgLevel === 3 ? 4: 3">批号</el-col>
-          <el-col :span="2" v-show="orgLevel !== 3">可用数量</el-col>
-          <el-col :span="orgLevel === 3 ? 4 : 3">实际库存数量</el-col>
+          <el-col :span="2" v-show="orgLevel !== 3">可用库存</el-col>
+          <el-col :span="orgLevel === 3 ? 4 : 3">实际库存</el-col>
           <el-col :span="2" v-show="orgLevel !== 3">在途库存</el-col>
           <el-col :span="orgLevel === 3 ? 4 : 2">有效期</el-col>
         </el-row>
