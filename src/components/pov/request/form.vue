@@ -659,7 +659,8 @@
         }
         http.get('/org/goods/' + OrgGoodsId).then(res => {
           this.currentList.push(res.data);
-          let currentObj = this.filterProductList.length > 0 ? this.filterProductList[0] : {};
+          let ary = this.filterProductList.filter(f => f.orgGoodsId === OrgGoodsId);
+          let currentObj = ary.length > 0 ? ary[0] : '0';
           this.currentList.forEach(item => {
             if (item.orgGoodsDto.id === OrgGoodsId) {
               this.product.fixInfo = item.orgGoodsDto;
