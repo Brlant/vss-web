@@ -109,8 +109,8 @@
     },
     methods: {
       queryOrderDetail () {
-        this.currentOrder = {};
         if (!this.orderId) return false;
+        this.currentOrder = {};
         InWork.queryOrderDetail(this.orderId).then(res => {
           res.data.state = res.data.erpStatus;
           this.currentOrder = res.data;
