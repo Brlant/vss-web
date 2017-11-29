@@ -14,7 +14,7 @@
       <el-form-item label="手机号码" prop="phone">
         <oms-input type="text" v-model="form.phone" placeholder="请输入"></oms-input>
       </el-form-item>
-      <el-form-item label="Email" prop="email">
+      <el-form-item label="Email">
         <oms-input type="text" v-model="form.email" placeholder="请输入"></oms-input>
       </el-form-item>
       <el-form-item label="用户角色" v-if="!form.adminFlag" prop="list">
