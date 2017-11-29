@@ -32,7 +32,7 @@
         margin: 0;
       }
       > h2 {
-        padding: 0 45px;
+        padding: 0 0;
         margin: 0;
         font-size: 18px;
         font-weight: bold;
