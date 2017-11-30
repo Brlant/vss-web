@@ -271,7 +271,7 @@
           pageSize: this.pager.pageSize,
           cdcId: orgId
         }, this.filters);
-        this.loadingData = false;
+        this.loadingData = true;
         pullSignal.query(params).then(res => {
           res.data.list.forEach(item => {
             item.isChecked = false;
