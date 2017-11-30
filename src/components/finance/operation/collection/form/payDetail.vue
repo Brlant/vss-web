@@ -136,7 +136,7 @@
             <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
           </td>
           <td>
-            <el-input v-model="product.payment" style="width: 150px" @change="paymentChange(product)">
+            <el-input v-model="product.payment" style="width: 150px" @blur="paymentChange(product)">
               <template slot="prepend">
                 <span>¥</span>
               </template>
