@@ -541,6 +541,9 @@
           warehouseId: this.currentOrder.warehouseId,
           detailDtoList: orgDetailGoods
         };
+        this.$nextTick(() => {
+          this.form.detailDtoList = orgDetailGoods;
+        });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
       addOrderInfo () {
@@ -557,9 +560,11 @@
           cdcId: this.currentOrder.cdcId,
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.vaccineSign),
-          warehouseId: this.currentOrder.warehouseId,
-          detailDtoList: orgDetailGoods
+          warehouseId: this.currentOrder.warehouseId
         };
+        this.$nextTick(() => {
+          this.form.detailDtoList = orgDetailGoods;
+        });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
       changeNumber () {
@@ -569,22 +574,20 @@
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       changeType () {
-        if (this.index !== 2) {
-          this.product = {
-            'amount': null,
-            'measurementUnit': '',
-            'orgGoodsId': '',
-            'packingCount': null,
-            'specificationsId': '',
-            'fixInfo': {
-              'goodsDto': {}
-            },
-            'unitPrice': null
-          };
-          this.accessoryList = [];
-          this.currentList = [];
-          this.form.detailDtoList = [];
-        }
+        this.product = {
+          'amount': null,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.accessoryList = [];
+        this.currentList = [];
+        this.form.detailDtoList = [];
         this.$refs['orderGoodsForm'].resetFields();
         this.filterProduct();
         this.searchProduct();
