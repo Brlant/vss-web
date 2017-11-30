@@ -356,6 +356,7 @@
       changeExpectedTime: function (date) {// 格式化日期
         if (!date) {
           this.currentOrder.expectedTime = '';
+          return;
         }
         this.currentOrder.expectedTime = this.$moment(date).format('YYYY-MM-DD');
       },

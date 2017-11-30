@@ -773,6 +773,7 @@
       changeExpectedTime: function (date) {// 格式化时间
         if (!date) {
           this.form.expectedTime = '';
+          return;
         }
         this.form.expectedTime = this.$moment(date).format('YYYY-MM-DD');
       },
