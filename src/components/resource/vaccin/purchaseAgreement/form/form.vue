@@ -137,14 +137,16 @@
     },
     methods: {
       setSalesFirmName: function (item) {
-        if (item) {
-          this.goodsList.forEach(val => {
-            if (val.orgGoodsDto.id === item) {
-              this.salesFirmName = val.orgGoodsDto.salesFirmName;
-              this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
-              this.form.unitPrice = utils.autoformatDecimalPoint(val.orgGoodsDto.procurementPrice.toString());
-            }
-          });
+        if (this.action !== 'edit') {
+          if (item) {
+            this.goodsList.forEach(val => {
+              if (val.orgGoodsDto.id === item) {
+                this.salesFirmName = val.orgGoodsDto.salesFirmName;
+                this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
+                this.form.unitPrice = utils.autoformatDecimalPoint(val.orgGoodsDto.procurementPrice.toString());
+              }
+            });
+          }
         }
       },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
