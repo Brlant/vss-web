@@ -163,7 +163,9 @@
               this.goodsList.push({
                 orgGoodsDto: {
                   id: this.form.orgGoodsId,
-                  name: this.form.orgGoodsName
+                  name: this.form.orgGoodsName,
+                  goodsNo: this.form.orgGoodsNo,
+                  salesFirmName: this.form.supplyCompanyName
                 }
               });
             }
