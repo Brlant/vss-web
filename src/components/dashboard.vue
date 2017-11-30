@@ -189,7 +189,7 @@
         if (this.level === 3) {
           this.$router.push({path: '/pov/request', query: {id: item.id}});
         } else {
-          this.$router.push({path: '/sale/pov', query: {id: item.id}});
+          this.$router.push({path: `/sale/pov/${item.id}`});
         }
       },
       goToOrderUrl (item) {
