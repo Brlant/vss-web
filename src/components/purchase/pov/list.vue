@@ -245,6 +245,12 @@
     },
     mounted () {
 //      this.getDemandList(1);
+      this.resetSearchForm();
+      let orderId = this.$route.params.id;
+      if (orderId && orderId !== 'list') {
+        this.currentItem = {id: orderId};
+        this.showDetailPart = true;
+      }
     },
     watch: {
       filters: {
@@ -277,13 +283,6 @@
             item.isChecked = false;
           });
           this.demandList = res.data.list;
-          if (this.$route.query.id) {
-            let ary = this.demandList.filter(f => f.id === this.$route.query.id);
-            if (ary.length) {
-              this.showDetail(ary[0]);
-              this.$router.push('/sale/pov');
-            }
-          }
           this.pager.count = res.data.count;
           this.loadingData = false;
           this.queryCount();
@@ -311,10 +310,12 @@
       showDetail (item) {
         this.currentItemId = item.id;
         this.currentItem = item;
+        this.$router.push(`${item.id}`);
         this.showDetailPart = true;
       },
       resetRightBox () {
         this.showDetailPart = false;
+        this.$router.push('list');
       },
       checkStatus (item, key) {
         this.activeStatus = key;
@@ -348,6 +349,8 @@
         };
         this.demandTime = '';
         this.demandList = [];
+        this.checkList = [];
+        this.isCheckAll = false;
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
         Object.keys(this.assignType).forEach(key => {
@@ -394,7 +397,7 @@
           this.$notify.success({
             message: '需求分配成功'
           });
-          this.$router.push({path: '/sale/pov/allocation', query: {id: res.data.id}});
+          this.$router.push({path: '/sale/allocation/pov', query: {id: res.data.id}});
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '需求分配失败'

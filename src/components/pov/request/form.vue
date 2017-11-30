@@ -539,7 +539,7 @@
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.vaccineSign),
           warehouseId: this.currentOrder.warehouseId,
-          detailDtoList: orgDetailGoods
+          detailDtoList: []
         };
         this.$nextTick(() => {
           this.form.detailDtoList = orgDetailGoods;
@@ -560,7 +560,8 @@
           cdcId: this.currentOrder.cdcId,
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.vaccineSign),
-          warehouseId: this.currentOrder.warehouseId
+          warehouseId: this.currentOrder.warehouseId,
+          detailDtoList: []
         };
         this.$nextTick(() => {
           this.form.detailDtoList = orgDetailGoods;
@@ -623,7 +624,9 @@
         Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress}).then(res => {
           this.warehouses = res.data || [];
           let fs = this.warehouses.filter(i => i.default)[0];
-          this.form.warehouseId = fs && fs.id || '';
+          if (fs) {
+            this.form.warehouseId = fs.id;
+          }
         });
       },
       filterProducts: function () {
