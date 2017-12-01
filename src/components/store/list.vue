@@ -46,6 +46,10 @@
       width: auto;
     }
   }
+
+  .header-list {
+    overflow: hidden;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -129,88 +133,38 @@
         </el-form>
       </div>
 
+      <el-table :data="batches" class="header-list store" border @row-click="showDetail"
+                :header-row-class-name="'headerClass'" v-loading="loadingData" max-height="600">
+        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true" width="200"></el-table-column>
+        <el-table-column prop="factoryName" label="生产厂商" :sortable="true" width="180"></el-table-column>
+        <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
+        <el-table-column prop="availableCount" label="可用库存" :sortable="true" v-if="orgLevel !== 3"></el-table-column>
+        <el-table-column prop="qualifiedCount" label="实际库存" :sortable="true"></el-table-column>
+        <el-table-column prop="transitCount" label="在途库存" :sortable="true" v-if="orgLevel !== 3"></el-table-column>
+        <el-table-column prop="expiryDate" label="有效期" :sortable="true">
+          <template slot-scope="scope">
+            {{ scope.row.expiryDate | date}}
+          </template>
+        </el-table-column>
+        <tr class="el-table__row" slot="append" v-if="batches.length">
+          <td>合计</td>
+          <td></td>
+          <td></td>
+          <td v-show="orgLevel !== 3">{{ totalInfo.availableCount }}</td>
+          <td>{{ totalInfo.qualifiedCount }}</td>
+          <td v-show="orgLevel !== 3">{{ totalInfo.transitCount }}</td>
+          <td></td>
+        </tr>
+      </el-table>
 
-      <div class="order-list clearfix ">
-        <el-row class="order-list-header" :gutter="10">
-          <el-col :span="6">货主货品名称</el-col>
-          <el-col :span="6">生产厂商</el-col>
-          <el-col :span=" orgLevel === 3 ? 4: 3">批号</el-col>
-          <el-col :span="2" v-show="orgLevel !== 3">可用库存</el-col>
-          <el-col :span="orgLevel === 3 ? 4 : 3">实际库存</el-col>
-          <el-col :span="2" v-show="orgLevel !== 3">在途库存</el-col>
-          <el-col :span="orgLevel === 3 ? 4 : 2">有效期</el-col>
-        </el-row>
-        <el-row v-if="loadingData">
-          <el-col :span="24">
-            <oms-loading :loading="loadingData"></oms-loading>
-          </el-col>
-        </el-row>
-        <el-row v-else-if="batches.length == 0">
-          <el-col :span="24">
-            <div class="empty-info">
-              暂无信息
-            </div>
-          </el-col>
-        </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item order-list-item-bg" v-for="item in batches"
-               :class="[{'active':currentItemId==item.id}]"
-               @click.prevent="showDetail(item)">
-            <el-row>
-              <el-col :span="6" class="pt">
-                <span>{{ item.goodsName }}</span>
-              </el-col>
-              <el-col :span="6" class="pt">
-                <span>{{ item.factoryName }}</span>
-              </el-col>
-              <el-col :span=" orgLevel === 3 ? 4: 3" class="pt">
-                <span>{{ item.batchNumber }}</span>
-              </el-col>
-              <el-col :span="2" class="pt" v-show="orgLevel !== 3" align="center">
-                <span>{{ item.availableCount }}</span>
-              </el-col>
-              <el-col :span=" orgLevel === 3 ? 4: 3">
-                <div><span class="align-word">合格</span>：{{ item.qualifiedCount }}</div>
-              </el-col>
-              <el-col :span="2" v-show="orgLevel !== 3" class="pt" align="center">
-                <span>{{ item.transitCount }}</span>
-              </el-col>
-              <el-col :span=" orgLevel === 3 ? 4: 2" class="pt" align="center">
-                <span>{{ item.expiryDate | date }}</span>
-              </el-col>
-            </el-row>
-          </div>
-          <el-row class="order-list-item order-list-item-bg" style="background: #f1f1f1">
-            <el-col :span="6" class="pt">
-              <span>合计</span>
-            </el-col>
-            <el-col :span="6" class="pt">
-            </el-col>
-            <el-col :span=" orgLevel === 3 ? 4: 3" class="pt">
-            </el-col>
-            <el-col :span="2" class="pt" v-show="orgLevel !== 3" align="center" style="padding-left: 5px;">
-              <span>{{ totalInfo.availableCount }}</span>
-            </el-col>
-            <el-col :span=" orgLevel === 3 ? 4: 3" style="padding-left: 5px;">
-              <div><span class="align-word">合格</span>：{{ totalInfo.qualifiedCount }}</div>
-            </el-col>
-            <el-col :span="2" v-show="orgLevel !== 3" class="pt" align="center">
-              <span>{{ totalInfo.transitCount }}</span>
-            </el-col>
-            <el-col :span=" orgLevel === 3 ? 4: 2" class="pt" align="center">
-            </el-col>
-          </el-row>
-        </div>
 
-      </div>
-
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
-          :current-page="pager.currentPage">
-        </el-pagination>
-      </div>
+      <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
+      <!--<el-pagination-->
+      <!--layout="prev, pager, next"-->
+      <!--:total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"-->
+      <!--:current-page="pager.currentPage">-->
+      <!--</el-pagination>-->
+      <!--</div>-->
     </div>
 
     <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
@@ -223,6 +177,7 @@
   import { BaseInfo, OrgGoods, erpStock, http } from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
+
   export default {
     components: {detail},
     data () {
@@ -273,20 +228,16 @@
       }
     },
     methods: {
-      getBatches (pageNo) { // 得到波次列表
+      getBatches () { // 得到波次列表
         this.totalInfo = {};
-        this.pager.currentPage = pageNo;
-        let params = Object.assign({
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize
-        }, this.filters);
+        this.batches = [];
+        let params = Object.assign({}, this.filters);
         this.loadingData = true;
         erpStock.query(params).then(res => {
-          if (res.data.list.length > 1) {
-            this.batches = res.data.list.filter(f => f.id);
-            this.totalInfo = res.data.list[res.data.list.length - 1];
+          if (res.data.length > 1) {
+            this.batches = res.data.filter(f => f.id);
+            this.totalInfo = res.data[res.data.length - 1];
           }
-          this.pager.count = res.data.count;
           this.loadingData = false;
         });
       },
@@ -304,6 +255,7 @@
         });
       },
       showDetail (item) {
+        console.log(1);
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
