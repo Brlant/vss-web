@@ -146,6 +146,9 @@
         if (!val) {
           this.$refs['accountform'].resetFields();
         }
+      },
+      user (val) {
+        this.getRoleSelect();
       }
     },
     methods: {
@@ -186,7 +189,8 @@
                 name: '成功',
                 message: '新增货主用户"' + self.form.name + '"成功'
               });
-              self.$emit('change', self.form);
+              formData.list = this.getSelectRoles(formData, this.roleSelect);
+              self.$emit('change', formData);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
@@ -202,7 +206,8 @@
                 name: '成功',
                 message: '修改货主用户"' + self.form.name + '"成功'
               });
-              self.$emit('change', self.form);
+              formData.list = this.getSelectRoles(formData, this.roleSelect);
+              self.$emit('change', formData);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
@@ -211,6 +216,14 @@
               this.doing = false;
             });
           }
+        });
+      },
+      getSelectRoles (formData, roles) {
+        return roles.filter(f => formData.list.some(s => s.roleId === f.id)).map(m => {
+          return {
+            roleId: m.id,
+            title: m.title
+          };
         });
       },
       doClose: function () {
