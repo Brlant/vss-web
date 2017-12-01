@@ -130,7 +130,7 @@
       transitionName: 'slide-left',
       toRoute: {},
       loading: true,
-      isPermission: true,
+      isPermission: false,
       level: ''
     }),
     computed: {
