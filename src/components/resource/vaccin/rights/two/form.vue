@@ -267,7 +267,7 @@
             </el-form-item>
             <el-form-item label="销售价格" prop="salePriceGroupId">
               <el-select filterable remote placeholder="请输入名称搜索销售价格" :remote-method="filterPriceGroup"
-                         :clearable="true"
+                         :clearable="true" :default-first-option="true"
                          v-model="form.salePriceGroupId"
                          @change="changeSelect" @click.native="filterPriceGroup('')" popperClass="good-selects">
                 <el-option :value="item.id" :key="item.id" :label="'￥' +item.unitPrice"
