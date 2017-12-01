@@ -136,13 +136,15 @@
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
                 show-summary max-height="600">
-        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true" width="200"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商" :sortable="true" width="180"></el-table-column>
-        <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
-        <el-table-column prop="availableCount" label="可用库存" :sortable="true" v-if="orgLevel !== 3"></el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际库存" :sortable="true"></el-table-column>
-        <el-table-column prop="transitCount" label="在途库存" :sortable="true" v-if="orgLevel !== 3"></el-table-column>
-        <el-table-column prop="expiryDate" label="有效期" :sortable="true">
+        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
+        <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
+        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="130"></el-table-column>
+        <el-table-column prop="availableCount" label="可用库存" :sortable="true" v-if="orgLevel !== 3"
+                         width="90"></el-table-column>
+        <el-table-column prop="qualifiedCount" label="实际库存" :sortable="true" width="90"></el-table-column>
+        <el-table-column prop="transitCount" label="在途库存" :sortable="true" v-if="orgLevel !== 3"
+                         width="90"></el-table-column>
+        <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
           <template slot-scope="scope">
             {{ scope.row.expiryDate | date}}
           </template>
@@ -159,7 +161,7 @@
       <!--</div>-->
     </div>
 
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
       <detail :currentItem="currentItem" @close="resetRightBox"></detail>
     </page-right>
   </div>
