@@ -134,7 +134,8 @@
       </div>
 
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
-                :header-row-class-name="'headerClass'" v-loading="loadingData" max-height="600">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
+                show-summary max-height="600">
         <el-table-column prop="goodsName" label="货主货品名称" :sortable="true" width="200"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true" width="180"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
@@ -146,15 +147,6 @@
             {{ scope.row.expiryDate | date}}
           </template>
         </el-table-column>
-        <tr class="el-table__row" slot="append" v-if="batches.length">
-          <td>合计</td>
-          <td></td>
-          <td></td>
-          <td v-show="orgLevel !== 3">{{ totalInfo.availableCount }}</td>
-          <td>{{ totalInfo.qualifiedCount }}</td>
-          <td v-show="orgLevel !== 3">{{ totalInfo.transitCount }}</td>
-          <td></td>
-        </tr>
       </el-table>
 
 
@@ -234,10 +226,7 @@
         let params = Object.assign({}, this.filters);
         this.loadingData = true;
         erpStock.query(params).then(res => {
-          if (res.data.length > 1) {
-            this.batches = res.data.filter(f => f.id);
-            this.totalInfo = res.data[res.data.length - 1];
-          }
+          this.batches = res.data;
           this.loadingData = false;
         });
       },
@@ -255,7 +244,6 @@
         });
       },
       showDetail (item) {
-        console.log(1);
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
@@ -265,6 +253,35 @@
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchWord);
+      },
+      getSummaries (param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' && column.property !== 'transitCount') {
+            sums[index] = '';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = '';
+          }
+        });
+
+        return sums;
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
