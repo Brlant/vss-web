@@ -120,19 +120,19 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list"
-                :header-row-class-name="'headerClass'" v-loading="loadingData" height="400">
-        <el-table-column prop="orderNo" label="货主订单号"></el-table-column>
-        <el-table-column prop="createTime" label="业务日期"></el-table-column>
-        <el-table-column prop="customerName" label="客户"></el-table-column>
-        <el-table-column prop="orgName" label="保管账"></el-table-column>
-        <el-table-column prop="orgGoodsName" label="货品名称"></el-table-column>
-        <el-table-column prop="count" label="数量"></el-table-column>
-        <el-table-column prop="price" label="单价"></el-table-column>
-        <el-table-column prop="totalMoney" label="金额"></el-table-column>
-        <el-table-column prop="batchNumber" label="批号"></el-table-column>
-        <el-table-column prop="expirationDate" label="有效期至"></el-table-column>
-        <el-table-column prop="arriveDate" label="送达日期"></el-table-column>
-        <el-table-column prop="address" label="送货地址"></el-table-column>
+                :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="400">
+        <el-table-column prop="orderNo" label="货主订单号" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="createTime" label="业务日期" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="customerName" label="客户" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="orgName" label="保管账" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="count" label="数量" :sortable="true" width="90"></el-table-column>
+        <el-table-column prop="price" label="单价" :sortable="true" width="90"></el-table-column>
+        <el-table-column prop="totalMoney" label="金额" :sortable="true" width="90"></el-table-column>
+        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="expirationDate" label="有效期至" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="arriveDate" label="送达日期" :sortable="true" width="100"></el-table-column>
+        <el-table-column prop="address" label="送货地址" :sortable="true" width="120"></el-table-column>
       </el-table>
     </div>
   </div>
