@@ -96,7 +96,7 @@
 
     .min-gutter {
       .el-form-item {
-        margin-bottom: 20px;
+        margin-bottom: 5px;
       }
       .el-form-item__label {
         font-size: 12px
@@ -247,11 +247,11 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <div class="btn-submit-save">
-            <perm label="purchasing-contract-add">
-              <div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">
-                <el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>
-              </div>
-            </perm>
+            <!--<perm label="purchasing-contract-add">-->
+              <!--<div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">-->
+                <!--<el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>-->
+              <!--</div>-->
+            <!--</perm>-->
             <perm label="purchasing-contract-export">
               <div style="margin-bottom: 10px" v-if="form.purchaseContractIsUsed">
                 <el-button type="success" @click="synchroOrder" style="width: 150px">同步采购合同</el-button>
@@ -274,8 +274,7 @@
         <h3>{{currentPartName}}</h3>
 
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-          <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
-                   label-width="160px" style="padding-right: 20px">
+          <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false" label-width="160px" style="padding-right: 20px">
             <el-form-item label="合同名称">
               {{form.purchaseContractName}}
             </el-form-item>
