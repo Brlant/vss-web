@@ -241,7 +241,7 @@
             </el-form-item>
             <el-form-item label="选择疾控货品" prop="orgGoodsId">
               <el-select filterable remote placeholder="请输入名称搜索疾控货品" :remote-method="getGoodsList" :clearable="true"
-                         v-model="form.orgGoodsId">
+                         v-model="form.orgGoodsId" @click.native.once="getGoodsList('')" @change="orgGoodsChange">
                 <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                            v-for="item in goodses">
                   <div style="overflow: hidden">
@@ -335,6 +335,13 @@
       },
       formatPrice: function () {// 格式化单价，保留两位小数
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
+      },
+      orgGoodsChange (val) {
+        this.goodses.forEach(item => {
+          if (item.orgGoodsDto.id === val) {
+            this.form.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.sellPrice.toString());
+          }
+        });
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {

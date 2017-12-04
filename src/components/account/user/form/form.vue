@@ -14,7 +14,7 @@
       <el-form-item label="手机号码" prop="phone">
         <oms-input type="text" v-model="form.phone" placeholder="请输入手机号码"></oms-input>
       </el-form-item>
-      <el-form-item label="Email" prop="email">
+      <el-form-item label="Email">
         <oms-input type="text" v-model="form.email" placeholder="请输入邮箱"></oms-input>
       </el-form-item>
       <el-form-item label="用户角色" v-if="!form.adminFlag">
@@ -146,6 +146,9 @@
         if (!val) {
           this.$refs['accountform'].resetFields();
         }
+      },
+      user (val) {
+        this.getRoleSelect();
       }
     },
     methods: {
@@ -186,7 +189,8 @@
                 name: '成功',
                 message: '新增货主用户"' + self.form.name + '"成功'
               });
-              self.$emit('change', self.form);
+              formData.list = this.getSelectRoles(formData, this.roleSelect);
+              self.$emit('change', formData);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
@@ -202,7 +206,8 @@
                 name: '成功',
                 message: '修改货主用户"' + self.form.name + '"成功'
               });
-              self.$emit('change', self.form);
+              formData.list = this.getSelectRoles(formData, this.roleSelect);
+              self.$emit('change', formData);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
@@ -211,6 +216,14 @@
               this.doing = false;
             });
           }
+        });
+      },
+      getSelectRoles (formData, roles) {
+        return roles.filter(f => formData.list.some(s => s.roleId === f.id)).map(m => {
+          return {
+            roleId: m.id,
+            title: m.title
+          };
         });
       },
       doClose: function () {

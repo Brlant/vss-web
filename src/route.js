@@ -111,7 +111,7 @@ const route = [
             meta: {moduleId: 'resource', title: '二类疫苗接种点授权', perm: 'second-vaccine-authorization'}
           },
           {
-            path: '/sale/pov',
+            path: '/sale/pov/:id',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
             meta: {moduleId: 'sale', title: '接种点疫苗要货需求', perm: 'demand-assignment'},
             children: [
@@ -121,7 +121,7 @@ const route = [
                 meta: {moduleId: 'sale', title: '接种点疫苗要货需求', perm: 'demand-assignment-query'}
               },
               {
-                path: '/sale/pov/allocation',
+                path: '/sale/allocation/pov',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
                 meta: {moduleId: 'sale', title: '接种点疫苗要货需求', perm: 'demand-assignment-update'}
               }

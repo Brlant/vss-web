@@ -226,7 +226,7 @@
         this.status = -1;
         if (!this.$route.query.id) return;
         this.pager.currentPage = pageNo;
-        this.loadingData = false;
+        this.loadingData = true;
         demandAssignment.queryDetailList(this.$route.query.id).then(res => {
           this.allocationList = res.data.list;
           this.pager.count = res.data.count;

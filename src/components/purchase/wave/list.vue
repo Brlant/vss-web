@@ -174,7 +174,7 @@
       queryAllocationList (pageNo) { // 得到需求分配列表
         this.allocationList = [];
         this.pager.currentPage = pageNo;
-        this.loadingData = false;
+        this.loadingData = true;
         let params = Object.assign({}, this.filters);
         demandAssignment.query(params).then(res => {
           this.allocationList = res.data.list;

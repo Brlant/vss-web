@@ -122,7 +122,9 @@
           </td>
         </tr>
         <tr class="text-center">
-          <td colspan="4"></td>
+          <td colspan="4" align="right">
+            <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
+          </td>
           <td colspan="2" align="right">
             <span style="font-weight:600;"
                   v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney}}</span>

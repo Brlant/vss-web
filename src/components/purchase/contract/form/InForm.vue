@@ -776,6 +776,7 @@
       changeExpectedTime: function (date) {// 格式化时间
         if (!date) {
           this.form.expectedTime = '';
+          return;
         }
         this.form.expectedTime = this.$moment(date).format('YYYY-MM-DD');
       },
@@ -1127,7 +1128,7 @@
       },
       onSubmit: function () {// 提交表单
         let self = this;
-        this.changeExpectedTime(this.expectedTime);
+        this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;

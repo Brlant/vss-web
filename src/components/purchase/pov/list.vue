@@ -208,8 +208,8 @@
     components: {showForm},
     data () {
       return {
-        loadingData: true,
-        showSearch: false,
+        loadingData: false,
+        showSearch: true,
         showDetailPart: false,
         assignType: utils.assignType,
         activeStatus: 0,
@@ -244,18 +244,26 @@
       }
     },
     mounted () {
-      this.getDemandList(1);
+//      this.getDemandList(1);
+      this.resetSearchForm();
+      let orderId = this.$route.params.id;
+      if (orderId && orderId !== 'list') {
+        this.currentItem = {id: orderId};
+        this.showDetailPart = true;
+      }
     },
     watch: {
       filters: {
         handler: function () {
-          this.getDemandList(1);
+          if (this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0]) {
+            this.getDemandList(1);
+          }
         },
         deep: true
       },
       user (val) {
         if (val.userCompanyAddress) {
-          this.getDemandList(1);
+//          this.getDemandList(1);
         }
       }
     },
@@ -269,19 +277,12 @@
           pageSize: this.pager.pageSize,
           cdcId: orgId
         }, this.filters);
-        this.loadingData = false;
+        this.loadingData = true;
         pullSignal.query(params).then(res => {
           res.data.list.forEach(item => {
             item.isChecked = false;
           });
           this.demandList = res.data.list;
-          if (this.$route.query.id) {
-            let ary = this.demandList.filter(f => f.id === this.$route.query.id);
-            if (ary.length) {
-              this.showDetail(ary[0]);
-              this.$router.push('/sale/pov');
-            }
-          }
           this.pager.count = res.data.count;
           this.loadingData = false;
           this.queryCount();
@@ -309,10 +310,12 @@
       showDetail (item) {
         this.currentItemId = item.id;
         this.currentItem = item;
+        this.$router.push(`${item.id}`);
         this.showDetailPart = true;
       },
       resetRightBox () {
         this.showDetailPart = false;
+        this.$router.push('list');
       },
       checkStatus (item, key) {
         this.activeStatus = key;
@@ -328,9 +331,15 @@
         return status;
       },
       searchInOrder: function () {// 搜索
-        this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
-        this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
-        Object.assign(this.filters, this.searchWord);
+        if (this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0]) {
+          this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
+          this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
+          Object.assign(this.filters, this.searchWord);
+        } else {
+          this.$notify.info({
+            message: '请选择需求到货日期'
+          });
+        }
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
@@ -338,8 +347,15 @@
           demandStartTime: '',
           demandEndTime: ''
         };
+        this.demandTime = '';
+        this.demandList = [];
+        this.checkList = [];
+        this.isCheckAll = false;
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
+        Object.keys(this.assignType).forEach(key => {
+          this.assignType[key].num = '';
+        });
       },
       checkAll () { // 全选
         if (this.isCheckAll) {
@@ -381,7 +397,7 @@
           this.$notify.success({
             message: '需求分配成功'
           });
-          this.$router.push({path: '/sale/pov/allocation', query: {id: res.data.id}});
+          this.$router.push({path: '/sale/allocation/pov', query: {id: res.data.id}});
         }).catch(error => {
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '需求分配失败'

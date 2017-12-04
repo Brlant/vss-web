@@ -140,10 +140,13 @@
           </td>
         </tr>
         <tr class="text-center">
-          <td colspan="5"></td>
-          <td colspan="3" align="right"><span style="font-weight:600;"
-                                              v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney
-            }}</span>
+          <td colspan="7" align="right">
+            <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
+          </td>
+          <td colspan="2" align="right">
+            <span style="font-weight:600;"
+                  v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney
+              }}</span>
           </td>
         </tr>
         </tbody>
@@ -238,6 +241,7 @@
       changeExpectedTime: function (date) {// 格式化日期
         if (!date) {
           this.currentOrder.expectedTime = '';
+          return;
         }
         this.currentOrder.expectedTime = this.$moment(date).format('YYYY-MM-DD');
       },

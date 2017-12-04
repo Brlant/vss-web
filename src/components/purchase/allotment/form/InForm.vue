@@ -32,7 +32,7 @@
         margin: 0;
       }
       > h2 {
-        padding: 0 45px;
+        padding: 0 0;
         margin: 0;
         font-size: 18px;
         font-weight: bold;
@@ -440,8 +440,10 @@
                 </td>
               </tr>
               <tr>
-                <td colspan="3"></td>
-                <td colspan="2"><span style="color: #333;font-weight: 700"
+                <td colspan="3" align="right">
+                  <total-count property="amount" :list="form.detailDtoList"></total-count>
+                </td>
+                <td colspan="2" style="font-weight: 600"><span
                                       v-show="form.detailDtoList.length && totalMoney">合计:</span><span
                   v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
               </tr>
@@ -764,6 +766,7 @@
       changeExpectedTime: function (date) {// 格式化时间
         if (!date) {
           this.form.expectedTime = '';
+          return;
         }
         this.form.expectedTime = this.$moment(date).format('YYYY-MM-DD');
       },
@@ -1082,7 +1085,7 @@
       },
       onSubmit: function () {// 提交表单
         let self = this;
-        this.changeExpectedTime(this.expectedTime);
+        this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;

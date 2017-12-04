@@ -192,6 +192,18 @@
                   {{row.actualCount}}
                 </td>
               </tr>
+              <tr>
+                <th style="width: 300px"></th>
+                <th></th>
+                <th>
+                  <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
+                </th>
+                <th>
+                  <total-count property="applyMoney" :showIcon="true" title="合计金额"
+                               :list="currentOrder.detailDtoList"></total-count>
+                </th>
+                <th v-show="filters.status === 4"></th>
+              </tr>
               </tbody>
             </table>
           </div>

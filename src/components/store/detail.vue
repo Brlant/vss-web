@@ -47,8 +47,8 @@
             <oms-row label="批号" :span="span">{{ currentItem.batchNumber }}</oms-row>
           </el-col>
           <el-col :span="12">
-            <oms-row label="可用数量" :span="span" v-show="orgLevel !== 3">{{ currentItem.availableCount }}</oms-row>
-            <oms-row label="合格库存数量" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
+            <oms-row label="可用库存" :span="span" v-show="orgLevel !== 3">{{ currentItem.availableCount }}</oms-row>
+            <oms-row label="实际库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
             <oms-row label="在途库存" :span="span" v-show="orgLevel !== 3">{{ currentItem.transitCount }}</oms-row>
             <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
           </el-col>

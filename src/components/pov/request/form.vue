@@ -393,7 +393,9 @@
                 </td>
               </tr>
               <tr>
-                <td colspan="3"></td>
+                <td colspan="3" align="right">
+                  <total-count property="amount" :list="form.detailDtoList"></total-count>
+                </td>
                 <td colspan="2">
                   <span style="color: #333;font-weight: 700" v-show="form.detailDtoList.length &&  Number(totalMoney)">合计:  ¥{{ totalMoney | formatMoney
                     }}
@@ -537,8 +539,11 @@
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.vaccineSign),
           warehouseId: this.currentOrder.warehouseId,
-          detailDtoList: orgDetailGoods
+          detailDtoList: []
         };
+        this.$nextTick(() => {
+          this.form.detailDtoList = orgDetailGoods;
+        });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
       addOrderInfo () {
@@ -556,8 +561,11 @@
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.vaccineSign),
           warehouseId: this.currentOrder.warehouseId,
-          detailDtoList: orgDetailGoods
+          detailDtoList: []
         };
+        this.$nextTick(() => {
+          this.form.detailDtoList = orgDetailGoods;
+        });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
       changeNumber () {
@@ -567,22 +575,20 @@
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       changeType () {
-        if (this.index !== 2) {
-          this.product = {
-            'amount': null,
-            'measurementUnit': '',
-            'orgGoodsId': '',
-            'packingCount': null,
-            'specificationsId': '',
-            'fixInfo': {
-              'goodsDto': {}
-            },
-            'unitPrice': null
-          };
-          this.accessoryList = [];
-          this.currentList = [];
-          this.form.detailDtoList = [];
-        }
+        this.product = {
+          'amount': null,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.accessoryList = [];
+        this.currentList = [];
+        this.form.detailDtoList = [];
         this.$refs['orderGoodsForm'].resetFields();
         this.filterProduct();
         this.searchProduct();
@@ -618,7 +624,9 @@
         Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress}).then(res => {
           this.warehouses = res.data || [];
           let fs = this.warehouses.filter(i => i.default)[0];
-          this.form.warehouseId = fs && fs.id || '';
+          if (fs) {
+            this.form.warehouseId = fs.id;
+          }
         });
       },
       filterProducts: function () {

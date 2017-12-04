@@ -218,7 +218,6 @@
         itemTemp.status = 1;
         OrgUser.update(itemTemp.id, itemTemp).then(() => {
           item.status = 1;
-          this.getPageList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功启用用户"' + item.name + '"'
@@ -229,8 +228,22 @@
         if (!value) return '';
         return value.toString();
       },
-      itemChange: function (item) {
-        this.getPageList(1);
+      itemChange: function (formData) {
+        if (!formData.id) {
+          this.getPageList(1);
+        } else {
+          let index = -1;
+          this.dataRows.forEach((f, key) => {
+            if (f.id === formData.id) {
+              index = key;
+            }
+          });
+          if (index !== -1) {
+            this.dataRows.splice(index, 1, formData);
+          } else {
+            this.getPageList(1);
+          }
+        }
         this.showRight = false;
       }
     }

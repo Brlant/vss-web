@@ -114,7 +114,7 @@
 <script>
   import AppHeader from './common/app.header.vue';
   import AppFooter from './common/app.footer.vue';
-  import { Auth, DictGroup, cerpAccess, cerpAction, Access, BaseInfo } from '../resources';
+  import {Auth, DictGroup, cerpAccess, cerpAction, Access, BaseInfo} from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
   import printDialog from './common/print.loading.vue';
@@ -130,7 +130,7 @@
       transitionName: 'slide-left',
       toRoute: {},
       loading: true,
-      isPermission: true,
+      isPermission: false,
       level: ''
     }),
     computed: {
@@ -141,12 +141,12 @@
         return this.$store.state.bodySize['left'];
       }
     },
-    beforeRouteEnter (to, form, next) {
+    beforeRouteEnter(to, form, next) {
       next(vm => {
         vm.toRoute = to;
       });
     },
-    beforeRouteUpdate (to, from, next) {
+    beforeRouteUpdate(to, from, next) {
       utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
       this.toRoute = to;
       next();
@@ -185,7 +185,7 @@
       this.setBodyHeight();
     },
     methods: {
-      queryRoles () {
+      queryRoles() {
         cerpAccess.bindMunicipal().then(() => {
           this.loading = false;
           this.queryPerms();
@@ -197,7 +197,7 @@
           });
         });
       },
-      queryLevel () {
+      queryLevel() {
         cerpAction.queryLevel().then(res => {
           this.level = res.data;
           window.localStorage.setItem('logLevel', res.data);
@@ -205,20 +205,20 @@
           this.isPermission = res.data === 0;
         });
       },
-      queryPerms () {
+      queryPerms() {
         Auth.permission().then(res => {
           this.$store.commit('initPermissions', res.data);
         }).then(() => {
+
+          utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
+          this.loading = false;
+
           DictGroup.getAll().then(data => {
             this.$store.commit('initDict', data);
-            setTimeout(() => {
-              utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
-              this.loading = false;
-            }, 1000);
           });
         });
       },
-      getRoleMenus (data) {
+      getRoleMenus(data) {
         Access.getRoleMenus(data.userCompanyAddress).then(res => {
           let menuData = res.data;
           let menuList = {};
@@ -229,14 +229,14 @@
           this.$store.commit('initPermList', menuData);
         });
       },
-      queryWeChat () {
+      queryWeChat() {
         cerpAction.queryWeChatInfo().then(res => {
           this.$store.commit('initWeChatInfo', res.data);
         }).catch(() => {
           this.$store.commit('initWeChatInfo', {});
         });
       },
-      queryBaseInfo (data) {
+      queryBaseInfo(data) {
         BaseInfo.queryBaseInfo(data.userCompanyAddress).then(res => {
           this.$store.commit('initOrgName', res.data.orgDto.name);
           window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');
