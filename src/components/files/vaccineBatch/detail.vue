@@ -60,10 +60,11 @@
                     药检报告
                   </h2>
                   <div>
-                    <div class="base-pic-list">
-                      <div v-for=" attachment in drugControlReportList" class="base-pic-item">
-                        <div @click="watchDrugControlReport(attachment)">
-                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    <div class="base-pic-list" v-if="drugControlReportList.length>0">
+                      <div class="base-pic-item">
+                        <div @click="watchDrugControlReport(drugControlReportList[0])">
+                          <img
+                            :src="drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -81,10 +82,10 @@
                     批签发
                   </h2>
                   <div>
-                    <div class="base-pic-list">
-                      <div v-for=" attachment in batchReleaseList" class="base-pic-item">
-                        <div @click="watchBatchRelease(attachment)">
-                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    <div class="base-pic-list" v-if="batchReleaseList.length>0">
+                      <div class="base-pic-item">
+                        <div @click="watchBatchRelease(batchReleaseList[0])">
+                          <img :src="batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -104,10 +105,11 @@
                     进口注册证
                   </h2>
                   <div>
-                    <div class="base-pic-list">
-                      <div v-for=" attachment in importCertificateList" class="base-pic-item">
-                        <div @click="watchImportCertificate(attachment)">
-                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    <div class="base-pic-list" v-if="importCertificateList.length>0">
+                      <div class="base-pic-item">
+                        <div @click="watchImportCertificate(importCertificateList[0])">
+                          <img
+                            :src="importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -125,10 +127,10 @@
                     通关单
                   </h2>
                   <div>
-                    <div class="base-pic-list">
-                      <div v-for=" attachment in customsPassList" class="base-pic-item">
-                        <div @click="watchCustomsPass(attachment)">
-                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    <div class="base-pic-list" v-if="customsPassList.length>0">
+                      <div class="base-pic-item">
+                        <div @click="watchCustomsPass(customsPassList[0])">
+                          <img :src="customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
                         </div>
                       </div>
                     </div>

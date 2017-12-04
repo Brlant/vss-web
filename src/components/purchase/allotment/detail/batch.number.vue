@@ -71,10 +71,11 @@
                     药检报告
                   </h2>
                   <div>
-                    <div class="base-pic-list">
-                      <div v-for=" attachment in item.attachmentMap.drugControlReports" class="base-pic-item">
-                        <div @click="watchPhoto(item.attachmentMap.drugControlReports)">
-                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    <div class="base-pic-list" v-if="item.attachmentMap.drugControlReports.length>0">
+                      <div class="base-pic-item">
+                        <div @click="watchPhoto(item.attachmentMap.drugControlReports[0])">
+                          <img
+                            :src="item.attachmentMap.drugControlReports[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -92,10 +93,11 @@
                     批签发
                   </h2>
                   <div>
-                    <div class="base-pic-list">
-                      <div v-for=" attachment in item.attachmentMap.batchReleases" class="base-pic-item">
-                        <div @click="watchPhoto(item.attachmentMap.batchReleases)">
-                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    <div class="base-pic-list" v-if="item.attachmentMap.batchReleases.length>0">
+                      <div class="base-pic-item">
+                        <div @click="watchPhoto(item.attachmentMap.batchReleases[0])">
+                          <img
+                            :src="item.attachmentMap.batchReleases[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -115,10 +117,11 @@
                     进口注册证
                   </h2>
                   <div>
-                    <div class="base-pic-list">
-                      <div v-for=" attachment in item.attachmentMap.importCertificates" class="base-pic-item">
-                        <div @click="watchPhoto(item.attachmentMap.importCertificates)">
-                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    <div class="base-pic-list" v-if="item.attachmentMap.importCertificates.length>0">
+                      <div class="base-pic-item">
+                        <div @click="watchPhoto(item.attachmentMap.importCertificates[0])">
+                          <img
+                            :src="item.attachmentMap.importCertificates[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -136,10 +139,11 @@
                     通关单
                   </h2>
                   <div>
-                    <div class="base-pic-list">
-                      <div v-for=" attachment in item.attachmentMap.customsPass" class="base-pic-item">
-                        <div @click="watchPhoto(item.attachmentMap.customsPass)">
-                          <img :src="attachment.attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                    <div class="base-pic-list" v-if="item.attachmentMap.customsPass.length>0">
+                      <div class="base-pic-item">
+                        <div @click="watchPhoto(item.attachmentMap.customsPass[0])">
+                          <img
+                            :src="item.attachmentMap.customsPass[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -307,6 +311,34 @@
         });
       },
       onSubmit: function (item) {
+        //        if (!this.drugControlReport.id) {
+//          this.$notify.info({
+//            duration: 2000,
+//            message: '请上传药检报告'
+//          });
+//          return;
+//        }
+//        if (!this.batchReleases.id) {
+//          this.$notify.info({
+//            duration: 2000,
+//            message: '请上传批签发文件'
+//          });
+//          return;
+//        }
+//        if (!this.importCertificates.id) {
+//          this.$notify.info({
+//            duration: 2000,
+//            message: '请上传进口注册证'
+//          });
+//          return;
+//        }
+//        if (!this.customsPass.id) {
+//          this.$notify.info({
+//            duration: 2000,
+//            message: '请上传通关单'
+//          });
+//          return;
+//        }
         let batchReleases = [];
         let drugControlReports = [];
         let importCertificates = [];
