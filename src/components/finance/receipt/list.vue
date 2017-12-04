@@ -87,7 +87,7 @@
       </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
             <h2 class="header">
             <span class="pull-right">
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -137,7 +137,7 @@
           <div v-if="!currentItem.id">
             <div class="empty-info">暂无信息</div>
           </div>
-          <div v-else="" class="d-table-col-wrap">
+          <div v-else="" class="d-table-col-wrap" :style="'height:'+bodyHeight">
             <div class="content-body clearfix">
               <el-row>
                 <el-col :span="15">

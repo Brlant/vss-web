@@ -84,7 +84,7 @@
       </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
             <h2 class="header">
             <span class="pull-right">
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -124,18 +124,19 @@
           </div>
         </div>
         <div class="d-table-right">
-          <!--<span class="pull-right" style="margin-right: 8px">-->
-          <!--<perm label="accounts-receivable-detail-add">-->
-          <!--<a href="#" class="btn-circle" @click.stop.prevent="add">-->
-          <!--<i class="el-icon-t-plus"></i>-->
-          <!--</a>-->
-          <!--</perm>-->
-          <!--</span>-->
-          <div v-if="!currentItem.id">
-            <div class="empty-info">暂无信息</div>
-          </div>
-          <div v-else="" class="d-table-col-wrap">
-            <h2 class="clearfix">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+            <!--<span class="pull-right" style="margin-right: 8px">-->
+            <!--<perm label="accounts-receivable-detail-add">-->
+            <!--<a href="#" class="btn-circle" @click.stop.prevent="add">-->
+            <!--<i class="el-icon-t-plus"></i>-->
+            <!--</a>-->
+            <!--</perm>-->
+            <!--</span>-->
+            <div v-if="!currentItem.id">
+              <div class="empty-info">暂无信息</div>
+            </div>
+            <div v-else="">
+              <h2 class="clearfix">
                 <span class="pull-right">
                   <el-button-group>
                     <perm label="sale-price-group-edit">
@@ -148,43 +149,43 @@
                     </perm>
                   </el-button-group>
                 </span>
-            </h2>
-            <div class="content-body clearfix" style="margin-top: 0;margin-bottom: 0">
-              <el-row>
-                <oms-row label="销售价格组名称" :span="5">
-                  {{currentItem.name}}
-                </oms-row>
-                <oms-row label="货品名称" :span="5">
-                  {{currentItem.goodsName}}
-                </oms-row>
-                <oms-row label="销售单价" :span="5">
-                  <span>￥{{currentItem.unitPrice | formatMoney}}</span>
-                </oms-row>
-                <oms-row label="是否可用" :span="5">
-                  {{currentItem.availabilityStatus | formatStatus}}
-                </oms-row>
-              </el-row>
-            </div>
-            <div style="overflow: hidden;margin-bottom: 5px">
-              <!--<el-row>-->
-              <!--<el-col :span="12" class="search-input" style="padding-right: 10px">-->
-              <!--<el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV" :clearable="true"-->
-              <!--v-model="povId" @click.native="filterPOV('')">-->
-              <!--<el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"-->
-              <!--v-for="org in showOrgList">-->
-              <!--</el-option>-->
-              <!--</el-select>-->
-              <!--</el-col>-->
-              <!--<el-col :span="3">-->
-              <!--<perm label="sale-price-group-pov-bind">-->
-              <!--<el-button type="primary" @click="bindPov">绑定接种点</el-button>-->
-              <!--</perm>-->
-              <!--</el-col>-->
-              <!--<el-col :span="24">-->
-              <!---->
-              <!--</el-col>-->
-              <!--</el-row>-->
-              <span class="pull-right">
+              </h2>
+              <div class="content-body clearfix" style="margin-top: 0;margin-bottom: 0">
+                <el-row>
+                  <oms-row label="销售价格组名称" :span="5">
+                    {{currentItem.name}}
+                  </oms-row>
+                  <oms-row label="货品名称" :span="5">
+                    {{currentItem.goodsName}}
+                  </oms-row>
+                  <oms-row label="销售单价" :span="5">
+                    <span>￥{{currentItem.unitPrice | formatMoney}}</span>
+                  </oms-row>
+                  <oms-row label="是否可用" :span="5">
+                    {{currentItem.availabilityStatus | formatStatus}}
+                  </oms-row>
+                </el-row>
+              </div>
+              <div style="overflow: hidden;margin-bottom: 5px">
+                <!--<el-row>-->
+                <!--<el-col :span="12" class="search-input" style="padding-right: 10px">-->
+                <!--<el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV" :clearable="true"-->
+                <!--v-model="povId" @click.native="filterPOV('')">-->
+                <!--<el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"-->
+                <!--v-for="org in showOrgList">-->
+                <!--</el-option>-->
+                <!--</el-select>-->
+                <!--</el-col>-->
+                <!--<el-col :span="3">-->
+                <!--<perm label="sale-price-group-pov-bind">-->
+                <!--<el-button type="primary" @click="bindPov">绑定接种点</el-button>-->
+                <!--</perm>-->
+                <!--</el-col>-->
+                <!--<el-col :span="24">-->
+                <!---->
+                <!--</el-col>-->
+                <!--</el-row>-->
+                <span class="pull-right">
                      <span class="btn-search-toggle open" v-show="showSearch">
                         <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入接种点名称搜索"
                                       :showFocus="showSearch"></single-input>
@@ -195,47 +196,48 @@
                        </a>
 
                   </span>
-            </div>
-            <table class="table">
-              <thead>
-              <tr class="tr-header">
-                <th>接种点</th>
-                <!--<th>操作</th>-->
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-if="loadingData">
-                <td colspan="5">
-                  <oms-loading :loading="loadingData"></oms-loading>
-                </td>
-              </tr>
-              <tr v-else-if="!receiptDetails.length">
-                <td colspan="5">
-                  <div class="empty-info">
-                    暂无信息
-                  </div>
-                </td>
-              </tr>
-              <tr v-else="" v-for="row in receiptDetails" class="tr-right"
-                  :class="{active:orderId === row.orderId}">
-                <td>
-                  {{ row.povName }}
-                </td>
-                <!--<td>-->
-                <!--<perm label="sale-price-group-pov-delete">-->
-                <!--<a href="#" @click.stop.prevent="removePov(row)"><i class="el-icon-t-delete"></i>删除</a>-->
-                <!--</perm>-->
-                <!--</td>-->
-              </tr>
-              </tbody>
-            </table>
-            <div class="text-center" v-show="pager.count>pager.pageSize">
-              <el-pagination layout="prev, pager, next"
-                             :total="pager.count"
-                             :pageSize="pager.pageSize"
-                             @current-change="getDetail"
-                             :current-page="pager.currentPage">
-              </el-pagination>
+              </div>
+              <table class="table">
+                <thead>
+                <tr class="tr-header">
+                  <th>接种点</th>
+                  <!--<th>操作</th>-->
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-if="loadingData">
+                  <td colspan="5">
+                    <oms-loading :loading="loadingData"></oms-loading>
+                  </td>
+                </tr>
+                <tr v-else-if="!receiptDetails.length">
+                  <td colspan="5">
+                    <div class="empty-info">
+                      暂无信息
+                    </div>
+                  </td>
+                </tr>
+                <tr v-else="" v-for="row in receiptDetails" class="tr-right"
+                    :class="{active:orderId === row.orderId}">
+                  <td>
+                    {{ row.povName }}
+                  </td>
+                  <!--<td>-->
+                  <!--<perm label="sale-price-group-pov-delete">-->
+                  <!--<a href="#" @click.stop.prevent="removePov(row)"><i class="el-icon-t-delete"></i>删除</a>-->
+                  <!--</perm>-->
+                  <!--</td>-->
+                </tr>
+                </tbody>
+              </table>
+              <div class="text-center" v-show="pager.count>pager.pageSize">
+                <el-pagination layout="prev, pager, next"
+                               :total="pager.count"
+                               :pageSize="pager.pageSize"
+                               @current-change="getDetail"
+                               :current-page="pager.currentPage">
+                </el-pagination>
+              </div>
             </div>
           </div>
         </div>
@@ -254,7 +256,7 @@
 </template>
 <script>
   import utils from '@/tools/utils';
-  import { receipt, BriceGroup, cerpAction, BriceGroupPov } from '@/resources';
+  import {receipt, BriceGroup, cerpAction, BriceGroupPov} from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
 
@@ -306,13 +308,15 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height - 20) + 'px';
+        return height;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
     },
     watch: {
@@ -328,7 +332,7 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
         }
@@ -367,7 +371,7 @@
         });
         this.querySum(params);
       },
-      querySum (params) {
+      querySum(params) {
         let para = Object.assign({}, params);
         para.availabilityStatus = undefined;
         BriceGroup.querySum(para).then(res => {
@@ -375,11 +379,11 @@
           this.priceGroupType[1].num = res.data['invalid'];
         });
       },
-      refresh () {
+      refresh() {
         this.getOrgsList(1);
         this.resetRightBox();
       },
-      refreshDetails () {
+      refreshDetails() {
         this.getDetail();
         this.resetRightBox();
       },
@@ -399,7 +403,7 @@
           this.pager.count = res.data.count;
         });
       },
-      bindPov () {
+      bindPov() {
         let form = {
           'salePriceGroupId': this.currentItem.id,
           'povId': this.povId
@@ -422,7 +426,7 @@
           });
         });
       },
-      removePov (item) {
+      removePov(item) {
         this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -447,7 +451,7 @@
         this.currentItem = item;
         this.getDetail(1);
       },
-      showDetail (item) {
+      showDetail(item) {
         this.orderId = item.orderId;
         this.showPart = true;
         this.currentDetail = item;
@@ -461,10 +465,10 @@
           this.filterPOVs();
         });
       },
-      filterPOVs () {
+      filterPOVs() {
         this.showOrgList = this.orgList.filter(f => !this.receiptDetails.some(s => f.subordinateId === s.povId));
       },
-      add () {
+      add() {
         if (!this.currentItem.id) {
           this.$notify.info({
             message: '请先添加付款方'
@@ -473,15 +477,15 @@
         }
         this.showRight = true;
       },
-      addDetail () {
+      addDetail() {
         this.showLeft = true;
         this.form = {};
       },
-      edit (row) {
+      edit(row) {
         this.form = row;
         this.showLeft = true;
       },
-      deletePriceGroup (item) {
+      deletePriceGroup(item) {
         this.$confirm('是否删除销售价格组"' + item.name + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -503,7 +507,7 @@
         this.activeStatus = item.availabilityStatus;
         this.filters.availabilityStatus = item.availabilityStatus;
       },
-      onSubmit () {
+      onSubmit() {
         this.getOrgsList();
       }
     }

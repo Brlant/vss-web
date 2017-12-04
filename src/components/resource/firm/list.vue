@@ -138,7 +138,7 @@
       <div class="container d-table">
 
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
             <h2 class="header" style="overflow: hidden">
               厂商资料
               <span class="pull-right">

@@ -48,7 +48,7 @@
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
           <h2 class="header">
           <span class="pull-right">
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -84,7 +84,7 @@
         </div>
       </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
           <h2 class="clearfix">
               <span class="pull-right" v-show="showTypeList.length">
                   <perm label="first-vaccine-authorization-add">
@@ -211,7 +211,9 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height + 10) + 'px';
+        return height;
       }
     },
     mounted () {
