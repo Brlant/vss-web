@@ -172,7 +172,7 @@
           <div v-if="!data.id" class="empty-info">
             请选择
           </div>
-          <div v-else>
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" v-else>
             <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
@@ -489,7 +489,9 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height - 25) + 'px';
+        return height;
       }
     },
     methods: {

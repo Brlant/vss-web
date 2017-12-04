@@ -185,7 +185,7 @@
           <div v-else-if="!businessRelationItem.followOrg" class="empty-info">
             暂无信息
           </div>
-          <div v-else>
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" v-else>
             <h2 class="clearfix">
               <span class="pull-right">
                  <!--<perm label="org-relation-edit">-->
@@ -340,7 +340,7 @@
                 <div class="base-pic-list">
                   <div v-for=" licence in businessRelationItem.followOrg.licenses" class="base-pic-item">
                     <div @click="watchPhoto(licence)">
-                      <img :src="licence.photoThumb ">
+                      <img :src="licence.photoThumb+'?image&action=resize:w_180,h_180,m_2'">
                       <h3>{{licence.name}}</h3>
                       <div>有效期:{{licence.validStartTime | date}}至{{licence.validEndTime | date}}</div>
                       <div>
@@ -397,7 +397,7 @@
 
 </template>
 <script>
-  import { BaseInfo, Vendor } from '@/resources';
+  import {BaseInfo, Vendor} from '@/resources';
   import utils from '@/tools/utils';
   import photoShow from './photo/photo.show.vue';
   import qs from 'qs';
@@ -451,22 +451,24 @@
       };
     },
     computed: {
-      orgRelationList () {
+      orgRelationList() {
         return this.$store.state.dict['orgRelation'];
       },
-      companyAddress () {
+      companyAddress() {
         let province = this.businessRelationItem.followOrg.orgDto.province;
         let city = this.businessRelationItem.followOrg.orgDto.city;
         let region = this.businessRelationItem.followOrg.orgDto.region;
         return utils.formatAddress(province, city, region);
       },
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height - 25) + 'px';
+        return height;
       }
     },
     watch: {
       filters: {
-        handler () {
+        handler() {
           this.getBusinessRelationList(1);
         },
         deep: true
@@ -477,7 +479,7 @@
         }
       }
     },
-    mounted () {
+    mounted() {
       this.getBusinessRelationList(1);
     },
     methods: {
@@ -490,7 +492,7 @@
         };
         this.resetRightBox();
       },
-      watchPhoto (item) {
+      watchPhoto(item) {
         this.photoForm = item;
         this.showPhotoRightShow = true;
       },
@@ -510,7 +512,7 @@
         }
         return state;
       },
-      getBusinessRelationList (pageNo, isContinue = false) {
+      getBusinessRelationList(pageNo, isContinue = false) {
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -677,7 +679,7 @@
           }
         });
       },
-      doClose () {
+      doClose() {
         this.showRight = false;
         this.$refs['relationForm'].resetFields();
       },

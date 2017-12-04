@@ -172,7 +172,7 @@
           <div v-if="!data.id" class="empty-info">
             请选择
           </div>
-          <div v-else>
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" v-else>
             <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
@@ -180,16 +180,16 @@
                     <el-button @click="edit"><i class="el-icon-t-edit"></i> 编辑</el-button>
                   </perm>
                    <perm label="first-vaccine-info-start">
-                    <el-button @click="enableRelation" v-show="data.status == '0'"><i class="el-icon-t-start"></i> 启用</el-button>
+                    <el-button @click="enableRelation" v-show="data.status == '0'"><i
+                      class="el-icon-t-start"></i> 启用</el-button>
                    </perm>
                    <perm label="first-vaccine-info-stop">
                     <el-button @click="forbid" v-show="data.status == '1' "><i
                       class="el-icon-t-stop"></i> 停用</el-button>
                    </perm>
                    <!--<perm label="first-vaccine-info-delete">-->
-                    <!--<el-button @click="remove"><i class="el-icon-t-remove"></i> 删除</el-button>-->
-                    <!--</perm>-->
-                  </perm>
+                   <!--<el-button @click="remove"><i class="el-icon-t-remove"></i> 删除</el-button>-->
+                   <!--</perm>-->
                 </el-button-group>
             </span>
             </h2>
@@ -216,7 +216,7 @@
                     {{ data.name}}
                   </goods-row>
                   <!--<goods-row label="疫苗分类" :span="8">-->
-                    <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
+                  <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
                   <!--</goods-row>-->
                   <goods-row label="疫苗标志" :span="8">
                     <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
@@ -439,10 +439,11 @@
 </template>
 <script>
   import goodsPart from './form/form.vue';
-  import { Vaccine } from '@/resources';
+  import {Vaccine} from '@/resources';
   import goodsRow from './goods.row.vue';
   import utils from '@/tools/utils';
   import attachmentLists from './../../../common/attachmentList.vue';
+
   export default {
     components: {goodsPart, goodsRow, attachmentLists},
     data: function () {
@@ -472,7 +473,7 @@
         }
       };
     },
-    mounted () {
+    mounted() {
       this.$emit('loaded');
       this.getGoodsList(1);
     },
@@ -481,7 +482,7 @@
         this.getGoodsList(1);
       },
       filters: {
-        handler () {
+        handler() {
           this.getGoodsList(1);
         },
         deep: true
@@ -489,7 +490,9 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height - 25) + 'px';
+        return height;
       }
     },
     methods: {
@@ -550,7 +553,7 @@
           this.queryOrgGoods();
         });
       },
-      queryOrgGoods () {
+      queryOrgGoods() {
         let id = this.currentItem.orgGoodsDto.id;
         if (!id) return;
         Vaccine.queryVaccineDetail(id).then(res => {
