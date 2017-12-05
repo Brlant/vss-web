@@ -79,11 +79,12 @@
                   <a href="#" @click.stop.prevent="edit(row)"><i
                     class="el-icon-t-edit"></i>编辑</a>
 
-                  <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用用户\""+row.name+"\"?"' v-show="row.status==1">
+                  <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用用户\""+row.name+"\"?"'
+                              v-show="row.status !== '2' ">
                     <i class="el-icon-t-forbidden"></i>停用
                   </oms-forbid>
                   <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用用户\""+row.name+"\"?"'
-                              v-show="row.status==2"><i class="el-icon-t-start" v-show="!row.adminFlag"></i>启用
+                              v-show="row.status=== '2' "><i class="el-icon-t-start" v-show="!row.adminFlag"></i>启用
                   </oms-forbid>
                 </perm>
               </td>
@@ -108,7 +109,7 @@
 
 </template>
 <script>
-  import {OrgUser} from '../../../resources';
+  import { OrgUser, User } from '../../../resources';
   import editForm from './form/form.vue';
   import OmsRemove from '../../common/remove.vue';
   import OmsForbid from '../../common/forbid.vue';
@@ -209,9 +210,9 @@
       },
       forbid: function (item) {
         let itemTemp = JSON.parse(JSON.stringify(item));
-        itemTemp.status = 2;
-        OrgUser.update(itemTemp.id, itemTemp).then(() => {
-          item.status = 2;
+        itemTemp.status = '2';
+        User.stopUser(itemTemp.id).then(() => {
+          item.status = '2';
           this.$notify.success({
             title: '成功',
             message: '已经停用用户"' + itemTemp.name + '"'
@@ -220,9 +221,9 @@
       },
       useNormal: function (item) {
         let itemTemp = JSON.parse(JSON.stringify(item));
-        itemTemp.status = 1;
-        OrgUser.update(itemTemp.id, itemTemp).then(() => {
-          item.status = 1;
+        itemTemp.status = '0';
+        User.enableUser(itemTemp.id).then(() => {
+          item.status = '0';
           this.$notify.success({
             title: '成功',
             message: '已成功启用用户"' + item.name + '"'
