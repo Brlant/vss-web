@@ -109,7 +109,7 @@
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/repertory'});
         this.$http.get('/erp-statement/stock-detail/export', {params}).then(res => {
-          utils.download(res.data.path, '二类苗库存盘点表');
+          utils.download(res.data.path, '进销存盘点表');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/repertory'});
         }).catch(error => {

@@ -181,38 +181,14 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #48576a;
-    height: auto;
-    line-height: normal;
-    box-sizing: border-box;
-    cursor: pointer;
-  }
-
   .productItem-info {
     float: left;
   }
 
   .order-good-selects {
     .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
       height: auto;
-      width: 530px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
+      width: auto;
     }
   }
 
@@ -231,7 +207,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="font-size: 16px">{{ index === 2 ? '编辑' : '新增' }}要货申请单</h2>
+        <h2 class="clearfix right-title" style="font-size: 16px">{{ index === 2 ? '编辑' : '新增' }}分货申请单</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit" :disabled="doing">保存申请单</el-button>
@@ -242,15 +218,20 @@
         <div class="hide-content show-content">
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="订单类型" prop="type">
-              <el-radio-group v-model.number="form.type" @change="changeType">
-                <el-radio :label="1">一类疫苗</el-radio>
-                <el-radio :label="2">二类疫苗</el-radio>
-              </el-radio-group>
-            </el-form-item>
-            <el-form-item label="疾控中心" prop="cdcId">
-              <el-select placeholder="请选择疾控" v-model="form.cdcId" clearable>
-                <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
+            <el-form-item label="接种点" prop="povId">
+              <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV" :clearable="true"
+                         v-model="form.povId" @change="povChange"
+                         popper-class="good-selects">
+                <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                           v-for="org in orgList">
+                  <div style="overflow: hidden">
+                    <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                  </div>
+                  <div style="overflow: hidden">
+                  <span class="select-other-info pull-left">
+                    <span>系统代码</span> {{org.subordinateCode}}
+                  </span>
+                  </div>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -465,8 +446,8 @@
           type: [
             {required: true, type: 'number', message: '请选择疫苗标志', trigger: 'change'}
           ],
-          cdcId: [
-            {required: true, message: '请选择疾控', trigger: 'change'}
+          povId: [
+            {required: true, message: '请选择接种点', trigger: 'change'}
           ],
           demandTime: [
             {required: true, message: '请选择到货需求日期', trigger: 'change'}
@@ -484,7 +465,8 @@
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
-        doing: false
+        doing: false,
+        orgList: []
       };
     },
     computed: {
@@ -495,6 +477,10 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      type () {
+        let level = this.$store.state.orgLevel;
+        return level === 1 ? 1 : 2;
       }
     },
     watch: {
@@ -509,8 +495,9 @@
           cdcId: '',
           type: 1
         };
-        this.searchWarehouses();
-        this.queryOnCDCs();
+        // this.searchWarehouses();
+        // this.queryOnCDCs();
+        this.filterPOV();
         this.currentList = [];
         if (val === 2) {
           this.editOrderInfo();
@@ -533,9 +520,13 @@
             unitPrice: m.price
           };
         });
+        this.orgList.push({
+          subordinateId: this.currentOrder.povId,
+          subordinateName: this.currentOrder.povName
+        });
         this.form = {
           id: this.currentOrder.id,
-          cdcId: this.currentOrder.cdcId,
+          povId: this.currentOrder.povId,
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.vaccineSign),
           warehouseId: this.currentOrder.warehouseId,
@@ -556,8 +547,12 @@
             unitPrice: m.price
           };
         });
+        this.orgList.push({
+          subordinateId: this.currentOrder.povId,
+          subordinateName: this.currentOrder.povName
+        });
         this.form = {
-          cdcId: this.currentOrder.cdcId,
+          povId: this.currentOrder.povId,
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.vaccineSign),
           warehouseId: this.currentOrder.warehouseId,
@@ -593,12 +588,35 @@
         this.filterProduct();
         this.searchProduct();
       },
+      povChange (val) {
+        this.product = {
+          'amount': null,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.accessoryList = [];
+        this.currentList = [];
+        this.warehouses = [];
+        this.$refs['orderGoodsForm'].resetFields();
+        if (!val) {
+          this.form.warehouseId = '';
+          return;
+        }
+        this.searchProduct();
+        this.searchWarehouses(val);
+      },
       searchProduct: function () {
         this.searchProductList = [];
-        if (!this.form.cdcId) return;
+        if (!this.form.povId) return;
         let rTime = Date.now();
         this.requestTime = rTime;
-        VaccineRights.queryVaccineByPov(this.$store.state.user.userCompanyAddress, {cdcId: this.form.cdcId}).then(res => {
+        VaccineRights.queryVaccineByPov(this.form.povId, {cdcId: this.$store.state.user.userCompanyAddress}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }
@@ -606,6 +624,14 @@
           this.$nextTick(() => {
             this.filterProducts();
           });
+        });
+      },
+      filterPOV: function (query) {// 过滤POV
+        let params = Object.assign({}, {
+          keyWord: query
+        });
+        cerpAction.queryAllPov(params).then(res => {
+          this.orgList = res.data.list;
         });
       },
       queryOnCDCs () {
@@ -616,12 +642,11 @@
         });
       },
       filterProduct () {
-        this.showCdcs = this.cdcs.filter(f => f.level === this.form.type);
+        this.showCdcs = this.cdcs.filter(f => f.level === this.type);
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
       searchWarehouses () {
-        let user = this.$store.state.user;
-        Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress}).then(res => {
+        Address.queryAddress(this.form.povId, {deleteFlag: false, orgId: this.form.povId}).then(res => {
           this.warehouses = res.data || [];
           let fs = this.warehouses.filter(i => i.default)[0];
           if (fs) {
@@ -646,7 +671,7 @@
             arr.push(item);
           }
         });
-        this.filterProductList = arr.filter(f => f.goodsTypeId === this.form.type.toString());
+        this.filterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
         if (!OrgGoodsId) {
@@ -793,7 +818,7 @@
             pullSignal.update(saveData.id, saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '编辑要货申请单成功',
+                message: '编辑分货申请单成功',
                 type: 'success'
               });
               self.$emit('change');
@@ -804,16 +829,16 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '编辑要货申请单失败',
+                title: '编辑分货申请单失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
             });
           } else {
-            pullSignal.save(saveData).then(res => {
+            http.post('/pull-signal/cdc', saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '新增要货申请单成功',
+                message: '新增分货申请单成功',
                 type: 'success'
               });
               self.$emit('change', res.data);
@@ -824,7 +849,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '新增要货申请单失败',
+                title: '新增分货申请单失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
