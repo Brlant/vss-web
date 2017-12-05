@@ -24,13 +24,10 @@
   box-sizing: border-box;
   padding-top: 50px;
   padding-left: 180px;
-  min-height: 100vh;
-
 }
 
 .main-body {
-  min-height: 300px;
-  padding-bottom: 40px;
+
 }
 
 .sub-menu {
@@ -167,13 +164,17 @@
 }
 
 .d-table {
-  margin: 20px auto;
+  margin: 20px auto 0;
   background: #eeeeee;
   display: table;
   width: 100%;
+  .d-table-col-wrap{
+    overflow:auto;
+  }
   > div {
     display: table-cell;
     vertical-align: top;
+
     &.d-table-left {
       position: relative;
       width: 280px;
@@ -189,11 +190,14 @@
       }
     }
     &.d-table-right {
+      .d-table-col-wrap{
+        padding:10px 20px;
+      }
       position: relative;
       font-size: 12px;
       border: 6px solid #eee;
       background: #fff;
-      padding: 10px 20px;
+      padding: 0;
       .table td {
         padding: 13px;
 

@@ -135,7 +135,7 @@
 
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
-                show-summary max-height="600">
+                show-summary :max-height="bodyHeight">
         <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="130"></el-table-column>
@@ -168,13 +168,13 @@
 </template>
 <script>
   //  import order from '../../../tools/orderList';
-  import { BaseInfo, OrgGoods, erpStock, http } from '@/resources';
+  import {BaseInfo, OrgGoods, erpStock, http} from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
 
   export default {
     components: {detail},
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: true,
@@ -205,12 +205,17 @@
         totalInfo: {}
       };
     },
-    mounted () {
+    mounted() {
       this.getBatches(1);
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
+      },
+      bodyHeight: function () {
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = height - 110;
+        return height;
       }
     },
     watch: {
@@ -222,7 +227,7 @@
       }
     },
     methods: {
-      getBatches () { // 得到波次列表
+      getBatches() { // 得到波次列表
         this.totalInfo = {};
         this.batches = [];
         let params = Object.assign({}, this.filters);
@@ -245,18 +250,18 @@
           });
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchWord);
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -295,7 +300,7 @@
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
       },
-      filterFactory (query) { // 生产厂商
+      filterFactory(query) { // 生产厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
@@ -309,7 +314,7 @@
           this.factories = res.data.list;
         });
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           deleteFlag: false,
@@ -320,7 +325,7 @@
           this.orgGoods = res.data.list;
         });
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

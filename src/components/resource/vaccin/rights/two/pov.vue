@@ -48,7 +48,7 @@
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
           <h2 class="header">
           <span class="pull-right">
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -81,7 +81,7 @@
         </div>
       </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
           <h2 class="clearfix">
               <span class="pull-right" v-show="showTypeList.length">
                   <perm label="second-vaccine-authorization-add">
@@ -158,7 +158,7 @@
 </template>
 <script>
   import addForm from './form.vue';
-  import { cerpAction, Vaccine, VaccineRights, PurchaseAgreement } from '@/resources';
+  import {cerpAction, Vaccine, VaccineRights, PurchaseAgreement} from '@/resources';
 
   export default {
     components: {
@@ -208,10 +208,12 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height + 10) + 'px';
+        return height;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
     },
     watch: {
@@ -220,7 +222,7 @@
         this.orgName = '';
         this.getOrgsList();
       },
-      keyWord () {
+      keyWord() {
         this.pickTypeList();
       }
     },
@@ -260,7 +262,7 @@
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
       },
-      queryVaccines (query) {
+      queryVaccines(query) {
         let params = Object.assign({}, {
           keyWord: query
         });
@@ -269,7 +271,7 @@
           this.filterPOVs();
         });
       },
-      filterPOVs () {
+      filterPOVs() {
         this.showOrgList = this.orgList.filter(f => !this.dataRows.some(s => f.subordinateId === s.povId));
       },
       filterPOV: function (query) {// 过滤POV
@@ -297,7 +299,7 @@
           this.loadingData = false;
         });
       },
-      refreshDetails () {
+      refreshDetails() {
         this.getPageList(1);
         this.showRight = false;
       },
@@ -319,7 +321,7 @@
           });
         });
       },
-      bindVaccinePOV () {
+      bindVaccinePOV() {
         let form = {
           'orgGoodsId': this.currentItem.orgGoodsId,
           'povId': this.povId
@@ -353,15 +355,15 @@
         this.currentItem = item;
         this.getPageList(1);
       },
-      add () {
+      add() {
         this.formPara = {};
         this.showRight = true;
       },
-      edit (item) {
+      edit(item) {
         this.formPara = item;
         this.showRight = true;
       },
-      changeItem (item) {
+      changeItem(item) {
         if (this.action === 'add') {
           this.getPageList(1);
         } else {

@@ -23,7 +23,7 @@
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
           <h2 class="header" style="overflow: hidden">
           <span class="pull-right">
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
          <span class="pull-right" style="margin-top: 8px">
            <span class="btn-search-toggle open" v-show="showSearch">
               <single-input v-model="keyTxt" placeholder="请输入名称搜索" :showFocus="showSearch"></single-input>
@@ -114,12 +114,13 @@
                 </perm>
                 <perm label="erp-account-start">
                   <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用货主用户 \""+row.name+"\" ?"'
-                              v-show="row.status==2"><i
+                              v-show="row.status === '2'"><i
                     class="el-icon-t-start"></i>启用
                   </oms-forbid>
                 </perm>
                 <perm label="erp-account-stop">
-                  <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"' v-show="row.status==1">
+                  <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"'
+                              v-show="row.status !== '2'">
                     <i class="el-icon-t-forbidden"></i>停用
                   </oms-forbid>
                 </perm>
@@ -147,7 +148,7 @@
 
 </template>
 <script>
-  import {BaseInfo, OrgUser, cerpAction} from '../../../resources';
+  import { BaseInfo, OrgUser, cerpAction, User } from '../../../resources';
   import editForm from './form/form.vue';
   import OmsRemove from '../../common/remove.vue';
   import OmsForbid from '../../common/forbid.vue';
@@ -195,7 +196,9 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height + 50) + 'px';
+        return height;
       }
     },
     mounted() {
@@ -290,9 +293,9 @@
       },
       forbid: function (item) {
         let itemTemp = JSON.parse(JSON.stringify(item));
-        itemTemp.status = 2;
-        OrgUser.update(itemTemp.id, itemTemp).then(() => {
-          item.status = 2;
+        itemTemp.status = '2';
+        User.stopUser(itemTemp.id).then(() => {
+          item.status = '2';
           this.$notify.success({
             title: '成功',
             message: '已成功停用货主用户"' + itemTemp.name + '"'
@@ -301,10 +304,9 @@
       },
       useNormal: function (item) {
         let itemTemp = JSON.parse(JSON.stringify(item));
-        itemTemp.status = 1;
-        OrgUser.update(itemTemp.id, itemTemp).then(() => {
-          item.status = 1;
-          this.getPageList(1);
+        itemTemp.status = '0';
+        User.enableUser(itemTemp.id).then(() => {
+          item.status = '0';
           this.$notify.success({
             title: '成功',
             message: '已成功启用货主用户"' + item.name + '"'

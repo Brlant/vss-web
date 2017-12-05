@@ -3,9 +3,7 @@
   @import "../assets/mixins.less";
   @import "../assets/oms.less";
 
-  .d-table {
-    min-height: 500px;
-  }
+
 
   .layer-loading {
     text-align: center;

@@ -30,7 +30,8 @@
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <h2 class="header">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <h2 class="header">
           <span class="pull-right">
             <perm label="binding-warehouse-add">
               <a href="#" class="btn-circle" @click.stop.prevent="addType">
@@ -38,35 +39,37 @@
               </a>
             </perm>
           </span>
-          仓库地址
-        </h2>
-        <div v-if="showTypeList.length == 0" class="empty-info">
-          暂无信息
-        </div>
-        <div v-else>
-          <ul class="show-list">
-            <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
-                :class="{'active':item.id==currentItem.id}">
-              <div class="id-part">
-                <span v-show="item.default">默认</span>
-                <span class="pull-right">
+            仓库地址
+          </h2>
+          <div v-if="showTypeList.length == 0" class="empty-info">
+            暂无信息
+          </div>
+          <div v-else>
+            <ul class="show-list">
+              <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
+                  :class="{'active':item.id==currentItem.id}">
+                <div class="id-part">
+                  <span v-show="item.default">默认</span>
+                  <span class="pull-right">
                     <el-tag type="danger" v-show="item.status==='3'">停用</el-tag>
                     <el-tag type="success" v-show=" item.status==='0'">正常</el-tag>
                 </span>
-              </div>
-              <div>
-                {{item.name }}
-              </div>
-            </li>
-          </ul>
+                </div>
+                <div>
+                  {{item.name }}
+                </div>
+              </li>
+            </ul>
+          </div>
         </div>
       </div>
       <div class="d-table-right">
-        <div v-if="showTypeList.length == 0" class="empty-info">
-          暂无信息
-        </div>
-        <div v-else>
-          <h2 class="clearfix">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div v-if="showTypeList.length == 0" class="empty-info">
+            暂无信息
+          </div>
+          <div v-else>
+            <h2 class="clearfix">
                 <span class="pull-right">
                   <el-button-group>
                     <perm label="binding-warehouse-update">
@@ -83,32 +86,33 @@
                     </perm>
                   </el-button-group>
                 </span>
-          </h2>
-          <div class="page-main-body">
-            <oms-row label="仓库名称" :span="4">
-              {{data.name}}
-            </oms-row>
-            <oms-row label="仓库类型" :span="4">
-              {{warehouseType}}
-            </oms-row>
-            <oms-row label="所属物流公司" :span="4" v-if="data.warehouseType==='0'">
-              {{data.warehouseSourceFirmName}}
-            </oms-row>
-            <oms-row label="仓库地址类型" :span="4">
-              <dict :dict-group="'orgAddress'" :dict-key="formatAddress"></dict>
-            </oms-row>
-            <oms-row label="所在地区" :span="4">
-              {{ storeAddress }}
-            </oms-row>
-            <oms-row label="详细地址" :span="4">
-              {{ data.detail }}
-            </oms-row>
-            <oms-row label="联系人" :span="4">
-              {{ data.contact }}
-            </oms-row>
-            <oms-row label="联系电话" :span="4">
-              {{ data.telephone }}
-            </oms-row>
+            </h2>
+            <div class="page-main-body">
+              <oms-row label="仓库名称" :span="4">
+                {{data.name}}
+              </oms-row>
+              <oms-row label="仓库类型" :span="4">
+                {{warehouseType}}
+              </oms-row>
+              <oms-row label="所属物流公司" :span="4" v-if="data.warehouseType==='0'">
+                {{data.warehouseSourceFirmName}}
+              </oms-row>
+              <oms-row label="仓库地址类型" :span="4">
+                <dict :dict-group="'orgAddress'" :dict-key="formatAddress"></dict>
+              </oms-row>
+              <oms-row label="所在地区" :span="4">
+                {{ storeAddress }}
+              </oms-row>
+              <oms-row label="详细地址" :span="4">
+                {{ data.detail }}
+              </oms-row>
+              <oms-row label="联系人" :span="4">
+                {{ data.contact }}
+              </oms-row>
+              <oms-row label="联系电话" :span="4">
+                {{ data.telephone }}
+              </oms-row>
+            </div>
           </div>
         </div>
       </div>
@@ -121,7 +125,7 @@
 </template>
 <script>
   import storePart from './form/form.vue';
-  import { Address } from '../../../resources';
+  import {Address} from '../../../resources';
   import utils from '../../../tools/utils';
 
   export default {
@@ -158,13 +162,13 @@
         let value = this.data.type;
         return value.toString();
       },
-      storeAddress () {
+      storeAddress() {
         let province = this.data.province;
         let city = this.data.city;
         let region = this.data.region;
         return utils.formatAddress(province, city, region);
       },
-      warehouseType () {
+      warehouseType() {
         let warehouseType = '';
         if (this.data.warehouseType === '0') {
           warehouseType = '物流公司仓库';
@@ -172,9 +176,14 @@
           warehouseType = '本地仓库';
         }
         return warehouseType;
+      },
+      bodyHeight: function () {
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height + 45) + 'px';
+        return height;
       }
     },
-    mounted () {
+    mounted() {
       this.getPageList();
     },
     watch: {
