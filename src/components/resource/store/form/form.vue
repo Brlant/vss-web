@@ -37,7 +37,7 @@
     <el-form-item label="联系人" prop="contact">
       <oms-input type="text" v-model="form.contact" placeholder="请输入联系人"></oms-input>
     </el-form-item>
-    <el-form-item label="联系人手机">
+    <el-form-item label="联系人电话">
       <oms-input type="text" v-model="form.telephone" placeholder="请输入联系人手机"></oms-input>
     </el-form-item>
     <el-form-item label="所在地区">
