@@ -304,6 +304,12 @@ export const PurchaseContract = resource('/purchase-contract', http, {
   },
   synchroContract(id) {// 同步采购合同
     return http.put(`/purchase-contract/${id}/synchro`);
+  },
+  start(id) {
+    return http.put(`/purchase-contract/${id}/start`);
+  },
+  stop(id) {
+    return http.put(`/purchase-contract/${id}/enable`);
   }
 });
 

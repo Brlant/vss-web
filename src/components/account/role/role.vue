@@ -55,7 +55,8 @@
       </div>
       <div class="container d-table">
         <div class="d-table-left">
-          <h2 class="header">
+          <div class="d-table-col-wrap">
+            <h2 class="header">
                 <span class="pull-right">
                   <perm label="access-role-add">
                     <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="el-icon-t-plus"></i> </a>
@@ -63,38 +64,39 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="el-icon-t-search"></i> </a>
                 </span>
-            角色管理
-          </h2>
-          <div class="search-left-box" v-show="showTypeSearch">
-            <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
-          </div>
-          <div v-if="!currentItem.title" class="empty-info">
-            暂无信息
-          </div>
-          <div v-else>
-            <ul class="show-list">
-              <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
-                  :class="{'active':item.id===currentItem.id}">
-                <perm label="access-role-delete">
-                  <oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'
-                              class="hover-show"><i
-                    class="el-icon-t-delete"></i></oms-remove>
-                </perm>
-                <div class="id-part">
-                  {{item.name }}
-                </div>
-                <div>
-                  {{item.title }}
-                </div>
-              </li>
-            </ul>
+              角色管理
+            </h2>
+            <div class="search-left-box" v-show="showTypeSearch">
+              <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
+            </div>
+            <div v-if="!currentItem.title" class="empty-info">
+              暂无信息
+            </div>
+            <div v-else>
+              <ul class="show-list">
+                <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
+                    :class="{'active':item.id===currentItem.id}">
+                  <perm label="access-role-delete">
+                    <oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'
+                                class="hover-show"><i
+                      class="el-icon-t-delete"></i></oms-remove>
+                  </perm>
+                  <div class="id-part">
+                    {{item.name }}
+                  </div>
+                  <div>
+                    {{item.title }}
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="d-table-right">
           <div v-if="!currentItem.title" class="empty-info">
             暂无信息
           </div>
-          <div v-else>
+          <div class="d-table-col-wrap" v-else>
             <h2 class="clearfix">
               <span class="pull-right">
                <el-button-group>
@@ -184,7 +186,7 @@
   </div>
 </template>
 <script>
-  import { Access } from '../../../resources';
+  import {Access} from '../../../resources';
   import roleForm from './form/form.vue';
 
   export default {
@@ -219,7 +221,7 @@
         return this.$store.state.permList;
       }
     },
-    mounted () {
+    mounted() {
       this.getPageList();
     },
     watch: {

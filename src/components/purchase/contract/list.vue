@@ -220,13 +220,46 @@
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <perm label="purchasing-contract-edit">
+                <div>
+                  <perm label="purchasing-contract-edit">
                    <span @click.stop.prevent="editContract(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
                     编辑
                   </span>
-                </perm>
+                  </perm>
+                </div>
+                <!--<perm label="purchasing-contract-add">-->
+                <!--<div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">-->
+                <!--<el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>-->
+                <!--</div>-->
+                <!--</perm>-->
+                <div>
+                  <perm label="purchasing-contract-edit">
+                    <span @click.stop.prevent="createOrder(item)" v-if="!item.used">
+                      <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-wave"></i></a>
+                      批量生成采购订单
+                    </span>
+                  </perm>
+                </div>
+                <div>
+                  <perm label="purchasing-contract-edit">
+                    <span @click.stop.prevent="stopContract(item)" v-if="item.availabilityStatus">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="el-icon-t-forbidden"></i></a>
+                      停用
+                    </span>
+                  </perm>
+                </div>
+                <div>
+                  <perm label="purchasing-contract-edit">
+                    <span @click.stop.prevent="startContract(item)" v-if="!item.availabilityStatus">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="el-icon-t-start"></i></a>
+                      启用
+                    </span>
+                  </perm>
+                </div>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -343,6 +376,72 @@
       }
     },
     methods: {
+      startContract: function (item) {
+        this.$confirm('确认启用采购合同《' + item.name + '》?', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          PurchaseContract.start(item.id).then(() => {
+            this.$notify({
+              duration: 2000,
+              message: '启用采购合同成功',
+              type: 'success'
+            });
+            this.getOrderList(1);
+          }).catch(error => {
+            this.$notify.error({
+              duration: 2000,
+              message: error.response.data && error.response.data.msg || '启用采购合同失败'
+            });
+          });
+        });
+      },
+      stopContract: function (item) {
+        this.$confirm('确认停用采购合同《' + item.name + '》?', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          PurchaseContract.stop(item.id).then(() => {
+            this.$notify({
+              duration: 2000,
+              message: '停用采购合同成功',
+              type: 'success'
+            });
+            this.getOrderList(1);
+          }).catch(error => {
+            this.$notify.error({
+              duration: 2000,
+              message: error.response.data && error.response.data.msg || '停用采购合同失败'
+            });
+          });
+        });
+      },
+      createOrder: function (item) {
+        if (!item) {
+          return;
+        }
+        this.$confirm('确认按照采购合同《' + item.name + '》的信息批量生成采购订单?', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          PurchaseContract.batchCreateOrder(item.id).then(() => {
+            this.$notify.success({
+              duration: 2000,
+              title: '成功',
+              message: '批量生成采购订单成功'
+            });
+            this.getOrderList(1);
+          }).catch(error => {
+            this.$notify.error({
+              duration: 2000,
+              message: error.response.data && error.response.data.msg || '批量生成采购订单失败'
+            });
+          });
+        });
+      },
       refreshOrder() {
         this.currentOrderId = '';
         this.getOrderList(1);

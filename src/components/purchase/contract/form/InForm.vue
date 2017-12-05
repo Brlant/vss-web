@@ -318,11 +318,11 @@
               <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
                          v-model="form.importedFlag"></el-switch>
             </el-form-item>
-            <el-form-item label="是否生效">
-              <el-switch v-model="form.availabilityStatus" on-text="是" off-text="否" on-color="#13ce66"
-                         off-color="#ff4949">
-              </el-switch>
-            </el-form-item>
+            <!--<el-form-item label="是否生效">-->
+              <!--<el-switch v-model="form.availabilityStatus" on-text="是" off-text="否" on-color="#13ce66"-->
+                         <!--off-color="#ff4949">-->
+              <!--</el-switch>-->
+            <!--</el-form-item>-->
             <el-form-item label="备注">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>

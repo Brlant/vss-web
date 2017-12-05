@@ -23,7 +23,7 @@
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'max-height:'+bodyHeight">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
           <h2 class="header" style="overflow: hidden">
           <span class="pull-right">
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -56,7 +56,7 @@
         </div>
       </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
          <span class="pull-right" style="margin-top: 8px">
            <span class="btn-search-toggle open" v-show="showSearch">
               <single-input v-model="keyTxt" placeholder="请输入名称搜索" :showFocus="showSearch"></single-input>
@@ -196,7 +196,9 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height + 50) + 'px';
+        return height;
       }
     },
     mounted() {
