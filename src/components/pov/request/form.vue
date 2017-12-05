@@ -384,7 +384,7 @@
                   <span v-if=" !Number(product.unitPrice)">-</span>
                 </td>
                 <td class="goods-btn">
-                  <div v-show="index === 2 || index === 3">
+                  <div>
                     <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
                       class="el-icon-t-edit"></i> 编辑</a>
                   </div>
@@ -663,17 +663,16 @@
           };
           this.$refs['orderGoodsForm'].resetFields();
           this.accessoryList = [];
+          this.currentList = [];
           return;
         }
         http.get('/org/goods/' + OrgGoodsId).then(res => {
           this.currentList.push(res.data);
-          let ary = this.filterProductList.filter(f => f.orgGoodsId === OrgGoodsId);
-          let currentObj = ary.length > 0 ? ary[0] : '0';
+
           this.currentList.forEach(item => {
             if (item.orgGoodsDto.id === OrgGoodsId) {
               this.product.fixInfo = item.orgGoodsDto;
-              let sellPrice = currentObj.sellPrice;
-              this.product.unitPrice = utils.autoformatDecimalPoint(sellPrice ? sellPrice.toString() : '');
+
               this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
               this.accessoryList = item.list;
               this.form.detailDtoList.forEach((detailItem) => {
@@ -702,9 +701,13 @@
         }
         let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;
+        let ary = this.filterProductList.filter(f => f.orgGoodsId === this.product.orgGoodsId);
+        let currentObj = ary.length > 0 ? ary[0] : '0';
         this.currentList.forEach((item) => {
           if (this.product.orgGoodsId === item.orgGoodsDto.id) {
             this.product.orgGoodsName = item.orgGoodsDto.name;
+            let sellPrice = currentObj.sellPrice;
+            this.product.unitPrice = utils.autoformatDecimalPoint(sellPrice ? sellPrice.toString() : '');
             this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
             item.list.forEach(m => {
               let amount = Math.ceil(m.proportion * this.product.amount);
