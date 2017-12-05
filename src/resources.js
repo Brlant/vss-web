@@ -1,4 +1,4 @@
-import {Notification} from 'element-ui/lib/notification';
+import { Notification } from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -176,6 +176,12 @@ export const User = resource('/oms/user', http, {
   },
   forget: (obj) => {
     return http.post('/oms/user/password/verifyMail', obj);
+  },
+  stopUser: (userId) => {
+    return http.put(`/oms/user/${userId}/stop`);
+  },
+  enableUser: (userId) => {
+    return http.put(`/oms/user/${userId}/enablement`);
   }
 });
 
