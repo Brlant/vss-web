@@ -686,6 +686,13 @@
           this.form.state = '';
           this.form.id = null;
         }
+        // 运输条件和物流中心设置默认值
+        if (this.LogisticsCenter) {
+          this.form.logisticsCentreId = this.LogisticsCenter[1].id;
+        }
+        if (this.transportationConditionList) {
+          this.form.transportationCondition = this.transportationConditionList[0].key;
+        }
       },
 //      form: {
 //        handler: 'autoSave',
