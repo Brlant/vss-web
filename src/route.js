@@ -213,12 +213,12 @@ const route = [
           {
             path: '/finance/pay',
             component: resolve => require(['./components/finance/pay/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '应付账款管理', perm: 'accounts-payable'}
+            meta: {moduleId: 'finance', title: '应付账款查询', perm: 'accounts-payable'}
           },
           {
             path: '/finance/get',
             component: resolve => require(['./components/finance/receipt/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '应收账款管理', perm: 'accounts-receivable'}
+            meta: {moduleId: 'finance', title: '应收账款查询', perm: 'accounts-receivable'}
           },
           {
             path: '/payment/invoice',
