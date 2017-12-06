@@ -180,7 +180,7 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px'}">
-      <role-form :formItem="form" :action="action" @close="showRight=false" :actionType="showRight"
+      <role-form :formItem="form" :action="action" @close="showRight=false" :roleMenu="permList" :actionType="showRight"
                  @changed="change"></role-form>
     </page-right>
   </div>
@@ -213,16 +213,18 @@
           usableStatus: 1,
           keyWord: ''
         },
-        activeStatus: 1
+        activeStatus: 1,
+        permList: {}
       };
     },
-    computed: {
-      permList: function () {
-        return this.$store.state.permList;
-      }
-    },
+    // computed: {
+    //   permList: function () {
+    //     return this.$store.state.permList;
+    //   }
+    // },
     mounted () {
       this.getPageList();
+      this.getRoleMenus();
     },
     watch: {
       filters: {
@@ -244,6 +246,17 @@
           this.typeList = res.data.list;
           this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);
           this.queryRoleDetail(this.currentItem.id);
+        });
+      },
+      getRoleMenus () {
+        this.$http.get('/oms/access/menus', {params: {objectId: 'cerp-system'}}).then(res => {
+          let menuData = res.data;
+          let menuList = {};
+          res.data.menuList.forEach(item => {
+            menuList[item.id] = item.name;
+          });
+          menuData.menuList = menuList;
+          this.permList = menuData;
         });
       },
       queryRoleDetail: function (id) {

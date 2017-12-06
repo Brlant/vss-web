@@ -71,6 +71,12 @@
       actionType: {
         type: Boolean,
         default: true
+      },
+      roleMenu: {
+        type: Object,
+        default () {
+          return {};
+        }
       }
     },
     data: function () {
@@ -107,11 +113,11 @@
         }
       };
     },
-    computed: {
-      roleMenu () {
-        return this.$store.state.permList;
-      }
-    },
+    // computed: {
+    //   roleMenu () {
+    //     return this.$store.state.permList;
+    //   }
+    // },
     mounted: function () {
       const self = this;
       if (!this.roleMenu.tree) return;

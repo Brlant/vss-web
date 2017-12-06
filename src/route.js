@@ -111,6 +111,11 @@ const route = [
             meta: {moduleId: 'resource', title: '二类疫苗接种点授权', perm: 'second-vaccine-authorization'}
           },
           {
+            path: '/sale/request/pov',
+            component: resolve => require(['./components/purchase/request/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '分货申请', perm: 'cargo-signal'}
+          },
+          {
             path: '/sale/pov/:id',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
             meta: {moduleId: 'sale', title: '接种点疫苗要货需求', perm: 'demand-assignment'},
@@ -387,7 +392,7 @@ const route = [
           {
             path: '/report/repertory',
             component: resolve => require(['./components/report/repertory.vue'], resolve),
-            meta: {moduleId: 'report', title: '二类苗库存盘点表', perm: 'inventory-form-manager'}
+            meta: {moduleId: 'report', title: '进销存盘点表', perm: 'inventory-form-manager'}
           }
         ]
       }

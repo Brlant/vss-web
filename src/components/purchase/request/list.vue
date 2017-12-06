@@ -51,7 +51,7 @@
           <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
         <span class="pull-right" style="margin-top: 8px">
-           <perm label="pull-signal-add">
+           <perm label="cargo-signal-add">
              <a href="#" class="btn-circle" @click.stop.prevent="add">
                 <i class="el-icon-t-plus"></i>
             </a>
@@ -66,7 +66,7 @@
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-              要货申请单列表
+              分货申请单列表
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -79,7 +79,7 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    要货申请编号 {{item.id }}
+                    分货申请编号 {{item.id }}
                   </div>
                   <div>
                     {{item.povName }}
@@ -101,21 +101,20 @@
               <h2 class="clearfix">
               <span class="pull-right">
                 <el-button-group>
-                   <perm label="pull-signal-add">
+                   <perm label="cargo-signal-add">
                         <el-button @click="addOrder()"><i
                           class="el-icon-t-reset"></i> 再次要货
                         </el-button>
                     </perm>
-                    <perm label="pull-signal-audit" v-show="currentOrder.status === 0">
+                    <perm label="cargo-signal-audit" v-show="currentOrder.status === 0">
                       <el-button @click="audited()"><i
                         class="el-icon-t-verify"></i>审批</el-button>
                     </perm>
-                    <perm label="pull-signal-edit" v-show="currentOrder.status === 0">
+                    <perm label="cargo-signal-edit" v-show="currentOrder.status === 0">
                       <el-button @click="editOrder()"><i
                         class="el-icon-t-edit"></i>编辑</el-button>
                     </perm>
-
-                    <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
+                    <perm label="cargo-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
                       <el-button @click="cancel()"><i
                         class="el-icon-t-verify"></i>取消</el-button>
                     </perm>
@@ -125,7 +124,7 @@
               <div class="content-body clearfix">
                 <el-row>
                   <el-col :span="8">
-                    <oms-row label="要货申请编号">
+                    <oms-row label="分货申请编号">
                       {{currentOrder.id }}
                     </oms-row>
                     <oms-row label="申请时间">
@@ -208,7 +207,6 @@
               </table>
             </div>
           </div>
-
         </div>
       </div>
     </div>
@@ -305,7 +303,7 @@
         let params = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          povId: orgId
+          cdcId: orgId
         }, this.filters);
         pullSignal.query(params).then(res => {
           if (isContinue) {
@@ -331,7 +329,7 @@
       },
       queryCount () {
         let params = Object.assign({}, {
-          povId: this.user.userCompanyAddress
+          cdcId: this.user.userCompanyAddress
         }, this.filters);
         pullSignal.queryCount(params).then(res => {
           this.requestType[0].num = res.data['all'];

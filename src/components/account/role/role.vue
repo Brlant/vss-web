@@ -93,11 +93,12 @@
           </div>
         </div>
         <div class="d-table-right">
-          <div v-if="!currentItem.title" class="empty-info">
-            暂无信息
-          </div>
-          <div class="d-table-col-wrap" v-else>
-            <h2 class="clearfix">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+            <div v-if="!currentItem.title" class="empty-info">
+              暂无信息
+            </div>
+            <div v-else>
+              <h2 class="clearfix">
               <span class="pull-right">
                <el-button-group>
                  <perm label="access-role-edit">
@@ -122,58 +123,60 @@
                 </perm>
                 </el-button-group>
               </span>
-            </h2>
-            <div class="page-main-body">
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  角色名称：
-                </el-col>
-                <el-col :span="20">
-                  {{ resData.title }}
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  角色英文名称：
-                </el-col>
-                <el-col :span="20">
-                  {{ resData.name }}
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  角色状态：
-                </el-col>
-                <el-col :span="20">
-                  {{ resData.usableStatus == 1 ? '可用' : '停用' }}
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  角色描述：
-                </el-col>
-                <el-col :span="20">
-                  {{resData.remark}}
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="4" class="text-right">
-                  角色权限：
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="24">
-                  <div class="role-perm-list">
-                    <div class="group-list" v-for="groupItem in permList.tree"
-                         v-show="checkGroupItem(groupItem)">
-                      <h2>{{permList.menuList[groupItem.parentId]}}</h2>
-                      <ul>
-                        <li v-for="item in groupItem.children" v-show="checkItem(item)">{{permList.menuList[item]}}</li>
-                      </ul>
+              </h2>
+              <div class="page-main-body">
+                <el-row>
+                  <el-col :span="4" class="text-right">
+                    角色名称：
+                  </el-col>
+                  <el-col :span="20">
+                    {{ resData.title }}
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="4" class="text-right">
+                    角色英文名称：
+                  </el-col>
+                  <el-col :span="20">
+                    {{ resData.name }}
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="4" class="text-right">
+                    角色状态：
+                  </el-col>
+                  <el-col :span="20">
+                    {{ resData.usableStatus == 1 ? '可用' : '停用' }}
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="4" class="text-right">
+                    角色描述：
+                  </el-col>
+                  <el-col :span="20">
+                    {{resData.remark}}
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="4" class="text-right">
+                    角色权限：
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="24">
+                    <div class="role-perm-list">
+                      <div class="group-list" v-for="groupItem in permList.tree"
+                           v-show="checkGroupItem(groupItem)">
+                        <h2>{{permList.menuList[groupItem.parentId]}}</h2>
+                        <ul>
+                          <li v-for="item in groupItem.children" v-show="checkItem(item)">{{permList.menuList[item]}}
+                          </li>
+                        </ul>
+                      </div>
                     </div>
-                  </div>
-                </el-col>
-              </el-row>
+                  </el-col>
+                </el-row>
+              </div>
             </div>
           </div>
         </div>
@@ -219,6 +222,11 @@
     computed: {
       permList: function () {
         return this.$store.state.permList;
+      },
+      bodyHeight: function () {
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height - 20) + 'px';
+        return height;
       }
     },
     mounted() {
