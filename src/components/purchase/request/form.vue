@@ -185,11 +185,8 @@
     float: left;
   }
 
-  .order-good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: auto;
-    }
+  .good-selects .el-select-dropdown__item {
+    width: auto;
   }
 
   .ar {

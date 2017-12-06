@@ -93,12 +93,12 @@
           </div>
         </div>
         <div class="d-table-right">
-
-          <div v-if="!currentOrder.id">
-            <div class="empty-info">暂无信息</div>
-          </div>
-          <div v-else="" class="d-table-col-wrap">
-            <h2 class="clearfix">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+            <div v-if="!currentOrder.id">
+              <div class="empty-info">暂无信息</div>
+            </div>
+            <div v-else="">
+              <h2 class="clearfix">
               <span class="pull-right">
                 <el-button-group>
                    <perm label="pull-signal-add">
@@ -121,92 +121,94 @@
                     </perm>
                 </el-button-group>
               </span>
-            </h2>
-            <div class="content-body clearfix">
-              <el-row>
-                <el-col :span="8">
-                  <oms-row label="要货申请编号">
-                    {{currentOrder.id }}
-                  </oms-row>
-                  <oms-row label="申请时间">
-                    {{currentOrder.applyTime | time}}
-                  </oms-row>
-                  <oms-row label="到货需求日期">
-                    {{currentOrder.demandTime | date }}
-                  </oms-row>
-                  <oms-row label="接种点仓库">
-                    {{currentOrder.warehouseName}}
-                  </oms-row>
-                </el-col>
-                <el-col :span="16">
-                  <oms-row label="申请人">
-                    {{currentOrder.applyManName}}
-                  </oms-row>
-                  <oms-row label="审批人">
-                    {{currentOrder.auditManName}}
-                  </oms-row>
-                  <oms-row label="审批时间">
-                    {{currentOrder.auditTime | time}}
-                  </oms-row>
-                  <oms-row label="关联疾控销售订单">
-                    {{currentOrder.orderNo}}
-                  </oms-row>
-                  <oms-row label="需求单状态">
-                    {{ formatStatus(currentOrder.status)}}
-                  </oms-row>
-                </el-col>
-              </el-row>
+              </h2>
+              <div class="content-body clearfix">
+                <el-row>
+                  <el-col :span="8">
+                    <oms-row label="要货申请编号">
+                      {{currentOrder.id }}
+                    </oms-row>
+                    <oms-row label="申请时间">
+                      {{currentOrder.applyTime | time}}
+                    </oms-row>
+                    <oms-row label="到货需求日期">
+                      {{currentOrder.demandTime | date }}
+                    </oms-row>
+                    <oms-row label="接种点仓库">
+                      {{currentOrder.warehouseName}}
+                    </oms-row>
+                  </el-col>
+                  <el-col :span="16">
+                    <oms-row label="申请人">
+                      {{currentOrder.applyManName}}
+                    </oms-row>
+                    <oms-row label="审批人">
+                      {{currentOrder.auditManName}}
+                    </oms-row>
+                    <oms-row label="审批时间">
+                      {{currentOrder.auditTime | time}}
+                    </oms-row>
+                    <oms-row label="关联疾控销售订单">
+                      {{currentOrder.orderNo}}
+                    </oms-row>
+                    <oms-row label="需求单状态">
+                      {{ formatStatus(currentOrder.status)}}
+                    </oms-row>
+                  </el-col>
+                </el-row>
+              </div>
+              <span style="font-size: 14px">【要货明细】</span>
+              <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}"
+                     style="margin-top: 10px">
+                <thead>
+                <tr>
+                  <th style="width: 300px">货品名称</th>
+                  <th>单价</th>
+                  <th>申请数量</th>
+                  <th>申请金额</th>
+                  <th v-show="filters.status === 4">分配数量</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr v-for="row in currentOrder.detailDtoList">
+                  <td>
+                    {{row.goodsName}}
+                  </td>
+                  <td>
+                    <span v-if="row.price">￥{{row.price | formatMoney}}</span>
+                    <span v-if="!row.price">-</span>
+                  </td>
+                  <td>
+                    {{row.applyCount}}
+                    <dict
+                      :dict-group="'measurementUnit'"
+                      :dict-key="row.unit"></dict>
+                  </td>
+                  <td>
+                    <span v-if="row.applyMoney">￥{{row.applyMoney | formatMoney}}</span>
+                    <span v-if="!row.applyMoney">-</span>
+                  </td>
+                  <td v-show="filters.status === 4">
+                    {{row.actualCount}}
+                  </td>
+                </tr>
+                <tr>
+                  <th style="width: 300px"></th>
+                  <th></th>
+                  <th>
+                    <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
+                  </th>
+                  <th>
+                    <total-count property="applyMoney" :showIcon="true" title="合计金额"
+                                 :list="currentOrder.detailDtoList"></total-count>
+                  </th>
+                  <th v-show="filters.status === 4"></th>
+                </tr>
+                </tbody>
+              </table>
             </div>
-            <span style="font-size: 14px">【要货明细】</span>
-            <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}"
-                   style="margin-top: 10px">
-              <thead>
-              <tr>
-                <th style="width: 300px">货品名称</th>
-                <th>单价</th>
-                <th>申请数量</th>
-                <th>申请金额</th>
-                <th v-show="filters.status === 4">分配数量</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-for="row in currentOrder.detailDtoList">
-                <td>
-                  {{row.goodsName}}
-                </td>
-                <td>
-                  <span v-if="row.price">￥{{row.price | formatMoney}}</span>
-                  <span v-if="!row.price">-</span>
-                </td>
-                <td>
-                  {{row.applyCount}}
-                  <dict
-                    :dict-group="'measurementUnit'"
-                    :dict-key="row.unit"></dict>
-                </td>
-                <td>
-                  <span v-if="row.applyMoney">￥{{row.applyMoney | formatMoney}}</span>
-                  <span v-if="!row.applyMoney">-</span>
-                </td>
-                <td v-show="filters.status === 4">
-                  {{row.actualCount}}
-                </td>
-              </tr>
-              <tr>
-                <th style="width: 300px"></th>
-                <th></th>
-                <th>
-                  <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
-                </th>
-                <th>
-                  <total-count property="applyMoney" :showIcon="true" title="合计金额"
-                               :list="currentOrder.detailDtoList"></total-count>
-                </th>
-                <th v-show="filters.status === 4"></th>
-              </tr>
-              </tbody>
-            </table>
           </div>
+
         </div>
       </div>
     </div>
@@ -261,7 +263,9 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height - 20) + 'px';
+        return height;
       },
       user () {
         return this.$store.state.user;
