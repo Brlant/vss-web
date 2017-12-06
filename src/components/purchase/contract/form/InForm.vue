@@ -672,6 +672,13 @@
           this.form.state = '';
           this.form.id = null;
         }
+        // 运输条件和物流中心设置默认值
+        if (this.LogisticsCenter) {
+          this.form.logisticsCentreId = this.LogisticsCenter[1].id;
+        }
+        if (this.transportationConditionList) {
+          this.form.transportationCondition = this.transportationConditionList[0].key;
+        }
       },
       form: {
         handler: 'autoSave',
@@ -756,8 +763,7 @@
         let oldForm = window.localStorage.getItem(this.saveKey);
         if (oldForm) {
           this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-          this.form.logisticsCentreId = this.form.logisticsCentreId
-            ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
+          this.form.logisticsCentreId = this.form.logisticsCentreId ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
       },
       resetForm: function () {// 重置表单
