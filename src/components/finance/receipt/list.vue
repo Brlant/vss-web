@@ -141,8 +141,8 @@
             <div class="content-body clearfix">
               <el-row>
                 <el-col :span="15">
-                  <oms-row label="收款方" :span="6">
-                    {{currentItem.remitteeName}}
+                  <oms-row label="付款方" :span="6">
+                    {{currentItem.payerName}}
                   </oms-row>
                   <oms-row label="未收款总额" :span="6">
                     <span>￥{{(currentItem.paidTotal ? currentItem.payableTotal - currentItem.paidTotal : currentItem.payableTotal) | formatMoney}}</span>
