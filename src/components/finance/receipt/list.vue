@@ -186,58 +186,32 @@
               <!--</a>-->
               <!--</span>-->
             </div>
-            <table class="table "
-                   style="margin-top: 10px">
-              <thead>
-              <tr>
-                <th>订单号</th>
-                <th>货品名称</th>
-                <th>创建时间</th>
-                <th>应收金额</th>
-                <th>待收金额</th>
-                <th>状态</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-if="loadingData">
-                <td colspan="5">
-                  <oms-loading :loading="loadingData"></oms-loading>
-                </td>
-              </tr>
-              <tr v-else-if="!receiptDetails.length">
-                <td colspan="5">
-                  <div class="empty-info">
-                    暂无信息
-                  </div>
-                </td>
-              </tr>
-              <tr v-else="" v-for="row in receiptDetails"
-                  :class="{active:orderId === row.orderId}">
-                <td>
-                  {{row.orderNo}}
-                </td>
-                <td width="180px">
-                  {{row.goodsName}}
-                </td>
-                <td>
-                  {{row.createTime | minute }}
-                </td>
-                <td>
-                  <span v-show="row.billAmount">
-                    ￥{{row.billAmount | formatMoney}}
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    ￥{{(row.billAmount - row.prepaidAccounts) | formatMoney}}
-                  </span>
-                </td>
-                <td>
-                  {{statusTitle(row.status)}}
-                </td>
-              </tr>
-              </tbody>
-            </table>
+            <el-table :data="receiptDetails" class="header-list"
+                      :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="600">
+              <el-table-column prop="orderNo" label="订单号"></el-table-column>
+              <el-table-column prop="goodsName" label="货品名称" width="180"></el-table-column>
+              <el-table-column prop="createTime" label="创建时间">
+                <template slot-scope="scope">
+                  {{ scope.row.createTime | minute }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="billAmount" label="应收金额">
+                <template slot-scope="scope">
+                  ￥{{ scope.row.billAmount | formatMoney}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="salePrice" label="待收金额">
+                <template slot-scope="scope">
+                  ￥{{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="saleMoney" label="状态" :filters="filterStatus" :filter-method="filterStatusMethod">
+                <template slot-scope="scope">
+                  {{statusTitle(scope.row.status)}}
+                </template>
+              </el-table-column>
+            </el-table>
+
             <div class="text-center" v-show="pager.count>pager.pageSize">
               <el-pagination layout="prev, pager, next"
                              :total="pager.count"
@@ -302,7 +276,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20,
+          pageSize: 10,
           totalPage: 1
         },
         typePager: {
@@ -320,7 +294,11 @@
         orgType: {
           0: {title: '已收总额', num: ''},
           1: {title: '未收总额', num: ''}
-        }
+        },
+        filterStatus: [
+          {text: '未收清', value: '0'},
+          {text: '已收清', value: '1'}
+        ]
       };
     },
     computed: {
@@ -359,12 +337,15 @@
         if (status) {
           let title = '';
           if (status === '0') {
-            title = '未收款';
+            title = '未收清';
           } else if (status === '1') {
-            title = '已收款';
+            title = '已收清';
           }
           return title;
         }
+      },
+      filterStatusMethod (value, row) {
+        return row.status === value;
       },
       resetRightBox: function () {
         this.showRight = false;
@@ -413,7 +394,7 @@
         this.resetRightBox();
       },
       getDetail: function (pageNo) {
-        this.receiptDetails = {};
+        this.receiptDetails = [];
         if (!this.currentItem.id) return;
         this.pager.currentPage = pageNo;
         this.loadingData = true;
