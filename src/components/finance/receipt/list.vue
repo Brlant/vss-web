@@ -161,9 +161,27 @@
             <div>
               <el-form class="payForm" ref="payForm" :inline="true" onsubmit="return false">
                 <el-form-item label="货品名称">
-                  <oms-input v-model="searchCondition.goodsName"></oms-input>
+                  <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
+                             :remote-method="searchProduct" @click.native.once="searchProduct('')" :clearable="true"
+                             popper-class="good-selects">
+                    <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
+                               :label="item.orgGoodsDto.name"
+                               :value="item.orgGoodsDto.id">
+                      <div style="overflow: hidden">
+                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      </div>
+                      <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                        </span>
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        </span>
+                      </div>
+                    </el-option>
+                  </el-select>
                 </el-form-item>
-                <el-form-item label="创建时间">
+                <el-form-item label="发生时间">
                   <el-date-picker
                     v-model="createTimes"
                     type="datetimerange"
@@ -197,26 +215,27 @@
               <!--</a>-->
               <!--</span>-->
             </div>
-            <el-table :data="receiptDetails" class="header-list"
+            <el-table :data="receiptDetails" class="header-list" border
                       :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="600">
-              <el-table-column prop="orderNo" label="订单号"></el-table-column>
-              <el-table-column prop="goodsName" label="货品名称" width="180"></el-table-column>
-              <el-table-column prop="createTime" label="创建时间">
+              <el-table-column prop="orderNo" label="订单号" :sortable="true"></el-table-column>
+              <el-table-column prop="goodsName" label="货品名称" width="180" :sortable="true"></el-table-column>
+              <el-table-column prop="createTime" label="发生时间" :sortable="true">
                 <template slot-scope="scope">
                   {{ scope.row.createTime | minute }}
                 </template>
               </el-table-column>
-              <el-table-column prop="billAmount" label="应收金额">
+              <el-table-column prop="billAmount" label="应收金额" :sortable="true">
                 <template slot-scope="scope">
                   ￥{{ scope.row.billAmount | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="salePrice" label="待收金额">
+              <el-table-column prop="salePrice" label="待收金额" :sortable="true">
                 <template slot-scope="scope">
                   ￥{{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="saleMoney" label="状态" :filters="filterStatus" :filter-method="filterStatusMethod">
+              <el-table-column prop="saleMoney" label="状态" :sortable="true" :filters="filterStatus"
+                               :filter-method="filterStatusMethod">
                 <template slot-scope="scope">
                   {{statusTitle(scope.row.status)}}
                 </template>
@@ -253,7 +272,7 @@
 
 </template>
 <script>
-  import { receipt } from '@/resources';
+  import { receipt, Vaccine } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.out.vue';
@@ -273,13 +292,13 @@
           keyWord: ''
         },
         filterRights: {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
           status: ''
         },
         searchCondition: {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
           status: '0'
@@ -311,7 +330,8 @@
         filterStatus: [
           {text: '未收清', value: '0'},
           {text: '已收清', value: '1'}
-        ]
+        ],
+        goodesList: []
       };
     },
     computed: {
@@ -392,6 +412,16 @@
 
         });
       },
+      searchProduct (keyWord) {
+        let params = Object.assign({}, {
+          keyWord: keyWord
+        });
+        let level = this.$store.state.orgLevel;
+        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
+        Vaccine[api](params).then(res => {
+          this.goodesList = res.data.list;
+        });
+      },
       queryTotalMoney () {
         this.$http.get('/accounts-receivable/statistics').then(res => {
           this.orgType[0].num = res.data['paidMoney'];
@@ -428,7 +458,7 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
           status: '0'

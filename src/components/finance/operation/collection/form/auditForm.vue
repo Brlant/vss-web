@@ -294,7 +294,7 @@
                 <el-row type="flex">
                   <el-col :span="8">货品名称 </el-col>
                   <el-col :span="6">订单号 </el-col>
-                  <el-col :span="6">创建时间 </el-col>
+                  <el-col :span="6">发生时间</el-col>
                   <el-col :span="4">本次收款金额 </el-col>
                 </el-row>
               </li>

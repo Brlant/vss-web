@@ -201,6 +201,7 @@
         });
       },
       refreshOrder () {
+        this.currentOrderId = '';
         this.queryOrderList(1);
       },
       obtionStatusNum: function (num) {
