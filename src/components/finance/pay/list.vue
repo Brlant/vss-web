@@ -163,7 +163,18 @@
                     placeholder="请选择">
                   </el-date-picker>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item label="是否付清">
+                  <el-switch
+                    v-model="searchCondition.status"
+                    on-text="是"
+                    off-text="否"
+                    on-value="1"
+                    off-value="0"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949">
+                  </el-switch>
+                </el-form-item>
+                <el-form-item style="margin-left: 10px">
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 </el-form-item>
@@ -257,12 +268,14 @@
         filterRights: {
           goodsName: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          status: ''
         },
         searchCondition: {
           goodsName: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          status: '0'
         },
         createTimes: '',
         action: 'add',
@@ -411,11 +424,12 @@
         let temp = {
           goodsName: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          status: '0'
         };
         this.createTimes = '';
         Object.assign(this.searchCondition, temp);
-        Object.assign(this.filterRights, temp);
+        Object.assign(this.filterRights, temp, {status: ''});
       },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
