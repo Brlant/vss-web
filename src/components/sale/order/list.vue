@@ -542,7 +542,7 @@
         this.showSearch = !this.showSearch;
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD HH::mm:ss') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }
   };
