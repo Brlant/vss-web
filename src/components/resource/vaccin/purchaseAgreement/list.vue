@@ -162,7 +162,10 @@
           <el-col :span="4">供货厂商</el-col>
           <el-col :span="4">采购单价</el-col>
           <el-col :span="4">协议采购数量</el-col>
-          <el-col :span="4">协议有效时间</el-col>
+          <el-col :span="4">协议有效时间
+            <i class="el-icon-caret-top"  v-if="filters.asc" @click="filters.asc=false"></i>
+            <i class="el-icon-caret-bottom"  v-if="!filters.asc" @click="filters.asc=true"></i>
+          </el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -186,6 +189,9 @@
                 </div>
                 <div>
                   {{item.orgGoodsName }}
+                  <el-tag type="primary" v-show="item.expireStatus==='0'">正常</el-tag>
+                  <el-tag type="warning" v-show="item.expireStatus==='1'">即将到期</el-tag>
+                  <el-tag type="danger" v-show="item.expireStatus==='2'">已过期</el-tag>
                 </div>
               </el-col>
               <el-col :span="4">
@@ -255,6 +261,7 @@
           totalPage: 1
         },
         filters: {
+          asc: true,
           availabilityStatus: true
         },
         orgType: {
