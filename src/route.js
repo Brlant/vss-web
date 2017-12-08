@@ -213,12 +213,12 @@ const route = [
           {
             path: '/finance/pay',
             component: resolve => require(['./components/finance/pay/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '应付账款管理', perm: 'accounts-payable'}
+            meta: {moduleId: 'finance', title: '应付账款查询', perm: 'accounts-payable'}
           },
           {
             path: '/finance/get',
             component: resolve => require(['./components/finance/receipt/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '应收账款管理', perm: 'accounts-receivable'}
+            meta: {moduleId: 'finance', title: '应收账款查询', perm: 'accounts-receivable'}
           },
           {
             path: '/payment/invoice',
@@ -393,6 +393,11 @@ const route = [
             path: '/report/repertory',
             component: resolve => require(['./components/report/repertory.vue'], resolve),
             meta: {moduleId: 'report', title: '进销存盘点表', perm: 'inventory-form-manager'}
+          },
+          {
+            path: '/report/month/repertory',
+            component: resolve => require(['./components/report/month-end-repertory.vue'], resolve),
+            meta: {moduleId: 'report', title: '二类疫苗月终库存盘点表', perm: 'month-stock-inventory-form-manager'}
           }
         ]
       }

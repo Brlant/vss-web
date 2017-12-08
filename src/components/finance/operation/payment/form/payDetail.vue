@@ -45,7 +45,7 @@
       <el-form-item label="货品名称">
         <oms-input v-model="searchCondition.goodsName"></oms-input>
       </el-form-item>
-      <el-form-item label="创建时间" style="width: 380px" class="create-date">
+      <el-form-item label="发生时间" style="width: 380px" class="create-date">
         <el-date-picker
           v-model="createTimes"
           type="datetimerange"
@@ -66,7 +66,7 @@
           <th>订单号</th>
           <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
           <th>待付金额</th>
-          <th>创建时间</th>
+          <th>发生时间</th>
         </tr>
         </thead>
         <tbody>
@@ -117,7 +117,7 @@
         <thead>
         <tr>
           <th :style="{width: billPayType === '1' ? '180px' : '260px'}">订单号/货品名称</th>
-          <th>创建时间</th>
+          <th>发生时间</th>
           <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
           <th>待付金额</th>
           <th>本次付款金额</th>

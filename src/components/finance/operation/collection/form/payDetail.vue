@@ -49,7 +49,7 @@
       <el-form-item label="货品名称">
         <oms-input v-model="searchCondition.goodsName"></oms-input>
       </el-form-item>
-      <el-form-item label="创建时间" style="width: 380px" class="create-date">
+      <el-form-item label="发生时间" style="width: 380px" class="create-date">
         <el-date-picker
           v-model="createTimes"
           type="datetimerange"
@@ -69,7 +69,7 @@
           <th style="width: 240px">货品名称</th>
           <th>订单号</th>
           <th>待收金额</th>
-          <th>创建时间</th>
+          <th>发生时间</th>
         </tr>
         </thead>
         <tbody>
@@ -117,7 +117,7 @@
         <thead>
         <tr>
           <th style="width: 260px">订单号/货品名称</th>
-          <th>创建时间</th>
+          <th>发生时间</th>
           <th>待收金额</th>
           <th>本次收款金额</th>
           <th>操作</th>

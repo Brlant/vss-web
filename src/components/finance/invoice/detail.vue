@@ -67,7 +67,7 @@
                 <th>订单号</th>
                 <th>应付金额</th>
                 <th>待付金额</th>
-                <th>创建时间</th>
+                <th>发生时间</th>
               </tr>
               </thead>
               <tbody>

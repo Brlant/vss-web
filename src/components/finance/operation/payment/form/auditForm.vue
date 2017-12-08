@@ -294,7 +294,7 @@
                   <el-col :span="form.billPayType === '1' ? 7 : 8">货品名称</el-col>
                   <el-col :span="form.billPayType === '1' ? 5 : 6">订单号</el-col>
                   <el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">创建时间 </el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">发生时间</el-col>
                   <el-col :span="form.billPayType === '1' ? 3 : 4">本次付款金额 </el-col>
                 </el-row>
               </li>

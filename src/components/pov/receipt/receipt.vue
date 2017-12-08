@@ -69,6 +69,9 @@
           </div>
         </div>
         <div class="btn-submit-save">
+          <perm label="pov-receipt-manager">
+            <el-button type="primary" :plain="true" @click="autoComplete" :disabled="doing">一键收货</el-button>
+          </perm>
           <el-button type="primary" @click="onSubmit" :disabled="doing">保存</el-button>
         </div>
       </div>
@@ -150,6 +153,29 @@
         } else {
           this.save();
         }
+      },
+      autoComplete () {
+        this.$confirm('是否一键收货', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          if (this.doing) return;
+          this.doing = true;
+          this.$http.post(`erp-receipt/${this.orderId}/auto`).then(() => {
+            this.$notify.success({
+              message: '收货成功'
+            });
+            this.doing = false;
+            this.$emit('close');
+            this.$emit('refreshOrder');
+          }).catch(error => {
+            this.doing = false;
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '收货失败'
+            });
+          });
+        });
       },
       save () {
         let obj = {

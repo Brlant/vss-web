@@ -141,8 +141,8 @@
             <div class="content-body clearfix">
               <el-row>
                 <el-col :span="15">
-                  <oms-row label="收款方" :span="6">
-                    {{currentItem.remitteeName}}
+                  <oms-row label="付款方" :span="6">
+                    {{currentItem.payerName}}
                   </oms-row>
                   <oms-row label="未收款总额" :span="6">
                     <span>￥{{(currentItem.paidTotal ? currentItem.payableTotal - currentItem.paidTotal : currentItem.payableTotal) | formatMoney}}</span>
@@ -161,16 +161,45 @@
             <div>
               <el-form class="payForm" ref="payForm" :inline="true" onsubmit="return false">
                 <el-form-item label="货品名称">
-                  <oms-input v-model="searchCondition.goodsName"></oms-input>
+                  <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
+                             :remote-method="searchProduct" @click.native.once="searchProduct('')" :clearable="true"
+                             popper-class="good-selects">
+                    <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
+                               :label="item.orgGoodsDto.name"
+                               :value="item.orgGoodsDto.id">
+                      <div style="overflow: hidden">
+                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      </div>
+                      <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                        </span>
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        </span>
+                      </div>
+                    </el-option>
+                  </el-select>
                 </el-form-item>
-                <el-form-item label="创建时间">
+                <el-form-item label="发生时间">
                   <el-date-picker
                     v-model="createTimes"
                     type="datetimerange"
                     placeholder="请选择">
                   </el-date-picker>
                 </el-form-item>
-                <el-form-item>
+                <el-form-item label="是否收清">
+                  <el-switch
+                    v-model="searchCondition.status"
+                    on-text="是"
+                    off-text="否"
+                    on-value="1"
+                    off-value="0"
+                    active-color="#13ce66"
+                    inactive-color="#ff4949">
+                  </el-switch>
+                </el-form-item>
+                <el-form-item style="margin-left: 10px">
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 </el-form-item>
@@ -186,58 +215,33 @@
               <!--</a>-->
               <!--</span>-->
             </div>
-            <table class="table "
-                   style="margin-top: 10px">
-              <thead>
-              <tr>
-                <th>订单号</th>
-                <th>货品名称</th>
-                <th>创建时间</th>
-                <th>应收金额</th>
-                <th>待收金额</th>
-                <th>状态</th>
-              </tr>
-              </thead>
-              <tbody>
-              <tr v-if="loadingData">
-                <td colspan="5">
-                  <oms-loading :loading="loadingData"></oms-loading>
-                </td>
-              </tr>
-              <tr v-else-if="!receiptDetails.length">
-                <td colspan="5">
-                  <div class="empty-info">
-                    暂无信息
-                  </div>
-                </td>
-              </tr>
-              <tr v-else="" v-for="row in receiptDetails"
-                  :class="{active:orderId === row.orderId}">
-                <td>
-                  {{row.orderNo}}
-                </td>
-                <td width="180px">
-                  {{row.goodsName}}
-                </td>
-                <td>
-                  {{row.createTime | minute }}
-                </td>
-                <td>
-                  <span v-show="row.billAmount">
-                    ￥{{row.billAmount | formatMoney}}
-                  </span>
-                </td>
-                <td>
-                  <span>
-                    ￥{{(row.billAmount - row.prepaidAccounts) | formatMoney}}
-                  </span>
-                </td>
-                <td>
-                  {{statusTitle(row.status)}}
-                </td>
-              </tr>
-              </tbody>
-            </table>
+            <el-table :data="receiptDetails" class="header-list" border
+                      :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="600">
+              <el-table-column prop="orderNo" label="订单号" :sortable="true"></el-table-column>
+              <el-table-column prop="goodsName" label="货品名称" width="180" :sortable="true"></el-table-column>
+              <el-table-column prop="createTime" label="发生时间" :sortable="true">
+                <template slot-scope="scope">
+                  {{ scope.row.createTime | minute }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="billAmount" label="应收金额" :sortable="true">
+                <template slot-scope="scope">
+                  ￥{{ scope.row.billAmount | formatMoney}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="salePrice" label="待收金额" :sortable="true">
+                <template slot-scope="scope">
+                  ￥{{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="saleMoney" label="状态" :sortable="true" :filters="filterStatus"
+                               :filter-method="filterStatusMethod">
+                <template slot-scope="scope">
+                  {{statusTitle(scope.row.status)}}
+                </template>
+              </el-table-column>
+            </el-table>
+
             <div class="text-center" v-show="pager.count>pager.pageSize">
               <el-pagination layout="prev, pager, next"
                              :total="pager.count"
@@ -268,7 +272,7 @@
 
 </template>
 <script>
-  import { receipt } from '@/resources';
+  import { receipt, Vaccine } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.out.vue';
@@ -288,21 +292,23 @@
           keyWord: ''
         },
         filterRights: {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          status: ''
         },
         searchCondition: {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          status: '0'
         },
         createTimes: '',
         action: 'add',
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20,
+          pageSize: 10,
           totalPage: 1
         },
         typePager: {
@@ -320,7 +326,12 @@
         orgType: {
           0: {title: '已收总额', num: ''},
           1: {title: '未收总额', num: ''}
-        }
+        },
+        filterStatus: [
+          {text: '未收清', value: '0'},
+          {text: '已收清', value: '1'}
+        ],
+        goodesList: []
       };
     },
     computed: {
@@ -359,12 +370,15 @@
         if (status) {
           let title = '';
           if (status === '0') {
-            title = '未收款';
+            title = '未收清';
           } else if (status === '1') {
-            title = '已收款';
+            title = '已收清';
           }
           return title;
         }
+      },
+      filterStatusMethod (value, row) {
+        return row.status === value;
       },
       resetRightBox: function () {
         this.showRight = false;
@@ -398,6 +412,16 @@
 
         });
       },
+      searchProduct (keyWord) {
+        let params = Object.assign({}, {
+          keyWord: keyWord
+        });
+        let level = this.$store.state.orgLevel;
+        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
+        Vaccine[api](params).then(res => {
+          this.goodesList = res.data.list;
+        });
+      },
       queryTotalMoney () {
         this.$http.get('/accounts-receivable/statistics').then(res => {
           this.orgType[0].num = res.data['paidMoney'];
@@ -413,7 +437,7 @@
         this.resetRightBox();
       },
       getDetail: function (pageNo) {
-        this.receiptDetails = {};
+        this.receiptDetails = [];
         if (!this.currentItem.id) return;
         this.pager.currentPage = pageNo;
         this.loadingData = true;
@@ -434,13 +458,14 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          status: '0'
         };
         this.createTimes = '';
         Object.assign(this.searchCondition, temp);
-        Object.assign(this.filterRights, temp);
+        Object.assign(this.filterRights, temp, {status: ''});
       },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
