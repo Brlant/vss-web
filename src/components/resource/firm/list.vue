@@ -523,6 +523,9 @@
         }, this.filters);
         this.loadingListData = true;
         Vendor.query(params).then(res => {
+          if (this.scrollLoading) {
+            this.scrollLoading.close();
+          }
           if (isContinue) {
             this.businessRelationList = this.businessRelationList.concat(res.data.list);
           } else {

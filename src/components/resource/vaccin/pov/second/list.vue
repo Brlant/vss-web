@@ -482,6 +482,9 @@
           type: '2'
         });
         VaccineRights.queryPovVaccineByType(params).then(res => {
+          if (this.scrollLoading) {
+            this.scrollLoading.close();
+          }
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {

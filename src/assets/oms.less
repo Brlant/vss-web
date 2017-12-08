@@ -168,8 +168,8 @@
   background: #eeeeee;
   display: table;
   width: 100%;
-  .d-table-col-wrap{
-    overflow:auto;
+  .d-table-col-wrap {
+    overflow: auto;
   }
   > div {
     display: table-cell;
@@ -190,8 +190,8 @@
       }
     }
     &.d-table-right {
-      .d-table-col-wrap{
-        padding:10px 20px;
+      .d-table-col-wrap {
+        padding: 10px 20px;
       }
       position: relative;
       font-size: 12px;
@@ -860,6 +860,7 @@
 .font-gray {
   color: #999 !important;
 }
+
 .good-selects {
   .el-select-dropdown__item {
     font-size: 14px;
@@ -961,4 +962,13 @@
 .break-word {
   word-wrap: break-word;
   word-break: break-all;
+}
+
+.el-loading-mask {
+  &.scrollLoading {
+    background-color: rgba(255, 255, 255, 0.24);
+    .el-loading-spinner {
+      top: 80%;
+    }
+  }
 }

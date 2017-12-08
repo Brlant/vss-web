@@ -308,6 +308,9 @@
           cdcId: orgId
         }, this.filters);
         pullSignal.query(params).then(res => {
+          if (this.scrollLoading) {
+            this.scrollLoading.close();
+          }
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {

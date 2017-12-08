@@ -64,6 +64,11 @@ Vue.prototype.$scrollLoadingData = function (event) {
   let scrollTop = target.scrollTop;
   if (height > 0 && height - scrollTop < difference) {
     if (this.getOrgMore && this.typePager.currentPage < this.typePager.totalPage) {
+      this.scrollLoading = this.$loading({
+        target: target.parentNode,
+        text: '加载中',
+        customClass: 'scrollLoading'
+      });
       this.getOrgMore();
     }
   }

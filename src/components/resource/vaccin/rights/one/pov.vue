@@ -251,6 +251,9 @@
         let nowTime = new Date();
         this.nowTime = nowTime;
         this.$http.get('/vaccine-info/first-vaccine/valid/org-goods', {params}).then(res => {
+          if (this.scrollLoading) {
+            this.scrollLoading.close();
+          }
           if (this.nowTime > nowTime) return;
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
