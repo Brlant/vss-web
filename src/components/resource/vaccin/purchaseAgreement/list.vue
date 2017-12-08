@@ -189,9 +189,9 @@
                 </div>
                 <div>
                   {{item.orgGoodsName }}
-                  <el-tag type="primary" v-show="item.expireStatus==='0'">正常</el-tag>
-                  <el-tag type="warning" v-show="item.expireStatus==='1'">即将到期</el-tag>
-                  <el-tag type="danger" v-show="item.expireStatus==='2'">已过期</el-tag>
+                  <el-tag type="primary" v-show="item.isOverdue==='0'">正常</el-tag>
+                  <el-tag type="warning" v-show="item.isOverdue==='1'">即将到期</el-tag>
+                  <el-tag type="danger" v-show="item.isOverdue==='2'">已过期</el-tag>
                 </div>
               </el-col>
               <el-col :span="4">
