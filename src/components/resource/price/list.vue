@@ -79,7 +79,7 @@
              v-for="(item, key) in priceGroupType"
              @click="changeStatus(item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="item.availabilityStatus===activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="d-table" style="margin-top: 20px">
