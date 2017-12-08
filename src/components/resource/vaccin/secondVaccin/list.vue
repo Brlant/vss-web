@@ -123,7 +123,7 @@
       </div>
       <div class="d-table">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
             <h2 class="header">
                 <span class="pull-right">
                   <perm label="second-vaccine-info-add">
@@ -495,6 +495,9 @@
       }
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       handlePreview: function (id) {
         this.$store.commit('changeAttachment', id);
       },

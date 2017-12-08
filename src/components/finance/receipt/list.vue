@@ -87,7 +87,7 @@
       </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
             <h2 class="header">
             <span class="pull-right">
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -366,6 +366,9 @@
       }
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       statusTitle: function (status) {
         if (status) {
           let title = '';

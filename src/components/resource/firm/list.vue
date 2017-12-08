@@ -138,7 +138,7 @@
       <div class="container d-table">
 
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
             <h2 class="header" style="overflow: hidden">
               厂商资料
               <span class="pull-right">
@@ -483,6 +483,9 @@
       this.getBusinessRelationList(1);
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       resetPhoto: function () {
         this.photoForm = {
           name: '',
