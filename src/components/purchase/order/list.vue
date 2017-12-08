@@ -179,7 +179,7 @@
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
-                    type="datetimerange"
+                    type="daterange"
                     placeholder="请选择" format="yyyy-MM-dd">
                   </el-date-picker>
                 </el-col>
@@ -249,7 +249,7 @@
               <el-col :span="5">
                 <div>
                   <span>下单</span>
-                  ：{{item.createTime | minute }}
+                  ：{{item.createTime | date }}
                 </div>
                 <div>
                   <span>预计入库</span>

@@ -63,7 +63,7 @@ Vue.prototype.$scrollLoadingData = function (event) {
   let height = target.scrollHeight - target.clientHeight;
   let scrollTop = target.scrollTop;
   if (height > 0 && height - scrollTop < difference) {
-    if (this.getOrgMore) {
+    if (this.getOrgMore && this.typePager.currentPage < this.typePager.totalPage) {
       this.getOrgMore();
     }
   }

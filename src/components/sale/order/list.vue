@@ -161,7 +161,7 @@
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
-                    type="datetimerange"
+                    type="daterange"
                     placeholder="请选择" format="yyyy-MM-dd">
                   </el-date-picker>
                 </el-col>
@@ -229,7 +229,7 @@
             <div>{{item.transactOrgName }}</div>
           </el-col>
           <el-col :span="5">
-            <div>下单：{{item.createTime | minute }}</div>
+            <div>下单：{{item.createTime | date }}</div>
             <div>预计送货：{{ item.expectedTime | date }}</div>
           </el-col>
           <el-col :span="3">
