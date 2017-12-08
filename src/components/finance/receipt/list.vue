@@ -161,22 +161,23 @@
             <div>
               <el-form class="payForm" ref="payForm" :inline="true" onsubmit="return false">
                 <el-form-item label="货品名称">
-                  <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                             :remote-method="searchProduct" @click.native.once="searchProduct('')" :clearable="true"
-                             popper-class="good-selects">
-                    <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
-                               :label="item.orgGoodsDto.name"
-                               :value="item.orgGoodsDto.id">
-                      <div style="overflow: hidden">
-                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                  <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
+                             @click.native="searchProduct('')" popper-class="good-selects">
+                    <el-option v-for="item in goodesList" :key="item.id"
+                               :label="item.goodsName"
+                               :value="item.orgGoodsId">
+                      <div>
+                        <div>
+                          <span class="pull-left">{{item.goodsName}}</span>
                       </div>
-                      <div style="overflow: hidden">
+                        <div class="clearfix">
+                            <span class="select-other-info pull-left">
+                              <span v-show="item.goodsNo">货品编号</span>{{item.goodsNo}}
+                            </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-                        </span>
-                        <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
-                        </span>
+                          v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}
+                            </span>
+                        </div>
                       </div>
                     </el-option>
                   </el-select>
@@ -184,7 +185,7 @@
                 <el-form-item label="发生时间">
                   <el-date-picker
                     v-model="createTimes"
-                    type="datetimerange"
+                    type="daterange"
                     placeholder="请选择">
                   </el-date-picker>
                 </el-form-item>
@@ -221,7 +222,7 @@
               <el-table-column prop="goodsName" label="货品名称" width="180" :sortable="true"></el-table-column>
               <el-table-column prop="createTime" label="发生时间" :sortable="true">
                 <template slot-scope="scope">
-                  {{ scope.row.createTime | minute }}
+                  {{ scope.row.createTime | date }}
                 </template>
               </el-table-column>
               <el-table-column prop="billAmount" label="应收金额" :sortable="true">
@@ -272,7 +273,7 @@
 
 </template>
 <script>
-  import { receipt, Vaccine } from '@/resources';
+  import { receipt, Vaccine, VaccineRights } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.out.vue';
@@ -416,13 +417,9 @@
         });
       },
       searchProduct (keyWord) {
-        let params = Object.assign({}, {
-          keyWord: keyWord
-        });
-        let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
-          this.goodesList = res.data.list;
+        if (!keyWord && this.goodesList.length) return;
+        VaccineRights.queryVaccineByPov(this.currentItem.payerId, {cdcId: this.$store.state.user.userCompanyAddress}).then(res => {
+          this.goodesList = res.data;
         });
       },
       queryTotalMoney () {
@@ -476,6 +473,7 @@
       showType: function (item) {
         this.currentItem = item;
         this.getDetail(1);
+        this.goodesList = [];
       },
       showDetail (item) {
         this.orderId = item.orderId;
@@ -499,7 +497,7 @@
         this.showRight = true;
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       onSubmit () {
         this.getOrgsList();

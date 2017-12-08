@@ -48,7 +48,7 @@
       <el-form-item label="发生时间" style="width: 380px" class="create-date">
         <el-date-picker
           v-model="createTimes"
-          type="datetimerange"
+          type="daterange"
           placeholder="请选择">
         </el-date-picker>
       </el-form-item>
@@ -94,7 +94,7 @@
             <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
           </td>
           <td>
-            {{product.createTime | minute }}
+            {{product.createTime | date }}
           </td>
         </tr>
         </tbody>
@@ -131,7 +131,7 @@
             <div>{{product.goodsName}}</div>
           </td>
           <td>
-            {{product.createTime | minute }}
+            {{product.createTime | date }}
           </td>
           <td class="break-word" v-show="billPayType === '1'">
             {{product.invoiceNo ? product.invoiceNo : '无'}}
@@ -263,7 +263,7 @@
         Object.assign(this.filterRights, temp);
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       paymentChange (item) {
         if (item.payment > (item.billAmount - item.prepaidAccounts)) {

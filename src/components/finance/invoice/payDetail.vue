@@ -48,7 +48,7 @@
       <el-form-item label="发生时间" style="width: 380px" class="create-date">
         <el-date-picker
           v-model="createTimes"
-          type="datetimerange"
+          type="daterange"
           placeholder="请选择">
         </el-date-picker>
       </el-form-item>
@@ -91,7 +91,7 @@
             <span v-if="!Number(product.billAmount)">-</span>
           </td>
           <td>
-            {{product.createTime | minute }}
+            {{product.createTime | date }}
           </td>
         </tr>
         </tbody>
@@ -133,7 +133,7 @@
             <span v-if="!Number(product.billAmount)">-</span>
           </td>
           <td>
-            {{product.createTime | minute }}
+            {{product.createTime | date }}
           </td>
           <td class="goods-btn" style="width: 60px">
             <a href="#" @click.prevent="remove(product)">
@@ -228,7 +228,7 @@
         Object.assign(this.filterRights, temp);
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       add (item) {
         let index = this.selectPayments.indexOf(item);

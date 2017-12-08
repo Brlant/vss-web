@@ -155,7 +155,7 @@
               <el-form class="payForm" ref="payForm" :inline="true" onsubmit="return false">
                 <el-form-item label="货品名称">
                   <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                             :remote-method="searchProduct" @click.native.once="searchProduct('')" :clearable="true"
+                             :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
                     <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
                                :label="item.orgGoodsDto.name"
@@ -177,7 +177,7 @@
                 <el-form-item label="发生时间">
                   <el-date-picker
                     v-model="createTimes"
-                    type="datetimerange"
+                    type="daterange"
                     placeholder="请选择">
                   </el-date-picker>
                 </el-form-item>
@@ -214,7 +214,7 @@
               <el-table-column prop="goodsName" label="货品名称" :sortable="true" width="180"></el-table-column>
               <el-table-column prop="createTime" label="发生时间" :sortable="true">
                 <template slot-scope="scope">
-                  {{ scope.row.createTime | minute }}
+                  {{ scope.row.createTime | date }}
                 </template>
               </el-table-column>
               <el-table-column prop="billAmount" label="应付金额" :sortable="true">
@@ -426,7 +426,8 @@
       },
       searchProduct (keyWord) {
         let params = Object.assign({}, {
-          keyWord: keyWord
+          keyWord: keyWord,
+          salesFirm: this.currentItem.remitteeId
         });
         let level = this.$store.state.orgLevel;
         let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
@@ -470,11 +471,12 @@
       },
       showType: function (item) {
         this.currentItem = item;
+        this.goodesList = [];
         this.getDetail(1);
       },
       showDetail (item) {
         this.orderId = item.orderId;
-        this.currentDetail = item;
+        this.currentDetail = item.remitteeId;
         this.showPart = true;
       },
       edit (row) {
@@ -488,7 +490,7 @@
         this.getOrgsList();
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }
   };

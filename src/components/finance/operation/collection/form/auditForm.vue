@@ -302,7 +302,7 @@
                 <el-row type="flex">
                   <el-col :span="8">{{ item.goodsName }} </el-col>
                   <el-col :span="6">{{ item.orderNo }} </el-col>
-                  <el-col :span="6">{{ item.createTime | minute }} </el-col>
+                  <el-col :span="6">{{ item.createTime | date }}</el-col>
                   <el-col :span="4"> ￥{{item.paidMoney | formatMoney}} </el-col>
                 </el-row>
               </li>

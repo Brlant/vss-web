@@ -305,7 +305,7 @@
                   <el-col :span="4" v-show="form.billPayType === '1'" class="break-word">
                     {{ item.invoiceNo ? item.invoiceNo : '无' }}
                   </el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.createTime | minute }} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.createTime | date }}</el-col>
                   <el-col :span="form.billPayType === '1' ? 3 : 4"> ￥{{item.paidMoney | formatMoney}} </el-col>
                 </el-row>
               </li>
