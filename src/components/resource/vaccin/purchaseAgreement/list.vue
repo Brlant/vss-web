@@ -189,7 +189,6 @@
                 </div>
                 <div>
                   {{item.orgGoodsName }}
-                  <el-tag type="primary" v-show="item.isOverdue==='0'">正常</el-tag>
                   <el-tag type="warning" v-show="item.isOverdue==='1'">即将到期</el-tag>
                   <el-tag type="danger" v-show="item.isOverdue==='2'">已过期</el-tag>
                 </div>
