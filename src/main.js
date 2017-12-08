@@ -56,6 +56,18 @@ Vue.filter('formatMoney', function (val) {
     return val.toFixed(2);
   }
 });
+Vue.prototype.$scrollLoadingData = function (event) {
+  let e = event ? event : window.event;
+  let target = e.target || e.srcElement;
+  let difference = 20;
+  let height = target.scrollHeight - target.clientHeight;
+  let scrollTop = target.scrollTop;
+  if (height > 0 && height - scrollTop < difference) {
+    if (this.getOrgMore) {
+      this.getOrgMore();
+    }
+  }
+};
 new Vue({
   template: '<router-view id="app"></router-view>',
   router,
