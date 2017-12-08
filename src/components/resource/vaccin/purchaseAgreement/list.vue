@@ -153,7 +153,8 @@
         <div class="status-item" :class="{'active':key==activeStatus }" v-for="(item,key) in orgType"
              @click="changeType(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span
+            class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix">
@@ -162,7 +163,10 @@
           <el-col :span="4">供货厂商</el-col>
           <el-col :span="4">采购单价</el-col>
           <el-col :span="4">协议采购数量</el-col>
-          <el-col :span="4">协议有效时间</el-col>
+          <el-col :span="4">协议有效时间
+            <i class="el-icon-caret-top" v-if="filters.asc" @click="filters.asc=false" style="cursor:pointer;"></i>
+            <i class="el-icon-caret-bottom" v-if="!filters.asc" @click="filters.asc=true" style="cursor:pointer;"></i>
+          </el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -206,6 +210,8 @@
               <el-col :span="4">
                 <div>
                   {{ item.expireTime | date}}
+                  <el-tag type="warning" v-show="item.isOverdue==='1'">即将到期</el-tag>
+                  <el-tag type="danger" v-show="item.isOverdue==='2'">已过期</el-tag>
                 </div>
               </el-col>
             </el-row>
@@ -255,6 +261,7 @@
           totalPage: 1
         },
         filters: {
+          asc: true,
           availabilityStatus: true
         },
         orgType: {

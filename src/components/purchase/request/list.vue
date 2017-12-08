@@ -48,7 +48,7 @@
         <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
              v-for="(item,key) in requestType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
         <span class="pull-right" style="margin-top: 8px">
            <perm label="cargo-signal-add">

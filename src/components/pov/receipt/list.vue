@@ -56,7 +56,7 @@
         <div class="status-item" :class="{'active':key==activeStatus}"
              v-for="(item,key) in receiptType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
