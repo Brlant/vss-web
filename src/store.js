@@ -18,7 +18,8 @@ const state = {
   weChatInfo: {},
   bodyHeight: 0,
   orgLevel: '',
-  prints: []
+  prints: [],
+  logisticsCentreId: '6320790940790948456'
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
