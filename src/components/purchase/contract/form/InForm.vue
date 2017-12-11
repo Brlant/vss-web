@@ -692,6 +692,8 @@
       setDefaultValue () {
         this.form.transportationCondition = '0';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
+        this.form.purchaseContractName = '';
+        this.form.purchaseContractNo = '';
       },
       createOrderInfo () {
         this.form.purchaseContractName = '';
@@ -760,7 +762,7 @@
       },
       initForm: function () {// 根据缓存，回设form
         let oldForm = window.localStorage.getItem(this.saveKey);
-        if (oldForm) {
+        if (oldForm && !this.form.id) {
           this.form = Object.assign({}, this.form, JSON.parse(oldForm));
         }
       },
@@ -1179,14 +1181,13 @@
             });
           } else {
             PurchaseContract.save(saveData).then(res => {
-              this.resetForm();
               this.$notify({
                 duration: 2000,
                 message: '新增采购合同成功',
                 type: 'success'
               });
-              self.$emit('change', res.data);
               window.localStorage.removeItem(this.saveKey);
+              self.$emit('change', res.data);
               this.$nextTick(() => {
                 this.doing = false;
                 this.$emit('right-close');
