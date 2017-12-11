@@ -147,6 +147,7 @@
         <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
           <template slot-scope="scope">
             {{ scope.row.expiryDate | date}}
+            <el-tag :type="statusType[isValid(scope.row)]">{{ statusTitle[isValid(scope.row)] }}</el-tag>
           </template>
         </el-table-column>
       </el-table>
@@ -168,13 +169,13 @@
 </template>
 <script>
   //  import order from '../../../tools/orderList';
-  import {BaseInfo, OrgGoods, erpStock, http} from '@/resources';
+  import { BaseInfo, OrgGoods, erpStock, http } from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
 
   export default {
     components: {detail},
-    data() {
+    data () {
       return {
         loadingData: true,
         showSearch: true,
@@ -202,14 +203,24 @@
         },
         currentItemId: '',
         currentItem: {},
-        totalInfo: {}
+        totalInfo: {},
+        statusTitle: [
+          '已过期',
+          '即将到期',
+          '正常'
+        ],
+        statusType: [
+          'danger',
+          'warning',
+          'primary'
+        ]
       };
     },
-    mounted() {
+    mounted () {
       this.getBatches(1);
     },
     computed: {
-      orgLevel() {
+      orgLevel () {
         return this.$store.state.orgLevel;
       },
       bodyHeight: function () {
@@ -227,7 +238,13 @@
       }
     },
     methods: {
-      getBatches() { // 得到波次列表
+      isValid (item) {
+        let a = this.$moment();
+        let b = this.$moment(item.expiryDate);
+        let days = b.diff(a, 'days');
+        return a < b ? days > 30 ? 2 : 1 : 0;
+      },
+      getBatches () { // 得到波次列表
         this.totalInfo = {};
         this.batches = [];
         let params = Object.assign({}, this.filters);
@@ -250,18 +267,18 @@
           });
         });
       },
-      showDetail(item) {
+      showDetail (item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
       },
-      resetRightBox() {
+      resetRightBox () {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchWord);
       },
-      getSummaries(param) {
+      getSummaries (param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -300,7 +317,7 @@
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
       },
-      filterFactory(query) { // 生产厂商
+      filterFactory (query) { // 生产厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
@@ -314,7 +331,7 @@
           this.factories = res.data.list;
         });
       },
-      filterOrgGoods(query) {
+      filterOrgGoods (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           deleteFlag: false,
@@ -325,7 +342,7 @@
           this.orgGoods = res.data.list;
         });
       },
-      formatTime(date) {
+      formatTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

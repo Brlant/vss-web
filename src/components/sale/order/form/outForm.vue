@@ -745,6 +745,8 @@
           this.resetForm();
           this.form.state = '';
           this.form.id = null;
+          // 设置一些默认值
+          this.setDefaultValue();
         }
         this.filterAddress();
       }
@@ -766,6 +768,10 @@
 //      }
     },
     methods: {
+      setDefaultValue () {
+        this.form.transportationMeansId = '0';
+        this.form.transportationCondition = '0';
+      },
       getTitle () {
         return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}销售订单`;
       },

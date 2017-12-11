@@ -314,10 +314,10 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="是否进口">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.importedFlag"></el-switch>
-            </el-form-item>
+            <!--<el-form-item label="是否进口">-->
+            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--v-model="form.importedFlag"></el-switch>-->
+            <!--</el-form-item>-->
             <!--<el-form-item label="是否生效">-->
               <!--<el-switch v-model="form.availabilityStatus" on-text="是" off-text="否" on-color="#13ce66"-->
                          <!--off-color="#ff4949">-->
@@ -671,13 +671,8 @@
           this.resetForm();
           this.form.state = '';
           this.form.id = null;
-        }
-        // 运输条件和物流中心设置默认值
-        if (this.LogisticsCenter) {
-          this.form.logisticsCentreId = this.LogisticsCenter[1].id;
-        }
-        if (this.transportationConditionList) {
-          this.form.transportationCondition = this.transportationConditionList[0].key;
+          // 设默认值
+          this.setDefaultValue();
         }
       },
       form: {
@@ -694,6 +689,10 @@
       this.initForm();
     },
     methods: {
+      setDefaultValue () {
+        this.form.transportationCondition = '0';
+        this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
+      },
       createOrderInfo () {
         this.form.purchaseContractName = '';
         this.form.purchaseContractNo = '';

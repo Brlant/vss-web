@@ -276,7 +276,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="供货厂商仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
+            <el-form-item label="供货厂商仓库"
                           v-show="showContent.isShowOtherContent">
               <el-select placeholder="请选择供货厂商仓库" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress">
@@ -310,10 +310,10 @@
                            v-for="item in transportationConditionList"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="是否进口">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.importedFlag"></el-switch>
-            </el-form-item>
+            <!--<el-form-item label="是否进口">-->
+            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--v-model="form.importedFlag"></el-switch>-->
+            <!--</el-form-item>-->
             <el-form-item :label="'预计出库时间'"
                           :prop=" showContent.isShowOtherContent?'expectedTime':'' "
                           v-show="showContent.isShowOtherContent">
@@ -731,6 +731,8 @@
           this.resetForm();
           this.form.state = '';
           this.form.id = null;
+          // 设默认值
+          this.setDefaultValue();
         }
         this.filterAddress();
       }
@@ -751,6 +753,9 @@
 //      }
     },
     methods: {
+      setDefaultValue () {
+        this.form.transportationCondition = '0';
+      },
       autoSave: function () {
         if (!this.form.id) {
           window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));

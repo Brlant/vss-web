@@ -236,7 +236,7 @@
                   {{getOrderStatus(item)}}
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state === '0' ">
+              <el-col :span="3" class="opera-btn" v-if="filters.state === '0' || filters.state === '1' ">
                 <perm label="return-manager-edit">
                   <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i

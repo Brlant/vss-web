@@ -237,7 +237,7 @@
               {{getOrderStatus(item)}}
             </div>
           </el-col>
-          <el-col :span="2" class="opera-btn" v-if="filters.state === '0' ">
+          <el-col :span="2" class="opera-btn" v-if="filters.state === '0' || filters.state === '1'">
             <perm :label="vaccineType === '1'?'sales-order-edit': 'second-vaccine-sales-order-edit' ">
               <span @click.stop.prevent="editOrder(item)">
                 <a href="#" class="btn-circle" @click.prevent=""><i

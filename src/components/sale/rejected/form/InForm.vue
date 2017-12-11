@@ -687,6 +687,8 @@
           this.resetForm();
           this.form.state = '';
           this.form.id = null;
+          // 设置一些默认值
+          this.setDefaultValue();
         }
         this.filterAddress();
       },
@@ -704,6 +706,11 @@
 //      this.initForm();
     },
     methods: {
+      setDefaultValue () {
+        this.form.transportationCondition = '0';
+        this.form.logisticsProviderId = 'GO1';
+        this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
+      },
       editOrderInfo () {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {

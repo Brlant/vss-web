@@ -304,9 +304,9 @@
             <el-form-item label="疾控仓库地址">
               {{ getWarehouseAddress(form)}}
             </el-form-item>
-            <el-form-item label="是否进口">
-              {{form.importedFlag | formatStatus}}
-            </el-form-item>
+            <!--<el-form-item label="是否进口">-->
+            <!--{{form.importedFlag | formatStatus}}-->
+            <!--</el-form-item>-->
             <el-form-item label="是否生效">
               {{form.availabilityStatus | formatStatus}}
             </el-form-item>

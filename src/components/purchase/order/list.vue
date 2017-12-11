@@ -262,7 +262,7 @@
                   <el-tag type="danger" v-show="item.exceptionFlag">异常({{ item.exceptionCount}})</el-tag>
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state === '6' ">
+              <el-col :span="3" class="opera-btn" v-if="filters.state === '6'">
                 <perm :label="vaccineType === '1'?'purchasing-order-edit': 'second-vaccine-purchasing-order-edit' ">
                    <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
