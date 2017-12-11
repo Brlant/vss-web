@@ -31,7 +31,7 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm :label="vaccineType === '1'?'purchasing-order-audit': 'second-vaccine-purchasing-order-audit' "
+            <perm :label="vaccineType === '1'?'purchasing-order-cancel': 'second-vaccine-purchasing-order-cancel' "
                   v-show="currentOrder.state === '6' ">
               <el-button type="primary" @click="cancel">取消订单</el-button>
             </perm>
