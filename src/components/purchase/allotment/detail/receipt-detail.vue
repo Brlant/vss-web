@@ -37,7 +37,7 @@
         </oms-row>
       </el-col>
       <el-col :span="12">
-        <oms-row label="温度是否合格">
+        <oms-row label="在途温度">
           <el-tag type="success">合格</el-tag>
         </oms-row>
       </el-col>
