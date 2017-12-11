@@ -59,6 +59,7 @@
           <div class="product-list-detail" v-if="info.list">
             <h3 style="background: #f1f1f1;overflow: hidden">
               <span style="float: left">付款明细</span>
+              <span>(共{{info.list.length}}条)</span>
             </h3>
             <table class="table">
               <thead>
