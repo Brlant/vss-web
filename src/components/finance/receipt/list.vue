@@ -121,8 +121,11 @@
                   </div>
                 </li>
               </ul>
-              <div class="btn-left-list-more" @click.stop="getOrgMore">
-                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              <div class="btn-left-list-more">
+                <bottom-loading></bottom-loading>
+                <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                  <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+                </div>
               </div>
             </div>
           </div>
@@ -402,9 +405,8 @@
           pageSize: this.pager.pageSize
         }, this.filters);
         receipt.query(params).then(res => {
-          if (this.scrollLoading) {
-            this.scrollLoading.close();
-          }
+          this.$store.commit('initBottomLoading', false);
+
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {

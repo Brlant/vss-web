@@ -42,7 +42,6 @@
       border: 0;
     }
   }
-
 </style>
 <template>
   <div>
@@ -74,8 +73,11 @@
                 </div>
               </li>
             </ul>
-            <div class="btn-left-list-more" @click.stop="getOrgMore">
-              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            <div class="btn-left-list-more">
+              <bottom-loading></bottom-loading>
+              <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -158,7 +160,7 @@
 </template>
 <script>
   import addForm from './form.vue';
-  import {cerpAction, Vaccine, VaccineRights, PurchaseAgreement} from '@/resources';
+  import { cerpAction, Vaccine, VaccineRights, PurchaseAgreement } from '@/resources';
 
   export default {
     components: {
@@ -213,7 +215,7 @@
         return height;
       }
     },
-    mounted() {
+    mounted () {
       this.getOrgsList(1);
     },
     watch: {
@@ -222,7 +224,7 @@
         this.orgName = '';
         this.getOrgsList();
       },
-      keyWord() {
+      keyWord () {
         this.pickTypeList();
       }
     },
@@ -246,9 +248,7 @@
         let nowTime = new Date();
         this.nowTime = nowTime;
         this.$http.get('/purchase-agreement/valid/second-vaccine/pager', {params}).then(res => {
-          if (this.scrollLoading) {
-            this.scrollLoading.close();
-          }
+          this.$store.commit('initBottomLoading', false);
           if (this.nowTime > nowTime) return;
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
@@ -268,7 +268,7 @@
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
       },
-      queryVaccines(query) {
+      queryVaccines (query) {
         let params = Object.assign({}, {
           keyWord: query
         });
@@ -277,7 +277,7 @@
           this.filterPOVs();
         });
       },
-      filterPOVs() {
+      filterPOVs () {
         this.showOrgList = this.orgList.filter(f => !this.dataRows.some(s => f.subordinateId === s.povId));
       },
       filterPOV: function (query) {// 过滤POV
@@ -305,7 +305,7 @@
           this.loadingData = false;
         });
       },
-      refreshDetails() {
+      refreshDetails () {
         this.getPageList(1);
         this.showRight = false;
       },
@@ -327,7 +327,7 @@
           });
         });
       },
-      bindVaccinePOV() {
+      bindVaccinePOV () {
         let form = {
           'orgGoodsId': this.currentItem.orgGoodsId,
           'povId': this.povId
@@ -361,15 +361,15 @@
         this.currentItem = item;
         this.getPageList(1);
       },
-      add() {
+      add () {
         this.formPara = {};
         this.showRight = true;
       },
-      edit(item) {
+      edit (item) {
         this.formPara = item;
         this.showRight = true;
       },
-      changeItem(item) {
+      changeItem (item) {
         if (this.action === 'add') {
           this.getPageList(1);
         } else {

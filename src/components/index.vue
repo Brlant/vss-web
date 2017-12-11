@@ -149,6 +149,11 @@
       this.toRoute = to;
       next();
     },
+    watch: {
+      $route () {
+        this.$store.commit('initBottomLoading', false);
+      }
+    },
     mounted: function () {
       window.localStorage.removeItem('noticeError');
       if (!this.$store.state.user || !this.$store.state.user.userId) {

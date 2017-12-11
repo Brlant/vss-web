@@ -19,7 +19,8 @@ const state = {
   bodyHeight: 0,
   orgLevel: '',
   prints: [],
-  logisticsCentreId: '6320790940790948456'
+  logisticsCentreId: '6320790940790948456',
+  bottomLoading: false
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -118,6 +119,9 @@ const mutations = {
     } else {
       state.prints.push(data);
     }
+  },
+  initBottomLoading (state, data) {
+    state.bottomLoading = data;
   }
 };
 

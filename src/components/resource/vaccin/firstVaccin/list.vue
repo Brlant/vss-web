@@ -164,8 +164,11 @@
 
             </div>
           </div>
-          <div class="lot-load" @click.stop="getOrgMore">
-            <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+          <div class="lot-load">
+            <bottom-loading></bottom-loading>
+            <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            </div>
           </div>
         </div>
         <div class="d-table-right">
@@ -544,9 +547,8 @@
 
         }, this.filters);
         Vaccine.queryFirstVaccine(params).then(res => {
-          if (this.scrollLoading) {
-            this.scrollLoading.close();
-          }
+          this.$store.commit('initBottomLoading', false);
+
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {

@@ -81,6 +81,7 @@ import omsLoading from '../components/common/oms.loading.vue';
 import ElForm from '../components/common/form/src/form.vue';
 import fa from '../components/common/fa.vue';
 import totalCount from '../components/common/count.total.vue';
+import bottomLoading from '../components/common/bottom.loading.vue';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
   Pagination,
@@ -157,7 +158,8 @@ const tinyVue = [
   omsLoading,
   ElForm,
   fa,
-  totalCount
+  totalCount,
+  bottomLoading
 ];
 
 const install = function (Vue, opts = {}) {
