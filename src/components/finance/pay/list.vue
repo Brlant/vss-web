@@ -60,6 +60,7 @@
 
   .order-list-status .status-item.active, .order-list-status .status-item:hover {
     height: 40px;
+    width: 160px;
   }
 
   .payForm {
