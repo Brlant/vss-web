@@ -348,7 +348,7 @@
         loading: false,
         form: {
           type: '0',
-          payType: '',
+          payType: '2',
           orgId: '',
           explain: '',
           amount: '',
@@ -408,7 +408,7 @@
       defaultIndex (val) {
         this.form = {
           type: '0',
-          payType: '',
+          payType: '2',
           orgId: '',
           explain: '',
           amount: '',
