@@ -144,8 +144,9 @@
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="5">疫苗厂商</el-col>
           <el-col :span="5">发票号码</el-col>
-          <el-col :span="4">发票金额</el-col>
-          <el-col :span="5">待付金额</el-col>
+          <el-col :span="3">发票金额</el-col>
+          <el-col :span="3">待付金额</el-col>
+          <el-col :span="3">是否已到</el-col>
           <el-col :span="2">状态</el-col>
           <el-col :span="3">操作</el-col>
         </el-row>
@@ -175,14 +176,19 @@
                       {{ item.invoiceNumber }}
                     </span>
               </el-col>
-              <el-col :span="4" class="R pt10">
+              <el-col :span="3" class="R pt10">
                     <span>
                        ￥{{ item.amount | formatMoney}}
                     </span>
               </el-col>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="3" class="R pt10">
                     <span>
                        ￥{{ (item.amount - item.paidAmount) | formatMoney}}
+                    </span>
+              </el-col>
+              <el-col :span="3" class="R pt10">
+                    <span>
+                      {{ item.haveTo ? '已到' : '未到'}}
                     </span>
               </el-col>
               <el-col :span="2" class="R pt10">
