@@ -20,7 +20,7 @@
     <el-form-item label="英文名称" prop="name">
       <oms-input type="text" v-model="form.name" placeholder="请输入"></oms-input>
     </el-form-item>
-    <el-form-item label="角色描述" prop="remark">
+    <el-form-item label="角色描述">
       <oms-input type="text" v-model="form.remark" placeholder="请输入"></oms-input>
     </el-form-item>
     <h4 class="clearfix">配置角色权限</h4>
