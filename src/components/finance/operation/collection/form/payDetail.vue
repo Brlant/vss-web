@@ -47,9 +47,29 @@
   <div>
     <el-form ref="payForm" :inline="true">
       <el-form-item label="货品名称">
-        <oms-input v-model="searchCondition.goodsName"></oms-input>
+        <!--<oms-input v-model="searchCondition.goodsName"></oms-input>-->
+        <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
+                   @click.native="searchProduct('')" popper-class="good-selects">
+          <el-option v-for="item in goodesList" :key="item.id"
+                     :label="item.goodsName"
+                     :value="item.orgGoodsId">
+            <div>
+              <div>
+                <span class="pull-left">{{item.goodsName}}</span>
+              </div>
+              <div class="clearfix">
+                            <span class="select-other-info pull-left">
+                              <span v-show="item.goodsNo">货品编号</span>{{item.goodsNo}}
+                            </span>
+                <span class="select-other-info pull-left"><span
+                  v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}
+                            </span>
+              </div>
+            </div>
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="发生时间" style="width: 380px" class="create-date">
+      <el-form-item label="发生时间" class="create-date">
         <el-date-picker
           v-model="createTimes"
           type="daterange"
@@ -155,7 +175,7 @@
 
 </template>
 <script>
-  import { pay } from '@/resources';
+  import { pay, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -176,16 +196,17 @@
           pageSize: 5
         },
         filterRights: {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: ''
         },
         searchCondition: {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: ''
         },
-        createTimes: ''
+        createTimes: '',
+        goodesList: []
       };
     },
     computed: {
@@ -196,11 +217,15 @@
     watch: {
       factoryId (val) {
         this.payments = [];
+        this.goodesList = [];
+        this.resetSearchForm();
         if (!val) return;
         this.queryPayments(1);
       },
       billPayType () {
         this.payments = [];
+        this.goodesList = [];
+        this.resetSearchForm();
         if (!this.factoryId) return;
         this.queryPayments(1);
       },
@@ -239,6 +264,13 @@
           this.pager.count = res.data.count;
         });
       },
+      searchProduct (keyWord) {
+        if (!this.factoryId) return;
+        if (!keyWord && this.goodesList.length) return;
+        VaccineRights.queryVaccineByPov(this.factoryId, {cdcId: this.$store.state.user.userCompanyAddress}).then(res => {
+          this.goodesList = res.data;
+        });
+      },
       searchInOrder: function () {// 搜索
         this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
         this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
@@ -246,7 +278,7 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: ''
         };

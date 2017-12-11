@@ -287,6 +287,7 @@
             </el-form-item>
             <el-form-item label="收款明细" class="mb0">
               <span v-show="!form.detailList.length">无</span>
+              <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
             </el-form-item>
             <ul class="show-list invoice-list"
                 v-show="form.detailList.length">

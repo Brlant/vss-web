@@ -100,7 +100,7 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row label="发票号码" :span="5">
-                <oms-input type="text" v-model="searchCondition.invoiceNumber" placeholder="请输入货主订单号"></oms-input>
+                <oms-input type="text" v-model="searchCondition.invoiceNumber" placeholder="请输入发票号码"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
