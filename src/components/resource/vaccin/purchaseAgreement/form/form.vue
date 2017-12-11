@@ -42,7 +42,7 @@
         <template slot="prepend">¥</template>
       </oms-input>
     </el-form-item>
-    <el-form-item label="协议采购数量" prop="amount">
+    <el-form-item label="协议采购数量">
       <oms-input type="number" v-model.number="form.amount" min="0" placeholder="请输入协议采购数量"></oms-input>
     </el-form-item>
     <el-form-item label="协议到期时间" prop="expireTime" ref="expireTime">
@@ -79,9 +79,6 @@
           ],
           unitPrice: [
             {required: true, message: '请输入采购单价', trigger: 'blur'}
-          ],
-          amount: [
-            {type: 'number', required: true, message: '请输入采购数量', trigger: 'blur'}
           ],
           expireTime: [
             {required: true, message: '请选择协议到期日期', trigger: 'change'}

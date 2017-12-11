@@ -530,12 +530,12 @@
           'bizType': '0',
           'type': this.type,
           'logisticsProviderId': '',
-          'transportationCondition': '',
+          'transportationCondition': '0',
           'transportationMeansId': '1',
           'transportationAddress': '',
           'importedFlag': '',
           'orgRelation': '',
-          'logisticsCentreId': '',
+          'logisticsCentreId': this.$store.state.logisticsCentreId,
           'expectedTime': '',
           'detailDtoList': [],
           'supplierId': '',
@@ -602,7 +602,7 @@
         LogisticsCenter: [],
         doing: false,
         isSupplierOrOrg: false, // 是不是货主或业务单位
-        saveKey: 'inOrderForm',
+        saveKey: 'contractForm',
         isStorageData: true, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
@@ -762,7 +762,6 @@
         let oldForm = window.localStorage.getItem(this.saveKey);
         if (oldForm) {
           this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-          this.form.logisticsCentreId = this.form.logisticsCentreId ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
       },
       resetForm: function () {// 重置表单
