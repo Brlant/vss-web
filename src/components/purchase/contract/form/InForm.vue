@@ -314,10 +314,6 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="是否进口">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.importedFlag"></el-switch>
-            </el-form-item>
             <!--<el-form-item label="是否生效">-->
               <!--<el-switch v-model="form.availabilityStatus" on-text="是" off-text="否" on-color="#13ce66"-->
                          <!--off-color="#ff4949">-->
@@ -530,12 +526,12 @@
           'bizType': '0',
           'type': this.type,
           'logisticsProviderId': '',
-          'transportationCondition': '',
+          'transportationCondition': '0',
           'transportationMeansId': '1',
           'transportationAddress': '',
           'importedFlag': '',
           'orgRelation': '',
-          'logisticsCentreId': '',
+          'logisticsCentreId': this.$store.state.logisticsCentreId,
           'expectedTime': '',
           'detailDtoList': [],
           'supplierId': '',
@@ -602,7 +598,7 @@
         LogisticsCenter: [],
         doing: false,
         isSupplierOrOrg: false, // 是不是货主或业务单位
-        saveKey: 'inOrderForm',
+        saveKey: 'contractForm',
         isStorageData: true, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
@@ -671,13 +667,6 @@
           this.resetForm();
           this.form.state = '';
           this.form.id = null;
-        }
-        // 运输条件和物流中心设置默认值
-        if (this.LogisticsCenter) {
-          this.form.logisticsCentreId = this.LogisticsCenter[1].id;
-        }
-        if (this.transportationConditionList) {
-          this.form.transportationCondition = this.transportationConditionList[0].key;
         }
       },
       form: {
@@ -763,7 +752,6 @@
         let oldForm = window.localStorage.getItem(this.saveKey);
         if (oldForm) {
           this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-          this.form.logisticsCentreId = this.form.logisticsCentreId ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
       },
       resetForm: function () {// 重置表单
