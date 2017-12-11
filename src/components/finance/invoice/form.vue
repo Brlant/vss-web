@@ -279,6 +279,10 @@
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
+            <el-form-item label="是否已到" prop="haveTo">
+              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
+                         v-model="form.haveTo"></el-switch>
+            </el-form-item>
           </el-form>
         </div>
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
@@ -308,13 +312,15 @@
           type: '',
           amount: '',
           status: 0,
-          detailList: []
+          detailList: [],
+          haveTo: false
         },
         rules: {
           factoryId: {required: true, message: '请选择疫苗厂商', trigger: 'change'},
           invoiceNumber: {required: true, message: '请输入发票号码', trigger: 'blur'},
           type: {required: true, message: '请选择发票类型', trigger: 'change'},
-          amount: {required: true, message: '请选择发票明细，自动计算发票金额', trigger: 'blur'}
+          amount: {required: true, message: '请选择发票明细，自动计算发票金额', trigger: 'blur'},
+          haveTo: {required: true, message: '请选择发票是否已到'}
         },
         doing: false,
         title: '添加发票',
