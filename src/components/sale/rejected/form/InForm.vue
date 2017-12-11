@@ -278,13 +278,14 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流商选择"
+            <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <el-select filterable remote placeholder="请输入名称搜索物流商" :remote-method="filterLogistics"
-                         :clearable="true"
-                         v-model="form.logisticsProviderId">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>
-              </el-select>
+              <!--<el-select filterable remote placeholder="请输入名称搜索物流商" :remote-method="filterLogistics"-->
+              <!--:clearable="true"-->
+              <!--v-model="form.logisticsProviderId">-->
+              <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>-->
+              <!--</el-select>-->
+              <oms-input v-model="form.logisticsProviderId" placeholder="请输入物流商"></oms-input>
             </el-form-item>
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
@@ -708,7 +709,7 @@
     methods: {
       setDefaultValue () {
         this.form.transportationCondition = '0';
-        this.form.logisticsProviderId = 'GO1';
+        this.form.logisticsProviderId = '国控生物航启路物流中心';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       },
       editOrderInfo () {
