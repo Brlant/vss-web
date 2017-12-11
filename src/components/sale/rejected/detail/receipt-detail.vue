@@ -41,22 +41,10 @@
         <oms-row label="车牌号">
           {{ plateNumber }}
         </oms-row>
-        <oms-row label="最高温度">
-          <span v-show="currentOrder.highestTemperature">{{ currentOrder.highestTemperature }}℃</span>
-        </oms-row>
-        <oms-row label="最低温度">
-          <span v-show="currentOrder.lowestTemperature">{{ currentOrder.lowestTemperature }}℃</span>
-        </oms-row>
       </el-col>
       <el-col :span="12">
-        <oms-row label="温度数据提供方式">
-          {{ currentOrder.temperatureDataModeName }}
-        </oms-row>
-        <oms-row label="保温包装类型">
-          {{ currentOrder.insulationTypeName }}
-        </oms-row>
-        <oms-row label="平均温度">
-          <span v-show="currentOrder.averageTemperature">{{ currentOrder.averageTemperature }}℃</span>
+        <oms-row label="温度是否合格">
+          <el-tag type="success">合格</el-tag>
         </oms-row>
       </el-col>
     </el-row>

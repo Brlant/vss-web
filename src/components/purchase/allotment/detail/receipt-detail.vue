@@ -35,13 +35,10 @@
         <oms-row label="车牌号">
           {{ plateNumber }}
         </oms-row>
-        <oms-row label="保温包装类型">
-          {{ currentOrder.insulationTypeName }}
-        </oms-row>
       </el-col>
       <el-col :span="12">
-        <oms-row label="温度数据提供方式">
-          {{ currentOrder.temperatureDataModeName }}
+        <oms-row label="温度是否合格">
+          <el-tag type="success">合格</el-tag>
         </oms-row>
       </el-col>
     </el-row>
