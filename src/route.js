@@ -63,7 +63,16 @@ const route = [
           //   component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
           //   meta: {moduleId: 'purchase', title: '分配中订单', perm: 'cerp-create-wave'}
           // },
-
+          {
+            path: '/purchase/agreement',
+            component: resolve => require(['./components/resource/vaccin/purchaseAgreement/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '区二类疫苗目录', perm: 'purchase-agreement'}
+          },
+          {
+            path: '/purchase/contract',
+            component: resolve => require(['./components/purchase/contract/list.vue'], resolve),
+            meta: {moduleId: 'purchase', title: '采购合同', perm: 'purchasing-contract'}
+          },
           {
             path: '/purchase/order/one/class/:id',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
