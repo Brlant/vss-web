@@ -188,6 +188,7 @@
           res.data.list.forEach(item => {
             if (!item.procurementCount) {
               item.procurementCount = Math.abs(item.balanceAmount);
+              this.autoSave(item);
             }
           });
           this.allocationList = res.data.list;
@@ -227,6 +228,13 @@
             i.resultAmount = i.inventoryQuantity - count;
           }
         });
+      },
+      autoSave (item) {
+        let obj = {
+          id: item.list[0].detailId,
+          procurementCount: item.procurementCount
+        };
+        pullSignal.update(obj.id, obj);
       },
       save (item) {
         let obj = {
