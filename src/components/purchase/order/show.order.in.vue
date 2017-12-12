@@ -40,7 +40,8 @@
       </div>
       <div class="content-right content-padding">
         <h3>{{ title }}</h3>
-        <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
+        <basic-info :currentOrder="currentOrder" :vaccineType="vaccineType" v-show="index === 0"
+                    :index="index"></basic-info>
         <receipt-detail :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt-detail>
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <exception-info :currentOrder="currentOrder" v-show="index === 3" :orderId="orderId"

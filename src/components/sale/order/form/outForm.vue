@@ -218,7 +218,7 @@
   }
 
   .ar {
-    text-align: right;
+    /*text-align: right;*/
   }
 
   .good-selects {
@@ -356,10 +356,10 @@
                         </el-tag>
                       </div>
                       <div style="overflow: hidden">
-                        <span class="select-other-info pull-left"><span
+                        <span class="select-other-info pull-left" v-show="vaccineType==='2'"><span
                           v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                         </span>
-                        <span class="select-other-info pull-left"><span
+                        <span class="select-other-info pull-left" v-show="vaccineType==='2'"><span
                           v-show="item.orgGoodsDto.sellPrice">销售价格 ￥{{ item.orgGoodsDto.sellPrice
                           }}</span>
                         </span>
@@ -378,7 +378,7 @@
                     </template>
                   </oms-input>
                 </el-form-item>
-                <el-form-item label="单价" class="productItem-info" prop="unitPrice">
+                <el-form-item label="单价" class="productItem-info" prop="unitPrice" v-show="vaccineType==='2'">
                   <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
                              @blur="formatPrice">
                     <template slot="prepend">¥</template>
@@ -472,9 +472,9 @@
                 <tr>
                   <th style="width: 300px">货品名称</th>
                   <th>批号</th>
-                  <th>货品单价</th>
+                  <th v-show="vaccineType==='2'">货品单价</th>
                   <th>货品数量</th>
-                  <th>金额</th>
+                  <th v-show="vaccineType==='2'">金额</th>
                   <th>操作</th>
                 </tr>
                 </thead>
@@ -487,7 +487,7 @@
                     <span>{{product.orgGoodsName}}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
-                  <td class="ar">
+                  <td class="ar" v-show="vaccineType==='2'">
                    <span v-show="Number(product.unitPrice)">
                      <span>¥</span>{{product.unitPrice | formatMoney}}
                      <span v-if="!Number(product.unitPrice)">-</span>
@@ -498,7 +498,7 @@
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
-                  <td class="ar">
+                  <td class="ar" v-show="vaccineType==='2'">
                     <span v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney
                       }}</span>
                     <span v-if="!Number(product.unitPrice)">-</span>
@@ -518,7 +518,7 @@
                   <td colspan="4" align="right">
                     <total-count property="amount" :list="form.detailDtoList"></total-count>
                   </td>
-                  <td colspan="2" style="font-weight: 600">
+                  <td colspan="2" style="font-weight: 600" v-show="vaccineType==='2'">
                     <span v-show="form.detailDtoList.length && totalMoney">合计:</span><span
                     v-show="form.detailDtoList.length && totalMoney">¥{{ totalMoney | formatMoney }}</span></td>
                 </tr>

@@ -151,8 +151,8 @@
           <td>生产日期</td>
           <td>有效期</td>
           <td class="text-center">数量</td>
-          <td class="text-center">单价</td>
-          <td class="text-center">金额</td>
+          <td class="text-center" v-show="vaccineType==='2'">单价</td>
+          <td class="text-center" v-show="vaccineType==='2'">金额</td>
         </tr>
         </thead>
         <tbody>
@@ -197,11 +197,11 @@
             {{item.amount}}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
-          <td width="80px" class="text-center">
+          <td width="80px" class="text-center" v-show="vaccineType==='2'">
             <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
             <span v-if="!item.unitPrice">-</span>
           </td>
-          <td class="text-center">
+          <td class="text-center" v-show="vaccineType==='2'">
             <span v-if="item.unitPrice">
               <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
             </span>
@@ -212,7 +212,7 @@
           <td colspan="7" align="right">
             <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
           </td>
-          <td colspan="2" align="right">
+          <td colspan="2" align="right" v-show="vaccineType==='2'">
             <span style="font-weight:600;"
                   v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney
               }}</span>
