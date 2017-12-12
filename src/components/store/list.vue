@@ -140,14 +140,37 @@
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="130"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :sortable="true" v-if="orgLevel !== 3"
-                         width="90"></el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际库存" :sortable="true" width="90"></el-table-column>
+                         width="90">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="用于出库订单的控制，表明可销售的数量" placement="right">
+              <div>
+                <span>{{scope.row.availableCount}}</span>
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column prop="qualifiedCount" label="实际库存" :sortable="true" width="90">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="仓库内真实货品数量" placement="right">
+              <div>
+                <span>{{scope.row.qualifiedCount}}</span>
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="transitCount" label="在途库存" :sortable="true" v-if="orgLevel !== 3"
-                         width="90"></el-table-column>
+                         width="90">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="在运输中的货品数量" placement="right">
+              <div>
+                <span>{{scope.row.transitCount}}</span>
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
         <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
           <template slot-scope="scope">
-            {{ scope.row.expiryDate | date}}
-            <el-tag :type="statusType[isValid(scope.row)]">{{ statusTitle[isValid(scope.row)] }}</el-tag>
+            <span :class="{'red': isValid(scope.row)===1}">{{ scope.row.expiryDate | date}}</span>
           </template>
         </el-table-column>
       </el-table>
