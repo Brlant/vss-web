@@ -82,6 +82,17 @@
           {{ item.aggregateQuantity }}
         </td>
       </tr>
+      <tr v-show="details.length">
+        <td colspan="3" width="180px">合计</td>
+        <td colspan="3" width="180px"></td>
+        <td colspan="2" width="120px"></td>
+        <td colspan="2" width="120px"></td>
+        <td colspan="2" width="120px"></td>
+        <td colspan="2" width="120px"></td>
+        <td colspan="2" width="120px">
+          <total-count title="" :list="details" property="aggregateQuantity"></total-count>
+        </td>
+      </tr>
       </tbody>
     </table>
   </div>

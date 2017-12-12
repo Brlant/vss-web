@@ -86,11 +86,9 @@
             <el-form-item label="批号" style="margin-bottom: 5px">
               <span>{{ item.batchNumber }}</span>
             </el-form-item>
-            <el-form-item label="大包装数量">
-              <oms-input type="text" placeholder="请输入大包装数量" v-model.number="item.largePackageCount"></oms-input>
-            </el-form-item>
-            <el-form-item label="小包装数量">
-              <oms-input type="text" placeholder="请输入小包装数量" v-model.number="item.smallPackageCount"></oms-input>
+            <el-form-item label="数量">
+              <input class="el-input__inner" type="number" placeholder="请输入数量" v-model.number="item.currentAmount"
+                     @input="changeAmount(item)"></input>
             </el-form-item>
           </el-form>
         </div>
@@ -141,7 +139,7 @@
     },
     methods: {
       onSubmit () {
-        let isFullReceive = this.productList.every(item => item.largePackageCount !== '' || item.smallPackageCount !== '');
+        let isFullReceive = this.productList.every(item => item.currentAmount !== '');
         if (!isFullReceive) {
           this.$confirm('没有完全收货，是否确认保存', '', {
             confirmButtonText: '确定',
@@ -177,6 +175,11 @@
           });
         });
       },
+      changeAmount (item) {
+        if (item.currentAmount > item.amount) {
+          item.currentAmount = item.amount;
+        }
+      },
       save () {
         let obj = {
           list: []
@@ -185,10 +188,7 @@
           obj.list.push({
             batchNumber: f.batchNumber,
             orgGoodsId: f.orgGoodsId,
-            largePackageCount: f.largePackageCount,
-            bulkCount: f.bulkCount,
-            mediumPackageCount: f.mediumPackageCount,
-            smallPackageCount: f.smallPackageCount
+            totalCount: f.currentAmount
           });
         });
         if (this.doing) return;
@@ -215,6 +215,7 @@
             f.bulkCount = '';
             f.mediumPackageCount = '';
             f.smallPackageCount = '';
+            f.currentAmount = f.amount;
           });
           this.productList = [].concat(res.data.detailDtoList);
           if (this.productList.length) {

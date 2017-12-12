@@ -125,11 +125,11 @@
                 </span>
               </el-col>
               <el-col :span="3" class="pt">
-                <!--<span v-show="status === 1 ">{{item.procurementCount}}-->
-                <!--<dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>-->
-                <!--</span>-->
+                <span v-show="status === 1 ">{{item.purchaseQuantity}}
+                <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
+                </span>
                 <perm label="purchansing-assignment-update">
-                  <el-input v-show="status === 0 " v-model.number="item.procurementCount"
+                  <el-input v-show="status === 0 " v-model.number="item.purchaseQuantity"
                             @blur="save(item)">
                     <template slot="append">
                       <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
@@ -141,13 +141,13 @@
           </div>
         </div>
       </div>
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="queryAllocationList"
-          :current-page="pager.currentPage">
-        </el-pagination>
-      </div>
+      <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
+      <!--<el-pagination-->
+      <!--layout="prev, pager, next"-->
+      <!--:total="pager.count" :pageSize="pager.pageSize" @current-change="queryAllocationList"-->
+      <!--:current-page="pager.currentPage">-->
+      <!--</el-pagination>-->
+      <!--</div>-->
     </div>
   </div>
 </template>
@@ -182,17 +182,15 @@
         this.allocationList = [];
         this.status = -1;
         if (!this.$route.query.id) return;
-        this.pager.currentPage = pageNo;
         this.loadingData = true;
         procurementCollect.queryDetailList(this.$route.query.id).then(res => {
           res.data.list.forEach(item => {
-            if (!item.procurementCount && res.data.status === 0) {
-              item.procurementCount = Math.abs(item.balanceAmount);
+            if (item.purchaseQuantity === null && res.data.status === 0) {
+              item.purchaseQuantity = Math.abs(item.balanceAmount);
               this.autoSave(item);
             }
           });
           this.allocationList = res.data.list;
-          this.pager.count = res.data.count;
           this.status = res.data.status;
           this.loadingData = false;
         });
@@ -232,7 +230,7 @@
       autoSave (item) {
         let obj = {
           id: item.list[0].detailId,
-          procurementCount: item.procurementCount
+          procurementCount: item.purchaseQuantity
         };
         let list = [];
         list.push(obj);
@@ -241,7 +239,7 @@
       save (item) {
         let obj = {
           id: item.list[0].detailId,
-          procurementCount: item.procurementCount
+          procurementCount: item.purchaseQuantity
         };
         let list = [];
         list.push(obj);

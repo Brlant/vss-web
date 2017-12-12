@@ -169,13 +169,13 @@
           </div>
         </div>
       </div>
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="queryAllocationList"
-          :current-page="pager.currentPage">
-        </el-pagination>
-      </div>
+      <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
+      <!--<el-pagination-->
+      <!--layout="prev, pager, next"-->
+      <!--:total="pager.count" :pageSize="pager.pageSize" @current-change="queryAllocationList"-->
+      <!--:current-page="pager.currentPage">-->
+      <!--</el-pagination>-->
+      <!--</div>-->
     </div>
 
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
@@ -225,11 +225,9 @@
         this.allocationList = [];
         this.status = -1;
         if (!this.$route.query.id) return;
-        this.pager.currentPage = pageNo;
         this.loadingData = true;
         demandAssignment.queryDetailList(this.$route.query.id).then(res => {
           this.allocationList = res.data.list;
-          this.pager.count = res.data.count;
           this.status = res.data.status;
           this.loadingData = false;
         });
