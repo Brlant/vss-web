@@ -44,7 +44,8 @@
       </el-col>
       <el-col :span="12">
         <oms-row label="在途温度">
-          <el-tag type="success">合格</el-tag>
+          <el-tag type="success" v-show="currentOrder.transportTemperatureFlag !== false">合格</el-tag>
+          <el-tag type="warning" v-show="currentOrder.transportTemperatureFlag === false">不合格</el-tag>
         </oms-row>
       </el-col>
     </el-row>
