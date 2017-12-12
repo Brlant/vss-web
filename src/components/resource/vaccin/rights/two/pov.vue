@@ -140,13 +140,13 @@
             </tr>
             </tbody>
           </table>
-        </div>
-        <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
-          <el-pagination
-            layout="prev, pager, next"
-            :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
-            :current-page="pager.currentPage">
-          </el-pagination>
+          <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
+              :current-page="pager.currentPage">
+            </el-pagination>
+          </div>
         </div>
       </div>
     </div>
