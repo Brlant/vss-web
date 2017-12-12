@@ -384,6 +384,8 @@
             this.$notify.success({
               message: '已成功取消申请单'
             });
+            this.currentItem = {};
+            this.currentOrder = {};
             this.getOrgsList(1);
           }).catch(error => {
             this.$notify.error({
@@ -402,6 +404,8 @@
             this.$notify.success({
               message: '申请单审核通过'
             });
+            this.currentItem = {};
+            this.currentOrder = {};
             this.getOrgsList(1);
           }).catch(error => {
             this.$notify.error({

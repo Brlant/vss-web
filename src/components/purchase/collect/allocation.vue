@@ -175,7 +175,7 @@
       };
     },
     mounted () {
-      this.queryAllocationList();
+      this.queryAllocationList(1);
     },
     methods: {
       queryAllocationList (pageNo) { // 得到需求分配列表
@@ -186,7 +186,7 @@
         this.loadingData = true;
         procurementCollect.queryDetailList(this.$route.query.id).then(res => {
           res.data.list.forEach(item => {
-            if (!item.procurementCount) {
+            if (!item.procurementCount && res.data.status === 0) {
               item.procurementCount = Math.abs(item.balanceAmount);
               this.autoSave(item);
             }
@@ -234,14 +234,18 @@
           id: item.list[0].detailId,
           procurementCount: item.procurementCount
         };
-        pullSignal.update(obj.id, obj);
+        let list = [];
+        list.push(obj);
+        demandAssignment.allotVaccine(list);
       },
       save (item) {
         let obj = {
           id: item.list[0].detailId,
           procurementCount: item.procurementCount
         };
-        pullSignal.update(obj.id, obj).then(() => {
+        let list = [];
+        list.push(obj);
+        demandAssignment.allotVaccine(list).then(() => {
           this.$notify.success({
             message: '分配采购数量成功'
           });
