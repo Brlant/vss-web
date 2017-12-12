@@ -976,7 +976,7 @@
         }
         let params = {
           keyWord: query,
-          factoryId: this.form.supplierId
+          factoryId: this.form.customerId
         };
         let rTime = Date.now();
         this.requestTime = rTime;
