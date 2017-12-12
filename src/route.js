@@ -126,17 +126,17 @@ const route = [
           {
             path: '/purchase/allocation',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '疫苗采购汇总', perm: 'cerp-create-wave'},
+            meta: {moduleId: 'purchase', title: '疫苗采购汇总', perm: 'purchansing-assignment'},
             children: [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/collect/list.vue'], resolve),
-                meta: {moduleId: 'purchase', title: '疫苗采购汇总', perm: 'demand-assignment-query'}
+                meta: {moduleId: 'purchase', title: '疫苗采购汇总', perm: 'purchansing-assignment'}
               },
               {
                 path: '/purchase/allocation/task',
                 component: resolve => require(['./components/purchase/collect/allocation.vue'], resolve),
-                meta: {moduleId: 'purchase', title: '疫苗采购汇总', perm: 'demand-assignment-update'}
+                meta: {moduleId: 'purchase', title: '疫苗采购汇总', perm: 'purchansing-assignment'}
               }
             ]
           },

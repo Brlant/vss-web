@@ -55,7 +55,7 @@
       <div class="mb-15" style="overflow: hidden">
         <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/purchase/allocation')">返回疫苗采购汇总
         </el-button>
-        <perm label="submit-allocation-plan" v-show="!$route.query.type">
+        <perm label="submit-purchansing-plan" v-show="!$route.query.type">
           <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 ">生成采购合同</el-button>
         </perm>
       </div>
@@ -125,15 +125,17 @@
                 </span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span v-show="status === 1 ">{{item.procurementCount}}
-                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
-                </span>
-                <el-input v-show="status === 0 " v-model.number="item.procurementCount"
-                          @blur="save(item)">
-                  <template slot="append">
-                    <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
-                  </template>
-                </el-input>
+                <!--<span v-show="status === 1 ">{{item.procurementCount}}-->
+                <!--<dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>-->
+                <!--</span>-->
+                <perm label="purchansing-assignment-update">
+                  <el-input v-show="status === 0 " v-model.number="item.procurementCount"
+                            @blur="save(item)">
+                    <template slot="append">
+                      <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
+                    </template>
+                  </el-input>
+                </perm>
               </el-col>
             </el-row>
           </div>

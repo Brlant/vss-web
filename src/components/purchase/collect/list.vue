@@ -102,11 +102,13 @@
                     <!--class="el-icon-t-link"></i></a>-->
                     <!--规划采购-->
                     <!--</span>-->
-                    <span @click.prevent="showDetail(item)">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="el-icon-t-wave"></i></a>
-                    生成采购合同
-                    </span>
+                    <perm label="submit-purchansing-plan">
+                      <span @click.prevent="showDetail(item)">
+                        <a href="#" class="btn-circle" @click.prevent=""><i
+                          class="el-icon-t-wave"></i></a>
+                        生成采购合同
+                      </span>
+                    </perm>
                   </div>
                 </div>
                 <div v-show="item.status === 1">

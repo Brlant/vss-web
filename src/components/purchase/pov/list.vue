@@ -110,7 +110,7 @@
             {{item.num}}</span></div>
         </div>
         <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 11">
-          <perm label="demand-assignment-add" class="opera-btn">
+          <perm label="purchansing-assignment-add" class="opera-btn">
             <span @click="createPurchaseDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
               class="el-icon-t-wave"></i></a><span class="wave-title"> 生成采购汇总单</span></span>
           </perm>
