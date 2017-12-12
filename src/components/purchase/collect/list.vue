@@ -58,7 +58,8 @@
              v-for="(item,key) in waveType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
       </div>
       <div class="order-list clearfix ">
@@ -101,10 +102,10 @@
                     <!--class="el-icon-t-link"></i></a>-->
                     <!--规划采购-->
                     <!--</span>-->
-                   <span @click.prevent="showDetail(item)">
+                    <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-wave"></i></a>
-                    疫苗分配
+                    生成采购合同
                     </span>
                   </div>
                 </div>
@@ -113,7 +114,7 @@
                    <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-wave"></i></a>
-                    查看分配详情
+                    查看详情
                     </span>
                   </div>
                 </div>
@@ -134,7 +135,7 @@
   </div>
 </template>
 <script>
-  import { demandAssignment } from '@/resources';
+  import { demandAssignment, procurementCollect } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -145,7 +146,7 @@
         allocationList: [],
         showRight: false,
         showDetailPart: false,
-        waveType: utils.waveType,
+        waveType: utils.purchaseAllotmentType,
         pager: {
           currentPage: 1,
           count: 0,
@@ -176,7 +177,7 @@
         this.pager.currentPage = pageNo;
         this.loadingData = true;
         let params = Object.assign({}, this.filters);
-        demandAssignment.query(params).then(res => {
+        procurementCollect.query(params).then(res => {
           this.allocationList = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
@@ -184,7 +185,7 @@
         this.queryStatusNum(params);
       },
       queryStatusNum: function (params) {
-        demandAssignment.queryStateNum(params).then(res => {
+        procurementCollect.queryStateNum(params).then(res => {
           let data = res.data;
           this.waveType[0].num = this.obtionStatusNum(data['unfinished']);
           this.waveType[1].num = this.obtionStatusNum(data['complete']);
@@ -211,10 +212,10 @@
         });
       },
       showDetail (item) {
-        this.$router.push({path: '/sale/allocation/task', query: {id: item.id}});
+        this.$router.push({path: '/purchase/allocation/task', query: {id: item.id}});
       },
       purchase (item) {
-        this.$router.push({path: '/sale/allocation/task', query: {id: item.id, type: 'purchase'}});
+        this.$router.push({path: '/purchase/allocation/task', query: {id: item.id, type: 'purchase'}});
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;

@@ -1,6 +1,6 @@
 <template>
   <span v-show="list.length" style="font-weight:600;">
-     {{title}}:<span v-show="showIcon">￥</span>
+     {{title}}<span v-show="showIcon">:￥</span>
     <span v-if="!showIcon">{{ count }}</span>
     <span v-if="showIcon">{{ count | formatMoney }}</span>
   </span>

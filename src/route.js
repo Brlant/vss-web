@@ -63,16 +63,7 @@ const route = [
           //   component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
           //   meta: {moduleId: 'purchase', title: '分配中订单', perm: 'cerp-create-wave'}
           // },
-          {
-            path: '/purchase/agreement',
-            component: resolve => require(['./components/resource/vaccin/purchaseAgreement/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '区二类疫苗目录', perm: 'purchase-agreement'}
-          },
-          {
-            path: '/purchase/contract',
-            component: resolve => require(['./components/purchase/contract/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '采购合同', perm: 'purchasing-contract'}
-          },
+
           {
             path: '/purchase/order/one/class/:id',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
@@ -133,19 +124,36 @@ const route = [
             ]
           },
           {
+            path: '/purchase/allocation',
+            component: resolve => require(['./components/common/parent-route.vue'], resolve),
+            meta: {moduleId: 'purchase', title: '疫苗采购汇总', perm: 'cerp-create-wave'},
+            children: [
+              {
+                path: '',
+                component: resolve => require(['./components/purchase/collect/list.vue'], resolve),
+                meta: {moduleId: 'purchase', title: '疫苗采购汇总', perm: 'demand-assignment-query'}
+              },
+              {
+                path: '/purchase/allocation/task',
+                component: resolve => require(['./components/purchase/collect/allocation.vue'], resolve),
+                meta: {moduleId: 'purchase', title: '疫苗采购汇总', perm: 'demand-assignment-update'}
+              }
+            ]
+          },
+          {
             path: '/sale/allocation',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
-            meta: {moduleId: 'sale', title: '接种点疫苗需求汇总', perm: 'cerp-create-wave'},
+            meta: {moduleId: 'sale', title: '疫苗销售汇总', perm: 'cerp-create-wave'},
             children: [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-                meta: {moduleId: 'sale', title: '接种点疫苗需求汇总', perm: 'demand-assignment-query'}
+                meta: {moduleId: 'sale', title: '疫苗销售汇总', perm: 'demand-assignment-query'}
               },
               {
                 path: '/sale/allocation/task',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'sale', title: '疫苗需求清单', perm: 'demand-assignment-update'}
+                meta: {moduleId: 'sale', title: '疫苗销售需求清单', perm: 'demand-assignment-update'}
               }
             ]
           },

@@ -649,6 +649,22 @@ export const receipt = resource('accounts-receivable', http, {
   }
 });
 
+/**
+ * 采购汇总
+ * @type {the}
+ */
+export const procurementCollect = resource('/procurement-demand', http, {
+  createOrder (key) {
+    return http.put(`/procurement-demand/${key}/sales-ticket`);
+  },
+  queryDetailList (key) {
+    return http.get(`/procurement-demand/${key}/goods`);
+  },
+  queryStateNum (params) {
+    return http.get('/procurement-demand/count', {params});
+  }
+});
+
 // 要货需求分配
 export const demandAssignment = resource('/demand-assignment', http, {
   queryDetailList(key) {

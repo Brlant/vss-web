@@ -46,6 +46,7 @@
       width: auto;
     }
   }
+
 </style>
 <template>
   <div class="order-page">
@@ -102,24 +103,31 @@
       </div>
 
       <div class="order-list-status container clearfix">
-        <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
+        <div class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
              v-for="(item,key) in assignType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">
+            {{item.num}}</span></div>
         </div>
+        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 11">
+          <perm label="demand-assignment-add" class="opera-btn">
+            <span @click="createPurchaseDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
+              class="el-icon-t-wave"></i></a><span class="wave-title"> 生成采购汇总单</span></span>
+          </perm>
+       </span>
         <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1">
           <perm label="demand-assignment-add" class="opera-btn">
             <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
-              class="el-icon-t-wave"></i></a><span class="wave-title"> 生成汇总单</span></span>
+              class="el-icon-t-wave"></i></a><span class="wave-title"> 生成销售汇总单</span></span>
           </perm>
        </span>
       </div>
       <div class="order-list clearfix " style="margin-top: 20px">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="1" v-show="filters.status === 1">
+          <el-col :span="1" v-show="filters.status === 1 || filters.status === 11">
             <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
           </el-col>
-          <el-col :span="filters.status === 1 ? 4: 5">接种点要货申请编号</el-col>
+          <el-col :span="filters.status === 1 || filters.status === 11 ? 4: 5">接种点要货申请编号</el-col>
           <el-col :span="7">接种点</el-col>
           <el-col :span="3">到货需求日期</el-col>
           <el-col :span="5">需求单创建时间</el-col>
@@ -141,12 +149,12 @@
           <div class="order-list-item" v-for="item in demandList"
                :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]">
             <el-row>
-              <el-col :span="1" v-show="filters.status === 1">
+              <el-col :span="1" v-show="filters.status === 1 || filters.status === 11">
                 <div class="el-checkbox-warp" @click.stop.prevent="checkItem(item)">
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
               </el-col>
-              <el-col :span="filters.status === 1 ? 4: 5" class="R pt10">
+              <el-col :span="filters.status === 1 || filters.status === 11 ? 4: 5" class="R pt10">
                 <span>
                   {{ item.id }}
                 </span>
@@ -168,7 +176,7 @@
                   查看详情
                   </span>
                 </div>
-                <div v-show="filters.status === 1">
+                <div v-show="filters.status === 1 || filters.status === 11">
                   <perm label="demand-assignment-cancel">
                      <span @click.prevent="cancel(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
@@ -200,7 +208,7 @@
   </div>
 </template>
 <script>
-  import { demandAssignment, pullSignal, cerpAction } from '@/resources';
+  import { demandAssignment, pullSignal, cerpAction, procurementCollect } from '@/resources';
   import utils from '../../../tools/utils';
   import showForm from './detail/index.vue';
 
@@ -272,11 +280,21 @@
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
         this.pager.currentPage = pageNo;
+        let searchCondition = {};
+        // 查询采购单
+        if (this.filters.status > 10) {
+          searchCondition = Object.assign({}, this.filters, {
+            procurementStatus: this.filters.status === 11 ? 0 : 1
+          });
+          searchCondition.status = undefined;
+        } else {
+          searchCondition = this.filters;
+        }
         let params = Object.assign({
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
           cdcId: orgId
-        }, this.filters);
+        }, searchCondition);
         this.loadingData = true;
         pullSignal.query(params).then(res => {
           res.data.list.forEach(item => {
@@ -297,6 +315,8 @@
           this.assignType[1].num = res.data['create-wave'];
           this.assignType[2].num = res.data['assigned'];
           this.assignType[3].num = res.data['canceled'];
+          this.assignType[4].num = res.data['procurement-pending-audit'];
+          this.assignType[5].num = res.data['procurement-audited'];
         });
       },
       filterOrg: function (query) {// 过滤供货商
@@ -384,6 +404,26 @@
           this.checkList.splice(index, 1);
         }
       },
+      createPurchaseDemand () {
+        if (!this.checkList.length) {
+          this.$notify.info({
+            message: '请选择申请单'
+          });
+          return;
+        }
+        let list = [];
+        this.checkList.forEach(i => list.push(i.id));
+        procurementCollect.save({list}).then(res => {
+          this.$notify.success({
+            message: '生产采购汇总单成功'
+          });
+          this.$router.push({path: '/purchase/allocation/task', query: {id: res.data.id}});
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '生产采购汇总单失败'
+          });
+        });
+      },
       createDemand () {
         if (!this.checkList.length) {
           this.$notify.info({
@@ -395,12 +435,12 @@
         this.checkList.forEach(i => list.push(i.id));
         demandAssignment.save({list}).then(res => {
           this.$notify.success({
-            message: '需求分配成功'
+            message: '生成销售汇总单成功'
           });
           this.$router.push({path: '/sale/allocation/pov', query: {id: res.data.id}});
         }).catch(error => {
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '需求分配失败'
+            message: error.response.data && error.response.data.msg || '生成销售汇总单失败'
           });
         });
       },

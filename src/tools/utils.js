@@ -24,10 +24,12 @@ export default {
     11: {'title': '异常', state: '6', num: ''}
   },
   assignType: {
-    0: {'title': '待分配', status: 1, num: ''},
-    1: {'title': '待生成订单', status: 2, num: ''},
-    2: {'title': '已完成分配', status: 4, num: ''},
-    3: {'title': '已取消', status: 3, num: ''}
+    0: {'title': '待生成销售汇总', status: 1, num: ''},
+    1: {'title': '待分配销售', status: 2, num: ''},
+    2: {'title': '已分配销售', status: 4, num: ''},
+    3: {'title': '已取消', status: 3, num: ''},
+    4: {'title': '待生成采购汇总', status: 11, num: ''},
+    5: {'title': '已生成采购汇总', status: 12, num: ''}
   },
   waveType: {
     0: {'title': '未分配', status: 0, num: ''},
@@ -91,6 +93,10 @@ export default {
   invoiceType: {
     0: {'title': '未付清', status: 0, num: ''},
     1: {'title': '已付清', status: 1, num: ''}
+  },
+  purchaseAllotmentType: {
+    0: {'title': '待生成', status: 0, num: ''},
+    1: {'title': '已生成', status: 1, num: ''}
   },
   /**
    * 格式化地址，已省/市/区显示
