@@ -533,7 +533,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, cerpAction, InWork } from '@/resources';
+  import { Address, cerpAction, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
 
@@ -810,9 +810,9 @@
       },
       changeRemark (form) {
         if (!this.form.remark) {
-          this.form.remark = form.name + '  数量' + form.count;
+          this.form.remark = form.name + '  数量' + form.count + form.materialUnit;
         } else {
-          this.form.remark += '，' + form.name + '  数量' + form.count;
+          this.form.remark += '，' + form.name + '  数量' + form.count + form.materialUnit;
         }
       },
       changeNumber () {

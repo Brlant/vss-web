@@ -36,7 +36,7 @@
 <template>
   <div>
 
-    <el-row style="margin-bottom:0" class="page-main-body padding">
+    <el-row style="margin-bottom:0" class="page-main-body padding" v-loading="loading">
       <el-col :span="12">
         <oms-row label="车牌号">
           {{ plateNumber }}
@@ -148,7 +148,8 @@
     data () {
       return {
         goodsDetails: [],
-        plateNumber: ''
+        plateNumber: '',
+        loading: false
       };
     },
     watch: {
@@ -162,11 +163,13 @@
     },
     methods: {
       getGoodsDetails () {
+        this.loading = true;
         http.get(`/receipt/order/${this.currentOrder.id}`).then(res => {
           this.goodsDetails = this.currentOrder.detailDtoList.slice();
           this.goodsDetails.forEach(i => {
             i.batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
           });
+          this.loading = false;
         });
       },
       getTotalNumber (item) {

@@ -382,12 +382,12 @@
                   </template>
                 </oms-input>
               </el-form-item>
-              <el-form-item label="单价" class="productItem-info" prop="unitPrice">
-                <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
-                           @blur="formatPrice">
-                  <template slot="prepend">¥</template>
-                </oms-input>
-              </el-form-item>
+              <!--<el-form-item label="单价" class="productItem-info" prop="unitPrice">-->
+              <!--<oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"-->
+              <!--@blur="formatPrice">-->
+              <!--<template slot="prepend">¥</template>-->
+              <!--</oms-input>-->
+              <!--</el-form-item>-->
             </el-form>
             <div class="product-info-fix clearfix">
               <el-row>
@@ -431,10 +431,10 @@
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 300px">货品名称</th>
-                <th>货品单价</th>
+                <th style="width: 350px">货品名称</th>
+                <!--<th>货品单价</th>-->
                 <th>货品数量</th>
-                <th>金额</th>
+                <!--<th>金额</th>-->
                 <th>操作</th>
               </tr>
               </thead>
@@ -446,18 +446,18 @@
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
                 </td>
-                <td class="ar">
-                  <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
-                  <span v-if="!Number(product.unitPrice)">-</span>
-                </td>
+                <!--<td class="ar">-->
+                <!--<span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>-->
+                <!--<span v-if="!Number(product.unitPrice)">-</span>-->
+                <!--</td>-->
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar"><span
-                  v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
-                  <span v-if="!Number(product.unitPrice)">-</span>
-                </td>
+                <!--<td class="ar"><span-->
+                <!--v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>-->
+                <!--<span v-if="!Number(product.unitPrice)">-</span>-->
+                <!--</td>-->
                 <td class="goods-btn">
                   <div v-show="defaultIndex === 2">
                     <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
@@ -469,14 +469,14 @@
                   </div>
                 </td>
               </tr>
-              <tr>
-                <td colspan="3" align="right">
-                  <total-count property="amount" :list="form.detailDtoList"></total-count>
-                </td>
-                <td colspan="2" style="font-weight: 600"><span
-                                      v-show="form.detailDtoList.length && totalMoney">合计:</span><span
-                  v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
-              </tr>
+              <!--<tr>-->
+              <!--<td colspan="3" align="right">-->
+              <!--<total-count property="amount" :list="form.detailDtoList"></total-count>-->
+              <!--</td>-->
+              <!--<td colspan="2" style="font-weight: 600"><span-->
+              <!--v-show="form.detailDtoList.length && totalMoney">合计:</span><span-->
+              <!--v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>-->
+              <!--</tr>-->
               </tbody>
             </table>
           </div>
@@ -488,7 +488,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, cerpAction, InWork } from '@/resources';
+  import { Address, BaseInfo, cerpAction, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -708,6 +708,7 @@
     },
     methods: {
       setDefaultValue () {
+        this.form.transportationMeansId = '2';
         this.form.transportationCondition = '0';
         this.form.logisticsProviderId = '国控生物航启路物流中心';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;

@@ -9,6 +9,10 @@
     </el-form-item>
     <el-form-item label="物料数量" style="display: inline-block" v-if="form.name">
       <oms-input type="number" v-model.number="form.count" :min="0">
+        <el-select v-model="form.materialUnit" slot="append" placeholder="请选择单位" style="width:160px">
+          <el-option :value="item.label" :key="item.key" :label="item.label"
+                     v-for="item in materialUnits"></el-option>
+        </el-select>
       </oms-input>
     </el-form-item>
     <el-form-item style="display: inline-block">
@@ -24,10 +28,16 @@
       return {
         form: {
           name: '',
-          count: ''
+          count: '',
+          materialUnit: '张'
         },
         materials: []
       };
+    },
+    computed: {
+      materialUnits () {
+        return this.$store.state.dict['materialUnit'];
+      }
     },
     mounted () {
       this.queryMaterials();
@@ -58,7 +68,8 @@
         this.$emit('changeRemark', this.form);
         this.form = {
           name: '',
-          count: ''
+          count: '',
+          materialUnit: ''
         };
       }
     }

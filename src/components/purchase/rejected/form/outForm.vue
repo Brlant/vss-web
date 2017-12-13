@@ -354,10 +354,10 @@
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                         </span>
-                        <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice
-                          }}</span>
-                        </span>
+                        <!--<span class="select-other-info pull-left"><span-->
+                        <!--v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice-->
+                        <!--}}</span>-->
+                        <!--</span>-->
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                         </span>
@@ -373,12 +373,12 @@
                     </template>
                   </oms-input>
                 </el-form-item>
-                <el-form-item label="单价" class="productItem-info" prop="unitPrice">
-                  <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
-                             @blur="formatPrice">
-                    <template slot="prepend">¥</template>
-                  </oms-input>
-                </el-form-item>
+                <!--<el-form-item label="单价" class="productItem-info" prop="unitPrice">-->
+                <!--<oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"-->
+                <!--@blur="formatPrice">-->
+                <!--<template slot="prepend">¥</template>-->
+                <!--</oms-input>-->
+                <!--</el-form-item>-->
               </el-form>
 
               <div class="product-info-fix clearfix">
@@ -465,11 +465,11 @@
               <table class="table">
                 <thead>
                 <tr>
-                  <th style="width: 300px">货品名称</th>
+                  <th style="width: 350px">货品名称</th>
                   <th>批号</th>
-                  <th>货品单价</th>
+                  <!--<th>货品单价</th>-->
                   <th>货品数量</th>
-                  <th>金额</th>
+                  <!--<th>金额</th>-->
                   <th>操作</th>
                 </tr>
                 </thead>
@@ -482,18 +482,18 @@
                     <span>{{product.orgGoodsName}}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
-                  <td class="ar">
-                    <span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>
-                    <span v-if="!Number(product.unitPrice)">-</span>
-                  </td>
-                  <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
+                  <!--<td class="ar">-->
+                  <!--<span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>-->
+                  <!--<span v-if="!Number(product.unitPrice)">-</span>-->
+                  <!--</td>-->
+                  <td>{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
-                  <td class="ar"><span
-                    v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
-                    <span v-if="!Number(product.unitPrice)">-</span>
-                  </td>
+                  <!--<td class="ar"><span-->
+                  <!--v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>-->
+                  <!--<span v-if="!Number(product.unitPrice)">-</span>-->
+                  <!--</td>-->
                   <td class="goods-btn">
                     <div v-show="defaultIndex === 2">
                       <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
@@ -505,14 +505,14 @@
                     </div>
                   </td>
                 </tr>
-                <tr>
-                  <td colspan="4" align="right">
-                    <total-count property="amount" :list="form.detailDtoList"></total-count>
-                  </td>
-                  <td colspan="2" style="font-weight: 600"><span
-                                        v-show="form.detailDtoList.length && totalMoney">合计:</span><span
-                    v-show="form.detailDtoList.length  && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
-                </tr>
+                <!--<tr>-->
+                <!--<td colspan="4" align="right">-->
+                <!--<total-count property="amount" :list="form.detailDtoList"></total-count>-->
+                <!--</td>-->
+                <!--<td colspan="2" style="font-weight: 600"><span-->
+                <!--v-show="form.detailDtoList.length && totalMoney">合计:</span><span-->
+                <!--v-show="form.detailDtoList.length  && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>-->
+                <!--</tr>-->
                 </tbody>
               </table>
             </div>
@@ -524,7 +524,7 @@
 </template>
 
 <script>
-  import { erpOrder, LogisticsCenter, http, Address, BaseInfo, InWork } from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -754,6 +754,7 @@
     },
     methods: {
       setDefaultValue () {
+        this.form.transportationMeansId = '1';
         this.form.transportationCondition = '0';
       },
       autoSave: function () {
