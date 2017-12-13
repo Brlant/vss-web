@@ -227,18 +227,18 @@
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
-                  <goods-row label="中标价格" :span="8">
-                    <span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}
-                  </goods-row>
-                  <goods-row label="采购价格" :span="8">
-                    <span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}
-                  </goods-row>
+                  <!--<goods-row label="中标价格" :span="8">-->
+                    <!--<span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}-->
+                  <!--</goods-row>-->
+                  <!--<goods-row label="采购价格" :span="8">-->
+                    <!--<span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}-->
+                  <!--</goods-row>-->
                   <goods-row label="供货厂商" :span="8">
                     {{ data.salesFirmName }}
                   </goods-row>
-                  <goods-row label="销售价格" :span="8">
-                    <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
-                  </goods-row>
+                  <!--<goods-row label="销售价格" :span="8">-->
+                    <!--<span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}-->
+                  <!--</goods-row>-->
                   <goods-row label="库存上限" :span="8">
                     {{ data.inventoryUpperLimit }}
                   </goods-row>
