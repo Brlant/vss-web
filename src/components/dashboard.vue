@@ -177,7 +177,7 @@
         };
         let orgId = this.user.userCompanyAddress;
         if (this.level === 3) {
-          Object.assign(params, {povId: orgId});
+          Object.assign(params, {povId: orgId, status: 0});
         } else {
           Object.assign(params, {cdcId: orgId, status: 1});
         }

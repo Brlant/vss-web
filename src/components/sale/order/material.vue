@@ -29,7 +29,7 @@
         form: {
           name: '',
           count: '',
-          materialUnit: '张'
+          materialUnit: ''
         },
         materials: []
       };
@@ -62,6 +62,12 @@
         if (!this.form.count) {
           this.$notify.info({
             message: '请输入物料数量'
+          });
+          return;
+        }
+        if (!this.form.materialUnit) {
+          this.$notify.info({
+            message: '请选择单位'
           });
           return;
         }
