@@ -178,9 +178,6 @@
         };
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
-          if (this.action === 'edit') {
-            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.orgGoodsDto.id);
-          }
         });
       },
       formatUnitPrice() {// 格式化单价，保留两位小数
