@@ -67,8 +67,8 @@
           <td>货品</td>
           <td class="text-center">供货厂商</td>
           <td class="text-center">数量</td>
-          <td class="text-center">单价</td>
-          <td class="text-center">金额</td>
+          <!--<td class="text-center">单价</td>-->
+          <!--<td class="text-center">金额</td>-->
         </tr>
         </thead>
         <tbody>
@@ -86,7 +86,7 @@
               <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
             </el-tooltip>
           </td>
-          <td width="240px">
+          <td width="280px">
             <div>
               <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
                 <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
@@ -110,25 +110,25 @@
             {{item.amount}}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
           </td>
-          <td width="80px" class="text-center">
-            <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
-            <span v-if="!item.unitPrice">-</span>
-          </td>
-          <td class="text-center">
-            <span v-if="item.unitPrice">
-              <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
-            </span>
-            <span v-if="!item.unitPrice">-</span>
-          </td>
+          <!--<td width="80px" class="text-center">-->
+          <!--<span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>-->
+          <!--<span v-if="!item.unitPrice">-</span>-->
+          <!--</td>-->
+          <!--<td class="text-center">-->
+          <!--<span v-if="item.unitPrice">-->
+          <!--<span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}-->
+          <!--</span>-->
+          <!--<span v-if="!item.unitPrice">-</span>-->
+          <!--</td>-->
         </tr>
         <tr class="text-center">
           <td colspan="4" align="right">
             <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
           </td>
-          <td colspan="2" align="right">
-            <span style="font-weight:600;"
-                  v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney}}</span>
-          </td>
+          <!--<td colspan="2" align="right">-->
+          <!--<span style="font-weight:600;"-->
+          <!--v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney}}</span>-->
+          <!--</td>-->
         </tr>
         </tbody>
       </table>

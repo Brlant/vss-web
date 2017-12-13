@@ -166,21 +166,21 @@
           <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in storageCondition"></el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="中标价格" prop="bidPrice">
-        <oms-input type="text" v-model="form.bidPrice" placeholder="请输入中标价格" @blur="formatPrice" @change="setPrice">
-          <template slot="prepend">￥</template>
-        </oms-input>
-      </el-form-item>
-      <el-form-item label="采购价格" prop="procurementPrice">
-        <oms-input type="text" v-model="form.procurementPrice" placeholder="请输入采购价格" @blur="formatPrice">
-          <template slot="prepend">￥</template>
-        </oms-input>
-      </el-form-item>
-      <el-form-item label="销售价格" prop="sellPrice">
-        <oms-input type="text" v-model="form.sellPrice" placeholder="请输入销售价格" @blur="formatPrice">
-          <template slot="prepend">￥</template>
-        </oms-input>
-      </el-form-item>
+      <!--<el-form-item label="中标价格" prop="bidPrice">-->
+      <!--<oms-input type="text" v-model="form.bidPrice" placeholder="请输入中标价格" @blur="formatPrice" @change="setPrice">-->
+      <!--<template slot="prepend">￥</template>-->
+      <!--</oms-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="采购价格" prop="procurementPrice">-->
+      <!--<oms-input type="text" v-model="form.procurementPrice" placeholder="请输入采购价格" @blur="formatPrice">-->
+      <!--<template slot="prepend">￥</template>-->
+      <!--</oms-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="销售价格" prop="sellPrice">-->
+      <!--<oms-input type="text" v-model="form.sellPrice" placeholder="请输入销售价格" @blur="formatPrice">-->
+      <!--<template slot="prepend">￥</template>-->
+      <!--</oms-input>-->
+      <!--</el-form-item>-->
       <el-form-item label="库存上限" prop="inventoryUpperLimit">
         <oms-input type="number" :min="0" v-model.number="form.inventoryUpperLimit" placeholder="请输入库存上限"></oms-input>
       </el-form-item>
@@ -199,7 +199,7 @@
         <!--<el-form ref="otherGoodsForm" :model="form" :rules="otherGoodsRules" label-width="120px">-->
         <el-form-item label="其他组织疫苗">
           <el-select placeholder="请选择组织疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects" remote
-                     :remote-method="queryCombinationGoods" :clearable="true">
+                     :remote-method="queryCombinationGoods" @click.native="queryCombinationGoods('')" :clearable="true">
             <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                        v-for="item in otherGoodsList">
               <div style="overflow: hidden">
@@ -225,8 +225,8 @@
           <el-button type="primary" @click="addGoods">添加</el-button>
         </el-form-item>
         <!--</el-form>-->
-        <ul class="show-list">
-          <li class="list-item"><span>其他组织疫苗</span> <span style="position: absolute;right: 200px">比例</span></li>
+        <ul class="show-list" v-show="selectGoodsList.length">
+          <li class="list-item"><span>其他组织疫苗</span> <span style="position: absolute;right: 200px">数量</span></li>
           <li v-for="item in selectGoodsList" class="list-item">
             <span style="display: inline-block;width: 260px">{{ item.name }}</span>
             <span style="position: absolute;right: 200px;display: inline-block;">{{ item.proportion }}</span>
@@ -243,7 +243,7 @@
   </div>
 </template>
 <script>
-  import {Vaccine, BaseInfo, SuccessfulBidder, Goods, http} from '@/resources';
+  import { BaseInfo, Goods, http, SuccessfulBidder, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -586,9 +586,9 @@
         // 如果选择组合疫苗，则验证组或疫苗的表单
         if (this.form.goodsIsCombination) {
           if (this.selectGoodsList && this.selectGoodsList.length === 0) {
-            this.$notify.error({
+            this.$notify.info({
               duration: 1500,
-              message: '请选择要组合的组织疫苗'
+              message: '请先添加其他组织疫苗'
             });
             return;
           }

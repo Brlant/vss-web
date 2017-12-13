@@ -37,7 +37,7 @@
 </style>
 <template>
   <div>
-    <table class="product-detail-list">
+    <table class="product-detail-list" v-loading="loading">
       <tbody>
       <tr>
         <td colspan="3" width="180px" class="t-head">货品</td>
@@ -101,7 +101,8 @@
       return {
         details: [],
         plateNumber: '',
-        packageType: ['大包装', '中包装', '小包装']
+        packageType: ['大包装', '中包装', '小包装'],
+        loading: false
       };
     },
     watch: {
@@ -113,8 +114,10 @@
     },
     methods: {
       getGoodsDetails () {
+        this.loading = true;
         http.get(`/erp-receipt/order/${this.currentOrder.id}/detail`).then(res => {
           this.details = res.data;
+          this.loading = false;
         });
       }
     }

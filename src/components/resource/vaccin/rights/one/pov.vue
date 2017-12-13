@@ -107,7 +107,7 @@
             <thead>
             <tr class="tr-header">
               <th>接种点</th>
-              <th>销售价格</th>
+              <!--<th>销售价格</th>-->
               <th>操作</th>
             </tr>
             </thead>
@@ -130,9 +130,9 @@
               <td>
                 {{ row.povName }}
               </td>
-              <td>
-                ￥{{row.price ? row.price : 0 }}
-              </td>
+              <!--<td>-->
+              <!--￥{{row.price ? row.price : 0 }}-->
+              <!--</td>-->
               <td>
                 <!--<perm label="vaccine-authorization-update">-->
                 <!--<a href="#" @click.stop.prevent="edit(row)"><i class="el-icon-t-edit"></i>编辑</a>-->
@@ -164,7 +164,7 @@
 </template>
 <script>
   import addForm from './form.vue';
-  import { cerpAction, Vaccine, VaccineRights, PurchaseAgreement } from '@/resources';
+  import { cerpAction, PurchaseAgreement, Vaccine, VaccineRights } from '@/resources';
 
   export default {
     components: {
