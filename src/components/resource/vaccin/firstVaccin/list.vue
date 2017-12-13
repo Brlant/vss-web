@@ -228,16 +228,16 @@
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
                   <!--<goods-row label="中标价格" :span="8">-->
-                  <!--<span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}-->
+                    <!--<span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}-->
                   <!--</goods-row>-->
                   <!--<goods-row label="采购价格" :span="8">-->
-                  <!--<span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}-->
+                    <!--<span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}-->
                   <!--</goods-row>-->
                   <goods-row label="供货厂商" :span="8">
                     {{ data.salesFirmName }}
                   </goods-row>
                   <!--<goods-row label="销售价格" :span="8">-->
-                  <!--<span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}-->
+                    <!--<span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}-->
                   <!--</goods-row>-->
                   <goods-row label="库存上限" :span="8">
                     {{ data.inventoryUpperLimit }}
@@ -442,7 +442,7 @@
 </template>
 <script>
   import goodsPart from './form/form.vue';
-  import { Vaccine } from '@/resources';
+  import {Vaccine} from '@/resources';
   import goodsRow from './goods.row.vue';
   import utils from '@/tools/utils';
   import attachmentLists from './../../../common/attachmentList.vue';
