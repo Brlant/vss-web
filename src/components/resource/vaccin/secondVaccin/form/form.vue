@@ -416,7 +416,7 @@
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
           if (this.action === 'edit') {
-            let isExist = this.orgList.some(item => this.form.orgList.id === item.id);
+            let isExist = this.orgList.some(item => this.form.orgId === item.id);
             if (!isExist) {
               this.orgList.push({
                 id: this.form.salesFirm,
