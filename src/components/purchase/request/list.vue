@@ -234,7 +234,7 @@
         dataRows: [],
         showTypeList: [],
         requestType: utils.requestType,
-        activeStatus: 0,
+        activeStatus: 1,
         filters: {
           status: '',
           keyWord: ''
@@ -339,7 +339,7 @@
           cdcId: this.user.userCompanyAddress
         }, this.filters);
         pullSignal.queryCount(params).then(res => {
-          this.requestType[0].num = res.data['all'];
+          // this.requestType[0].num = res.data['all'];
           this.requestType[1].num = res.data['pending-audit'];
           this.requestType[2].num = res.data['audited'];
           this.requestType[3].num = res.data['create-wave'];

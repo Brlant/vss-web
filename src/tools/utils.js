@@ -3,7 +3,6 @@ import address from './address';
 export default {
   address: address.value,
   requestType: {
-    0: {'title': '所有', status: null, num: ''},
     1: {'title': '待审批', status: 0, num: ''},
     2: {'title': '待疾控处理', status: 1, num: ''},
     3: {'title': '待生成订单', status: 2, num: ''},
