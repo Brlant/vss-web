@@ -14,9 +14,8 @@
   <el-form ref="form" :rules="rules" :model="form" label-width="120px" class="demo-ruleForm">
     <h2 class="clearfix">{{showTitle}}区二类疫苗</h2>
     <el-form-item label="疫苗" prop="orgGoodsId" class="search-input">
-      <el-select placeholder="请选择疫苗" v-model="form.orgGoodsId" filterable remote :remote-method="getOmsGoods"
-                 @click.native="getOmsGoods('')"
-                 :clearable="true" popper-class="good-selects" @change="setSalesFirmName(form.orgGoodsId)">
+      <el-select filterable remote placeholder="请选择疫苗" :remote-method="getOmsGoods" @click.native="getOmsGoods('')"
+                 :clearable="true" v-model="form.orgGoodsId" popperClass="good-selects" @clear="clearOmsGoods">
         <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                    v-for="item in goodsList">
           <div style="overflow: hidden">
@@ -123,41 +122,17 @@
         }
         if (this.action === 'edit') {
           this.form = Object.assign({}, val);
-        }
-        this.getOmsGoods();
-      },
-      actionType: function (val) {
-        if (!val) {
-          this.$refs['form'].resetFields();
-        }
-      }
-    },
-    methods: {
-      setSalesFirmName: function (item) {
-        if (this.action !== 'edit') {
-          if (item) {
-            this.goodsList.forEach(val => {
-              if (val.orgGoodsDto.id === item) {
-                this.salesFirmName = val.orgGoodsDto.salesFirmName;
-                this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
-                this.form.unitPrice = utils.autoformatDecimalPoint(val.orgGoodsDto.procurementPrice.toString());
-              }
-            });
-          }
-        }
-      },
-      getOmsGoods: function (keyWord) {// 得到组织疫苗列表
-        let params = {
-          keyWord: keyWord,
-          deleteFlag: false,
-          status: true
-        };
-        Vaccine.query(params).then(res => {
-          this.goodsList = res.data.list;
-          if (this.action === 'edit') {
+          this.salesFirmName = this.form.supplyCompanyName;
+          let params = {
+            deleteFlag: false,
+            status: true
+          };
+          Vaccine.query(params).then(res => {
+            this.goodsList = res.data.list;
             let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.orgGoodsDto.id);
             if (!isExist) {
               this.goodsList.push({
+                list: [],
                 orgGoodsDto: {
                   id: this.form.orgGoodsId,
                   name: this.form.orgGoodsName,
@@ -166,7 +141,43 @@
                 }
               });
             }
-          }
+          });
+        }
+      },
+      actionType: function (val) {
+        if (!val) {
+          this.$refs['form'].resetFields();
+        }
+      },
+      'form.orgGoodsId': function (item) {
+        if (item) {
+          this.goodsList.forEach(val => {
+            if (val.orgGoodsDto.id === item) {
+              this.salesFirmName = val.orgGoodsDto.salesFirmName;
+              this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
+              this.form.unitPrice = utils.autoformatDecimalPoint(val.orgGoodsDto.procurementPrice.toString());
+            }
+          });
+        }
+      }
+    },
+    mounted() {
+    },
+    methods: {
+      clearOmsGoods: function () {
+        this.salesFirmName = '';
+        this.form.supplyCompanyId = '';
+        this.form.unitPrice = '';
+      },
+      getOmsGoods: function (keyWord) {// 得到组织疫苗列表
+        this.goodsList = [];
+        let params = {
+          keyWord: keyWord,
+          deleteFlag: false,
+          status: true
+        };
+        Vaccine.query(params).then(res => {
+          this.goodsList = res.data.list;
         });
       },
       formatUnitPrice() {// 格式化单价，保留两位小数
