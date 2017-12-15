@@ -269,7 +269,7 @@
               <el-select filterable remote placeholder="请输入名称搜索销售价格" :remote-method="filterPriceGroup"
                          :clearable="true" :default-first-option="true"
                          v-model="form.salePriceGroupId"
-                         @change="changeSelect" @click.native="filterPriceGroup('')" popperClass="good-selects">
+                         @change="changeSelect" @click.native.once="filterPriceGroup('')" popperClass="good-selects">
                 <el-option :value="item.id" :key="item.id" :label="'￥' +item.unitPrice"
                            v-for="item in prices">
                   <div style="overflow: hidden">
@@ -292,7 +292,7 @@
   </div>
 </template>
 <script>
-  import { Vaccine, BriceGroup, cerpAction, VaccineRights, http } from '@/resources';
+  import { BriceGroup, cerpAction, http, Vaccine, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -330,11 +330,13 @@
             subordinateId: val.povId,
             subordinateName: val.povName
           });
+          this.prices = [];
           this.prices.push({
             id: val.salePriceGroupId,
-            name: val.salePriceGroupName
+            name: val.salePriceGroupName,
+            unitPrice: val.price
           });
-          this.form = val;
+          this.form = JSON.parse(JSON.stringify(val));
           this.form.povList = [];
         } else {
           this.form = {
