@@ -184,7 +184,7 @@
         <div class="status-item"
              :class="{'active':key===activeStatus}"
              v-for="(item,key) in successBidderType"
-             @click="changeStatus(item)">
+             @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
@@ -413,8 +413,8 @@
         this.showFlag = true;
         this.getPageList();
       },
-      changeStatus: function (item) {// 订单分类改变
-        this.activeStatus = item.availabilityStatus;
+      changeStatus: function (item, key) {// 订单分类改变
+        this.activeStatus = key;
         this.searchCondition.availabilityStatus = item.availabilityStatus;
         this.getPageList(1);
       },
