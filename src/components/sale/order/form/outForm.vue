@@ -389,6 +389,20 @@
               <div class="product-info-fix clearfix">
                 <el-row>
                   <el-col :span="12">
+                    <oms-row label="大包装" :span="8" v-show="product.fixInfo.goodsDto.largePacking">
+                      {{product.fixInfo.goodsDto.largePacking}}
+                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                      /
+                      <dict :dict-group="'shipmentPackingUnit'"
+                            :dict-key="product.fixInfo.goodsDto.largePackageUnit"></dict>
+                    </oms-row>
+                    <oms-row label="中包装" :span="8" v-show="product.fixInfo.goodsDto.mediumPacking">
+                      {{product.fixInfo.goodsDto.mediumPacking}}
+                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                      /
+                      <dict :dict-group="'shipmentPackingUnit'"
+                            :dict-key="product.fixInfo.goodsDto.mediumPackageUnit"></dict>
+                    </oms-row>
                     <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
                       {{product.fixInfo.goodsDto.smallPacking}}
                       <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
