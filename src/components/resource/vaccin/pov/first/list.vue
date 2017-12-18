@@ -364,6 +364,17 @@
                   </goods-row>
                 </el-col>
               </el-row>
+              <div class="border-show"></div>
+              <el-row>
+                <el-col :span="4" class="text-right" style="font-size: 12px">
+                  [ 附件 ]
+                </el-col>
+                <el-col :span="12">
+                  <attachment-lists attachmentIdList="" :objectId="data.goodsDto.id"
+                                    :objectType="'goodsDocument'"
+                                    :permission="'goods-attachment-download'"></attachment-lists>
+                </el-col>
+              </el-row>
               <div class="border-show" v-show="combinationList.length>0"></div>
               <el-row v-show="combinationList.length>0">
                 <el-col :span="3" class="text-right" style="font-size: 12px">
