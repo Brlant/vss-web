@@ -167,121 +167,122 @@
           </div>
         </div>
         <div class="d-table-right">
-          <div v-if="!data.id" class="empty-info">
-            请选择
-          </div>
-          <div v-else>
-            <h2 class="clearfix">
-            </h2>
-            <div class="page-main-body min-row">
-              <el-row>
-                <el-col :span="4" class="text-right" style="font-size: 12px">
-                  [ 产品图片 ]
-                </el-col>
-                <el-col :span="12" class="text-right" style="font-size: 12px">
-                  [ 疫苗信息 ]
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="12" style="padding-left:120px;">
-                  <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
-                    <img :src="data.goodsDto.photo "/>
-                  </div>
-                </el-col>
-                <el-col :span="12">
-                  <goods-row label="疫苗编号" :span="8">
-                    {{ data.goodsNo}}
-                  </goods-row>
-                  <goods-row label="疫苗名称" :span="8">
-                    {{ data.name}}
-                  </goods-row>
-                  <goods-row label="接种点采购价格" :span="8">
-                    <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
-                  </goods-row>
-                  <!--<goods-row label="疫苗分类" :span="8">-->
-                  <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
-                  <!--</goods-row>-->
-                  <goods-row label="疫苗标志" :span="8">
-                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
-                  </goods-row>
-                  <goods-row label="储存条件" :span="8">
-                    <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
-                  </goods-row>
-                  <goods-row label="供货厂商" :span="8">
-                    {{ data.salesFirmName }}
-                  </goods-row>
-                  <goods-row label="是否组合" :span="8" v-show="data.goodsIsCombination">
-                    {{ data.goodsIsCombination | formatStatus}}
-                  </goods-row>
-                  <goods-row label="是否计价" :span="8" v-show="data.valuationFlag">
-                    {{ data.valuationFlag | formatStatus}}
-                  </goods-row>
-                </el-col>
-              </el-row>
-              <div class="border-show"></div>
-              <el-row>
-                <el-col :span="4" class="text-right" style="font-size: 12px">
-                  [ 疫苗标准产品信息 ]
-                </el-col>
-                <el-col :span="12" class="text-right" style="font-size: 12px">
-                  [ 包装存储信息 ]
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="12">
-                  <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
-                  <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
-                  <goods-row label="疫苗ID" :span="12">{{ data.goodsDto.id }}</goods-row>
-                  <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>
-                  <goods-row label="剂型" :span="12">
-                    <dict :dict-group="'dosageForm'" :dict-key="data.goodsDto.dosageForm"></dict>
-                  </goods-row>
-                  <goods-row label="基本单位" :span="12">
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"></dict>
-                  </goods-row>
-                  <goods-row label="批准文号" :span="12">{{ data.goodsDto.approvalNumber }}</goods-row>
-                </el-col>
-                <el-col :span="12">
-                  <goods-row label="存储类别" :span="8">
-                    <dict :dict-group="'storageType'" :dict-key="data.goodsDto.storageType"></dict>
-                  </goods-row>
-                  <goods-row label="储存条件" :span="8">
-                    <dict :dict-group="'storageCondition'" :dict-key="data.goodsDto.storageConditionId"></dict>
-                  </goods-row>
-                  <goods-row label="运输温度" :span="8">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+            <div v-if="!data.id" class="empty-info">
+              请选择
+            </div>
+            <div v-else>
+              <h2 class="clearfix">
+              </h2>
+              <div class="page-main-body min-row">
+                <el-row>
+                  <el-col :span="4" class="text-right" style="font-size: 12px">
+                    [ 产品图片 ]
+                  </el-col>
+                  <el-col :span="12" class="text-right" style="font-size: 12px">
+                    [ 疫苗信息 ]
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="12" style="padding-left:120px;">
+                    <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
+                      <img :src="data.goodsDto.photo "/>
+                    </div>
+                  </el-col>
+                  <el-col :span="12">
+                    <goods-row label="疫苗编号" :span="8">
+                      {{ data.goodsNo}}
+                    </goods-row>
+                    <goods-row label="疫苗名称" :span="8">
+                      {{ data.name}}
+                    </goods-row>
+                    <goods-row label="接种点采购价格" :span="8">
+                      <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
+                    </goods-row>
+                    <!--<goods-row label="疫苗分类" :span="8">-->
+                    <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
+                    <!--</goods-row>-->
+                    <goods-row label="疫苗标志" :span="8">
+                      <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
+                    </goods-row>
+                    <goods-row label="储存条件" :span="8">
+                      <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
+                    </goods-row>
+                    <goods-row label="供货厂商" :span="8">
+                      {{ data.salesFirmName }}
+                    </goods-row>
+                    <goods-row label="是否组合" :span="8" v-show="data.goodsIsCombination">
+                      {{ data.goodsIsCombination | formatStatus}}
+                    </goods-row>
+                    <goods-row label="是否计价" :span="8" v-show="data.valuationFlag">
+                      {{ data.valuationFlag | formatStatus}}
+                    </goods-row>
+                  </el-col>
+                </el-row>
+                <div class="border-show"></div>
+                <el-row>
+                  <el-col :span="4" class="text-right" style="font-size: 12px">
+                    [ 疫苗标准产品信息 ]
+                  </el-col>
+                  <el-col :span="12" class="text-right" style="font-size: 12px">
+                    [ 包装存储信息 ]
+                  </el-col>
+                </el-row>
+                <el-row>
+                  <el-col :span="12">
+                    <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
+                    <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
+                    <goods-row label="疫苗ID" :span="12">{{ data.goodsDto.id }}</goods-row>
+                    <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>
+                    <goods-row label="剂型" :span="12">
+                      <dict :dict-group="'dosageForm'" :dict-key="data.goodsDto.dosageForm"></dict>
+                    </goods-row>
+                    <goods-row label="基本单位" :span="12">
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"></dict>
+                    </goods-row>
+                    <goods-row label="批准文号" :span="12">{{ data.goodsDto.approvalNumber }}</goods-row>
+                  </el-col>
+                  <el-col :span="12">
+                    <goods-row label="存储类别" :span="8">
+                      <dict :dict-group="'storageType'" :dict-key="data.goodsDto.storageType"></dict>
+                    </goods-row>
+                    <goods-row label="储存条件" :span="8">
+                      <dict :dict-group="'storageCondition'" :dict-key="data.goodsDto.storageConditionId"></dict>
+                    </goods-row>
+                    <goods-row label="运输温度" :span="8">
                     <span
                       v-show="data.goodsDto.transportStartTemperature">{{ data.goodsDto.transportStartTemperature}} ℃ - {{ data.goodsDto.transportEndTemperature
                       }} ℃</span>
-                  </goods-row>
-                  <goods-row label="冷藏存储温度" :span="8">
+                    </goods-row>
+                    <goods-row label="冷藏存储温度" :span="8">
                     <span
                       v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ - {{ data.goodsDto.storageEndTemperature}} ℃
                     </span>
-                  </goods-row>
-                  <goods-row label="最小发货单位" :span="8">
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="data.goodsDto.shipmentPackingUnit"
-                          v-show="data.goodsDto.packageSize"></dict>
-                    = {{ data.goodsDto.packageSize }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.largePacking"></dict>
-                  </goods-row>
-                  <goods-row label="大包装" :span="8" v-show="data.goodsDto.largePacking">
-                    {{ data.goodsDto.largePacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.largePacking"></dict>
-                  </goods-row>
-                  <goods-row label="中包装" :span="8" v-show="data.goodsDto.measurementUnit">
-                    {{ data.goodsDto.mediumPacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.mediumPacking"></dict>
-                  </goods-row>
-                  <goods-row label="小包装" :span="8" v-show="data.goodsDto.smallPacking">
-                    {{ data.goodsDto.smallPacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.smallPacking"></dict>
-                  </goods-row>
-                </el-col>
-              </el-row>
+                    </goods-row>
+                    <goods-row label="最小发货单位" :span="8">
+                      <dict :dict-group="'shipmentPackingUnit'" :dict-key="data.goodsDto.shipmentPackingUnit"
+                            v-show="data.goodsDto.packageSize"></dict>
+                      = {{ data.goodsDto.packageSize }}
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
+                            v-show="data.goodsDto.largePacking"></dict>
+                    </goods-row>
+                    <goods-row label="大包装" :span="8" v-show="data.goodsDto.largePacking">
+                      {{ data.goodsDto.largePacking }}
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
+                            v-show="data.goodsDto.largePacking"></dict>
+                    </goods-row>
+                    <goods-row label="中包装" :span="8" v-show="data.goodsDto.measurementUnit">
+                      {{ data.goodsDto.mediumPacking }}
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
+                            v-show="data.goodsDto.mediumPacking"></dict>
+                    </goods-row>
+                    <goods-row label="小包装" :span="8" v-show="data.goodsDto.smallPacking">
+                      {{ data.goodsDto.smallPacking }}
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
+                            v-show="data.goodsDto.smallPacking"></dict>
+                    </goods-row>
+                  </el-col>
+                </el-row>
 
               <div class="border-show"></div>
               <el-row>
@@ -395,13 +396,14 @@
               </el-row>
             </div>
           </div>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {Vaccine, VaccineRights} from '@/resources';
+  import { Vaccine, VaccineRights } from '@/resources';
   import goodsRow from './goods.row.vue';
   import utils from '@/tools/utils';
   import attachmentLists from '@/components/common/attachmentList.vue';
@@ -449,7 +451,9 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height - 25) + 'px';
+        return height;
       }
     },
     methods: {
