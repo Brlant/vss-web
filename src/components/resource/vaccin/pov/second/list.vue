@@ -407,7 +407,7 @@
   import attachmentLists from '@/common/attachmentList.vue';
 
   export default {
-    components: {goodsRow,attachmentLists},
+    components: {goodsRow, attachmentLists},
     data: function () {
       return {
         showRight: false,
