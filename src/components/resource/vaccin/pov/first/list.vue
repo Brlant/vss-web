@@ -404,7 +404,7 @@
   import {Vaccine, VaccineRights} from '@/resources';
   import goodsRow from './goods.row.vue';
   import utils from '@/tools/utils';
-  import attachmentLists from '@/common/attachmentList.vue';
+  import attachmentLists from '@/components/common/attachmentList.vue';
 
   export default {
     components: {goodsRow, attachmentLists},
