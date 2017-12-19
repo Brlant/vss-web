@@ -370,7 +370,9 @@
                 <el-col :span="4" class="text-right" style="font-size: 12px">
                   [ 附件 ]
                 </el-col>
-                <el-col :span="12">
+              </el-row>
+              <el-row>
+                <el-col :span="12" style="padding-left:120px;">
                   <attachment-lists attachmentIdList="" :objectId="data.goodsDto.id"
                                     :objectType="'goodsDocument'"
                                     :permission="'goods-attachment-download'"></attachment-lists>
@@ -378,7 +380,7 @@
               </el-row>
               <div class="border-show" v-show="combinationList.length>0"></div>
               <el-row v-show="combinationList.length>0">
-                <el-col :span="3" class="text-right" style="font-size: 12px">
+                <el-col :span="4" class="text-right" style="font-size: 12px">
                   [ 组合明细 ]
                 </el-col>
               </el-row>
@@ -407,9 +409,13 @@
   import goodsRow from './goods.row.vue';
   import utils from '@/tools/utils';
   import attachmentLists from '@/components/common/attachmentList.vue';
+  import ElRow from 'element-ui/packages/row/src/row';
 
   export default {
-    components: {goodsRow, attachmentLists},
+    components: {
+      ElRow,
+      goodsRow, attachmentLists
+    },
     data: function () {
       return {
         showRight: false,
