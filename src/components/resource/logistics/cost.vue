@@ -73,6 +73,10 @@
     margin-right: 40px;
     margin-bottom: 20px;
   }
+
+  .d-table > div.d-table-right {
+    padding: 10px 20px;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -156,8 +160,9 @@
 <script>
   import addForm from './form.vue';
   import secondForm from './secondForm.vue';
-  import {http} from '../../../resources';
+  import { http } from '../../../resources';
   import utils from '../../../tools/utils';
+
   export default {
     components: {
       addForm,

@@ -277,7 +277,7 @@
 
 </template>
 <script>
-  import { receipt, Vaccine, VaccineRights } from '@/resources';
+  import { receipt, VaccineRights } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.out.vue';
@@ -341,7 +341,9 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height + 10) + 'px';
+        return height;
       },
       user () {
         return this.$store.state.user;
