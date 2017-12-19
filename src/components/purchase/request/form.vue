@@ -234,7 +234,12 @@
             </el-form-item>
             <el-form-item label="接种点仓库" prop="warehouseId">
               <el-select placeholder="请选择接种点仓库" v-model="form.warehouseId" filterable clearable>
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
+                <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">-->
+                <!--</el-option>-->
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
+                           v-for="item in warehouses">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -390,7 +395,7 @@
 </template>
 
 <script>
-  import { pullSignal, cerpAction, Address, VaccineRights, http } from '@/resources';
+  import { Address, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -507,6 +512,13 @@
       }
     },
     methods: {
+      filterAddressLabel (item) {
+        let name = item.name ? '【' + item.name + '】' : '';
+        return name + this.getWarehouseAdress(item);
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+      },
       editOrderInfo () {
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
           return {

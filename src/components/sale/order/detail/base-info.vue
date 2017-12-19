@@ -58,7 +58,7 @@
           </el-form-item>
           <el-form-item label="接种点仓库" prop="transportationAddress">
             <el-select placeholder="请选择接种点仓库" v-model="currentOrder.transportationAddress" filterable clearable>
-              <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
+              <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                 <span class="pull-left">{{ item.name }}</span>
                 <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
               </el-option>
@@ -79,7 +79,7 @@
           </el-form-item>
           <el-form-item label="疾控仓库地址" prop="orgAddress">
             <el-select placeholder="请选择疾控仓库地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
-              <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id"
+              <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                          v-for="item in LogisticsCenter">
                 <span class="pull-left">{{ item.name }}</span>
                 <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
@@ -310,6 +310,10 @@
       }
     },
     methods: {
+      filterAddressLabel (item) {
+        let name = item.name ? '【' + item.name + '】' : '';
+        return name + this.getWarehouseAdress(item);
+      },
       getTimeTitle: function (item) {
         return item.transportationMeansId === '0' ? item.bizType === '1' ? '预计出库' : '预计送货'
           : item.transportationMeansId === '1' ? '预计提货'
