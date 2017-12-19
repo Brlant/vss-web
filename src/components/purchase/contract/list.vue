@@ -220,15 +220,8 @@
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <div>
-                  <perm label="purchasing-contract-edit">
-                   <span @click.stop.prevent="editContract(item)">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="el-icon-t-edit"></i></a>
-                    编辑
-                  </span>
-                  </perm>
-                </div>
+                <!--<div>-->
+                <!--</div>-->
                 <!--<perm label="purchasing-contract-add">-->
                 <!--<div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">-->
                 <!--<el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>-->
@@ -244,14 +237,12 @@
                 </div>
                 <div>
                   <perm label="purchasing-contract-edit">
-                    <span @click.stop.prevent="stopContract(item)" v-if="item.availabilityStatus">
+                     <span @click.stop.prevent="editContract(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
-                        class="el-icon-t-forbidden"></i></a>
-                      停用
+                        class="el-icon-t-edit"></i></a>
+                      编辑
                     </span>
                   </perm>
-                </div>
-                <div>
                   <perm label="purchasing-contract-edit">
                     <span @click.stop.prevent="startContract(item)" v-if="!item.availabilityStatus">
                       <a href="#" class="btn-circle" @click.prevent=""><i
@@ -259,7 +250,23 @@
                       启用
                     </span>
                   </perm>
+                  <perm label="purchasing-contract-edit">
+                    <span @click.stop.prevent="stopContract(item)" v-if="item.availabilityStatus">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="el-icon-t-forbidden"></i></a>
+                      停用
+                    </span>
+                  </perm>
                 </div>
+                <!--<div>-->
+                  <!--<perm label="purchasing-contract-edit">-->
+                    <!--<span @click.stop.prevent="startContract(item)" v-if="!item.availabilityStatus">-->
+                      <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
+                        <!--class="el-icon-t-start"></i></a>-->
+                      <!--启用-->
+                    <!--</span>-->
+                  <!--</perm>-->
+                <!--</div>-->
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
