@@ -288,6 +288,12 @@
                 :action="action"
                 @right-close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="resetRightBox"
+                :css="{'width':'1000px','padding':0}">
+      <edit-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
+                 :action="action"
+                 @right-close="resetRightBox"></edit-form>
+    </page-right>
     <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
       <show-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
@@ -305,12 +311,13 @@
   import utils from '@/tools/utils';
   import addForm from './form/InForm.vue';
   import showForm from './form/showForm.vue';
+  import editForm from './form/editForm.vue';
   import orderForm from '../order/show.order.in.vue';
   import {Order, BaseInfo, PurchaseContract} from '@/resources';
 
   export default {
     components: {
-      addForm, showForm, orderForm
+      addForm, showForm, orderForm, editForm
     },
     data: function () {
       return {
@@ -318,13 +325,15 @@
         showItemRight: false,
         showDetail: false,
         showOrderRight: false,
+        showEditItemRight: false,
         showSearch: false,
         currentOrderId: '',
         orderId: '',
         state: '',
         orderList: [],
         filters: {
-          availabilityStatus: true
+          availabilityStatus: true,
+          used: false
         },
         searchCondition: {
           keyWord: '',
@@ -332,8 +341,9 @@
         },
         expectedTime: '',
         orgType: {
-          0: {'title': '正常', 'num': '', 'availabilityStatus': true},
-          1: {'title': '停用', 'num': '', 'availabilityStatus': false}
+          0: {'title': '待生成订单', 'num': '', 'used': false, 'availabilityStatus': true},
+          1: {'title': '正常', 'num': '', 'used': true, 'availabilityStatus': true},
+          2: {'title': '停用', 'num': '', 'availabilityStatus': false}
         },
         activeStatus: 0,
         orgList: [], // 来源单位列表
@@ -463,7 +473,7 @@
       editContract(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
-        this.showItemRight = true;
+        this.showEditItemRight = true;
         this.defaultIndex = 2;
       },
       showContract(item) {
@@ -500,6 +510,7 @@
         this.showDetail = false;
         this.showItemRight = false;
         this.showOrderRight = false;
+        this.showEditItemRight = false;
         this.defaultIndex = 0;
         this.action = '';
       },
@@ -563,8 +574,9 @@
       queryStatusNum: function (params) {
         PurchaseContract.queryStateNum(params).then(res => {
           let data = res.data;
-          this.orgType[0].num = this.obtionStatusNum(data['invalid']);
+          this.orgType[0].num = this.obtionStatusNum(data['unused']);
           this.orgType[1].num = this.obtionStatusNum(data['valid']);
+          this.orgType[2].num = this.obtionStatusNum(data['invalid']);
         });
       },
       obtionStatusNum: function (num) {
@@ -576,6 +588,7 @@
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;
         this.filters.availabilityStatus = item.availabilityStatus;
+        this.filters.used = item.used;
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
