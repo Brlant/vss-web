@@ -69,14 +69,13 @@
                 <el-select placeholder="请输入名称搜索接种点" v-model="searchWord.povId" filterable remote
                            :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
                            popperClass="good-selects">
-                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                             v-for="org in orgList">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.subordinateCode}}
+                        <span>系统代码</span> {{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -208,7 +207,7 @@
   </div>
 </template>
 <script>
-  import { demandAssignment, pullSignal, cerpAction, procurementCollect } from '@/resources';
+  import { BaseInfo, demandAssignment, procurementCollect, pullSignal } from '@/resources';
   import utils from '../../../tools/utils';
   import showForm from './detail/index.vue';
 
@@ -320,11 +319,14 @@
         });
       },
       filterOrg: function (query) {// 过滤供货商
-        let params = Object.assign({}, {
-          keyWord: query
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       showDetail (item) {

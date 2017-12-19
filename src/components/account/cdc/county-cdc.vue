@@ -67,6 +67,10 @@
   .minor-part {
     color: #999;
   }
+
+  .d-table > div.d-table-right {
+    padding: 10px 20px;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -167,7 +171,8 @@
   </div>
 </template>
 <script>
-  import {cerpAction, cerpAccess} from '@/resources';
+  import { cerpAccess, cerpAction } from '@/resources';
+
   export default {
     data () {
       return {

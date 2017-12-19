@@ -73,7 +73,7 @@
   }
 
   .d-table > div.d-table-right {
-    padding: 10px;
+    padding: 10px 20px;
   }
 </style>
 <template>

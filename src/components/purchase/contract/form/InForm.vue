@@ -287,7 +287,8 @@
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
               <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in supplierWarehouses">
+                <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id"
+                           v-for="item in supplierWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -308,7 +309,8 @@
             </el-form-item>
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
               <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in cdcWarehouses">
+                <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id"
+                           v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -383,6 +385,20 @@
             <div class="product-info-fix clearfix">
               <el-row>
                 <el-col :span="12">
+                  <oms-row label="大包装" :span="8" v-show="product.fixInfo.goodsDto.largePacking">
+                    {{product.fixInfo.goodsDto.largePacking}}
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'"
+                          :dict-key="product.fixInfo.goodsDto.largePackageUnit"></dict>
+                  </oms-row>
+                  <oms-row label="中包装" :span="8" v-show="product.fixInfo.goodsDto.mediumPacking">
+                    {{product.fixInfo.goodsDto.mediumPacking}}
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'"
+                          :dict-key="product.fixInfo.goodsDto.mediumPackageUnit"></dict>
+                  </oms-row>
                   <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
                     {{product.fixInfo.goodsDto.smallPacking}}
                     <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
@@ -478,7 +494,7 @@
 </template>
 
 <script>
-  import { PurchaseContract, LogisticsCenter, http, Address, BaseInfo, InWork } from './../../../../resources';
+  import { Address, BaseInfo, http, LogisticsCenter, PurchaseContract } from './../../../../resources';
   import utils from '@/tools/utils';
 
   export default {

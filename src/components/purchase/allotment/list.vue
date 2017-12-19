@@ -257,7 +257,6 @@
               <el-col :span="4">
                 <div>
                   {{getOrderStatus(item)}}
-                  <el-tag type="danger" v-show="item.exceptionFlag">异常({{ item.exceptionCount}})</el-tag>
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn" v-if="filters.state === '6' ">
@@ -300,7 +299,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
-  import { Order, BaseInfo, erpOrder } from '@/resources';
+  import { BaseInfo, erpOrder, Order } from '@/resources';
 
   export default {
     components: {

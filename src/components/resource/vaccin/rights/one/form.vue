@@ -271,8 +271,7 @@
   </div>
 </template>
 <script>
-  import { Vaccine, BriceGroup, cerpAction, VaccineRights, http } from '@/resources';
-  import utils from '@/tools/utils';
+  import { http, VaccineRights } from '@/resources';
 
   export default {
     props: {
@@ -339,6 +338,7 @@
         });
       },
       filterMethod (query, item) {
+        if (!query) return true;
         return item.followOrgName && item.followOrgName.indexOf(query) > -1;
       },
       onSubmit () {

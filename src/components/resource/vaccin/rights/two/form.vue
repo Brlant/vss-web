@@ -292,7 +292,7 @@
   </div>
 </template>
 <script>
-  import { BriceGroup, cerpAction, http, Vaccine, VaccineRights } from '@/resources';
+  import { BriceGroup, cerpAction, http, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -390,6 +390,7 @@
         });
       },
       filterMethod (query, item) {
+        if (!query) return true;
         return item.subordinateName && item.subordinateName.indexOf(query) > -1;
       },
       onSubmit () {

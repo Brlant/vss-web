@@ -164,7 +164,7 @@
 </template>
 <script>
   import addForm from './form.vue';
-  import { cerpAction, PurchaseAgreement, Vaccine, VaccineRights } from '@/resources';
+  import { cerpAction, Vaccine, VaccineRights } from '@/resources';
 
   export default {
     components: {
@@ -325,11 +325,11 @@
           VaccineRights.deleteVaccine(item.id).then(() => {
             this.getPageList(1);
             this.$notify.success({
-              message: '已成功删除疫苗'
+              message: '已成功删除接种点'
             });
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '删除疫苗失败'
+              message: error.response.data && error.response.data.msg || '删除接种点失败'
             });
           });
         });
