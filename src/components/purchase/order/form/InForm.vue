@@ -282,7 +282,8 @@
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
               <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in supplierWarehouses">
+                <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id"
+                           v-for="item in supplierWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -303,7 +304,8 @@
             </el-form-item>
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
               <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in cdcWarehouses">
+                <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id"
+                           v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>

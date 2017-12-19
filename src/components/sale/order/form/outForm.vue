@@ -284,7 +284,7 @@
                           v-show="showContent.isShowOtherContent" :clearable="true">
               <el-select placeholder="请选择接种点仓库" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress" :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
+                <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -302,7 +302,8 @@
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
               <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter">
+                <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id"
+                           v-for="item in LogisticsCenter">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>

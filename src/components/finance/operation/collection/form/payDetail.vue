@@ -193,7 +193,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 15
+          pageSize: 50
         },
         filterRights: {
           orgGoodsId: '',
