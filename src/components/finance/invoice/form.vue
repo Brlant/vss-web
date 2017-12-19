@@ -279,10 +279,10 @@
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
-            <el-form-item label="是否已到" prop="haveTo">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.haveTo"></el-switch>
-            </el-form-item>
+            <!--<el-form-item label="是否已到" prop="haveTo">-->
+              <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+                         <!--v-model="form.haveTo"></el-switch>-->
+            <!--</el-form-item>-->
           </el-form>
         </div>
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
