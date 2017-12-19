@@ -234,7 +234,12 @@
             </el-form-item>
             <el-form-item label="接种点仓库" prop="warehouseId">
               <el-select placeholder="请选择接种点仓库" v-model="form.warehouseId" filterable clearable>
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
+                <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">-->
+                <!--</el-option>-->
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
+                           v-for="item in warehouses">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -253,7 +258,8 @@
                    onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="疫苗">
-              <el-select v-model="product.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
+              <el-select v-model="product.orgGoodsId" filterable :filter-method="filterGoods" placeholder="请输入名称搜索产品"
+                         :clearable="true"
                          :loading="loading" popper-class="good-selects"
                          @change="getGoodDetail">
 
@@ -390,7 +396,7 @@
 </template>
 
 <script>
-  import { pullSignal, cerpAction, Address, VaccineRights, http } from '@/resources';
+  import { Address, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -463,7 +469,8 @@
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
         doing: false,
-        orgList: []
+        orgList: [],
+        totalFilterProductList: []
       };
     },
     computed: {
@@ -507,6 +514,17 @@
       }
     },
     methods: {
+      filterGoods (query) {
+        this.filterProductList = this.totalFilterProductList.filter(f => f.orgGoodsNameAcronymy.indexOf(query) !== -1 ||
+          f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1);
+      },
+      filterAddressLabel (item) {
+        let name = item.name ? '【' + item.name + '】' : '';
+        return name + this.getWarehouseAdress(item);
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+      },
       editOrderInfo () {
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
           return {
@@ -668,7 +686,8 @@
             arr.push(item);
           }
         });
-        this.filterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        this.filterProductList = JSON.parse(JSON.stringify(this.totalFilterProductList));
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
         if (!OrgGoodsId) {

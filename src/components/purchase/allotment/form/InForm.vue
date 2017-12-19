@@ -263,7 +263,7 @@
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
               <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
-                <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id"
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in supplierWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
@@ -285,7 +285,7 @@
             </el-form-item>
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
               <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
-                <el-option :label="getWarehouseAdress(item)" :value="item.id" :key="item.id"
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
@@ -695,6 +695,10 @@
 //      this.initForm();
     },
     methods: {
+      filterAddressLabel (item) {
+        let name = item.name ? '【' + item.name + '】' : '';
+        return name + this.getWarehouseAdress(item);
+      },
       createOrderInfo () {
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
