@@ -258,7 +258,8 @@
                    onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="疫苗">
-              <el-select v-model="product.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
+              <el-select v-model="product.orgGoodsId" filterable :filter-method="filterGoods" placeholder="请输入名称搜索产品"
+                         :clearable="true"
                          :loading="loading" popper-class="good-selects"
                          @change="getGoodDetail">
 
@@ -468,7 +469,8 @@
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
         doing: false,
-        orgList: []
+        orgList: [],
+        totalFilterProductList: []
       };
     },
     computed: {
@@ -512,6 +514,10 @@
       }
     },
     methods: {
+      filterGoods (query) {
+        this.filterProductList = this.totalFilterProductList.filter(f => f.orgGoodsNameAcronymy.indexOf(query) !== -1 ||
+          f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1);
+      },
       filterAddressLabel (item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
@@ -680,7 +686,8 @@
             arr.push(item);
           }
         });
-        this.filterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        this.filterProductList = JSON.parse(JSON.stringify(this.totalFilterProductList));
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
         if (!OrgGoodsId) {
