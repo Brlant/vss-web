@@ -682,7 +682,6 @@
       }
     },
     mounted: function () {
-      debugger;
       this.currentPartName = this.productListSet[0].name;
       if (this.action === 'add') {
         this.filterLogisticsCenter();
