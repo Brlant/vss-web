@@ -103,13 +103,18 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="10">
-              <oms-form-row label="到货需求日期" :span="7">
+            <el-col :span="8">
+              <oms-form-row label="到货需求日期" :span="8">
                 <el-date-picker
                   type="daterange"
                   v-model="demandTime"
                   placeholder="请选择到货需求日期" format="yyyy-MM-dd">
                 </el-date-picker>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="组织区域代码" :span="7">
+                <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入组织区域代码"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="6">
@@ -264,12 +269,14 @@
           status: 1,
           povId: '',
           demandStartTime: '',
-          demandEndTime: ''
+          demandEndTime: '',
+          orgAreaCode: ''
         },
         searchWord: {
           povId: '',
           demandStartTime: '',
-          demandEndTime: ''
+          demandEndTime: '',
+          orgAreaCode: ''
         },
         demandTime: '',
         pager: {
@@ -423,7 +430,8 @@
         let temp = {
           povId: '',
           demandStartTime: '',
-          demandEndTime: ''
+          demandEndTime: '',
+          orgAreaCode: ''
         };
         this.demandTime = '';
         this.demandList = [];
