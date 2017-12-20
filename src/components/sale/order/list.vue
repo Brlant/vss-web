@@ -155,6 +155,34 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="8" v-show="vaccineType === '1' ">
+              <oms-form-row label="货主货品" :span="6">
+                <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货主货品"
+                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
+                           popper-class="good-selects">
+                  <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
+                             :label="item.orgGoodsDto.name"
+                             :value="item.orgGoodsDto.id">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                        </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8" v-show="vaccineType === '1' ">
+              <oms-form-row label="组织区域代码" :span="7">
+                <oms-input type="text" v-model="searchCondition.orgAreaCode" placeholder="请输入组织区域代码"></oms-input>
+              </oms-form-row>
+            </el-col>
             <el-col :span="8">
               <oms-form-row label="下单时间" :span="6">
                 <el-col :span="24">
@@ -273,7 +301,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
-  import { BaseInfo, erpOrder, Order } from '@/resources';
+  import { BaseInfo, erpOrder, Order, Vaccine } from '@/resources';
 
   export default {
     components: {
@@ -298,6 +326,8 @@
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: '',
+          orgGoodsId: '',
+          orgAreaCode: '',
           deleteFlag: false
         },
         searchCondition: {
@@ -308,6 +338,8 @@
           createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
+          orgGoodsId: '',
+          orgAreaCode: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -324,7 +356,8 @@
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
         user: {},
-        state: ''
+        state: '',
+        goodesList: []
       };
     },
     mounted () {
@@ -391,11 +424,24 @@
           createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
-          thirdPartyNumber: ''
+          thirdPartyNumber: '',
+          orgGoodsId: '',
+          orgAreaCode: ''
         };
         this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
+      },
+      searchProduct (keyWord) {
+        let params = Object.assign({}, {
+          keyWord: keyWord,
+          orgId: this.$store.state.user['userCompanyAddress']
+        });
+        let level = this.$store.state.orgLevel;
+        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
+        Vaccine[api](params).then(res => {
+          this.goodesList = res.data.list;
+        });
       },
       resetRightBox: function () {
         this.showDetail = false;
