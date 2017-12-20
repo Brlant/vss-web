@@ -265,15 +265,14 @@
             <el-form-item label="接种点" prop="supplierId">
               <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier" popper-class="good-selects">
-                <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                           v-for="org in orgList">
+                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
                   </div>
                   <div style="overflow: hidden">
-                  <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.subordinateCode}}
-                  </span>
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
                   </div>
                 </el-option>
               </el-select>
@@ -478,7 +477,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, cerpAction, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -787,11 +786,14 @@
         this.$emit('close');
       },
       filterOrg: function (query) {// 过滤来源单位
-        let params = Object.assign({}, {
-          keyWord: query
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       filterLogistics: function (query) {// 过滤物流商

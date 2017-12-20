@@ -259,7 +259,7 @@
 </template>
 <script>
   import utils from '@/tools/utils';
-  import {receipt, BriceGroup, cerpAction, BriceGroupPov} from '@/resources';
+  import { BriceGroup, BriceGroupPov } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
 
@@ -465,13 +465,13 @@
         this.currentDetail = item;
       },
       filterPOV: function (query) {// 过滤POV
-        let params = Object.assign({}, {
-          keyWord: query
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
-          this.filterPOVs();
-        });
+        // let params = Object.assign({}, {
+        //   keyWord: query
+        // });
+        // cerpAction.queryAllPov(params).then(res => {
+        //   this.orgList = res.data.list;
+        //   this.filterPOVs();
+        // });
       },
       filterPOVs() {
         this.showOrgList = this.orgList.filter(f => !this.receiptDetails.some(s => f.subordinateId === s.povId));

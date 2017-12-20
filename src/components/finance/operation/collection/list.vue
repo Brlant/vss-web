@@ -151,15 +151,14 @@
                 <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.orgId" popper-class="good-selects"
                            @click.native.once="filterOrg('')">
-                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                             v-for="org in orgList">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
                     </div>
                     <div style="overflow: hidden">
-                  <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.subordinateCode}}
-                  </span>
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -262,7 +261,7 @@
   import utils from '../../../../tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import { BillReceivable, receivable, BaseInfo, cerpAction } from '../../../../resources';
+  import { BaseInfo, BillReceivable } from '../../../../resources';
 
   export default {
     components: {
@@ -319,11 +318,14 @@
     },
     methods: {
       filterOrg: function (query) {
-        let params = Object.assign({}, {
-          keyWord: query
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       getOrderStatus: function (order) {
