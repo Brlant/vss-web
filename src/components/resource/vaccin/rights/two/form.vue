@@ -292,7 +292,7 @@
   </div>
 </template>
 <script>
-  import { BriceGroup, cerpAction, http, VaccineRights } from '@/resources';
+  import { BriceGroup, http, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -324,7 +324,7 @@
     watch: {
       formItem (val) {
         this.$refs['d-form'].resetFields();
-        if (val.id) {
+        if (val && val.id) {
           this.title = '编辑疫苗授权';
           this.orgList.push({
             subordinateId: val.povId,
@@ -381,10 +381,11 @@
 //        }
         let params = Object.assign({}, {
           keyWord: query,
-          pageSize: -1
+          pageSize: -1,
+          orgGoodsId: this.currentItem.orgGoodsId
         });
         this.loading = true;
-        cerpAction.queryAllPov(params).then(res => {
+        this.$http.get('/vaccine-authorization/pov/filter', {params}).then(res => {
           this.orgList = res.data;
           this.loading = false;
         });

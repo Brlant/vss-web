@@ -102,19 +102,19 @@
       </div>
 
       <div class="order-list-status container clearfix">
-        <div class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
+        <div v-show="demandList.length" class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
              v-for="(item,key) in assignType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">
             {{item.num}}</span></div>
         </div>
-        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 11">
+        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 11 && demandList.length">
           <perm label="purchansing-assignment-add" class="opera-btn">
             <span @click="createPurchaseDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
               class="el-icon-t-wave"></i></a><span class="wave-title"> 生成采购汇总单</span></span>
           </perm>
        </span>
-        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1">
+        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1 && demandList.length">
           <perm label="demand-assignment-add" class="opera-btn">
             <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
               class="el-icon-t-wave"></i></a><span class="wave-title"> 生成销售汇总单</span></span>
@@ -140,7 +140,7 @@
         <el-row v-else-if="demandList.length == 0">
           <el-col :span="24">
             <div class="empty-info">
-              暂无信息
+              暂无信息，请尝试搜索
             </div>
           </el-col>
         </el-row>
