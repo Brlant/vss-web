@@ -296,8 +296,7 @@
     </page-right>
     <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
-      <show-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
-                 :action="action"
+      <show-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase" :action="action"
                  @right-close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
@@ -361,14 +360,14 @@
     },
     mounted() {
       this.getOrderList(1);
-      let orderId = this.$route.params.id;
-      if (orderId === 'add') {
-        this.add();
-        this.purchase = {
-          id: this.$route.query.id,
-          count: this.$route.query.count
-        };
-      }
+//      let orderId = this.$route.params.id;
+//      if (orderId === 'add') {
+//        this.add();
+//        this.purchase = {
+//          id: this.$route.query.id,
+//          count: this.$route.query.count
+//        };
+//      }
     },
     computed: {
       transportationMeansList: function () {

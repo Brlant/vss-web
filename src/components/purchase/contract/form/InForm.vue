@@ -671,12 +671,22 @@
       },
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
+      },
+      action() {
+        if (this.$store.state.user.userCompanyAddress) {
+          BaseInfo.queryBaseInfo(this.$store.state.user.userCompanyAddress).then(res => {
+            let myDate = new Date();
+            this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
+          });
+        }
       }
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
-      this.initForm();
+      if (this.action === 'add') {
+        this.filterLogisticsCenter();
+        this.initForm();
+      }
     },
     methods: {
       filterAddressLabel (item) {
@@ -687,11 +697,9 @@
         this.form.transportationCondition = '0';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
         this.form.purchaseContractName = '';
-        this.form.purchaseContractNo = '';
       },
       createOrderInfo () {
         this.form.purchaseContractName = '';
-        this.form.purchaseContractNo = '';
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
         if (!orgGoodsId) return;
@@ -750,7 +758,7 @@
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
-        if (!this.form.id) {
+        if (!this.form.id && this.action === 'add') {
           window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
         }
       },
@@ -1151,29 +1159,7 @@
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
-          if (saveData.id) {
-            PurchaseContract.updateOrder(saveData.id, saveData).then(res => {
-              this.resetForm();
-              this.$notify({
-                duration: 2000,
-                message: '编辑采购合同成功',
-                type: 'success'
-              });
-              self.$emit('change');
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('right-close');
-              });
-            }).catch(error => {
-              this.doing = false;
-              this.$notify({
-                duration: 2000,
-                title: '编辑采购合同失败',
-                message: error.response.data.msg,
-                type: 'error'
-              });
-            });
-          } else {
+          if (!saveData.id) {
             PurchaseContract.save(saveData).then(res => {
               this.$notify({
                 duration: 2000,

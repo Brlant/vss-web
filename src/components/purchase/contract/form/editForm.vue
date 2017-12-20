@@ -348,7 +348,7 @@
   import utils from '@/tools/utils';
 
   export default {
-    name: 'addForm',
+    name: 'editForm',
     loading: false,
     props: {
       type: {
@@ -541,18 +541,15 @@
           this.setDefaultValue();
         }
       },
-      form: {
-        handler: 'autoSave',
-        deep: true
-      },
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       }
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
-      this.initForm();
+      if (this.action === 'edit') {
+        this.filterLogisticsCenter();
+      }
     },
     methods: {
       getWarehouseAddress: function (item) { // 得到仓库地址
@@ -598,21 +595,12 @@
             this.accessoryList = res.data.list;
             this.product.amount = Math.abs(this.purchase.count);
           });
-//          this.$nextTick(() => {
-//            this.form.detailDtoList.push({
-//              amount: Math.abs(this.purchase.count),
-//              orgGoodsId: orgGoodsId,
-//              orgGoodsName: res.data.orgGoodsDto.name,
-//              unitPrice: res.data.orgGoodsDto.procurementPrice,
-//              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
-//            });
-//          });
+
         });
       },
       editOrderInfo() {
         if (!this.orderId) return;
         PurchaseContract.queryContractDetail(this.orderId).then(res => {
-//          this.currentOrder = res.data;
           this.resetForm();
           this.isStorageData = true;
           res.data.detailDtoList.forEach(f => {
@@ -624,20 +612,6 @@
           });
         });
       },
-      changeNumber() {
-        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
-      },
-      autoSave: function () {
-        if (!this.form.id) {
-          window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
-        }
-      },
-      initForm: function () {// 根据缓存，回设form
-        let oldForm = window.localStorage.getItem(this.saveKey);
-        if (oldForm && !this.form.id) {
-          this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-        }
-      },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
         this.form.supplierId = '';
@@ -646,9 +620,6 @@
         this.form.logisticsCentreId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
-      },
-      formatPrice: function () {// 格式化单价，保留两位小数
-        this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
       changeExpectedTime: function (date) {// 格式化时间
         if (!date) {
@@ -671,10 +642,6 @@
           this.form.supplierId = '';
           return;
         }
-//        let relation = '';
-//        if (bizType === '0') relation = '0';
-//        if (bizType === '1') relation = '1';
-//        if (!relation) return;
         let params = {
           keyWord: query,
           relation: '1'
@@ -713,95 +680,6 @@
           this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
         });
       },
-      getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
-      },
-      bizTypeChange: function (val) {// 业务类型改变
-        if (!this.isStorageData) {// 有缓存时，不重置表单
-          let orgId = this.form.orgId;
-          let bizType = this.form.bizType;
-          this.$refs['orderAddForm'].resetFields();
-          this.form.remark = '';
-          this.form.orgId = orgId;
-          this.form.bizType = bizType;
-        }
-        if (this.transportationMeansList && this.transportationMeansList.length) {
-          if (val === '1') {
-            this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '1');
-          } else {
-            this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '3');
-          }
-        }
-        switch (val) {
-          case '0' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: true, // 是否显示来源单位
-              expectedTimeLabel: '预计入库时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '1' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: true, // 是否显示来源单位
-              expectedTimeLabel: '拟退货时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '2' : {
-            this.showContent = {
-              isShowOtherContent: false, // 是否显示物流类型
-              isShowSupplierId: false, // 是否显示来源单位
-              expectedTimeLabel: ''
-            };
-            break;
-          }
-          case '3' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: false, // 是否显示来源单位
-              expectedTimeLabel: '预计入库时间'
-            };
-            break;
-          }
-        }
-
-      },
-      changeSupplier: function (val) {// 业务单位改变
-        if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.supplierWarehouses = [];
-          this.form.pickUpAddress = '';
-          this.product.orgGoodsId = '';
-          this.form.detailDtoList = [];
-          this.$refs['orderGoodsAddForm'].resetFields();
-          this.accessoryList = [];
-        }
-        if (!val) return;
-        if (this.form.transportationMeansId === '2') {
-          Address.queryAddress(val, {
-            deleteFlag: false,
-//                warehouseType: 0,
-            orgId: val,
-            auditedStatus: '1'
-          }).then(res => {
-            this.supplierWarehouses = res.data;
-            let defaultStore = res.data.filter(item => item.default);
-            this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
-          });
-        }
-        this.searchProduct();
-        this.checkLicence(val);
-      },
-      changeTransportationMeans: function () {// 物流方式改变
-        if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.pickUpAddress = '';
-          this.form.logisticsProviderId = '';
-          this.form.supplierId = '';
-        }
-      },
       checkLicence: function (val) {// 校验单位和货主证照是否过期
         if (!val || !this.action) return;
         http.get('/order-licence/org/' + val + '/overdue').then(res => {
@@ -818,190 +696,6 @@
             type: 'error'
           });
         });
-      },
-      searchProduct: function (query) {
-        if (!this.vaccineType) {
-          if (!this.form.supplierId) {
-            this.searchProductList = [];
-            return;
-          }
-          let params = {
-            keyWord: query,
-            factoryId: this.form.supplierId
-          };
-          http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-            this.searchProductList = res.data.list;
-            this.$nextTick(function () {
-              this.filterProducts();
-            });
-          });
-        } else {
-          if (this.orgLevel === 1) {
-            if (!this.form.supplierId) {
-              this.searchProductList = [];
-              return;
-            }
-            let params = {
-              keyWord: query
-            };
-            let rTime = Date.now();
-            this.requestTime = rTime;
-            http.get(`/vaccine-info/${this.form.supplierId}/first-vaccine/valid`, {params: params}).then(res => {
-              if (this.requestTime > rTime) {
-                return;
-              }
-              this.searchProductList = res.data.list;
-              this.$nextTick(function () {
-                this.filterProducts();
-              });
-            });
-          } else {
-            if (!this.form.supplierId) {
-              this.searchProductList = [];
-              return;
-            }
-            let params = {
-              vaccineType: this.vaccineType,
-              keyWord: query,
-              factoryId: this.form.supplierId
-            };
-            let rTime = Date.now();
-            this.requestTime = rTime;
-            http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-              if (this.requestTime > rTime) {
-                return;
-              }
-              this.searchProductList = res.data.list;
-              this.$nextTick(function () {
-                this.filterProducts();
-              });
-            });
-          }
-        }
-
-      },
-      filterProducts: function () {
-        let arr = [];
-        let isIn;
-        this.searchProductList.forEach(item => {
-          isIn = false;
-          this.form.detailDtoList.forEach(product => {
-            if (product.orgGoodsId === item.orgGoodsDto.id) {
-              if (!product.isCombination) {
-                isIn = true;
-                return false;
-              }
-            }
-          });
-          if (!isIn) {
-            arr.push(item);
-          }
-        });
-        this.filterProductList = arr;
-      },
-      getGoodDetail: function (OrgGoodsId) {// 选货品
-        if (!OrgGoodsId) {
-          this.product = {
-            'amount': null,
-            'entrustment': false,
-            'measurementUnit': '',
-            'orgGoodsId': '',
-            'packingCount': null,
-            'specificationsId': '',
-            'fixInfo': {
-              'goodsDto': {}
-            },
-            'unitPrice': null
-          };
-          this.$refs['orderGoodsAddForm'].resetFields();
-          this.accessoryList = [];
-          return;
-        }
-        this.searchProductList.forEach(item => {
-          if (item.orgGoodsDto.id === OrgGoodsId) {
-            this.product.fixInfo = item.orgGoodsDto;
-            let price = item.orgGoodsDto.procurementPrice;
-            this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
-            this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
-            this.accessoryList = item.list;
-            this.form.detailDtoList.forEach((detailItem) => {
-              if (detailItem.orgGoodsId === OrgGoodsId) {
-                detailItem.fixInfo = item.orgGoodsDto;
-                return false;
-              }
-            });
-          }
-        });
-        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-      },
-      addProduct: function () {// 货品加入到合同
-        if (!this.product.orgGoodsId) {
-          this.$notify.info({
-            duration: 2000,
-            message: '请先选择产品'
-          });
-          return false;
-        }
-        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-        if (!isCheck) return;
-        this.$refs['orderGoodsAddForm'].validate((valid) => {
-          if (!valid) {
-            return false;
-          }
-          this.searchProductList.forEach((item) => {
-            if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-              this.product.orgGoodsName = item.orgGoodsDto.name;
-              this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
-              item.list.forEach(m => {
-                let amount = Math.ceil(m.proportion * this.product.amount);
-                this.form.detailDtoList.push({
-                  mainOrgId: item.orgGoodsDto.id,
-                  isCombination: true,
-                  orgGoodsId: m.accessory,
-                  orgGoodsName: m.name,
-                  unitPrice: m.procurementPrice ? m.procurementPrice : 0,
-                  amount: amount,
-                  measurementUnit: m.accessoryGoods.measurementUnit,
-                  packingCount: null,
-                  specificationsId: ''
-                });
-              });
-            }
-          });
-          this.$nextTick(function () {
-            this.product = {
-              'amount': null,
-              'entrustment': false,
-              'measurementUnit': '',
-              'orgGoodsId': '',
-              'packingCount': null,
-              'specificationsId': '',
-              'fixInfo': {
-                'goodsDto': {}
-              },
-              'unitPrice': null
-            };
-            this.$refs['orderGoodsAddForm'].resetFields();
-            this.accessoryList = [];
-          });
-        });
-
-      },
-      remove: function (item) {
-        this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
-        this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
-        this.searchProduct();
-      },
-      editItem(item) {
-        this.filterProductList.push({
-          orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
-          list: []
-        });
-        this.product.orgGoodsId = item.orgGoodsId;
-        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
-        this.product.amount = item.amount;
-        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
-        this.remove(item);
       },
       onSubmit: function () {// 提交表单
         let self = this;
@@ -1046,28 +740,6 @@
               this.$notify({
                 duration: 2000,
                 title: '编辑采购合同失败',
-                message: error.response.data.msg,
-                type: 'error'
-              });
-            });
-          } else {
-            PurchaseContract.save(saveData).then(res => {
-              this.$notify({
-                duration: 2000,
-                message: '新增采购合同成功',
-                type: 'success'
-              });
-              window.localStorage.removeItem(this.saveKey);
-              self.$emit('change', res.data);
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('right-close');
-              });
-            }).catch(error => {
-              this.doing = false;
-              this.$notify({
-                duration: 2000,
-                title: '新增采购合同失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
