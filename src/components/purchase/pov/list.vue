@@ -47,6 +47,9 @@
     }
   }
 
+  .order-list-status-right {
+    justify-content: flex-end;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -56,7 +59,25 @@
           <span class="">
             <i class="el-icon-t-search"></i> 筛选查询
           </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-right" v-show="filters.status === 11 && isSearch">
+          <perm label="purchansing-assignment-add" class="opera-btn">
+            <span @click="createPurchaseDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
+              class="el-icon-t-wave"></i></a><span class="wave-title"> 生成采购汇总单</span></span>
+          </perm>
+         </span>
+          <span class="pull-right" v-show="filters.status === 1 && isSearch">
+            <perm label="demand-assignment-add" class="opera-btn">
+              <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
+                class="el-icon-t-wave"></i></a><span class="wave-title"> 生成销售汇总单</span></span>
+            </perm>
+         </span>
+          <span class="pull-right">
+            <perm label="cargo-signal-add" class="opera-btn">
+              <span @click="applyOrder" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
+                class="el-icon-t-plus"></i></a><span class="wave-title">分货申请</span></span>
+            </perm>
+         </span>
+          <span class="pull-right switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -100,32 +121,29 @@
           </el-row>
         </el-form>
       </div>
-      <div class="order-list-status container clearfix">
-        <div v-show="isSearch" class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
-             v-for="(item,key) in assignType" @click="checkStatus(item, key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">
+      <el-row v-show="isSearch">
+        <el-col :span="13">
+          <div class="order-list-status container clearfix">
+            <div class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
+                 v-for="(item,key) in assignType" v-show="key < 4" @click="checkStatus(item, key)">
+              <div class="status-bg" :class="['b_color_'+key]"></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">
             {{item.num}}</span></div>
-        </div>
-        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 11 && isSearch">
-          <perm label="purchansing-assignment-add" class="opera-btn">
-            <span @click="createPurchaseDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
-              class="el-icon-t-wave"></i></a><span class="wave-title"> 生成采购汇总单</span></span>
-          </perm>
-       </span>
-        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1 && isSearch">
-          <perm label="demand-assignment-add" class="opera-btn">
-            <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
-              class="el-icon-t-wave"></i></a><span class="wave-title"> 生成销售汇总单</span></span>
-          </perm>
-       </span>
-        <span class="pull-right" style="margin-top: 8px" :style="{'margin-right': isSearch ? '140px' : ''}">
-          <perm label="cargo-signal-add" class="opera-btn">
-            <span @click="applyOrder" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
-              class="el-icon-t-plus"></i></a><span class="wave-title">分货申请</span></span>
-          </perm>
-       </span>
-      </div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="11">
+          <div class="order-list-status order-list-status-right container clearfix">
+            <div class="status-item" v-show="key > 3" :class="{'active':key==activeStatus}" style="width: 115px"
+                 v-for="(item,key) in assignType" @click="checkStatus(item, key)">
+              <div class="status-bg" :class="['b_color_'+key]"></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">
+            {{item.num}}</span></div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+
       <el-row v-if="!isSearch">
         <el-col :span="24">
           <div class="empty-info">
@@ -226,9 +244,13 @@
   import utils from '../../../tools/utils';
   import showForm from './detail/index.vue';
   import addForm from '../request/form';
+  import ElCollapse from 'element-ui/packages/collapse/src/collapse';
 
   export default {
-    components: {showForm, addForm},
+    components: {
+      ElCollapse,
+      showForm, addForm
+    },
     data () {
       return {
         loadingData: false,
@@ -302,7 +324,7 @@
         // 查询采购单
         if (this.filters.status > 10) {
           searchCondition = Object.assign({}, this.filters, {
-            procurementStatus: this.filters.status === 11 ? 0 : 1
+            procurementStatus: this.filters.status === 11 ? 0 : this.filters.status === 12 ? 1 : 2
           });
           searchCondition.status = undefined;
         } else {
@@ -335,6 +357,7 @@
           this.assignType[3].num = res.data['canceled'];
           this.assignType[4].num = res.data['procurement-pending-audit'];
           this.assignType[5].num = res.data['procurement-audited'];
+          this.assignType[6].num = res.data['procurement-canceled'];
         });
       },
       filterOrg: function (query) {// 过滤供货商
@@ -485,16 +508,29 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          pullSignal.cancel(item.id).then(() => {
-            this.$notify.success({
-              message: '已成功取消需求单'
+          if (this.filters.status === 1) {
+            pullSignal.cancel(item.id).then(() => {
+              this.$notify.success({
+                message: '已成功取消需求单'
+              });
+              this.getDemandList(1);
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '取消需求单失败'
+              });
             });
-            this.getDemandList(1);
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '取消需求单失败'
+          } else {
+            this.$http.put(`/pull-signal/cancel/procurement/${item.id} `).then(() => {
+              this.$notify.success({
+                message: '已成功取消需求单'
+              });
+              this.getDemandList(1);
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '取消需求单失败'
+              });
             });
-          });
+          }
         });
       },
       changeTime (date) {

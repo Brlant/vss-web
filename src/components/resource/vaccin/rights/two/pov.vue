@@ -89,7 +89,7 @@
               <el-form class="rightForm" ref="rightForm" inline onsubmit="return false">
                 <el-form-item label="接种点">
                   <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV"
-                             :clearable="true"
+                             :clearable="true" @click.native.once="filterPOV('')"
                              v-model="searchCondition.povId" popper-class="good-selects ">
                     <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                       <div style="overflow: hidden">
