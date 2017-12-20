@@ -324,9 +324,9 @@
       },
       changeRemark (form) {
         if (!this.currentOrder.remark) {
-          this.currentOrder.remark = form.name + '  数量' + form.count + form.materialUnit;
+          this.currentOrder.remark = form.count + form.name;
         } else {
-          this.currentOrder.remark += '，' + form.name + '  数量' + form.count + form.materialUnit;
+          this.currentOrder.remark += '，' + form.count + form.name;
         }
       },
       searchWarehouses () {

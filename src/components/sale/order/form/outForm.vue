@@ -803,9 +803,9 @@
       },
       changeRemark (form) {
         if (!this.form.remark) {
-          this.form.remark = form.name + '  数量' + form.count + form.materialUnit;
+          this.form.remark = form.count + form.name;
         } else {
-          this.form.remark += '，' + form.name + '  数量' + form.count + form.materialUnit;
+          this.form.remark += '，' + form.count + form.name;
         }
       },
       changeNumber () {
