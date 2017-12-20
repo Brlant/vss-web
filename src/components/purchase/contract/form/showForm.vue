@@ -247,11 +247,6 @@
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <div class="btn-submit-save">
-            <!--<perm label="purchasing-contract-add">-->
-              <!--<div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">-->
-                <!--<el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>-->
-              <!--</div>-->
-            <!--</perm>-->
             <perm label="purchasing-contract-export">
               <div style="margin-bottom: 10px" v-if="form.purchaseContractIsUsed">
                 <el-button type="success" @click="synchroOrder" style="width: 150px">同步采购合同</el-button>
@@ -438,52 +433,8 @@
           'remark': '',
           'pickUpAddress': ''
         },
-        rules: {
-          purchaseContractName: [
-            {required: true, message: '请输入采购合同名称', trigger: 'blur'}
-          ],
-          purchaseContractNo: [
-            {required: true, message: '请输入采购合同编号', trigger: 'blur'}
-          ],
-          supplierId: [
-            {required: true, message: '请选择供货厂商', trigger: 'change'}
-          ],
-          transportationMeansId: [
-            {required: true, message: '请选择物流方式', trigger: 'change'}
-          ],
-          transportationAddress: [
-            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
-          ],
-          pickUpAddress: [
-            {required: true, message: '请选择提货地址', trigger: 'change'}
-          ],
-          logisticsProviderId: [
-            {required: true, message: '请选择物流商', trigger: 'change'}
-          ],
-          transportationCondition: [
-            {required: true, message: '请选择运输条件', trigger: 'change'}
-          ],
-          expectedTime: [
-            {required: true, message: '请选择预计入库时间', trigger: 'change'}
-          ]
-        },
-        orderGoodsRules: {
-          orgGoodsId: [
-            {required: true, message: '请选择产品', trigger: 'change'}
-          ],
-          amount: [
-            {required: true, min: 1, type: 'number', message: '请输入产品数量', trigger: 'blur'}
-          ],
-          unitPrice: [
-            {required: true, message: '请输入单价', trigger: 'change'}
-          ],
-          packingCount: [
-            {required: true, min: 1, type: 'number', message: '请输入包装数量', trigger: 'blur'}
-          ],
-          specificationsId: [
-            {required: true, message: '请选择包装单位', trigger: 'change'}
-          ]
-        },
+        rules: {},
+        orderGoodsRules: {},
         currentPartName: '',
         index: 0,
         productListSet: [
@@ -567,18 +518,12 @@
           this.form.id = null;
         }
       },
-      form: {
-        handler: 'autoSave',
-        deep: true
-      },
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       }
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
-      this.initForm();
     },
     methods: {
       getWarehouseAddress: function (item) { // 得到仓库地址
@@ -616,15 +561,6 @@
             this.accessoryList = res.data.list;
             this.product.amount = Math.abs(this.purchase.count);
           });
-//          this.$nextTick(() => {
-//            this.form.detailDtoList.push({
-//              amount: Math.abs(this.purchase.count),
-//              orgGoodsId: orgGoodsId,
-//              orgGoodsName: res.data.orgGoodsDto.name,
-//              unitPrice: res.data.orgGoodsDto.procurementPrice,
-//              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
-//            });
-//          });
         });
       },
       editOrderInfo () {
@@ -642,22 +578,6 @@
           });
         });
       },
-      changeNumber () {
-        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
-      },
-      autoSave: function () {
-        if (!this.form.id) {
-          window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
-        }
-      },
-      initForm: function () {// 根据缓存，回设form
-        let oldForm = window.localStorage.getItem(this.saveKey);
-        if (oldForm) {
-          this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-          this.form.logisticsCentreId = this.form.logisticsCentreId
-            ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
-        }
-      },
       resetForm: function () {// 重置表单
         this.form.supplierId = '';
         this.form.actualConsignee = '';
@@ -665,16 +585,6 @@
         this.form.logisticsCentreId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
-      },
-      formatPrice: function () {// 格式化单价，保留两位小数
-        this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
-      },
-      changeExpectedTime: function (date) {// 格式化时间
-        if (!date) {
-          this.form.expectedTime = '';
-          return;
-        }
-        this.form.expectedTime = this.$moment(date).format('YYYY-MM-DD');
       },
       setIndexValue: function (value) {// 左侧显示页切换
         this.index = value;
@@ -690,10 +600,6 @@
           this.form.supplierId = '';
           return;
         }
-//        let relation = '';
-//        if (bizType === '0') relation = '0';
-//        if (bizType === '1') relation = '1';
-//        if (!relation) return;
         let params = {
           keyWord: query,
           relation: '1'
@@ -713,14 +619,6 @@
           this.logisticsList = res.data;
         });
       },
-      filterLogisticsCenter: function () {// 过滤物流中心
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
-        });
-      },
       filterAddress () {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
@@ -731,94 +629,6 @@
           let defaultStore = res.data.filter(item => item.default);
           this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
         });
-      },
-      getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
-      },
-      bizTypeChange: function (val) {// 业务类型改变
-        if (!this.isStorageData) {// 有缓存时，不重置表单
-          let orgId = this.form.orgId;
-          let bizType = this.form.bizType;
-          this.$refs['orderAddForm'].resetFields();
-          this.form.remark = '';
-          this.form.orgId = orgId;
-          this.form.bizType = bizType;
-        }
-        if (this.transportationMeansList && this.transportationMeansList.length) {
-          if (val === '1') {
-            this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '1');
-          } else {
-            this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '3');
-          }
-        }
-        switch (val) {
-          case '0' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: true, // 是否显示来源单位
-              expectedTimeLabel: '预计入库时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '1' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: true, // 是否显示来源单位
-              expectedTimeLabel: '拟退货时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '2' : {
-            this.showContent = {
-              isShowOtherContent: false, // 是否显示物流类型
-              isShowSupplierId: false, // 是否显示来源单位
-              expectedTimeLabel: ''
-            };
-            break;
-          }
-          case '3' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: false, // 是否显示来源单位
-              expectedTimeLabel: '预计入库时间'
-            };
-            break;
-          }
-        }
-
-      },
-      changeSupplier: function (val) {// 业务单位改变
-        if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.supplierWarehouses = [];
-          this.form.pickUpAddress = '';
-          this.product.orgGoodsId = '';
-          this.form.detailDtoList = [];
-          this.$refs['orderGoodsAddForm'].resetFields();
-          this.accessoryList = [];
-        }
-        if (!val) return;
-        if (this.form.transportationMeansId === '2') {
-          Address.queryAddress(val, {
-            deleteFlag: false,
-            orgId: val,
-            auditedStatus: '1'
-          }).then(res => {
-            this.supplierWarehouses = res.data;
-            let defaultStore = res.data.filter(item => item.default);
-            this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
-          });
-        }
-        this.searchProduct();
-        this.checkLicence(val);
-      },
-      changeTransportationMeans: function () {// 物流方式改变
-        if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.pickUpAddress = '';
-          this.form.logisticsProviderId = '';
-          this.form.supplierId = '';
-        }
       },
       checkLicence: function (val) {// 校验单位和货主证照是否过期
         if (!val || !this.action) return;
@@ -836,145 +646,6 @@
             type: 'error'
           });
         });
-      },
-      searchProduct: function (query) {
-        if (!this.form.supplierId) {
-          this.searchProductList = [];
-          return;
-        }
-        let params = {
-          keyWord: query,
-          factoryId: this.form.supplierId
-        };
-        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-          this.searchProductList = res.data.list;
-          this.$nextTick(function () {
-            this.filterProducts();
-          });
-        });
-      },
-      filterProducts: function () {
-        let arr = [];
-        let isIn;
-        this.searchProductList.forEach(item => {
-          isIn = false;
-          this.form.detailDtoList.forEach(product => {
-            if (product.orgGoodsId === item.orgGoodsDto.id) {
-              if (!product.isCombination) {
-                isIn = true;
-                return false;
-              }
-            }
-          });
-          if (!isIn) {
-            arr.push(item);
-          }
-        });
-        this.filterProductList = arr;
-      },
-      getGoodDetail: function (OrgGoodsId) {// 选货品
-        if (!OrgGoodsId) {
-          this.product = {
-            'amount': null,
-            'entrustment': false,
-            'measurementUnit': '',
-            'orgGoodsId': '',
-            'packingCount': null,
-            'specificationsId': '',
-            'fixInfo': {
-              'goodsDto': {}
-            },
-            'unitPrice': null
-          };
-          this.$refs['orderGoodsAddForm'].resetFields();
-          this.accessoryList = [];
-          return;
-        }
-        this.searchProductList.forEach(item => {
-          if (item.orgGoodsDto.id === OrgGoodsId) {
-            this.product.fixInfo = item.orgGoodsDto;
-            let price = item.orgGoodsDto.procurementPrice;
-            this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
-            this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
-            this.accessoryList = item.list;
-            this.form.detailDtoList.forEach((detailItem) => {
-              if (detailItem.orgGoodsId === OrgGoodsId) {
-                detailItem.fixInfo = item.orgGoodsDto;
-                return false;
-              }
-            });
-          }
-        });
-        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-      },
-      addProduct: function () {// 货品加入到合同
-        if (!this.product.orgGoodsId) {
-          this.$notify.info({
-            duration: 2000,
-            message: '请先选择产品'
-          });
-          return false;
-        }
-        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-        if (!isCheck) return;
-        this.$refs['orderGoodsAddForm'].validate((valid) => {
-          if (!valid) {
-            return false;
-          }
-          this.searchProductList.forEach((item) => {
-            if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-              this.product.orgGoodsName = item.orgGoodsDto.name;
-              this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
-              item.list.forEach(m => {
-                let amount = Math.ceil(m.proportion * this.product.amount);
-                this.form.detailDtoList.push({
-                  mainOrgId: item.orgGoodsDto.id,
-                  isCombination: true,
-                  orgGoodsId: m.accessory,
-                  orgGoodsName: m.name,
-                  unitPrice: m.procurementPrice ? m.procurementPrice : 0,
-                  amount: amount,
-                  measurementUnit: m.accessoryGoods.measurementUnit,
-                  packingCount: null,
-                  specificationsId: ''
-                });
-              });
-            }
-          });
-          this.$nextTick(function () {
-            this.product = {
-              'amount': null,
-              'entrustment': false,
-              'measurementUnit': '',
-              'orgGoodsId': '',
-              'packingCount': null,
-              'specificationsId': '',
-              'fixInfo': {
-                'goodsDto': {}
-              },
-              'unitPrice': null
-            };
-            this.$refs['orderGoodsAddForm'].resetFields();
-            this.accessoryList = [];
-          });
-        });
-
-      },
-      remove: function (item) {
-        this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
-        this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
-        this.searchProduct();
-      },
-      editItem (item) {
-        this.filterProductList.push({
-          orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
-          list: []
-        });
-        this.product.orgGoodsId = item.orgGoodsId;
-        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
-        this.product.amount = item.amount;
-        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
-        this.remove(item);
       },
       synchroOrder: function () {
         this.$confirm('确认对采购合同《' + this.form.purchaseContractName + '》进行同步信息操作?', '', {
@@ -994,28 +665,6 @@
             this.$notify.error({
               duration: 2000,
               message: error.response.data && error.response.data.msg || '同步采购合同《' + this.form.purchaseContractName + '》的信息失败'
-            });
-          });
-        });
-      },
-      createOrder: function () {
-        this.$confirm('确认按照采购合同《' + this.form.purchaseContractName + '》的信息批量生成采购订单?', '', {
-          confirmButtonText: '确认',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          PurchaseContract.batchCreateOrder(this.orderId).then(() => {
-            this.$notify.success({
-              duration: 2000,
-              title: '成功',
-              message: '批量生成采购订单成功'
-            });
-            this.$emit('change', this.form);
-            this.$emit('right-close');
-          }).catch(error => {
-            this.$notify.error({
-              duration: 2000,
-              message: error.response.data && error.response.data.msg || '批量生成采购订单失败'
             });
           });
         });
