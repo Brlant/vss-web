@@ -142,12 +142,12 @@
       </div>
       <div class="order-list clearfix" style="margin-top: 10px">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="5">疫苗厂商</el-col>
-          <el-col :span="5">发票号码</el-col>
+          <el-col :span="6">疫苗厂商</el-col>
+          <el-col :span="6">发票号码</el-col>
           <el-col :span="3">发票金额</el-col>
           <el-col :span="3">待付金额</el-col>
-          <el-col :span="3">是否已到</el-col>
-          <el-col :span="2">状态</el-col>
+          <!--<el-col :span="3">是否已到</el-col>-->
+          <el-col :span="3">状态</el-col>
           <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -166,12 +166,12 @@
           <div class="order-list-item order-list-item-bg" v-for="item in invoices"
                :class="[{'active':currentId==item.id}]" @click="showDetailPart(item)">
             <el-row>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="6" class="R pt10">
                     <span>
                       {{ item.factoryName }}
                     </span>
               </el-col>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="6" class="R pt10">
                     <span>
                       {{ item.invoiceNumber }}
                     </span>
@@ -186,12 +186,12 @@
                        ￥{{ (item.amount - item.paidAmount) | formatMoney}}
                     </span>
               </el-col>
+              <!--<el-col :span="3" class="R pt10">-->
+                    <!--<span>-->
+                      <!--{{ item.haveTo ? '已到' : '未到'}}-->
+                    <!--</span>-->
+              <!--</el-col>-->
               <el-col :span="3" class="R pt10">
-                    <span>
-                      {{ item.haveTo ? '已到' : '未到'}}
-                    </span>
-              </el-col>
-              <el-col :span="2" class="R pt10">
                     <span>
                       {{ item.status === 0 ? '未付清' : '已付清'}}
                     </span>

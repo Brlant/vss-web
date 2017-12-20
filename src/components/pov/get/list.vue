@@ -147,7 +147,8 @@
 
 </template>
 <script>
-  import {cerpAction, Vaccine, VaccineRights } from '@/resources';
+  import { Vaccine, VaccineRights } from '@/resources';
+
   export default {
     data: function () {
       return {
@@ -210,29 +211,29 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
-        this.typePager.currentPage = pageNo;
-        let params = Object.assign({}, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          keyWord: this.typeTxt
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.$store.commit('initBottomLoading', false);
-
-          if (isContinue) {
-            this.showTypeList = this.showTypeList.concat(res.data.list);
-          } else {
-            this.showTypeList = res.data.list;
-            if (this.showTypeList.length !== 0) {
-              this.currentItem = res.data.list[0];
-              this.orgName = this.showTypeList[0].subordinateName;
-              this.getPageList();
-            } else {
-              this.currentItem = Object.assign({'id': ''});
-            }
-          }
-          this.typePager.totalPage = res.data.totalPage;
-        });
+        // this.typePager.currentPage = pageNo;
+        // let params = Object.assign({}, {
+        //   pageNo: pageNo,
+        //   pageSize: this.pager.pageSize,
+        //   keyWord: this.typeTxt
+        // });
+        // cerpAction.queryAllPov(params).then(res => {
+        //   this.$store.commit('initBottomLoading', false);
+        //
+        //   if (isContinue) {
+        //     this.showTypeList = this.showTypeList.concat(res.data.list);
+        //   } else {
+        //     this.showTypeList = res.data.list;
+        //     if (this.showTypeList.length !== 0) {
+        //       this.currentItem = res.data.list[0];
+        //       this.orgName = this.showTypeList[0].subordinateName;
+        //       this.getPageList();
+        //     } else {
+        //       this.currentItem = Object.assign({'id': ''});
+        //     }
+        //   }
+        //   this.typePager.totalPage = res.data.totalPage;
+        // });
       },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);

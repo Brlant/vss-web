@@ -219,22 +219,26 @@
               <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV" :clearable="true"
                          v-model="form.povId" @change="povChange"
                          popper-class="good-selects">
-                <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                           v-for="org in orgList">
+                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
                   </div>
                   <div style="overflow: hidden">
-                  <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.subordinateCode}}
-                  </span>
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
                   </div>
                 </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="接种点仓库" prop="warehouseId">
               <el-select placeholder="请选择接种点仓库" v-model="form.warehouseId" filterable clearable>
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
+                <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">-->
+                <!--</el-option>-->
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
+                           v-for="item in warehouses">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -253,7 +257,8 @@
                    onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="疫苗">
-              <el-select v-model="product.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
+              <el-select v-model="product.orgGoodsId" filterable :filter-method="filterGoods" placeholder="请输入名称搜索产品"
+                         :clearable="true"
                          :loading="loading" popper-class="good-selects"
                          @change="getGoodDetail">
 
@@ -390,7 +395,7 @@
 </template>
 
 <script>
-  import { pullSignal, cerpAction, Address, VaccineRights, http } from '@/resources';
+  import { Address, BaseInfo, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -463,7 +468,8 @@
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
         doing: false,
-        orgList: []
+        orgList: [],
+        totalFilterProductList: []
       };
     },
     computed: {
@@ -507,6 +513,17 @@
       }
     },
     methods: {
+      filterGoods (query) {
+        this.filterProductList = this.totalFilterProductList.filter(f => f.orgGoodsNameAcronymy.indexOf(query) !== -1 ||
+          f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1);
+      },
+      filterAddressLabel (item) {
+        let name = item.name ? '【' + item.name + '】' : '';
+        return name + this.getWarehouseAdress(item);
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        return item.detail;
+      },
       editOrderInfo () {
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
           return {
@@ -624,11 +641,20 @@
         });
       },
       filterPOV: function (query) {// 过滤POV
-        let params = Object.assign({}, {
-          keyWord: query
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
+        // let params = Object.assign({}, {
+        //   keyWord: query
+        // });
+        // cerpAction.queryAllPov(params).then(res => {
+        //   this.orgList = res.data.list;
+        // });
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       queryOnCDCs () {
@@ -668,7 +694,8 @@
             arr.push(item);
           }
         });
-        this.filterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        this.filterProductList = JSON.parse(JSON.stringify(this.totalFilterProductList));
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
         if (!OrgGoodsId) {

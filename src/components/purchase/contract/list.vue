@@ -220,15 +220,8 @@
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <div>
-                  <perm label="purchasing-contract-edit">
-                   <span @click.stop.prevent="editContract(item)">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="el-icon-t-edit"></i></a>
-                    编辑
-                  </span>
-                  </perm>
-                </div>
+                <!--<div>-->
+                <!--</div>-->
                 <!--<perm label="purchasing-contract-add">-->
                 <!--<div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">-->
                 <!--<el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>-->
@@ -244,14 +237,12 @@
                 </div>
                 <div>
                   <perm label="purchasing-contract-edit">
-                    <span @click.stop.prevent="stopContract(item)" v-if="item.availabilityStatus">
+                     <span @click.stop.prevent="editContract(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
-                        class="el-icon-t-forbidden"></i></a>
-                      停用
+                        class="el-icon-t-edit"></i></a>
+                      编辑
                     </span>
                   </perm>
-                </div>
-                <div>
                   <perm label="purchasing-contract-edit">
                     <span @click.stop.prevent="startContract(item)" v-if="!item.availabilityStatus">
                       <a href="#" class="btn-circle" @click.prevent=""><i
@@ -259,7 +250,23 @@
                       启用
                     </span>
                   </perm>
+                  <perm label="purchasing-contract-edit">
+                    <span @click.stop.prevent="stopContract(item)" v-if="item.availabilityStatus">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="el-icon-t-forbidden"></i></a>
+                      停用
+                    </span>
+                  </perm>
                 </div>
+                <!--<div>-->
+                  <!--<perm label="purchasing-contract-edit">-->
+                    <!--<span @click.stop.prevent="startContract(item)" v-if="!item.availabilityStatus">-->
+                      <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
+                        <!--class="el-icon-t-start"></i></a>-->
+                      <!--启用-->
+                    <!--</span>-->
+                  <!--</perm>-->
+                <!--</div>-->
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -281,10 +288,15 @@
                 :action="action"
                 @right-close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="resetRightBox"
+                :css="{'width':'1000px','padding':0}">
+      <edit-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
+                 :action="action"
+                 @right-close="resetRightBox"></edit-form>
+    </page-right>
     <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
-      <show-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
-                 :action="action"
+      <show-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase" :action="action"
                  @right-close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
@@ -298,12 +310,13 @@
   import utils from '@/tools/utils';
   import addForm from './form/InForm.vue';
   import showForm from './form/showForm.vue';
+  import editForm from './form/editForm.vue';
   import orderForm from '../order/show.order.in.vue';
   import {Order, BaseInfo, PurchaseContract} from '@/resources';
 
   export default {
     components: {
-      addForm, showForm, orderForm
+      addForm, showForm, orderForm, editForm
     },
     data: function () {
       return {
@@ -311,13 +324,15 @@
         showItemRight: false,
         showDetail: false,
         showOrderRight: false,
+        showEditItemRight: false,
         showSearch: false,
         currentOrderId: '',
         orderId: '',
         state: '',
         orderList: [],
         filters: {
-          availabilityStatus: true
+          availabilityStatus: true,
+          used: false
         },
         searchCondition: {
           keyWord: '',
@@ -325,8 +340,9 @@
         },
         expectedTime: '',
         orgType: {
-          0: {'title': '正常', 'num': '', 'availabilityStatus': true},
-          1: {'title': '停用', 'num': '', 'availabilityStatus': false}
+          0: {'title': '待生成订单', 'num': '', 'used': false, 'availabilityStatus': true},
+          1: {'title': '正常', 'num': '', 'used': true, 'availabilityStatus': true},
+          2: {'title': '停用', 'num': '', 'availabilityStatus': false}
         },
         activeStatus: 0,
         orgList: [], // 来源单位列表
@@ -344,14 +360,14 @@
     },
     mounted() {
       this.getOrderList(1);
-      let orderId = this.$route.params.id;
-      if (orderId === 'add') {
-        this.add();
-        this.purchase = {
-          id: this.$route.query.id,
-          count: this.$route.query.count
-        };
-      }
+//      let orderId = this.$route.params.id;
+//      if (orderId === 'add') {
+//        this.add();
+//        this.purchase = {
+//          id: this.$route.query.id,
+//          count: this.$route.query.count
+//        };
+//      }
     },
     computed: {
       transportationMeansList: function () {
@@ -456,7 +472,7 @@
       editContract(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
-        this.showItemRight = true;
+        this.showEditItemRight = true;
         this.defaultIndex = 2;
       },
       showContract(item) {
@@ -493,6 +509,7 @@
         this.showDetail = false;
         this.showItemRight = false;
         this.showOrderRight = false;
+        this.showEditItemRight = false;
         this.defaultIndex = 0;
         this.action = '';
       },
@@ -556,8 +573,9 @@
       queryStatusNum: function (params) {
         PurchaseContract.queryStateNum(params).then(res => {
           let data = res.data;
-          this.orgType[0].num = this.obtionStatusNum(data['invalid']);
+          this.orgType[0].num = this.obtionStatusNum(data['unused']);
           this.orgType[1].num = this.obtionStatusNum(data['valid']);
+          this.orgType[2].num = this.obtionStatusNum(data['invalid']);
         });
       },
       obtionStatusNum: function (num) {
@@ -569,6 +587,7 @@
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;
         this.filters.availabilityStatus = item.availabilityStatus;
+        this.filters.used = item.used;
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';

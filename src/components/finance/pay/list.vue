@@ -68,6 +68,10 @@
       margin-bottom: 10px;
     }
   }
+
+  .d-table > div.d-table-left {
+    width: 220px;
+  }
 </style>
 <template>
   <div>
@@ -213,25 +217,31 @@
               <!--</span>-->
             </div>
             <el-table :data="payDetails" class="header-list" border
-                      :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="600">
-              <el-table-column prop="orderNo" label="订单号" :sortable="true"></el-table-column>
-              <el-table-column prop="goodsName" label="货品名称" :sortable="true" width="180"></el-table-column>
-              <el-table-column prop="createTime" label="发生时间" :sortable="true">
+                      :header-row-class-name="'headerClass'" v-loading="loadingData">
+              <el-table-column prop="orderNo" label="订单号" width="85" :sortable="true"></el-table-column>
+              <el-table-column prop="goodsName" label="货品名称" :sortable="true"></el-table-column>
+              <el-table-column prop="goodsCount" label="数量" width="60" :sortable="true"></el-table-column>
+              <el-table-column prop="createTime" label="发生时间" width="90" :sortable="true">
                 <template slot-scope="scope">
                   {{ scope.row.createTime | date }}
                 </template>
               </el-table-column>
-              <el-table-column prop="billAmount" label="应付金额" :sortable="true">
+              <el-table-column prop="billAmount" label="应付金额" width="90" :sortable="true">
                 <template slot-scope="scope">
                   ￥{{ scope.row.billAmount | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="salePrice" label="待付金额" :sortable="true">
+              <el-table-column prop="salePrice" label="待付金额" width="90" :sortable="true">
                 <template slot-scope="scope">
                   ￥{{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="saleMoney" label="状态" :sortable="true" :filters="filterStatus"
+              <el-table-column prop="invoceId" label="是否发票已到" :sortable="true">
+                <template slot-scope="scope">
+                  {{ scope.row.invoiceId ? '是' : '否' }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="saleMoney" label="状态" width="80" :sortable="true" :filters="filterStatus"
                                :filter-method="filterStatusMethod">
                 <template slot-scope="scope">
                   {{statusTitle(scope.row.status)}}
@@ -268,7 +278,7 @@
 
 </template>
 <script>
-  import { pay, OrgGoods, Vaccine } from '@/resources';
+  import { pay, Vaccine } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.in.vue';
@@ -335,7 +345,9 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height + 10) + 'px';
+        return height;
       },
       user () {
         return this.$store.state.user;

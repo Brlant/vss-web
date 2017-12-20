@@ -82,6 +82,7 @@
         <tr>
           <th width="30px">操作</th>
           <th style="width: 240px">货品名称</th>
+          <th>数量</th>
           <th>订单号</th>
           <th>应付金额</th>
           <th>发生时间</th>
@@ -101,6 +102,9 @@
           </td>
           <td>
             <span>{{product.goodsName}}</span>
+          </td>
+          <td>
+            <span>{{product.goodsCount}}</span>
           </td>
           <td>
             <span>{{product.orderNo}}</span>
@@ -127,12 +131,13 @@
     <div class="product-list-detail" v-show="selectPayments.length">
       <h3 style="background: #f1f1f1;overflow: hidden">
         <span style="float: left">已选明细</span>
-        <span style="float: right">发票金额：￥{{ amount | formatMoney }}</span>
+        <span style="float: right">已选发票明细总额：￥{{ amount | formatMoney }}</span>
       </h3>
       <table class="table">
         <thead>
         <tr>
-          <th style="width: 300px">货品名称</th>
+          <th style="width: 240px">货品名称</th>
+          <th>数量</th>
           <th>订单号</th>
           <th>应付金额</th>
           <th>发生时间</th>
@@ -143,6 +148,9 @@
         <tr v-for="product in selectPayments">
           <td>
             <span>{{product.goodsName}}</span>
+          </td>
+          <td>
+            <span>{{product.goodsCount}}</span>
           </td>
           <td>
             <span>{{product.orderNo}}</span>
@@ -167,7 +175,7 @@
 
 </template>
 <script>
-  import { pay, Vaccine } from '@/resources';
+  import { Vaccine } from '@/resources';
 
   export default {
     props: {
@@ -184,7 +192,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 5
+          pageSize: 50
         },
         filterRights: {
           orgGoodsId: '',

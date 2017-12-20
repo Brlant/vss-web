@@ -138,7 +138,7 @@
                       {{currentOrder.demandTime | date }}
                     </oms-row>
                     <oms-row label="接种点仓库">
-                      {{currentOrder.warehouseName}}
+                      {{currentOrder.warehouseAddress}}
                     </oms-row>
                   </el-col>
                   <el-col :span="16">

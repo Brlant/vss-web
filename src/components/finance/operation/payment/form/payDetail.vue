@@ -178,7 +178,7 @@
 
 </template>
 <script>
-  import { pay, Vaccine } from '@/resources';
+  import { Vaccine } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -197,7 +197,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 5
+          pageSize: 50
         },
         filterRights: {
           orgGoodsId: '',

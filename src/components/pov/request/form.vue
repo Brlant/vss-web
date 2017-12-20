@@ -256,7 +256,12 @@
             </el-form-item>
             <el-form-item label="接种点仓库" prop="warehouseId">
               <el-select placeholder="请选择接种点仓库" v-model="form.warehouseId" filterable clearable>
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
+                <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">-->
+                <!--</el-option>-->
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
+                           v-for="item in warehouses">
+                  <span class="pull-left">{{ item.name }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -275,7 +280,8 @@
                    onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="疫苗">
-              <el-select v-model="product.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
+              <el-select v-model="product.orgGoodsId" filterable :filter-method="filterGoods" placeholder="请输入名称搜索产品"
+                         :clearable="true"
                          :loading="loading" popper-class="order-good-selects"
                          @change="getGoodDetail">
 
@@ -318,6 +324,20 @@
             <div class="product-info-fix clearfix">
               <el-row>
                 <el-col :span="12">
+                  <oms-row label="大包装" :span="8" v-show="product.fixInfo.goodsDto.largePacking">
+                    {{product.fixInfo.goodsDto.largePacking}}
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'"
+                          :dict-key="product.fixInfo.goodsDto.largePackageUnit"></dict>
+                  </oms-row>
+                  <oms-row label="中包装" :span="8" v-show="product.fixInfo.goodsDto.mediumPacking">
+                    {{product.fixInfo.goodsDto.mediumPacking}}
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    /
+                    <dict :dict-group="'shipmentPackingUnit'"
+                          :dict-key="product.fixInfo.goodsDto.mediumPackageUnit"></dict>
+                  </oms-row>
                   <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
                     {{product.fixInfo.goodsDto.smallPacking}}
                     <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
@@ -412,7 +432,7 @@
 </template>
 
 <script>
-  import { pullSignal, cerpAction, Address, VaccineRights, http } from '@/resources';
+  import { Address, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -484,7 +504,8 @@
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
-        doing: false
+        doing: false,
+        totalFilterProductList: []
       };
     },
     computed: {
@@ -523,6 +544,17 @@
       }
     },
     methods: {
+      filterGoods (query) {
+        this.filterProductList = this.totalFilterProductList.filter(f => f.orgGoodsNameAcronymy.indexOf(query) !== -1 ||
+          f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1);
+      },
+      filterAddressLabel (item) {
+        let name = item.name ? '【' + item.name + '】' : '';
+        return name + this.getWarehouseAdress(item);
+      },
+      getWarehouseAdress: function (item) { // 得到仓库地址
+        return item.detail;
+      },
       editOrderInfo () {
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
           return {
@@ -646,7 +678,8 @@
             arr.push(item);
           }
         });
-        this.filterProductList = arr.filter(f => f.goodsTypeId === this.form.type.toString());
+        this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.form.type.toString());
+        this.filterProductList = JSON.parse(JSON.stringify(this.totalFilterProductList));
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
         if (!OrgGoodsId) {

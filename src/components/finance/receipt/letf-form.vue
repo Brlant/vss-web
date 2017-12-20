@@ -252,7 +252,7 @@
   </div>
 </template>
 <script>
-  import { cerpAction, receipt } from '@/resources';
+  import { receipt } from '@/resources';
 
   export default {
     data () {
@@ -268,13 +268,13 @@
     },
     methods: {
       queryPOVs (query) {
-        this.povs = [];
-        let params = {
-          keyWord: query
-        };
-        cerpAction.queryAllPov(params).then(res => {
-          this.povs = res.data.list;
-        });
+        // this.povs = [];
+        // let params = {
+        //   keyWord: query
+        // };
+        // cerpAction.queryAllPov(params).then(res => {
+        //   this.povs = res.data.list;
+        // });
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {

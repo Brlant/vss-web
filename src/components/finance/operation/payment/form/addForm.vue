@@ -319,7 +319,7 @@
 </template>
 
 <script>
-  import { http, Address, BaseInfo, pay, BillPayable } from '../../../../../resources';
+  import { BillPayable, pay } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
   import payDetail from './payDetail.vue';
 
@@ -352,7 +352,7 @@
           orgId: '',
           explain: '',
           amount: '',
-          billPayType: '1',
+          billPayType: '0',
           relationList: []
         },
         rules: {
@@ -412,7 +412,7 @@
           orgId: '',
           explain: '',
           amount: '',
-          billPayType: '1',
+          billPayType: '0',
           relationList: []
         };
         this.index = 0;
@@ -457,6 +457,7 @@
         }
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
+            this.index = 0;
             return;
           }
           this.doing = true;

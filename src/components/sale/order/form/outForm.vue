@@ -267,15 +267,14 @@
             <el-form-item label="接种点" prop="customerId">
               <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
-                <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
-                           v-for="org in orgList">
+                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
                   </div>
                   <div style="overflow: hidden">
-                  <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.subordinateCode}}
-                  </span>
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
                   </div>
                 </el-option>
               </el-select>
@@ -284,7 +283,7 @@
                           v-show="showContent.isShowOtherContent" :clearable="true">
               <el-select placeholder="请选择接种点仓库" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress" :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -302,7 +301,8 @@
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
               <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter">
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
+                           v-for="item in LogisticsCenter">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -354,6 +354,9 @@
                                 style="line-height: 22px;margin-left: 20px;height: 20px">
                           组合
                         </el-tag>
+                        <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
+                          v-show="item.orgGoodsDto.goodsDto.specifications">规格</span>  {{item.orgGoodsDto.goodsDto.specifications}}
+                        </span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left" v-show="vaccineType==='2'"><span
@@ -388,25 +391,10 @@
 
               <div class="product-info-fix clearfix">
                 <el-row>
-                  <el-col :span="12">
-                    <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
-                      {{product.fixInfo.goodsDto.smallPacking}}
-                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                      /
-                      <dict :dict-group="'shipmentPackingUnit'"
-                            :dict-key="product.fixInfo.goodsDto.smallPackageUnit"></dict>
-                    </oms-row>
-                    <oms-row label="货品编号" :span="8">
-                      {{product.fixInfo.goodsNo}}
-                    </oms-row>
-                    <oms-row label="供货厂商" :span="8">
-                      {{product.fixInfo.salesFirmName}}
-                    </oms-row>
-                    <oms-row label="批准文号" :span="8">
-                      {{product.fixInfo.goodsDto.approvalNumber}}
-                    </oms-row>
+                  <el-col :span="14">
+                    <goods-info-part :product-info="product"></goods-info-part>
                   </el-col>
-                  <el-col :span="12">
+                  <el-col :span="10">
                     <span v-show="accessoryList.length">【组合货品】</span>
                     <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
@@ -533,7 +521,7 @@
 </template>
 
 <script>
-  import { Address, cerpAction, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
 
@@ -768,6 +756,10 @@
 //      }
     },
     methods: {
+      filterAddressLabel (item) {
+        let name = item.name ? '【' + item.name + '】' : '';
+        return name + this.getWarehouseAdress(item);
+      },
       setDefaultValue () {
         this.form.transportationMeansId = '0';
         this.form.transportationCondition = '0';
@@ -810,9 +802,9 @@
       },
       changeRemark (form) {
         if (!this.form.remark) {
-          this.form.remark = form.name + '  数量' + form.count + form.materialUnit;
+          this.form.remark = form.count + form.name;
         } else {
-          this.form.remark += '，' + form.name + '  数量' + form.count + form.materialUnit;
+          this.form.remark += '，' + form.count + form.name;
         }
       },
       changeNumber () {
@@ -835,11 +827,14 @@
         this.$emit('close');
       },
       filterPOV: function (query) {// 过滤POV
-        let params = Object.assign({}, {
-          keyWord: query
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       filterLogisticsCenter: function () {// 过滤物流中心
@@ -969,7 +964,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+        return item.detail;
       },
       checkLicence: function (val) {// 检查货主/单位证照是否过期
         if (!val || !this.action) return;

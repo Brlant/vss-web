@@ -280,7 +280,7 @@
                           v-show="showContent.isShowOtherContent">
               <el-select placeholder="请选择供货厂商仓库" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -298,7 +298,8 @@
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
               <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter">
+                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
+                           v-for="item in LogisticsCenter">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -349,6 +350,9 @@
                                 style="line-height: 22px;margin-left: 20px;height: 20px">
                           组合
                         </el-tag>
+                        <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
+                          v-show="item.orgGoodsDto.goodsDto.specifications">规格</span>  {{item.orgGoodsDto.goodsDto.specifications}}
+                        </span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
@@ -383,25 +387,10 @@
 
               <div class="product-info-fix clearfix">
                 <el-row>
-                  <el-col :span="12">
-                    <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
-                      {{product.fixInfo.goodsDto.smallPacking}}
-                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                      /
-                      <dict :dict-group="'shipmentPackingUnit'"
-                            :dict-key="product.fixInfo.goodsDto.smallPackageUnit"></dict>
-                    </oms-row>
-                    <oms-row label="货品编号" :span="8">
-                      {{product.fixInfo.goodsNo}}
-                    </oms-row>
-                    <oms-row label="供货厂商" :span="8">
-                      {{product.fixInfo.salesFirmName}}
-                    </oms-row>
-                    <oms-row label="批准文号" :span="8">
-                      {{product.fixInfo.goodsDto.approvalNumber}}
-                    </oms-row>
+                  <el-col :span="14">
+                    <goods-info-part :product-info="product"></goods-info-part>
                   </el-col>
-                  <el-col :span="12">
+                  <el-col :span="10">
                     <span v-show="accessoryList.length">【组合货品】</span>
                     <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
@@ -753,6 +742,10 @@
 //      }
     },
     methods: {
+      filterAddressLabel (item) {
+        let name = item.name ? '【' + item.name + '】' : '';
+        return name + this.getWarehouseAdress(item);
+      },
       setDefaultValue () {
         this.form.transportationMeansId = '1';
         this.form.transportationCondition = '0';
@@ -940,7 +933,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+        return item.detail;
       },
       filterAddress () {
         Address.queryAddress(this.form.orgId, {

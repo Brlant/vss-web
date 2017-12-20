@@ -54,6 +54,13 @@
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
               class="el-icon-t-search"></i> </a>
           </span>
+            <perm label="first-vaccine-authorization-add">
+              <span class="pull-right" style="margin-right: 10px">
+            <a href="#" class="btn-circle" @click.prevent="showMultiplePart"><i
+              class="el-icon-t-plus"></i></a>
+          </span>
+            </perm>
+
             货主疫苗列表
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
@@ -88,14 +95,40 @@
       </div>
       <div class="d-table-right">
         <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-          <h2 class="clearfix">
+          <el-row>
+            <el-col :span="20">
+              <el-form class="rightForm" ref="rightForm" inline onsubmit="return false">
+                <el-form-item label="接种点">
+                  <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV"
+                             :clearable="true" @click.native.once="filterPOV('')"
+                             v-model="searchCondition.povId" popper-class="good-selects ">
+                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                      <div style="overflow: hidden">
+                        <span class="pull-left" style="clear: right">{{org.name}}</span>
+                      </div>
+                      <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码</span> {{org.manufacturerCode}}
+                      </span>
+                      </div>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item style="margin-left: 10px">
+                  <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <el-col :span="4">
               <span class="pull-right" v-show="showTypeList.length">
                   <perm label="first-vaccine-authorization-add">
                     <el-button @click="add(currentItem)"><i
                       class="el-icon-t-plus"></i>添加</el-button>
                   </perm>
               </span>
-          </h2>
+            </el-col>
+          </el-row>
           <div class="pov-info">
             <el-row class="clearfix font-bold" style="font-weight: 500;font-size: 14px">
               <oms-row label="疫苗名称" :span="3">
@@ -146,7 +179,7 @@
           </table>
           <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
             <el-pagination
-              layout="prev, pager, next"
+              layout="total,prev, pager, next"
               :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
               :current-page="pager.currentPage">
             </el-pagination>
@@ -159,21 +192,27 @@
       <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="refreshDetails"
                 @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showMultiple" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
+      <multiple-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refreshLeft="refreshLeft"
+                     @close="resetRightBox"></multiple-form>
+    </page-right>
   </div>
 
 </template>
 <script>
   import addForm from './form.vue';
-  import { cerpAction, PurchaseAgreement, Vaccine, VaccineRights } from '@/resources';
+  import { BaseInfo, Vaccine, VaccineRights } from '@/resources';
+  import multipleForm from './multiple-from';
 
   export default {
     components: {
-      addForm
+      addForm, multipleForm
     },
     data: function () {
       return {
         loadingData: false,
         showRight: false,
+        showMultiple: false,
         showTypeSearch: false,
         showSearch: false,
         dataRows: [],
@@ -181,6 +220,9 @@
         typeTxt: '',
         keyTxt: '',
         filters: {
+          povId: ''
+        },
+        searchCondition: {
           povId: ''
         },
         keyWord: '',
@@ -230,6 +272,12 @@
       },
       keyWord () {
         this.pickTypeList();
+      },
+      filters: {
+        handler: function () {
+          this.getPageList(1);
+        },
+        deep: true
       }
     },
     methods: {
@@ -238,6 +286,7 @@
       },
       resetRightBox: function () {
         this.showRight = false;
+        this.showMultiple = false;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
@@ -269,6 +318,7 @@
               this.currentItem = Object.assign({'id': ''});
             }
           }
+          this.pager.count = res.data.count;
           this.typePager.totalPage = res.data.totalPage;
         });
       },
@@ -281,19 +331,17 @@
         });
         Vaccine.queryLevelVaccine(params).then(res => {
           this.vaccines = res.data.list;
-          this.filterPOVs();
         });
-      },
-      filterPOVs () {
-        this.showOrgList = this.orgList.filter(f => !this.dataRows.some(s => f.subordinateId === s.povId));
       },
       filterPOV: function (query) {// 过滤POV
-        let params = Object.assign({}, {
-          keyWord: query
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
-          this.filterPOVs();
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       getPageList: function (pageNo) {
@@ -305,16 +353,30 @@
         let params = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize
-        });
+        }, this.filters);
         VaccineRights.queryPovByVaccine(orgId, params).then(res => {
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
         });
       },
+      searchInOrder: function () {// 搜索
+        Object.assign(this.filters, this.searchCondition);
+      },
+      resetSearchForm: function () {// 重置表单
+        let temp = {
+          povId: ''
+        };
+        Object.assign(this.searchCondition, temp);
+        Object.assign(this.filters, temp);
+      },
       refreshDetails () {
         this.getPageList(1);
         this.showRight = false;
+      },
+      refreshLeft () {
+        this.getOrgsList(1);
+        this.resetRightBox();
       },
       removeVaccine: function (item) {
         this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
@@ -325,11 +387,11 @@
           VaccineRights.deleteVaccine(item.id).then(() => {
             this.getPageList(1);
             this.$notify.success({
-              message: '已成功删除疫苗'
+              message: '已成功删除接种点'
             });
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '删除疫苗失败'
+              message: error.response.data && error.response.data.msg || '删除接种点失败'
             });
           });
         });
@@ -367,6 +429,10 @@
         this.orgName = item.orgGoodsDto.name;
         this.currentItem = item;
         this.getPageList(1);
+      },
+      showMultiplePart () {
+        this.formPara = {};
+        this.showMultiple = true;
       },
       add () {
         this.formPara = {};

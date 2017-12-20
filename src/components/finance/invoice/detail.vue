@@ -65,6 +65,7 @@
               <thead>
               <tr>
                 <th style="width: 250px">货品名称</th>
+                <th>数量</th>
                 <th>订单号</th>
                 <th>应付金额</th>
                 <th>待付金额</th>
@@ -75,6 +76,9 @@
               <tr v-for="product in info.list">
                 <td>
                   <span>{{product.goodsName}}</span>
+                </td>
+                <td>
+                  <span>{{product.goodsCount}}</span>
                 </td>
                 <td>
                   <span>{{product.orderNo}}</span>
@@ -100,6 +104,7 @@
 </template>
 <script>
   import { invoiceManage } from '@/resources';
+
   export default {
     props: {
       currentId: String,

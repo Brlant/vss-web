@@ -249,8 +249,8 @@
               <el-transfer v-loading="loading"
                            v-model="form.povList"
                            :props="{
-                  key: 'followOrgId',
-                  label: 'followOrgName'
+                  key: 'subordinateId',
+                  label: 'subordinateName'
                 }"
                            filter-placeholder="请输入名称搜索接种点"
                            :data="orgList"
@@ -271,8 +271,7 @@
   </div>
 </template>
 <script>
-  import { Vaccine, BriceGroup, cerpAction, VaccineRights, http } from '@/resources';
-  import utils from '@/tools/utils';
+  import { http, VaccineRights } from '@/resources';
 
   export default {
     props: {
@@ -303,11 +302,11 @@
     watch: {
       formItem (val) {
         this.$refs['d-form'].resetFields();
-        if (val.id) {
+        if (val && val.id) {
           this.title = '编辑疫苗授权';
           this.orgList.push({
-            followOrgId: val.povId,
-            followOrgName: val.povName
+            subordinateId: val.povId,
+            subordinateName: val.povName
           });
           this.prices.push({
             id: val.salePriceGroupId,
@@ -330,16 +329,18 @@
     methods: {
       filterPOV: function (query) {// 过滤POV
         let params = Object.assign({}, {
-          keyWord: query
+          keyWord: query,
+          orgGoodsId: this.currentItem.orgGoodsDto.id
         });
         this.loading = true;
-        this.$http.get('erp-org/customer', {params}).then(res => {
+        this.$http.get('/vaccine-authorization/pov/filter', {params}).then(res => {
           this.orgList = res.data;
           this.loading = false;
         });
       },
       filterMethod (query, item) {
-        return item.followOrgName && item.followOrgName.indexOf(query) > -1;
+        if (!query) return true;
+        return item.subordinateName && item.subordinateName.indexOf(query) > -1;
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {

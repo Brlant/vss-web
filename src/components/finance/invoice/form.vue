@@ -279,10 +279,10 @@
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
-            <el-form-item label="是否已到" prop="haveTo">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
-                         v-model="form.haveTo"></el-switch>
-            </el-form-item>
+            <!--<el-form-item label="是否已到" prop="haveTo">-->
+              <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+                         <!--v-model="form.haveTo"></el-switch>-->
+            <!--</el-form-item>-->
           </el-form>
         </div>
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
@@ -293,7 +293,7 @@
   </div>
 </template>
 <script>
-  import { invoiceManage, BaseInfo } from '@/resources';
+  import { BaseInfo, invoiceManage } from '@/resources';
   import utils from '@/tools/utils';
   import payDetail from './payDetail.vue';
 
@@ -390,6 +390,7 @@
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {
           if (!valid || this.doing) {
+            this.index = 0;
             return false;
           }
           this.doing = true;

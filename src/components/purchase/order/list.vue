@@ -156,24 +156,34 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="物流商" :span="6">-->
-            <!--<el-select filterable remote placeholder="请输入名称搜索物流商" :remote-method="filterLogistics"-->
-            <!--:clearable="true"-->
-            <!--v-model="searchCondition.logisticsProviderId" popperClass="good-selects">-->
-            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList">-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
-            <!--</div>-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="select-other-info pull-left">-->
-            <!--<span>系统代码</span> {{org.manufacturerCode}}-->
-            <!--</span>-->
-            <!--</div>-->
-            <!--</el-option>-->
-            <!--</el-select>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
+            <el-col :span="8" v-show="vaccineType === '1'">
+              <oms-form-row label="货主货品" :span="6">
+                <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货主货品"
+                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
+                           popper-class="good-selects">
+                  <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
+                             :label="item.orgGoodsDto.name"
+                             :value="item.orgGoodsDto.id">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                        </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8" v-show="vaccineType === '1'">
+              <oms-form-row label="组织区域代码" :span="7">
+                <oms-input type="text" v-model="searchCondition.orgAreaCode" placeholder="请输入组织区域代码"></oms-input>
+              </oms-form-row>
+            </el-col>
             <el-col :span="8">
               <oms-form-row label="下单时间" :span="6">
                 <el-col :span="24">
@@ -259,7 +269,6 @@
               <el-col :span="3">
                 <div>
                   {{getOrderStatus(item)}}
-                  <el-tag type="danger" v-show="item.exceptionFlag">异常({{ item.exceptionCount}})</el-tag>
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn" v-if="filters.state === '6'">
@@ -302,7 +311,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
-  import { Order, BaseInfo, erpOrder } from '@/resources';
+  import { BaseInfo, erpOrder, Order, Vaccine } from '@/resources';
 
   export default {
     components: {
@@ -326,6 +335,8 @@
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: '',
+          orgGoodsId: '',
+          orgAreaCode: '',
           deleteFlag: false
         },
         searchCondition: {
@@ -336,7 +347,9 @@
           createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
-          thirdPartyNumber: ''
+          thirdPartyNumber: '',
+          orgGoodsId: '',
+          orgAreaCode: ''
         },
         expectedTime: '',
         orgType: utils.inOrderType,
@@ -353,7 +366,8 @@
         action: '',
         user: {},
         state: '',
-        purchase: {}
+        purchase: {},
+        goodesList: []
       };
     },
     mounted () {
@@ -414,6 +428,17 @@
         this.searchCondition.createEndTime = this.formatTime(this.expectedTime[1]);
         Object.assign(this.filters, this.searchCondition);
       },
+      searchProduct (keyWord) {
+        let params = Object.assign({}, {
+          keyWord: keyWord,
+          orgId: this.$store.state.user['userCompanyAddress']
+        });
+        let level = this.$store.state.orgLevel;
+        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
+        Vaccine[api](params).then(res => {
+          this.goodesList = res.data.list;
+        });
+      },
       resetSearchForm: function () {// 重置表单
         let temp = {
           searchType: '',
@@ -423,7 +448,9 @@
           createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
-          thirdPartyNumber: ''
+          thirdPartyNumber: '',
+          orgGoodsId: '',
+          orgAreaCode: ''
         };
         this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
