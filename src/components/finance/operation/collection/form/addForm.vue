@@ -439,6 +439,7 @@
         }
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
+            this.index = 0;
             return;
           }
           this.doing = true;

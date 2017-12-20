@@ -293,7 +293,7 @@
   </div>
 </template>
 <script>
-  import { invoiceManage, BaseInfo } from '@/resources';
+  import { BaseInfo, invoiceManage } from '@/resources';
   import utils from '@/tools/utils';
   import payDetail from './payDetail.vue';
 
@@ -390,6 +390,7 @@
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {
           if (!valid || this.doing) {
+            this.index = 0;
             return false;
           }
           this.doing = true;
