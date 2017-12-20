@@ -100,28 +100,40 @@
           </el-row>
         </el-form>
       </div>
-
       <div class="order-list-status container clearfix">
-        <div v-show="demandList.length" class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
+        <div v-show="isSearch" class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
              v-for="(item,key) in assignType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">
             {{item.num}}</span></div>
         </div>
-        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 11 && demandList.length">
+        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 11 && isSearch">
           <perm label="purchansing-assignment-add" class="opera-btn">
             <span @click="createPurchaseDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
               class="el-icon-t-wave"></i></a><span class="wave-title"> 生成采购汇总单</span></span>
           </perm>
        </span>
-        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1 && demandList.length">
+        <span class="pull-right" style="margin-top: 8px" v-show="filters.status === 1 && isSearch">
           <perm label="demand-assignment-add" class="opera-btn">
             <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
               class="el-icon-t-wave"></i></a><span class="wave-title"> 生成销售汇总单</span></span>
           </perm>
        </span>
+        <span class="pull-right" style="margin-top: 8px" :style="{'margin-right': isSearch ? '140px' : ''}">
+          <perm label="cargo-signal-add" class="opera-btn">
+            <span @click="applyOrder" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
+              class="el-icon-t-plus"></i></a><span class="wave-title">分货申请</span></span>
+          </perm>
+       </span>
       </div>
-      <div class="order-list clearfix " style="margin-top: 20px">
+      <el-row v-if="!isSearch">
+        <el-col :span="24">
+          <div class="empty-info">
+            暂无信息,请尝试查询
+          </div>
+        </el-col>
+      </el-row>
+      <div class="order-list clearfix " style="margin-top: 20px" v-show="isSearch">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="1" v-show="filters.status === 1 || filters.status === 11">
             <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
@@ -140,7 +152,7 @@
         <el-row v-else-if="demandList.length == 0">
           <el-col :span="24">
             <div class="empty-info">
-              暂无信息，请尝试搜索
+              暂无信息
             </div>
           </el-col>
         </el-row>
@@ -204,20 +216,25 @@
                 class="order-detail-info" partClass="pr-no-animation">
       <show-form :currentItem="currentItem" @close="resetRightBox"></show-form>
     </page-right>
+    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <add-form @change="onSubmit" :index="index" @close="resetRightBox"></add-form>
+    </page-right>
   </div>
 </template>
 <script>
   import { BaseInfo, demandAssignment, procurementCollect, pullSignal } from '@/resources';
   import utils from '../../../tools/utils';
   import showForm from './detail/index.vue';
+  import addForm from '../request/form';
 
   export default {
-    components: {showForm},
+    components: {showForm, addForm},
     data () {
       return {
         loadingData: false,
         showSearch: true,
         showDetailPart: false,
+        showRight: false,
         assignType: utils.assignType,
         activeStatus: 0,
         demandList: [],
@@ -242,7 +259,9 @@
         currentItem: {},
         checkList: [], // 选中的订单列表
         isCheckAll: false,
-        orgList: []
+        orgList: [],
+        isSearch: false,
+        index: -1
       };
     },
     computed: {
@@ -335,8 +354,20 @@
         this.$router.push(`${item.id}`);
         this.showDetailPart = true;
       },
+      applyOrder () {
+        this.showRight = true;
+        this.index = 1;
+      },
+      onSubmit () {
+        if (this.isSearch) {
+          this.getDemandList(1);
+        }
+        this.showRight = false;
+      },
       resetRightBox () {
+        this.index = -1;
         this.showDetailPart = false;
+        this.showRight = false;
         this.$router.push('list');
       },
       checkStatus (item, key) {
@@ -354,6 +385,7 @@
       },
       searchInOrder: function () {// 搜索
         if (this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0]) {
+          this.isSearch = true;
           this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
           this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
           Object.assign(this.filters, this.searchWord);
@@ -364,6 +396,7 @@
         }
       },
       resetSearchForm: function () {// 重置表单
+        this.isSearch = false;
         let temp = {
           povId: '',
           demandStartTime: '',

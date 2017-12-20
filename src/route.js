@@ -110,11 +110,11 @@ const route = [
             component: resolve => require(['./components/resource/vaccin/rights/two/pov.vue'], resolve),
             meta: {moduleId: 'resource', title: '二类疫苗接种点授权', perm: 'second-vaccine-authorization'}
           },
-          {
-            path: '/sale/request/pov',
-            component: resolve => require(['./components/purchase/request/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '分货申请', perm: 'cargo-signal'}
-          },
+          // {
+          //   path: '/sale/request/pov',
+          //   component: resolve => require(['./components/purchase/request/list.vue'], resolve),
+          //   meta: {moduleId: 'resource', title: '分货申请', perm: 'cargo-signal'}
+          // },
           {
             path: '/sale/pov/:id',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
