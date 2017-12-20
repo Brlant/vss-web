@@ -117,10 +117,11 @@
                 <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入组织区域代码"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="8">
               <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <el-button native-type="reset" @click="exportExcel">导出EXCEL</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -441,6 +442,31 @@
         Object.assign(this.filters, temp);
         Object.keys(this.assignType).forEach(key => {
           this.assignType[key].num = '';
+        });
+      },
+      exportExcel () {
+        if (!(this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0])) {
+          this.$notify.info({
+            message: '请选择需求到货日期'
+          });
+          return;
+        }
+        let params = Object.assign({}, {
+          cdcId: this.user.userCompanyAddress
+        }, this.filters, {
+          procurementStatus: '',
+          status: ''
+        });
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/sale/pov/list'});
+        this.$http.get('/pull-signal/export', {params}).then(res => {
+          utils.download(res.data.path, '接种点要货需求');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/sale/pov/list'});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/sale/pov/list'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
         });
       },
       checkAll () { // 全选

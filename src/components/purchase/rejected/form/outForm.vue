@@ -933,7 +933,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+        return item.detail;
       },
       filterAddress () {
         Address.queryAddress(this.form.orgId, {

@@ -168,7 +168,7 @@
           </table>
           <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
             <el-pagination
-              layout="prev, pager, next"
+              layout="total, prev, pager, next"
               :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
               :current-page="pager.currentPage">
             </el-pagination>
@@ -297,6 +297,7 @@
               this.currentItem = Object.assign({'id': ''});
             }
           }
+          this.pager.count = res.data.count;
           this.typePager.totalPage = res.data.totalPage;
         });
       },

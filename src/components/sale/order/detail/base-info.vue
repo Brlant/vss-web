@@ -320,7 +320,7 @@
             : item.transportationMeansId === '2' ? '预计发货' : '';
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+        return item.detail;
       },
       changeRemark (form) {
         if (!this.currentOrder.remark) {

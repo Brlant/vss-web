@@ -54,6 +54,13 @@
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
               class="el-icon-t-search"></i> </a>
           </span>
+            <perm label="first-vaccine-authorization-add">
+              <span class="pull-right" style="margin-right: 10px">
+            <a href="#" class="btn-circle" @click.prevent="showMultiplePart"><i
+              class="el-icon-t-plus"></i></a>
+          </span>
+            </perm>
+
             货主疫苗列表
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
@@ -172,7 +179,7 @@
           </table>
           <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
             <el-pagination
-              layout="prev, pager, next"
+              layout="total,prev, pager, next"
               :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
               :current-page="pager.currentPage">
             </el-pagination>
@@ -185,21 +192,27 @@
       <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="refreshDetails"
                 @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showMultiple" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
+      <multiple-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refreshLeft="refreshLeft"
+                     @close="resetRightBox"></multiple-form>
+    </page-right>
   </div>
 
 </template>
 <script>
   import addForm from './form.vue';
   import { BaseInfo, Vaccine, VaccineRights } from '@/resources';
+  import multipleForm from './multiple-from';
 
   export default {
     components: {
-      addForm
+      addForm, multipleForm
     },
     data: function () {
       return {
         loadingData: false,
         showRight: false,
+        showMultiple: false,
         showTypeSearch: false,
         showSearch: false,
         dataRows: [],
@@ -273,6 +286,7 @@
       },
       resetRightBox: function () {
         this.showRight = false;
+        this.showMultiple = false;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
@@ -304,6 +318,7 @@
               this.currentItem = Object.assign({'id': ''});
             }
           }
+          this.pager.count = res.data.count;
           this.typePager.totalPage = res.data.totalPage;
         });
       },
@@ -359,6 +374,10 @@
         this.getPageList(1);
         this.showRight = false;
       },
+      refreshLeft () {
+        this.getOrgsList(1);
+        this.resetRightBox();
+      },
       removeVaccine: function (item) {
         this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
@@ -410,6 +429,10 @@
         this.orgName = item.orgGoodsDto.name;
         this.currentItem = item;
         this.getPageList(1);
+      },
+      showMultiplePart () {
+        this.formPara = {};
+        this.showMultiple = true;
       },
       add () {
         this.formPara = {};

@@ -964,7 +964,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+        return item.detail;
       },
       checkLicence: function (val) {// 检查货主/单位证照是否过期
         if (!val || !this.action) return;

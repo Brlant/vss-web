@@ -845,7 +845,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
+        return item.detail;
       },
       bizTypeChange: function (val) {// 业务类型改变
         if (!this.isStorageData) {// 有缓存时，不重置表单
