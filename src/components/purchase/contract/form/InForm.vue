@@ -352,6 +352,9 @@
                               style="line-height: 22px;margin-left: 20px;height: 20px">
                         组合
                       </el-tag>
+                      <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
+                        v-show="item.orgGoodsDto.goodsDto.specifications">规格</span>  {{item.orgGoodsDto.goodsDto.specifications}}
+                      </span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
@@ -661,10 +664,6 @@
       }
     },
     watch: {
-      filterAddressLabel (item) {
-        let name = item.name ? '【' + item.name + '】' : '';
-        return name + this.getWarehouseAdress(item);
-      },
       index: function (val) {
         this.productListSet.forEach((item) => {
           if (item.key === val) {
@@ -709,6 +708,10 @@
       this.initForm();
     },
     methods: {
+      filterAddressLabel (item) {
+        let name = item.name ? '【' + item.name + '】' : '';
+        return name + this.getWarehouseAdress(item);
+      },
       setDefaultValue () {
         this.form.transportationCondition = '0';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;

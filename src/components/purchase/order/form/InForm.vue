@@ -349,6 +349,9 @@
                               style="line-height: 22px;margin-left: 20px;height: 20px">
                         组合
                       </el-tag>
+                      <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
+                        v-show="item.orgGoodsDto.goodsDto.specifications">规格</span>  {{item.orgGoodsDto.goodsDto.specifications}}
+                      </span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
