@@ -384,39 +384,10 @@
             </el-form>
             <div class="product-info-fix clearfix">
               <el-row>
-                <el-col :span="12">
-                  <oms-row label="大包装" :span="8" v-show="product.fixInfo.goodsDto.largePacking">
-                    {{product.fixInfo.goodsDto.largePacking}}
-                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                    /
-                    <dict :dict-group="'shipmentPackingUnit'"
-                          :dict-key="product.fixInfo.goodsDto.largePackageUnit"></dict>
-                  </oms-row>
-                  <oms-row label="中包装" :span="8" v-show="product.fixInfo.goodsDto.mediumPacking">
-                    {{product.fixInfo.goodsDto.mediumPacking}}
-                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                    /
-                    <dict :dict-group="'shipmentPackingUnit'"
-                          :dict-key="product.fixInfo.goodsDto.mediumPackageUnit"></dict>
-                  </oms-row>
-                  <oms-row label="小包装" :span="8" v-show="product.fixInfo.goodsDto.smallPacking">
-                    {{product.fixInfo.goodsDto.smallPacking}}
-                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                    /
-                    <dict :dict-group="'shipmentPackingUnit'"
-                          :dict-key="product.fixInfo.goodsDto.smallPackageUnit"></dict>
-                  </oms-row>
-                  <oms-row label="货品编号" :span="8">
-                    {{product.fixInfo.goodsNo}}
-                  </oms-row>
-                  <oms-row label="供货厂商" :span="8">
-                    {{product.fixInfo.salesFirmName}}
-                  </oms-row>
-                  <oms-row label="批准文号" :span="8">
-                    {{product.fixInfo.goodsDto.approvalNumber}}
-                  </oms-row>
+                <el-col :span="14">
+                  <goods-info-part :product-info="product"></goods-info-part>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="10">
                   <span v-show="accessoryList.length">【组合货品】</span>
                   <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
                        <span style="margin-right: 10px">{{acce.name}}</span>
