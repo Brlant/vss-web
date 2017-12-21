@@ -293,7 +293,7 @@
               </el-select>
             </el-form-item>
             <!--<el-form-item label="是否进口">-->
-            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.importedFlag"></el-switch>-->
             <!--</el-form-item>-->
             <el-form-item :label="showContent.expectedTimeLabel"
@@ -1056,9 +1056,12 @@
 
       },
       remove: function (item) {
+        this.deleteItem(item);
+        this.searchProduct();
+      },
+      deleteItem (item) {
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
-        this.searchProduct();
       },
       editItem (item) {
 //        this.filterProductList = [];
@@ -1075,7 +1078,9 @@
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
-        this.remove(item);
+        // 2.0变化
+        this.deleteItem(item);
+        this.searchProduct(item.orgGoodsName);
       },
       onSubmit: function () {// 提交表单
         let self = this;

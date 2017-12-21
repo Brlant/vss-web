@@ -202,18 +202,8 @@
 
   .order-good-selects {
     .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
       height: auto;
       width: 680px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
     }
   }
 
@@ -293,7 +283,7 @@
               <oms-input type="text" placeholder="请输入实际收货人" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
             <!--<el-form-item label="是否同批号">-->
-            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
             <el-form-item label="疾控仓库地址" prop="orgAddress">
@@ -315,7 +305,7 @@
               </el-select>
             </el-form-item>
             <!--<el-form-item label="是否进口">-->
-            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.importedFlag"></el-switch>-->
             <!--</el-form-item>-->
             <el-form-item :label="'预计送货时间'"
@@ -789,6 +779,8 @@
         InWork.queryOrderDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
           this.resetForm();
+          // 2.0变化
+          this.resetProductForm();
           this.isStorageData = true;
           res.data.detailDtoList.forEach(f => {
             f.orgGoodsName = f.name;
@@ -1263,27 +1255,54 @@
               }
             });
           });
-
-          this.$nextTick(function () {
-            this.product = {
-              'amount': null,
-              'entrustment': false,
-              'measurementUnit': '',
-              'orgGoodsId': '',
-              'packingCount': null,
-              'specificationsId': '',
-              'fixInfo': {
-                'goodsDto': {}
-              },
-              'unitPrice': null
-            };
-            this.$refs['orderGoodsAddForm'].resetFields();
-            this.accessoryList = [];
-            this.batchNumbers = [];
-          });
+          this.resetProductForm();
+        });
+      },
+      resetProductForm () {
+        this.$nextTick(function () {
+          this.product = {
+            'amount': null,
+            'entrustment': false,
+            'measurementUnit': '',
+            'orgGoodsId': '',
+            'packingCount': null,
+            'specificationsId': '',
+            'fixInfo': {
+              'goodsDto': {}
+            },
+            'unitPrice': null
+          };
+          this.$refs['orderGoodsAddForm'].resetFields();
+          this.accessoryList = [];
+          this.batchNumbers = [];
         });
       },
       remove: function (item) { // 删除货品
+        this.deleteItem(item);
+        this.searchProduct();
+      },
+      editItem (item) {
+//        this.filterProductList = [];
+//        this.searchProductList = [];
+//        this.searchProductList.push({
+//          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+//          list: []
+//        });
+        this.filterProductList.push({
+          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+          list: []
+        });
+        this.product.orgGoodsId = item.orgGoodsId;
+        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
+        this.product.amount = item.amount;
+        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.editItemProduct = JSON.parse(JSON.stringify(item));
+        // 2.0变化
+        this.deleteItem(item);
+        this.searchProduct(item.orgGoodsName);
+        this.queryBatchNumers();
+      },
+      deleteItem (item) {
         let orgGoodsId = item.orgGoodsId;
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
         let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);
@@ -1303,25 +1322,6 @@
         } else {
           this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         }
-        this.searchProduct();
-      },
-      editItem (item) {
-//        this.filterProductList = [];
-//        this.searchProductList = [];
-//        this.searchProductList.push({
-//          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
-//          list: []
-//        });
-        this.filterProductList.push({
-          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
-          list: []
-        });
-        this.product.orgGoodsId = item.orgGoodsId;
-        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
-        this.product.amount = item.amount;
-        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
-        this.editItemProduct = JSON.parse(JSON.stringify(item));
-        this.remove(item);
       },
       onSubmit: function () {// 提交表单
 

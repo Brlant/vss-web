@@ -267,8 +267,8 @@
             <el-form-item label="发票付款" prop="billPayType">
               <el-switch
                 v-model="form.billPayType"
-                on-text="有"
-                off-text="无"
+                active-text="有"
+                inactive-text="无"
                 on-value="1"
                 off-value="0"
                 @change="changeBillPayType"

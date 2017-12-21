@@ -52,7 +52,8 @@
       </el-select>
     </el-form-item>
     <el-form-item label="默认地址" prop="isuse">
-      <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949" v-model="form.default"></el-switch>
+      <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
+                 v-model="form.default"></el-switch>
     </el-form-item>
     <el-form-item label-width="120px">
       <el-button type="primary" @click="onSubmit('storeform')" :disabled="doing">保存</el-button>
@@ -61,7 +62,7 @@
   </el-form>
 </template>
 <script>
-  import {Address, BaseInfo} from '../../../../resources';
+  import { Address, BaseInfo } from '../../../../resources';
   import utils from './../../../../tools/utils';
 
   export default {

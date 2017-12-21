@@ -793,9 +793,12 @@
         });
       },
       remove: function (item) {
+        this.deleteItem(item);
+        this.searchProduct();
+      },
+      deleteItem (item) {
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
-        this.searchProduct();
       },
       editItem (item) {
         this.filterProductList.push({
@@ -804,7 +807,11 @@
         });
         this.product.orgGoodsId = item.orgGoodsId;
         this.product.amount = item.amount;
-        this.remove(item);
+        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        // 2.0变化
+        this.deleteItem(item);
+        this.searchProduct(item.orgGoodsName);
+        this.getGoodDetail(item.orgGoodsId);
       },
       onSubmit: function () {// 提交表单
         let self = this;

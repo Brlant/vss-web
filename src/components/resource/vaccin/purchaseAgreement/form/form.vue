@@ -49,9 +49,9 @@
       </el-date-picker>
     </el-form-item>
     <el-form-item label="是否生效">
-      <el-switch v-model="form.availabilityStatus" on-text="是" off-text="否"
-                 on-color="#13ce66"
-                 off-color="#ff4949">
+      <el-switch v-model="form.availabilityStatus" active-text="是" inactive-text="否"
+                 active-color="#13ce66"
+                 inactive-color="#ff4949">
       </el-switch>
     </el-form-item>
     <el-form-item label-width="120px">
@@ -66,7 +66,7 @@
   </el-form>
 </template>
 <script>
-  import {Vaccine, PurchaseAgreement} from '../../../../../resources';
+  import { PurchaseAgreement, Vaccine } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
 
   export default {

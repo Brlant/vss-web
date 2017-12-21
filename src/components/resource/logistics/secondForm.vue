@@ -201,18 +201,8 @@
 
   .order-good-selects {
     .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
       height: auto;
       width: 680px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
     }
   }
 
@@ -259,7 +249,7 @@
   </div>
 </template>
 <script>
-  import {logisticsCost} from '../../../resources';
+  import { logisticsCost } from '../../../resources';
   import utils from '../../../tools/utils';
 
   export default {

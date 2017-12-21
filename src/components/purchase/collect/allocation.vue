@@ -17,18 +17,8 @@
 
   .good-selects {
     .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
       height: auto;
       width: 300px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
     }
   }
 
@@ -152,7 +142,7 @@
   </div>
 </template>
 <script>
-  import { demandAssignment, OrgGoods, procurementCollect, pullSignal } from '@/resources';
+  import { demandAssignment, OrgGoods, procurementCollect } from '@/resources';
 
   export default {
     data () {

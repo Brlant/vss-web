@@ -865,18 +865,8 @@
 
 .good-selects {
   .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: normal;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: rgb(72, 94, 106);
     height: auto;
     width: 430px;
-    line-height: 1.5;
-    box-sizing: border-box;
-    cursor: pointer;
   }
   .select-other-info {
     color: #999;
@@ -1002,5 +992,71 @@
 .rightForm {
   .el-input {
     width: 350px;
+  }
+}
+
+//2.0变化
+
+.app-body {
+
+  .el-table thead {
+    color: #1f323d;
+  }
+
+  .el-table td, .el-table th {
+    padding: 4px 0;
+  }
+  .el-tag {
+    padding: 0 5px;
+    height: 22px;
+    line-height: 20px;
+  }
+  .el-button {
+    padding: 10px 15px;
+  }
+  .el-button--mini, .el-button--mini.is-round {
+    padding: 7px 15px;
+  }
+  .el-button--small, .el-button--small.is-round {
+    padding: 7px 9px;
+  }
+  .el-input__inner {
+    height: 36px;
+  }
+  .el-form-item__content {
+    line-height: 36px;
+    position: relative;
+    font-size: 14px;
+  }
+  .el-form-item__label {
+    line-height: 36px;
+  }
+  .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
+    max-width: 350px;
+    width: 100%;
+  }
+  .el-menu--horizontal .el-menu-item {
+    color: inherit;
+  }
+  .el-menu--horizontal .el-submenu .el-submenu__title {
+    color: inherit;
+  }
+
+  .inline-block-count {
+    .el-input-group__append, .el-input-group__prepend {
+      padding: 0 10px;
+    }
+    .el-input {
+      max-width: 250px;
+    }
+  }
+  a:focus {
+    outline: none;
+  }
+  .el-menu {
+    background-color: inherit;
+  }
+  .el-submenu .el-menu-item:hover, .el-submenu__title:hover {
+    background-color: #d1dde5;
   }
 }

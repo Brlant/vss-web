@@ -290,7 +290,7 @@
               <oms-input type="text" placeholder="请输入实际收货人" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
             <!--<el-form-item label="是否同批号">-->
-            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
             <el-form-item label="疾控仓库地址" prop="orgAddress">
@@ -312,7 +312,7 @@
               </el-select>
             </el-form-item>
             <!--<el-form-item label="是否进口">-->
-            <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.importedFlag"></el-switch>-->
             <!--</el-form-item>-->
             <el-form-item :label="'预计出库时间'"
@@ -1263,6 +1263,10 @@
         });
       },
       remove: function (item) { // 删除货品
+        this.deleteItem(item);
+        this.searchProduct();
+      },
+      deleteItem (item) {
         let orgGoodsId = item.orgGoodsId;
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
         let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);
@@ -1282,7 +1286,6 @@
         } else {
           this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         }
-        this.searchProduct();
       },
       editItem (item) {
         this.filterProductList.push({
@@ -1294,7 +1297,10 @@
         this.product.amount = item.amount;
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
         this.editItemProduct = JSON.parse(JSON.stringify(item));
-        this.remove(item);
+        // 2.0变化
+        this.deleteItem(item);
+        this.searchProduct(item.orgGoodsName);
+        this.queryBatchNumers();
       },
       onSubmit: function () {// 提交表单
 

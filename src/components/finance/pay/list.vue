@@ -192,8 +192,8 @@
                 <el-form-item label="是否付清">
                   <el-switch
                     v-model="searchCondition.status"
-                    on-text="是"
-                    off-text="否"
+                    active-text="是"
+                    inactive-text="否"
                     on-value="1"
                     off-value="0"
                     active-color="#13ce66"

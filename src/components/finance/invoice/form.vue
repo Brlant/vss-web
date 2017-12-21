@@ -201,18 +201,8 @@
 
   .order-good-selects {
     .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
       height: auto;
       width: 680px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
     }
   }
 
@@ -280,7 +270,7 @@
               </oms-input>
             </el-form-item>
             <!--<el-form-item label="是否已到" prop="haveTo">-->
-              <!--<el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"-->
+            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
                          <!--v-model="form.haveTo"></el-switch>-->
             <!--</el-form-item>-->
           </el-form>

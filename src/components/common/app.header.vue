@@ -269,7 +269,7 @@
         <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="false"
                  :default-openeds="defaultOpenMenus" style="margin-bottom: 27px">
           <template v-for="item in menu">
-            <el-submenu :index="item.path" :key="item.meta.moduleId" v-if="item.subMenu.length>0">
+            <el-submenu :index="item.path" v-if="item.subMenu.length>0">
               <template slot="title">
                 <i :class="'el-icon-t-'+item.meta.icon"></i>
                 <span slot="title">{{item.meta.title}}</span>
@@ -278,11 +278,11 @@
                 {{child.meta.title}}
               </el-menu-item>
             </el-submenu>
-            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else-if="item.path">
+            <el-menu-item :index="item.path" v-else-if="item.path">
               <i :class="'el-icon-t-'+item.meta.icon"></i>
               <span slot="title">{{item.meta.title}}</span>
             </el-menu-item>
-            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else="!item.path" @click="$router.push('/')">
+            <el-menu-item :index="item.path" v-else="!item.path" @click="$router.push('/')">
               <i :class="'el-icon-t-'+item.meta.icon"></i>
               <span slot="title">{{item.meta.title}}</span>
             </el-menu-item>
@@ -302,7 +302,7 @@
 </template>
 
 <script>
-  import {Auth, cerpAction} from '../../resources';
+  import { Auth, cerpAction } from '../../resources';
   import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import route from '../../route.js';

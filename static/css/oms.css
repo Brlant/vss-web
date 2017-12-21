@@ -18,6 +18,11 @@ a {
   clear: both
 }
 
+/*2.0变化*/
+.main-card-box .el-form-item__label {
+  line-height: 1;
+}
+
 .red {
   color: #f00;
 }

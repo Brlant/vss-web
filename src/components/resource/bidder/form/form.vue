@@ -57,7 +57,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="是否生效">
-        <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
+        <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                    v-model="form.availabilityStatus"></el-switch>
       </el-form-item>
       <el-form-item label-width="100px">
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-  import {User, Access, OrgUser, http} from '../../../../resources';
+  import { http } from '../../../../resources';
 
   export default {
     name: 'editForm',
