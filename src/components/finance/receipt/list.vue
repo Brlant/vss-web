@@ -81,7 +81,7 @@
   }
 </style>
 <template>
-  <div>
+  <div class="pay-part">
     <div class="container">
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item active"

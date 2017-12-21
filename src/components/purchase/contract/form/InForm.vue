@@ -683,10 +683,8 @@
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      if (this.action === 'add') {
         this.filterLogisticsCenter();
         this.initForm();
-      }
     },
     methods: {
       filterAddressLabel (item) {
