@@ -97,21 +97,7 @@
   }
 
   .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #48576a;
     height: auto;
-    line-height: normal;
-    box-sizing: border-box;
-    cursor: pointer;
-    .select-other-info {
-      padding-left: 10px;
-      color: #8E8E8E
-    }
   }
 
   .good-selects {

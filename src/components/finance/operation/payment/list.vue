@@ -96,33 +96,9 @@
     cursor: pointer;
   }
 
-  .select-other-info {
-    color: #999;
-    margin-left: 10px
-  }
-
-  .selected {
-    .select-other-info {
-      color: #ddd
-    }
-  }
 
   .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #48576a;
     height: auto;
-    line-height: normal;
-    box-sizing: border-box;
-    cursor: pointer;
-    .select-other-info {
-      padding-left: 10px;
-      color: #8E8E8E
-    }
   }
 
 </style>
@@ -289,7 +265,7 @@
   import utils from '../../../../tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import {BillPayable, pay, BaseInfo} from '../../../../resources';
+  import { BaseInfo, BillPayable } from '../../../../resources';
 
   export default {
     components: {

@@ -163,16 +163,7 @@
     }
   }
 
-  .select-other-info {
-    color: #999;
-    margin-left: 10px
-  }
 
-  .selected {
-    .select-other-info {
-      color: #ddd
-    }
-  }
 
   .ml15 {
     margin-left: 40px;
@@ -183,17 +174,7 @@
   }
 
   .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #48576a;
     height: auto;
-    line-height: normal;
-    box-sizing: border-box;
-    cursor: pointer;
   }
 
   .productItem-info {

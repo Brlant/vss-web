@@ -162,16 +162,7 @@
     }
   }
 
-  .select-other-info {
-    color: #999;
-    margin-left: 10px
-  }
 
-  .selected {
-    .select-other-info {
-      color: #ddd
-    }
-  }
 
   .ml15 {
     margin-left: 40px;

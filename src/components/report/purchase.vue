@@ -125,7 +125,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list"
+      <el-table :data="reportList" class="header-list" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="400">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true"></el-table-column>
