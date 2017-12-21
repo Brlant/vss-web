@@ -182,7 +182,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in demandList"
-               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]">
+               :class="['status-'+activeStatus,{'active':currentItemId==item.id}]">
             <el-row>
               <el-col :span="1" v-show="filters.status === 1 || filters.status === 11">
                 <div class="el-checkbox-warp" @click.stop.prevent="checkItem(item)">
@@ -250,11 +250,9 @@
   import utils from '../../../tools/utils';
   import showForm from './detail/index.vue';
   import addForm from '../request/form';
-  import ElCollapse from 'element-ui/packages/collapse/src/collapse';
 
   export default {
     components: {
-      ElCollapse,
       showForm, addForm
     },
     data () {
