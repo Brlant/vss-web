@@ -71,7 +71,7 @@
 
 </style>
 <template>
-  <el-dialog v-model="dialogVisible" :before-close="close"
+  <el-dialog :visible.sync="dialogVisible" :before-close="close"
              class="attachment-dialog"
              :class="{'docview':type=='doc','img-view':type=='image'}" top="0">
     <div slot="title" class="attachment-dialog-head">
@@ -110,7 +110,7 @@
   </el-dialog>
 </template>
 <script>
-  import {http} from '../../resources';
+  import { http } from '../../resources';
   import utils from '@/tools/utils';
   import ElButton from '../../../node_modules/element-ui/packages/button/src/button.vue';
 

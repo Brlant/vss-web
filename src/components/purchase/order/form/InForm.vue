@@ -162,7 +162,6 @@
     }
   }
 
-
   .ml15 {
     margin-left: 40px;
   }
@@ -423,7 +422,7 @@
                   <total-count property="amount" :list="form.detailDtoList"></total-count>
                 </td>
                 <td colspan="2" style="font-weight: 600"><span
-                                      v-show="form.detailDtoList.length && totalMoney">合计:</span><span
+                  v-show="form.detailDtoList.length && totalMoney">合计:</span><span
                   v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
               </tr>
               </tbody>
@@ -724,6 +723,10 @@
             f.orgGoodsName = f.name;
           });
           this.form = JSON.parse(JSON.stringify(res.data));
+          // ******2.0变化
+          this.changeSupplier(this.form.supplierId);
+          this.changeTransportationMeans(this.form.transportationMeansId);
+          // ******
           this.$nextTick(() => {
             this.isStorageData = true;
           });

@@ -746,6 +746,10 @@
             f.no = f.batchNumber;
           });
           this.form = JSON.parse(JSON.stringify(res.data));
+          // ****** 2.0变化
+          this.changeCustomerId(this.form.customerId);
+          this.changeTransportationMeans(this.form.transportationMeansId);
+          // ******
           this.$nextTick(() => {
             this.isStorageData = true;
           });

@@ -537,6 +537,9 @@
           warehouseId: this.currentOrder.warehouseId,
           detailDtoList: []
         };
+        // ******2.0变化
+        this.changeType();
+        // ******
         this.$nextTick(() => {
           this.form.detailDtoList = orgDetailGoods;
         });

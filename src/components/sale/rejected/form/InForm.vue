@@ -687,6 +687,10 @@
             f.orgGoodsName = f.name;
           });
           this.form = JSON.parse(JSON.stringify(res.data));
+          // ******2.0变化
+          this.changeSupplier(this.form.supplierId);
+          this.changeTransportationMeans(this.form.transportationMeansId);
+          // ******
           this.$nextTick(() => {
             this.isStorageData = true;
           });
