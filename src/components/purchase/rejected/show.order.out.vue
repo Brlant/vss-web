@@ -29,7 +29,8 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="return-manager-cancel" v-show="currentOrder.state === '0' || currentOrder.state === '1'">
+            <perm label="return-manager-cancel"
+                  v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'">
               <el-button type="primary" @click="cancel">取消订单</el-button>
             </perm>
           </li>
@@ -47,7 +48,8 @@
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="1" v-show="index === 8"></relevance-code>
-
+        <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
+                      v-show="index === 0"></cancel-order>
       </div>
     </div>
   </div>
@@ -56,7 +58,7 @@
   import basicInfo from './detail/base-info.vue';
   import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
-  import { InWork, http, erpOrder } from '@/resources';
+  import { http, InWork } from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
 
@@ -154,22 +156,12 @@
         this.$emit('refreshOrder');
       },
       cancel () {
-        this.$confirm('是否取消订单', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        this.index = 0;
+        this.$refs['cancelPart'].isShow = true;
+        this.$notify({
+          duration: 2000,
+          message: '请选择取消订单原因',
           type: 'warning'
-        }).then(() => {
-          erpOrder.cancel(this.orderId).then(() => {
-            this.$notify.success({
-              message: '取消订单成功'
-            });
-            this.$emit('close');
-            this.$emit('refreshOrder');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '取消订单失败'
-            });
-          });
         });
       }
     }
