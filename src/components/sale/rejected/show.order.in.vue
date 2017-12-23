@@ -29,7 +29,7 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="sales-return-cancel" v-show="currentOrder.state === '6'">
+            <perm label="sales-return-cancel" v-show="currentOrder.state === '6' || currentOrder.state === '7'">
               <el-button type="primary" @click="cancel">取消订单</el-button>
             </perm>
           </li>
@@ -45,7 +45,8 @@
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 5"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="0" v-show="index === 8"></relevance-code>
-
+        <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
+                      v-show="index === 0"></cancel-order>
       </div>
     </div>
   </div>
@@ -56,7 +57,7 @@
   import log from '@/components/common/order.log.vue';
   import batchNumbers from '../../purchase/order/detail/batch.number.vue';
   import exceptionInfo from '../../purchase/order/detail/exception.info.vue';
-  import { InWork, http, erpOrder } from '@/resources';
+  import { http, InWork } from '@/resources';
   import orderAttachment from '@/components/common/order/in.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
 
@@ -142,22 +143,12 @@
         this.$emit('refreshOrder');
       },
       cancel () {
-        this.$confirm('是否取消订单', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        this.index = 0;
+        this.$refs['cancelPart'].isShow = true;
+        this.$notify({
+          duration: 2000,
+          message: '请选择取消订单原因',
           type: 'warning'
-        }).then(() => {
-          erpOrder.cancel(this.orderId).then(() => {
-            this.$notify.success({
-              message: '取消订单成功'
-            });
-            this.$emit('close');
-            this.$emit('refreshOrder');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '取消订单失败'
-            });
-          });
         });
       }
     }
