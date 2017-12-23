@@ -176,7 +176,7 @@
         procurementCollect.queryDetailList(this.$route.query.id).then(res => {
           res.data.list.forEach(item => {
             if (item.purchaseQuantity === null && res.data.status === 0) {
-              item.purchaseQuantity = Math.abs(item.balanceAmount);
+              item.purchaseQuantity = item.balanceAmount > 0 ? 0 : Math.abs(item.balanceAmount);
               this.autoSave(item);
             }
           });
