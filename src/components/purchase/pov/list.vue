@@ -115,9 +115,9 @@
             <el-col :span="12">
               <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
-                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                <el-button native-type="reset" @click="exportExcel">导出EXCEL</el-button>
-                <!--<el-button native-type="reset" @click="exportNoSaleExcel">导出待生成销售汇总单</el-button>-->
+                <el-button @click="resetSearchForm">重置</el-button>
+                <el-button @click="exportExcel" :plain="true" type="success">导出EXCEL</el-button>
+                <!--<el-button  @click="exportNoSaleExcel" :plain="true" type="success">导出待生成销售汇总</el-button>-->
               </oms-form-row>
             </el-col>
           </el-row>
@@ -467,8 +467,16 @@
         });
       },
       exportNoSaleExcel () {
+        if (!(this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0])) {
+          this.$notify.info({
+            message: '请选择需求到货日期'
+          });
+          return;
+        }
         let params = Object.assign({}, {
-          cdcId: this.user.userCompanyAddress,
+          cdcId: this.user.userCompanyAddress
+        }, this.filters, {
+          procurementStatus: '',
           status: '1'
         });
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/sale/pov/list'});

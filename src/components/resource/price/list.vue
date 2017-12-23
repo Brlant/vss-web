@@ -69,10 +69,77 @@
       border: 0;
     }
   }
+
+  .advanced-query-form {
+    background: #fff;
+    .el-select {
+      display: block;
+      position: relative;
+    }
+    .el-date-editor.el-input {
+      width: 100%;
+    }
+    padding-top: 20px;
+  }
+
+  .el-select-dropdown__item {
+    height: auto;
+  }
 </style>
 <template>
   <div>
     <div class="container">
+      <div class="opera-btn-group" :class="{up:!showSearch}">
+        <div class="opera-icon">
+          <span class="">
+            <i class="el-icon-t-search"></i> 筛选查询
+          </span>
+          <span class="pull-right switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
+            <i class="el-icon-arrow-up"></i>
+            <span v-show="showSearch">收起筛选</span>
+            <span v-show="!showSearch">展开筛选</span>
+          </span>
+        </div>
+        <el-form class="advanced-query-form" onsubmit="return false">
+          <el-row>
+            <el-col :span="8">
+              <oms-form-row label="价格组名称" :span="8">
+                <oms-input type="text" v-model="searchWord.name" placeholder="请输入价格组名称"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="10">
+              <oms-form-row label="货主货品" :span="4">
+                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="getGoodsList" :clearable="true"
+                           v-model="searchWord.orgGoodsId" @click.native.once="getGoodsList('')">
+                  <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
+                             v-for="item in goodses">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left">
+                      <span>销售价格</span>  {{item.orgGoodsDto.sellPrice | formatMoney}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="6">
+              <oms-form-row label="" :span="1">
+                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                <el-button @click="resetSearchForm">重置</el-button>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
              :class="{'active':item.availabilityStatus===activeStatus}"
@@ -86,10 +153,10 @@
         <div class="d-table-left">
           <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
             <h2 class="header">
-            <span class="pull-right">
-                <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                  class="el-icon-t-search"></i> </a>
-            </span>
+              <!--<span class="pull-right">-->
+              <!--<a href="#" class="btn-circle" @click.prevent="searchType"><i-->
+              <!--class="el-icon-t-search"></i> </a>-->
+              <!--</span>-->
               <span class="pull-right" style="margin-right: 8px">
                 <perm label="sale-price-group-add">
                   <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
@@ -188,17 +255,17 @@
                 <!---->
                 <!--</el-col>-->
                 <!--</el-row>-->
-                <span class="pull-right">
-                     <span class="btn-search-toggle open" v-show="showSearch">
-                        <single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入接种点名称搜索"
-                                      :showFocus="showSearch"></single-input>
-                        <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
-                     </span>
-                     <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-                          <i class="el-icon-t-search"></i>
-                       </a>
+                <!--<span class="pull-right">-->
+                <!--<span class="btn-search-toggle open" v-show="showSearch">-->
+                <!--<single-input style="width: 180px" v-model="filterRights.keyWord" placeholder="请输入接种点名称搜索"-->
+                <!--:showFocus="showSearch"></single-input>-->
+                <!--<i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>-->
+                <!--</span>-->
+                <!--<a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">-->
+                <!--<i class="el-icon-t-search"></i>-->
+                <!--</a>-->
 
-                  </span>
+                <!--</span>-->
               </div>
               <table class="table">
                 <thead>
@@ -278,11 +345,16 @@
         showTypeList: [],
         priceGroupType: utils.priceGroupType,
         filters: {
-          keyWord: '',
+          name: '',
+          orgGoodsId: '',
           availabilityStatus: true
         },
         filterRights: {
           keyWord: ''
+        },
+        searchWord: {
+          name: '',
+          orgGoodsId: ''
         },
         action: 'add',
         pager: {
@@ -306,7 +378,8 @@
         orgList: [],
         showOrgList: [],
         povId: '',
-        activeStatus: true
+        activeStatus: true,
+        goodses: []
       };
     },
     computed: {
@@ -410,6 +483,26 @@
           this.receiptDetails = res.data.list;
           this.pager.count = res.data.count;
         });
+      },
+      getGoodsList: function (query) {
+        let params = Object.assign({}, {
+          keyWord: query,
+          deleteFlag: false
+        });
+        this.$http.get('/vaccine-info/second-vaccine/valid/org-goods', {params}).then(res => {
+          this.goodses = res.data.list;
+        });
+      },
+      searchInOrder: function () {// 搜索
+        Object.assign(this.filters, this.searchWord);
+      },
+      resetSearchForm: function () {// 重置表单
+        let temp = {
+          name: '',
+          orgGoodsId: ''
+        };
+        Object.assign(this.searchWord, temp);
+        Object.assign(this.filters, temp);
       },
       bindPov() {
         let form = {
