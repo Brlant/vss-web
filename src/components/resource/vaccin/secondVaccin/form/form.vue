@@ -343,6 +343,9 @@
           }
           this.otherGoodsList = [];
           this.getCombinationGoods();
+          console.log(val);
+          this.getOmsGoods(val.goodsDto.name);
+          this.filterOrg(val.salesFirmName);
         } else {
 //          this.queryCombinationGoods();
           this.getOmsGoods();
@@ -405,15 +408,6 @@
         };
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
-          if (this.action === 'edit') {
-            let isExist = this.orgList.some(item => this.form.orgId === item.id);
-            if (!isExist) {
-              this.orgList.push({
-                id: this.form.salesFirm,
-                name: this.form.salesFirmName
-              });
-            }
-          }
         });
       },
       setPrice: function () {
@@ -423,39 +417,12 @@
         }
       },
       getOmsGoods: function (keyWord) {// 得到组织疫苗列表
-//        if (this.orgLevel === 1) {
-//          let params = {
-//            keyWord: keyWord
-//          };
-//          http.get('vaccine-info/first-vaccine/valid', {params}).then(res => {
-//            this.goodsList = res.data.list;
-//            if (this.action === 'edit') {
-//              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
-//              if (!isExist) {
-//                this.goodsList.push({
-//                  id: this.form.goodsDto.id,
-//                  name: this.form.goodsDto.name
-//                });
-//              }
-//            }
-//            this.getGoodsType(this.form.goodsId);
-//          });
-//        } else {
           let params = {
             keyWord: keyWord,
             availabilityStatus: true
           };
           SuccessfulBidder.queryInfo(params).then(res => {
             this.goodsList = res.data;
-            if (this.action === 'edit') {
-              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
-              if (!isExist) {
-                this.goodsList.push({
-                  id: this.form.goodsDto.id,
-                  name: this.form.goodsDto.name
-                });
-              }
-            }
             this.getGoodsType(this.form.goodsId);
           });
 //        }

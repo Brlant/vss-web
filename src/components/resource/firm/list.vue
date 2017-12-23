@@ -400,10 +400,9 @@
 
 </template>
 <script>
-  import {BaseInfo, Vendor} from '@/resources';
+  import { BaseInfo, Vendor } from '@/resources';
   import utils from '@/tools/utils';
   import photoShow from './photo/photo.show.vue';
-  import qs from 'qs';
 
   export default {
     components: {photoShow},
@@ -599,14 +598,7 @@
           relation: this.currentItem.relation,
           expirationDate: this.currentItem.expirationDate
         };
-        let isExist = this.orgList.some(item => this.currentItem.followOrgId === item.id);
-        if (!isExist) {
-          this.orgList.push({
-            id: this.currentItem.followOrgId,
-            name: this.currentItem.followOrgName,
-            auditedStatus: 1
-          });
-        }
+        this.queryOtherBusiness(this.currentItem.followOrgName);
         this.showRight = true;
       },
       forbid: function () {

@@ -123,25 +123,7 @@
         if (this.action === 'edit') {
           this.form = Object.assign({}, val);
           this.salesFirmName = this.form.supplyCompanyName;
-          let params = {
-            deleteFlag: false,
-            status: true
-          };
-          Vaccine.query(params).then(res => {
-            this.goodsList = res.data.list;
-            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.orgGoodsDto.id);
-            if (!isExist) {
-              this.goodsList.push({
-                list: [],
-                orgGoodsDto: {
-                  id: this.form.orgGoodsId,
-                  name: this.form.orgGoodsName,
-                  goodsNo: this.form.orgGoodsNo,
-                  salesFirmName: this.form.supplyCompanyName
-                }
-              });
-            }
-          });
+          this.getOmsGoods(this.form.orgGoodsName);
         }
       },
       actionType: function (val) {

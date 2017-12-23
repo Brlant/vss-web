@@ -275,12 +275,7 @@
     watch: {
       formItem (val) {
         if (val.id) {
-          this.goodses.push({
-            orgGoodsDto: {
-              id: val.orgGoodsId,
-              name: val.goodsName
-            }
-          });
+          this.getGoodsList(val.goodsName);
           this.form = val;
           this.form.unitPrice = this.form.unitPrice ? this.form.unitPrice.toString() : '';
           this.title = '编辑二类疫苗销售价格组';

@@ -122,10 +122,7 @@
     watch: {
       formItem: function () {
         if (this.formItem.id) {
-          this.vaccineList.push({
-            id: this.formItem.goodsId,
-            name: this.formItem.goodsName
-          });
+          this.filterVaccine(this.formItem.goodsName);
           this.form = this.formItem;// this.formItem;
           this.formatExpireTimeDate(this.form.expireTime);
         } else {

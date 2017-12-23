@@ -156,25 +156,13 @@
         };
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
-          if (this.action === 'edit') {
-            let isExist = this.orgList.some(item => this.form.orgList.id === item.id);
-            if (!isExist) {
-              this.orgList.push({
-                id: this.form.salesFirm,
-                name: this.form.salesFirmName
-              });
-            }
-          }
         });
       },
       initFormValue: function () {
         this.selectOptions = [];
         this.orgList = [];
         if (this.formItem.id) {
-          this.orgList.push({
-            id: this.formItem.warehouseSourceFirm,
-            name: this.formItem.warehouseSourceFirmName
-          });
+          this.getOrgs(this.formItem.warehouseSourceFirmName);
           this.form = Object.assign({}, this.formItem);
           this.selectOptions.push(this.form.province);
           this.selectOptions.push(this.form.city);
