@@ -225,7 +225,7 @@
               </el-dropdown-menu>
             </el-dropdown>-->
             <span v-show="level !== 1">
-              <el-tag type="gray" v-show="level">{{ filterLevel(level) }}</el-tag>
+              <el-tag v-show="level" type="info" class="tag-title">{{ filterLevel(level) }}</el-tag>
               <span class="org-title">{{orgName}}</span>
             </span>
             <el-dropdown trigger="click">
@@ -318,7 +318,7 @@
         logo_pic: logo_pic,
         isCollapse: false,
         skinList: [
-          {color: '#fff', background: '#3399cc', name: '天空灰'},
+          {color: '#fff', background: '#409EFF', name: '天空灰'},
           {color: '#333', background: '#fff', name: '透明白'},
           {color: '#fff', background: '#9c27b0', name: '贵族紫'},
           {color: '#fff', background: '#3f51b5', name: '工业蓝'},
