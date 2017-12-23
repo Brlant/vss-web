@@ -343,6 +343,8 @@
           }
           this.otherGoodsList = [];
           this.getCombinationGoods();
+          this.getOmsGoods(val.goodsDto.name);
+          this.filterOrg(val.salesFirmName);
         } else {
 //          this.queryCombinationGoods();
           this.getOmsGoods();

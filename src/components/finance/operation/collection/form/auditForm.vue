@@ -227,10 +227,10 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">审核收款申请</h2>
+        <h2 class="clearfix right-title">收款申请详情</h2>
       </div>
       <div class="content-right min-gutter">
-        <h3>审核收款作业申请</h3>
+        <h3>收款申请详情</h3>
         <div>
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">

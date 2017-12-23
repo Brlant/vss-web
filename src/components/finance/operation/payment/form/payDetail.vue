@@ -64,7 +64,7 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="发生时间" style="width: 380px" class="create-date">
+      <el-form-item label="发生时间" class="create-date">
         <el-date-picker
           v-model="createTimes"
           type="daterange"
