@@ -93,6 +93,11 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="7">
+              <oms-form-row label="申请单编号" :span="8">
+                <oms-input type="text" v-model="searchWord.id" placeholder="请输入申请单编号"></oms-input>
+              </oms-form-row>
+            </el-col>
             <el-col :span="9">
               <oms-form-row label="到货需求日期" :span="8">
                 <el-date-picker
@@ -107,11 +112,12 @@
                 <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入组织区域代码"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="12">
               <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 <el-button native-type="reset" @click="exportExcel">导出EXCEL</el-button>
+                <!--<el-button native-type="reset" @click="exportNoSaleExcel">导出待生成销售汇总单</el-button>-->
               </oms-form-row>
             </el-col>
           </el-row>
@@ -259,13 +265,15 @@
           povId: '',
           demandStartTime: '',
           demandEndTime: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          id: ''
         },
         searchWord: {
           povId: '',
           demandStartTime: '',
           demandEndTime: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          id: ''
         },
         demandTime: '',
         pager: {
@@ -420,7 +428,8 @@
           povId: '',
           demandStartTime: '',
           demandEndTime: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          id: ''
         };
         this.demandTime = '';
         this.demandList = [];
@@ -444,6 +453,23 @@
         }, this.filters, {
           procurementStatus: '',
           status: ''
+        });
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/sale/pov/list'});
+        this.$http.get('/pull-signal/export', {params}).then(res => {
+          utils.download(res.data.path, '接种点要货需求');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/sale/pov/list'});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/sale/pov/list'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      exportNoSaleExcel () {
+        let params = Object.assign({}, {
+          cdcId: this.user.userCompanyAddress,
+          status: '1'
         });
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/sale/pov/list'});
         this.$http.get('/pull-signal/export', {params}).then(res => {
