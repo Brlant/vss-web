@@ -74,7 +74,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
-               :class="[{'active':currentItemId==item.id}]">
+               :class="[{'active':currentItemId==item.orgGoodsId}]">
             <el-row>
               <el-col :span="status === 0 ? 4 : 6" class="R pt">
                 <div>
@@ -232,14 +232,14 @@
       },
       showPart (item) {
         this.currentItem = item;
-        this.currentItemId = item.id;
+        this.currentItemId = item.orgGoodsId;
         this.showRight = true;
       },
       showOrderFormPart (item) {
         OrgGoods.queryOneGoods(item.orgGoodsId).then(res => {
           this.vaccineType = res.data.orgGoodsDto.goodsDto.vaccineSign;
           this.currentItem = item;
-          this.currentItemId = item.id;
+          this.currentItemId = item.orgGoodsId;
           this.purchase = {
             id: item.orgGoodsId,
             count: item.balanceAmount
