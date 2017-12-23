@@ -43,7 +43,7 @@
   <div class="order-page">
     <div class="container">
       <div class="mb-15" style="overflow: hidden">
-        <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/purchase/allocation')">返回疫苗采购汇总
+        <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/purchase/allocation')">返回采购汇总
         </el-button>
         <perm label="submit-purchansing-plan" v-show="!$route.query.type">
           <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 ">生成采购合同</el-button>

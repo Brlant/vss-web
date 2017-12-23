@@ -93,7 +93,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="9">
               <oms-form-row label="到货需求日期" :span="8">
                 <el-date-picker
                   type="daterange"
@@ -102,8 +102,8 @@
                 </el-date-picker>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="组织区域代码" :span="7">
+            <el-col :span="7">
+              <oms-form-row label="组织区域代码" :span="8">
                 <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入组织区域代码"></oms-input>
               </oms-form-row>
             </el-col>
