@@ -87,6 +87,7 @@
         <tr>
           <th width="30px">操作</th>
           <th style="width: 240px">货品名称</th>
+          <th>数量</th>
           <th>订单号</th>
           <th>待收金额</th>
           <th>发生时间</th>
@@ -106,6 +107,9 @@
           </td>
           <td>
             <span>{{product.goodsName}}</span>
+          </td>
+          <td>
+            <span>{{product.goodsCount}}</span>
           </td>
           <td>
             <span>{{product.orderNo}}</span>
@@ -137,6 +141,7 @@
         <thead>
         <tr>
           <th style="width: 260px">订单号/货品名称</th>
+          <th>数量</th>
           <th>发生时间</th>
           <th>待收金额</th>
           <th>本次收款金额</th>
@@ -148,6 +153,9 @@
           <td>
             <span class="minor-part">{{product.orderNo}}</span>
             <div>{{product.goodsName}}</div>
+          </td>
+          <td>
+            <span>{{product.goodsCount}}</span>
           </td>
           <td>
             {{product.createTime | date }}

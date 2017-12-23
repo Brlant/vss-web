@@ -264,16 +264,18 @@
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
                   <el-col :span="8">货品名称 </el-col>
+                  <el-col :span="2">数量</el-col>
                   <el-col :span="6">订单号 </el-col>
-                  <el-col :span="6">发生时间</el-col>
+                  <el-col :span="4">发生时间</el-col>
                   <el-col :span="4">本次收款金额 </el-col>
                 </el-row>
               </li>
               <li class="show-item" v-for="item in form.detailList">
                 <el-row type="flex">
                   <el-col :span="8">{{ item.goodsName }} </el-col>
+                  <el-col :span="2">{{ item.count }}</el-col>
                   <el-col :span="6">{{ item.orderNo }} </el-col>
-                  <el-col :span="6">{{ item.createTime | date }}</el-col>
+                  <el-col :span="4">{{ item.createTime | date }}</el-col>
                   <el-col :span="4"> ￥{{item.paidMoney | formatMoney}} </el-col>
                 </el-row>
               </li>

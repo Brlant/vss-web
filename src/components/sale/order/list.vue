@@ -155,7 +155,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8" v-show="vaccineType === '1' ">
+            <el-col :span="8">
               <oms-form-row label="货主货品" :span="6">
                 <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货主货品"
                            :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"

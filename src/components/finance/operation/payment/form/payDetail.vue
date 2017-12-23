@@ -81,7 +81,8 @@
         <thead>
         <tr>
           <th width="30px">操作</th>
-          <th :style="{width: billPayType === '1' ? '200px' : '260px'}">货品名称</th>
+          <th style="width: 240px">货品名称</th>
+          <th>数量</th>
           <th>订单号</th>
           <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
           <th>待付金额</th>
@@ -102,6 +103,9 @@
           </td>
           <td>
             <span>{{product.goodsName}}</span>
+          </td>
+          <td>
+            <span>{{product.goodsCount}}</span>
           </td>
           <td>
             <span>{{product.orderNo}}</span>
@@ -135,7 +139,8 @@
       <table class="table">
         <thead>
         <tr>
-          <th :style="{width: billPayType === '1' ? '180px' : '260px'}">订单号/货品名称</th>
+          <th style="width: 240px">订单号/货品名称</th>
+          <th>数量</th>
           <th>发生时间</th>
           <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
           <th>待付金额</th>
@@ -148,6 +153,9 @@
           <td>
             <span class="minor-part">{{product.orderNo}}</span>
             <div>{{product.goodsName}}</div>
+          </td>
+          <td>
+            <span>{{product.goodsCount}}</span>
           </td>
           <td>
             {{product.createTime | date }}

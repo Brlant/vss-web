@@ -263,21 +263,23 @@
                 v-if="form.detailList.length">
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
-                  <el-col :span="form.billPayType === '1' ? 7 : 8">货品名称</el-col>
+                  <el-col :span="form.billPayType === '1' ? 6 : 7">货品名称</el-col>
+                  <el-col :span="2">数量</el-col>
                   <el-col :span="form.billPayType === '1' ? 5 : 6">订单号</el-col>
                   <el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">发生时间</el-col>
+                  <el-col :span="form.billPayType === '1' ? 4 : 5">发生时间</el-col>
                   <el-col :span="form.billPayType === '1' ? 3 : 4">本次付款金额 </el-col>
                 </el-row>
               </li>
               <li class="show-item" v-for="item in form.detailList">
                 <el-row type="flex">
-                  <el-col :span="form.billPayType === '1' ? 7 : 8">{{ item.goodsName }} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 6 : 7">{{ item.goodsName }}</el-col>
+                  <el-col :span="2">{{ item.count }}</el-col>
                   <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.orderNo }} </el-col>
                   <el-col :span="4" v-show="form.billPayType === '1'" class="break-word">
                     {{ item.invoiceNo ? item.invoiceNo : '无' }}
                   </el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.createTime | date }}</el-col>
+                  <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.createTime | date }}</el-col>
                   <el-col :span="form.billPayType === '1' ? 3 : 4"> ￥{{item.paidMoney | formatMoney}} </el-col>
                 </el-row>
               </li>

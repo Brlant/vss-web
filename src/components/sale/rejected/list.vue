@@ -165,6 +165,29 @@
             <!--</oms-form-row>-->
             <!--</el-col>-->
             <el-col :span="8">
+              <oms-form-row label="货主货品" :span="6">
+                <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货主货品"
+                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
+                           popper-class="good-selects">
+                  <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
+                             :label="item.orgGoodsDto.name"
+                             :value="item.orgGoodsDto.id">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                        </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="预计入库时间" :span="7">
                 <el-col :span="24">
                   <el-date-picker
@@ -288,7 +311,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
-  import { BaseInfo, erpOrder, Order } from '@/resources';
+  import { BaseInfo, erpOrder, Order, Vaccine } from '@/resources';
 
   export default {
     components: {
@@ -312,6 +335,7 @@
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: '',
+          orgGoodsId: '',
           deleteFlag: false
         },
         searchCondition: {
@@ -322,6 +346,7 @@
           expectedEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
+          orgGoodsId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
@@ -338,7 +363,8 @@
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
         user: {},
-        state: ''
+        state: '',
+        goodesList: []
       };
     },
     mounted () {
@@ -395,6 +421,7 @@
           expectedEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
+          orgGoodsId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
@@ -445,6 +472,17 @@
           });
         }
         this.queryStatusNum(param);
+      },
+      searchProduct (keyWord) {
+        let params = Object.assign({}, {
+          keyWord: keyWord,
+          orgId: this.$store.state.user['userCompanyAddress']
+        });
+        let level = this.$store.state.orgLevel;
+        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
+        Vaccine[api](params).then(res => {
+          this.goodesList = res.data.list;
+        });
       },
       refreshOrder () {
         this.currentOrderId = '';
