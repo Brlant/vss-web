@@ -1023,6 +1023,7 @@
           orgId: this.form.orgId,
           orgGoodsId: this.product.orgGoodsId
         };
+        this.batchNumbers = [];
         http.get('/erp-stock/valid/batch', {params}).then(res => {
           if (res.data.length || this.editItemProduct.batchNumberId) {
             res.data.forEach(f => {
