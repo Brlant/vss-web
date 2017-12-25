@@ -73,7 +73,7 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form class="advanced-query-form" onsubmit="return false">
+        <el-form class="advanced-query-form" :model="searchWord" onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="接种点" :span="4">
@@ -99,13 +99,14 @@
               </oms-form-row>
             </el-col>
             <el-col :span="9">
-              <oms-form-row label="到货需求日期" :span="8">
+              <el-form-item label="到货需求日期" lable-width="140px"
+                :rules="[{required: true}]">
                 <el-date-picker
                   type="daterange"
-                  v-model="demandTime"
+                  v-model="demandTime" style="width: 300px"
                   placeholder="请选择到货需求日期" format="yyyy-MM-dd">
                 </el-date-picker>
-              </oms-form-row>
+              </el-form-item>
             </el-col>
             <el-col :span="7">
               <oms-form-row label="组织区域代码" :span="8">
@@ -117,7 +118,7 @@
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
                 <el-button @click="exportExcel" :plain="true" type="success">导出EXCEL</el-button>
-                <!--<el-button  @click="exportNoSaleExcel" :plain="true" type="success">导出待生成销售汇总</el-button>-->
+                <el-button  @click="exportNoSaleExcel" :plain="true" type="success">导出待生成销售汇总</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
