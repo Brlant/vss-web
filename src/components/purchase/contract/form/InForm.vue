@@ -653,8 +653,8 @@
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-        this.filterLogisticsCenter();
-        this.initForm();
+      this.initForm();
+      this.filterLogisticsCenter();
     },
     methods: {
       filterAddressLabel (item) {

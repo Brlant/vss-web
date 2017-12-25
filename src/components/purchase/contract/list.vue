@@ -472,7 +472,11 @@
       editContract(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
-        this.showEditItemRight = true;
+        if (item.used) {
+          this.showEditItemRight = true;
+        } else {
+          this.showItemRight = true;
+        }
         this.defaultIndex = 2;
       },
       showContract(item) {
