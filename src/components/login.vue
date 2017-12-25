@@ -5,7 +5,7 @@
 <template>
   <div class="main-box-rap">
     <div class="main-card-box">
-      <img class="bg-logo" src="../assets/img/bg.png">
+      <div class="bg-logo"></div>
       <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part-s clearfix">
         <div class="m-logo">疾病预防控制中心疫苗管理系统</div>

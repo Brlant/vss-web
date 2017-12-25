@@ -117,7 +117,7 @@
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
                 <el-button @click="exportExcel" :plain="true" type="success">导出EXCEL</el-button>
-                <!--<el-button  @click="exportNoSaleExcel" :plain="true" type="success">导出待生成销售汇总</el-button>-->
+                <el-button  @click="exportNoSaleExcel" :plain="true" type="success">导出待生成销售汇总</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
