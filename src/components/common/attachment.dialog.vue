@@ -92,7 +92,7 @@
     <transition name="el-fade-in">
       <div @click.stop="closeDialog" style="height:100%;width:100%;">
         <div v-if="type=='image'" class="dialog-image-rap">
-          <img :src="fileUrl+'?image&action=resize:w_600,h_800,m_2'" alt=''
+          <img :src="fileUrl+'?image&action=resize:h_600,m_2'" alt=''
                :style="'transform: rotate('+currentZ+'deg)'" @click.stop="stop">
         </div>
         <div v-if="groupLen>1" class="img-button">
