@@ -47,6 +47,14 @@
         bottom: 35px;
         right: 35px;
       }
+      .img-button {
+        position: absolute;
+        width: 300px;
+        height: 150px;
+        bottom: 0;
+        left: 50%;
+        margin-left: -100px;
+      }
       .attachment-doc-body {
         height: 100%;
       }
@@ -71,36 +79,45 @@
 
 </style>
 <template>
-  <el-dialog :visible.sync="dialogVisible" :before-close="close"
+  <el-dialog :visible.sync="dialogVisible" :before-close="close" :fullscreen="true"
              class="attachment-dialog"
              :class="{'docview':type=='doc','img-view':type=='image'}" top="0">
     <div slot="title" class="attachment-dialog-head">
       <div>{{Attachment.attachmentFileName}}</div>
-      <div v-if="groupLen>1">
-        {{currentIndex + 1}}/{{groupLen}}
-        <el-tooltip content="前一个资源">
-          <a @click.prevent.stop="goPrev()">
-            <f-a name="prev"></f-a>
-          </a>
-        </el-tooltip>
-        <el-tooltip content="后一个资源">
-          <a @click.prevent.stop="goPrev()">
-            <f-a name="next"></f-a>
-          </a>
-        </el-tooltip>
-
-      </div>
+      <a class="download-link" :href="Attachment.attachmentStoragePath" @click.stop=""
+         :download="Attachment.attachmentFileName">
+        <i class="el-icon-t-download"></i> 下载
+      </a>
     </div>
     <transition name="el-fade-in">
       <div @click.stop="closeDialog" style="height:100%;width:100%;">
         <div v-if="type=='image'" class="dialog-image-rap">
-          <img :src="fileUrl+'?image&action=resize:w_600,h_800,m_2'" alt='' :style="'transform: rotate('+currentZ+'deg)'" @click.stop="stop">
+          <img :src="fileUrl+'?image&action=resize:w_600,h_800,m_2'" alt=''
+               :style="'transform: rotate('+currentZ+'deg)'" @click.stop="stop">
+        </div>
+        <div v-if="groupLen>1" class="img-button">
+          <!--<el-tooltip content="前一个资源">-->
+          <!--<a @click.prevent.stop="goPrev()">-->
+          <!--<f-a name="prev"></f-a>-->
+          <!--</a>-->
+          <!--</el-tooltip>-->
+          <!--<el-tooltip content="后一个资源">-->
+          <!--<a @click.prevent.stop="goPrev()">-->
+          <!--<f-a name="next"></f-a>-->
+          <!--</a>-->
+          <!--</el-tooltip>-->
+          <el-button-group>
+            <el-button type="primary" :plain="true" @click.prevent.stop="goPrev()"><i
+              class="el-icon-arrow-left el-icon--left"></i>上一页
+            </el-button>
+            <el-button type="info" :plain="true" :disabled="false">{{currentIndex + 1}}/{{groupLen}}</el-button>
+            <el-button type="primary" :plain="true" @click.prevent.stop="goNext()">下一页<i
+              class="el-icon-arrow-right el-icon--right"></i></el-button>
+          </el-button-group>
         </div>
         <div class="img-tools" v-if="type=='image'" @click.stop="stop">
-
           <el-button type="default" @click.stop="changeZ(1)"><i class="el-icon-t-rotate"></i>
           </el-button>
-
         </div>
         <div v-if="type=='doc'" class="attachment-doc-body" @click.stop="stop">
           <iframe :src="docViewUrl" width="100%" height="100%" frameborder="0"></iframe>
@@ -112,10 +129,8 @@
 <script>
   import { http } from '../../resources';
   import utils from '@/tools/utils';
-  import ElButton from '../../../node_modules/element-ui/packages/button/src/button.vue';
 
   export default {
-    components: {ElButton},
     data() {
       return {
         dialogVisible: false,
@@ -123,7 +138,9 @@
         type: '',
         currentZ: 0,
         attachmentId: '',
-        currentIndex: 1
+        currentIndex: 1,
+        attachmentIdList: [],
+        tempAttachmentList: []
       };
     },
     computed: {
@@ -132,6 +149,12 @@
       },
       attachmentList: function () {
         return this.$store.state.attachmentDialog.attachmentList;
+      },
+      objectId: function () {
+        return this.$store.state.attachmentDialog.objectId;
+      },
+      objectType: function () {
+        return this.$store.state.attachmentDialog.objectType;
       },
       groupLen: function () {
         return this.$store.state.attachmentDialog.attachmentList.length;
@@ -142,12 +165,12 @@
       docViewUrl: function () {
         return 'https://doc-view.sinopharm-bio.com/view/url?url=' + encodeURIComponent(this.Attachment.attachmentStoragePath);
       },
-      stateDialogVisible: function () {
+      dialogVisibleStatus: function () {
         return this.$store.state.attachmentDialog.open;
       }
     },
     watch: {
-      stateDialogVisible: function (val) {
+      dialogVisibleStatus: function (val) {
         if (val === true) {
           this.showAttachment();
         }
@@ -157,7 +180,6 @@
         this.getAttachment();
       }
     },
-
     methods: {
       getAttachment: function () {
         this.currentZ = 0;
