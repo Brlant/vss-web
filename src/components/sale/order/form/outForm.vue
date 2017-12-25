@@ -344,86 +344,89 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "
-                              v-show="batchNumbers.length === 0 ">
-                  <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
-                    <template slot="append">
-                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                    </template>
-                  </oms-input>
-                </el-form-item>
-                <el-form-item label="单价" class="productItem-info" prop="unitPrice" v-show="vaccineType==='2'">
-                  <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
-                             @blur="formatPrice">
-                    <template slot="prepend">¥</template>
-                  </oms-input>
-                </el-form-item>
-              </el-form>
-
-              <div class="product-info-fix clearfix">
-                <el-row>
-                  <el-col :span="14">
-                    <goods-info-part :product-info="product"></goods-info-part>
-                  </el-col>
-                  <el-col :span="10">
-                    <span v-show="accessoryList.length">【组合货品】</span>
-                    <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
+                <div v-show="product.orgGoodsId">
+                  <el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "
+                                v-show="batchNumbers.length === 0 ">
+                    <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
+                      <template slot="append">
+                        <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                      </template>
+                    </oms-input>
+                  </el-form-item>
+                  <el-form-item label="单价" class="productItem-info" prop="unitPrice" v-show="vaccineType==='2'">
+                    <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
+                               @blur="formatPrice">
+                      <template slot="prepend">¥</template>
+                    </oms-input>
+                  </el-form-item>
+                  <div class="product-info-fix clearfix">
+                    <el-row>
+                      <el-col :span="14">
+                        <goods-info-part :product-info="product"></goods-info-part>
+                      </el-col>
+                      <el-col :span="10">
+                        <span v-show="accessoryList.length">【组合货品】</span>
+                        <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                        <span style="margin-right: 10px"
                              v-show="acce.sellPrice">¥ {{ acce.sellPrice | formatMoney }}</span>
                        <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                     </span>
-                  </el-col>
-                </el-row>
-              </div>
+                      </el-col>
+                    </el-row>
+                  </div>
+                  <div class="product-list-detail" v-for="item in batchNumbers">
+                    <h3>批号信息</h3>
+                    <table class="table">
+                      <thead>
+                      <tr>
+                        <th>
+                          <el-checkbox @change="checkItemAll(item)" v-model="item.isCheckedAll"></el-checkbox>
+                        </th>
+                        <th>产品数量</th>
+                        <th>批号</th>
+                        <th>仓库数量</th>
+                        <th>生产日期</th>
+                        <th>有效期</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr v-for=" batchNumber in item.lots">
+                        <td>
+                          <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
+                        </td>
+                        <td>
+                          <el-input style="width:180px" type="number" v-model.number="batchNumber.productCount" :min="0"
+                                    @blur="isChangeValue(batchNumber)">
+                            <template slot="append" style="width: 50px">
+                              <dict :dict-group="'measurementUnit'"
+                                    :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                            </template>
+                          </el-input>
+                        </td>
+                        <td>{{ batchNumber.no }}</td>
+                        <td>
+                          {{ batchNumber.count }}
+                          <dict :dict-group="'measurementUnit'"
+                                :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                        </td>
+                        <td>{{ batchNumber.productionDate | date }}</td>
+                        <td>{{ batchNumber.expirationDate | date }}</td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                  <oms-form-row label-width="160px" :span="4" :label="''">
+                    <el-button type="primary" @click="addProduct">加入订单</el-button>
+                  </oms-form-row>
+                </div>
+              </el-form>
+
             </div>
 
             <!--<span v-show="batchNumbers.length" style="font-weight: 600">批号信息</span>-->
-            <div class="product-list-detail" v-for="item in batchNumbers">
-              <h3>批号信息</h3>
-              <table class="table">
-                <thead>
-                <tr>
-                  <th>
-                    <el-checkbox @change="checkItemAll(item)" v-model="item.isCheckedAll"></el-checkbox>
-                  </th>
-                  <th>产品数量</th>
-                  <th>批号</th>
-                  <th>仓库数量</th>
-                  <th>生产日期</th>
-                  <th>有效期</th>
-                </tr>
-                </thead>
-                <tbody>
-                <tr v-for=" batchNumber in item.lots">
-                  <td>
-                    <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
-                  </td>
-                  <td>
-                    <el-input style="width:180px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                              @blur="isChangeValue(batchNumber)">
-                      <template slot="append" style="width: 50px">
-                        <dict :dict-group="'measurementUnit'"
-                              :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                      </template>
-                    </el-input>
-                  </td>
-                  <td>{{ batchNumber.no }}</td>
-                  <td>
-                    {{ batchNumber.count }}
-                    <dict :dict-group="'measurementUnit'"
-                          :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                  </td>
-                  <td>{{ batchNumber.productionDate | date }}</td>
-                  <td>{{ batchNumber.expirationDate | date }}</td>
-                </tr>
-                </tbody>
-              </table>
-            </div>
-            <oms-form-row label-width="160px" :span="4" :label="''">
-              <el-button type="primary" @click="addProduct">加入订单</el-button>
-            </oms-form-row>
+
             <div class="product-list-detail">
               <h3 style="background: #13ce66;color: #fff">已选货品</h3>
               <table class="table">
@@ -1260,6 +1263,8 @@
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
           this.batchNumbers = [];
+          this.searchProduct();
+
         });
       },
       remove: function (item) { // 删除货品
