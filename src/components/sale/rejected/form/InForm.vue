@@ -881,8 +881,16 @@
             auditedStatus: '1'
           }).then(res => {
             this.supplierWarehouses = res.data;
-            let defaultStore = res.data.filter(item => item.default);
-            this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
+            // let defaultStore = res.data.filter(item => item.default);
+            // this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
+            // 以前去默认仓库地址
+            // 现在业务关系中维护地址
+            this.orgList.forEach(i => {
+              if (i.id === val) {
+                this.form.pickUpAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
+              }
+            });
+            // *************************//
           });
         }
         this.checkLicence(val);

@@ -894,8 +894,16 @@
         Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId}).then(res => {
           this.warehouses = res.data || [];
           if (!this.isStorageData) {
-            let fs = this.warehouses.filter(i => i.default)[0];
-            this.form.transportationAddress = fs && fs.id || '';
+            // let fs = this.warehouses.filter(i => i.default)[0];
+            // this.form.transportationAddress = fs && fs.id || '';
+            // 以前去默认仓库地址
+            // 现在业务关系中维护地址
+            this.orgList.forEach(i => {
+              if (i.id === orgId) {
+                this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
+              }
+            });
+            // *************************//
           }
         });
       },

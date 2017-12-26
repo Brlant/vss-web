@@ -650,13 +650,21 @@
         this.showCdcs = this.cdcs.filter(f => f.level === this.type);
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
-      searchWarehouses () {
+      searchWarehouses (val) {
         Address.queryAddress(this.form.povId, {deleteFlag: false, orgId: this.form.povId}).then(res => {
           this.warehouses = res.data || [];
-          let fs = this.warehouses.filter(i => i.default)[0];
-          if (fs) {
-            this.form.warehouseId = fs.id;
-          }
+          // let fs = this.warehouses.filter(i => i.default)[0];
+          // if (fs) {
+          //   this.form.warehouseId = fs.id;
+          // }
+          // 以前去默认仓库地址
+          // 现在业务关系中维护地址
+          this.orgList.forEach(i => {
+            if (i.id === val) {
+              this.form.warehouseId = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
+            }
+          });
+          // *************************//
         });
       },
       filterProducts: function () {
