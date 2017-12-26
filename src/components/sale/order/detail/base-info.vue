@@ -191,7 +191,10 @@
           <td class="text-center" width="140px">
             {{item.orgGoodsDto.salesFirmName}}
           </td>
-          <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
+          <td width="80px" class="R">
+            {{ item.batchNumber || '无' }}
+            <el-tag v-show="item.inEffectiveFlag" type="danger">近效期</el-tag>
+          </td>
           <td>{{ item.productionDate | date }}</td>
           <td>{{ item.expiryDate | date }}</td>
           <td width="100px" class="text-center">

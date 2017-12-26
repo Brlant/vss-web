@@ -163,8 +163,6 @@
     }
   }
 
-
-
   .ml15 {
     margin-left: 40px;
   }
@@ -349,7 +347,8 @@
                                 v-show="batchNumbers.length === 0 ">
                     <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
                       <template slot="append">
-                        <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                        <dict :dict-group="'measurementUnit'"
+                              :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                       </template>
                     </oms-input>
                   </el-form-item>
@@ -405,7 +404,10 @@
                             </template>
                           </el-input>
                         </td>
-                        <td>{{ batchNumber.no }}</td>
+                        <td>
+                          {{ batchNumber.no }}
+                          <el-tag v-show="batchNumber.inEffectiveFlag" type="danger">近效期</el-tag>
+                        </td>
                         <td>
                           {{ batchNumber.count }}
                           <dict :dict-group="'measurementUnit'"
@@ -448,7 +450,10 @@
                     </el-tag>
                     <span>{{product.orgGoodsName}}</span>
                   </td>
-                  <td>{{ product.no ? product.no : '无' }}</td>
+                  <td>
+                    {{ product.no ? product.no : '无' }}
+                    <el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>
+                  </td>
                   <td class="ar" v-show="vaccineType==='2'">
                    <span v-show="Number(product.unitPrice)">
                      <span>¥</span>{{product.unitPrice | formatMoney}}
@@ -495,7 +500,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
 
@@ -543,6 +548,7 @@
           'orgGoodsId': '',
           'packingCount': null,
           'specificationsId': '',
+          inEffectiveFlag: false,
           unitPrice: null,
           'fixInfo': {
             'goodsDto': {}
@@ -658,22 +664,22 @@
       };
     },
     computed: {
-      bizTypeList () {
+      bizTypeList() {
         return this.$store.state.dict['bizOutType'];
       },
-      transportationMeansList () {
+      transportationMeansList() {
         return this.$store.state.dict['outTransportMeans'];
       },
-      transportationConditionList () {
+      transportationConditionList() {
         return this.$store.state.dict['transportationCondition'];
       },
-      shipmentPackingUnit () {
+      shipmentPackingUnit() {
         return this.$store.state.dict['shipmentPackingUnit'];
       },
-      measurementUnitList () {
+      measurementUnitList() {
         return this.$store.state.dict['measurementUnit'];
       },
-      orgRelationList () {
+      orgRelationList() {
         return this.$store.state.dict['orgRelation'];
       },
       totalMoney: function () {
@@ -693,7 +699,7 @@
           }
         });
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -730,15 +736,15 @@
 //      }
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      setDefaultValue () {
+      setDefaultValue() {
         this.form.transportationMeansId = '0';
         this.form.transportationCondition = '0';
       },
-      getTitle () {
+      getTitle() {
         return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}销售订单`;
       },
       autoSave: function () {
@@ -758,7 +764,7 @@
         this.form.actualConsignee = '';
         this.form.orgAddress = '';
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -780,17 +786,17 @@
           });
         });
       },
-      changeRemark (form) {
+      changeRemark(form) {
         if (!this.form.remark) {
           this.form.remark = form.count + form.name;
         } else {
           this.form.remark += '，' + form.count + form.name;
         }
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
       changeExpectedTime: function (date) {// 格式化日期
@@ -874,7 +880,7 @@
           }
         }
       },
-      changeTransportationMeans (val) {// 物流方式改变时
+      changeTransportationMeans(val) {// 物流方式改变时
         switch (val) {
           case '0': {
             this.showContent.expectedTimeLabel = '预计送货时间';
@@ -896,7 +902,7 @@
           this.showContent.expectedTimeLabel = '';
         }
       },
-      changeCustomerId (val) {// POV改变时
+      changeCustomerId(val) {// POV改变时
         if (!this.isStorageData) {// 有缓存时，不重置表单
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
@@ -908,7 +914,7 @@
         this.searchWarehouses(val);
         this.searchProduct();
       },
-      searchWarehouses (orgId) {
+      searchWarehouses(orgId) {
         if (!orgId) {
           this.warehouses = [];
           this.form.transportationAddress = '';
@@ -922,7 +928,7 @@
           }
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -996,6 +1002,7 @@
             'orgGoodsId': '',
             'packingCount': null,
             'specificationsId': '',
+            inEffectiveFlag: false,
             'fixInfo': {
               'goodsDto': {}
             },
@@ -1044,7 +1051,7 @@
         });
         this.filterProductList = arr;
       },
-      queryBatchNumers () { // 查询货品批次信息
+      queryBatchNumers() { // 查询货品批次信息
         let params = {
           goodsId: this.product.fixInfo.goodsId,
           orgId: this.form.orgId,
@@ -1071,12 +1078,13 @@
           }
         });
       },
-      changeBatchNumbers (lots) {
+      changeBatchNumbers(lots) {
         if (!lots.length) {
           lots.push({
             id: this.editItemProduct.batchNumberId,
             no: this.editItemProduct.no,
             productCount: this.editItemProduct.amount,
+            inEffectiveFlag: this.editItemProduct.inEffectiveFlag,
             count: this.editItemProduct.amount,
             productionDate: this.editItemProduct.productionDate,
             expirationDate: this.editItemProduct.expiryDate,
@@ -1092,7 +1100,7 @@
           });
         }
       },
-      isChangeValue (item) {
+      isChangeValue(item) {
         item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         if (item.productCount > item.count) {
           this.$notify.warning({
@@ -1102,7 +1110,7 @@
         }
         item.isChecked = item.productCount > 0;
       },
-      isShowName (item) {
+      isShowName(item) {
         let index = this.form.detailDtoList.indexOf(item);
         if (index === 0) {
           return true;
@@ -1120,7 +1128,7 @@
         }
         return !isShow;
       },
-      checkItemAll (item) {
+      checkItemAll(item) {
         item.lots.forEach(l => {
           l.isChecked = item.isCheckedAll;
         });
@@ -1246,7 +1254,7 @@
           this.resetProductForm();
         });
       },
-      resetProductForm () {
+      resetProductForm() {
         this.$nextTick(function () {
           this.product = {
             'amount': null,
@@ -1255,23 +1263,23 @@
             'orgGoodsId': '',
             'packingCount': null,
             'specificationsId': '',
+            inEffectiveFlag: false,
             'fixInfo': {
-              'goodsDto': {}
-            },
+                'goodsDto': {}
+              },
             'unitPrice': null
           };
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
           this.batchNumbers = [];
           this.searchProduct();
-
         });
       },
       remove: function (item) { // 删除货品
         this.deleteItem(item);
         this.searchProduct();
       },
-      editItem (item) {
+      editItem(item) {
 //        this.filterProductList = [];
 //        this.searchProductList = [];
 //        this.searchProductList.push({
@@ -1292,7 +1300,7 @@
         this.searchProduct(item.orgGoodsName);
         this.queryBatchNumers();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         let orgGoodsId = item.orgGoodsId;
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
         let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);
