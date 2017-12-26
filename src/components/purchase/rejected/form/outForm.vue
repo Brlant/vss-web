@@ -901,6 +901,7 @@
             this.orgList.forEach(i => {
               if (i.id === orgId) {
                 this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
+                this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
               }
             });
             // *************************//

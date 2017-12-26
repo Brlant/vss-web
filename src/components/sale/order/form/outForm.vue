@@ -761,7 +761,6 @@
         this.form.detailDtoList = [];
         this.form.customerId = '';
         this.form.transportationAddress = '';
-        this.form.actualConsignee = '';
         this.form.orgAddress = '';
       },
       editOrderInfo() {
@@ -930,6 +929,7 @@
             this.orgList.forEach(i => {
               if (i.id === orgId) {
                 this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
+                this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
               }
             });
             // *************************//
