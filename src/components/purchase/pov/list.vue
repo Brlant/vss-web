@@ -108,13 +108,13 @@
                 </el-date-picker>
               </el-form-item>
             </el-col>
-            <el-col :span="7">
-              <oms-form-row label="组织区域代码" :span="8">
+            <el-col :span="8">
+              <oms-form-row label="组织区域代码" :span="6">
                 <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入组织区域代码"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="12">
-              <oms-form-row label="" :span="1">
+            <el-col :span="11">
+              <oms-form-row label="" :span="2">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
                 <el-button @click="exportExcel" :plain="true" type="success">导出EXCEL</el-button>

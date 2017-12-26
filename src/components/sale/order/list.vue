@@ -195,7 +195,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="4">
-              <oms-form-row label="" :span="3">
+              <oms-form-row label="" :span="vaccineType === '1' ? '3' : '6' ">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
