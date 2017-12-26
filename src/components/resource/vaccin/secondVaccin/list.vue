@@ -449,11 +449,9 @@
   import goodsRow from './goods.row.vue';
   import utils from '@/tools/utils';
   import attachmentLists from './../../../common/attachmentList.vue';
-  import ElRow from 'element-ui/packages/row/src/row';
 
   export default {
     components: {
-      ElRow,
       goodsPart, goodsRow, attachmentLists
     },
     data: function () {

@@ -56,12 +56,10 @@
 </template>
 <script>
   import Locale from 'element-ui/lib/mixins/locale';
-  import ElProgress from 'element-ui/packages/progress';
 
   export default {
     mixins: [Locale],
 
-    components: {ElProgress},
 
     props: {
       files: {
