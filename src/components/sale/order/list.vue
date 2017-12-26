@@ -256,8 +256,8 @@
             <div>{{item.transactOrgName }}</div>
           </el-col>
           <el-col :span="5">
-            <div>下单：{{item.createTime | date }}</div>
-            <div>预计送货：{{ item.expectedTime | date }}</div>
+            <div>下单：{{item.createTime | minute }}</div>
+            <div>预计送货：{{ item.expectedTime | minute }}</div>
           </el-col>
           <el-col :span="3">
             <div class="vertical-center">
