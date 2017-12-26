@@ -101,7 +101,10 @@
         if (perms.includes('order-document-watch')) {
           menu.push({name: '附件管理', key: 3});
         }
-        menu.push({name: '关联追溯码', key: 8});
+        let state = this.state;
+        if (state > 2) {
+          menu.push({name: '关联追溯码', key: 8});
+        }
         menu.push({name: '操作日志', key: 2});
         return menu;
       }
