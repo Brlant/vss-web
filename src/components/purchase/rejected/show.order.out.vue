@@ -31,7 +31,7 @@
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="return-manager-cancel"
                   v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'">
-              <el-button type="primary" @click="cancel">取消订单</el-button>
+              <el-button type="warning" plain @click="cancel">取消订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
