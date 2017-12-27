@@ -212,10 +212,8 @@
 </template>
 <script>
   import { BaseInfo, http, Vaccine } from '@/resources';
-  import ElRow from 'element-ui/packages/row/src/row';
 
   export default {
-    components: {ElRow},
     data () {
       return {
         loadingData: true,

@@ -319,42 +319,44 @@
                   </el-option>
                 </el-select>
               </el-form-item>
-              <el-form-item label="产品数量" class="productItem-info" prop="amount">
-                <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
-                  <template slot="append">
-                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                  </template>
-                </oms-input>
-              </el-form-item>
-              <el-form-item label="单价" class="productItem-info" prop="unitPrice">
-                <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
-                           @blur="formatPrice">
-                  <template slot="prepend">¥</template>
-                </oms-input>
-              </el-form-item>
-            </el-form>
-            <div class="product-info-fix clearfix">
-              <el-row>
-                <el-col :span="14">
-                  <goods-info-part :product-info="product"></goods-info-part>
-                </el-col>
-                <el-col :span="10">
-                  <span v-show="accessoryList.length">【组合货品】</span>
-                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
+              <div v-show="product.orgGoodsId">
+                <el-form-item label="产品数量" class="productItem-info" prop="amount">
+                  <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
+                    <template slot="append">
+                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                    </template>
+                  </oms-input>
+                </el-form-item>
+                <el-form-item label="单价" class="productItem-info" prop="unitPrice">
+                  <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
+                             @blur="formatPrice">
+                    <template slot="prepend">¥</template>
+                  </oms-input>
+                </el-form-item>
+                <div class="product-info-fix clearfix">
+                  <el-row>
+                    <el-col :span="14">
+                      <goods-info-part :product-info="product"></goods-info-part>
+                    </el-col>
+                    <el-col :span="10">
+                      <span v-show="accessoryList.length">【组合货品】</span>
+                      <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                       <span style="margin-right: 10px"
                             v-show="acce.procurementPrice">¥ {{ acce.procurementPrice | formatMoney }}</span>
                        <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
-                </el-col>
-              </el-row>
-            </div>
-          </div>
+                    </el-col>
+                  </el-row>
+                </div>
+                <oms-form-row label="" :span="4">
+                  <el-button type="primary" @click="addProduct">加入订单</el-button>
+                </oms-form-row>
+              </div>
 
-          <oms-form-row label="" :span="4">
-            <el-button type="primary" @click="addProduct">加入订单</el-button>
-          </oms-form-row>
+            </el-form>
+          </div>
           <div class="product-list-detail">
             <h3 style="background: #13ce66;color: #fff">已选货品</h3>
             <table class="table">
@@ -1025,6 +1027,7 @@
             };
             this.$refs['orderGoodsAddForm'].resetFields();
             this.accessoryList = [];
+            this.searchProduct();
           });
         });
 

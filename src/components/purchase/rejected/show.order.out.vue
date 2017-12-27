@@ -31,7 +31,7 @@
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="return-manager-cancel"
                   v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'">
-              <el-button type="primary" @click="cancel">取消订单</el-button>
+              <el-button type="warning" plain @click="cancel">取消订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
@@ -96,7 +96,10 @@
         if (perms.includes('order-document-watch')) {
           menu.push({name: '附件管理', key: 3});
         }
-        menu.push({name: '关联追溯码', key: 8});
+        let state = this.state;
+        if (state > 2) {
+          menu.push({name: '关联追溯码', key: 8});
+        }
         menu.push({name: '操作日志', key: 2});
         return menu;
       }

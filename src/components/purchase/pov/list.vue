@@ -73,7 +73,7 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form class="advanced-query-form" onsubmit="return false">
+        <el-form class="advanced-query-form" :model="searchWord" onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="接种点" :span="4">
@@ -99,20 +99,25 @@
               </oms-form-row>
             </el-col>
             <el-col :span="9">
-              <oms-form-row label="到货需求日期" :span="8">
-                <el-date-picker
-                  type="daterange"
-                  v-model="demandTime"
-                  placeholder="请选择到货需求日期" format="yyyy-MM-dd">
-                </el-date-picker>
-              </oms-form-row>
+              <el-row>
+                <el-col :span="8" style="padding-top: 10px;padding-right:8px;text-align: right">
+                  <span style="color: red">*</span>到货需求日期
+                </el-col>
+                <el-col :span="16">
+                  <el-date-picker
+                    type="daterange"
+                    v-model="demandTime"
+                    placeholder="请选择到货需求日期" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </el-row>
             </el-col>
-            <el-col :span="7">
-              <oms-form-row label="组织区域代码" :span="8">
+            <el-col :span="8" class="clearfix">
+              <oms-form-row label="组织区域代码" :span="7">
                 <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入组织区域代码"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="16">
               <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button @click="resetSearchForm">重置</el-button>

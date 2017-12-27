@@ -41,7 +41,7 @@
               <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
             </oms-row>
             <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | date}}</span>
+              <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
@@ -120,7 +120,7 @@
               <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
             <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | date}}</span>
+              <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
             <oms-row :label="getTimeTitle(currentOrder)" v-show="currentOrder.expectedTime">
               <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
@@ -161,9 +161,9 @@
           <td width="70px">
             <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                         effect="light" placement="right">
-              <img :src="item.orgGoodsDto.goodsDto.photo "
+              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_60,h_60,m_2' "
                    class="product-img">
-              <img slot="content" :src="item.orgGoodsDto.goodsDto.photo "
+              <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
                    class="product-img">
             </el-tooltip>
             <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
@@ -191,7 +191,10 @@
           <td class="text-center" width="140px">
             {{item.orgGoodsDto.salesFirmName}}
           </td>
-          <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
+          <td width="80px" class="R">
+            {{ item.batchNumber || '无' }}
+            <el-tag v-show="item.inEffectiveFlag" type="danger">近效期</el-tag>
+          </td>
           <td>{{ item.productionDate | date }}</td>
           <td>{{ item.expiryDate | date }}</td>
           <td width="100px" class="text-center">

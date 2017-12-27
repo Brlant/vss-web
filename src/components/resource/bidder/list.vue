@@ -277,12 +277,10 @@
   import utils from '@/tools/utils';
   import editForm from './form/form.vue';
   import {BaseInfo, http, Vaccine} from '@/resources';
-  import ElCol from 'element-ui/packages/col/src/col';
   import OmsForbid from '../../common/forbid.vue';
 
   export default {
     components: {
-      ElCol,
       editForm
     },
     data: function () {

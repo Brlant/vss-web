@@ -43,7 +43,7 @@
             <dict :dict-group="'bizInType'" :dict-key="currentOrder.bizType"></dict>
           </oms-row>
           <oms-row label="下单时间">
-            <span class="goods-span">{{currentOrder.createTime | date}}</span>
+            <span class="goods-span">{{currentOrder.createTime | minute}}</span>
           </oms-row>
           <oms-row label="物流方式">
             <dict :dict-group="'transportationMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
@@ -76,9 +76,9 @@
           <td width="70px">
             <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                         effect="light" placement="right">
-              <img :src="item.orgGoodsDto.goodsDto.photo "
+              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_60,h_60,m_2' "
                    class="product-img">
-              <img slot="content" :src="item.orgGoodsDto.goodsDto.photo "
+              <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
                    class="product-img">
             </el-tooltip>
             <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">

@@ -259,7 +259,7 @@
               <el-col :span="5">
                 <div>
                   <span>下单</span>
-                  ：{{item.createTime | date }}
+                  ：{{item.createTime | minute }}
                 </div>
                 <div>
                   <span>预计入库</span>

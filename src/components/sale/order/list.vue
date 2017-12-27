@@ -195,7 +195,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="4">
-              <oms-form-row label="" :span="3">
+              <oms-form-row label="" :span="vaccineType === '1' ? '3' : '6' ">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
@@ -256,8 +256,8 @@
             <div>{{item.transactOrgName }}</div>
           </el-col>
           <el-col :span="5">
-            <div>下单：{{item.createTime | date }}</div>
-            <div>预计送货：{{ item.expectedTime | date }}</div>
+            <div>下单：{{item.createTime | minute }}</div>
+            <div>预计送货：{{ item.expectedTime | minute }}</div>
           </el-col>
           <el-col :span="3">
             <div class="vertical-center">

@@ -125,7 +125,7 @@
       </div>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
-          layout="prev, pager, next"
+          layout="prev, pager, next, jumper"
           :total="pager.count" :pageSize="pager.pageSize" @current-change="getTraceCodes"
           :current-page="pager.currentPage">
         </el-pagination>

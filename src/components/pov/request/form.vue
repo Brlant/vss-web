@@ -280,38 +280,42 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="疫苗数量">
-              <oms-input type="number" placeholder="请输入申请数量" v-model.number="product.amount" :min="0"
-                         @blur="changeNumber">
-                <template slot="append">
-                  <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                </template>
-              </oms-input>
-            </el-form-item>
-          </el-form>
-
-          <div class="oms-form order-product-box">
-            <div class="product-info-fix clearfix">
-              <el-row>
-                <el-col :span="14">
-                  <goods-info-part :product-info="product"></goods-info-part>
-                </el-col>
-                <el-col :span="10">
-                  <span v-show="accessoryList.length">【组合疫苗】</span>
-                  <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
+            <div v-show="product.orgGoodsId">
+              <el-form-item label="疫苗数量">
+                <oms-input type="number" placeholder="请输入申请数量" v-model.number="product.amount" :min="0"
+                           @blur="changeNumber">
+                  <template slot="append">
+                    <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                  </template>
+                </oms-input>
+              </el-form-item>
+              <div class="oms-form order-product-box">
+                <div class="product-info-fix clearfix">
+                  <el-row>
+                    <el-col :span="14">
+                      <goods-info-part :product-info="product"></goods-info-part>
+                    </el-col>
+                    <el-col :span="10">
+                      <span v-show="accessoryList.length">【组合疫苗】</span>
+                      <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                        <span style="margin-right: 10px"
                              v-show="acce.sellPrice">¥ {{ acce.sellPrice | formatMoney}}</span>
                        <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
-                </el-col>
-              </el-row>
+                    </el-col>
+                  </el-row>
+                </div>
+              </div>
+              <oms-form-row label="" :span="4">
+                <el-button type="primary" @click="addProduct">添加疫苗</el-button>
+              </oms-form-row>
             </div>
-          </div>
-          <oms-form-row label="" :span="4">
-            <el-button type="primary" @click="addProduct">添加疫苗</el-button>
-          </oms-form-row>
+
+          </el-form>
+
+
           <div class="product-list-detail">
             <h3 style="background: #13ce66;color: #fff">已选疫苗</h3>
             <table class="table">
