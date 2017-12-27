@@ -60,7 +60,6 @@
   export default {
     mixins: [Locale],
 
-
     props: {
       files: {
         type: Array,
