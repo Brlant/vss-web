@@ -1,5 +1,5 @@
 <template>
-  <div v-if="productInfo.fixInfo.goodsDto">
+  <div v-if="productInfo.fixInfo">
     <el-row>
       <el-col :span="12">
         <oms-row label="小包装" :span="8">

@@ -85,6 +85,7 @@
       <thead>
       <tr>
         <th>货品名称</th>
+        <th>规格</th>
         <th>单价</th>
         <th>申请数量</th>
         <th>申请金额</th>
@@ -96,6 +97,9 @@
 
         <td>
           {{row.goodsName}}
+        </td>
+        <td>
+          <span>{{ row.specification }}</span>
         </td>
         <td>
           <span v-if="row.price">￥{{row.price | formatMoney}}</span>
@@ -114,6 +118,7 @@
       </tr>
       <tr>
         <th style="width: 300px"></th>
+        <th></th>
         <th></th>
         <th>
           <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>

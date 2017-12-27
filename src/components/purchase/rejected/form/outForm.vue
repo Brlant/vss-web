@@ -427,7 +427,8 @@
               <table class="table">
                 <thead>
                 <tr>
-                  <th style="width: 350px">货品名称</th>
+                  <th style="width: 300px">货品名称</th>
+                  <th>规格</th>
                   <th>批号</th>
                   <!--<th>货品单价</th>-->
                   <th>货品数量</th>
@@ -442,6 +443,11 @@
                             :class="{ml15:product.isCombination}">组合
                     </el-tag>
                     <span>{{product.orgGoodsName}}</span>
+                  </td>
+                  <td>
+                    <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
+                    <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
+                    <span v-else="">{{ product.specifications }}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
                   <!--<td class="ar">-->
@@ -1209,6 +1215,7 @@
                   measurementUnit: m.accessoryGoods.measurementUnit,
                   packingCount: null,
                   specificationsId: '',
+                  specifications: m.accessoryGoods.specifications,
                   proportion: m.proportion
                 });
               });

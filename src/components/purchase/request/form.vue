@@ -317,7 +317,8 @@
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 300px">疫苗名称</th>
+                <th style="width: 240px">疫苗名称</th>
+                <th>规格</th>
                 <th>单价</th>
                 <th>申请数量</th>
                 <th>申请金额</th>
@@ -331,6 +332,11 @@
                           :class="{ml15:product.isCombination}">组合
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
+                </td>
+                <td>
+                  <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
+                  <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
+                  <span v-else="">{{ product.specification }}</span>
                 </td>
                 <td class="ar">
                   <span v-if=" Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
@@ -509,7 +515,8 @@
             measurementUnit: m.unit,
             orgGoodsId: m.orgGoodsId,
             orgGoodsName: m.goodsName,
-            unitPrice: m.price
+            unitPrice: m.price,
+            specification: m.specification
           };
         });
         this.orgList.push({
@@ -759,6 +766,7 @@
                 amount: amount,
                 measurementUnit: m.accessoryGoods.measurementUnit,
                 packingCount: null,
+                specification: m.accessoryGoods.specifications,
                 specificationsId: ''
               });
             });
