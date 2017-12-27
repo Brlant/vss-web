@@ -215,7 +215,7 @@
         <h3>{{currentPartName}}</h3>
 
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-          <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
+          <el-form ref="contractForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="合同名称">
               <oms-input type="text" v-model="form.purchaseContractName" placeholder="请输入采购合同名称"></oms-input>
@@ -741,7 +741,7 @@
         }
       },
       resetForm: function () {// 重置表单
-        this.$refs['orderAddForm'].resetFields();
+        this.$refs['contractForm'].resetFields();
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.supplierId = '';
         this.form.actualConsignee = '';
@@ -823,7 +823,7 @@
         if (!this.isStorageData) {// 有缓存时，不重置表单
           let orgId = this.form.orgId;
           let bizType = this.form.bizType;
-          this.$refs['orderAddForm'].resetFields();
+          this.$refs['contractForm'].resetFields();
           this.form.remark = '';
           this.form.orgId = orgId;
           this.form.bizType = bizType;
@@ -1114,7 +1114,7 @@
       onSubmit: function () {// 提交表单
         let self = this;
         this.changeExpectedTime(this.form.expectedTime);
-        this.$refs['orderAddForm'].validate((valid) => {
+        this.$refs['contractForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;
             return false;
@@ -1136,7 +1136,29 @@
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
-          if (!saveData.id) {
+          if (saveData.id) {
+            PurchaseContract.updateOrder(saveData.id, saveData).then(res => {
+              this.resetForm();
+              this.$notify({
+                duration: 2000,
+                message: '编辑采购合同成功',
+                type: 'success'
+              });
+              self.$emit('change');
+              this.$nextTick(() => {
+                this.doing = false;
+                this.$emit('right-close');
+              });
+            }).catch(error => {
+              this.doing = false;
+              this.$notify({
+                duration: 2000,
+                title: '编辑采购合同失败',
+                message: error.response.data.msg,
+                type: 'error'
+              });
+            });
+          } else {
             PurchaseContract.save(saveData).then(res => {
               this.$notify({
                 duration: 2000,
@@ -1144,7 +1166,7 @@
                 type: 'success'
               });
               window.localStorage.removeItem(this.saveKey);
-              self.$emit('change', res.data);
+              this.$emit('change', res.data);
               this.$nextTick(() => {
                 this.doing = false;
                 this.$emit('right-close');
