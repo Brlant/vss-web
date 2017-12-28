@@ -396,6 +396,7 @@
               <thead>
               <tr>
                 <th style="width: 350px">货品名称</th>
+                <th>规格</th>
                 <!--<th>货品单价</th>-->
                 <th>货品数量</th>
                 <!--<th>金额</th>-->
@@ -414,6 +415,11 @@
                 <!--<span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>-->
                 <!--<span v-if="!Number(product.unitPrice)">-</span>-->
                 <!--</td>-->
+                <td>
+                  <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
+                  <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
+                  <span v-else="">{{ product.specifications }}</span>
+                </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
@@ -1034,6 +1040,7 @@
                   amount: amount,
                   measurementUnit: m.accessoryGoods.measurementUnit,
                   packingCount: null,
+                  specifications: m.accessoryGoods.specifications,
                   specificationsId: ''
                 });
               });

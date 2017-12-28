@@ -265,11 +265,12 @@
         </div>
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
           <div class="product-list-detail">
-            <h3 style="background: #13ce66;color: #fff">已选货品</h3>
+            <h3 style="background: #13ce66;color: #fff">已选货品1</h3>
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 300px">货品名称</th>
+                <th style="width: 240px">货品名称</th>
+                <th>规格</th>
                 <th>货品单价</th>
                 <th>货品数量</th>
                 <th>金额</th>
@@ -282,6 +283,11 @@
                           :class="{ml15:product.isCombination}">组合
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
+                </td>
+                <td>
+                  <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
+                  <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
+                  <span v-else="">{{ product.specifications }}</span>
                 </td>
                 <td>
                   <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>

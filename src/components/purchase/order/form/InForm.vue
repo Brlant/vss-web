@@ -382,6 +382,7 @@
               <thead>
               <tr>
                 <th style="width: 300px">货品名称</th>
+                <th>规格</th>
                 <th v-show="vaccineType==='2'">货品单价</th>
                 <th>货品数量</th>
                 <th v-show="vaccineType==='2'">金额</th>
@@ -395,6 +396,11 @@
                           :class="{ml15:product.isCombination}">组合
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
+                </td>
+                <td>
+                  <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
+                  <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
+                  <span v-else="">{{ product.specifications }}</span>
                 </td>
                 <td class="ar" v-show="vaccineType==='2'">
                   <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
@@ -1068,6 +1074,7 @@
                   amount: amount,
                   measurementUnit: m.accessoryGoods.measurementUnit,
                   packingCount: null,
+                  specifications: m.accessoryGoods.specifications,
                   specificationsId: ''
                 });
               });
