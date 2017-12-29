@@ -233,22 +233,22 @@
                 <el-col :span="7">
                   {{ businessRelationItem.followOrg.orgDto.creditCode }}
                 </el-col>
-                <el-col :span="4" class="text-right">
-                  建立日期：
-                </el-col>
-                <el-col :span="8">
-                  {{ businessRelationItem.followOrg.orgDto.createTime | minute}}
-                </el-col>
+                <!--<el-col :span="4" class="text-right">-->
+                  <!--建立日期：-->
+                <!--</el-col>-->
+                <!--<el-col :span="8">-->
+                  <!--{{ businessRelationItem.followOrg.orgDto.createTime | minute}}-->
+                <!--</el-col>-->
               </el-row>
               <el-row>
-                <el-col :span="5" class="text-right">
-                  法人代表：
-                </el-col>
-                <el-col :span="7">
-                  {{ businessRelationItem.followOrg.orgDto.legalRepresentative }}
-                </el-col>
+                <!--<el-col :span="5" class="text-right">-->
+                  <!--法人代表：-->
+                <!--</el-col>-->
+                <!--<el-col :span="7">-->
+                  <!--{{ businessRelationItem.followOrg.orgDto.legalRepresentative }}-->
+                <!--</el-col>-->
 
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   邮政编码：
                 </el-col>
                 <el-col :span="8">
@@ -286,14 +286,14 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="5" class="text-right">
-                  备注：
-                </el-col>
-                <el-col :span="7">
-                  {{ businessRelationItem.followOrg.orgDto.remarks }}
-                </el-col>
+                <!--<el-col :span="5" class="text-right">-->
+                  <!--备注：-->
+                <!--</el-col>-->
+                <!--<el-col :span="7">-->
+                  <!--{{ businessRelationItem.followOrg.orgDto.remarks }}-->
+                <!--</el-col>-->
 
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   有效期限：
                 </el-col>
                 <el-col :span="8">
