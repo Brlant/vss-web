@@ -71,13 +71,12 @@
     border: 1px solid #eee;
     position: relative;
     cursor: pointer;
-    width: 180px;
+    width: 380px;
     margin: 5px;
     padding: 10px;
     font-size: 12px;
     img {
-      width: 180px;
-      height: 180px;
+      width: 380px;
       display: block;
       background: #ccc;
     }
@@ -205,9 +204,10 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="12" style="padding-left:120px;">
+                <el-col :span="12" style="padding-left:50px;">
                   <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
-                    <img :src="data.goodsDto.photo?data.goodsDto.photo:'/static/img/userpic.png' "/>
+                    <img
+                      :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_2':'/static/img/userpic.png' "/>
                   </div>
                 </el-col>
                 <el-col :span="12">

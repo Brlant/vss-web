@@ -117,8 +117,7 @@
              v-for="(item,key) in vaccineType"
              @click="changeType(key,item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span
-            class="status-num">{{item.num}}</span></div>
+          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="d-table">
@@ -208,8 +207,7 @@
               <el-row>
                 <el-col :span="12" style="padding-left:50px;">
                   <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
-                    <img
-                      :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_2':'/static/img/userpic.png' "/>
+                    <img :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_2':'/static/img/userpic.png' "/>
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -229,16 +227,16 @@
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
                   <!--<goods-row label="中标价格" :span="8">-->
-                  <!--<span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}-->
+                    <!--<span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}-->
                   <!--</goods-row>-->
                   <!--<goods-row label="采购价格" :span="8">-->
-                  <!--<span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}-->
+                    <!--<span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}-->
                   <!--</goods-row>-->
                   <goods-row label="供货厂商" :span="8">
                     {{ data.salesFirmName }}
                   </goods-row>
                   <!--<goods-row label="销售价格" :span="8">-->
-                  <!--<span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}-->
+                    <!--<span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}-->
                   <!--</goods-row>-->
                   <goods-row label="库存上限" :span="8">
                     {{ data.inventoryUpperLimit }}
@@ -279,9 +277,8 @@
                 </el-col>
                 <el-col :span="12">
                   <goods-row label="存储类别" :span="8">
-                     <span v-for="(item, index) in data.goodsDto.storageType">
-                       <dict :dict-group="'storageType'" :dict-key="item"></dict>
-                       <span v-if="form.orgGoodsDto.goodsDto.storageType.length !== (index+1) ">、</span>
+                     <span v-for="type in data.goodsDto.storageType">
+                       <dict :dict-group="'typeId'" :dict-key="type"></dict><span v-if=" data.goodsDto.storageType.length!==0">/</span>
                     </span>
                   </goods-row>
                   <goods-row label="储存条件" :span="8">
@@ -507,7 +504,7 @@
       }
     },
     methods: {
-      scrollLoadingData(event) {
+      scrollLoadingData (event) {
         this.$scrollLoadingData(event);
       },
       handlePreview: function (id) {

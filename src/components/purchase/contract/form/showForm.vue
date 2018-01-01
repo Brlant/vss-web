@@ -500,7 +500,7 @@
         if (!item.warehouseAddress) {
           return '';
         }
-        return utils.formatAddress(item.warehouseProvince, item.warehouseCity, item.warehouseRegion) + '/' + item.warehouseAddress;
+        return item.warehouseAddress;
       },
       createOrderInfo () {
         this.form.detailDtoList = [];

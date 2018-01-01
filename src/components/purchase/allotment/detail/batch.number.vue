@@ -40,7 +40,6 @@
       font-size: 12px;
       img {
         width: 180px;
-        height: 180px;
         display: block;
         background: #ccc;
 
@@ -75,7 +74,7 @@
                       <div class="base-pic-item">
                         <div @click="watchPhoto(item.attachmentMap.drugControlReports[0])">
                           <img
-                            :src="item.attachmentMap.drugControlReports[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="item.attachmentMap.drugControlReports[0].attachmentStoragePath+'?image&action=resize:w_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -97,7 +96,7 @@
                       <div class="base-pic-item">
                         <div @click="watchPhoto(item.attachmentMap.batchReleases[0])">
                           <img
-                            :src="item.attachmentMap.batchReleases[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="item.attachmentMap.batchReleases[0].attachmentStoragePath+'?image&action=resize:w_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -121,7 +120,7 @@
                       <div class="base-pic-item">
                         <div @click="watchPhoto(item.attachmentMap.importCertificates[0])">
                           <img
-                            :src="item.attachmentMap.importCertificates[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="item.attachmentMap.importCertificates[0].attachmentStoragePath+'?image&action=resize:w_180,m_2'">
                         </div>
                       </div>
                     </div>
@@ -143,7 +142,7 @@
                       <div class="base-pic-item">
                         <div @click="watchPhoto(item.attachmentMap.customsPass[0])">
                           <img
-                            :src="item.attachmentMap.customsPass[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="item.attachmentMap.customsPass[0].attachmentStoragePath+'?image&action=resize:w_180,m_2'">
                         </div>
                       </div>
                     </div>
