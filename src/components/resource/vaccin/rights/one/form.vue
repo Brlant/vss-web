@@ -317,7 +317,10 @@
       },
       filterMethod (query, item) {
         if (!query) return true;
-        return item.subordinateName && item.subordinateName.indexOf(query) > -1;
+        return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
+          item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
+          item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
+          item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {

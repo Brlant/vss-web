@@ -197,6 +197,11 @@ const route = [
             path: '/pov/receipt',
             component: resolve => require(['./components/pov/receipt/list.vue'], resolve),
             meta: {moduleId: 'pov', title: '收货订单', perm: 'pov-receipt-manager'}
+          },
+          {
+            path: '/pov/record',
+            component: resolve => require(['./components/pov/record/list.vue'], resolve),
+            meta: {moduleId: 'pov', title: '注射信息', perm: 'injection-task-query'}
           }
         ]
       },

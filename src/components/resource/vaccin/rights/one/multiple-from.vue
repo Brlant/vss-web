@@ -354,11 +354,16 @@
       },
       filterMethod (query, item) {
         if (!query) return true;
-        return item.subordinateName && item.subordinateName.indexOf(query) > -1;
+        return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
+          item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
+          item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
+          item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
       },
       filterVaccine (query, item) {
         if (!query) return true;
-        return item.orgGoodsDto.name && item.orgGoodsDto.name.indexOf(query) > -1;
+        return item.orgGoodsDto.name && item.orgGoodsDto.name.indexOf(query) > -1 ||
+          item.orgGoodsDto.goodsDto && item.orgGoodsDto.goodsDto.nameAcronymy.indexOf(query) > -1 ||
+          item.orgGoodsDto.goodsDto && item.orgGoodsDto.goodsDto.code.indexOf(query) > -1 ;
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {
