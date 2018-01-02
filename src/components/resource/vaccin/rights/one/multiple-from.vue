@@ -195,7 +195,6 @@
       height: 70px;
     }
   }
-
 </style>
 
 <template>

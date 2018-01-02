@@ -611,7 +611,7 @@
       },
       searchWarehouses () {
         let user = this.$store.state.user;
-        Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress}).then(res => {
+        Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress, auditedStatus: '1'}).then(res => {
           this.warehouses = res.data || [];
           let fs = this.warehouses.filter(i => i.default)[0];
           if (fs) {

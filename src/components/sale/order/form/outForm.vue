@@ -878,7 +878,7 @@
               isShowCustomerId: false, // 是否显示POV
               expectedTimeLabel: '预计出库时间'
             };
-            Address.queryAddress(this.form.orgId, {deleteFlag: false, orgId: this.form.orgId}).then(res => {
+            Address.queryAddress(this.form.orgId, {deleteFlag: false, orgId: this.form.orgId, auditedStatus: '1'}).then(res => {
               this.warehouses = res.data;
             });
             break;
@@ -925,7 +925,7 @@
           this.form.transportationAddress = '';
           return;
         }
-        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId}).then(res => {
+        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1'}).then(res => {
           this.warehouses = res.data || [];
           if (!this.isStorageData) {
             // let fs = this.warehouses.filter(i => i.default)[0];
