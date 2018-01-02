@@ -206,6 +206,7 @@
       getPageList: function () {
         let param = Object.assign({}, {
           deleteFlag: false,
+          auditedStatus: '1',
           keyword: this.typeTxt
         });
         Address.queryAddress(param).then(res => {

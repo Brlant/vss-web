@@ -41,7 +41,7 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="上架时间" :span="5">
+              <oms-form-row label="业务日期" :span="5">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
@@ -128,7 +128,7 @@
       <el-table :data="reportList" class="header-list" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="400">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true"></el-table-column>
-        <el-table-column prop="createTime" label="上架时间" :sortable="true"></el-table-column>
+        <el-table-column prop="createTime" label="业务日期" :sortable="true"></el-table-column>
         <el-table-column prop="suppliersName" label="供应商" :sortable="true"></el-table-column>
         <el-table-column prop="orgName" label="保管账" :sortable="true"></el-table-column>
         <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true"></el-table-column>

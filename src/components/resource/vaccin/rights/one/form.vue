@@ -229,6 +229,7 @@
                            :filter-method="filterMethod"
                            :titles="['未选接种点', '已选接种点']"
                            class="transfer-list"
+                           :render-content="renderFuncPOV"
               >
               </el-transfer>
             </el-form-item>
@@ -298,6 +299,11 @@
       }
     },
     methods: {
+      renderFuncPOV(h, option) {
+        return (
+          <span title={option.subordinateName}>{ option.subordinateName }</span>
+      );
+      },
       filterPOV: function (query) {// 过滤POV
         let params = Object.assign({}, {
           keyWord: query,

@@ -658,7 +658,7 @@
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
       searchWarehouses (val) {
-        Address.queryAddress(this.form.povId, {deleteFlag: false, orgId: this.form.povId}).then(res => {
+        Address.queryAddress(this.form.povId, {deleteFlag: false, orgId: this.form.povId, auditedStatus: '1'}).then(res => {
           this.warehouses = res.data || [];
           // let fs = this.warehouses.filter(i => i.default)[0];
           // if (fs) {
