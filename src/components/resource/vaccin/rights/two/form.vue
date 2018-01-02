@@ -229,6 +229,7 @@
                            :filter-method="filterMethod"
                            :titles="['未选接种点', '已选接种点']"
                            class="transfer-list"
+                           :render-content="renderFuncPOV"
               >
               </el-transfer>
             </el-form-item>
@@ -321,6 +322,11 @@
       }
     },
     methods: {
+      renderFuncPOV(h, option) {
+        return (
+          <span title={option.subordinateName}>{ option.subordinateName }</span>
+      );
+      },
       formatPrice: function () {// 格式化单价，保留两位小数
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },

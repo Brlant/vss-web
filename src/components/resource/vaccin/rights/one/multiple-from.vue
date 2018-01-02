@@ -226,6 +226,7 @@
                            :filter-method="filterVaccine"
                            :titles="['未选接疫苗', '已选接疫苗']"
                            class="transfer-list-two"
+                           :render-content="renderFunc"
               >
               </el-transfer>
             </el-form-item>
@@ -247,6 +248,7 @@
                            :filter-method="filterMethod"
                            :titles="['未选接种点', '已选接种点']"
                            class="transfer-list-two"
+                           :render-content="renderFuncPOV"
               >
               </el-transfer>
             </el-form-item>
@@ -317,6 +319,16 @@
       }
     },
     methods: {
+      renderFunc(h, option) {
+        return (
+          <span title={option.label}>{ option.label }</span>
+        );
+      },
+      renderFuncPOV(h, option) {
+        return (
+          <span title={option.subordinateName}>{ option.subordinateName }</span>
+      );
+      },
       filterPOV: function (query) {// 过滤POV
         let params = Object.assign({}, {
           keyWord: query
