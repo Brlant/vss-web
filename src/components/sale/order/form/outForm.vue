@@ -935,7 +935,7 @@
             this.orgList.forEach(i => {
               if (i.id === orgId) {
                 this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
-                this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
+                // this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
               }
             });
             // *************************//
@@ -957,11 +957,11 @@
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.actualConsignee = ''; // 仓库改变时, 设置实际收货人
         }
-        this.warehouses.forEach(item => {
-          if (val === item.id) {
-            this.form.actualConsignee = item.contact;
-          }
-        });
+        // this.warehouses.forEach(item => {
+        //   if (val === item.id) {
+        //     this.form.actualConsignee = item.contact;
+        //   }
+        // });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
