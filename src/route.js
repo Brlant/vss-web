@@ -201,7 +201,7 @@ const route = [
           {
             path: '/pov/record',
             component: resolve => require(['./components/pov/record/list.vue'], resolve),
-            meta: {moduleId: 'pov', title: '注射信息', perm: 'injection-task-query'}
+            meta: {moduleId: 'pov', title: '注射记录', perm: 'injection-task-query'}
           }
         ]
       },
