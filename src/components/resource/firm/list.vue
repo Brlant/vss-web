@@ -498,8 +498,16 @@
         this.resetRightBox();
       },
       watchPhoto(item) {
-        this.photoForm = item;
-        this.showPhotoRightShow = true;
+        if (item.photos.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item.photos[0].attachmentId,
+            attachmentList: item.photos
+          });
+          /*
+          this.photoForm = item;
+          this.showPhotoRightShow = true;
+          */
+        }
       },
       isExpirationTime: function (item) {
         let state = '';
