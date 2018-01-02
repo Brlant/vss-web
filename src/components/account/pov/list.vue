@@ -107,7 +107,7 @@
           </div>
         </div>
         <div class="d-table-right">
-          <div class="d-table-col-wrap">
+          <div>
             <el-row>
               <el-col :span="10" class="search-input">
                 <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrgs"
@@ -144,7 +144,7 @@
               </el-col>
             </el-row>
           </div>
-          <div class="order-list clearfix d-table-col-wrap" style="margin-top: 10px">
+          <div class="order-list clearfix" style="margin-top: 10px">
             <el-row class="order-list-header" :gutter="10">
               <el-col :span="20">接种点名称</el-col>
               <el-col :span="4">操作</el-col>

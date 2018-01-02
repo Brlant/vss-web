@@ -40,6 +40,10 @@
   .header-list {
     overflow: hidden;
   }
+  .opera-btn-group {
+    margin-left: 0;
+    margin-right: 0;
+  }
 </style>
 <template>
   <div class="order-page">

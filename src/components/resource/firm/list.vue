@@ -498,8 +498,16 @@
         this.resetRightBox();
       },
       watchPhoto(item) {
-        this.photoForm = item;
-        this.showPhotoRightShow = true;
+        if (item.photos.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item.photos[0].attachmentId,
+            attachmentList: item.photos
+          });
+          /*
+          this.photoForm = item;
+          this.showPhotoRightShow = true;
+          */
+        }
       },
       isExpirationTime: function (item) {
         let state = '';
@@ -534,10 +542,10 @@
             this.currentItem = Object.assign({}, {'id': ''}, this.businessRelationList[0]);
             this.currentName = this.currentItem.followOrgName;
             this.relationData = this.currentItem;
+            this.getBusinessRelationItem(this.currentItem.id);
           }
           this.typePager.totalPage = res.data.totalPage;
           this.loadingListData = false;
-          this.getBusinessRelationItem(this.currentItem.id);
         });
       },
       getBusinessRelationItem: function (id) {
