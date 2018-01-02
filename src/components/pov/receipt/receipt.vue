@@ -31,22 +31,31 @@
     top: 60px;
     left: 0;
     right: 0;
-    bottom: 100px;
+    bottom: 140px;
     overflow: auto;
-    .product-item {
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background: #eef2f3;
-      padding: 15px 0;
-      cursor: pointer;
-      position: relative;
-      &.active {
-        background: white;
+
+  }
+
+  .product-item {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #eef2f3;
+    padding: 15px 0;
+    cursor: pointer;
+    position: relative;
+    &.active {
+      background: white;
+    }
+    &.is-total {
+      border: 0;
+      h2 {
+        background: #eef2f3;
+        padding: 0;
+        text-align: left;
       }
     }
   }
-
   .oms-row {
     color: #777;
     text-align: left;
@@ -61,11 +70,16 @@
         <div class="product-list">
           <div v-for="(product,key) in productList" :class="{'active': activeKey === key }"
                @click="changeProduct(product, key)" class="product-item">
-            <oms-row label="货品名称" :span="span">{{product.name}}111</oms-row>
+            <oms-row label="货品名称" :span="span">{{product.name}}</oms-row>
             <oms-row label="批号" :span="span">{{product.batchNumber}}</oms-row>
             <oms-row label="规格" :span="span">{{product.orgGoodsDto.goodsDto.specifications}}</oms-row>
             <oms-row label="生产厂商" :span="span">{{product.orgGoodsDto.goodsDto.factoryName}}</oms-row>
             <oms-row label="数量" :span="span">{{product.amount}}</oms-row>
+          </div>
+          <div class="product-item is-total" style="cursor: default">
+            <h2>合计:</h2>
+            <oms-row label="应收数量" :span="span">{{ totalCount }}</oms-row>
+            <oms-row label="实收数量" :span="span">{{ receiptCount }}</oms-row>
           </div>
         </div>
         <div class="btn-submit-save">
@@ -135,6 +149,22 @@
     watch: {
       orderId () {
         this.queryOrderDetail();
+      }
+    },
+    computed: {
+      totalCount() {
+        let count = 0;
+        this.productList.forEach(i => {
+          count += Number(i.amount);
+        });
+        return count;
+      },
+      receiptCount() {
+        let count = 0;
+        this.productList.forEach(i => {
+          count += Number(i.currentAmount);
+        });
+        return count;
       }
     },
     methods: {
