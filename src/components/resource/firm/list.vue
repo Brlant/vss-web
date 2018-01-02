@@ -534,10 +534,10 @@
             this.currentItem = Object.assign({}, {'id': ''}, this.businessRelationList[0]);
             this.currentName = this.currentItem.followOrgName;
             this.relationData = this.currentItem;
+            this.getBusinessRelationItem(this.currentItem.id);
           }
           this.typePager.totalPage = res.data.totalPage;
           this.loadingListData = false;
-          this.getBusinessRelationItem(this.currentItem.id);
         });
       },
       getBusinessRelationItem: function (id) {
