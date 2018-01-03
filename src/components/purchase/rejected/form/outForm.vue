@@ -492,7 +492,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {

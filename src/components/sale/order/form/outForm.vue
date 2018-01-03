@@ -468,7 +468,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
