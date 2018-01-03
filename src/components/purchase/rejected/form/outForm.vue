@@ -339,14 +339,14 @@
                   </el-select>
                 </el-form-item>
                 <div v-show="product.orgGoodsId">
-                  <el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "
-                                v-show="batchNumbers.length === 0 ">
-                    <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
-                      <template slot="append" style="width: 30px">
-                        <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                      </template>
-                    </oms-input>
-                  </el-form-item>
+                  <!--<el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "-->
+                  <!--v-show="batchNumbers.length === 0 ">-->
+                  <!--<oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">-->
+                  <!--<template slot="append" style="width: 30px">-->
+                  <!--<dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>-->
+                  <!--</template>-->
+                  <!--</oms-input>-->
+                  <!--</el-form-item>-->
                   <div class="product-info-fix clearfix">
                     <el-row>
                       <el-col :span="14">
@@ -360,51 +360,15 @@
                              v-show="acce.procurementPrice">¥ {{ acce.procurementPrice | formatMoney }}</span>
                              <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
                              <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
-                    </span>
+                        </span>
                       </el-col>
                     </el-row>
                   </div>
-                  <div class="product-list-detail" v-for="item in batchNumbers">
-                    <h3>批号信息</h3>
-                    <table class="table">
-                      <thead>
-                      <tr>
-                        <th>
-                          <el-checkbox @change="checkItemAll(item)" v-model="item.isCheckedAll"></el-checkbox>
-                        </th>
-                        <th>产品数量</th>
-                        <th>批号</th>
-                        <th>可用库存</th>
-                        <th>生产日期</th>
-                        <th>有效期</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr v-for=" batchNumber in item.lots">
-                        <td>
-                          <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
-                        </td>
-                        <td>
-                          <el-input style="width:180px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                                    @blur="isChangeValue(batchNumber)">
-                            <template slot="append">
-                              <dict :dict-group="'measurementUnit'"
-                                    :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                            </template>
-                          </el-input>
-                        </td>
-                        <td>{{ batchNumber.no }}</td>
-                        <td>
-                          {{ batchNumber.count }}
-                          <dict :dict-group="'measurementUnit'"
-                                :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                        </td>
-                        <td>{{ batchNumber.productionDate | date }}</td>
-                        <td>{{ batchNumber.expirationDate | date }}</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <batch-number-part ref="batchNumberPart" :form="form" :product="product"
+                                     :productList="filterProductList"
+                                     :editItemProduct="editItemProduct"
+                                     @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"
+                  ></batch-number-part>
                   <oms-form-row label-width="160px" :span="4" :label="''">
                     <el-button type="primary" @click="addProduct">加入订单</el-button>
                   </oms-form-row>
@@ -468,7 +432,7 @@
                         class="el-icon-t-edit"></i> 编辑</a>
                     </div>
                     <div>
-                      <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
+                      <a href="#" @click.prevent="remove(product)"><i
                         class="el-icon-t-delete"></i> 删除</a>
                     </div>
                   </td>
@@ -492,12 +456,16 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
+  import batchNumberPart from '@/components/sale/order/form/batchNumber';
 
   export default {
     name: 'addForm',
     loading: false,
+    components: {
+      batchNumberPart
+    },
     props: {
       type: {
         type: String,
@@ -645,7 +613,8 @@
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
-        editItemProduct: {}
+        editItemProduct: {},
+        isHasBatchNumberInfo: false
       };
     },
     computed: {
@@ -981,7 +950,9 @@
         });
       },
       getGoodDetail: function (OrgGoodsId) {// 选货品
-
+        this.accessoryList = [];
+        this.batchNumbers = [];
+        this.editItemProduct = {};
         if (!OrgGoodsId) {
           this.product = {
             'amount': null,
@@ -996,9 +967,6 @@
             'unitPrice': null
           };
           this.$refs['orderGoodsAddForm'].resetFields();
-          this.accessoryList = [];
-          this.batchNumbers = [];
-          this.editItemProduct = {};
           return;
         }
 
@@ -1019,7 +987,7 @@
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
 
-        this.queryBatchNumers();
+        // this.queryBatchNumers();
       },
       filterProducts: function () {
         let arr = [];
@@ -1040,86 +1008,8 @@
         });
         this.filterProductList = arr;
       },
-      queryBatchNumers () { // 查询货品批次信息
-        let params = {
-          goodsId: this.product.fixInfo.goodsId,
-          orgId: this.form.orgId,
-          orgGoodsId: this.product.orgGoodsId
-        };
-        this.batchNumbers = [];
-        http.get('/erp-stock/valid/batch', {params}).then(res => {
-          if (res.data.length || this.editItemProduct.batchNumberId) {
-            res.data.forEach(f => {
-              f.isChecked = false;
-              f.productCount = '';
-            });
-            this.batchNumbers.push({
-              id: this.product.fixInfo.id,
-              mainId: this.product.fixInfo.id,
-              name: this.product.fixInfo.name,
-              isCheckedAll: false,
-              lots: []
-            });
-            this.batchNumbers[0].lots = res.data || [];
-            if (this.editItemProduct.batchNumberId) {
-              this.changeBatchNumbers(this.batchNumbers[0].lots);
-            }
-          }
-        });
-      },
-      changeBatchNumbers (lots) {
-        if (!lots.length) {
-          lots.push({
-            id: this.editItemProduct.batchNumberId,
-            no: this.editItemProduct.no,
-            productCount: this.editItemProduct.amount,
-            count: this.editItemProduct.amount,
-            productionDate: this.editItemProduct.productionDate,
-            expirationDate: this.editItemProduct.expiryDate,
-            isChecked: true
-          });
-        } else {
-          lots.forEach(i => {
-            if (i.id === this.editItemProduct.batchNumberId) {
-              i.productCount = this.editItemProduct.amount;
-              i.count = i.count + this.editItemProduct.amount;
-              i.isChecked = true;
-            }
-          });
-        }
-      },
-      isChangeValue (item) {
-        item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
-        if (item.productCount > item.count) {
-          this.$notify.warning({
-            duration: 2000,
-            message: '输入的产品数量大于可用库存'
-          });
-        }
-        item.isChecked = item.productCount > 0;
-      },
-      isShowName (item) {
-        let index = this.form.detailDtoList.indexOf(item);
-        if (index === 0) {
-          return true;
-        }
-        if (item.mainOrgId) {
-          return true;
-        }
-        let isShow = true;
-        let t = this.form.detailDtoList[index - 1];
-
-        if (t.mainOrgId) {
-          isShow = true;
-        } else {
-          isShow = false;
-        }
-        return isShow;
-      },
-      checkItemAll (item) {
-        item.lots.forEach(l => {
-          l.isChecked = item.isCheckedAll;
-        });
+      setIsHasBatchNumberInfo (val) {
+        this.isHasBatchNumberInfo = val;
       },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
@@ -1131,58 +1021,10 @@
         }
         let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;
-        if (!this.batchNumbers.length) {
-          this.$notify.info({
-            duration: 2000,
-            message: '无库存批次，无法加入订单'
-          });
-          return false;
-        }
-        if (this.batchNumbers.length) {
-          let isHave = this.batchNumbers.some(item => item.lots.some(s => s.count > 0));
-          if (!isHave) {
-            this.$notify.info({
-              duration: 2000,
-              message: '无库存，无法加入订单'
-            });
-            return false;
-          }
-        }
-        if (this.batchNumbers.length) {
-          let isChecked = this.batchNumbers.every(item => item.lots.some(l => l.isChecked));
-          if (!isChecked) {
-            this.$notify.info({
-              duration: 2000,
-              message: '请选择货品批号'
-            });
-            return false;
-          }
-          let isHaveCount = this.batchNumbers.some(item => item.lots.some(l => l.isChecked && !l.productCount));
-          if (isHaveCount) {
-            this.$notify.info({
-              duration: 2000,
-              message: '请填写产品数量'
-            });
-            return false;
-          }
-          let isOver = this.batchNumbers.some(item => item.lots.some(l => l.isChecked && (l.productCount > l.count)));
-          if (isOver) {
-            this.$notify.warning({
-              duration: 2000,
-              message: '输入的产品数量大于可用库存'
-            });
-            return false;
-          }
-        }
-        this.batchNumbers.forEach(item => {
-          let lots = item.lots.filter(l => l.isChecked);
-          this.selectBatchNumbers.push({
-            id: item.id,
-            mainId: item.mainId,
-            name: item.name,
-            lots: lots
-          });
-        });
+        // 取得子组件的批号信息
+        this.batchNumbers = this.$refs['batchNumberPart'].batchNumbers || [];
+        let isPass = this.$refs['batchNumberPart'].checkPass();
+        if (!isPass) return;
         this.$refs['orderGoodsAddForm'].validate((valid) => {
           if (!valid) {
             return false;
@@ -1225,22 +1067,6 @@
               });
             }
           });
-
-          // 批号信息
-          this.form.detailDtoList.forEach(item => {
-            item.shipmentDtoList = [];
-            this.selectBatchNumbers.forEach(bn => {
-              if (item.orgGoodsId === bn.id) {
-                bn.lots.forEach(ph => {
-                  item.shipmentDtoList.push({
-                    batchNumberId: ph.batchNumberId,
-                    count: ph.count
-                  });
-                });
-              }
-            });
-          });
-
           this.$nextTick(function () {
             this.product = {
               'amount': null,
@@ -1300,7 +1126,6 @@
         // 2.0变化
         this.deleteItem(item);
         this.searchProduct(item.orgGoodsName);
-        this.queryBatchNumers();
       },
       onSubmit: function () {// 提交表单
 
