@@ -126,7 +126,7 @@
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     &:hover {
       border-color: #aaa
@@ -468,7 +468,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';

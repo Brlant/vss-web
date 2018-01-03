@@ -9,51 +9,60 @@
       font-weight: normal;
     }
   }
+
+  .no-batch-number-info {
+    padding: 5px;
+  }
 </style>
 <template>
-  <div v-show="!isHasBatchNumberInfo">
-    <div class="product-list-detail" v-for="item in batchNumbers">
-      <h3>批号信息({{item.orgGoodsName}}
-        <el-tag v-show="!item.isMainly">组合</el-tag>
-        )
-      </h3>
-      <table class="table">
-        <thead>
-        <tr>
-          <th>
-            <el-checkbox @change="checkItemAll(item)" v-model="item.isCheckedAll"></el-checkbox>
-          </th>
-          <th>产品数量</th>
-          <th>批号</th>
-          <th>可用库存</th>
-          <th>生产日期</th>
-          <th>有效期</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for=" batchNumber in item.lots">
-          <td>
-            <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
-          </td>
-          <td>
-            <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                      @blur="isChangeValue(batchNumber, item)">
-              <template slot="append">
-                <dict :dict-group="'measurementUnit'"
-                      :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-              </template>
-            </el-input>
-          </td>
-          <td>
-            {{ batchNumber.no }}
-            <el-tag v-show="batchNumber.inEffectiveFlag" type="danger">近效期</el-tag>
-          </td>
-          <td>{{ batchNumber.count }}</td>
-          <td>{{ batchNumber.productionDate | date }}</td>
-          <td>{{ batchNumber.expirationDate | date }}</td>
-        </tr>
-        </tbody>
-      </table>
+  <div v-loading="doing">
+    <div v-show="!isHasBatchNumberInfo">
+      <div class="product-list-detail" v-for="item in batchNumbers">
+        <h3>批号信息({{item.orgGoodsName}}
+          <el-tag v-show="!item.isMainly">组合</el-tag>
+          )
+        </h3>
+        <table class="table">
+          <thead>
+          <tr>
+            <th>
+              <el-checkbox @change="checkItemAll(item)" v-model="item.isCheckedAll"></el-checkbox>
+            </th>
+            <th>产品数量</th>
+            <th>批号</th>
+            <th>可用库存</th>
+            <th>生产日期</th>
+            <th>有效期</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for=" batchNumber in item.lots">
+            <td>
+              <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
+            </td>
+            <td>
+              <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
+                        @blur="isChangeValue(batchNumber, item)">
+                <template slot="append">
+                  <dict :dict-group="'measurementUnit'"
+                        :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                </template>
+              </el-input>
+            </td>
+            <td>
+              {{ batchNumber.no }}
+              <el-tag v-show="batchNumber.inEffectiveFlag" type="danger">近效期</el-tag>
+            </td>
+            <td>{{ batchNumber.count }}</td>
+            <td>{{ batchNumber.productionDate | date }}</td>
+            <td>{{ batchNumber.expirationDate | date }}</td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <div v-show="isHasBatchNumberInfo && !doing">
+      <h2 class="no-batch-number-info">无库存批次信息</h2>
     </div>
   </div>
 </template>
@@ -78,7 +87,8 @@
         batchNumbers: [],
         isHasBatchNumberInfo: false,
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        doing: false
       };
     },
     watch: {
@@ -139,13 +149,14 @@
        */
       queryBatchNumber () {
         if (!this.batchNumbers.length) return;
+        this.doing = true;
         axios.all(this.batchNumbers.map(m => {
           let params = {
             goodsId: m.goodsId,
             orgId: this.form.orgId,
             orgGoodsId: m.orgGoodsId
           };
-          return this.$http.get('/stock-batch/valid/batch', {params});
+          return this.$http.get('/erp-stock/valid/batch', {params});
         })).then(
           axios.spread((...args) => {
             this.batchNumbers.forEach((i, index) => {
@@ -156,6 +167,7 @@
               i.lots = args[index].data || [];
             });
             this.editBatchNumbers();
+            this.doing = false;
           })
         );
       },
