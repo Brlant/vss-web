@@ -378,8 +378,7 @@
                   <batch-number-part ref="batchNumberPart" :form="form" :product="product"
                                      :productList="filterProductList"
                                      :editItemProduct="editItemProduct"
-                                     :isHasBatchNumberInfo="isHasBatchNumberInfo"
-                                     :setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"
+                                     @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"
                   ></batch-number-part>
 
                   <oms-form-row label-width="160px" :span="4" :label="''">
@@ -975,9 +974,8 @@
           });
         });
       },
-      setIsHasBatchNumberInfo () {
-        let batchNumbers = this.$refs['batchNumberPart'] && this.$refs['batchNumberPart'].batchNumbers || [];
-        this.isHasBatchNumberInfo = !batchNumbers.length || batchNumbers.length && batchNumbers.every(s => !s.lots.length);
+      setIsHasBatchNumberInfo (val) {
+        this.isHasBatchNumberInfo = val;
       },
       getGoodDetail: function (OrgGoodsId) {// 选货品
         this.accessoryList = [];
@@ -1048,84 +1046,8 @@
         if (!isCheck) return;
         // 取得子组件的批号信息
         this.batchNumbers = this.$refs['batchNumberPart'].batchNumbers || [];
-        this.setIsHasBatchNumberInfo();
-        if (this.isHasBatchNumberInfo) {
-          this.$notify.info({
-            duration: 2000,
-            message: '无库存批次，无法加入订单'
-          });
-          return false;
-        }
-        if (this.batchNumbers.length) {
-          let isChecked = this.batchNumbers.every(item => item.lots.some(l => l.isChecked));
-          if (!isChecked) {
-            this.$notify.info({
-              duration: 2000,
-              message: '请选择货品批号'
-            });
-            return false;
-          }
-          let isHaveCount = this.batchNumbers.some(item => item.lots.some(l => l.isChecked && !l.productCount));
-          if (isHaveCount) {
-            this.$notify.info({
-              duration: 2000,
-              message: '请填写产品数量'
-            });
-            return false;
-          }
-          let isOver = this.batchNumbers.some(item => item.lots.some(l => l.isChecked && (l.productCount > l.count)));
-          if (isOver) {
-            this.$notify.warning({
-              duration: 2000,
-              message: '输入的产品数量大于仓库数量'
-            });
-            return false;
-          }
-          if (!this.editItemProduct.orgGoodsId) {
-            let isPassed = true;
-            this.searchProductList.forEach((item) => {
-              if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-                let list = item.list;
-                list.forEach(i => {
-                  let count = 0;
-                  this.batchNumbers.forEach(b => {
-                    if (b.orgGoodsId === i.accessory) {
-                      b.lots.forEach(bl => {
-                        if (bl.isChecked) {
-                          count += Number(bl.productCount);
-                        }
-                      });
-                    }
-                  });
-                  i.accessoryTotalCount = count;
-                });
-                let totalCount = 0;
-                this.batchNumbers.forEach(b => {
-                  if (b.orgGoodsId === this.product.orgGoodsId) {
-                    b.lots.forEach(bl => {
-                      if (bl.isChecked) {
-                        totalCount += Number(bl.productCount);
-                      }
-                    });
-                  }
-                });
-                list.forEach(i => {
-                  let amount = Math.ceil(i.proportion * totalCount);
-                  if (i.accessoryTotalCount !== amount) {
-                    isPassed = false;
-                  }
-                });
-              }
-            });
-            if (!isPassed) {
-              this.$notify.warning({
-                duration: 2000,
-                message: '组合货品数量比例不匹配'
-              });
-              return false;
-            }
-          }
-        }
+        let isPass = this.$refs['batchNumberPart'].checkPass();
+        if (!isPass) return;
         this.$refs['orderGoodsAddForm'].validate((valid) => {
           if (!valid) {
             return false;
