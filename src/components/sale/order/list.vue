@@ -257,7 +257,7 @@
           </el-col>
           <el-col :span="5">
             <div>下单：{{item.createTime | minute }}</div>
-            <div>预计送货：{{ item.expectedTime | minute }}</div>
+            <div>预计送货：{{ item.expectedTime | date }}</div>
           </el-col>
           <el-col :span="3">
             <div class="vertical-center">
