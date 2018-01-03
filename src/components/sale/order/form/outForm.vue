@@ -343,15 +343,15 @@
                   </el-select>
                 </el-form-item>
                 <div v-show="product.orgGoodsId">
-                  <el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "
-                                v-show="batchNumbers.length === 0 ">
-                    <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
-                      <template slot="append">
-                        <dict :dict-group="'measurementUnit'"
-                              :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                      </template>
-                    </oms-input>
-                  </el-form-item>
+                  <!--<el-form-item label="产品数量" class="productItem-info" :prop=" isHasBatchNumberInfo ? '' : 'amount' "-->
+                  <!--v-if="isHasBatchNumberInfo">-->
+                  <!--<oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">-->
+                  <!--<template slot="append">-->
+                  <!--<dict :dict-group="'measurementUnit'"-->
+                  <!--:dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>-->
+                  <!--</template>-->
+                  <!--</oms-input>-->
+                  <!--</el-form-item>-->
                   <el-form-item label="单价" class="productItem-info" prop="unitPrice" v-show="vaccineType==='2'">
                     <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
                                @blur="formatPrice">
@@ -375,50 +375,13 @@
                       </el-col>
                     </el-row>
                   </div>
-                  <div class="product-list-detail" v-for="item in batchNumbers">
-                    <h3>批号信息</h3>
-                    <table class="table">
-                      <thead>
-                      <tr>
-                        <th>
-                          <el-checkbox @change="checkItemAll(item)" v-model="item.isCheckedAll"></el-checkbox>
-                        </th>
-                        <th>产品数量</th>
-                        <th>批号</th>
-                        <th>可用库存</th>
-                        <th>生产日期</th>
-                        <th>有效期</th>
-                      </tr>
-                      </thead>
-                      <tbody>
-                      <tr v-for=" batchNumber in item.lots">
-                        <td>
-                          <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
-                        </td>
-                        <td>
-                          <el-input style="width:180px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                                    @blur="isChangeValue(batchNumber)">
-                            <template slot="append" style="width: 50px">
-                              <dict :dict-group="'measurementUnit'"
-                                    :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                            </template>
-                          </el-input>
-                        </td>
-                        <td>
-                          {{ batchNumber.no }}
-                          <el-tag v-show="batchNumber.inEffectiveFlag" type="danger">近效期</el-tag>
-                        </td>
-                        <td>
-                          {{ batchNumber.count }}
-                          <dict :dict-group="'measurementUnit'"
-                                :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                        </td>
-                        <td>{{ batchNumber.productionDate | date }}</td>
-                        <td>{{ batchNumber.expirationDate | date }}</td>
-                      </tr>
-                      </tbody>
-                    </table>
-                  </div>
+                  <batch-number-part ref="batchNumberPart" :form="form" :product="product"
+                                     :productList="filterProductList"
+                                     :editItemProduct="editItemProduct"
+                                     :isHasBatchNumberInfo="isHasBatchNumberInfo"
+                                     :setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"
+                  ></batch-number-part>
+
                   <oms-form-row label-width="160px" :span="4" :label="''">
                     <el-button type="primary" @click="addProduct">加入订单</el-button>
                   </oms-form-row>
@@ -434,13 +397,13 @@
               <table class="table">
                 <thead>
                 <tr>
-                  <th style="width: 300px">货品名称</th>
+                  <th style="width: 240px">货品名称</th>
                   <th>规格</th>
                   <th>批号</th>
                   <th v-show="vaccineType==='2'">货品单价</th>
                   <th>货品数量</th>
                   <th v-show="vaccineType==='2'">金额</th>
-                  <th>操作</th>
+                  <th style="width: 80px">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -477,12 +440,12 @@
                     <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
                   <td class="goods-btn">
-                    <div v-show="defaultIndex === 2">
+                    <div v-show="defaultIndex === 2 && !product.isCombination">
                       <a href="#" @click.prevent="editItem(product)"><i
                         class="el-icon-t-edit"></i> 编辑</a>
                     </div>
                     <div>
-                      <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
+                      <a href="#" @click.prevent="remove(product)"><i
                         class="el-icon-t-delete"></i> 删除</a>
                     </div>
                   </td>
@@ -506,14 +469,15 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
+  import batchNumberPart from './batchNumber';
 
   export default {
     name: 'addForm',
     loading: false,
-    components: {materialPart},
+    components: {materialPart, batchNumberPart},
     props: {
       type: {
         type: String,
@@ -666,26 +630,27 @@
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
-        editItemProduct: {}
+        editItemProduct: {},
+        isHasBatchNumberInfo: false
       };
     },
     computed: {
-      bizTypeList() {
+      bizTypeList () {
         return this.$store.state.dict['bizOutType'];
       },
-      transportationMeansList() {
+      transportationMeansList () {
         return this.$store.state.dict['outTransportMeans'];
       },
-      transportationConditionList() {
+      transportationConditionList () {
         return this.$store.state.dict['transportationCondition'];
       },
-      shipmentPackingUnit() {
+      shipmentPackingUnit () {
         return this.$store.state.dict['shipmentPackingUnit'];
       },
-      measurementUnitList() {
+      measurementUnitList () {
         return this.$store.state.dict['measurementUnit'];
       },
-      orgRelationList() {
+      orgRelationList () {
         return this.$store.state.dict['orgRelation'];
       },
       totalMoney: function () {
@@ -705,7 +670,7 @@
           }
         });
       },
-      defaultIndex(val) {
+      defaultIndex (val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -742,15 +707,15 @@
 //      }
     },
     methods: {
-      filterAddressLabel(item) {
+      filterAddressLabel (item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      setDefaultValue() {
+      setDefaultValue () {
         this.form.transportationMeansId = '0';
         this.form.transportationCondition = '0';
       },
-      getTitle() {
+      getTitle () {
         return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}销售订单`;
       },
       autoSave: function () {
@@ -769,7 +734,7 @@
         this.form.transportationAddress = '';
         this.form.orgAddress = '';
       },
-      editOrderInfo() {
+      editOrderInfo () {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -791,17 +756,17 @@
           });
         });
       },
-      changeRemark(form) {
+      changeRemark (form) {
         if (!this.form.remark) {
           this.form.remark = form.count + form.name;
         } else {
           this.form.remark += '，' + form.count + form.name;
         }
       },
-      changeNumber() {
+      changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
-      formatPrice() {// 格式化单价，保留两位小数
+      formatPrice () {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
       changeExpectedTime: function (date) {// 格式化日期
@@ -878,14 +843,18 @@
               isShowCustomerId: false, // 是否显示POV
               expectedTimeLabel: '预计出库时间'
             };
-            Address.queryAddress(this.form.orgId, {deleteFlag: false, orgId: this.form.orgId, auditedStatus: '1'}).then(res => {
+            Address.queryAddress(this.form.orgId, {
+              deleteFlag: false,
+              orgId: this.form.orgId,
+              auditedStatus: '1'
+            }).then(res => {
               this.warehouses = res.data;
             });
             break;
           }
         }
       },
-      changeTransportationMeans(val) {// 物流方式改变时
+      changeTransportationMeans (val) {// 物流方式改变时
         switch (val) {
           case '0': {
             this.showContent.expectedTimeLabel = '预计送货时间';
@@ -907,7 +876,7 @@
           this.showContent.expectedTimeLabel = '';
         }
       },
-      changeCustomerId(val) {// POV改变时
+      changeCustomerId (val) {// POV改变时
         if (!this.isStorageData) {// 有缓存时，不重置表单
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
@@ -919,7 +888,7 @@
         this.searchWarehouses(val);
         this.searchProduct();
       },
-      searchWarehouses(orgId) {
+      searchWarehouses (orgId) {
         if (!orgId) {
           this.warehouses = [];
           this.form.transportationAddress = '';
@@ -935,14 +904,14 @@
             this.orgList.forEach(i => {
               if (i.id === orgId) {
                 this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
-                // this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
+                this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
               }
             });
             // *************************//
           }
         });
       },
-      filterAddress() {
+      filterAddress () {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -957,11 +926,11 @@
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.actualConsignee = ''; // 仓库改变时, 设置实际收货人
         }
-        // this.warehouses.forEach(item => {
-        //   if (val === item.id) {
-        //     this.form.actualConsignee = item.contact;
-        //   }
-        // });
+        this.warehouses.forEach(item => {
+          if (val === item.id) {
+            this.form.actualConsignee = item.contact;
+          }
+        });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
@@ -1006,8 +975,13 @@
           });
         });
       },
+      setIsHasBatchNumberInfo () {
+        let batchNumbers = this.$refs['batchNumberPart'] && this.$refs['batchNumberPart'].batchNumbers || [];
+        this.isHasBatchNumberInfo = !batchNumbers.length || batchNumbers.length && batchNumbers.every(s => !s.lots.length);
+      },
       getGoodDetail: function (OrgGoodsId) {// 选货品
-
+        this.accessoryList = [];
+        this.editItemProduct = {};
         if (!OrgGoodsId) {
           this.product = {
             'amount': null,
@@ -1023,8 +997,6 @@
             'unitPrice': null
           };
           this.$refs['orderGoodsAddForm'].resetFields();
-          this.accessoryList = [];
-          this.editItemProduct = {};
           return;
         }
 
@@ -1044,7 +1016,6 @@
           }
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-        this.queryBatchNumers();
       },
       filterProducts: function () {
         let arr = [];
@@ -1065,88 +1036,6 @@
         });
         this.filterProductList = arr;
       },
-      queryBatchNumers() { // 查询货品批次信息
-        let params = {
-          goodsId: this.product.fixInfo.goodsId,
-          orgId: this.form.orgId,
-          orgGoodsId: this.product.orgGoodsId
-        };
-        this.batchNumbers = [];
-        http.get('/erp-stock/valid/batch', {params}).then(res => {
-          if (res.data.length || this.editItemProduct.batchNumberId) {
-            res.data.forEach(f => {
-              f.isChecked = false;
-              f.productCount = '';
-            });
-            this.batchNumbers.push({
-              id: this.product.fixInfo.id,
-              mainId: this.product.fixInfo.id,
-              name: this.product.fixInfo.name,
-              isCheckedAll: false,
-              lots: []
-            });
-            this.batchNumbers[0].lots = res.data || [];
-            if (this.editItemProduct.batchNumberId) {
-              this.changeBatchNumbers(this.batchNumbers[0].lots);
-            }
-          }
-        });
-      },
-      changeBatchNumbers(lots) {
-        if (!lots.length) {
-          lots.push({
-            id: this.editItemProduct.batchNumberId,
-            no: this.editItemProduct.no,
-            productCount: this.editItemProduct.amount,
-            inEffectiveFlag: this.editItemProduct.inEffectiveFlag,
-            count: this.editItemProduct.amount,
-            productionDate: this.editItemProduct.productionDate,
-            expirationDate: this.editItemProduct.expiryDate,
-            isChecked: true
-          });
-        } else {
-          lots.forEach(i => {
-            if (i.id === this.editItemProduct.batchNumberId) {
-              i.productCount = this.editItemProduct.amount;
-              i.count = i.count + this.editItemProduct.amount;
-              i.isChecked = true;
-            }
-          });
-        }
-      },
-      isChangeValue(item) {
-        item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
-        if (item.productCount > item.count) {
-          this.$notify.warning({
-            duration: 2000,
-            message: '输入的产品数量大于可用库存'
-          });
-        }
-        item.isChecked = item.productCount > 0;
-      },
-      isShowName(item) {
-        let index = this.form.detailDtoList.indexOf(item);
-        if (index === 0) {
-          return true;
-        }
-        if (item.mainOrgId) {
-          return true;
-        }
-        let isShow = true;
-        let t = this.form.detailDtoList[index - 1];
-
-        if (t.mainOrgId) {
-          isShow = true;
-        } else {
-          isShow = false;
-        }
-        return !isShow;
-      },
-      checkItemAll(item) {
-        item.lots.forEach(l => {
-          l.isChecked = item.isCheckedAll;
-        });
-      },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
           this.$notify.info({
@@ -1157,22 +1046,15 @@
         }
         let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;
-        if (!this.batchNumbers.length) {
+        // 取得子组件的批号信息
+        this.batchNumbers = this.$refs['batchNumberPart'].batchNumbers || [];
+        this.setIsHasBatchNumberInfo();
+        if (this.isHasBatchNumberInfo) {
           this.$notify.info({
             duration: 2000,
             message: '无库存批次，无法加入订单'
           });
           return false;
-        }
-        if (this.batchNumbers.length) {
-          let isHave = this.batchNumbers.some(item => item.lots.some(s => s.count > 0));
-          if (!isHave) {
-            this.$notify.info({
-              duration: 2000,
-              message: '无库存，无法加入订单'
-            });
-            return false;
-          }
         }
         if (this.batchNumbers.length) {
           let isChecked = this.batchNumbers.every(item => item.lots.some(l => l.isChecked));
@@ -1195,20 +1077,55 @@
           if (isOver) {
             this.$notify.warning({
               duration: 2000,
-              message: '输入的产品数量大于可用库存'
+              message: '输入的产品数量大于仓库数量'
             });
             return false;
           }
+          if (!this.editItemProduct.orgGoodsId) {
+            let isPassed = true;
+            this.searchProductList.forEach((item) => {
+              if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+                let list = item.list;
+                list.forEach(i => {
+                  let count = 0;
+                  this.batchNumbers.forEach(b => {
+                    if (b.orgGoodsId === i.accessory) {
+                      b.lots.forEach(bl => {
+                        if (bl.isChecked) {
+                          count += Number(bl.productCount);
+                        }
+                      });
+                    }
+                  });
+                  i.accessoryTotalCount = count;
+                });
+                let totalCount = 0;
+                this.batchNumbers.forEach(b => {
+                  if (b.orgGoodsId === this.product.orgGoodsId) {
+                    b.lots.forEach(bl => {
+                      if (bl.isChecked) {
+                        totalCount += Number(bl.productCount);
+                      }
+                    });
+                  }
+                });
+                list.forEach(i => {
+                  let amount = Math.ceil(i.proportion * totalCount);
+                  if (i.accessoryTotalCount !== amount) {
+                    isPassed = false;
+                  }
+                });
+              }
+            });
+            if (!isPassed) {
+              this.$notify.warning({
+                duration: 2000,
+                message: '组合货品数量比例不匹配'
+              });
+              return false;
+            }
+          }
         }
-        this.batchNumbers.forEach(item => {
-          let lots = item.lots.filter(l => l.isChecked);
-          this.selectBatchNumbers.push({
-            id: item.id,
-            mainId: item.mainId,
-            name: item.name,
-            lots: lots
-          });
-        });
         this.$refs['orderGoodsAddForm'].validate((valid) => {
           if (!valid) {
             return false;
@@ -1217,59 +1134,92 @@
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
               this.product.orgGoodsName = item.orgGoodsDto.name;
               let totalAmount = 0;
-              if (this.batchNumbers.length) {
-                this.batchNumbers[0].lots.forEach(item => {
-                  if (item.isChecked) {
-                    let product = JSON.parse(JSON.stringify(this.product));
-                    product.batchNumberId = item.id;
-                    product.no = item.no;
-                    product.amount = item.productCount;
-                    this.form.detailDtoList.push(product);
-                    totalAmount += item.productCount;
+              // 判断时候需要批号信息
+              if (!this.isHasBatchNumberInfo) {
+                this.batchNumbers.forEach(b => {
+                  if (b.orgGoodsId === this.product.orgGoodsId) {
+                    b.lots.forEach(bl => {
+                      if (bl.isChecked) {
+                        let product = JSON.parse(JSON.stringify(this.product));
+                        product.batchNumberId = bl.id;
+                        product.no = bl.no;
+                        product.amount = bl.productCount;
+                        this.form.detailDtoList.push(product);
+                        totalAmount += bl.productCount;
+                      }
+                    });
                   }
+                });
+                item.list.forEach(m => {
+                  this.batchNumbers.forEach(b => {
+                    if (b.orgGoodsId === m.accessory) {
+                      if (b.lots.length) {
+                        b.lots.forEach(bl => {
+                          if (bl.isChecked) {
+                            this.form.detailDtoList.push({
+                              no: bl.no,
+                              batchNumberId: bl.id,
+                              mainOrgId: item.orgGoodsDto.id,
+                              isCombination: true,
+                              orgGoodsId: m.accessory,
+                              orgGoodsName: m.name,
+                              unitPrice: m.sellPrice ? m.sellPrice : 0,
+                              amount: bl.productCount,
+                              measurementUnit: m.accessoryGoods.measurementUnit,
+                              packingCount: null,
+                              specificationsId: '',
+                              specifications: m.accessoryGoods.specifications,
+                              proportion: m.proportion
+                            });
+                          }
+                        });
+                      } else {
+                        let amount = Math.ceil(m.proportion * totalAmount);
+                        this.form.detailDtoList.push({
+                          no: '',
+                          batchNumberId: '',
+                          mainOrgId: item.orgGoodsDto.id,
+                          isCombination: true,
+                          orgGoodsId: m.accessory,
+                          orgGoodsName: m.name,
+                          unitPrice: m.sellPrice ? m.sellPrice : 0,
+                          amount: amount,
+                          measurementUnit: m.accessoryGoods.measurementUnit,
+                          packingCount: null,
+                          specificationsId: '',
+                          specifications: m.accessoryGoods.specifications,
+                          proportion: m.proportion
+                        });
+                      }
+                    }
+                  });
                 });
               } else {
                 this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
-              }
-              item.list.forEach(m => {
-                let amount = Math.ceil(m.proportion * (totalAmount ? totalAmount : this.product.amount));
-                this.form.detailDtoList.push({
-                  no: '',
-                  batchNumberId: '',
-                  mainOrgId: item.orgGoodsDto.id,
-                  isCombination: true,
-                  orgGoodsId: m.accessory,
-                  orgGoodsName: m.name,
-                  unitPrice: m.sellPrice ? m.sellPrice : 0,
-                  amount: amount,
-                  measurementUnit: m.accessoryGoods.measurementUnit,
-                  packingCount: null,
-                  specificationsId: '',
-                  specifications: m.accessoryGoods.specifications,
-                  proportion: m.proportion
-                });
-              });
-            }
-          });
-
-          // 批号信息
-          this.form.detailDtoList.forEach(item => {
-            item.shipmentDtoList = [];
-            this.selectBatchNumbers.forEach(bn => {
-              if (item.orgGoodsId === bn.id) {
-                bn.lots.forEach(ph => {
-                  item.shipmentDtoList.push({
-                    batchNumberId: ph.batchNumberId,
-                    count: ph.count
+                item.list.forEach(m => {
+                  this.form.detailDtoList.push({
+                    no: '',
+                    batchNumberId: '',
+                    mainOrgId: item.orgGoodsDto.id,
+                    isCombination: true,
+                    orgGoodsId: m.accessory,
+                    orgGoodsName: m.name,
+                    unitPrice: m.sellPrice ? m.sellPrice : 0,
+                    amount: this.product.amount,
+                    measurementUnit: m.accessoryGoods.measurementUnit,
+                    packingCount: null,
+                    specificationsId: '',
+                    specifications: m.accessoryGoods.specifications,
+                    proportion: m.proportion
                   });
                 });
               }
-            });
+            }
           });
           this.resetProductForm();
         });
       },
-      resetProductForm() {
+      resetProductForm () {
         this.$nextTick(function () {
           this.product = {
             'amount': null,
@@ -1280,8 +1230,8 @@
             'specificationsId': '',
             inEffectiveFlag: false,
             'fixInfo': {
-                'goodsDto': {}
-              },
+              'goodsDto': {}
+            },
             'unitPrice': null
           };
           this.$refs['orderGoodsAddForm'].resetFields();
@@ -1294,7 +1244,7 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      editItem(item) {
+      editItem (item) {
 //        this.filterProductList = [];
 //        this.searchProductList = [];
 //        this.searchProductList.push({
@@ -1313,9 +1263,9 @@
         // 2.0变化
         this.deleteItem(item);
         this.searchProduct(item.orgGoodsName);
-        this.queryBatchNumers();
+        // this.queryBatchNumers();
       },
-      deleteItem(item) {
+      deleteItem (item) {
         let orgGoodsId = item.orgGoodsId;
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
         let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);
