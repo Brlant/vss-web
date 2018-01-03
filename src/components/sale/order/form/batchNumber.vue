@@ -25,7 +25,7 @@
           </th>
           <th>产品数量</th>
           <th>批号</th>
-          <th>仓库数量</th>
+          <th>可用库存</th>
           <th>生产日期</th>
           <th>有效期</th>
         </tr>
@@ -207,7 +207,7 @@
         if (item.productCount > item.count) {
           this.$notify.warning({
             duration: 2000,
-            message: '输入的产品数量大于仓库数量'
+            message: '输入的产品数量大于可用库存'
           });
         }
         item.isChecked = item.productCount > 0;
@@ -268,7 +268,7 @@
           if (isOver) {
             this.$notify.warning({
               duration: 2000,
-              message: '输入的产品数量大于仓库数量'
+              message: '输入的产品数量大于可用库存'
             });
             return false;
           }

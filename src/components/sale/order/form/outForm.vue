@@ -469,7 +469,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
@@ -1077,7 +1077,7 @@
           if (isOver) {
             this.$notify.warning({
               duration: 2000,
-              message: '输入的产品数量大于仓库数量'
+              message: '输入的产品数量大于可用库存'
             });
             return false;
           }
