@@ -305,6 +305,7 @@
           this.prices.push({
             id: val.salePriceGroupId,
             name: val.salePriceGroupName,
+            goodsName: this.currentItem.orgGoodsName,
             unitPrice: val.price
           });
           this.form = JSON.parse(JSON.stringify(val));
@@ -316,6 +317,7 @@
             povList: [],
             povId: ''
           };
+          this.prices = [];
           this.title = '新增疫苗授权';
         }
         this.filterPOV();
