@@ -194,6 +194,9 @@
     margin-bottom: 5px;
   }
 
+  a:focus {
+    outline: none;
+  }
 </style>
 
 <style>
@@ -251,11 +254,11 @@
                     <span class="wechat-nick"
                           v-if="weChatInfo.nickname">微信：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
                       }}<span v-if="weChatInfo.nickname && weChatInfo.nickname.length > 3">...</span></span>
-                    <a class="btn-wechat" href="#" @click.stop.pre="unbind" v-if="weChatInfo.nickname">(解绑)</a>
+                    <a class="btn-wechat" href="#" @click.stop.prevent="unbind" v-if="weChatInfo.nickname">(解绑)</a>
                   </div>
                   <div class="text-right clearfix">
                     <router-link to="/resetpsw">重置密码</router-link>
-                    <a href="#" @click.stop.pre="logout">退出</a>
+                    <a href="#" @click.stop.prevent="logout">退出</a>
                   </div>
                 </div>
               </el-dropdown-menu>
