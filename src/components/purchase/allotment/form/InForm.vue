@@ -995,6 +995,7 @@
           this.searchProductList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
               this.product.orgGoodsName = item.orgGoodsDto.name;
+              this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
               this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
               item.list.forEach(m => {
                 let amount = Math.ceil(m.proportion * this.product.amount);

@@ -378,8 +378,7 @@
                   <batch-number-part ref="batchNumberPart" :form="form" :product="product"
                                      :productList="filterProductList"
                                      :editItemProduct="editItemProduct"
-                                     @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"
-                  ></batch-number-part>
+                                     @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"></batch-number-part>
 
                   <oms-form-row label-width="160px" :span="4" :label="''">
                     <el-button type="primary" @click="addProduct">加入订单</el-button>
@@ -399,10 +398,10 @@
                   <th style="width: 240px">货品名称</th>
                   <th>规格</th>
                   <th>批号</th>
-                  <th v-show="vaccineType==='2'">货品单价</th>
-                  <th>货品数量</th>
+                  <th style="width: 70px" v-show="vaccineType==='2'">货品单价</th>
+                  <th style="width: 70px">货品数量</th>
                   <th v-show="vaccineType==='2'">金额</th>
-                  <th style="width: 80px">操作</th>
+                  <th style="width: 60px">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -1159,6 +1158,7 @@
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
           this.batchNumbers = [];
+          this.editItemProduct = {};
           this.searchProduct();
         });
       },

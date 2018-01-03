@@ -30,19 +30,18 @@
             </th>
             <th>产品数量</th>
             <th>批号</th>
-            <th>可用库存</th>
             <th>生产日期</th>
             <th>有效期</th>
           </tr>
           </thead>
           <tbody>
-          <tr v-for=" batchNumber in item.lots">
+          <tr v-for=" bm in item.lots">
             <td>
-              <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
+              <el-checkbox v-model="bm.isChecked"></el-checkbox>
             </td>
             <td>
-              <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                        @blur="isChangeValue(batchNumber, item)">
+              <el-input style="width:160px" type="number" v-model.number="bm.productCount" :min="0"
+                        @blur="isChangeValue(bm, item)">
                 <template slot="append">
                   <dict :dict-group="'measurementUnit'"
                         :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
@@ -50,19 +49,18 @@
               </el-input>
             </td>
             <td>
-              {{ batchNumber.no }}
-              <el-tag v-show="batchNumber.inEffectiveFlag" type="danger">近效期</el-tag>
+              {{ bm.batchNumber }}
+              <el-tag v-show="bm.inEffectiveFlag" type="danger">近效期</el-tag>
             </td>
-            <td>{{ batchNumber.count }}</td>
-            <td>{{ batchNumber.productionDate | date }}</td>
-            <td>{{ batchNumber.expirationDate | date }}</td>
+            <td>{{ bm.productionDate | date }}</td>
+            <td>{{ bm.expirationDate | date }}</td>
           </tr>
           </tbody>
         </table>
       </div>
     </div>
     <div v-show="isHasBatchNumberInfo && !doing && product.orgGoodsId">
-      <h2 class="no-batch-number-info">无库存批次信息</h2>
+      <h2 class="no-batch-number-info">无批号信息</h2>
     </div>
   </div>
 </template>
@@ -137,11 +135,9 @@
       getAPIAry () {
         return this.batchNumbers.map(m => {
           let params = {
-            goodsId: m.goodsId,
-            orgId: this.form.orgId,
-            orgGoodsId: m.orgGoodsId
+            goodsId: m.goodsId
           };
-          return this.$http.get('/stock-batch/valid/batch', {params});
+          return this.$http.get('/batch-number', {params});
         });
       },
       /**
@@ -152,11 +148,9 @@
         this.doing = true;
         axios.all(this.batchNumbers.map(m => {
           let params = {
-            goodsId: m.goodsId,
-            orgId: this.form.orgId,
-            orgGoodsId: m.orgGoodsId
+            goodsId: m.goodsId
           };
-          return this.$http.get('/erp-stock/valid/batch', {params});
+          return this.$http.get('/batch-number', {params});
         })).then(
           axios.spread((...args) => {
             this.batchNumbers.forEach((i, index) => {
@@ -178,23 +172,10 @@
         if (!this.editItemProduct.batchNumberId) return;
         this.batchNumbers.forEach(i => {
           if (i.orgGoodsId === this.editItemProduct.orgGoodsId) {
-            if (!i.lots.length) {
-              i.lots.push({
-                id: this.editItemProduct.batchNumberId,
-                no: this.editItemProduct.no,
-                inEffectiveFlag: this.editItemProduct.inEffectiveFlag,
-                productCount: this.editItemProduct.amount,
-                count: this.editItemProduct.amount,
-                productionDate: this.editItemProduct.productionDate,
-                expirationDate: this.editItemProduct.expiryDate,
-                isChecked: true
-              });
-            } else {
-              // 把对应的数量，重新加回去
+            if (i.lots.length) {
               i.lots.forEach(i => {
                 if (i.id === this.editItemProduct.batchNumberId) {
                   i.productCount = this.editItemProduct.amount;
-                  i.count = i.count + this.editItemProduct.amount;
                   i.isChecked = true;
                 }
               });
@@ -219,12 +200,6 @@
         if (product.isMainly) {
           item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         }
-        if (item.productCount > item.count) {
-          this.$notify.warning({
-            duration: 2000,
-            message: '输入的产品数量大于可用库存'
-          });
-        }
         item.isChecked = item.productCount > 0;
       },
       setIsHasBatchNumberInfo () {
@@ -236,7 +211,7 @@
         if (this.isHasBatchNumberInfo) {
           this.$notify.info({
             duration: 2000,
-            message: '无库存批次，无法加入订单'
+            message: '无批号信息，无法加入订单'
           });
           return false;
         }
@@ -248,36 +223,11 @@
           });
           return false;
         }
-        if (this.form.sameBatchNumber) {
-          let seleteNumber = 0;
-          this.batchNumbers.forEach(i => {
-            i.lots.forEach(l => {
-              if (l.isChecked) {
-                seleteNumber++;
-              }
-            });
-          });
-          if (seleteNumber > 1) {
-            this.$notify.info({
-              duration: 2000,
-              message: '请选择单个批号'
-            });
-            return false;
-          }
-        }
         let isHaveCount = this.batchNumbers.some(item => item.lots.some(l => l.isChecked && !l.productCount));
         if (isHaveCount) {
           this.$notify.info({
             duration: 2000,
             message: '请填写产品数量'
-          });
-          return false;
-        }
-        let isOver = this.batchNumbers.some(item => item.lots.some(l => l.isChecked && (l.productCount > l.count)));
-        if (isOver) {
-          this.$notify.warning({
-            duration: 2000,
-            message: '输入的产品数量大于可用库存'
           });
           return false;
         }

@@ -124,7 +124,7 @@
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
-      margin-bottom: 20px;
+      margin-bottom: 10px;
     }
     &:hover {
       border-color: #aaa
@@ -188,7 +188,7 @@
   }
 
   .ar {
-    text-align: right;
+    text-align: center;
   }
 
   .good-selects {
@@ -351,13 +351,13 @@
                 </el-select>
               </el-form-item>
               <div v-show="product.orgGoodsId">
-                <el-form-item label="产品数量" class="productItem-info" prop="amount">
-                  <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
-                    <template slot="append">
-                      <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
-                    </template>
-                  </oms-input>
-                </el-form-item>
+                <!--<el-form-item label="产品数量" class="productItem-info" prop="amount">-->
+                <!--<oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">-->
+                <!--<template slot="append">-->
+                <!--<dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>-->
+                <!--</template>-->
+                <!--</oms-input>-->
+                <!--</el-form-item>-->
                 <div class="product-info-fix clearfix">
                   <el-row>
                     <el-col :span="14">
@@ -375,6 +375,10 @@
                     </el-col>
                   </el-row>
                 </div>
+                <batch-number-part ref="batchNumberPart" :form="form" :product="product"
+                                   :productList="filterProductList"
+                                   :editItemProduct="editItemProduct"
+                                   @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"></batch-number-part>
                 <oms-form-row label="" :span="4">
                   <el-button type="primary" @click="addProduct">加入订单</el-button>
                 </oms-form-row>
@@ -395,12 +399,13 @@
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 350px">货品名称</th>
+                <th style="width: 300px">货品名称</th>
                 <th>规格</th>
+                <th>批号</th>
                 <!--<th>货品单价</th>-->
                 <th>货品数量</th>
                 <!--<th>金额</th>-->
-                <th>操作</th>
+                <th style="width: 70px">操作</th>
               </tr>
               </thead>
               <tbody>
@@ -420,10 +425,15 @@
                   <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
                   <span v-else="">{{ product.specifications }}</span>
                 </td>
+                <td>
+                  {{ product.no ? product.no : '无' }}
+                  <el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>
+                </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
+
                 <!--<td class="ar"><span-->
                 <!--v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>-->
                 <!--<span v-if="!Number(product.unitPrice)">-</span>-->
@@ -434,7 +444,7 @@
                       class="el-icon-t-edit"></i> 编辑</a>
                   </div>
                   <div>
-                    <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
+                    <a href="#" @click.prevent="remove(product)"><i
                       class="el-icon-t-delete"></i> 删除</a>
                   </div>
                 </td>
@@ -460,10 +470,12 @@
 <script>
   import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
+  import batchNumberPart from './batchNumber';
 
   export default {
     name: 'addForm',
     loading: false,
+    components: {batchNumberPart},
     props: {
       type: {
         'type': String,
@@ -607,7 +619,9 @@
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         amount: 0,
-        requestTime: ''
+        requestTime: '',
+        editItemProduct: {},
+        isHasBatchNumberInfo: false
       };
     },
     computed: {
@@ -727,22 +741,6 @@
           this.form.logisticsCentreId = this.form.logisticsCentreId
             ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
-      },
-      queryBatchNumers () { // 查询货品批次信息
-        if (!this.form.supplierId || !this.product.fixInfo.goodsId || !this.product.orgGoodsId) {
-          this.amount = 0;
-          return;
-        }
-        let params = {
-          goodsId: this.product.fixInfo.goodsId,
-          orgId: this.form.supplierId,
-          orgGoodsId: this.product.orgGoodsId
-        };
-        http.get('/erp-stock/valid/batch', {params}).then(res => {
-          res.data.forEach(f => {
-            this.amount += Number(f.count);
-          });
-        });
       },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
@@ -967,7 +965,12 @@
         });
         this.filterProductList = arr;
       },
+      setIsHasBatchNumberInfo (val) {
+        this.isHasBatchNumberInfo = val;
+      },
       getGoodDetail: function (OrgGoodsId) {// 选货品
+        this.accessoryList = [];
+        this.editItemProduct = {};
         if (!OrgGoodsId) {
           this.product = {
             'amount': null,
@@ -983,7 +986,6 @@
           };
           this.amount = 0;
           this.$refs['orderGoodsAddForm'].resetFields();
-          this.accessoryList = [];
           return;
         }
         this.searchProductList.forEach(item => {
@@ -1002,7 +1004,6 @@
           }
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-        this.queryBatchNumers();
       },
       addProduct: function () {// 货品加入到订单
         if (!this.product.orgGoodsId) {
@@ -1012,15 +1013,12 @@
           });
           return false;
         }
-        if (this.product.amount > this.amount) {
-          this.$notify.warning({
-            duration: 2000,
-            message: '输入的产品数量大于库存数量'
-          });
-          return;
-        }
         let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;
+        // 取得子组件的批号信息
+        this.batchNumbers = this.$refs['batchNumberPart'].batchNumbers || [];
+        let isPass = this.$refs['batchNumberPart'].checkPass();
+        if (!isPass) return;
         this.$refs['orderGoodsAddForm'].validate((valid) => {
           if (!valid) {
             return false;
@@ -1028,20 +1026,64 @@
           this.searchProductList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
               this.product.orgGoodsName = item.orgGoodsDto.name;
-              this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
+              let totalAmount = 0;
+              this.batchNumbers.forEach(b => {
+                if (b.orgGoodsId === this.product.orgGoodsId) {
+                  b.lots.forEach(bl => {
+                    if (bl.isChecked) {
+                      let product = JSON.parse(JSON.stringify(this.product));
+                      product.batchNumberId = bl.id;
+                      product.no = bl.batchNumber;
+                      product.amount = bl.productCount;
+                      product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
+                      this.form.detailDtoList.push(product);
+                      totalAmount += bl.productCount;
+                    }
+                  });
+                }
+              });
               item.list.forEach(m => {
-                let amount = Math.ceil(m.proportion * this.product.amount);
-                this.form.detailDtoList.push({
-                  mainOrgId: item.orgGoodsDto.id,
-                  isCombination: true,
-                  orgGoodsId: m.accessory,
-                  orgGoodsName: m.name,
-                  unitPrice: m.sellPrice ? m.sellPrice : 0,
-                  amount: amount,
-                  measurementUnit: m.accessoryGoods.measurementUnit,
-                  packingCount: null,
-                  specifications: m.accessoryGoods.specifications,
-                  specificationsId: ''
+                this.batchNumbers.forEach(b => {
+                  if (b.orgGoodsId === m.accessory) {
+                    if (b.lots.length) {
+                      b.lots.forEach(bl => {
+                        if (bl.isChecked) {
+                          this.form.detailDtoList.push({
+                            no: bl.batchNumber,
+                            batchNumberId: bl.id,
+                            mainOrgId: item.orgGoodsDto.id,
+                            isCombination: true,
+                            orgGoodsId: m.accessory,
+                            orgGoodsName: m.name,
+                            unitPrice: m.sellPrice ? m.sellPrice : 0,
+                            amount: bl.productCount,
+                            measurementUnit: m.accessoryGoods.measurementUnit,
+                            packingCount: null,
+                            specificationsId: '',
+                            specifications: m.accessoryGoods.specifications,
+                            proportion: m.proportion
+                          });
+                        }
+                      });
+                    } else {
+                      let amount = Math.ceil(m.proportion * totalAmount);
+                      this.form.detailDtoList.push({
+                        no: '',
+                        batchNumberId: '',
+                        mainOrgId: item.orgGoodsDto.id,
+                        isCombination: true,
+                        orgGoodsId: m.accessory,
+                        orgGoodsName: m.name,
+                        unitPrice: m.sellPrice ? m.sellPrice : 0,
+                        amount: amount,
+                        measurementUnit: m.accessoryGoods.measurementUnit,
+                        packingCount: null,
+                        specificationsId: '',
+                        specifications: m.accessoryGoods.specifications,
+                        proportion: m.proportion
+                      });
+                    }
+                  }
                 });
               });
             }
@@ -1061,6 +1103,7 @@
             };
             this.$refs['orderGoodsAddForm'].resetFields();
             this.accessoryList = [];
+            this.editItemProduct = {};
             this.searchProduct();
           });
         });
@@ -1071,8 +1114,25 @@
         this.searchProduct();
       },
       deleteItem (item) {
-        this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
-        this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
+        let orgGoodsId = item.orgGoodsId;
+        this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
+        let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);
+        if (isDeleteAll) {
+          // 找出剩下的货品，重新计算组合货品数量，金额。
+          let amount = 0;
+          this.form.detailDtoList.forEach(f => {
+            if (f.orgGoodsId === orgGoodsId) {
+              amount += f.amount;
+            }
+          });
+          this.form.detailDtoList.forEach(f1 => {
+            if (f1.mainOrgId === orgGoodsId) {
+              f1.amount = Math.ceil(f1.proportion * amount);
+            }
+          });
+        } else {
+          this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
+        }
       },
       editItem (item) {
 //        this.filterProductList = [];
@@ -1089,6 +1149,7 @@
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.editItemProduct = JSON.parse(JSON.stringify(item));
         // 2.0变化
         this.deleteItem(item);
         this.searchProduct(item.orgGoodsName);
