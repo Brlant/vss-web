@@ -295,7 +295,7 @@
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize,
+          pageSize: this.typePager.pageSize,
           keyWord: this.typeTxt,
           deleteFlag: false,
           status: '1'
@@ -318,7 +318,7 @@
               this.currentItem = Object.assign({'id': ''});
             }
           }
-          this.pager.count = res.data.count;
+          this.typePager.count = res.data.count;
           this.typePager.totalPage = res.data.totalPage;
         });
       },
