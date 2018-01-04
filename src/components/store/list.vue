@@ -143,9 +143,9 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际库存" :sortable="true" width="90">
+        <el-table-column prop="qualifiedCount" label="实际合格库存" :sortable="true" width="100">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="仓库内真实货品数量" placement="right">
+            <el-tooltip class="item" effect="dark" content="仓库内真实合格货品数量" placement="right">
               <div>
                 <span>{{scope.row.qualifiedCount}}</span>
               </div>
@@ -158,6 +158,15 @@
             <el-tooltip class="item" effect="dark" content="在运输中的货品数量" placement="right">
               <div>
                 <span>{{scope.row.transitCount}}</span>
+              </div>
+            </el-tooltip>
+          </template>
+        </el-table-column>
+        <el-table-column prop="qualifiedCount" label="实际不合格库存" :sortable="true" width="120">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" content="仓库内真实不合格货品数量" placement="right">
+              <div>
+                <span>{{scope.row.unqualifiedCount}}</span>
               </div>
             </el-tooltip>
           </template>

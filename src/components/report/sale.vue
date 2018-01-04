@@ -75,18 +75,19 @@
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')">
-                  <el-option :value="org.id" :key="org.id" :label="org.goodsName"
-                             v-for="org in orgGoods">
+                  <el-option v-for="item in orgGoods" :key="item.orgGoodsDto.id"
+                             :label="item.orgGoodsDto.name"
+                             :value="item.orgGoodsDto.id">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{org.goodsName}}</span>
+                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
                     </div>
                     <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                        </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号</span>  {{org.goodsNo}}
-                      </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="org.saleFirmName">供货厂商</span>  {{ org.saleFirmName }}
-                      </span>
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -137,7 +138,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, http } from '@/resources';
+  import { BaseInfo, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -227,11 +228,12 @@
       filterOrgGoods (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
-          deleteFlag: false,
-          orgId: orgId,
-          keyWord: query
+          keyWord: query,
+          orgId: orgId
         });
-        http.get('/erp-stock/goods', {params}).then(res => {
+        let level = this.$store.state.orgLevel;
+        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
+        Vaccine[api](params).then(res => {
           this.orgGoods = res.data.list;
         });
       },
