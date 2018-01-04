@@ -47,6 +47,13 @@
       orderId () {
         this.isShow = false;
         this.form.reason = '';
+      },
+      isShow (val) {
+        if (val) {
+          this.$nextTick(() => {
+            this.$el.scrollIntoView();
+          });
+        }
       }
     },
     computed: {
