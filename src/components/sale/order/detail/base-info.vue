@@ -157,7 +157,7 @@
           <td></td>
           <td>名称</td>
           <td>批号</td>
-          <td>生产日期</td>
+          <!--<td>生产日期</td>-->
           <td>有效期</td>
           <td class="text-center">数量</td>
           <td class="text-center" v-show="vaccineType==='2'">单价</td>
@@ -166,7 +166,7 @@
         </thead>
         <tbody>
         <tr v-for="(item, index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
-          <td>{{index}}</td>
+          <td>{{index + 1}}</td>
           <td width="70px">
             <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                         effect="light" placement="right">
@@ -201,7 +201,7 @@
             {{ item.batchNumber || '无' }}
             <el-tag v-show="item.inEffectiveFlag" type="danger">近效期</el-tag>
           </td>
-          <td>{{ item.productionDate | date }}</td>
+          <!--<td>{{ item.productionDate | date }}</td>-->
           <td>{{ item.expiryDate | date }}</td>
           <td width="100px" class="text-center">
             {{item.amount}}
@@ -219,7 +219,7 @@
           </td>
         </tr>
         <tr class="text-center">
-          <td colspan="7" align="right">
+          <td colspan="6" align="right">
             <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
           </td>
           <td colspan="2" align="right" v-show="vaccineType==='2'">
