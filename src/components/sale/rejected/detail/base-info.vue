@@ -54,6 +54,10 @@
           <oms-row label="预计入库时间">
             <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
           </oms-row>
+          <oms-row label="是否合格">
+            <span class="goods-span" v-show="currentOrder.qualifiedFlag">合格</span>
+            <span class="goods-span" v-show="!currentOrder.qualifiedFlag">不合格</span>
+          </oms-row>
         </el-col>
       </el-row>
       <el-row v-show="currentOrder.remark">
