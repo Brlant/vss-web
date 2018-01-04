@@ -57,12 +57,17 @@
             </el-select>
           </el-form-item>
           <el-form-item label="接种点仓库" prop="transportationAddress">
-            <el-select placeholder="请选择接种点仓库" v-model="currentOrder.transportationAddress" filterable clearable>
+            <el-select placeholder="请选择接种点仓库" v-model="currentOrder.transportationAddress"
+                       @change="changeWarehouseAdress"
+                       filterable clearable>
               <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                 <span class="pull-left">{{ item.name }}</span>
                 <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
               </el-option>
             </el-select>
+          </el-form-item>
+          <el-form-item label="实际收货人">
+            <oms-input type="text" placeholder="请输入实际收货人" v-model="currentOrder.actualConsignee"></oms-input>
           </el-form-item>
           <el-form-item label="运输条件" prop="transportationCondition">
             <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
@@ -108,6 +113,9 @@
             <oms-row label="接种点仓库" :span="span">
               {{currentOrder.warehouseAddress}}
             </oms-row>
+            <oms-row label="实际收货人" :span="span">
+              <span class="goods-span">{{currentOrder.actualConsignee}}</span>
+            </oms-row>
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
@@ -145,9 +153,9 @@
       <table class="table no-border table-product-list" v-show="currentOrder.detailDtoList">
         <thead>
         <tr>
+          <td style="width: 30px">序号</td>
           <td></td>
           <td>名称</td>
-          <td class="text-center">供货厂商</td>
           <td>批号</td>
           <td>生产日期</td>
           <td>有效期</td>
@@ -157,7 +165,8 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="item in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
+        <tr v-for="(item, index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
+          <td>{{index}}</td>
           <td width="70px">
             <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                         effect="light" placement="right">
@@ -187,9 +196,6 @@
                 <span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>
               </el-tooltip>
             </div>
-          </td>
-          <td class="text-center" width="140px">
-            {{item.orgGoodsDto.salesFirmName}}
           </td>
           <td width="80px" class="R">
             {{ item.batchNumber || '无' }}
@@ -343,6 +349,14 @@
           orgId: this.currentOrder.customerId
         }).then(res => {
           this.warehouses = res.data || [];
+        });
+      },
+      changeWarehouseAdress: function (val) {
+        this.currentOrder.actualConsignee = '';
+        this.warehouses.forEach(item => {
+          if (val === item.id) {
+            this.currentOrder.actualConsignee = item.contact;
+          }
         });
       },
       filterLogisticsCenter: function () {// 过滤物流中心
