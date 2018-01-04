@@ -70,6 +70,9 @@
           <td></td>
           <td>货品</td>
           <td class="text-center">供货厂商</td>
+          <td>批号</td>
+          <td style="width: 80px">生产日期</td>
+          <td style="width: 80px">有效期</td>
           <td class="text-center">数量</td>
           <!--<td class="text-center">单价</td>-->
           <!--<td class="text-center">金额</td>-->
@@ -90,7 +93,7 @@
               <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
             </el-tooltip>
           </td>
-          <td width="280px">
+          <td width="200px">
             <div>
               <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
                 <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
@@ -107,9 +110,15 @@
               </el-tooltip>
             </div>
           </td>
-          <td class="text-center" width="180px">
+          <td class="text-center" width="160px">
             {{item.orgGoodsDto.salesFirmName}}
           </td>
+          <td width="80px" class="R">
+            {{ item.batchNumber || '无' }}
+            <el-tag v-show="item.inEffectiveFlag" type="danger">近效期</el-tag>
+          </td>
+          <td>{{ item.productionDate | date }}</td>
+          <td>{{ item.expiryDate | date }}</td>
           <td width="100px" class="text-center">
             {{item.amount}}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
@@ -126,7 +135,7 @@
           <!--</td>-->
         </tr>
         <tr class="text-center">
-          <td colspan="4" align="right">
+          <td colspan="7" align="right">
             <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
           </td>
           <!--<td colspan="2" align="right">-->
