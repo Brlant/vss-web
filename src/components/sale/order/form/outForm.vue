@@ -746,7 +746,7 @@
           });
           this.form = JSON.parse(JSON.stringify(res.data));
           // ****** 2.0变化
-          this.changeCustomerId(this.form.customerId);
+          this.changeCustomerId(this.form.customerId, true);
           this.changeTransportationMeans(this.form.transportationMeansId);
           // ******
           this.$nextTick(() => {
@@ -874,7 +874,7 @@
           this.showContent.expectedTimeLabel = '';
         }
       },
-      changeCustomerId (val) {// POV改变时
+      changeCustomerId (val, isEdit) {// POV改变时
         if (!this.isStorageData) {// 有缓存时，不重置表单
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
@@ -883,10 +883,10 @@
           this.product.orgGoodsId = '';
         }
         this.checkLicence(val);
-        this.searchWarehouses(val);
+        this.searchWarehouses(val, isEdit);
         this.searchProduct();
       },
-      searchWarehouses (orgId) {
+      searchWarehouses (orgId, isEdit) {
         if (!orgId) {
           this.warehouses = [];
           this.form.transportationAddress = '';
@@ -894,19 +894,18 @@
         }
         Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1'}).then(res => {
           this.warehouses = res.data || [];
-          if (!this.isStorageData) {
-            // let fs = this.warehouses.filter(i => i.default)[0];
-            // this.form.transportationAddress = fs && fs.id || '';
-            // 以前去默认仓库地址
-            // 现在业务关系中维护地址
-            this.orgList.forEach(i => {
-              if (i.id === orgId) {
-                this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
-                this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
-              }
-            });
-            // *************************//
-          }
+          // let fs = this.warehouses.filter(i => i.default)[0];
+          // this.form.transportationAddress = fs && fs.id || '';
+          // 以前去默认仓库地址
+          // 现在业务关系中维护地址
+          if (isEdit) return;
+          this.orgList.forEach(i => {
+            if (i.id === orgId) {
+              this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
+              this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
+            }
+          });
+          // *************************//
         });
       },
       filterAddress () {

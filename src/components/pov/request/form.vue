@@ -483,14 +483,16 @@
           cdcId: '',
           type: 1
         };
-        this.searchWarehouses();
         this.queryOnCDCs();
         this.currentList = [];
         if (val === 2) {
           this.editOrderInfo();
+          this.searchWarehouses(true);
         } else if (val === 3) {
           this.addOrderInfo();
+          this.searchWarehouses(true);
         } else {
+          this.searchWarehouses();
           this.resetForm();
           this.form.id = null;
         }
@@ -609,10 +611,11 @@
         this.showCdcs = this.cdcs.filter(f => f.level === this.form.type);
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
-      searchWarehouses () {
+      searchWarehouses (isEdit) {
         let user = this.$store.state.user;
         Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress, auditedStatus: '1'}).then(res => {
           this.warehouses = res.data || [];
+          if (isEdit) return;
           let fs = this.warehouses.filter(i => i.default)[0];
           if (fs) {
             this.form.warehouseId = fs.id;

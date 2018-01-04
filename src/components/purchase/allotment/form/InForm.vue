@@ -696,8 +696,8 @@
           });
           this.form = JSON.parse(JSON.stringify(res.data));
           // ******2.0变化
-          this.changeSupplier(this.form.supplierId);
-          this.changeTransportationMeans(this.form.transportationMeansId);
+          this.changeSupplier(this.form.supplierId, true);
+          this.changeTransportationMeans(this.form.transportationMeansId, true);
           // ******
           this.$nextTick(() => {
             this.isStorageData = true;
@@ -855,7 +855,7 @@
         }
 
       },
-      changeSupplier: function (val) {// 业务单位改变
+      changeSupplier: function (val, isEdit) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.supplierWarehouses = [];
           this.form.pickUpAddress = '';
@@ -873,6 +873,7 @@
             auditedStatus: '1'
           }).then(res => {
             this.supplierWarehouses = res.data;
+            if (isEdit) return;
             let defaultStore = res.data.filter(item => item.default);
             this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
           });
@@ -880,7 +881,8 @@
         this.searchProduct();
         this.checkLicence(val);
       },
-      changeTransportationMeans: function () {// 物流方式改变
+      changeTransportationMeans: function (isEdit) {// 物流方式改变
+        if (isEdit) return;
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.pickUpAddress = '';
           this.form.logisticsProviderId = '';
@@ -888,7 +890,7 @@
         }
         this.form.pickUpAddress = '';
         if (this.form.transportationMeansId === '2') {
-          this.form.pickUpAddress = this.from.this.form.transportationAddress;
+          this.form.pickUpAddress = this.form.transportationAddress;
         }
       },
       checkLicence: function (val) {// 校验单位和货主证照是否过期

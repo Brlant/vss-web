@@ -727,7 +727,7 @@
           });
           this.form = JSON.parse(JSON.stringify(res.data));
           // ******2.0变化
-          this.changeSupplier(this.form.supplierId);
+          this.changeSupplier(this.form.supplierId, true);
           this.changeTransportationMeans(this.form.transportationMeansId);
           // ******
           this.$nextTick(() => {
@@ -882,7 +882,7 @@
         }
 
       },
-      changeSupplier: function (val) {// 业务单位改变
+      changeSupplier: function (val, isEdit) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.supplierWarehouses = [];
           this.form.pickUpAddress = '';
@@ -904,6 +904,7 @@
             // this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
             // 以前去默认仓库地址
             // 现在业务关系中维护地址
+            if (isEdit) return;
             this.orgList.forEach(i => {
               if (i.id === val) {
                 this.form.pickUpAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';

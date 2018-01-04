@@ -170,7 +170,7 @@
                   <th>单价</th>
                   <th>申请数量</th>
                   <th>申请金额</th>
-                  <th v-show="filters.status === 4">分配数量</th>
+                  <th v-show="filters.status === 4" style="width: 60px">分配数量</th>
                 </tr>
                 </thead>
                 <tbody>
