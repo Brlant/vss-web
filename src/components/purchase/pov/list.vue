@@ -49,13 +49,13 @@
           <span class="">
             <i class="el-icon-t-search"></i> 筛选查询
           </span>
-          <span class="pull-right" v-show="filters.status === 11 && isSearch">
+          <span class="pull-right" v-show="filters.status === 11">
           <perm label="purchansing-assignment-add" class="opera-btn">
             <span @click="createPurchaseDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
               class="el-icon-t-wave"></i></a><span class="wave-title"> 生成采购汇总单</span></span>
           </perm>
          </span>
-          <span class="pull-right" v-show="filters.status === 1 && isSearch">
+          <span class="pull-right" v-show="filters.status === 1">
             <perm label="demand-assignment-add" class="opera-btn">
               <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
                 class="el-icon-t-wave"></i></a><span class="wave-title"> 生成销售汇总单</span></span>
@@ -128,7 +128,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-row v-show="isSearch">
+      <el-row>
         <el-col :span="13">
           <div class="order-list-status container clearfix">
             <div class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
@@ -150,15 +150,7 @@
           </div>
         </el-col>
       </el-row>
-
-      <el-row v-if="!isSearch">
-        <el-col :span="24">
-          <div class="empty-info">
-            暂无信息,请尝试查询
-          </div>
-        </el-col>
-      </el-row>
-      <div class="order-list clearfix " style="margin-top: 20px" v-show="isSearch">
+      <div class="order-list clearfix " style="margin-top: 20px">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="1" v-show="filters.status === 1 || filters.status === 11">
             <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
@@ -301,7 +293,7 @@
       }
     },
     mounted () {
-//      this.getDemandList(1);
+      this.getDemandList(1);
       this.resetSearchForm();
       let orderId = this.$route.params.id;
       if (orderId && orderId !== 'list') {
@@ -312,15 +304,13 @@
     watch: {
       filters: {
         handler: function () {
-          if (this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0]) {
-            this.getDemandList(1);
-          }
+          this.getDemandList(1);
         },
         deep: true
       },
       user (val) {
         if (val.userCompanyAddress) {
-//          this.getDemandList(1);
+          this.getDemandList(1);
         }
       }
     },
@@ -391,9 +381,7 @@
         this.index = 1;
       },
       onSubmit () {
-        if (this.isSearch) {
-          this.getDemandList(1);
-        }
+        this.getDemandList(1);
         this.showRight = false;
       },
       resetRightBox () {
@@ -417,7 +405,6 @@
       },
       searchInOrder: function () {// 搜索
         if (this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0]) {
-          this.isSearch = true;
           this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
           this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
           Object.assign(this.filters, this.searchWord);
@@ -428,7 +415,6 @@
         }
       },
       resetSearchForm: function () {// 重置表单
-        this.isSearch = false;
         let temp = {
           povId: '',
           demandStartTime: '',
@@ -437,14 +423,9 @@
           id: ''
         };
         this.demandTime = '';
-        this.demandList = [];
-        this.checkList = [];
         this.isCheckAll = false;
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
-        Object.keys(this.assignType).forEach(key => {
-          this.assignType[key].num = '';
-        });
       },
       exportExcel () {
         if (!(this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0])) {

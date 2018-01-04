@@ -73,7 +73,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="货主订单号" :span="6">
-                <el-input v-model="searchWord.batchNumber" placeholder="请输入货主订单号"></el-input>
+                <el-input v-model="searchWord.orderNo" placeholder="请输入货主订单号"></el-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
