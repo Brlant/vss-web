@@ -1177,19 +1177,22 @@
 //          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
 //          list: []
 //        });
-        this.filterProductList.push({
-          orgGoodsDto: item.orgGoodsDto || item.fixInfo,
-          list: []
+        this.product.orgGoodsId = '';
+        this.$nextTick(() => {
+          this.filterProductList.push({
+            orgGoodsDto: item.orgGoodsDto || item.fixInfo,
+            list: []
+          });
+          this.product.orgGoodsId = item.orgGoodsId;
+          this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
+          this.product.amount = item.amount;
+          this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+          this.editItemProduct = JSON.parse(JSON.stringify(item));
+          // 2.0变化
+          this.deleteItem(item);
+          this.searchProduct(item.orgGoodsName);
+          // this.queryBatchNumers();
         });
-        this.product.orgGoodsId = item.orgGoodsId;
-        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
-        this.product.amount = item.amount;
-        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
-        this.editItemProduct = JSON.parse(JSON.stringify(item));
-        // 2.0变化
-        this.deleteItem(item);
-        this.searchProduct(item.orgGoodsName);
-        // this.queryBatchNumers();
       },
       deleteItem (item) {
         let orgGoodsId = item.orgGoodsId;
