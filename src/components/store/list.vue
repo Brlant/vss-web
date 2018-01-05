@@ -162,7 +162,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际不合格库存" :sortable="true" width="120">
+        <el-table-column prop="unqualifiedCount" label="实际不合格库存" :sortable="true" width="120">
           <template slot-scope="scope">
             <el-tooltip class="item" effect="dark" content="仓库内真实不合格货品数量" placement="right">
               <div>
@@ -312,7 +312,8 @@
             sums[index] = '合计';
             return;
           }
-          if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' && column.property !== 'transitCount') {
+          if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' &&
+            column.property !== 'transitCount' && column.property !== 'unqualifiedCount') {
             sums[index] = '';
             return;
           }
