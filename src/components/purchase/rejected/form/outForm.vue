@@ -367,6 +367,7 @@
                   <batch-number-part ref="batchNumberPart" :form="form" :product="product"
                                      :productList="filterProductList"
                                      :editItemProduct="editItemProduct"
+                                     :formCopy="formCopy"
                                      @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"
                   ></batch-number-part>
                   <oms-form-row label-width="160px" :span="4" :label="''">
@@ -614,7 +615,8 @@
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
         editItemProduct: {},
-        isHasBatchNumberInfo: false
+        isHasBatchNumberInfo: false,
+        formCopy: {}
       };
     },
     computed: {
@@ -657,6 +659,7 @@
         });
       },
       defaultIndex (val) {
+        this.formCopy = {};
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -728,6 +731,7 @@
             f.no = f.batchNumber;
           });
           this.form = JSON.parse(JSON.stringify(res.data));
+          this.formCopy = JSON.parse(JSON.stringify(res.data));
           // ****** 2.0变化
           this.changeCustomerId(this.form.customerId);
           this.changeTransportationMeans(this.form.transportationMeansId);
@@ -1034,14 +1038,15 @@
               this.product.orgGoodsName = item.orgGoodsDto.name;
               let totalAmount = 0;
               if (this.batchNumbers.length) {
-                this.batchNumbers[0].lots.forEach(item => {
-                  if (item.isChecked) {
+                this.batchNumbers[0].lots.forEach(bl => {
+                  if (bl.isChecked) {
                     let product = JSON.parse(JSON.stringify(this.product));
-                    product.batchNumberId = item.id;
-                    product.no = item.no;
-                    product.amount = item.productCount;
+                    product.batchNumberId = bl.id;
+                    product.no = bl.no;
+                    product.amount = bl.productCount;
+                    product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
                     this.form.detailDtoList.push(product);
-                    totalAmount += item.productCount;
+                    totalAmount += bl.productCount;
                   }
                 });
               } else {

@@ -80,7 +80,8 @@
           return [];
         }
       },
-      editItemProduct: {}
+      editItemProduct: {},
+      formCopy: {}
     },
     data () {
       return {
@@ -184,17 +185,27 @@
                 no: this.editItemProduct.no,
                 inEffectiveFlag: this.editItemProduct.inEffectiveFlag,
                 productCount: this.editItemProduct.amount,
-                count: this.editItemProduct.amount,
                 productionDate: this.editItemProduct.productionDate,
                 expirationDate: this.editItemProduct.expiryDate,
                 isChecked: true
+              });
+              // 编辑时，如果是已经保存的货品，取其相应的数量当可用库存
+              this.formCopy.detailDtoList.forEach(p => {
+                if (p.orgGoodsId === this.editItemProduct.orgGoodsId) {
+                  i.lots[0].count = p.amount;
+                }
               });
             } else {
               // 把对应的数量，重新加回去
               i.lots.forEach(i => {
                 if (i.id === this.editItemProduct.batchNumberId) {
                   i.productCount = this.editItemProduct.amount;
-                  i.count = i.count + this.editItemProduct.amount;
+                  // 编辑时，如果是已经保存的货品，取其相应的数量+还剩下的可用库存
+                  this.formCopy.detailDtoList.forEach(p => {
+                    if (p.orgGoodsId === this.editItemProduct.orgGoodsId) {
+                      i.count = i.count + p.amount;
+                    }
+                  });
                   i.isChecked = true;
                 }
               });
