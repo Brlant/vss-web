@@ -67,7 +67,7 @@ export default {
   },
   receiptOperation: {
     0: {'title': '待审核', status: '0', num: ''},
-    1: {'title': '已完成', status: '1', num: ''},
+    1: {'title': '已审核', status: '1', num: ''},
     2: {'title': '审核未通过', status: '3', num: ''}
   },
   priceGroupType: {
