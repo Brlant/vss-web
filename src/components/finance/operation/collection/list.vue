@@ -172,11 +172,12 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
-          <el-col :span="5">收款单据编号</el-col>
-          <el-col :span="6">收款单位</el-col>
+          <el-col :span="4">收款单据编号</el-col>
+          <el-col :span="5">收款单位</el-col>
           <el-col :span="2">收款方式</el-col>
           <el-col :span="4">收款金额</el-col>
-          <el-col :span="7">收款说明</el-col>
+          <el-col :span="5">收款说明</el-col>
+          <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -195,12 +196,12 @@
                :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]"
                @click.stop="audit(item)">
             <el-row>
-              <el-col :span="5">
+              <el-col :span="4">
                 <div>
                   {{item.no }}
                 </div>
               </el-col>
-              <el-col :span="6" class="pt10">
+              <el-col :span="5" class="pt10">
                 <div class="f-grey">
                   系统代码{{item.orgNo }}
                 </div>
@@ -216,9 +217,17 @@
                   <span v-if="item.amount">¥</span> {{item.amount | formatMoney}}
                 </div>
               </el-col>
-              <el-col :span="7">
+              <el-col :span="5">
                 <div>
                   {{item.explain}}
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div>
+                  <el-button :plain="true" type="success" @click.prevent.stop="exportFile(item.id)"
+                             v-if="item.status==='1'">
+                    生成收款单
+                  </el-button>
                 </div>
               </el-col>
             </el-row>
@@ -303,6 +312,31 @@
       }
     },
     methods: {
+      exportFile: function (id) {
+        if (!id) {
+          return;
+        }
+        let params = Object.assign({}, this.filterRights);
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: '/collection/operation'
+        });
+        this.$http.get('/bill-receivable/' + id + '/export', {params}).then(res => {
+          utils.download(res.data.path, '即时库存查询');
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/collection/operation'
+          });
+        }).catch(error => {
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/collection/operation'
+          });
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
       filterOrg: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) return;
