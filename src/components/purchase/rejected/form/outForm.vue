@@ -659,6 +659,7 @@
         });
       },
       defaultIndex (val) {
+        this.formCopy = {};
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
