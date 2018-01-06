@@ -47,6 +47,10 @@ module.exports = {
         }
       },
       {
+        test: /\.sass$/,
+        loaders: ['style', 'css', 'sass']
+      },
+      {
         test: /\.js$/,
         loader: 'babel-loader',
         include: [resolve('src')]
