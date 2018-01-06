@@ -90,12 +90,6 @@ module.exports = {
       loaders: ['babel-loader?cacheDirectory=true'],
       threadPool: happyThreadPool,
       verbose: true
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      async: 'shared-module',
-      minChunks: (module, count) => (
-        count >= 2    // 当一个模块被重复引用2次或以上的时候单独打包起来。
-      )
     })
   ]
 };
