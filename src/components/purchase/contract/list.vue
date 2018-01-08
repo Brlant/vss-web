@@ -148,6 +148,14 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="8">
+              <oms-form-row label="创建时间" :span="6">
+                <el-col :span="24">
+                  <el-date-picker v-model="createTimes" type="daterange" placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
             <el-col :span="6">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
@@ -320,6 +328,7 @@
     },
     data: function () {
       return {
+        createTimes: '',
         loadingData: true,
         showItemRight: false,
         showDetail: false,
@@ -336,7 +345,9 @@
         },
         searchCondition: {
           keyWord: '',
-          transactOrgId: ''
+          transactOrgId: '',
+          startDate: '',
+          endDate: ''
         },
         expectedTime: '',
         orgType: {
@@ -495,15 +506,17 @@
         return state;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.expectedStartTime = this.formatTime(this.expectedTime[0]);
-        this.searchCondition.expectedEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchCondition.startDate = this.formatTime(this.createTimes[0]);
+        this.searchCondition.endDate = this.formatTime(this.createTimes[1]);
         Object.assign(this.filters, this.searchCondition);
         this.getOrderList(1);
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
           keyWord: '',
-          transactOrgId: ''
+          transactOrgId: '',
+          startDate: '',
+          endDate: ''
         };
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
