@@ -301,16 +301,14 @@
         if (value < 0) {
           if (item.payment < value) {
             this.$notify.info({
-              message: '输入的金额小于待付金额，已帮您调整为与待付金额相等'
+              message: '输入的金额小于待收金额，请修改本次收款金额，否则无法添加收款申请'
             });
-            item.payment = value;
           }
         } else {
           if (item.payment > value) {
             this.$notify.info({
-              message: '输入的金额大于待付金额，已帮您调整为与待付金额相等'
+              message: '输入的金额大于待收金额，请修改本次收款金额，否则无法添加收款申请'
             });
-            item.payment = value;
           }
         }
         item.payment = Number(item.payment);
