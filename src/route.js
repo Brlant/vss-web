@@ -313,7 +313,7 @@ const route = [
           },
           {
             path: '/account/management',
-            component: resolve => require(['./components/account/management/list.vue'], resolve),
+            component: resolve => require(['./components/account/allocation/list.vue'], resolve),
             meta: {moduleId: 'account', title: '账号分配', perm: 'erp-account-manager'}
           },
           {
@@ -330,6 +330,11 @@ const route = [
             path: '/account/user',
             component: resolve => require(['./components/account/user/list.vue'], resolve),
             meta: {moduleId: 'account', title: '用户管理', perm: 'erp-user-manager'}
+          },
+          {
+            path: '/account/system/management',
+            component: resolve => require(['./components/account/management/list.vue'], resolve),
+            meta: {moduleId: 'account', title: '系统账号管理', perm: 'erp-system-account-manager'}
           }
         ]
       },

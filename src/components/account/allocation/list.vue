@@ -29,7 +29,7 @@
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-            系统账号管理
+            账号分配
           </h2>
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -68,7 +68,7 @@
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
               <i class="el-icon-t-search"></i>
            </a>
-           <perm label="erp-system-account-add">
+           <perm label="erp-account-add">
                 <a href="#" class="btn-circle" @click.stop.prevent="add">
                 <i class="el-icon-t-plus"></i>
                 </a>
@@ -112,16 +112,16 @@
                 <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
               </td>
               <td class="list-op" style="width: 120px">
-                <perm label="erp-system-account-edit">
+                <perm label="erp-account-edit">
                   <a href="#" @click.stop.prevent="edit(row)"><i class="el-icon-t-edit"></i>编辑</a>
                 </perm>
-                <perm label="erp-system-account-start">
+                <perm label="erp-account-start">
                   <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用货主用户 \""+row.name+"\" ?"'
                               v-show="row.status === '2'"><i
                     class="el-icon-t-start"></i>启用
                   </oms-forbid>
                 </perm>
-                <perm label="erp-system-account-stop">
+                <perm label="erp-account-stop">
                   <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"'
                               v-show="row.status !== '2'">
                     <i class="el-icon-t-forbidden"></i>停用
@@ -151,7 +151,7 @@
 
 </template>
 <script>
-  import { BaseInfo, OrgUser, User } from '../../../resources';
+  import { BaseInfo, cerpAction, OrgUser, User } from '../../../resources';
   import editForm from './form/form.vue';
   import OmsRemove from '../../common/remove.vue';
   import OmsForbid from '../../common/forbid.vue';
@@ -204,7 +204,7 @@
         return height;
       }
     },
-    mounted() {
+    mounted () {
       this.getOrgsList(1);
     },
     watch: {
@@ -243,8 +243,9 @@
           pageSize: this.pager.pageSize,
           keyWord: this.typeTxt
         });
-        this.$http.get('erp-org/relation-list', {params}).then(res => {
+        cerpAction.querySubordinate(params).then(res => {
           this.$store.commit('initBottomLoading', false);
+
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
