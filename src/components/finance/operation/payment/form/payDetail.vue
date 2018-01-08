@@ -167,7 +167,7 @@
             <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
           </td>
           <td>
-            <el-input v-model="product.payment" style="width: 150px" @blur="paymentChange(product)">
+            <el-input v-model="product.payment" style="width: 170px" @blur="paymentChange(product)">
               <template slot="prepend">
                 <span>¥</span>
               </template>
@@ -187,7 +187,6 @@
 </template>
 <script>
   import { Vaccine } from '@/resources';
-  import utils from '@/tools/utils';
 
   export default {
     props: {
@@ -274,7 +273,7 @@
           this.loadingData = false;
           res.data.list.forEach(item => {
             let count = item.billAmount - item.prepaidAccounts;
-            item.payment = utils.autoformatDecimalPoint(count ? count.toString() : '0');
+            item.payment = count ? count.toFixed(2) : 0.00;
           });
           this.payments = res.data.list;
           this.pager.count = res.data.count;
@@ -311,13 +310,24 @@
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       paymentChange (item) {
-        if (item.payment > (item.billAmount - item.prepaidAccounts)) {
-          this.$notify.info({
-            message: '输入的金额大于待付金额，请修改本次付款金额，否则无法添加付款申请'
-          });
-          return;
+        let value = item.billAmount - item.prepaidAccounts;
+        if (value < 0) {
+          if (item.payment < value) {
+            this.$notify.info({
+              message: '输入的金额小于待付金额，已帮您调整为与待付金额相等'
+            });
+            item.payment = value;
+          }
+        } else {
+          if (item.payment > value) {
+            this.$notify.info({
+              message: '输入的金额大于待付金额，已帮您调整为与待付金额相等'
+            });
+            item.payment = value;
+          }
         }
-        item.payment = utils.autoformatDecimalPoint(item.payment ? item.payment.toString() : '0');
+        item.payment = Number(item.payment);
+        item.payment = item.payment ? item.payment.toFixed(2) : 0.00;
       },
       add (item) {
         let index = this.selectPayments.indexOf(item);

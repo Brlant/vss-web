@@ -400,10 +400,24 @@
         });
       },
       onSubmit: function () {// 提交表单
-        let isQualified = this.selectPayments.some(s => s.payment > (s.billAmount - s.prepaidAccounts));
+        let isQualified = this.selectPayments.some(s => !s.payment);
+        if (isQualified) {
+          this.$notify.info({
+            message: '收款明细中，存在本次收款金额为0的情况，请调整后，再进行保存'
+          });
+          return;
+        }
+        isQualified = this.selectPayments.some(s => s.payment && s.payment > (s.billAmount - s.prepaidAccounts));
         if (isQualified) {
           this.$notify.info({
             message: '收款明细中，存在本次收款金额大于待收金额的明细，请调整后，再进行保存'
+          });
+          return;
+        }
+        isQualified = this.selectPayments.some(s => s.payment < 0 && s.payment < (s.billAmount - s.prepaidAccounts));
+        if (isQualified) {
+          this.$notify.info({
+            message: '收款明细中，存在本次收款金额小于待收金额的明细，请调整后，再进行保存'
           });
           return;
         }
