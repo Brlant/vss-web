@@ -269,6 +269,7 @@
                 </perm>
               </el-col>
             </el-row>
+            <order-goods-info :order-item="item"></order-goods-info>
             <div class="order-list-item-bg"></div>
           </div>
         </div>

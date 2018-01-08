@@ -84,6 +84,7 @@ import totalCount from '../components/common/count.total.vue';
 import bottomLoading from '../components/common/bottom.loading.vue';
 import goodsInfoPart from '@/components/common/order/goods-info-part';
 import cancelOrder from '@/components/common/order/cancel-order';
+import orderGoodsInfo from '@/components/common/order/order-goods-info';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
   Pagination,
@@ -163,7 +164,8 @@ const tinyVue = [
   totalCount,
   bottomLoading,
   goodsInfoPart,
-  cancelOrder
+  cancelOrder,
+  orderGoodsInfo
 ];
 
 const install = function (Vue, opts = {}) {
