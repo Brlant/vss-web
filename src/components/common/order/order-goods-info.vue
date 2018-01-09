@@ -1,6 +1,7 @@
 <style lang="less" scoped>
   @import "../../../assets/mixins";
   .table {
+    margin-top: 10px;
     font-size: 12px;
     padding-left: 5px;
     font-weight: 400;
@@ -25,8 +26,11 @@
   }
 
   .table-product-list {
-    > tbody > tr > td, > thead > tr > th {
+    > thead > tr > th {
       padding: 5px;
+    }
+    > tbody > tr > td {
+      padding: 2px 5px 2px 0;
     }
   }
 
