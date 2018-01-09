@@ -56,7 +56,7 @@
         <dict :dict-group="'measurementUnit'" :dict-key="product.orgGoodsDto.goodsDto.measurementUnit"></dict>
       </td>
       <td align="left">
-        <span v-if="product.unitPrice">单件:￥{{product.unitPrice}}</span>
+        <span v-if="product.unitPrice">单价:￥{{product.unitPrice}}</span>
       </td>
       <td align="left">
           <span v-if="product.unitPrice">

@@ -249,7 +249,7 @@
           });
         }
         item.isChecked = item.productCount > 0;
-        this.autoSelectBatchWhenIsCombination(item, product);
+        // this.autoSelectBatchWhenIsCombination(item, product);
       },
       autoSelectBatchWhenIsCombination (item, product) {
         let ary = this.productList.filter(f => f.orgGoodsDto.id === this.product.orgGoodsId);
