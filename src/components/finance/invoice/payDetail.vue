@@ -280,7 +280,7 @@
       },
       remove (item) {
         let index = this.selectPayments.indexOf(item);
-        this.selectPayments.splice(item, 1);
+        this.selectPayments.splice(index, 1);
       }
     }
   };
