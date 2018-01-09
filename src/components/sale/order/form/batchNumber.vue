@@ -249,15 +249,20 @@
           });
         }
         item.isChecked = item.productCount > 0;
-        // this.autoSelectBatchWhenIsCombination(item, product);
+        this.autoSelectBatchWhenIsCombination(item, product);
       },
+      /**
+       * 自动选出组合货品的批号
+       * @param item
+       * @param product
+       */
       autoSelectBatchWhenIsCombination (item, product) {
         let ary = this.productList.filter(f => f.orgGoodsDto.id === this.product.orgGoodsId);
         if (!ary.length) return;
-        if (ary[0].list) return;
+        if (!ary[0].list) return;
         if (!product.isMainly) return;
         let totalCount = 0;
-        // 求出主货品总数量
+        // 主货品总数量
         this.batchNumbers.forEach(b => {
           if (b.orgGoodsId === this.product.orgGoodsId) {
             b.lots.forEach(bl => {
@@ -268,8 +273,50 @@
           }
         });
         this.batchNumbers.filter(f => f.orgGoodsId !== this.product.orgGoodsId).forEach(i => {
-          // let effectiveList
+          // 组合货品总数量
+          let comTotalCount = 0;
+          ary[0].list.forEach(p => {
+            if (p.accessory === i.orgGoodsId) {
+              comTotalCount = Math.ceil(totalCount * p.proportion);
+            }
+          });
+          // 查出近效期的批号
+          let effectiveList = i.lots.filter(fl => fl.inEffectiveFlag);
+          if (!effectiveList.length) {
+            this.selectBatch(i.lots, 0, 0, comTotalCount);
+          } else {
+            let c = this.selectBatch(effectiveList, 0, 0, comTotalCount);
+            if (c < comTotalCount) {
+              let noEffectiveList = i.lots.filter(fl => !fl.inEffectiveFlag);
+              this.selectBatch(noEffectiveList, 0, 0, comTotalCount - c);
+            }
+          }
         });
+      },
+      /**
+       * 递归设置批号信息
+       * @param list
+       * @param index
+       * @param count
+       * @param totalCount
+       * @returns {*}
+       */
+      selectBatch (list, index, count, totalCount) {
+        if (!list.length) return count;
+        if (index > list.length - 1) return count;
+        if (!(count < totalCount)) return count;
+        let cur = totalCount - count;
+        let batchCount = list[index].count;
+        if (cur < batchCount) {
+          list[index].productCount = cur;
+          count += cur;
+        } else {
+          list[index].productCount = batchCount;
+          count += batchCount;
+        }
+        list[index].isChecked = true;
+        index++;
+        return this.selectBatch(list, index, count, totalCount);
       },
       setIsHasBatchNumberInfo () {
         let batchNumbers = this.batchNumbers || [];
