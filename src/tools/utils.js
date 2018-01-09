@@ -37,11 +37,12 @@ export default {
   },
   inOrderType: {
     0: {'title': '待审单', state: '6', num: ''},
-    1: {'title': '执行中', state: '7', num: ''},
-    2: {'title': '已完成', state: '8', num: ''},
-    3: {'title': '已取消', state: '9', num: ''},
-    4: {'title': '已拒收', state: '5', num: ''},
-    5: {'title': '异常', state: '10', num: ''}
+    1: {'title': '待到货', state: '10', num: ''},
+    2: {'title': '执行中', state: '7', num: ''},
+    3: {'title': '已完成', state: '8', num: ''},
+    4: {'title': '已取消', state: '9', num: ''},
+    5: {'title': '已拒收', state: '5', num: ''},
+    6: {'title': '异常', state: '20', num: ''}
   },
   outOrderType: {
     0: {'title': '待确认', state: '0', num: ''},
