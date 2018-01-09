@@ -1,14 +1,20 @@
 <style lang="less" scoped>
   .table {
-    margin-bottom: 20px;
+    padding-left: 5px;
     .order-list-item {
       color: #999;
       line-height: 20px;
     }
     border-collapse: separate;
     border-spacing: 0;
-    > tbody > tr > td {
-      border-top: 1px solid #eee;
+    > tbody > tr > td, > thead > tr > th {
+      border: 0;
+    }
+    > thead {
+      background: #f1f1f1*0.9;
+    }
+    > tbody {
+      background: #f1f1f1;
     }
   }
 
@@ -29,39 +35,34 @@
   }
 </style>
 <template>
-  <!--<table style="width: 100%;">-->
-  <!--<tbody>-->
-  <!--<tr>-->
-  <!--<td width="100px" class="product-title">货品详情</td>-->
-  <!--<td>-->
-  <!---->
-  <!--</td>-->
-  <!--</tr>-->
-  <!--</tbody>-->
-  <!--</table>-->
   <table class="table no-border table-product-list" v-show="orderItem.detailDtoList">
+    <thead>
+    <tr>
+      <th>货主货品</th>
+      <th v-show="isShowbatch">批号</th>
+      <th v-show="isShowbatch">生产日期</th>
+      <th v-show="isShowbatch">有效期</th>
+      <th>数量</th>
+      <th v-show="level !== 1">单价</th>
+    </tr>
+    </thead>
     <tbody>
     <tr v-for="product in orderItem.detailDtoList" v-if="product.orgGoodsDto">
-      <td style="width: 320px">
+      <td style="width: 400px">
         <span style="font-size: 14px;line-height: 20px">{{product.name}}</span>
       </td>
       <td align="left" class="R" v-show="isShowbatch">
-        批号:{{ product.batchNumber || '无' }}
-        <el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>
+        {{ product.batchNumber || '无' }}
+        <!--<el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>-->
       </td>
-      <td align="left" v-show="isShowbatch">生产日期:{{ product.productionDate | date }}</td>
-      <td align="left" v-show="isShowbatch">有效期:{{ product.expiryDate | date }}</td>
+      <td align="left" v-show="isShowbatch">{{ product.productionDate | date }}</td>
+      <td align="left" v-show="isShowbatch">{{ product.expiryDate | date }}</td>
       <td align="left">
-        数量:{{product.amount}}
+        {{product.amount}}
         <dict :dict-group="'measurementUnit'" :dict-key="product.orgGoodsDto.goodsDto.measurementUnit"></dict>
       </td>
-      <td align="left">
-        <span v-if="product.unitPrice">单价:￥{{product.unitPrice}}</span>
-      </td>
-      <td align="left">
-          <span v-if="product.unitPrice">
-            金额:<span>¥</span>{{ product.amount * product.unitPrice | formatMoney }}
-          </span>
+      <td align="left" v-show="level !== 1">
+        <span v-if="product.unitPrice">￥{{product.unitPrice}}</span>
       </td>
     </tr>
     </tbody>
@@ -76,6 +77,9 @@
     computed: {
       isShowbatch () {
         return this.orderItem.type === '1' || (this.orderItem.type === '0' && this.orderItem.bizType === '1');
+      },
+      level () {
+        return this.$store.state.orgLevel;
       }
     }
   };
