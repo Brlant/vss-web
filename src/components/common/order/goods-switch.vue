@@ -1,16 +1,12 @@
 <style lang="less">
   .goods-switch {
     margin-right: 20px;
-    overflow: hidden;
-    display: flex;
-    justify-content: center;
   }
 </style>
 <template>
  <div class="goods-switch" >
-   <span class="title">显示明细:</span>
    <span>
-        <el-switch v-model="isShowGoodsList" @change="change" active-text="是" inactive-text="否"></el-switch>
+        <el-switch v-model="isShowGoodsList" @change="change" active-text="明细" inactive-text="精简"></el-switch>
    </span>
  </div>
 </template>

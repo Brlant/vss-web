@@ -73,7 +73,7 @@
       <el-table :data="dataList" class="header-list"
                 :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="400">
         <template v-for="(item, index) in firstLine">
-          <el-table-column :prop="item.key" :label="item.name" :sortable="index"></el-table-column>
+          <el-table-column :prop="item.key" :label="item.name"></el-table-column>
         </template>
       </el-table>
     </div>

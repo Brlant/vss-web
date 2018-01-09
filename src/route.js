@@ -452,6 +452,11 @@ const route = [
             path: '/report/month/repertory',
             component: resolve => require(['./components/report/month-end-repertory.vue'], resolve),
             meta: {moduleId: 'report', title: '二类疫苗月终库存盘点表', perm: 'month-stock-inventory-form-manager'}
+          },
+          {
+            path: '/report/logistics',
+            component: resolve => require(['./components/report/logistics.vue'], resolve),
+            meta: {moduleId: 'report', title: '免费疫苗出入库明细表', perm: 'first-vaccine-logistics-manager'}
           }
         ]
       }
