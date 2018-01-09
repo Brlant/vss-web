@@ -1,6 +1,9 @@
 <style lang="less" scoped>
+  @import "../../../assets/mixins";
   .table {
+    font-size: 12px;
     padding-left: 5px;
+    font-weight: 400;
     .order-list-item {
       color: #999;
       line-height: 20px;
@@ -10,11 +13,14 @@
     > tbody > tr > td, > thead > tr > th {
       border: 0;
     }
+    > tbody > tr > td {
+      font-size: 13px;
+    }
     > thead {
-      background: #f1f1f1*0.9;
+      background: #eff4fb;
     }
     > tbody {
-      background: #f1f1f1;
+      background: #f6faff;
     }
   }
 
@@ -40,7 +46,6 @@
     <tr>
       <th>货主货品</th>
       <th v-show="isShowbatch">批号</th>
-      <th v-show="isShowbatch">生产日期</th>
       <th v-show="isShowbatch">有效期</th>
       <th>数量</th>
       <th v-show="level !== 1">单价</th>
@@ -48,14 +53,13 @@
     </thead>
     <tbody>
     <tr v-for="product in orderItem.detailDtoList" v-if="product.orgGoodsDto">
-      <td style="width: 400px">
+      <td style="width: 480px">
         <span style="font-size: 14px;line-height: 20px">{{product.name}}</span>
       </td>
       <td align="left" class="R" v-show="isShowbatch">
         {{ product.batchNumber || '无' }}
         <!--<el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>-->
       </td>
-      <td align="left" v-show="isShowbatch">{{ product.productionDate | date }}</td>
       <td align="left" v-show="isShowbatch">{{ product.expiryDate | date }}</td>
       <td align="left">
         {{product.amount}}
