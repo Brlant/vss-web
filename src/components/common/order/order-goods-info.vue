@@ -41,36 +41,38 @@
   }
 </style>
 <template>
-  <table class="table no-border table-product-list" v-show="orderItem.detailDtoList">
-    <thead>
-    <tr>
-      <th>货主货品</th>
-      <th v-show="isShowbatch">批号</th>
-      <th v-show="isShowbatch">有效期</th>
-      <th>数量</th>
-      <th v-show="level !== 1">单价</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr v-for="product in orderItem.detailDtoList" v-if="product.orgGoodsDto">
-      <td style="width: 480px">
-        <span style="font-size: 14px;line-height: 20px">{{product.name}}</span>
-      </td>
-      <td align="left" class="R" v-show="isShowbatch">
-        {{ product.batchNumber || '无' }}
-        <!--<el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>-->
-      </td>
-      <td align="left" v-show="isShowbatch">{{ product.expiryDate | date }}</td>
-      <td align="left">
-        {{product.amount}}
-        <dict :dict-group="'measurementUnit'" :dict-key="product.orgGoodsDto.goodsDto.measurementUnit"></dict>
-      </td>
-      <td align="left" v-show="level !== 1">
-        <span v-if="product.unitPrice">￥{{product.unitPrice}}</span>
-      </td>
-    </tr>
-    </tbody>
-  </table>
+  <div v-if="isShowGoodsList">
+    <table class="table no-border table-product-list" v-show="orderItem.detailDtoList" >
+      <thead>
+      <tr>
+        <th>货主货品</th>
+        <th v-show="isShowbatch">批号</th>
+        <th v-show="isShowbatch">有效期</th>
+        <th>数量</th>
+        <th v-show="level !== 1">单价</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr v-for="product in orderItem.detailDtoList" v-if="product.orgGoodsDto">
+        <td style="width: 480px">
+          <span style="font-size: 14px;line-height: 20px">{{product.name}}</span>
+        </td>
+        <td align="left" class="R" v-show="isShowbatch">
+          {{ product.batchNumber || '无' }}
+          <!--<el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>-->
+        </td>
+        <td align="left" v-show="isShowbatch">{{ product.expiryDate | date }}</td>
+        <td align="left">
+          {{product.amount}}
+          <dict :dict-group="'measurementUnit'" :dict-key="product.orgGoodsDto.goodsDto.measurementUnit"></dict>
+        </td>
+        <td align="left" v-show="level !== 1">
+          <span v-if="product.unitPrice">￥{{product.unitPrice}}</span>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
 </template>
 <script>
   export default {
@@ -84,6 +86,9 @@
       },
       level () {
         return this.$store.state.orgLevel;
+      },
+      isShowGoodsList () {
+        return this.$store.state.isShowGoodsList;
       }
     }
   };

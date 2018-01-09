@@ -20,7 +20,8 @@ const state = {
   orgLevel: '',
   prints: [],
   logisticsCentreId: '6320790940790948456',
-  bottomLoading: false
+  bottomLoading: false,
+  isShowGoodsList: false
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -122,6 +123,9 @@ const mutations = {
   },
   initBottomLoading (state, data) {
     state.bottomLoading = data;
+  },
+  initIsShowGoodsList (state, data) {
+    state.isShowGoodsList = data;
   }
 };
 

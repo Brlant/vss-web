@@ -85,6 +85,7 @@ import bottomLoading from '../components/common/bottom.loading.vue';
 import goodsInfoPart from '@/components/common/order/goods-info-part';
 import cancelOrder from '@/components/common/order/cancel-order';
 import orderGoodsInfo from '@/components/common/order/order-goods-info';
+import goodsSwitch from '@/components/common/order/goods-switch';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
   Pagination,
@@ -165,7 +166,8 @@ const tinyVue = [
   bottomLoading,
   goodsInfoPart,
   cancelOrder,
-  orderGoodsInfo
+  orderGoodsInfo,
+  goodsSwitch
 ];
 
 const install = function (Vue, opts = {}) {
