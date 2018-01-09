@@ -266,7 +266,7 @@
           this.loadingData = false;
         });
       },
-      formatHeader (index) {
+      formatHeader(index) {
         let content = '';
         let title = '';
         switch (index) {
@@ -292,14 +292,10 @@
           }
         }
         return (
-          < el - tooltip;
-        effect = 'dark';
-        content = {content};
-        placement = 'top' >
-          < span > {title} < /span>
-          < /el-tooltip>;
-      )
-        ;
+          <el-tooltip effect="dark" content={content} placement="top">
+              <span>{title}</span>
+          </el-tooltip>
+        );
       },
       formatRowClass (data) {
         if (this.isValid(data.row) === 1) {
