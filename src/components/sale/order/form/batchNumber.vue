@@ -249,6 +249,27 @@
           });
         }
         item.isChecked = item.productCount > 0;
+        this.autoSelectBatchWhenIsCombination(item, product);
+      },
+      autoSelectBatchWhenIsCombination (item, product) {
+        let ary = this.productList.filter(f => f.orgGoodsDto.id === this.product.orgGoodsId);
+        if (!ary.length) return;
+        if (ary[0].list) return;
+        if (!product.isMainly) return;
+        let totalCount = 0;
+        // 求出主货品总数量
+        this.batchNumbers.forEach(b => {
+          if (b.orgGoodsId === this.product.orgGoodsId) {
+            b.lots.forEach(bl => {
+              if (bl.isChecked) {
+                totalCount += Number(bl.productCount);
+              }
+            });
+          }
+        });
+        this.batchNumbers.filter(f => f.orgGoodsId !== this.product.orgGoodsId).forEach(i => {
+          // let effectiveList
+        });
       },
       setIsHasBatchNumberInfo () {
         let batchNumbers = this.batchNumbers || [];
