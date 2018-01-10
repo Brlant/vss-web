@@ -42,6 +42,7 @@
   }
   .relation-no {
     cursor: pointer;
+    color: #409EFF * 0.8;
     &:hover {
       color: #409EFF;
     }
