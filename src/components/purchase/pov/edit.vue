@@ -62,6 +62,9 @@
     text-align: center;
     padding: 15px;
   }
+  .error {
+    color: red;
+  }
 </style>
 <template>
   <div class="content-part">
@@ -147,7 +150,10 @@
               {{row.repertoryCount}}
             </td>
             <td>
-              <el-input v-model.number="row.actualCount"></el-input>
+              <!--<el-input v-model.number="row.actualCount"></el-input>-->
+              <input class="el-input__inner" :class="{error: row.isNoValid}" type="number"
+                     @input="inputHandler(row)"
+                     v-model.number="row.actualCount"/>
             </td>
           </tr>
           </tbody>
@@ -187,6 +193,7 @@
           axios.spread((pre, next) => {
             pre.data.detailDtoList.forEach(i => {
               i.repertoryCount = this.getRepertoryCount(i, next);
+              i.isNoValid = false;
             });
             this.currentOrder = pre.data;
             this.loading = false;
@@ -202,9 +209,15 @@
         });
         return count;
       },
+      inputHandler (row) {
+        row.isNoValid = row.actualCount > row.repertoryCount;
+      },
       submit () {
         let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);
         if (valid) {
+          this.currentOrder.detailDtoList.forEach(i => {
+            i.isNoValid = i.actualCount > i.repertoryCount;
+          });
           this.$notify.info({
             message: '存在分配数量大于可用库存的要货明细，请进行调整'
           });
