@@ -103,7 +103,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="10">
-              <oms-form-row label="产品名称" :span="5">
+              <oms-form-row label="产品名称" :span="4">
                 <el-select filterable remote placeholder="请输入产品名称" :remote-method="filterOrgGoods"
                            :clearable="true" multiple
                            v-model="searchWord.orgGoodsIdList" popper-class="good-selects"
@@ -152,7 +152,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list"
+      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="400">
         <el-table-column prop="type" label="出入库类型" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" width="120"></el-table-column>
@@ -209,7 +209,7 @@
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/sale'});
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/logistics'});
         this.$http({
           url: '/erp-statement/first-vaccine/export',
           params,
@@ -219,10 +219,10 @@
         }).then(res => {
           utils.download(res.data.path, '免费疫苗物流数据库');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/sale'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/logistics'});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/sale'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/logistics'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });
@@ -250,6 +250,35 @@
           });
           this.loadingData = false;
         });
+      },
+      getSummaries (param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (column.property !== 'count') {
+            sums[index] = '';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = '';
+          }
+        });
+
+        return sums;
       },
       resetSearchForm: function () {
         this.searchWord = {

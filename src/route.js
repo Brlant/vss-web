@@ -457,6 +457,11 @@ const route = [
             path: '/report/logistics',
             component: resolve => require(['./components/report/logistics.vue'], resolve),
             meta: {moduleId: 'report', title: '免费疫苗出入库明细表', perm: 'first-vaccine-logistics-manager'}
+          },
+          {
+            path: '/report/allotation',
+            component: resolve => require(['./components/report/allotation.vue'], resolve),
+            meta: {moduleId: 'report', title: '出货货品统计表', perm: 'first-vaccine-distribution-manager'}
           }
         ]
       }

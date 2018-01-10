@@ -40,6 +40,9 @@
   .order-list-status-right {
     justify-content: flex-end;
   }
+  .order-list .order-list-body .order-list-item .el-row .el-col.pl7 {
+    /*padding-left: 7px;*/
+  }
 </style>
 <template>
   <div class="order-page">
@@ -190,13 +193,13 @@
               <el-col :span="7" class="pt">
                 <span>{{ item.povName }}</span>
               </el-col>
-              <el-col :span="3" class="pt">
+              <el-col :span="3" class="pt pl7">
                 <span>{{ item.demandTime | date }}</span>
               </el-col>
-              <el-col :span="5" class="pt">
+              <el-col :span="5" class="pt pl7">
                 <span>{{ item.applyTime | time }}</span>
               </el-col>
-              <el-col :span="4" class="opera-btn">
+              <el-col :span="4" class="opera-btn pl7">
                 <div>
                   <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i

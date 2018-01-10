@@ -14,9 +14,6 @@
     > tbody > tr > td, > thead > tr > th {
       border: 0;
     }
-    > tbody > tr > td {
-      font-size: 13px;
-    }
     > thead {
       background: #eff4fb;
     }
@@ -59,7 +56,7 @@
       <tbody>
       <tr v-for="product in orderItem.detailDtoList" v-if="product.orgGoodsDto">
         <td style="width: 480px">
-          <span style="font-size: 14px;line-height: 20px">{{product.name}}</span>
+          <span>{{product.name}}</span>
         </td>
         <td align="left" class="R" v-show="isShowbatch">
           {{ product.batchNumber || '无' }}
