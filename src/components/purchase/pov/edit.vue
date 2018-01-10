@@ -193,7 +193,7 @@
           axios.spread((pre, next) => {
             pre.data.detailDtoList.forEach(i => {
               i.repertoryCount = this.getRepertoryCount(i, next);
-              i.isNoValid = false;
+              i.isNoValid = i.actualCount > i.repertoryCount;
             });
             this.currentOrder = pre.data;
             this.loading = false;
