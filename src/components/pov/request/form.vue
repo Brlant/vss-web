@@ -501,7 +501,7 @@
     methods: {
       filterGoods (query) {
         this.filterProductList = this.totalFilterProductList.filter(f => f.orgGoodsNameAcronymy.indexOf(query) !== -1 ||
-          f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1);
+          f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1 || f.orgGoodsNamePhonetic.indexOf(query) !== -1);
       },
       filterAddressLabel (item) {
         let name = item.name ? '【' + item.name + '】' : '';

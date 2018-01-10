@@ -153,10 +153,10 @@
             <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
-            <div v-if="loadingListData">
-              <oms-loading :loading="loadingListData"></oms-loading>
-            </div>
-            <div v-else-if="businessRelationList.length == 0" class="empty-info">
+            <!--<div v-if="loadingListData">-->
+              <!--<oms-loading :loading="loadingListData"></oms-loading>-->
+            <!--</div>-->
+            <div v-if="businessRelationList.length == 0" class="empty-info">
               暂无信息
             </div>
             <div v-else>

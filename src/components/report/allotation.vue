@@ -63,7 +63,7 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary
-                :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="400">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight()">
         <el-table-column prop="orgGoodsName" label="疫苗名称"  :sortable="true"></el-table-column>
         <el-table-column prop="count" label="配送数量" :sortable="true"  width="200"></el-table-column>
         <el-table-column prop="measurementUnit" label="基本单位" width="160" :sortable="true"></el-table-column>
@@ -91,6 +91,9 @@
       };
     },
     methods: {
+      getHeight() {
+        return utils.getCurrentHeight(this.$refs['reportTable']);
+      },
       exportFile: function () {
         if (!this.bizDateAry || !this.bizDateAry.length) {
           this.$notify.info({

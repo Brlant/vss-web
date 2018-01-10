@@ -484,13 +484,13 @@
         };
         // this.searchWarehouses();
         // this.queryOnCDCs();
-        this.filterPOV();
         this.currentList = [];
         if (val === 2) {
           this.editOrderInfo();
         } else if (val === 3) {
           this.addOrderInfo();
         } else {
+          this.filterPOV();
           this.resetForm();
           this.form.id = null;
         }
@@ -499,7 +499,7 @@
     methods: {
       filterGoods (query) {
         this.filterProductList = this.totalFilterProductList.filter(f => f.orgGoodsNameAcronymy.indexOf(query) !== -1 ||
-          f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1);
+          f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1 || f.orgGoodsNamePhonetic.indexOf(query) !== -1);
       },
       filterAddressLabel (item) {
         let name = item.name ? '【' + item.name + '】' : '';
@@ -509,35 +509,40 @@
         return item.detail;
       },
       editOrderInfo () {
-        let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
-          return {
-            amount: m.applyCount,
-            measurementUnit: m.unit,
-            orgGoodsId: m.orgGoodsId,
-            orgGoodsName: m.goodsName,
-            unitPrice: m.price,
-            specification: m.specification
+        pullSignal.get(this.currentOrder.id).then(res => {
+          let currentOrder = res.data;
+          let orgDetailGoods = currentOrder.detailDtoList.map(m => {
+            return {
+              amount: m.applyCount,
+              measurementUnit: m.unit,
+              orgGoodsId: m.orgGoodsId,
+              orgGoodsName: m.goodsName,
+              unitPrice: m.price,
+              specification: m.specification
+            };
+          });
+          this.orgList.push({
+            subordinateId: currentOrder.povId,
+            subordinateName: currentOrder.povName
+          });
+          this.form.povId = currentOrder.povId;
+          // ******2.0变化
+          this.filterPOV(currentOrder.povName);
+          this.povChange(currentOrder.povId, true);
+          this.form = {
+            id: currentOrder.id,
+            povId: currentOrder.povId,
+            demandTime: currentOrder.demandTime,
+            type: Number(currentOrder.vaccineSign),
+            warehouseId: currentOrder.warehouseId,
+            detailDtoList: []
           };
+          // ******
+          this.$nextTick(() => {
+            this.form.detailDtoList = orgDetailGoods;
+          });
+//        this.form = JSON.parse(JSON.stringify(currentOrder));
         });
-        this.orgList.push({
-          subordinateId: this.currentOrder.povId,
-          subordinateName: this.currentOrder.povName
-        });
-        this.form = {
-          id: this.currentOrder.id,
-          povId: this.currentOrder.povId,
-          demandTime: this.currentOrder.demandTime,
-          type: Number(this.currentOrder.vaccineSign),
-          warehouseId: this.currentOrder.warehouseId,
-          detailDtoList: []
-        };
-        // ******2.0变化
-        this.changeType();
-        // ******
-        this.$nextTick(() => {
-          this.form.detailDtoList = orgDetailGoods;
-        });
-//        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
       addOrderInfo () {
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
@@ -591,7 +596,7 @@
         this.filterProduct();
         this.searchProduct();
       },
-      povChange (val) {
+      povChange (val, isEdited) {
         this.product = {
           'amount': null,
           'measurementUnit': '',
@@ -606,13 +611,14 @@
         this.accessoryList = [];
         this.currentList = [];
         this.warehouses = [];
+        this.form.detailDtoList = [];
         this.$refs['orderGoodsForm'].resetFields();
         if (!val) {
           this.form.warehouseId = '';
           return;
         }
         this.searchProduct();
-        this.searchWarehouses(val);
+        this.searchWarehouses(val, isEdited);
       },
       searchProduct: function () {
         this.searchProductList = [];
@@ -657,7 +663,7 @@
         this.showCdcs = this.cdcs.filter(f => f.level === this.type);
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
-      searchWarehouses (val) {
+      searchWarehouses (val, isEdited) {
         Address.queryAddress(this.form.povId, {deleteFlag: false, orgId: this.form.povId, auditedStatus: '1'}).then(res => {
           this.warehouses = res.data || [];
           // let fs = this.warehouses.filter(i => i.default)[0];
@@ -666,6 +672,7 @@
           // }
           // 以前去默认仓库地址
           // 现在业务关系中维护地址
+          if (isEdited) return;
           this.orgList.forEach(i => {
             if (i.id === val) {
               this.form.warehouseId = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
