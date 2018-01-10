@@ -208,7 +208,7 @@
                   </span>
                 </div>
                 <div >
-                  <perm label="demand-assignment-update">
+                  <perm label="pull-signal-assign-actual">
                     <span @click.prevent="editOrder(item)" v-show="filters.status === 1 || filters.status === 2">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-edit"></i></a>
@@ -223,11 +223,13 @@
                         取消需求单
                       </span>
                   </perm>
-                  <span @click.prevent="createSaleOrder(item)" v-show="filters.status === 2 && item.singleFlag">
-                      <a href="#" class="btn-circle" @click.prevent=""><i
-                        class="el-icon-t-sale"></i></a>
-                        生成销售单
-                  </span>
+                  <perm label="pull-signal-generate-order">
+                    <span @click.prevent="createSaleOrder(item)" v-show="filters.status === 2 && item.singleFlag">
+                        <a href="#" class="btn-circle" @click.prevent=""><i
+                          class="el-icon-t-sale"></i></a>
+                          生成销售单
+                    </span>
+                  </perm>
                 </div>
               </el-col>
             </el-row>
