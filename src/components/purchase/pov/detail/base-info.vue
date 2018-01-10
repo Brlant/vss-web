@@ -40,6 +40,12 @@
   .content-body {
     margin: 20px 0;
   }
+  .relation-no {
+    cursor: pointer;
+    &:hover {
+      color: #409EFF;
+    }
+  }
 </style>
 <template>
   <div class="d-table-col-wrap">
@@ -75,7 +81,9 @@
             {{currentOrder.auditTime | time}}
           </oms-row>
           <oms-row label="关联疾控销售订单">
-            {{currentOrder.orderNo}}
+            <a href="#" class="relation-no" @click.stop.prevent="goTo">
+              {{currentOrder.orderNo}}
+            </a>
           </oms-row>
         </el-col>
       </el-row>
@@ -152,6 +160,11 @@
       }
     },
     methods: {
+      goTo() {
+        let level = this.$store.state.orgLevel;
+        let url = level === 1 ? '/sale/order/one/class/' : '/sale/order/two/class/';
+        this.$router.push(url + this.currentOrder.orderId);
+      },
       getDetail: function () {
         this.currentOrder = {};
         if (!this.currentItem.id) return;
