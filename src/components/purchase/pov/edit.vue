@@ -116,9 +116,10 @@
           <tr>
             <th>货品名称</th>
             <th>规格</th>
-            <th width="90px">单价</th>
-            <th width="90px">申请数量</th>
-            <th width="90px">申请金额</th>
+            <th width="70px">单价</th>
+            <th width="80px">申请数量</th>
+            <th width="80px">申请金额</th>
+            <th width="80px">可用库存</th>
             <th>分配数量</th>
           </tr>
           </thead>
@@ -143,6 +144,9 @@
               <span v-if="!row.applyMoney">-</span>
             </td>
             <td>
+              {{row.repertoryCount}}
+            </td>
+            <td>
               <el-input v-model.number="row.actualCount"></el-input>
             </td>
           </tr>
@@ -154,7 +158,7 @@
 </template>
 <script>
   import { pullSignal } from '@/resources';
-
+  import axios from 'axios';
   export default {
     props: {
       currentItem: Object,
@@ -179,12 +183,33 @@
         this.currentOrder = {};
         if (!this.currentItem.id) return;
         this.loading = true;
-        pullSignal.get(this.currentItem.id).then(res => {
-          this.currentOrder = res.data;
-          this.loading = false;
+        axios.all([pullSignal.get(this.currentItem.id), this.$http.get(`/pull-signal/${this.currentItem.id}/stock`)]).then(
+          axios.spread((pre, next) => {
+            pre.data.detailDtoList.forEach(i => {
+              i.repertoryCount = this.getRepertoryCount(i, next);
+            });
+            this.currentOrder = pre.data;
+            this.loading = false;
+          })
+        );
+      },
+      getRepertoryCount(i, next) {
+        let count = 0;
+        next.data.forEach(n => {
+          if (n.orgGoodsId === i.orgGoodsId) {
+            count = n.count;
+          }
         });
+        return count;
       },
       submit () {
+        let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);
+        if (valid) {
+          this.$notify.info({
+            message: '存在分配数量大于可用库存的要货明细，请进行调整'
+          });
+          return;
+        }
         let ary = this.currentOrder.detailDtoList.map(m => {
           return {
             detailId: m.id,
