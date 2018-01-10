@@ -29,7 +29,7 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="sales-return-cancel" v-show="currentOrder.state === '6' || currentOrder.state === '7'">
+            <perm label="sales-return-cancel" v-show="currentOrder.state === '6' || currentOrder.state === '7'  || currentOrder.state === '10'">
               <el-button type="warning" plain @click="cancel">取消订单</el-button>
             </perm>
           </li>
