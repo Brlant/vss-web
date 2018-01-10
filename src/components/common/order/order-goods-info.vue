@@ -27,7 +27,7 @@
       padding: 5px;
     }
     > tbody > tr > td {
-      padding: 2px 5px 2px 0;
+      padding: 2px 0 2px 5px;
     }
   }
 
