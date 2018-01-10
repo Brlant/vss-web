@@ -135,24 +135,24 @@
         <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
-        <el-table-column prop="availableCount" :label="formatHeader(0)" :sortable="true" v-if="orgLevel !== 3"
+        <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true" v-if="orgLevel !== 3"
                          width="100">
           <template slot-scope="scope">
             <span>{{scope.row.qualifiedCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="qualifiedCount" :label="formatHeader(1)" :sortable="true" width="120">
+        <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true" width="120">
           <template slot-scope="scope">
             <span>{{scope.row.qualifiedCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="transitCount" :label="formatHeader(2)" :sortable="true" v-if="orgLevel !== 3"
+        <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true" v-if="orgLevel !== 3"
                          width="100">
           <template slot-scope="scope">
             <span>{{scope.row.transitCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="unqualifiedCount" :label="formatHeader(3)" :sortable="true" width="140">
+        <el-table-column prop="unqualifiedCount" label="实际不合格库存"  :render-header="formatHeader" :sortable="true" width="140">
           <template slot-scope="scope">
             <span>{{scope.row.unqualifiedCount}}</span>
           </template>
@@ -266,26 +266,27 @@
           this.loadingData = false;
         });
       },
-      formatHeader(index) {
+      formatHeader(h, col) {
+        let index = col.$index;
         let content = '';
         let title = '';
         switch (index) {
-          case 0: {
+          case 3: {
             content = '用于出库订单的控制，表明可销售的数量';
             title = '可用库存';
             break;
           }
-          case 1: {
+          case 4: {
             content = '仓库内真实合格货品数量';
             title = '实际合格库存';
             break;
           }
-          case 2: {
+          case 5: {
             content = '在运输中的货品数量';
             title = '在途库存';
             break;
           }
-          case 3: {
+          case 6: {
             content = '仓库内真实不合格货品数量';
             title = '实际不合格库存';
             break;

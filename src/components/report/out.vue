@@ -70,8 +70,8 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="dataList" class="header-list"
-                :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="400">
+      <el-table :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight()"
+                :header-row-class-name="'headerClass'" v-loading="loadingData">
         <template v-for="(item, index) in firstLine">
           <el-table-column :prop="item.key" :label="item.name"></el-table-column>
         </template>
@@ -108,6 +108,9 @@
       }
     },
     methods: {
+      getHeight() {
+        return utils.getCurrentHeight(this.$refs['reportTable']);
+      },
       exportFile: function () {
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);

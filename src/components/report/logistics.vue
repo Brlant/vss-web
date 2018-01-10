@@ -153,7 +153,7 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary
-                :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="400">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight()">
         <el-table-column prop="type" label="出入库类型" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="date" label="日期" :sortable="true" width="100"></el-table-column>
@@ -204,6 +204,9 @@
       };
     },
     methods: {
+      getHeight() {
+        return utils.getCurrentHeight(this.$refs['reportTable']);
+      },
       exportFile: function () {
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);

@@ -133,7 +133,7 @@ export default {
    * 实时动态强制更改用户录入
    * @param th
    */
-  format2DecimalPoint(val) {
+  format2DecimalPoint (val) {
     let th = val.toString();
     const regStrs = [
       ['^0(\\d+)$', '$1'], // 禁止录入整数部分两位以上，但首位为0
@@ -265,7 +265,7 @@ export default {
     }
     return label;
   },
-  changeTotalNumber(amount, smallPacking) {
+  changeTotalNumber (amount, smallPacking) {
     if (!smallPacking) return;
     let number = Number(amount);
     let remainder = number % smallPacking;
@@ -286,7 +286,7 @@ export default {
     });
     return re;
   },
-  isCheckPackage(count) {
+  isCheckPackage (count) {
     if (!count || count < 0) {
       this.$notify({
         duration: 2000,
@@ -298,7 +298,7 @@ export default {
     return count > 0;
   },
 
-  download(src, fileName) {
+  download (src, fileName) {
     let $a = document.createElement('a');
     $a.setAttribute('href', src);
     $a.setAttribute('download', fileName);
@@ -309,5 +309,15 @@ export default {
     body.appendChild($a);
     fileLink.click();
     body.removeChild($a);
+  },
+  getCurrentHeight (vm, defaultHeight = 400) {
+    if (vm) {
+      let obj = vm.$el.getBoundingClientRect();
+      let height = document.documentElement.clientHeight - obj.y;
+      if (typeof height === 'number') {
+        return height;
+      }
+    }
+    return defaultHeight;
   }
 };
