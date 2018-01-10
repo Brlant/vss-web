@@ -199,8 +199,19 @@
                 </el-col>
               </oms-form-row>
             </el-col>
+            <el-col :span="8">
+              <oms-form-row label="下单时间" :span="5">
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="createTimes"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
             <el-col :span="6">
-              <oms-form-row label="" :span="1">
+              <oms-form-row label="" :span="2">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
@@ -333,6 +344,8 @@
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           bizType: '1',
           transportationMeansId: '',
           transactOrgId: '',
@@ -346,12 +359,15 @@
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
+        createTimes: '',
         orgType: utils.inOrderType,
         activeStatus: 0,
         currentOrderId: '',
@@ -412,6 +428,8 @@
       searchInOrder: function () {// 搜索
         this.searchCondition.expectedStartTime = this.formatTime(this.expectedTime[0]);
         this.searchCondition.expectedEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
+        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
@@ -421,12 +439,15 @@
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
+        this.createTimes = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
       },
