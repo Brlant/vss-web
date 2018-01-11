@@ -16,6 +16,11 @@ Vue.use(tinyVue);
 Vue.use(Vuex);
 
 Vue.component(omsCostTime.name, omsCostTime);
+Vue.filter('thousandth', function (val) {
+  if (!val) return '';
+  // return val.toFixed(2).replace(/(\d)(?=(\d{3})+\.)/g, '$1,');
+
+});
 Vue.filter('date', function (dateTime) {
   if (!dateTime) return '';
   return moment(dateTime).format('YYYY-MM-DD');
@@ -50,10 +55,27 @@ Vue.filter('nl2br', function (textAreaContent) {
   return textAreaContent.replace(/\n/g, '<br>');
 });
 Vue.filter('formatMoney', function (val) {
+  let num = '';
   if (typeof val === 'string') {
-    return val;
+    num = val;
   } else if (typeof val === 'number') {
-    return val.toFixed(2);
+    num = val.toFixed(2).toString();
+  }
+  if (num) {
+    // 整数部分进行千分位分割
+    let arr = num.split('.');
+    num = arr[0];
+    let result = '';
+    while (num.length > 3) {
+      result = ',' + num.slice(-3) + result;
+      num = num.slice(0, num.length - 3);
+    }
+    if (num) {
+      result = num + result;
+    }
+    // 拼接小数位
+    result = result + '.' + arr[1];
+    return result;
   }
 });
 Vue.prototype.$scrollLoadingData = function (event) {
