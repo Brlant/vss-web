@@ -138,6 +138,7 @@
         <el-table-column prop="totalMoney" label="金额" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
         <el-table-column prop="expirationDate" label="有效期至" :sortable="true"></el-table-column>
+        <el-table-column prop="operateTime" label="上架时间" :sortable="true"></el-table-column>
       </el-table>
     </div>
 
@@ -201,6 +202,7 @@
             m.expirationDate = this.formatTime(m.expirationDate);
             m.price = m.price ? `￥${m.price}` : '';
             m.totalMoney = `￥${m.totalMoney}`;
+            m.operateTime = this.formatTime(m.operateTime, 'YYYY-MM-DD HH:mm');
             return m;
           });
           this.loadingData = false;
@@ -246,8 +248,8 @@
           this.orgGoods = res.data.list;
         });
       },
-      formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      formatTime: function (date, str = 'YYYY-MM-DD') {
+        return date ? this.$moment(date).format(str) : '';
       }
     }
   };
