@@ -138,7 +138,7 @@
         <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true" v-if="orgLevel !== 3"
                          width="100">
           <template slot-scope="scope">
-            <span>{{scope.row.qualifiedCount}}</span>
+            <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true" width="120">
