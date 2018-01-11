@@ -295,10 +295,10 @@
             <!--inactive-color="#ff4949">-->
               <!--</el-switch>-->
             <!--</el-form-item>-->
-            <!--<el-form-item label="备注">-->
-              <!--<oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"-->
-                         <!--:autosize="{ minRows: 2, maxRows: 5}"></oms-input>-->
-            <!--</el-form-item>-->
+            <el-form-item label="其他约定事项">
+              <oms-input type="textarea" v-model="form.remark" placeholder="请输入其他约定事项"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
             <el-form-item label-width="120px">
               <el-button type="primary" @click="index++">添加货品</el-button>
             </el-form-item>

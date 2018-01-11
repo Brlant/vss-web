@@ -255,9 +255,9 @@
             <el-form-item label="是否生成过采购订单">
               {{form.purchaseContractIsUsed | formatStatus}}
             </el-form-item>
-            <!--<el-form-item label="备注">-->
-              <!--{{form.remark}}-->
-            <!--</el-form-item>-->
+            <el-form-item label="其他约定事项">
+              {{form.remark}}
+            </el-form-item>
             <el-form-item label-width="120px">
               <el-button type="primary" @click="index++">查看货品</el-button>
             </el-form-item>
