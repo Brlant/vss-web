@@ -153,7 +153,8 @@
                     {{currentItem.payerName}}
                   </oms-row>
                   <oms-row label="未收款总额" :span="6">
-                    <span>￥{{(currentItem.paidTotal ? currentItem.payableTotal - currentItem.paidTotal : currentItem.payableTotal) | formatMoney}}</span>
+                    <span>￥{{(currentItem.paidTotal ? currentItem.payableTotal - currentItem.paidTotal : currentItem.payableTotal) | formatMoney
+                      }}</span>
                   </oms-row>
                 </el-col>
                 <el-col :span="9">
