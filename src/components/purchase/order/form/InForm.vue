@@ -181,7 +181,7 @@
   .order-good-selects {
     .el-select-dropdown__item {
       height: auto;
-      width: 680px;
+      width: auto;
     }
   }
 
@@ -314,7 +314,7 @@
                              :value="item.orgGoodsDto.id">
                     <div style="overflow: hidden">
                       <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                      <el-tag type="success" v-show="item.list.length"
+                      <el-tag class="pull-left" type="success" v-show="item.list.length"
                               style="line-height: 22px;margin-left: 20px;height: 20px">
                         组合
                       </el-tag>

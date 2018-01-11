@@ -182,7 +182,7 @@
   .order-good-selects {
     .el-select-dropdown__item {
       height: auto;
-      width: 680px;
+      width: auto;
     }
   }
 
