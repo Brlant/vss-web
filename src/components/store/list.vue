@@ -127,42 +127,68 @@
           </el-row>
         </el-form>
       </div>
-
-      <el-table :data="batches" class="header-list store" border @row-click="showDetail"
-                :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
-                :row-class-name="formatRowClass"
-                show-summary :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
-        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
-        <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true" v-if="orgLevel !== 3"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.availableCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true" width="120">
-          <template slot-scope="scope">
-            <span>{{scope.row.qualifiedCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true" v-if="orgLevel !== 3"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.transitCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="unqualifiedCount" label="实际不合格库存"  :render-header="formatHeader" :sortable="true" width="140">
-          <template slot-scope="scope">
-            <span>{{scope.row.unqualifiedCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
-          <template slot-scope="scope">
-            <span>{{ scope.row.expiryDate | date}}</span>
-          </template>
-        </el-table-column>
-      </el-table>
+      <div v-show="orgLevel !== 3">
+        <el-table :data="batches" class="header-list store" border @row-click="showDetail"
+                  :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
+                  :row-class-name="formatRowClass"
+                  show-summary :max-height="bodyHeight" style="width: 100%">
+          <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
+          <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
+          <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
+          <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.availableCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true" width="120">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.transitCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="unqualifiedCount" label="实际不合格库存"  :render-header="formatHeader" :sortable="true" width="140">
+            <template slot-scope="scope">
+              <span>{{scope.row.unqualifiedCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
+            <template slot-scope="scope">
+              <span>{{ scope.row.expiryDate | date}}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+      <div v-show="orgLevel === 3">
+        <el-table :data="batches" class="header-list store" border @row-click="showDetail"
+                  :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
+                  :row-class-name="formatRowClass"
+                  show-summary :max-height="bodyHeight" style="width: 100%">
+          <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
+          <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
+          <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
+          <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true" width="120">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="unqualifiedCount" label="实际不合格库存"  :render-header="formatHeader" :sortable="true" width="140">
+            <template slot-scope="scope">
+              <span>{{scope.row.unqualifiedCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
+            <template slot-scope="scope">
+              <span>{{ scope.row.expiryDate | date}}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
 
 
       <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
