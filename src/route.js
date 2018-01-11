@@ -313,8 +313,8 @@ const route = [
           },
           {
             path: '/account/management',
-            component: resolve => require(['./components/account/allocation/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '账号分配', perm: 'erp-account-manager'}
+            component: resolve => require(['./components/account/management/list.vue'], resolve),
+            meta: {moduleId: 'account', title: '账号分配', perm: 'erp-account-manager', type: 0}
           },
           {
             path: '/account/role',
@@ -334,7 +334,7 @@ const route = [
           {
             path: '/account/system/management',
             component: resolve => require(['./components/account/management/list.vue'], resolve),
-            meta: {moduleId: 'account', title: '系统账号管理', perm: 'erp-system-account-manager'}
+            meta: {moduleId: 'account', title: '系统账号管理', perm: 'erp-system-account-manager', type: 1}
           }
         ]
       },
@@ -452,6 +452,16 @@ const route = [
             path: '/report/month/repertory',
             component: resolve => require(['./components/report/month-end-repertory.vue'], resolve),
             meta: {moduleId: 'report', title: '二类疫苗月终库存盘点表', perm: 'month-stock-inventory-form-manager'}
+          },
+          {
+            path: '/report/logistics',
+            component: resolve => require(['./components/report/logistics.vue'], resolve),
+            meta: {moduleId: 'report', title: '免费疫苗出入库明细表', perm: 'first-vaccine-logistics-manager'}
+          },
+          {
+            path: '/report/allotation',
+            component: resolve => require(['./components/report/allotation.vue'], resolve),
+            meta: {moduleId: 'report', title: '出货货品统计表', perm: 'first-vaccine-distribution-manager'}
           }
         ]
       }

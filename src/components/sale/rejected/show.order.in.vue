@@ -29,8 +29,14 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="sales-return-cancel" v-show="currentOrder.state === '6' || currentOrder.state === '7'">
+            <perm label="sales-return-cancel" v-show="currentOrder.state === '6' || currentOrder.state === '7'  || currentOrder.state === '10'">
               <el-button type="warning" plain @click="cancel">取消订单</el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm label="sales-return-cancel"
+                  v-show="currentOrder.state === '6'">
+              <el-button type="danger" plain @click="deleteOrder">删除订单</el-button>
             </perm>
           </li>
         </ul>
@@ -57,7 +63,7 @@
   import log from '@/components/common/order.log.vue';
   import batchNumbers from '../../purchase/order/detail/batch.number.vue';
   import exceptionInfo from '../../purchase/order/detail/exception.info.vue';
-  import { http, InWork } from '@/resources';
+  import { http, InWork, erpOrder } from '@/resources';
   import orderAttachment from '@/components/common/order/in.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
 
@@ -144,6 +150,25 @@
       transformState (state) {
         this.currentOrder.state = state;
         this.$emit('refreshOrder');
+      },
+      deleteOrder () {
+        this.$confirm('是否删除订单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          erpOrder.delete(this.orderId).then(() => {
+            this.$notify.success({
+              message: '删除订单成功'
+            });
+            this.$emit('refreshOrder');
+            this.$emit('close');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '删除订单失败'
+            });
+          });
+        });
       },
       cancel () {
         this.index = 0;

@@ -121,6 +121,7 @@
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
           </span>
+          <goods-switch class="pull-right"></goods-switch>
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
@@ -198,8 +199,19 @@
                 </el-col>
               </oms-form-row>
             </el-col>
+            <el-col :span="8">
+              <oms-form-row label="下单时间" :span="5">
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="createTimes"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
             <el-col :span="6">
-              <oms-form-row label="" :span="1">
+              <oms-form-row label="" :span="2">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
@@ -211,7 +223,7 @@
 
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key == '5'}"
+             :class="{'active':key==activeStatus,'exceptionPosition':key == '6'}"
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
@@ -332,6 +344,8 @@
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           bizType: '1',
           transportationMeansId: '',
           transactOrgId: '',
@@ -345,12 +359,15 @@
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
+        createTimes: '',
         orgType: utils.inOrderType,
         activeStatus: 0,
         currentOrderId: '',
@@ -411,6 +428,8 @@
       searchInOrder: function () {// 搜索
         this.searchCondition.expectedStartTime = this.formatTime(this.expectedTime[0]);
         this.searchCondition.expectedEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
+        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
@@ -420,12 +439,15 @@
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
+        this.createTimes = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
       },
@@ -456,7 +478,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         });
-        if (this.filters.state !== '10') {
+        if (this.filters.state !== '20') {
           erpOrder.query(param).then(res => {
             this.orderList = res.data.list;
             this.pager.count = res.data.count;
@@ -536,11 +558,12 @@
         erpOrder.queryStateNum(params).then(res => {
           let data = res.data;
           this.orgType[0].num = this.obtionStatusNum(data['in-pend-check']);
-          this.orgType[1].num = this.obtionStatusNum(data['in-pend-execute']);
-          this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
-          this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
-          this.orgType[4].num = this.obtionStatusNum(data['in-refuse']);
-          this.orgType[5].num = this.obtionStatusNum(data['exception']);
+          this.orgType[1].num = this.obtionStatusNum(data['in-arrive']);
+          this.orgType[2].num = this.obtionStatusNum(data['in-pend-execute']);
+          this.orgType[3].num = this.obtionStatusNum(data['in-complete']);
+          this.orgType[4].num = this.obtionStatusNum(data['in-cancel']);
+          this.orgType[5].num = this.obtionStatusNum(data['in-refuse']);
+          this.orgType[6].num = this.obtionStatusNum(data['exception']);
         });
       },
       isLock: function (item) { // 判断是不是被锁定

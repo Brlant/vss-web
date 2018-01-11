@@ -40,6 +40,9 @@
   .order-list-status-right {
     justify-content: flex-end;
   }
+  .order-list .order-list-body .order-list-item .el-row .el-col.pl7 {
+    /*padding-left: 7px;*/
+  }
 </style>
 <template>
   <div class="order-page">
@@ -190,13 +193,13 @@
               <el-col :span="7" class="pt">
                 <span>{{ item.povName }}</span>
               </el-col>
-              <el-col :span="3" class="pt">
+              <el-col :span="3" class="pt pl7">
                 <span>{{ item.demandTime | date }}</span>
               </el-col>
-              <el-col :span="5" class="pt">
+              <el-col :span="5" class="pt pl7">
                 <span>{{ item.applyTime | time }}</span>
               </el-col>
-              <el-col :span="4" class="opera-btn">
+              <el-col :span="4" class="opera-btn pl7">
                 <div>
                   <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
@@ -204,13 +207,28 @@
                   查看详情
                   </span>
                 </div>
-                <div v-show="filters.status === 1 || filters.status === 11">
-                  <perm label="demand-assignment-cancel">
+                <div >
+                  <perm label="pull-signal-assign-actual">
+                    <span @click.prevent="editOrder(item)" v-show="filters.status === 1 || filters.status === 2">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="el-icon-t-edit"></i></a>
+                        编辑
+                  </span>
+                  </perm>
+
+                  <perm label="demand-assignment-cancel" v-show="filters.status === 1 || filters.status === 11">
                      <span @click.prevent="cancel(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-verify"></i></a>
                         取消需求单
                       </span>
+                  </perm>
+                  <perm label="pull-signal-generate-order">
+                    <span @click.prevent="createSaleOrder(item)" v-show="filters.status === 2 && item.singleFlag">
+                        <a href="#" class="btn-circle" @click.prevent=""><i
+                          class="el-icon-t-sale"></i></a>
+                          生成销售单
+                    </span>
                   </perm>
                 </div>
               </el-col>
@@ -234,7 +252,10 @@
       <show-form :currentItem="currentItem" @close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form @change="onSubmit" :index="index" @close="resetRightBox"></add-form>
+      <add-form @change="onSubmit" :currentOrder="currentItem" :index="index" @close="resetRightBox"></add-form>
+    </page-right>
+    <page-right :show="showEditPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
+      <edit-form @change="onSubmit" :currentItem="currentItem" :showEditPart="showEditPart"  @close="resetRightBox"></edit-form>
     </page-right>
   </div>
 </template>
@@ -243,16 +264,19 @@
   import utils from '../../../tools/utils';
   import showForm from './detail/index.vue';
   import addForm from '../request/form';
-
+  import editForm from './edit';
+  import Perm from '@/components/common/perm';
   export default {
     components: {
-      showForm, addForm
+      Perm,
+      showForm, addForm, editForm
     },
     data () {
       return {
         loadingData: false,
         showSearch: true,
         showDetailPart: false,
+        showEditPart: false,
         showRight: false,
         assignType: utils.assignType,
         activeStatus: 0,
@@ -376,6 +400,29 @@
         this.$router.push(`${item.id}`);
         this.showDetailPart = true;
       },
+      editOrder (item) {
+        this.currentItemId = item.id;
+        this.currentItem = item;
+        this.showEditPart = true;
+      },
+      createSaleOrder (item) {
+        this.$confirm('是否生成销售订单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.put(`/pull-signal/${item.id}/sales-ticket`).then(() => {
+            this.$notify.success({
+              message: '生成销售订单成功'
+            });
+            this.getDemandList(1);
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '生成销售订单失败'
+            });
+          });
+        });
+      },
       applyOrder () {
         this.showRight = true;
         this.index = 1;
@@ -384,11 +431,15 @@
         this.getDemandList(1);
         this.showRight = false;
       },
-      resetRightBox () {
+      resetRightBox (para) {
         this.index = -1;
         this.showDetailPart = false;
         this.showRight = false;
+        this.showEditPart = false;
         this.$router.push('list');
+        if (para) {
+          this.getDemandList(1);
+        }
       },
       checkStatus (item, key) {
         this.activeStatus = key;

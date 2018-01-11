@@ -16,14 +16,6 @@
     }
   }
 
-  .el-table__body-wrapper, .el-table__footer-wrapper, .el-table__header-wrapper {
-    width: auto;
-  }
-
-  .el-table {
-    width: inherit;
-  }
-
   .opera-btn-group {
     margin: 10px 0;
   }
@@ -57,8 +49,8 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row label="" :span="2">
-                <perm label="shipment-form-export">
-                  <el-button type="primary" @click="search" :disabled="loadingData">
+                <perm label="first-vaccine-distribution-export">
+                  <el-button type="primary" @click="search" :disabled="isLoading">
                     查询
                   </el-button>
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
@@ -70,13 +62,14 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight()"
-                :header-row-class-name="'headerClass'" v-loading="loadingData">
-        <template v-for="(item, index) in firstLine">
-          <el-table-column :prop="item.key" :label="item.name"></el-table-column>
-        </template>
+      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary
+                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight()">
+        <el-table-column prop="orgGoodsName" label="疫苗名称"  :sortable="true"></el-table-column>
+        <el-table-column prop="count" label="配送数量" :sortable="true"  width="200"></el-table-column>
+        <el-table-column prop="measurementUnit" label="基本单位" width="160" :sortable="true"></el-table-column>
       </el-table>
     </div>
+
   </div>
 </template>
 <script>
@@ -87,63 +80,93 @@
     data () {
       return {
         loadingData: false,
-        outReport: {},
-        firstLine: [],
-        dataList: [],
+        reportList: [],
         showSearch: true,
         searchWord: {
-          createStartTime: '',
-          createEndTime: ''
+          startTime: '',
+          endTime: ''
         },
         bizDateAry: '',
         isLoading: false
       };
-    },
-    computed: {
-      currentWidth () {
-        let length = this.outReport.map && this.outReport.map.firstLine.length || 0;
-        if (!length) return 150;
-        if (length > 0 && length < 8) return `${1080 / length}`;
-        if (length > 7) return 150;
-      }
     },
     methods: {
       getHeight() {
         return utils.getCurrentHeight(this.$refs['reportTable']);
       },
       exportFile: function () {
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        if (!this.bizDateAry || !this.bizDateAry.length) {
+          this.$notify.info({
+            message: '请选择业务日期'
+          });
+          return;
+        }
+        this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
+        this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/out'});
-        this.$http.get('/erp-statement/out-warehouse/export', {params}).then(res => {
-          utils.download(res.data.path, '出库一览表');
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/allotation'});
+        this.$http.get('/erp-statement/first-vaccine-distribution/export', {params}).then(res => {
+          utils.download(res.data.path, '出货货品统计表');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/allotation'});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/allotation'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },
+      getSummaries (param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (column.property !== 'count') {
+            sums[index] = '';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = '';
+          }
+        });
+
+        return sums;
+      },
       search: function () {// 搜索
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        if (!this.bizDateAry || !this.bizDateAry.length) {
+          this.$notify.info({
+            message: '请选择业务日期'
+          });
+          return;
+        }
+        this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
+        this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
-        this.$http.get('/erp-statement/out-warehouse', {params}).then(res => {
-          this.firstLine = res.data.map && res.data.map.firstLine || [];
-          this.dataList = res.data.map && res.data.map.data || [];
+        this.$http.get('/erp-statement/first-vaccine-distribution', {params}).then(res => {
+          this.reportList = res.data;
           this.loadingData = false;
         });
       },
       resetSearchForm: function () {
         this.searchWord = {
-          createStartTime: '',
-          createEndTime: ''
+          startTime: '',
+          endTime: ''
         };
         this.bizDateAry = '';
       },

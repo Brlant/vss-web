@@ -40,6 +40,7 @@
   .header-list {
     overflow: hidden;
   }
+
   .opera-btn-group {
     margin-left: 0;
     margin-right: 0;
@@ -129,51 +130,36 @@
 
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
+                :row-class-name="formatRowClass"
                 show-summary :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
-        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="130"></el-table-column>
-        <el-table-column prop="availableCount" label="可用库存" :sortable="true" v-if="orgLevel !== 3"
-                         width="90">
+        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
+        <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true" v-if="orgLevel !== 3"
+                         width="100">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="用于出库订单的控制，表明可销售的数量" placement="right">
-              <div>
-                <span>{{scope.row.availableCount}}</span>
-              </div>
-            </el-tooltip>
+            <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际合格库存" :sortable="true" width="100">
+        <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true" width="120">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="仓库内真实合格货品数量" placement="right">
-              <div>
-                <span>{{scope.row.qualifiedCount}}</span>
-              </div>
-            </el-tooltip>
+            <span>{{scope.row.qualifiedCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="transitCount" label="在途库存" :sortable="true" v-if="orgLevel !== 3"
-                         width="90">
+        <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true" v-if="orgLevel !== 3"
+                         width="100">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="在运输中的货品数量" placement="right">
-              <div>
-                <span>{{scope.row.transitCount}}</span>
-              </div>
-            </el-tooltip>
+            <span>{{scope.row.transitCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="unqualifiedCount" label="实际不合格库存" :sortable="true" width="120">
+        <el-table-column prop="unqualifiedCount" label="实际不合格库存"  :render-header="formatHeader" :sortable="true" width="140">
           <template slot-scope="scope">
-            <el-tooltip class="item" effect="dark" content="仓库内真实不合格货品数量" placement="right">
-              <div>
-                <span>{{scope.row.unqualifiedCount}}</span>
-              </div>
-            </el-tooltip>
+            <span>{{scope.row.unqualifiedCount}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
           <template slot-scope="scope">
-            <span :class="{'red': isValid(scope.row)===1}">{{ scope.row.expiryDate | date}}</span>
+            <span>{{ scope.row.expiryDate | date}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -268,7 +254,7 @@
         let a = this.$moment();
         let b = this.$moment(item.expiryDate);
         let days = b.diff(a, 'days');
-        return a < b ? days > 30 ? 2 : 1 : 0;
+        return a < b ? days > 90 ? 2 : 1 : 0;
       },
       getBatches () { // 得到波次列表
         this.totalInfo = {};
@@ -279,6 +265,43 @@
           this.batches = res.data;
           this.loadingData = false;
         });
+      },
+      formatHeader(h, col) {
+        let index = col.$index;
+        let content = '';
+        let title = '';
+        switch (index) {
+          case 3: {
+            content = '用于出库订单的控制，表明可销售的数量';
+            title = '可用库存';
+            break;
+          }
+          case 4: {
+            content = '仓库内真实合格货品数量';
+            title = '实际合格库存';
+            break;
+          }
+          case 5: {
+            content = '在运输中的货品数量';
+            title = '在途库存';
+            break;
+          }
+          case 6: {
+            content = '仓库内真实不合格货品数量';
+            title = '实际不合格库存';
+            break;
+          }
+        }
+        return (
+          <el-tooltip effect="dark" content={content} placement="top">
+              <span>{title}</span>
+          </el-tooltip>
+        );
+      },
+      formatRowClass (data) {
+        if (this.isValid(data.row) === 1) {
+          return 'effective-row';
+        }
       },
       exportFile: function () {
         let params = Object.assign({}, this.filters);

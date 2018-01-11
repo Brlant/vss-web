@@ -204,7 +204,7 @@
   .order-good-selects {
     .el-select-dropdown__item {
       height: auto;
-      width: 680px;
+      width: auto;
     }
   }
 
@@ -238,8 +238,8 @@
                 v-model="form.billPayType"
                 active-text="有"
                 inactive-text="无"
-                on-value="1"
-                off-value="0"
+                active-value="1"
+                inactive-value="0"
                 @change="changeBillPayType"
               >
               </el-switch>

@@ -35,6 +35,12 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
+            <perm label="return-manager-cancel"
+                  v-show="currentOrder.state === '0'">
+              <el-button type="danger" plain @click="deleteOrder">删除订单</el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="return-manager-audit" v-show="currentOrder.state === '1' ">
               <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
@@ -58,7 +64,7 @@
   import basicInfo from './detail/base-info.vue';
   import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
-  import { http, InWork } from '@/resources';
+  import { http, InWork, erpOrder } from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
 
@@ -157,6 +163,25 @@
       transformState (state) {
         this.currentOrder.state = state;
         this.$emit('refreshOrder');
+      },
+      deleteOrder () {
+        this.$confirm('是否删除订单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          erpOrder.delete(this.orderId).then(() => {
+            this.$notify.success({
+              message: '删除订单成功'
+            });
+            this.$emit('refreshOrder');
+            this.$emit('close');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '删除订单失败'
+            });
+          });
+        });
       },
       cancel () {
         this.index = 0;

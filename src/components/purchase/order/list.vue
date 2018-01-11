@@ -121,6 +121,7 @@
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
           </span>
+          <goods-switch class="pull-right"></goods-switch>
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
@@ -208,7 +209,7 @@
 
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
+             :class="{'active':key==activeStatus,'exceptionPosition':key === '6'}"
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
@@ -256,7 +257,7 @@
               <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="4">
                 <div>
                   <span>下单</span>
                   ：{{item.createTime | minute }}
@@ -266,7 +267,7 @@
                   ：{{ item.expectedTime | date}}
                 </div>
               </el-col>
-              <el-col :span="3">
+              <el-col :span="4">
                 <div>
                   {{getOrderStatus(item)}}
                 </div>
@@ -313,9 +314,11 @@
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
   import { BaseInfo, erpOrder, Order, Vaccine } from '@/resources';
+  import GoodsSwitch from '@/components/common/order/goods-switch';
 
   export default {
     components: {
+      GoodsSwitch,
       showForm, addForm
     },
     data: function () {
@@ -492,7 +495,7 @@
           pageSize: this.pager.pageSize,
           goodsType: this.vaccineType === '1' ? '0' : '1'
         });
-        if (this.filters.state !== '10') {
+        if (this.filters.state !== '20') {
           erpOrder.query(param).then(res => {
             this.orderList = res.data.list;
 //            this.pager.count = res.data.count;
@@ -558,11 +561,12 @@
         erpOrder.queryStateNum(params).then(res => {
           let data = res.data;
           this.orgType[0].num = this.obtionStatusNum(data['in-pend-check']);
-          this.orgType[1].num = this.obtionStatusNum(data['in-pend-execute']);
-          this.orgType[2].num = this.obtionStatusNum(data['in-complete']);
-          this.orgType[3].num = this.obtionStatusNum(data['in-cancel']);
-          this.orgType[4].num = this.obtionStatusNum(data['in-refuse']);
-          this.orgType[5].num = this.obtionStatusNum(data['exception']);
+          this.orgType[1].num = this.obtionStatusNum(data['in-arrive']);
+          this.orgType[2].num = this.obtionStatusNum(data['in-pend-execute']);
+          this.orgType[3].num = this.obtionStatusNum(data['in-complete']);
+          this.orgType[4].num = this.obtionStatusNum(data['in-cancel']);
+          this.orgType[5].num = this.obtionStatusNum(data['in-refuse']);
+          this.orgType[6].num = this.obtionStatusNum(data['exception']);
         });
       },
       isLock: function (item) { // 判断是不是被锁定

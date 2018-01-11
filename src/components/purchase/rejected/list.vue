@@ -121,6 +121,7 @@
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
           </span>
+          <goods-switch class="pull-right"></goods-switch>
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
           <el-row>
@@ -185,6 +186,17 @@
                     v-model="expectedTime"
                     type="daterange"
                     placeholder="请选择">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="下单时间" :span="6">
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="createTimes"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
@@ -322,6 +334,8 @@
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           bizType: '1',
           transportationMeansId: '',
           transactOrgId: '',
@@ -335,12 +349,15 @@
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: ''
         },
         expectedTime: '',
+        createTimes: '',
         orgType: utils.outReturnOrderType,
         activeStatus: 0,
         currentOrderId: '',
@@ -399,6 +416,8 @@
       searchInOrder: function () {// 搜索
         this.searchCondition.expectedStartTime = this.formatTime(this.expectedTime[0]);
         this.searchCondition.expectedEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
+        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
@@ -408,12 +427,15 @@
           logisticsProviderId: '',
           expectedStartTime: '',
           expectedEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           transportationMeansId: '',
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: ''
         };
         this.expectedTime = '';
+        this.createTimes = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
       },

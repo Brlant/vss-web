@@ -605,7 +605,7 @@
 .order-list {
 
   .order-list-header {
-    background: #f1f1f1;
+    background: @tableHeaderColor;
     line-height: 45px;
     padding-left: 10px;
     margin-bottom: 5px;
@@ -617,8 +617,9 @@
       margin-left: -5px;
       margin-right: -5px;
       padding: 10px 5px 10px 10px;
-      margin-bottom: 5px;
+      margin-top: 10px;
       box-shadow: 0 1px 2px rgba(51, 51, 51, 0.15);
+      font-weight: 500;
       .order-list-item-bg {
         position: absolute;
         opacity: 0.3;
@@ -628,7 +629,7 @@
         z-index: 1;
         right: 0;
         background: transparent;
-        border-left: 4px solid #f00;
+        border-left: 12px solid #f00;
         transition: 0.1s all ease-in-out;
       }
       &.order-list-item-bg {
@@ -641,18 +642,18 @@
         z-index: 3;
 
         .f-grey {
-          color: #999
+          color: #888
         }
         .el-col {
           padding-right: 5px;
           padding-left: 5px;
         }
       }
-      &:hover, &.active {
-        .order-list-item-bg {
-          background: #f00
-        }
-      }
+      //&:hover, &.active {
+      //  .order-list-item-bg {
+      //    background: #f00
+      //  }
+      //}
 
       &.status-0 {
         .order-list-item-bg {
@@ -661,20 +662,25 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_0
+            //background: @order_color_0
+            opacity: 1;
           }
+          box-shadow: 2px 0px 5px 2px @order_color_0
         }
       }
 
       &.status-1 {
         .order-list-item-bg {
-          border-left-color: @order_color_1
+          border-left-color: @order_color_1;
         }
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_1
+            opacity: 1;
+            //background: @order_color_1
+            //box-shadow: 0 0 5px 2px @order_color_1
           }
+          box-shadow: 2px 0px 5px 2px @order_color_1
         }
       }
       &.status-2 {
@@ -684,8 +690,11 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_2
+            opacity: 1;
+            //background: @order_color_2
+            //box-shadow: 0 0 10px 2px @order_color_2
           }
+          box-shadow: 2px 0px 5px 2px @order_color_2
         }
       }
       &.status-3 {
@@ -695,8 +704,12 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_3
+            opacity: 1;
+            //background: @order_color_3 //2px 0px 5px 2px #0c9
+            //box-shadow: 0 0 5px 2px @order_color_3
+            //box-shadow: 2px 0px 5px 2px #0c9
           }
+          box-shadow: 2px 0px 5px 2px @order_color_3
         }
       }
       &.status-4 {
@@ -706,8 +719,11 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_4
+            opacity:1;
+            //background: @order_color_4
+            //box-shadow: 0 0 5px 2px @order_color_4
           }
+          box-shadow: 2px 0px 5px 2px @order_color_4
         }
       }
       &.status-5 {
@@ -717,8 +733,11 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_5
+            opacity:1;
+            //background: @order_color_5
+            //box-shadow: 0 0 5px 2px @order_color_5
           }
+          box-shadow: 2px 0px 5px 2px @order_color_5
         }
       }
       &.status-6 {
@@ -728,8 +747,11 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_6
+            opacity:1;
+            //background: @order_color_6
+            //box-shadow: 0 0 5px 2px @order_color_6
           }
+          box-shadow: 2px 0px 5px 2px @order_color_6
         }
       }
       &.status-7 {
@@ -739,8 +761,11 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_7
+            opacity:1;
+            //background: @order_color_7
+            //box-shadow: 0 0 5px 2px @order_color_7
           }
+          box-shadow: 2px 0px 5px 2px @order_color_7
         }
       }
       &.status-8 {
@@ -750,8 +775,11 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_8
+            opacity:1;
+            //background: @order_color_8
+            //box-shadow: 0 0 5px 2px @order_color_8
           }
+          box-shadow: 2px 0px 5px 2px @order_color_8
         }
       }
       &.status-9 {
@@ -761,8 +789,11 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_9
+            opacity:1;
+            //background: @order_color_9
+            //box-shadow: 0 0 5px 2px @order_color_9
           }
+          box-shadow: 2px 0px 5px 2px @order_color_9
         }
       }
       &.status-10 {
@@ -772,8 +803,11 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_10
+            opacity:1;
+            //background: @order_color_10
+            //box-shadow: 0 0 5px 2px @order_color_10
           }
+          box-shadow: 2px 0px 5px 2px @order_color_10
         }
       }
       &.status-11 {
@@ -783,8 +817,11 @@
 
         &:hover, &.active {
           .order-list-item-bg {
-            background: @order_color_11
+            opacity:1;
+            //background: @order_color_11
+            //box-shadow: 0 0 5px 2px @order_color_11
           }
+          box-shadow: 2px 0px 5px 2px @order_color_11
         }
       }
     }
@@ -1090,4 +1127,9 @@
 
 :focus {
   outline: none;
+}
+
+/*库存查询，近效期变色*/
+.effective-row {
+  color: red;
 }

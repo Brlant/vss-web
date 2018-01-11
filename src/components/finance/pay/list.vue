@@ -194,8 +194,8 @@
                     v-model="searchCondition.status"
                     active-text="是"
                     inactive-text="否"
-                    on-value="1"
-                    off-value="0"
+                    active-value="1"
+                    inactive-value="0"
                     active-color="#13ce66"
                     inactive-color="#ff4949">
                   </el-switch>
