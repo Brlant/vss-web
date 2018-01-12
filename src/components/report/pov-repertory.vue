@@ -62,7 +62,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary
+      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary :row-class-name="formatRowClass"
                 ref="reportTable"  :maxHeight="getHeight()" :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="orgGoodsName" label="疫苗名称" width="160"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
@@ -129,6 +129,17 @@
       };
     },
     methods: {
+      isValid (item) {
+        let a = this.$moment();
+        let b = this.$moment(item.expirationDate);
+        let days = b.diff(a, 'days');
+        return a < b ? days > 90 ? 2 : 1 : 0;
+      },
+      formatRowClass (data) {
+        if (this.isValid(data.row) === 1) {
+          return 'effective-row';
+        }
+      },
       getHeight() {
         return utils.getCurrentHeight(this.$refs['reportTable']);
       },
