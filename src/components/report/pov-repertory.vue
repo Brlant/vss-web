@@ -96,14 +96,24 @@
             <span>￥{{scope.row.endStockMoney}}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="returnCount" label="退货数量" :sortable="true">
+          <template slot-scope="scope">
+            <span>{{scope.row.returnCount}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="returnMoney" label="退货金额" :sortable="true">
           <template slot-scope="scope">
             <span>￥{{scope.row.returnMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="returnCount" label="退货数量" :sortable="true">
+        <el-table-column prop="scrapCount" label="报废数量" :sortable="true">
           <template slot-scope="scope">
-            <span>{{scope.row.returnCount}}</span>
+            <span>{{scope.row.scrapCount}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="scrapMoney" label="报废金额" :sortable="true">
+          <template slot-scope="scope">
+            <span>￥{{scope.row.scrapMoney}}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -195,7 +205,7 @@
           }
         });
         sums.forEach((i, index) => {
-          if (index > 7 && index < sums.length - 1) {
+          if (index > 7 && index !== 12 && index !== 14) {
             sums[index] = '￥' + i;
           }
         });
