@@ -583,6 +583,7 @@
         this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
         this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice.toString());
         this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
+        this.form.combinationList = this.combinationList;
         this.showRight = true;
       },
       forbid: function () {
