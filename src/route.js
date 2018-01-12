@@ -469,9 +469,14 @@ const route = [
             meta: {moduleId: 'report', title: '出货货品统计表', perm: 'first-vaccine-distribution-manager'}
           },
           {
-            path: '/report/pov/repertory',
+            path: '/report/pov/one/repertory',
             component: resolve => require(['./components/report/pov-repertory.vue'], resolve),
-            meta: {moduleId: 'report', title: '接种单位二类疫苗盘点表', perm: 'pov-stock-form-manager'}
+            meta: {moduleId: 'report', title: '接种单位一类疫苗盘点表', perm: 'pov-stock-form-manager', type: 1}
+          },
+          {
+            path: '/report/pov/two/repertory',
+            component: resolve => require(['./components/report/pov-repertory.vue'], resolve),
+            meta: {moduleId: 'report', title: '接种单位二类疫苗盘点表', perm: 'pov-stock-form-manager', type: 2}
           }
         ]
       }

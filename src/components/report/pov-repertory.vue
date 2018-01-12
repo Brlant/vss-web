@@ -71,27 +71,27 @@
         <el-table-column prop="purchaseCount" label="进苗数量" :sortable="true"></el-table-column>
         <el-table-column prop="injectionCount" label="使用数量" :sortable="true"></el-table-column>
         <el-table-column prop="endStockCount" label="期末库存" :sortable="true"></el-table-column>
-        <el-table-column prop="price" label="单价" :sortable="true">
+        <el-table-column prop="price" label="单价" :sortable="true" v-if="type === 2">
           <template slot-scope="scope">
             <span>￥{{scope.row.price}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="restStockMoney" label="期前金额" :sortable="true">
+        <el-table-column prop="restStockMoney" label="期前金额" :sortable="true" v-if="type === 2">
           <template slot-scope="scope">
             <span>￥{{scope.row.restStockMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="purchaseMoney" label="进苗金额" :sortable="true">
+        <el-table-column prop="purchaseMoney" label="进苗金额" :sortable="true" v-if="type === 2">
           <template slot-scope="scope">
             <span>￥{{scope.row.purchaseMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="injectionMoney" label="使用金额" :sortable="true">
+        <el-table-column prop="injectionMoney" label="使用金额" :sortable="true" v-if="type === 2">
           <template slot-scope="scope">
             <span>￥{{scope.row.injectionMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="endStockMoney" label="期末金额" :sortable="true">
+        <el-table-column prop="endStockMoney" label="期末金额" :sortable="true" v-if="type === 2">
           <template slot-scope="scope">
             <span>￥{{scope.row.endStockMoney}}</span>
           </template>
@@ -101,7 +101,7 @@
             <span>{{scope.row.returnCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="returnMoney" label="退货金额" :sortable="true">
+        <el-table-column prop="returnMoney" label="退货金额" :sortable="true" v-if="type === 2">
           <template slot-scope="scope">
             <span>￥{{scope.row.returnMoney}}</span>
           </template>
@@ -111,7 +111,7 @@
             <span>{{scope.row.scrapCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="scrapMoney" label="报废金额" :sortable="true">
+        <el-table-column prop="scrapMoney" label="报废金额" :sortable="true" v-if="type === 2">
           <template slot-scope="scope">
             <span>￥{{scope.row.scrapMoney}}</span>
           </template>
@@ -138,6 +138,17 @@
         isLoading: false
       };
     },
+    computed: {
+      type () {
+        return this.$route.meta.type;
+      }
+    },
+    watch: {
+      type () {
+        this.reportList = [];
+        this.bizDateAry = '';
+      }
+    },
     methods: {
       isValid (item) {
         let a = this.$moment();
@@ -162,16 +173,16 @@
         }
         this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
-        let params = Object.assign({}, this.searchWord);
+        let params = Object.assign({}, this.searchWord, {type: this.type});
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/pov/repertory'});
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`});
         this.$http.get('/erp-statement/pov-stock/export', {params}).then(res => {
           utils.download(res.data.path, '接种单位二类疫苗盘点表');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/pov/repertory'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/pov/repertory'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });
@@ -204,11 +215,13 @@
             sums[index] = '';
           }
         });
-        sums.forEach((i, index) => {
-          if (index > 7 && index !== 12 && index !== 14) {
-            sums[index] = '￥' + i;
-          }
-        });
+        if (this.type === 2) {
+          sums.forEach((i, index) => {
+            if (index > 7 && index !== 12 && index !== 14) {
+              sums[index] = '￥' + i;
+            }
+          });
+        }
         return sums;
       },
       search: function () {// 搜索
@@ -220,7 +233,7 @@
         }
         this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
-        let params = Object.assign({}, this.searchWord);
+        let params = Object.assign({}, this.searchWord, {type: this.type});
         this.loadingData = true;
         this.$http.get('/erp-statement/pov-stock', {params}).then(res => {
           res.data.forEach(i => {
