@@ -262,7 +262,7 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/jsx">
   import { BriceGroup, http, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
 

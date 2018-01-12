@@ -184,7 +184,7 @@
     </page-right>
   </div>
 </template>
-<script>
+<script type="text/jsx">
   //  import order from '../../../tools/orderList';
   import { BaseInfo, erpStock, http } from '@/resources';
   import detail from './detail.vue';

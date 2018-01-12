@@ -54,7 +54,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span >
+          <span>
             <i class="el-icon-t-adjust"></i>
             <span class="title">请选择货品和批号输入调整部分库存数，如果是正数则增加库存，如果是负数则减少库存。</span>
           </span>
@@ -101,7 +101,7 @@
             <el-col :span="12">
               <el-col :span="12">
                 <oms-form-row label="可用库存" :span="8">
-                    <el-input v-model="form.availableCount" ></el-input>
+                  <el-input v-model="form.availableCount"></el-input>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
@@ -176,7 +176,7 @@
     </page-right>
   </div>
 </template>
-<script>
+<script type="text/jsx">
   //  import order from '../../../tools/orderList';
   import { BaseInfo, erpStock, http } from '@/resources';
   import detail from './detail.vue';
@@ -293,7 +293,7 @@
         }
         return (
           <el-tooltip effect="dark" content={content} placement="top">
-              <span>{title}</span>
+            <span>{title}</span>
           </el-tooltip>
         );
       },
@@ -445,21 +445,21 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-           let obj = Object.assign({}, this.form, this.searchWord);
-           this.doing = true;
-           this.$http.put('/erp-stock/adjust', obj).then(() => {
-             this.doing = false;
-             this.$notify.success({
-               message: '调整库存成功'
-             });
-             this.getBatches(1);
-             this.form = {
-               availableCount: '',
-               qualifiedCount: '',
-               transitCount: '',
-               unqualifiedCount: ''
-             };
-           });
+          let obj = Object.assign({}, this.form, this.searchWord);
+          this.doing = true;
+          this.$http.put('/erp-stock/adjust', obj).then(() => {
+            this.doing = false;
+            this.$notify.success({
+              message: '调整库存成功'
+            });
+            this.getBatches(1);
+            this.form = {
+              availableCount: '',
+              qualifiedCount: '',
+              transitCount: '',
+              unqualifiedCount: ''
+            };
+          });
         }).catch(error => {
           this.doing = false;
           this.$notify.error({

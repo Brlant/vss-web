@@ -242,7 +242,7 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/jsx">
   import { http, VaccineRights } from '@/resources';
 
   export default {

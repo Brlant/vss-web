@@ -258,7 +258,7 @@
     </div>
   </div>
 </template>
-<script>
+<script type="text/jsx">
   import { http } from '@/resources';
 
   export default {
