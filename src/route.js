@@ -462,6 +462,11 @@ const route = [
             path: '/report/allotation',
             component: resolve => require(['./components/report/allotation.vue'], resolve),
             meta: {moduleId: 'report', title: '出货货品统计表', perm: 'first-vaccine-distribution-manager'}
+          },
+          {
+            path: '/report/pov/repertory',
+            component: resolve => require(['./components/report/pov-repertory.vue'], resolve),
+            meta: {moduleId: 'report', title: '接种单位二类疫苗盘点表', perm: 'pov-stock-form-manager'}
           }
         ]
       }
