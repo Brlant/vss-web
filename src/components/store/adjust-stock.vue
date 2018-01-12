@@ -44,6 +44,9 @@
   .opera-btn-group {
     margin-left: 0;
     margin-right: 0;
+    .title {
+      color: red;
+    }
   }
 </style>
 <template>
@@ -51,19 +54,15 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
-            <i class="el-icon-arrow-up"></i>
-            <span v-show="showSearch">收起筛选</span>
-            <span v-show="!showSearch">展开筛选</span>
+          <span >
+            <i class="el-icon-t-adjust"></i>
+            <span class="title">请选择货品和批号输入调整部分库存数，如果是正数则增加库存，如果是负数则减少库存。</span>
           </span>
         </div>
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
-            <el-col :span="8">
-              <oms-form-row label="货主货品" :span="5">
+            <el-col :span="12">
+              <oms-form-row label="货主货品" :span="4">
                 <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
@@ -85,9 +84,9 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="12">
               <oms-form-row label="批号" :span="5">
-                <el-select v-model="searchWord.batchNumberId" filterable clearable remote
+                <el-select v-model="searchWord.batchNumberId" filterable clearable remote @change="batchNumberChange"
                            :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号">
                   <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
                              :label="item.batchNumber">
@@ -97,47 +96,46 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="生产厂商" :span="5">
-                <el-select filterable remote placeholder="请输入名称生产厂商" :remote-method="filterFactory" :clearable="true"
-                           v-model="searchWord.factoryId" popperClass="good-selects"
-                           @click.native.once="filterFactory('')">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
-                    <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </oms-form-row>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <el-col :span="12">
+                <oms-form-row label="可用库存" :span="8">
+                    <el-input v-model="form.availableCount" ></el-input>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="12">
+                <oms-form-row label="在途库存" :span="6">
+                  <el-input v-model="form.transitCount"></el-input>
+                </oms-form-row>
+              </el-col>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="近效期天数" :span="6">
-                <oms-input type="number" v-model.number="searchWord.nearTermDays" :min="0" placeholder="请输入近效期天数">
-                  <template slot="append">天</template>
-                </oms-input>
-              </oms-form-row>
+            <el-col :span="12">
+              <el-col :span="12">
+                <oms-form-row label="实际合格库存" :span="10">
+                  <el-input v-model="form.qualifiedCount"></el-input>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="12">
+                <oms-form-row label="实际不合格库存" :span="10">
+                  <el-input v-model="form.unqualifiedCount"></el-input>
+                </oms-form-row>
+              </el-col>
             </el-col>
-            <el-col :span="8">
+          </el-row>
+          <el-row>
+            <el-col :span="12">
               <oms-form-row label="" :span="3">
-                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
-                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                <el-button :plain="true" type="success" @click="exportFile">
-                  导出Excel
-                </el-button>
+                <el-button type="primary" @click="onSubmit" style="margin-left: 20px" :disabled="doing">调整库存</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
         </el-form>
       </div>
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
-                :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
+                :header-row-class-name="'headerClass'" v-loading="loadingData"
                 :row-class-name="formatRowClass"
-                show-summary :max-height="bodyHeight" style="width: 100%">
+                :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
@@ -147,7 +145,8 @@
             <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true" width="120">
+        <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true"
+                         width="120">
           <template slot-scope="scope">
             <span>{{scope.row.qualifiedCount}}</span>
           </template>
@@ -158,7 +157,8 @@
             <span>{{scope.row.transitCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="unqualifiedCount" label="实际不合格库存"  :render-header="formatHeader" :sortable="true" width="140">
+        <el-table-column prop="unqualifiedCount" label="实际不合格库存" :render-header="formatHeader" :sortable="true"
+                         width="140">
           <template slot-scope="scope">
             <span>{{scope.row.unqualifiedCount}}</span>
           </template>
@@ -169,14 +169,6 @@
           </template>
         </el-table-column>
       </el-table>
-
-      <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
-      <!--<el-pagination-->
-      <!--layout="prev, pager, next"-->
-      <!--:total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"-->
-      <!--:current-page="pager.currentPage">-->
-      <!--</el-pagination>-->
-      <!--</div>-->
     </div>
 
     <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
@@ -194,21 +186,17 @@
     components: {detail},
     data () {
       return {
-        loadingData: true,
+        loadingData: false,
         showSearch: true,
         showDetailPart: false,
         batches: [],
         filters: {
-          factoryId: '',
           batchNumberId: '',
-          orgGoodsId: '',
-          nearTermDays: ''
+          orgGoodsId: ''
         },
         searchWord: {
-          factoryId: '',
           batchNumberId: '',
-          orgGoodsId: '',
-          nearTermDays: ''
+          orgGoodsId: ''
         },
         factories: [], // 厂商列表
         orgList: [], // 货主列表,
@@ -231,11 +219,18 @@
           'warning',
           'primary'
         ],
-        batchNumberList: []
+        batchNumberList: [],
+        form: {
+          availableCount: '',
+          qualifiedCount: '',
+          transitCount: '',
+          unqualifiedCount: ''
+        },
+        doing: false
       };
     },
     mounted () {
-      this.getBatches(1);
+      // this.getBatches(1);
     },
     computed: {
       orgLevel () {
@@ -250,7 +245,7 @@
     watch: {
       filters: {
         handler: function () {
-          this.getBatches(1);
+          // this.getBatches(1);
         },
         deep: true
       }
@@ -263,8 +258,6 @@
         return a < b ? days > 90 ? 2 : 1 : 0;
       },
       getBatches () { // 得到波次列表
-        this.totalInfo = {};
-        this.batches = [];
         let params = Object.assign({}, this.filters);
         this.loadingData = true;
         erpStock.query(params).then(res => {
@@ -272,7 +265,7 @@
           this.loadingData = false;
         });
       },
-      formatHeader(h, col) {
+      formatHeader (h, col) {
         let index = col.$index;
         let content = '';
         let title = '';
@@ -365,13 +358,12 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          factoryId: '',
           batchNumberId: '',
-          orgGoodsId: '',
-          nearTermDays: ''
+          orgGoodsId: ''
         };
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
+        this.batches = [];
       },
       filterFactory (query) { // 生产厂商
         let orgId = this.$store.state.user.userCompanyAddress;
@@ -401,7 +393,17 @@
       orgGoodsChange (val) {
         this.searchWord.batchNumberId = '';
         this.batchNumberList = [];
+        this.batches = [];
         this.filterBatchNumber();
+      },
+      batchNumberChange (val) {
+        if (!val) {
+          this.filters.batchNumberId = '';
+          this.batches = [];
+          return;
+        }
+        this.searchInOrder();
+        this.getBatches(1);
       },
       filterBatchNumber (query) {
         if (!this.searchWord.orgGoodsId) return;
@@ -424,6 +426,46 @@
       },
       formatTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      },
+      onSubmit () {
+        if (!this.searchWord.orgGoodsId) {
+          this.$notify.info({
+            message: '请选择货主货品'
+          });
+          return;
+        }
+        if (!this.searchWord.batchNumberId) {
+          this.$notify.info({
+            message: '请选择批号'
+          });
+          return;
+        }
+        this.$confirm('是否调整库存', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+           let obj = Object.assign({}, this.form, this.searchWord);
+           this.doing = true;
+           this.$http.put('/erp-stock/adjust', obj).then(() => {
+             this.doing = false;
+             this.$notify.success({
+               message: '调整库存成功'
+             });
+             this.getBatches(1);
+             this.form = {
+               availableCount: '',
+               qualifiedCount: '',
+               transitCount: '',
+               unqualifiedCount: ''
+             };
+           });
+        }).catch(error => {
+          this.doing = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '调整库存失败'
+          });
+        });
       }
     }
   };

@@ -216,6 +216,11 @@ const route = [
             meta: {moduleId: 'store', title: '库存查询', perm: 'cerp-stock-query'}
           },
           {
+            path: '/store/adjust',
+            component: resolve => require(['./components/store/adjust-stock.vue'], resolve),
+            meta: {moduleId: 'store', title: '库存调整', perm: 'cerp-stock-adjust'}
+          },
+          {
             path: '/store/allotment/:id',
             component: resolve => require(['./components/purchase/allotment/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '调拨入库', perm: 'allocating-order'}
