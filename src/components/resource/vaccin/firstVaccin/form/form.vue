@@ -341,10 +341,11 @@
           if (this.form.sellPrice) {
             this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
           }
-          this.otherGoodsList = [];
-          this.getCombinationGoods();
-          this.getOmsGoods(val.goodsDto.name);
-          this.filterOrg(val.salesFirmName);
+          this.selectGoodsList = this.form.combinationList;
+//          this.otherGoodsList = [];
+//          this.getCombinationGoods();
+//          this.getOmsGoods(val.goodsDto.name);
+//          this.filterOrg(val.salesFirmName);
         } else {
 //          this.queryCombinationGoods();
           this.getOmsGoods();
