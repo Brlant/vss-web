@@ -440,7 +440,7 @@
           });
           return;
         }
-        this.$confirm('是否调整库存', '', {
+        this.$confirm('是否调整库存;请谨慎操作', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

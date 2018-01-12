@@ -168,7 +168,7 @@
           this.$store.commit('initUser', data);
           this.queryWeChat();
           this.queryBaseInfo(data);
-          this.getRoleMenus(data);
+          // this.getRoleMenus(data);
         }).catch(() => {
           Auth.logout().then(() => {
             this.$router.replace('/login');
@@ -177,7 +177,7 @@
       } else {
         let data = window.localStorage.getItem('user');
         data = JSON.parse(data);
-        this.getRoleMenus(data);
+        // this.getRoleMenus(data);
         this.queryBaseInfo(data);
       }
       this.queryPerms();
@@ -221,17 +221,17 @@
           });
         });
       },
-      getRoleMenus(data) {
-        Access.getRoleMenus(data.userCompanyAddress).then(res => {
-          let menuData = res.data;
-          let menuList = {};
-          res.data.menuList.forEach(item => {
-            menuList[item.id] = item.name;
-          });
-          menuData.menuList = menuList;
-          this.$store.commit('initPermList', menuData);
-        });
-      },
+      // getRoleMenus(data) {
+      //   Access.getRoleMenus(data.userCompanyAddress).then(res => {
+      //     let menuData = res.data;
+      //     let menuList = {};
+      //     res.data.menuList.forEach(item => {
+      //       menuList[item.id] = item.name;
+      //     });
+      //     menuData.menuList = menuList;
+      //     this.$store.commit('initPermList', menuData);
+      //   });
+      // },
       queryWeChat() {
         cerpAction.queryWeChatInfo().then(res => {
           this.$store.commit('initWeChatInfo', res.data);

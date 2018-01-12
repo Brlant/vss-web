@@ -227,10 +227,14 @@
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = (height - 20) + 'px';
         return height;
+      },
+      user () {
+        this.getRoleMenus();
       }
     },
     mounted() {
       this.getPageList();
+      this.getRoleMenus();
     },
     watch: {
       filters: {
@@ -252,6 +256,21 @@
           this.typeList = res.data.list;
           this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);
           this.queryRoleDetail(this.currentItem.id);
+        });
+      },
+      getRoleMenus() {
+        let permList = this.$store.state.permList;
+        if (permList && permList.menuList) return;
+        let user = this.$store.state.user;
+        if (!user.userCompanyAddress) return;
+        Access.getRoleMenus(user.userCompanyAddress).then(res => {
+          let menuData = res.data;
+          let menuList = {};
+          res.data.menuList.forEach(item => {
+            menuList[item.id] = item.name;
+          });
+          menuData.menuList = menuList;
+          this.$store.commit('initPermList', menuData);
         });
       },
       queryRoleDetail: function (id) {
