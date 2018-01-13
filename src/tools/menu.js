@@ -17,6 +17,18 @@ export function getRoleMenus(vm, property) {
   }
   Access.getRoleMenus(userId).then(res => {
     vm.$store.commit('initPermList', res.data);
+    setParentIds(vm, res.data);
     vm[property] = res.data;
   });
 }
+
+/**
+ * 得到所有父节点, 放进vuex
+ * @param vm
+ * @param menus
+ */
+function setParentIds (vm, menus) {
+  let parentIds = menus.filter(f => f.isLeaf).map(m => m.id);
+  vm.$store.commit('initMenuParentIds', parentIds);
+}
+

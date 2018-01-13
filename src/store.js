@@ -11,6 +11,7 @@ const state = {
   permissions: [],
   permList: {},
   roleList: {},
+  menuParentIds: [],
   attachmentDialog: {attachmentId: 0, open: false, attachmentList: []},
   form: {},
   bodySize: {left: '200px'},
@@ -126,6 +127,9 @@ const mutations = {
   },
   initIsShowGoodsList (state, data) {
     state.isShowGoodsList = data;
+  },
+  initMenuParentIds (state, data) {
+    state.menuParentIds = data;
   }
 };
 
