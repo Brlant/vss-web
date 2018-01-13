@@ -115,7 +115,7 @@
     },
     // computed: {
     //   roleMenu () {
-    //     return this.$store.state.permList;
+    //     return this.$store.state.allMenuList;
     //   }
     // },
     mounted: function () {

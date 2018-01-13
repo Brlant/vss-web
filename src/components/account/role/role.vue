@@ -164,17 +164,7 @@
                 </el-row>
                 <el-row>
                   <el-col :span="24">
-                    <!--<div class="role-perm-list">-->
-                    <!--<div class="group-list" v-for="groupItem in menuList.tree"-->
-                    <!--v-show="checkGroupItem(groupItem)">-->
-                    <!--<h2>{{menuList.menuList[groupItem.parentId]}}</h2>-->
-                    <!--<ul>-->
-                    <!--<li v-for="item in groupItem.children" v-show="checkItem(item)">{{menuList.menuList[item]}}-->
-                    <!--</li>-->
-                    <!--</ul>-->
-                    <!--</div>-->
-                    <!--</div>-->
-                    <el-tree :data="menuList" :props="defaultProps" default-expand-all></el-tree>
+                    <el-tree :data="checkedMenuList" :props="defaultProps" default-expand-all></el-tree>
                   </el-col>
                 </el-row>
               </div>
@@ -224,13 +214,11 @@
           keyWord: ''
         },
         activeStatus: 1,
-        menuList: []
+        menuList: [],
+        checkedMenuList: []
       };
     },
     computed: {
-      // menuList: function () {
-      //   return this.$store.state.menuList;
-      // },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = (height - 20) + 'px';
@@ -272,7 +260,8 @@
           permissionIdList.push(val.name);
           // this.getCheckedMenu(this.menuList, val.name);
         });
-        this.getCheckedMenu(this.menuList, permissionIdList);
+        this.checkedMenuList = JSON.parse(JSON.stringify(this.menuList));
+        this.getCheckedMenu(this.checkedMenuList, permissionIdList);
       },
       getPageList: function () {// 查询角色列表
         let param = Object.assign({}, {
@@ -305,26 +294,13 @@
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
       },
-      pickTypeList: function () {
-        let arr = [];
-        let self = this;
-        this.typeList.forEach(function (value) {
-          if (value.title.indexOf(self.typeTxt) !== -1) {
-            arr.push(value);
-          }
-        });
-        this.showTypeList = arr;
-      },
       edit: function () {
         this.action = 'edit';
         this.form = JSON.parse(JSON.stringify(this.resData));
         let checkedIdList = [];
         // 勾选已经有的权限
-        if (!this.form.id) return;
-        Access.getRoleDetail(this.form.id).then(res => {
-          res.data.permissionList.forEach(val => {
-            checkedIdList.push(val.name);
-          });
+        this.form.permissionList.forEach(val => {
+          checkedIdList.push(val.name);
         });
         this.form.checkedIdList = checkedIdList;
         this.showRight = true;
@@ -405,31 +381,10 @@
               roleItem.title = item.title;
             }
           });
+          // 重新过滤树
+          this.getMenus(this.resData.permissionList);
           this.showRight = false;
         }
-      },
-      checkItem: function (item) {
-        let visible = false;
-        this.resData.permissionList.forEach(function (val) {
-          if (val.name === item) {
-            visible = true;
-            return false;
-          }
-        });
-        return visible;
-      },
-      checkGroupItem: function (item) {
-        let visible = false;
-        item.children.forEach(key => {
-          if (this.checkItem(key)) {
-            visible = true;
-            return false;
-          }
-        });
-        if (this.checkItem(item.parentId)) {
-          visible = true;
-        }
-        return visible;
       }
     }
   };

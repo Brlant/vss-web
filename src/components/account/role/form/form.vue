@@ -48,43 +48,17 @@
           <oms-input type="text" v-model="form.remark" placeholder="请输入"></oms-input>
         </el-form-item>
         <h4 class="clearfix">配置角色权限</h4>
-        <!--<div v-if="tree.length === 0" class="empty-info">-->
-        <!--暂无角色权限-->
-        <!--</div>-->
-        <!--<div v-else>-->
-        <!--<div>-->
-        <!--<el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles"-->
-        <!--@change="checkAllChange(checkAllRoles)"></el-checkbox>-->
-        <!--</div>-->
-        <!--<div v-for="(menu,index) in tree">-->
-        <!--<el-checkbox :indeterminate="menu.isIndeterminate" v-model="menu.status"-->
-        <!--@change="handleCheckAllChange(menu)">-->
-        <!--{{ roleMenu.menuList[menu.parentId] }}-->
-        <!--</el-checkbox>-->
-        <!--<el-checkbox-group style="margin-left: 12px" v-model="menu.checkedChildren"-->
-        <!--@change="handleCheckedItemChange(menu)">-->
-        <!--<div class="power-style-part" v-show="menu.children.length>0">-->
-        <!--<div style="margin:10px 3px">-->
-        <!--<el-checkbox v-for="child in menu.children" :label="child.id" :key="child.id" v-model="child.checked">-->
-        <!--{{ roleMenu.menuList[child.id] }}-->
-        <!--</el-checkbox>-->
-        <!--</div>-->
-        <!--</div>-->
-        <!--</el-checkbox-group>-->
-        <!--</div>-->
         <el-input
           placeholder="输入关键字进行过滤"
           v-model="filterText">
         </el-input>
         <div>
-          <el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles"
-                       @change="checkAll()"></el-checkbox>
+          <el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles" @change="checkAll()"></el-checkbox>
         </div>
         <el-tree :data="tree" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current
-                 :default-checked-keys="form.checkedIdList" :props="defaultProps"
+                 :default-checked-keys="checkedIdList" :props="defaultProps"
                  :filter-node-method="filterNode">
         </el-tree>
-        <!--</div>-->
       </el-form>
     </div>
   </div>
@@ -109,7 +83,6 @@
       }
     },
     data: function () {
-
       let checkName = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入角色英文名称'));
@@ -128,11 +101,8 @@
           label: 'label',
           isLeaf: 'leaf'
         },
-        form: this.formItem,
-        permissionMenu: [], // 存储选择的权限
-        checkedIdList: [],
+        form: {},
         tree: [], // 新封装的权限菜单的数据结构
-        menuData: [], // 权限菜单的map,根据key，获取value
         checkAllRoles: false,
         doing: false,
         filterText: '',
@@ -151,30 +121,10 @@
       };
     },
     computed: {
-//      roleMenu () {
-//        return this.$store.state.permList;
-//      }
-    },
-    mounted: function () {
-//      const self = this;
-//      if (!this.roleMenu.tree) return;
-//      this.roleMenu.tree.forEach(function (val) {
-//        let temp = {
-//          parentId: val.parentId,
-//          status: false,
-//          isIndeterminate: false,
-//          children: [],
-//          checkedChildren: []
-//        };
-//        val.children.forEach(function (val) {
-//          let child = {
-//            id: val,
-//            checked: false
-//          };
-//          temp.children.push(child);
-//        });
-//        self.tree.push(temp);
-//      });
+      checkedIdList () {
+        let menuParentIds = this.$store.state.menuParentIds;
+        return this.form.checkedIdList && this.form.checkedIdList.filter(f => !menuParentIds.includes(f)) || [];
+      }
     },
     watch: {
       filterText(val) {
@@ -183,8 +133,7 @@
       formItem: function (val) {
         this.getMenus();
         if (val.id) {
-          this.form = this.formItem;
-//          this.selectExistMenu();
+          this.form = JSON.parse(JSON.stringify(this.formItem));
         } else {
           this.form = {
             title: '',
@@ -192,7 +141,6 @@
             remark: '',
             permissionList: []
           };
-//          this.selectExistMenu();
         }
       },
       showRight: function (val) {
@@ -200,26 +148,8 @@
           this.$refs['roleform'].resetFields();
         }
       },
-      roleMenu (val) {
-        if (!val) return;
-        const self = this;
-        val.tree.forEach(function (val) {
-          let temp = {
-            parentId: val.parentId,
-            status: false,
-            isIndeterminate: false,
-            children: [],
-            checkedChildren: []
-          };
-          val.children.forEach(function (val) {
-            let child = {
-              id: val,
-              checked: false
-            };
-            temp.children.push(child);
-          });
-          self.tree.push(temp);
-        });
+      checkedIdList (val) {
+        this.$refs.tree.setCheckedKeys(val);
       }
     },
     methods: {
@@ -238,86 +168,13 @@
           this.$refs.tree.setCheckedKeys([]);
         }
       },
-      selectExistMenu () {// 选中已有的权限
-        let self = this;
-        self.tree.forEach(item => {// 清空已经选中的角色
-          item.checkedChildren = [];
-        });
-
-        this.form.permissionList.forEach(function (obj) {// 遍历数据库返回已经选中的权限
-          let val = obj.name;
-          self.tree.forEach(function (m) {
-            m.isIndeterminate = m.parentId === val;
-            m.children.forEach(function (c) {
-              c.checked = c.id === val;
-              if (c.checked) {
-                let index = m.checkedChildren.indexOf(val);
-                if (index !== -1) return;
-                m.checkedChildren.push(val);
-              }
-            });
-          });
-        });
-        let m;
-        for (let i = 0; i < this.tree.length; i++) {// 设置以及一级菜单的状态
-          m = this.tree[i];
-          m.status = m.checkedChildren.length === m.children.length;
-          m.isIndeterminate = false;
-          if (!m.status) {
-            m.isIndeterminate = m.checkedChildren.length > 0;
-          }
-          if (m.children.length === 0) {
-            m.status = false;
-            this.form.permissionList.forEach(item => {
-              if (item.name === m.parentId) {
-                m.status = true;
-              }
-            });
-          }
-        }
-      },
-      handleCheckAllChange (menu) {// 一级菜单触发事件
-        menu.checkedChildren = [];
-        if (menu.status) {
-          menu.children.forEach(item => {
-            menu.checkedChildren.push(item.id);
-          });
-          menu.isIndeterminate = false;
-        }
-      },
-      handleCheckedItemChange (m) {// 二级菜单触发事件
-        m.children.forEach(item => {
-          item.checked = m.checkedChildren.indexOf(item.id) !== -1;
-        });
-        m.status = m.checkedChildren.length >= m.children.length;
-        m.isIndeterminate = false;
-        if (!m.status) {
-          m.isIndeterminate = m.checkedChildren.length > 0;
-        }
-      },
-      checkAllChange (val) {// 全选触发事件
-        if (val) {
-          this.tree.forEach(item => {
-            item.status = true;
-            item.isIndeterminate = false;
-            item.children.forEach(child => {
-              item.checkedChildren.push(child.id);
-            });
-          });
-        } else {
-          this.tree.forEach(item => {
-            item.status = false;
-            item.isIndeterminate = false;
-            item.checkedChildren = [];
-          });
-        }
-      },
       getCheckedMenu: function (data, menuList) {
         for (let i = 0; i < data.length; i++) {
           if (data[i].indeterminate || data[i].checked) {
-            menuList.push(data[i]);
-          } else if (data[i].children) {
-            this.getCheckedMenu(data[i].children, menuList);
+            menuList.push(data[i].key);
+          }
+          if (data[i].childNodes) {
+            this.getCheckedMenu(data[i].childNodes, menuList);
           }
         }
       },
@@ -328,39 +185,12 @@
           }
           this.doing = true;
           let rolelist = [];
-//          let self = this;
-//          this.tree.forEach(item => {
-//            if (item.status || item.isIndeterminate) {
-//              rolelist.push({
-//                name: item.parentId,
-//                title: self.menuData[item.parentId]
-//              });
-//            }
-//            item.checkedChildren.forEach(val => {
-//              rolelist.push({
-//                name: val,
-//                title: self.menuData[val]
-//              });
-//            });
-//          });
           // 获取选中的菜单
           let menuList = [];
           this.getCheckedMenu(this.$refs['tree'].root.childNodes, menuList);
-          console.log(menuList);
-          let menuIds = new Set();
-          let menuIdList = this.$refs.tree.getCheckedNodes();
-          if (menuIdList) {
-            menuIdList.forEach(val => {
-              menuIds.add(val.id);
-              if (val.parentId) {
-                menuIds.add(val.parentId);
-              }
-            });
-          }
-          menuIds.forEach(val => {
+          menuList.forEach(val => {
             rolelist.push({name: val});
           });
-
           this.form.permissionList = rolelist;
           if (this.action === 'add') {
             this.form.objectId = 'wms-system';

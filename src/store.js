@@ -9,11 +9,10 @@ const state = {
   user: {},
   dict: {},
   permissions: [],
-  permList: {},
+  allMenuList: {}, // 所有菜单
   roleList: {},
-  menuParentIds: [],
+  menuParentIds: [], // 所有非叶子节点菜单
   attachmentDialog: {attachmentId: 0, open: false, attachmentList: []},
-  form: {},
   bodySize: {left: '200px'},
   orgName: '',
   weChatInfo: {},
@@ -67,7 +66,7 @@ const mutations = {
     state.permissions = data;
   },
   initPermList(state, data) {
-    state.permList = data;
+    state.allMenuList = data;
   },
   changeAttachment(state, data) {
     let currentId;

@@ -221,8 +221,8 @@
       };
     },
     computed: {
-      // permList: function () {
-      //   return this.$store.state.permList;
+      // allMenuList: function () {
+      //   return this.$store.state.allMenuList;
       // },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);

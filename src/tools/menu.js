@@ -6,8 +6,8 @@ import {Access} from '@/resources.js';
  * @param property
  */
 export function getRoleMenus(vm, property) {
-  let menu = vm.$store.state.permList;
-  if (menu && menu.menuList) {
+  let menu = vm.$store.state.allMenuList;
+  if (menu && menu.length) {
     vm[property] = menu;
     return;
   }
@@ -16,19 +16,34 @@ export function getRoleMenus(vm, property) {
     return;
   }
   Access.getRoleMenus(userId).then(res => {
-    vm.$store.commit('initPermList', res.data);
+    vm.$store.commit('initPermList', JSON.parse(JSON.stringify(res.data)));
     setParentIds(vm, res.data);
     vm[property] = res.data;
   });
 }
 
 /**
- * 得到所有父节点, 放进vuex
+ * 把所有父节点,放进vuex
  * @param vm
  * @param menus
  */
 function setParentIds (vm, menus) {
-  let parentIds = menus.filter(f => f.isLeaf).map(m => m.id);
+  let parentIds = [];
+  getParentIds(menus, parentIds);
   vm.$store.commit('initMenuParentIds', parentIds);
+}
+
+/**
+ * 得到父节点
+ * @param menus
+ * @param parentsIds
+ */
+function getParentIds (menus, parentsIds) {
+  menus.forEach(i => {
+    if (i.children) {
+      parentsIds.push(i.id);
+      getParentIds(i.children, parentsIds);
+    }
+  });
 }
 
