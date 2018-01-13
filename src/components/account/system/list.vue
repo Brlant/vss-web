@@ -189,7 +189,7 @@
   </div>
 </template>
 <script>
-  import { System } from '../../../resources';
+  import { Access } from '../../../resources';
   import roleForm from './form/form.vue';
 
   export default {
@@ -249,7 +249,7 @@
           deleteFlag: false,
           objectId: 'cerp-system'
         }, this.filters);
-        System.querySystemAccess(param).then(res => {
+        Access.querySystemAccess(param).then(res => {
           this.showTypeList = res.data.list;
           this.typeList = res.data.list;
           this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);
@@ -269,7 +269,7 @@
       },
       queryRoleDetail: function (id) {
         if (!id) return;
-        System.getRoleDetail(id).then(res => {
+        Access.getRoleDetail(id).then(res => {
           this.resData = res.data;
         });
       },
@@ -307,7 +307,7 @@
         }).then(() => {
           let itemTemp = JSON.parse(JSON.stringify(this.resData));
           itemTemp.usableStatus = 0;
-          System.update(itemTemp.id, itemTemp).then(() => {
+          Access.update(itemTemp.id, itemTemp).then(() => {
             this.resData.usableStatus = 0;
             this.getPageList();
             this.$notify.success({
@@ -325,7 +325,7 @@
         }).then(() => {
           let itemTemp = JSON.parse(JSON.stringify(this.resData));
           itemTemp.usableStatus = 1;
-          System.update(itemTemp.id, itemTemp).then(() => {
+          Access.update(itemTemp.id, itemTemp).then(() => {
             this.resData.usableStatus = 1;
             this.getPageList();
             this.$notify.success({
@@ -341,7 +341,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          System.delete(this.resData.id).then(() => {
+          Access.delete(this.resData.id).then(() => {
             this.getPageList();
             this.$notify.success({
               title: '成功',
@@ -351,7 +351,7 @@
         });
       },
       removeType: function (item) {
-        System.delete(item.id).then(() => {
+        Access.delete(item.id).then(() => {
           this.getPageList();
           this.$notify.success({
             title: '成功',

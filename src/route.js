@@ -167,12 +167,12 @@ const route = [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-                meta: {moduleId: 'sale', title: '销售分配', perm: 'demand-assignment-query'}
+                meta: {moduleId: 'sale', title: '销售分配', perm: ''}
               },
               {
                 path: '/sale/allocation/task',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'sale', title: '销售分配', perm: 'demand-assignment-update'}
+                meta: {moduleId: 'sale', title: '销售分配', perm: ''}
               }
             ]
           },
@@ -201,7 +201,7 @@ const route = [
           {
             path: '/pov/record',
             component: resolve => require(['./components/pov/record/list.vue'], resolve),
-            meta: {moduleId: 'pov', title: '注射记录', perm: 'injection-task-query'}
+            meta: {moduleId: 'pov', title: '注射记录', perm: 'injection-task-manager'}
           }
         ]
       },
@@ -223,7 +223,7 @@ const route = [
           {
             path: '/store/allotment/:id',
             component: resolve => require(['./components/purchase/allotment/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '调拨入库', perm: 'allocating-order'}
+            meta: {moduleId: 'purchase', title: '调拨入库', perm: 'allocating-order-manager'}
           }
           // {
           //   path: '/store/bad',
@@ -250,7 +250,7 @@ const route = [
           {
             path: '/payment/invoice',
             component: resolve => require(['./components/finance/invoice/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '厂商发票管理', perm: 'invoice-manager'}
+            meta: {moduleId: 'finance', title: '厂商发票管理', perm: 'invoice-data-manager'}
           },
           {
             path: '/payment/operation',

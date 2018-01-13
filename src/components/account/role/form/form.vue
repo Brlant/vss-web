@@ -9,53 +9,81 @@
       margin-left: 15px;
     }
   }
+
+  .btn-submit-save {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+    padding: 15px;
+  }
 </style>
 <template>
-  <el-form ref="roleform" :rules="rules" :model="form" label-width="100px" class="demo-ruleForm"
-           @submit.prevent="onSubmit('roleform')" onsubmit="return false">
-    <h2 class="clearfix">角色管理</h2>
-    <el-form-item label="角色名称" prop="title">
-      <oms-input type="text" v-model="form.title" placeholder="请输入"></oms-input>
-    </el-form-item>
-    <el-form-item label="英文名称" prop="name">
-      <oms-input type="text" v-model="form.name" placeholder="请输入"></oms-input>
-    </el-form-item>
-    <el-form-item label="角色描述">
-      <oms-input type="text" v-model="form.remark" placeholder="请输入"></oms-input>
-    </el-form-item>
-    <h4 class="clearfix">配置角色权限</h4>
-    <div v-if="tree.length === 0" class="empty-info">
-      暂无角色权限
-    </div>
-    <div v-else>
-      <div>
-        <el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles"
-                     @change="checkAllChange(checkAllRoles)"></el-checkbox>
-      </div>
-      <div v-for="(menu,index) in tree">
-        <el-checkbox :indeterminate="menu.isIndeterminate" v-model="menu.status"
-                     @change="handleCheckAllChange(menu)">
-          {{ roleMenu.menuList[menu.parentId] }}
-        </el-checkbox>
-        <el-checkbox-group style="margin-left: 12px" v-model="menu.checkedChildren"
-                           @change="handleCheckedItemChange(menu)">
-          <div class="power-style-part" v-show="menu.children.length>0">
-            <div style="margin:10px 3px">
-              <el-checkbox v-for="child in menu.children" :label="child.id" :key="child.id" v-model="child.checked">
-                {{ roleMenu.menuList[child.id] }}
-              </el-checkbox>
-            </div>
-          </div>
-        </el-checkbox-group>
+  <div class="content-part">
+    <div class="content-left">
+      <h2 class="clearfix right-title">角色管理</h2>
+      <div class="btn-submit-save">
+        <div>
+          <el-button type="primary" style="width: 100px" @click="onSubmit('roleform')" native-type="submit" :disabled="doing">保存
+          </el-button>
+        </div>
+        <div>
+          <el-button style="width: 100px" @click.prevent.stop="doClose">关闭</el-button>
+        </div>
       </div>
     </div>
-    <el-form-item label-width="100px">
-      <el-button type="primary" @click="onSubmit('roleform')" native-type="submit" :disabled="doing">保存</el-button>
-      <el-button @click="doClose">取消</el-button>
-    </el-form-item>
-  </el-form>
+    <div class="content-right min-gutter">
+      <el-form ref="roleform" :rules="rules" :model="form" label-width="100px" class="demo-ruleForm"
+               @submit.prevent="onSubmit('roleform')" onsubmit="return false">
+        <el-form-item label="角色名称" prop="title">
+          <oms-input type="text" v-model="form.title" placeholder="请输入"></oms-input>
+        </el-form-item>
+        <el-form-item label="英文名称" prop="name">
+          <oms-input type="text" v-model="form.name" placeholder="请输入"></oms-input>
+        </el-form-item>
+        <el-form-item label="角色描述">
+          <oms-input type="text" v-model="form.remark" placeholder="请输入"></oms-input>
+        </el-form-item>
+        <h4 class="clearfix">配置角色权限</h4>
+        <!--<div v-if="tree.length === 0" class="empty-info">-->
+        <!--暂无角色权限-->
+        <!--</div>-->
+        <!--<div v-else>-->
+        <!--<div>-->
+        <!--<el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles"-->
+        <!--@change="checkAllChange(checkAllRoles)"></el-checkbox>-->
+        <!--</div>-->
+        <!--<div v-for="(menu,index) in tree">-->
+        <!--<el-checkbox :indeterminate="menu.isIndeterminate" v-model="menu.status"-->
+        <!--@change="handleCheckAllChange(menu)">-->
+        <!--{{ roleMenu.menuList[menu.parentId] }}-->
+        <!--</el-checkbox>-->
+        <!--<el-checkbox-group style="margin-left: 12px" v-model="menu.checkedChildren"-->
+        <!--@change="handleCheckedItemChange(menu)">-->
+        <!--<div class="power-style-part" v-show="menu.children.length>0">-->
+        <!--<div style="margin:10px 3px">-->
+        <!--<el-checkbox v-for="child in menu.children" :label="child.id" :key="child.id" v-model="child.checked">-->
+        <!--{{ roleMenu.menuList[child.id] }}-->
+        <!--</el-checkbox>-->
+        <!--</div>-->
+        <!--</div>-->
+        <!--</el-checkbox-group>-->
+        <!--</div>-->
+        <div>
+          <el-checkbox label="全选" style="margin-bottom: 20px"
+                       @change="checkAll()"></el-checkbox>
+        </div>
+        <el-tree :data="treeData" :props="defaultProps" show-checkbox node-key="id" default-expand-all
+                 :expand-on-click-node="false" :render-content="renderContent">
+        </el-tree>
+        <!--</div>-->
+      </el-form>
+    </div>
+  </div>
 </template>
-<script>
+<script type="text/jsx">
   import { Access } from '../../../../resources';
 
   export default {
@@ -74,6 +102,7 @@
       }
     },
     data: function () {
+
       let checkName = (rule, value, callback) => {
         if (value === '') {
           callback(new Error('请输入角色英文名称'));
@@ -87,6 +116,7 @@
         }
       };
       return {
+        treeData: [],
         form: this.formItem,
         permissionMenu: [], // 存储选择的权限
         tree: [], // 新封装的权限菜单的数据结构
@@ -108,29 +138,33 @@
       };
     },
     computed: {
-      roleMenu () {
-        return this.$store.state.permList;
-      }
+//      roleMenu () {
+//        return this.$store.state.permList;
+//      }
     },
     mounted: function () {
-      const self = this;
-      if (!this.roleMenu.tree) return;
-      this.roleMenu.tree.forEach(function (val) {
-        let temp = {
-          parentId: val.parentId,
-          status: false,
-          isIndeterminate: false,
-          children: [],
-          checkedChildren: []
-        };
-        val.children.forEach(function (val) {
-          let child = {
-            id: val,
-            checked: false
-          };
-          temp.children.push(child);
-        });
-        self.tree.push(temp);
+//      const self = this;
+//      if (!this.roleMenu.tree) return;
+//      this.roleMenu.tree.forEach(function (val) {
+//        let temp = {
+//          parentId: val.parentId,
+//          status: false,
+//          isIndeterminate: false,
+//          children: [],
+//          checkedChildren: []
+//        };
+//        val.children.forEach(function (val) {
+//          let child = {
+//            id: val,
+//            checked: false
+//          };
+//          temp.children.push(child);
+//        });
+//        self.tree.push(temp);
+//      });
+      let userId = this.$store.state.user.userCompanyAddress;
+      Access.getRoleMenus(userId).then(res => {
+        this.treeData = res.data;
       });
     },
     watch: {
@@ -147,6 +181,10 @@
           };
           this.selectExistMenu();
         }
+        let userId = this.$store.state.user.userCompanyAddress;
+        Access.getRoleMenus(userId).then(res => {
+          this.treeData = res.data;
+        });
       },
       showRight: function (val) {
         if (!val) {
@@ -176,6 +214,17 @@
       }
     },
     methods: {
+      checkAll: function () {
+        this.$refs.tree.setCheckedKeys([]);
+      },
+      renderContent(h, {node, data, store}) {
+        return (
+          <span
+            style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
+              <span>
+                <span>{node.label}</span>
+              </span></span>);
+      },
       selectExistMenu () {// 选中已有的权限
         let self = this;
         self.tree.forEach(item => {// 清空已经选中的角色

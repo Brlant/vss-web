@@ -116,10 +116,10 @@ export const OrgUser = resource('/oms/user/org', http, {
 // 角色管理对象
 export const Access = resource('/oms/access', http, {
   getRoleMenus: (orgId) => {
-    return http.get(`/erp-access/org/${orgId}/admin/menus`);
+    return http.get(`/erp-access/org/${orgId}/admin/menus/tree`);
   },
   getOrgRoleMenus: (orgId) => {
-    return http.get('/oms/access/org/' + orgId + '/admin/menus');
+    return http.get('/oms/access/org/' + orgId + '/admin/menus/tree');
   },
   getOrgRole: (orgId, params) => {
     params.objectId = 'cerp-system';
@@ -133,28 +133,11 @@ export const Access = resource('/oms/access', http, {
   },
   save: (obj) => {
     return http.post('/erp-access', obj);
-  }
-});
-
-export const System = resource('/oms/access', http, {
-  getRoleMenus: (orgId) => {
-    return http.get(`/erp-access/org/${orgId}/admin/menus`);
   },
-  getOrgRoleMenus: (orgId) => {
-    return http.get('/oms/access/org/' + orgId + '/admin/menus');
-  },
-  getOrgRole: (orgId, params) => {
-    params.objectId = 'cerp-system';
-    return http.get('/oms/access/orgs/' + orgId, {params});
-  },
-  getRoleDetail: (roleId) => {
-    return http.get('/oms/access/' + roleId);
-  },
-
   querySystemAccess: (params) => {
     return http.get('/oms/access/', {params});
   },
-  save: (obj) => {
+  saveSystem: (obj) => {
     return http.post('/erp-access/system', obj);
   }
 });
