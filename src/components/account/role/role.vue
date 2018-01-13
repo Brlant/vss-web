@@ -164,16 +164,17 @@
                 </el-row>
                 <el-row>
                   <el-col :span="24">
-                    <div class="role-perm-list">
-                      <div class="group-list" v-for="groupItem in permList.tree"
-                           v-show="checkGroupItem(groupItem)">
-                        <h2>{{permList.menuList[groupItem.parentId]}}</h2>
-                        <ul>
-                          <li v-for="item in groupItem.children" v-show="checkItem(item)">{{permList.menuList[item]}}
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
+                    <!--<div class="role-perm-list">-->
+                    <!--<div class="group-list" v-for="groupItem in menuList.tree"-->
+                    <!--v-show="checkGroupItem(groupItem)">-->
+                    <!--<h2>{{menuList.menuList[groupItem.parentId]}}</h2>-->
+                    <!--<ul>-->
+                    <!--<li v-for="item in groupItem.children" v-show="checkItem(item)">{{menuList.menuList[item]}}-->
+                    <!--</li>-->
+                    <!--</ul>-->
+                    <!--</div>-->
+                    <!--</div>-->
+                    <el-tree :data="menuList" :props="defaultProps" default-expand-all></el-tree>
                   </el-col>
                 </el-row>
               </div>
@@ -182,20 +183,26 @@
         </div>
       </div>
     </div>
-    <!--<page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px'}">-->
-      <!--<role-form :formItem="form" :action="action" @close="showRight=false" :actionType="showRight"-->
-                 <!--@changed="change"></role-form>-->
-    <!--</page-right>-->
+    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px'}">
+      <role-form :formItem="form" :action="action" @close="showRight=false" :actionType="showRight"
+                 @changed="change"></role-form>
+    </page-right>
   </div>
 </template>
 <script>
   import {Access} from '../../../resources';
-  // import roleForm from './form/form.vue';
+  import roleForm from './form/form.vue';
   import {getRoleMenus} from '@/tools/menu';
+
   export default {
-    // components: {roleForm},
+    components: {roleForm},
     data: function () {
       return {
+        defaultProps: {
+          children: 'children',
+          label: 'label',
+          isLeaf: 'leaf'
+        },
         showRight: false,
         showTypeRight: false,
         showTypeSearch: false,
@@ -217,12 +224,12 @@
           keyWord: ''
         },
         activeStatus: 1,
-        permList: []
+        menuList: []
       };
     },
     computed: {
-      // permList: function () {
-      //   return this.$store.state.permList;
+      // menuList: function () {
+      //   return this.$store.state.menuList;
       // },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
@@ -230,12 +237,12 @@
         return height;
       },
       user () {
-        getRoleMenus(this, 'permList');
+        return this.$store.state.user;
       }
     },
     mounted() {
       this.getPageList();
-      getRoleMenus(this, 'permList');
+      getRoleMenus(this, 'menuList');
     },
     watch: {
       filters: {
@@ -243,9 +250,27 @@
           this.getPageList();
         },
         deep: true
+      },
+      user() {
+        getRoleMenus(this, 'menuList');
       }
     },
     methods: {
+      getCheckedMenu: function (data, name) {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].id !== name) {
+            data[i].remove();
+            break;
+          } else {
+            this.getCheckedMenu(data[i].children, name);
+          }
+        }
+      },
+      getMenus: function (permissionList) {
+        permissionList.forEach(val => {
+          this.getCheckedMenu(this.menuList, val.name);
+        });
+      },
       getPageList: function () {// 查询角色列表
         let param = Object.assign({}, {
           keyword: this.typeTxt,
@@ -257,21 +282,6 @@
           this.typeList = res.data.list;
           this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);
           this.queryRoleDetail(this.currentItem.id);
-        });
-      },
-      getRoleMenus() {
-        let permList = this.$store.state.permList;
-        if (permList && permList.menuList) return;
-        let user = this.$store.state.user;
-        if (!user.userCompanyAddress) return;
-        Access.getRoleMenus(user.userCompanyAddress).then(res => {
-          let menuData = res.data;
-          let menuList = {};
-          res.data.menuList.forEach(item => {
-            menuList[item.id] = item.name;
-          });
-          menuData.menuList = menuList;
-          this.$store.commit('initPermList', menuData);
         });
       },
       queryRoleDetail: function (id) {

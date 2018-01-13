@@ -33,10 +33,6 @@
         <div>
           <el-button style="width: 100px" @click.prevent.stop="doClose">关闭</el-button>
         </div>
-        <div>
-          <el-button @click="getCheckedKeys">通过 key 获取</el-button>
-          <el-button @click="getCheckedNodes">通过 node 获取</el-button>
-        </div>
       </div>
     </div>
     <div class="content-right min-gutter">
@@ -85,8 +81,7 @@
                        @change="checkAll()"></el-checkbox>
         </div>
         <el-tree :data="tree" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current
-                 :default-checked-keys="form.checkedIdList" :props="defaultProps" :filter-node-method="filterNode"
-                 @node-click="handleNodeClick">
+                 :default-checked-keys="form.checkedIdList" :props="defaultProps" :filter-node-method="filterNode">
         </el-tree>
         <!--</div>-->
       </el-form>
@@ -94,7 +89,8 @@
   </div>
 </template>
 <script type="text/jsx">
-  import { Access } from '../../../../resources';
+  import {Access} from '../../../../resources';
+  import {getRoleMenus} from '@/tools/menu';
 
   export default {
     props: {
@@ -129,7 +125,7 @@
         defaultProps: {
           children: 'children',
           label: 'label',
-          isLeaf: ''
+          isLeaf: 'leaf'
         },
         form: this.formItem,
         permissionMenu: [], // 存储选择的权限
@@ -230,20 +226,8 @@
         if (!value) return true;
         return data.label.indexOf(value) !== -1;
       },
-      getCheckedKeys() {
-        console.log(this.$refs.tree.getCheckedKeys());
-      },
-      getCheckedNodes() {
-        console.log(this.$refs.tree.getCheckedNodes());
-      },
-      handleNodeClick(data) {
-        console.log(data);
-      },
       getMenus: function () {
-        let userId = this.$store.state.user.userCompanyAddress;
-        Access.getRoleMenus(userId).then(res => {
-          this.tree = res.data;
-        });
+        getRoleMenus(this, 'tree');
       },
       checkAll: function () {
         if (this.checkAllRoles) {
