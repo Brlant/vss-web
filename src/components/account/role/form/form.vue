@@ -26,11 +26,16 @@
       <h2 class="clearfix right-title">角色管理</h2>
       <div class="btn-submit-save">
         <div>
-          <el-button type="primary" style="width: 100px" @click="onSubmit('roleform')" native-type="submit" :disabled="doing">保存
+          <el-button type="primary" style="width: 100px;margin-bottom: 10px" @click="onSubmit('roleform')"
+                     native-type="submit" :disabled="doing">保存
           </el-button>
         </div>
         <div>
           <el-button style="width: 100px" @click.prevent.stop="doClose">关闭</el-button>
+        </div>
+        <div>
+          <el-button @click="getCheckedKeys">通过 key 获取</el-button>
+          <el-button @click="getCheckedNodes">通过 node 获取</el-button>
         </div>
       </div>
     </div>
@@ -71,12 +76,17 @@
         <!--</div>-->
         <!--</el-checkbox-group>-->
         <!--</div>-->
+        <el-input
+          placeholder="输入关键字进行过滤"
+          v-model="filterText">
+        </el-input>
         <div>
-          <el-checkbox label="全选" style="margin-bottom: 20px"
+          <el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles"
                        @change="checkAll()"></el-checkbox>
         </div>
-        <el-tree :data="treeData" :props="defaultProps" show-checkbox node-key="id" default-expand-all
-                 :expand-on-click-node="false" :render-content="renderContent">
+        <el-tree :data="tree" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current
+                 :default-checked-keys="form.checkedIdList" :props="defaultProps" :filter-node-method="filterNode"
+                 @node-click="handleNodeClick">
         </el-tree>
         <!--</div>-->
       </el-form>
@@ -116,13 +126,19 @@
         }
       };
       return {
-        treeData: [],
+        defaultProps: {
+          children: 'children',
+          label: 'label',
+          isLeaf: ''
+        },
         form: this.formItem,
         permissionMenu: [], // 存储选择的权限
+        checkedIdList: [],
         tree: [], // 新封装的权限菜单的数据结构
         menuData: [], // 权限菜单的map,根据key，获取value
         checkAllRoles: false,
         doing: false,
+        filterText: '',
         rules: {
           title: [
             {required: true, message: '请输入角色名称', trigger: 'blur'}
@@ -162,16 +178,16 @@
 //        });
 //        self.tree.push(temp);
 //      });
-      let userId = this.$store.state.user.userCompanyAddress;
-      Access.getRoleMenus(userId).then(res => {
-        this.treeData = res.data;
-      });
     },
     watch: {
+      filterText(val) {
+        this.$refs.tree.filter(val);
+      },
       formItem: function (val) {
+        this.getMenus();
         if (val.id) {
           this.form = this.formItem;
-          this.selectExistMenu();
+//          this.selectExistMenu();
         } else {
           this.form = {
             title: '',
@@ -179,12 +195,8 @@
             remark: '',
             permissionList: []
           };
-          this.selectExistMenu();
+//          this.selectExistMenu();
         }
-        let userId = this.$store.state.user.userCompanyAddress;
-        Access.getRoleMenus(userId).then(res => {
-          this.treeData = res.data;
-        });
       },
       showRight: function (val) {
         if (!val) {
@@ -214,16 +226,32 @@
       }
     },
     methods: {
-      checkAll: function () {
-        this.$refs.tree.setCheckedKeys([]);
+      filterNode(value, data) {
+        if (!value) return true;
+        return data.label.indexOf(value) !== -1;
       },
-      renderContent(h, {node, data, store}) {
-        return (
-          <span
-            style="flex: 1; display: flex; align-items: center; justify-content: space-between; font-size: 14px; padding-right: 8px;">
-              <span>
-                <span>{node.label}</span>
-              </span></span>);
+      getCheckedKeys() {
+        console.log(this.$refs.tree.getCheckedKeys());
+      },
+      getCheckedNodes() {
+        console.log(this.$refs.tree.getCheckedNodes());
+      },
+      handleNodeClick(data) {
+        console.log(data);
+      },
+      getMenus: function () {
+        let userId = this.$store.state.user.userCompanyAddress;
+        Access.getRoleMenus(userId).then(res => {
+          this.tree = res.data;
+        });
+      },
+      checkAll: function () {
+        if (this.checkAllRoles) {
+          this.$refs.tree.setCheckedNodes(this.tree);
+        }
+        if (!this.checkAllRoles) {
+          this.$refs.tree.setCheckedKeys([]);
+        }
       },
       selectExistMenu () {// 选中已有的权限
         let self = this;
@@ -306,21 +334,29 @@
           }
           this.doing = true;
           let rolelist = [];
-          let self = this;
-          this.tree.forEach(item => {
-            if (item.status || item.isIndeterminate) {
+//          let self = this;
+//          this.tree.forEach(item => {
+//            if (item.status || item.isIndeterminate) {
+//              rolelist.push({
+//                name: item.parentId,
+//                title: self.menuData[item.parentId]
+//              });
+//            }
+//            item.checkedChildren.forEach(val => {
+//              rolelist.push({
+//                name: val,
+//                title: self.menuData[val]
+//              });
+//            });
+//          });
+          let menuIdList = this.$refs.tree.getCheckedKeys();
+          if (menuIdList) {
+            menuIdList.forEach(val => {
               rolelist.push({
-                name: item.parentId,
-                title: self.menuData[item.parentId]
-              });
-            }
-            item.checkedChildren.forEach(val => {
-              rolelist.push({
-                name: val,
-                title: self.menuData[val]
+                name: val
               });
             });
-          });
+          }
 
           this.form.permissionList = rolelist;
           if (this.action === 'add') {

@@ -303,6 +303,15 @@
       edit: function () {
         this.action = 'edit';
         this.form = JSON.parse(JSON.stringify(this.resData));
+        let checkedIdList = [];
+        // 勾选已经有的权限
+        if (!this.form.id) return;
+        Access.getRoleDetail(this.form.id).then(res => {
+          res.data.permissionList.forEach(val => {
+            checkedIdList.push(val.name);
+          });
+        });
+        this.form.checkedIdList = checkedIdList;
         this.showRight = true;
       },
       forbid: function () {
