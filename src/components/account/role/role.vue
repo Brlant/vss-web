@@ -256,20 +256,23 @@
       }
     },
     methods: {
-      getCheckedMenu: function (data, name) {
+      getCheckedMenu: function (data, permissionList) {
         for (let i = 0; i < data.length; i++) {
-          if (data[i].id !== name) {
-            data[i].remove();
-            break;
-          } else {
-            this.getCheckedMenu(data[i].children, name);
+          if (permissionList.indexOf(data[i].id) === -1) {
+            data.splice(i, 1);
+            i--;
+          } else if (data[i].children) {
+            this.getCheckedMenu(data[i].children, permissionList);
           }
         }
       },
       getMenus: function (permissionList) {
+        let permissionIdList = [];
         permissionList.forEach(val => {
-          this.getCheckedMenu(this.menuList, val.name);
+          permissionIdList.push(val.name);
+          // this.getCheckedMenu(this.menuList, val.name);
         });
+        this.getCheckedMenu(this.menuList, permissionIdList);
       },
       getPageList: function () {// 查询角色列表
         let param = Object.assign({}, {
@@ -288,6 +291,7 @@
         if (!id) return;
         Access.getRoleDetail(id).then(res => {
           this.resData = res.data;
+          this.getMenus(this.resData.permissionList);
         });
       },
       resetRightBox: function () {

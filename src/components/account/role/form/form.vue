@@ -81,7 +81,8 @@
                        @change="checkAll()"></el-checkbox>
         </div>
         <el-tree :data="tree" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current
-                 :default-checked-keys="form.checkedIdList" :props="defaultProps" :filter-node-method="filterNode">
+                 :default-checked-keys="form.checkedIdList" :props="defaultProps"
+                 :filter-node-method="filterNode">
         </el-tree>
         <!--</div>-->
       </el-form>
@@ -311,6 +312,15 @@
           });
         }
       },
+      getCheckedMenu: function (data, menuList) {
+        for (let i = 0; i < data.length; i++) {
+          if (data[i].indeterminate || data[i].checked) {
+            menuList.push(data[i]);
+          } else if (data[i].children) {
+            this.getCheckedMenu(data[i].children, menuList);
+          }
+        }
+      },
       onSubmit: function (formName) {
         this.$refs[formName].validate((valid) => {
           if (!valid || this.doing) {
@@ -333,14 +343,23 @@
 //              });
 //            });
 //          });
-          let menuIdList = this.$refs.tree.getCheckedKeys();
+          // 获取选中的菜单
+          let menuList = [];
+          this.getCheckedMenu(this.$refs['tree'].root.childNodes, menuList);
+          console.log(menuList);
+          let menuIds = new Set();
+          let menuIdList = this.$refs.tree.getCheckedNodes();
           if (menuIdList) {
             menuIdList.forEach(val => {
-              rolelist.push({
-                name: val
-              });
+              menuIds.add(val.id);
+              if (val.parentId) {
+                menuIds.add(val.parentId);
+              }
             });
           }
+          menuIds.forEach(val => {
+            rolelist.push({name: val});
+          });
 
           this.form.permissionList = rolelist;
           if (this.action === 'add') {
