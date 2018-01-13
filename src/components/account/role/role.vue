@@ -182,18 +182,18 @@
         </div>
       </div>
     </div>
-    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px'}">
-      <role-form :formItem="form" :action="action" @close="showRight=false" :actionType="showRight"
-                 @changed="change"></role-form>
-    </page-right>
+    <!--<page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px'}">-->
+      <!--<role-form :formItem="form" :action="action" @close="showRight=false" :actionType="showRight"-->
+                 <!--@changed="change"></role-form>-->
+    <!--</page-right>-->
   </div>
 </template>
 <script>
   import {Access} from '../../../resources';
-  import roleForm from './form/form.vue';
-
+  // import roleForm from './form/form.vue';
+  import {getRoleMenus} from '@/tools/menu';
   export default {
-    components: {roleForm},
+    // components: {roleForm},
     data: function () {
       return {
         showRight: false,
@@ -216,25 +216,26 @@
           usableStatus: 1,
           keyWord: ''
         },
-        activeStatus: 1
+        activeStatus: 1,
+        permList: []
       };
     },
     computed: {
-      permList: function () {
-        return this.$store.state.permList;
-      },
+      // permList: function () {
+      //   return this.$store.state.permList;
+      // },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = (height - 20) + 'px';
         return height;
       },
       user () {
-        this.getRoleMenus();
+        getRoleMenus(this, 'permList');
       }
     },
     mounted() {
       this.getPageList();
-      this.getRoleMenus();
+      getRoleMenus(this, 'permList');
     },
     watch: {
       filters: {

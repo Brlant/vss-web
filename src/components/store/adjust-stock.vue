@@ -52,17 +52,20 @@
 <template>
   <div class="order-page">
     <div class="container">
+      <el-alert
+        title="请选择货品和批号输入调整部分库存数，如果是正数则增加库存，如果是负数则减少库存。"
+        type="warning">
+      </el-alert>
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
           <span>
             <i class="el-icon-t-adjust"></i>
-            <span class="title">请选择货品和批号输入调整部分库存数，如果是正数则增加库存，如果是负数则减少库存。</span>
           </span>
         </div>
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="12">
-              <oms-form-row label="货主货品" :span="4">
+              <oms-form-row label="货主货品" :span="4" :isRequire="true">
                 <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
@@ -85,13 +88,26 @@
               </oms-form-row>
             </el-col>
             <el-col :span="12">
-              <oms-form-row label="批号" :span="5">
+              <oms-form-row label="批号" :span="5" :isRequire="true">
                 <el-select v-model="searchWord.batchNumberId" filterable clearable remote @change="batchNumberChange"
                            :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号">
                   <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
                              :label="item.batchNumber">
                     {{ item.batchNumber }}
                     <!--<el-tag v-show="isNewBatch(item.createTime)" style="height: 20px">新</el-tag>-->
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
+              <oms-form-row label="仓库" :span="4">
+                <el-select v-model="searchWord.warehouseId" filterable clearable
+                           @change="warehouseChange"
+                           placeholder="请选择仓库">
+                  <el-option v-for="item in warehouses" :value="item.id" :key="item.id"
+                             :label="item.name">
                   </el-option>
                 </el-select>
               </oms-form-row>
@@ -125,8 +141,8 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <oms-form-row label="" :span="3">
-                <el-button type="primary" @click="onSubmit" style="margin-left: 20px" :disabled="doing">调整库存</el-button>
+              <oms-form-row label="" :span="4">
+                <el-button type="primary" @click="onSubmit"  :disabled="doing">调整库存</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -178,7 +194,7 @@
 </template>
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import { BaseInfo, erpStock, http } from '@/resources';
+  import { BaseInfo, erpStock, http, Address } from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
 
@@ -192,11 +208,13 @@
         batches: [],
         filters: {
           batchNumberId: '',
-          orgGoodsId: ''
+          orgGoodsId: '',
+          warehouseId: ''
         },
         searchWord: {
           batchNumberId: '',
-          orgGoodsId: ''
+          orgGoodsId: '',
+          warehouseId: ''
         },
         factories: [], // 厂商列表
         orgList: [], // 货主列表,
@@ -220,6 +238,7 @@
           'primary'
         ],
         batchNumberList: [],
+        warehouses: [],
         form: {
           availableCount: '',
           qualifiedCount: '',
@@ -231,6 +250,7 @@
     },
     mounted () {
       // this.getBatches(1);
+      this.queryOrgWarehouse();
     },
     computed: {
       orgLevel () {
@@ -359,7 +379,8 @@
       resetSearchForm: function () {// 重置表单
         let temp = {
           batchNumberId: '',
-          orgGoodsId: ''
+          orgGoodsId: '',
+          warehouseId: ''
         };
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
@@ -424,6 +445,20 @@
           this.batchNumberList = res.data.list;
         });
       },
+      queryOrgWarehouse() {
+        let param = Object.assign({}, {
+          deleteFlag: false,
+          auditedStatus: '1',
+        });
+        Address.queryAddress(param).then(res => {
+          this.warehouses = res.data;
+        });
+      },
+      warehouseChange (val) {
+        if (!this.searchWord.orgGoodsId || !this.searchWord.batchNumberId) return;
+        this.searchInOrder();
+        this.getBatches(1);
+      },
       formatTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
@@ -440,7 +475,7 @@
           });
           return;
         }
-        this.$confirm('是否调整库存;请谨慎操作', '', {
+        this.$confirm('是否调整库存，请谨慎操作', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
