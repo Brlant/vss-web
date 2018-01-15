@@ -1,5 +1,4 @@
-import {Access} from '@/resources.js';
-
+import {Access} from '@/resources';
 export default {
   mounted() {
 

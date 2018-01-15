@@ -65,8 +65,8 @@
   </div>
 </template>
 <script type="text/jsx">
-  import {Access} from '../../../../resources';
-  import roleMixin from '../../../../mixins/roleMixin';
+  import {Access} from '@/resources';
+  import roleMixin from '@/mixins/roleMixin';
 
   export default {
     props: {
