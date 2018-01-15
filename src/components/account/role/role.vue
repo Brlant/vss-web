@@ -182,9 +182,9 @@
   </div>
 </template>
 <script>
-  import {Access} from '../../../resources';
+  import {Access} from '@/resources';
   import roleForm from './form/form.vue';
-  import roleMixin from '../../../mixins/roleMixin.js';
+  import roleMixin from '@/mixins/roleMixin';
 
   export default {
     components: {roleForm},
@@ -250,7 +250,6 @@
       getMenuList: function (cache = true) {
         this.getRoleMenus(cache).then(res => {
           this.checkedMenuList = res.data;
-          this.getMenus();
         });
       },
       getCheckedMenu: function (data, permissionList) {

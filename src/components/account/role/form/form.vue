@@ -80,8 +80,8 @@
   </div>
 </template>
 <script type="text/jsx">
-  import {Access} from '../../../../resources';
-  import roleMixin from '../../../../mixins/roleMixin';
+  import {Access} from '@/resources';
+  import roleMixin from '@/mixins/roleMixin';
 
   export default {
     props: {
@@ -212,7 +212,7 @@
           });
           this.form.permissionList = rolelist;
           if (this.action === 'add') {
-            this.form.objectId = 'wms-system';
+            this.form.objectId = 'cerp-system';
             Access.save(this.form).then(() => {
               this.doing = false;
               this.$notify.success({
