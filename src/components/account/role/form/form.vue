@@ -19,6 +19,21 @@
     text-align: center;
     padding: 15px;
   }
+  .check-all {
+    margin-left: 24px;
+  }
+  .filter-input.el-input {
+    padding-right: 40px;
+    margin-bottom: 10px;
+    margin-left: 22px;
+    width: 67.5%;
+  }
+  .role-title {
+    margin: 10px 0 10px 10px;
+  }
+  .el-tree {
+    width:70%;
+  }
 </style>
 <template>
   <div class="content-part">
@@ -47,12 +62,12 @@
         <el-form-item label="角色描述">
           <oms-input type="text" v-model="form.remark" placeholder="请输入"></oms-input>
         </el-form-item>
-        <h4 class="clearfix">配置角色权限</h4>
-        <el-input
+        <h4 class="clearfix role-title">配置角色权限</h4>
+        <el-input class="filter-input"
           placeholder="输入关键字进行过滤"
           v-model="filterText">
         </el-input>
-        <div>
+        <div class="check-all">
           <el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles"
                        @change="checkAll()"></el-checkbox>
         </div>
