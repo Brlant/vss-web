@@ -50,7 +50,9 @@
              v-for="(item,key) in orgType"
              @click="filters.usableStatus=item.usableStatus">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title"><i class="el-icon-caret-right" v-if="item.usableStatus==filters.usableStatus"></i>{{item.title}}<!--<span class="status-num">{{item.num}}</span>--></div>
+          <div class="status-title"><i class="el-icon-caret-right"
+                                       v-if="item.usableStatus==filters.usableStatus"></i>{{item.title}}
+            <!--<span class="status-num">{{item.num}}</span>--></div>
         </div>
       </div>
       <div class="container d-table">
@@ -182,10 +184,11 @@
 <script>
   import {Access} from '../../../resources';
   import roleForm from './form/form.vue';
-  import {getRoleMenus} from '@/tools/menu';
+  import roleMixin from '../../../mixins/roleMixin.js';
 
   export default {
     components: {roleForm},
+    mixins: [roleMixin],
     data: function () {
       return {
         defaultProps: {
@@ -224,13 +227,13 @@
         height = (height - 20) + 'px';
         return height;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
     mounted() {
       this.getPageList();
-      getRoleMenus(this, 'menuList');
+      this.getMenuList();
     },
     watch: {
       filters: {
@@ -240,10 +243,16 @@
         deep: true
       },
       user() {
-        getRoleMenus(this, 'menuList');
+        this.getMenuList(false);
       }
     },
     methods: {
+      getMenuList: function (cache = true) {
+        this.getRoleMenus(cache).then(res => {
+          this.checkedMenuList = res.data;
+          this.getMenus();
+        });
+      },
       getCheckedMenu: function (data, permissionList) {
         for (let i = 0; i < data.length; i++) {
           if (permissionList.indexOf(data[i].id) === -1) {
@@ -258,9 +267,7 @@
         let permissionIdList = [];
         permissionList.forEach(val => {
           permissionIdList.push(val.name);
-          // this.getCheckedMenu(this.menuList, val.name);
         });
-        this.checkedMenuList = JSON.parse(JSON.stringify(this.menuList));
         this.getCheckedMenu(this.checkedMenuList, permissionIdList);
       },
       getPageList: function () {// 查询角色列表

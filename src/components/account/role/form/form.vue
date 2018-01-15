@@ -53,7 +53,8 @@
           v-model="filterText">
         </el-input>
         <div>
-          <el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles" @change="checkAll()"></el-checkbox>
+          <el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles"
+                       @change="checkAll()"></el-checkbox>
         </div>
         <el-tree :data="tree" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current
                  :default-checked-keys="checkedIdList" :props="defaultProps"
@@ -65,7 +66,7 @@
 </template>
 <script type="text/jsx">
   import {Access} from '../../../../resources';
-  import {getRoleMenus} from '@/tools/menu';
+  import roleMixin from '../../../../mixins/roleMixin';
 
   export default {
     props: {
@@ -82,6 +83,7 @@
         default: true
       }
     },
+    mixins: [roleMixin],
     data: function () {
       let checkName = (rule, value, callback) => {
         if (value === '') {
@@ -121,7 +123,7 @@
       };
     },
     computed: {
-      checkedIdList () {
+      checkedIdList() {
         let menuParentIds = this.$store.state.menuParentIds;
         return this.form.checkedIdList && this.form.checkedIdList.filter(f => !menuParentIds.includes(f)) || [];
       }
@@ -148,7 +150,7 @@
           this.$refs['roleform'].resetFields();
         }
       },
-      checkedIdList (val) {
+      checkedIdList(val) {
         this.$refs.tree.setCheckedKeys(val);
       }
     },
@@ -158,7 +160,9 @@
         return data.label.indexOf(value) !== -1;
       },
       getMenus: function () {
-        getRoleMenus(this, 'tree');
+        this.getRoleMenus().then(res => {
+          this.tree = res.data;
+        });
       },
       checkAll: function () {
         if (this.checkAllRoles) {

@@ -11,6 +11,7 @@ export function getRoleMenus(vm, property) {
     vm[property] = menu;
     return;
   }
+
   let userId = vm.$store.state.user.userCompanyAddress;
   if (!userId) {
     return;
