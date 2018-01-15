@@ -250,7 +250,6 @@
       getMenuList: function (cache = true) {
         this.getRoleMenus(cache).then(res => {
           this.checkedMenuList = res.data;
-          this.getMenus();
         });
       },
       getCheckedMenu: function (data, permissionList) {
