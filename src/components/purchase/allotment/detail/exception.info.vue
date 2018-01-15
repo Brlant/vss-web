@@ -112,7 +112,7 @@
               <span v-show="!exception.closed && exception.exceptionStatus === '0' ">待确认</span>
                   </span>
             <perm label="quality-exception-edit"
-                  v-show="exception.closed===false &&(exception.item.auditFlag&&exception.exceptionStatus!=='0')">
+                  v-show="exception.closed===false &&(exception.exceptionStatus!=='0')">
               <div style="margin-top: 10px;margin-bottom: 10px">
                 <span style="font-size: 14px">客户意见</span>
                 <div class="comment-box" style="margin-top: 4px">
@@ -129,16 +129,16 @@
             <span>
                     <perm label="quality-exception-confirm">
                         <el-button type="primary"
-                                   v-show="exception.item.auditFlag&&exception.exceptionStatus==='0'"
+                                   v-show="exception.exceptionStatus==='0'"
                                    @click="checkException(exception)">确认</el-button>
                     </perm>
                       <perm label="quality-exception-edit"
-                            v-show="exception.closed===false &&(exception.item.auditFlag&&exception.exceptionStatus!=='0')">
+                            v-show="exception.closed===false &&(exception.exceptionStatus!=='0')">
                         <el-button type="primary" @click="saveException(exception)" :disabled="doing">提交</el-button>
                       </perm>
                      <perm label="quality-exception-close">
                           <el-button type="primary"
-                                     v-show="exception.closed===false &&(exception.item.auditFlag&&exception.exceptionStatus!=='0')"
+                                     v-show="exception.closed===false &&(exception.exceptionStatus!=='0')"
                                      @click="closeException(exception)">关闭异常</el-button>
                       </perm>
                   </span>
