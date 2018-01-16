@@ -38,7 +38,7 @@
             </el-col>
             <el-col :span="18"><strong>{{log.actionTitle}}</strong>
               <el-tooltip class="item" effect="dark" :content="log.operatorOrgName ? log.operatorOrgName : '平台用户' "
-                          placement="right">
+                          placement="right" v-show="log.operatorName">
                 <span class="font-gray">[{{log.operatorName}}]</span>
               </el-tooltip>
             </el-col>
