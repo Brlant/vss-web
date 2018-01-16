@@ -96,7 +96,7 @@
       <div class="d-table-right">
         <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
           <el-row>
-            <el-col :span="20">
+            <el-col :span="22">
               <el-form class="rightForm" ref="rightForm" inline onsubmit="return false">
                 <el-form-item label="接种点">
                   <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV"
@@ -117,10 +117,13 @@
                 <el-form-item style="margin-left: 10px">
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                  <perm label="first-vaccine-authorization-delete">
+                    <el-button plain type="warning" @click="onceCancelRights">一键取消所有授权</el-button>
+                  </perm>
                 </el-form-item>
               </el-form>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="2">
               <span class="pull-right" v-show="showTypeList.length">
                   <perm label="first-vaccine-authorization-add">
                     <el-button @click="add(currentItem)"><i
@@ -449,6 +452,26 @@
           Object.assign(this.formPara, item);
         }
         this.showRight = false;
+      },
+      onceCancelRights() {
+        this.$confirm('是否取消疫苗"' + this.currentItem.orgGoodsDto.name + '"的所有接种点授权', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.delete(`vaccine-authorization/${this.currentItem.orgGoodsDto.id}/all`).then(() => {
+            this.getPageList(1);
+            this.$notify.success({
+              type: '成功',
+              message: '已经取消疫苗"' + this.currentItem.orgGoodsDto.name + '"的所有接种点授权'
+            });
+          }).catch(error => {
+            this.$notify.error({
+              type: '失败',
+              message: error.response.data && error.response.data.msg || '取消所有接种点授权失败'
+            });
+          });
+        });
       }
     }
   };
