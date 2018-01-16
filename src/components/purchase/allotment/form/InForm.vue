@@ -308,10 +308,8 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
                       </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice
-                        }}</span>
-                      </span>
+                      <span class="select-other-info pull-left">
+                          <span>标准价格 ￥</span>{{ item.orgGoodsDto.unitPrice | formatMoney}}</span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
                       </span>
@@ -342,8 +340,7 @@
                       <span v-show="accessoryList.length">【组合货品】</span>
                       <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
                        <span style="margin-right: 10px">{{acce.name}}</span>
-                      <span style="margin-right: 10px"
-                            v-show="acce.procurementPrice">¥ {{ acce.procurementPrice | formatMoney }}</span>
+                      <span style="margin-right: 10px">¥ {{ acce.unitPrice | formatMoney }}</span>
                        <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
@@ -668,7 +665,7 @@
             });
             this.product.orgGoodsId = res.data.orgGoodsDto.id;
             this.product.fixInfo = res.data.orgGoodsDto;
-            let price = res.data.orgGoodsDto.procurementPrice;
+            let price = res.data.orgGoodsDto.unitPrice;
             this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
             this.product.measurementUnit = res.data.orgGoodsDto.goodsDto.measurementUnit;
             this.accessoryList = res.data.list;
@@ -967,7 +964,7 @@
         this.searchProductList.forEach(item => {
           if (item.orgGoodsDto.id === OrgGoodsId) {
             this.product.fixInfo = item.orgGoodsDto;
-            let price = item.orgGoodsDto.procurementPrice;
+            let price = item.orgGoodsDto.unitPrice;
             this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
             this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
             this.accessoryList = item.list;
@@ -1007,7 +1004,7 @@
                   isCombination: true,
                   orgGoodsId: m.accessory,
                   orgGoodsName: m.name,
-                  unitPrice: m.procurementPrice ? m.procurementPrice : 0,
+                  unitPrice: m.unitPrice ? m.unitPrice : 0,
                   amount: amount,
                   measurementUnit: m.accessoryGoods.measurementUnit,
                   packingCount: null,
