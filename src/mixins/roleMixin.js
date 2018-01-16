@@ -30,7 +30,7 @@ export default {
                 getParentIds(menus, parentIds);
                 this.$store.commit('initMenuParentIds', parentIds);
               };
-              setParentIds(res);
+              setParentIds(res.data);
             });
           }
         }

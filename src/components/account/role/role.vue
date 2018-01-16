@@ -249,7 +249,7 @@
     methods: {
       getMenuList: function (cache = true) {
         this.getRoleMenus(cache).then(res => {
-          this.checkedMenuList = res.data;
+          this.menuList = res.data;
         });
       },
       getCheckedMenu: function (data, permissionList) {
@@ -267,6 +267,7 @@
         permissionList.forEach(val => {
           permissionIdList.push(val.name);
         });
+        this.checkedMenuList = JSON.parse(JSON.stringify(this.menuList));
         this.getCheckedMenu(this.checkedMenuList, permissionIdList);
       },
       getPageList: function () {// 查询角色列表
