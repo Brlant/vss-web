@@ -313,7 +313,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
-  import { BaseInfo, erpOrder, Order, Vaccine } from '@/resources';
+  import { BaseInfo, erpOrder, Vaccine } from '@/resources';
   import GoodsSwitch from '@/components/common/order/goods-switch';
 
   export default {
@@ -505,7 +505,7 @@
             this.loadingData = false;
           });
         } else {
-          Order.queryOrderExcepiton(param).then(res => {
+          erpOrder.queryOrderExcepiton(param).then(res => {
             this.orderList = res.data.list;
 //            this.pager.count = res.data.count;
             if (this.orderList.length === this.pager.pageSize) {
@@ -583,9 +583,9 @@
         return num;
       },
       remove: function (order) {
-        Order.delete(order.id).then(() => {
-          this.getOrderList();
-        });
+        // Order.delete(order.id).then(() => {
+        //   this.getOrderList();
+        // });
       },
       showItem: function (order) {
         this.currentOrderId = order.id;

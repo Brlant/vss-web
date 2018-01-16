@@ -303,7 +303,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
-  import { BaseInfo, erpOrder, Order, Vaccine } from '@/resources';
+  import { BaseInfo, erpOrder, Vaccine } from '@/resources';
 
   export default {
     components: {
@@ -574,9 +574,9 @@
         return num;
       },
       remove: function (order) {
-        Order.delete(order.id).then(() => {
-          this.getOrderList();
-        });
+        // Order.delete(order.id).then(() => {
+        //   this.getOrderList();
+        // });
       },
       showItem: function (order) {
         this.currentOrderId = order.id;

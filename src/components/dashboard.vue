@@ -124,7 +124,7 @@
 
 </template>
 <script>
-  import { Order, pullSignal } from '@/resources';
+  import { erpOrder, pullSignal } from '@/resources';
 
   export default {
     data: function () {
@@ -165,7 +165,7 @@
           type: 0,
           searchType: 1
         });
-        Order.queryOrderExcepiton(param).then(res => {
+        erpOrder.queryOrderExcepiton(param).then(res => {
           this.orderList = res.data.list;
         });
       },

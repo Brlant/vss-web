@@ -320,7 +320,7 @@
   import showForm from './form/showForm.vue';
   import editForm from './form/editForm.vue';
   import orderForm from '../order/show.order.in.vue';
-  import {Order, BaseInfo, PurchaseContract} from '@/resources';
+  import { BaseInfo, PurchaseContract} from '@/resources';
 
   export default {
     components: {
