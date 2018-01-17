@@ -117,24 +117,24 @@
             <el-col :span="12">
               <el-col :span="12">
                 <oms-form-row label="可用库存" :span="8">
-                  <el-input v-model="form.availableCount"></el-input>
+                  <el-input  type="number" v-model.number="form.availableCount"></el-input>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
                 <oms-form-row label="在途库存" :span="6">
-                  <el-input v-model="form.transitCount"></el-input>
+                  <el-input type="number" v-model.number="form.transitCount"></el-input>
                 </oms-form-row>
               </el-col>
             </el-col>
             <el-col :span="12">
               <el-col :span="12">
                 <oms-form-row label="实际合格库存" :span="10">
-                  <el-input v-model="form.qualifiedCount"></el-input>
+                  <el-input type="number" v-model.number="form.qualifiedCount"></el-input>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
                 <oms-form-row label="实际不合格库存" :span="10">
-                  <el-input v-model="form.unqualifiedCount"></el-input>
+                  <el-input type="number" v-model.number="form.unqualifiedCount"></el-input>
                 </oms-form-row>
               </el-col>
             </el-col>
