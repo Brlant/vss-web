@@ -68,7 +68,7 @@
           v-model="filterText">
         </el-input>
         <div class="check-all">
-          <el-checkbox label="全选" style="margin-bottom: 20px" v-model="checkAllRoles"
+          <el-checkbox label="全选"  v-model="checkAllRoles"
                        @change="checkAll()"></el-checkbox>
         </div>
         <el-tree :data="tree" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current

@@ -346,7 +346,7 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height + 10) + 'px';
+        height = (height - 30) + 'px';
         return height;
       },
       user () {

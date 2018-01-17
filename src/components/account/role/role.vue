@@ -217,8 +217,7 @@
           keyWord: ''
         },
         activeStatus: 1,
-        menuList: [],
-        checkedMenuList: []
+        menuList: []
       };
     },
     computed: {
@@ -229,6 +228,13 @@
       },
       user() {
         return this.$store.state.user;
+      },
+      checkedMenuList () {
+        let checkedMenuList = JSON.parse(JSON.stringify(this.menuList));
+        let perms = this.resData.permissionList;
+        if (!checkedMenuList || !perms) return [];
+        this.getMenus(checkedMenuList, perms);
+        return checkedMenuList;
       }
     },
     mounted() {
@@ -262,13 +268,12 @@
           }
         }
       },
-      getMenus: function (permissionList) {
+      getMenus: function (checkedMenuList, permissionList) {
         let permissionIdList = [];
         permissionList.forEach(val => {
           permissionIdList.push(val.name);
         });
-        this.checkedMenuList = JSON.parse(JSON.stringify(this.menuList));
-        this.getCheckedMenu(this.checkedMenuList, permissionIdList);
+        this.getCheckedMenu(checkedMenuList, permissionIdList);
       },
       getPageList: function () {// 查询角色列表
         let param = Object.assign({}, {
@@ -287,7 +292,7 @@
         if (!id) return;
         Access.getRoleDetail(id).then(res => {
           this.resData = res.data;
-          this.getMenus(this.resData.permissionList);
+          // this.getMenus(this.resData.permissionList);
         });
       },
       resetRightBox: function () {
@@ -388,8 +393,8 @@
               roleItem.title = item.title;
             }
           });
-          // 重新过滤树
-          this.getMenus(this.resData.permissionList);
+          // // 重新过滤树
+          // this.getMenus(this.resData.permissionList);
           this.showRight = false;
         }
       }
