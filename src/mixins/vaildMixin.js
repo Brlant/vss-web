@@ -8,6 +8,7 @@ export default {
         let body = document.body;
         let el = null;
         let pos = getMousePos(e);
+        let clientWidth = document.documentElement.clientWidth || document.body.clientWidth;
         el = document.getElementById('valid-tooltip');
         if (!el) {
           el = document.createElement('div');
@@ -15,7 +16,8 @@ export default {
           el.innerText = '近效期';
         }
         el.style.top = (pos.y - 20) + 'px';
-        el.style.left = (pos.x + 10) + 'px';
+        let value = clientWidth - pos.x;
+        el.style.left = value > 100 ? (pos.x + 10) + 'px' : (pos.x - 50) + 'px';
         body.appendChild(el);
       }
     },
