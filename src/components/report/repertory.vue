@@ -74,9 +74,6 @@
         <el-table-column prop="endStockCount" label="期末库存" :sortable="true"></el-table-column>
       </el-table>
     </div>
-    <div role="tooltip" id="el-tooltip-oms" aria-hidden="true" class="el-tooltip__popper is-light" style="transform-origin: center top 0px; z-index: 2063; display: none;">
-      <div x-arrow="" class="popper__arrow" style="left: 43.5px;"></div>
-    </div>
   </div>
 </template>
 <script>

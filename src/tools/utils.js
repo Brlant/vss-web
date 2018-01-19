@@ -321,3 +321,12 @@ export default {
     return defaultHeight;
   }
 };
+
+export function getMousePos(event) {
+  let e = event || window.event;
+  let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+  let scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+  let x = e.pageX || e.clientX + scrollX;
+  let y = e.pageY || e.clientY + scrollY;
+  return { 'x': x, 'y': y };
+}

@@ -136,7 +136,7 @@
       </div>
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
-                :row-class-name="formatRowClass"
+                :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter"  @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
@@ -189,9 +189,10 @@
   import { BaseInfo, erpStock, http } from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
-
+  import validMixin from '@/mixins/vaildMixin';
   export default {
     components: {detail},
+    mixins: [validMixin],
     data () {
       return {
         loadingData: true,
