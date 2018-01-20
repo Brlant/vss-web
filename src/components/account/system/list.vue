@@ -50,12 +50,15 @@
              v-for="(item,key) in orgType"
              @click="filters.usableStatus=item.usableStatus">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title"><i class="el-icon-caret-right" v-if="item.usableStatus==filters.usableStatus"></i>{{item.title}}<!--<span class="status-num">{{item.num}}</span>--></div>
+          <div class="status-title"><i class="el-icon-caret-right"
+                                       v-if="item.usableStatus==filters.usableStatus"></i>{{item.title}}
+            <!--<span class="status-num">{{item.num}}</span>--></div>
         </div>
       </div>
       <div class="container d-table">
         <div class="d-table-left">
-          <h2 class="header">
+          <div class="d-table-col-wrap">
+            <h2 class="header">
                 <span class="pull-right">
                   <perm label="access-role-add">
                     <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="el-icon-t-plus"></i> </a>
@@ -63,33 +66,32 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="el-icon-t-search"></i> </a>
                 </span>
-            系统角色管理
-          </h2>
-          <perm label="access-role-watch">
-          <div class="search-left-box" v-show="showTypeSearch">
-            <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
-          </div>
-          </perm>
-          <div v-if="!currentItem.title" class="empty-info">
-            暂无信息
-          </div>
-          <div v-else>
-            <ul class="show-list">
-              <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
-                  :class="{'active':item.id===currentItem.id}">
-                <!--<perm label="access-role-delete">-->
-                  <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'-->
-                              <!--class="hover-show"><i-->
-                    <!--class="el-icon-t-delete"></i></oms-remove>-->
-                <!--</perm>-->
-                <div class="id-part">
-                  {{item.name }}
-                </div>
-                <div>
-                  {{item.title }}
-                </div>
-              </li>
-            </ul>
+              角色管理
+            </h2>
+            <div class="search-left-box" v-show="showTypeSearch">
+              <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
+            </div>
+            <div v-if="!currentItem.title" class="empty-info">
+              暂无信息
+            </div>
+            <div v-else>
+              <ul class="show-list">
+                <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
+                    :class="{'active':item.id===currentItem.id}">
+                  <perm label="access-role-delete">
+                    <oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'
+                                class="hover-show"><i
+                      class="el-icon-t-delete"></i></oms-remove>
+                  </perm>
+                  <div class="id-part">
+                    {{item.name }}
+                  </div>
+                  <div>
+                    {{item.title }}
+                  </div>
+                </li>
+              </ul>
+            </div>
           </div>
         </div>
         <div class="d-table-right">
@@ -118,9 +120,9 @@
                      <i class="el-icon-t-start"></i>启用
                    </el-button>
                  </perm>
-                 <!--<perm label="access-role-delete">-->
-                 <!--<el-button @click="remove()"><i class="el-icon-t-delete"></i>删除</el-button>-->
-                 <!--</perm>-->
+                <perm label="access-role-delete">
+                   <el-button @click="remove()"><i class="el-icon-t-delete"></i>删除</el-button>
+                </perm>
                 </el-button-group>
               </span>
               </h2>
@@ -164,16 +166,7 @@
                 </el-row>
                 <el-row>
                   <el-col :span="24">
-                    <div class="role-perm-list">
-                      <div class="group-list" v-for="groupItem in permList.tree"
-                           v-show="checkGroupItem(groupItem)">
-                        <h2>{{permList.menuList[groupItem.parentId]}}</h2>
-                        <ul>
-                          <li v-for="item in groupItem.children" v-show="checkItem(item)">{{permList.menuList[item]}}
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
+                    <el-tree :data="checkedMenuList" :props="defaultProps" default-expand-all></el-tree>
                   </el-col>
                 </el-row>
               </div>
@@ -183,19 +176,26 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px'}">
-      <role-form :formItem="form" :action="action" @close="showRight=false" :roleMenu="permList" :actionType="showRight"
+      <role-form :formItem="form" :action="action" @close="showRight=false" :actionType="showRight"
                  @changed="change"></role-form>
     </page-right>
   </div>
 </template>
 <script>
-  import { Access } from '../../../resources';
+  import {Access} from '@/resources';
   import roleForm from './form/form.vue';
+  import roleMixin from '@/mixins/roleMixin';
 
   export default {
     components: {roleForm},
+    mixins: [roleMixin],
     data: function () {
       return {
+        defaultProps: {
+          children: 'children',
+          label: 'label',
+          isLeaf: 'leaf'
+        },
         showRight: false,
         showTypeRight: false,
         showTypeSearch: false,
@@ -217,22 +217,29 @@
           keyWord: ''
         },
         activeStatus: 1,
-        permList: {}
+        menuList: []
       };
     },
     computed: {
-      // allMenuList: function () {
-      //   return this.$store.state.allMenuList;
-      // },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = (height - 20) + 'px';
         return height;
+      },
+      user() {
+        return this.$store.state.user;
+      },
+      checkedMenuList() {
+        let checkedMenuList = JSON.parse(JSON.stringify(this.menuList));
+        let perms = this.resData.permissionList;
+        if (!checkedMenuList || !perms) return [];
+        this.getMenus(checkedMenuList, perms);
+        return checkedMenuList;
       }
     },
-    mounted () {
+    mounted() {
       this.getPageList();
-      this.getRoleMenus();
+      this.getMenuList();
     },
     watch: {
       filters: {
@@ -240,10 +247,35 @@
           this.getPageList();
         },
         deep: true
+      },
+      user() {
+        this.getMenuList(false);
       }
     },
     methods: {
-      getPageList: function () {
+      getMenuList: function (cache = true) {
+        this.getRoleMenus(cache).then(res => {
+          this.menuList = res.data;
+        });
+      },
+      getCheckedMenu: function (data, permissionList) {
+        for (let i = 0; i < data.length; i++) {
+          if (permissionList.indexOf(data[i].id) === -1) {
+            data.splice(i, 1);
+            i--;
+          } else if (data[i].children) {
+            this.getCheckedMenu(data[i].children, permissionList);
+          }
+        }
+      },
+      getMenus: function (checkedMenuList, permissionList) {
+        let permissionIdList = [];
+        permissionList.forEach(val => {
+          permissionIdList.push(val.name);
+        });
+        this.getCheckedMenu(checkedMenuList, permissionIdList);
+      },
+      getPageList: function () {// 查询角色列表
         let param = Object.assign({}, {
           keyword: this.typeTxt,
           deleteFlag: false,
@@ -256,21 +288,11 @@
           this.queryRoleDetail(this.currentItem.id);
         });
       },
-      getRoleMenus () {
-        this.$http.get('/oms/access/menus', {params: {objectId: 'cerp-system'}}).then(res => {
-          let menuData = res.data;
-          let menuList = {};
-          res.data.menuList.forEach(item => {
-            menuList[item.id] = item.name;
-          });
-          menuData.menuList = menuList;
-          this.permList = menuData;
-        });
-      },
       queryRoleDetail: function (id) {
         if (!id) return;
         Access.getRoleDetail(id).then(res => {
           this.resData = res.data;
+          // this.getMenus(this.resData.permissionList);
         });
       },
       resetRightBox: function () {
@@ -284,19 +306,15 @@
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
       },
-      pickTypeList: function () {
-        let arr = [];
-        let self = this;
-        this.typeList.forEach(function (value) {
-          if (value.title.indexOf(self.typeTxt) !== -1) {
-            arr.push(value);
-          }
-        });
-        this.showTypeList = arr;
-      },
       edit: function () {
         this.action = 'edit';
         this.form = JSON.parse(JSON.stringify(this.resData));
+        let checkedIdList = [];
+        // 勾选已经有的权限
+        this.form.permissionList.forEach(val => {
+          checkedIdList.push(val.name);
+        });
+        this.form.checkedIdList = checkedIdList;
         this.showRight = true;
       },
       forbid: function () {
@@ -375,31 +393,10 @@
               roleItem.title = item.title;
             }
           });
+          // // 重新过滤树
+          // this.getMenus(this.resData.permissionList);
           this.showRight = false;
         }
-      },
-      checkItem: function (item) {
-        let visible = false;
-        this.resData.permissionList.forEach(function (val) {
-          if (val.name === item) {
-            visible = true;
-            return false;
-          }
-        });
-        return visible;
-      },
-      checkGroupItem: function (item) {
-        let visible = false;
-        item.children.forEach(key => {
-          if (this.checkItem(key)) {
-            visible = true;
-            return false;
-          }
-        });
-        if (this.checkItem(item.parentId)) {
-          visible = true;
-        }
-        return visible;
       }
     }
   };
