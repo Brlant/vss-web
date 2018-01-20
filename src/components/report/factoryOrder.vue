@@ -134,7 +134,7 @@
         </el-form>
       </div>
 
-      <el-table :data="batches" class="header-list store" border
+      <el-table :data="batches" class="header-list store" border :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" v-loading="loadingData"
                 max-height="600" v-show="showTable">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true" width="150"></el-table-column>
@@ -169,17 +169,25 @@
         <el-table-column prop="count" label="数量" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="goodsUnit" label="单位" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="price" label="单价" :sortable="true"
-                         width="120"></el-table-column>
+                         width="120">
+          <template slot-scope="scope">
+            ￥{{ scope.row.price }}
+          </template>
+        </el-table-column>
         <el-table-column prop="totalMoney" label="金额" :sortable="true"
-                         width="120"></el-table-column>
+                         width="120">
+          <template slot-scope="scope">
+            ￥{{ scope.row.totalMoney}}
+          </template>
+        </el-table-column>
       </el-table>
-      <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
-      <!--<el-pagination-->
-      <!--layout="prev, pager, next"-->
-      <!--:total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"-->
-      <!--:current-page="pager.currentPage">-->
-      <!--</el-pagination>-->
-      <!--</div>-->
+      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <el-pagination
+      layout="total, sizes, prev, pager, next, jumper"
+      :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
+      :current-page="pager.currentPage">
+      </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -249,10 +257,13 @@
           this.vaccineList = res.data.list;
         });
       },
-      getBatches () { // 得到订单列表
+      getBatches (pageNo) { // 得到订单列表
+        this.pager.currentPage = pageNo;
         this.showTable = true;
         this.loadingData = true;
         let params = this.searchWord;
+        params.pageNo = pageNo;
+        params.pageSize = this.pager.pageSize;
         this.$http({
           url: '/order-statement/factory',
           params,
@@ -261,8 +272,43 @@
           }
         }).then(res => {
           this.batches = res.data.list;
+          this.pager.count = res.data.count;
           this.loadingData = false;
         });
+      },
+      getSummaries (param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (column.property !== 'count' && column.property !== 'price' &&
+            column.property !== 'totalMoney') {
+            sums[index] = '';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = '';
+          }
+        });
+        sums.forEach((i, index) => {
+          if (index > sums.length - 3) {
+            sums[index] = '￥' + i;
+          }
+        });
+        return sums;
       },
       exportFile: function () {
         let params = this.searchWord;
