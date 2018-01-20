@@ -31,6 +31,7 @@ module.exports = {
       '/api': {
         // target: 'https://test.cdcerp.cn/',
         target: 'http://erp.tinysoft.cc:88/',
+        // target: 'http://192.168.2.198:8113/',
         changeOrigin: true
       }
     },
