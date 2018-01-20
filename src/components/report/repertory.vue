@@ -62,19 +62,18 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight()"
+      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight()" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="goodsName" label="疫苗名称" width="160" :sortable="true"></el-table-column>
         <el-table-column prop="restStockCount" label="期前库存" :sortable="true"></el-table-column>
         <el-table-column prop="purchaseCount" label="进苗数量" :sortable="true"></el-table-column>
         <el-table-column prop="saleCount" label="发苗数量" :sortable="true"></el-table-column>
-        <el-table-column prop="saleReturnCount" label="退区数量" :sortable="true"></el-table-column>
-        <el-table-column prop="purchaseReturnCount" label="退厂家数量" :sortable="true"></el-table-column>
+        <el-table-column prop="saleReturnCount" label="销退数量" :sortable="true"></el-table-column>
+        <el-table-column prop="purchaseReturnCount" label="购退数量" :sortable="true"></el-table-column>
         <el-table-column prop="scarpCount" label="报损数量" :sortable="true"></el-table-column>
         <el-table-column prop="endStockCount" label="期末库存" :sortable="true"></el-table-column>
       </el-table>
     </div>
-
   </div>
 </template>
 <script>

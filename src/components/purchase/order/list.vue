@@ -262,7 +262,7 @@
                   <span>下单</span>
                   ：{{item.createTime | minute }}
                 </div>
-                <div>
+                <div v-show="item.expectedTime">
                   <span>预计入库</span>
                   ：{{ item.expectedTime | date}}
                 </div>

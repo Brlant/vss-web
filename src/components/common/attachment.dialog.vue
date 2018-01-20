@@ -1,5 +1,6 @@
 <style lang="less">
   .attachment-dialog {
+    user-select: none;
     .el-dialog {
       width: 100%;
       transform: none;
@@ -34,12 +35,27 @@
       padding: 0;
       .dialog-image-rap {
         position: absolute;
-        left: 50%;
-        top: 50%;
-        transform: translateX(-50%) translateY(-50%);
+        left: 0;
+        right: 0;
+        bottom: 0;
+        top: 0;
+        overflow:hidden;
+        text-align: center;
+        > div {
+          position: absolute;
+          left: 0;
+          top: 0;
+          min-width:100%;
+          min-height:100%;
+          text-align: center;
+          display:flex;
+          align-items: center;
+        }
         img {
-          max-width: 95vh;
+          max-width: 95vw;
           max-height: 95vh;
+          margin: 0 auto;
+          cursor: pointer;
         }
       }
       .img-tools {
@@ -81,7 +97,7 @@
 <template>
   <el-dialog :visible.sync="dialogVisible" :before-close="close" :fullscreen="true"
              class="attachment-dialog"
-             :class="{'docview':type=='doc','img-view':type=='image'}" top="0">
+             :class="{'docview':type=='doc','img-view':type=='image'}" top="0" ondragstart="return false">
     <div slot="title" class="attachment-dialog-head">
       <div>{{Attachment.attachmentFileName}}</div>
       <a class="download-link" :href="Attachment.attachmentStoragePath" @click.stop=""
@@ -92,8 +108,10 @@
     <transition name="el-fade-in">
       <div @click.stop="closeDialog" style="height:100%;width:100%;">
         <div v-if="type=='image'" class="dialog-image-rap">
-          <img :src="fileUrl+'?image&action=resize:h_600,m_2'" alt=''
-               :style="'transform: rotate('+currentZ+'deg)'" @click.stop="stop">
+          <div id="dialog-image-rap" :style="style">
+            <img :src="fileUrl" alt=''
+            >
+          </div>
         </div>
         <div v-if="groupLen>1" class="img-button">
           <!--<el-tooltip content="前一个资源">-->
@@ -118,6 +136,11 @@
         <div class="img-tools" v-if="type=='image'" @click.stop="stop">
           <el-button type="default" @click.stop="changeZ(1)"><i class="el-icon-t-rotate"></i>
           </el-button>
+
+          <el-button type="default" @click.stop="changeScale(1.2)"><i class="el-icon-zoom-in"></i>
+          </el-button>
+          <el-button type="default" @click.stop="changeScale(0.8)"><i class="el-icon-zoom-out"></i>
+          </el-button>
         </div>
         <div v-if="type=='doc'" class="attachment-doc-body" @click.stop="stop">
           <iframe :src="docViewUrl" width="100%" height="100%" frameborder="0"></iframe>
@@ -127,7 +150,7 @@
   </el-dialog>
 </template>
 <script>
-  import { http } from '../../resources';
+  import {http} from '../../resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -137,10 +160,16 @@
         Attachment: {},
         type: '',
         currentZ: 0,
+        scale: 1,
         attachmentId: '',
         currentIndex: 1,
         attachmentIdList: [],
-        tempAttachmentList: []
+        tempAttachmentList: [],
+        moveOpt: {
+          moving: false,
+          dpos: {x: 0, y: 0},
+          imgPos: {x: 0, y: 0}
+        }
       };
     },
     computed: {
@@ -167,7 +196,15 @@
       },
       dialogVisibleStatus: function () {
         return this.$store.state.attachmentDialog.open;
+      },
+      style() {
+        let arr = [];
+        arr.push('transform: rotate(' + this.currentZ + 'deg) scale(' + this.scale + ')');
+        arr.push('top:' + this.moveOpt.imgPos.y + 'px');
+        arr.push('left:' + this.moveOpt.imgPos.x + 'px');
+        return arr.join(';');
       }
+
     },
     watch: {
       dialogVisibleStatus: function (val) {
@@ -183,6 +220,7 @@
     methods: {
       getAttachment: function () {
         this.currentZ = 0;
+        this.scale = 1;
         let getServer = true;
         if (this.attachmentId) {
           if (this.attachmentList.length > 0) {
@@ -216,6 +254,7 @@
         this.type = this.getType();
         if (this.type === 'image' || this.type === 'doc') {
           this.dialogVisible = true;
+          this.listenMove();
         } else {
           utils.download(this.Attachment.attachmentStoragePath, this.Attachment.attachmentFileName);
           this.$store.commit('closeAttachmentDialog');
@@ -246,11 +285,15 @@
       changeZ: function (type) {
         this.currentZ = (this.currentZ + type * 90) % 360;
       },
+      changeScale(scale) {
+        this.scale = this.scale * scale;
+      },
       stop: function () {
       },
       closeDialog: function () {
         this.$store.commit('closeAttachmentDialog');
         this.dialogVisible = false;
+        this.listenMove(true);
       },
       getCurrentIndex: function (type) {
         let currentIndex = 0;
@@ -285,7 +328,47 @@
         let targetIndex = this.getCurrentIndex('prev');
         this.attachmentId = this.attachmentList[targetIndex].attachmentId;
         this.getAttachment();
+      },
+      startMove(e) {
+        let self = this;
+        let oEvent = e || event;
+        this.moveOpt.dpos = utils.getPos(oEvent);
+        document.onmousemove = function (e) {
+          let oEvent = e || event;
+          let dpos = utils.getPos(oEvent);
+
+          self.moveOpt.imgPos.x += dpos.x - self.moveOpt.dpos.x;
+          self.moveOpt.imgPos.y += dpos.y - self.moveOpt.dpos.y;
+          self.moveOpt.dpos = dpos; // todo 边界处理
+          console.log(self.moveOpt.imgPos.x, self.moveOpt.imgPos.y);
+        };
+
+        document.onmouseup = function (e) {
+          this.onmousemove = null;
+          this.onmouseup = null;
+        };
+
+        self.moveOpt.moving = true;
+      },
+      listenMove(isRemove = false) {
+
+        setTimeout(() => {
+          let self = this;
+          let dom = document.getElementById('dialog-image-rap');
+          console.log(dom);
+          if (!dom) return;
+          dom.onmousedown = null;
+
+          if (!isRemove) {
+            dom.onmousedown = function (e) {
+              self.startMove(e);
+            };
+          }
+        }, 300);
       }
+    },
+    mounted: function () {
+
     }
   };
 </script>

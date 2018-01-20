@@ -213,7 +213,7 @@ const route = [
           {
             path: '/store/request',
             component: resolve => require(['./components/store/list.vue'], resolve),
-            meta: {moduleId: 'store', title: '库存查询', perm: 'cerp-stock-query'}
+            meta: {moduleId: 'store', title: '即时库存', perm: 'cerp-stock-query'}
           },
           {
             path: '/store/adjust',
@@ -477,6 +477,11 @@ const route = [
             path: '/report/pov/two/repertory',
             component: resolve => require(['./components/report/pov-repertory.vue'], resolve),
             meta: {moduleId: 'report', title: '接种单位二类疫苗盘点表', perm: 'pov-stock-form-manager', type: 2}
+          },
+          {
+            path: '/report/pov/detail',
+            component: resolve => require(['./components/report/factoryOrder.vue'], resolve),
+            meta: {moduleId: 'report', title: '出入库明细', perm: 'stock-in-out-form-manager'}
           }
         ]
       }

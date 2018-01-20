@@ -29,7 +29,8 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'https://test.cdcerp.cn/',
+        // target: 'https://test.cdcerp.cn/',
+        target: 'http://erp.tinysoft.cc:88/',
         changeOrigin: true
       }
     },

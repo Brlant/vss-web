@@ -51,7 +51,7 @@
           <oms-row label="物流中心">
             <span class="goods-span">{{currentOrder.centreName}}</span>
           </oms-row>
-          <oms-row label="预计入库时间">
+          <oms-row label="预计入库时间" v-show="currentOrder.expectedTime">
             <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
           </oms-row>
         </el-col>
