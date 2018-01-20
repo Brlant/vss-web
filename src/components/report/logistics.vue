@@ -152,7 +152,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary
+      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary border
                 :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight()">
         <el-table-column prop="type" label="出入库类型" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" width="120"></el-table-column>

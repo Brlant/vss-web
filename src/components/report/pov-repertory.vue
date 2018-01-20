@@ -63,7 +63,7 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary :row-class-name="formatRowClass"
-                @cell-mouse-enter="cellMouseEnter"  @cell-mouse-leave="cellMouseLeave"
+                @cell-mouse-enter="cellMouseEnter"  @cell-mouse-leave="cellMouseLeave" border
                 ref="reportTable"  :maxHeight="getHeight()" :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="orgGoodsName" label="疫苗名称" width="160"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>

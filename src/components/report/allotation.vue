@@ -62,7 +62,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary
+      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary border
                 :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight()">
         <el-table-column prop="orgGoodsName" label="疫苗名称"  :sortable="true"></el-table-column>
         <el-table-column prop="count" label="配送数量" :sortable="true"  width="200"></el-table-column>
