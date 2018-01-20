@@ -39,7 +39,7 @@
         right: 0;
         bottom: 0;
         top: 0;
-        overflow: auto;
+        overflow:hidden;
         text-align: center;
         > div {
           position: absolute;
