@@ -267,6 +267,7 @@
         let params = this.searchWord;
         params.pageNo = pageNo;
         params.pageSize = this.pager.pageSize;
+        params.goodsList = [this.searchWord.goodsId];
         this.$http({
           url: '/order-statement/factory',
           params,
@@ -316,11 +317,18 @@
       },
       exportFile: function () {
         let params = this.searchWord;
+        params.goodsList = [this.searchWord.goodsId];
         this.$store.commit('initPrint', {
           isPrinting: true,
           moduleId: this.$route.path
         });
-        this.$http.get('/order-statement/factory/export', {params}).then(res => {
+        this.$http({
+          url: '/order-statement/factory/export',
+          params,
+          paramsSerializer(params) {
+            return qs.stringify(params, {indices: false});
+          }
+        }).then(res => {
           utils.download(res.data.path, '出入库明细');
           this.$store.commit('initPrint', {
             isPrinting: false,
