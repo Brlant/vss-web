@@ -131,7 +131,7 @@
         <el-table-column prop="orderNo" label="订单编号" :sortable="true"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true"></el-table-column>
         <el-table-column prop="suppliersName" label="供应商" :sortable="true"></el-table-column>
-        <el-table-column prop="orgName" label="保管账" :sortable="true"></el-table-column>
+        <el-table-column prop="orgName" label="保管帐" :sortable="true"></el-table-column>
         <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true"></el-table-column>
         <el-table-column prop="price" label="进货单价" :sortable="true"></el-table-column>
