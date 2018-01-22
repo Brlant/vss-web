@@ -335,7 +335,7 @@
       searchInOrder: function () {// 搜索
         this.searchWord.createStartTime = this.formatTime(this.expectedTime[0]);
         this.searchWord.createEndTime = this.formatTime(this.expectedTime[1]);
-        this.getBatches();
+        this.getBatches(1);
       },
       resetSearchForm: function () {// 重置表单
         this.searchWord = {
@@ -351,7 +351,7 @@
           orgId: ''
         };
         this.expectedTime = '';
-        this.getBatches();
+        this.getBatches(1);
       },
       formatTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
