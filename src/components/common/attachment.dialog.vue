@@ -39,16 +39,16 @@
         right: 0;
         bottom: 0;
         top: 0;
-        overflow:hidden;
+        overflow: hidden;
         text-align: center;
         > div {
           position: absolute;
           left: 0;
           top: 0;
-          min-width:100%;
-          min-height:100%;
+          min-width: 100%;
+          min-height: 100%;
           text-align: center;
-          display:flex;
+          display: flex;
           align-items: center;
         }
         img {
@@ -150,11 +150,11 @@
   </el-dialog>
 </template>
 <script>
-  import {http} from '../../resources';
+  import { http } from '../../resources';
   import utils from '@/tools/utils';
 
   export default {
-    data() {
+    data () {
       return {
         dialogVisible: false,
         Attachment: {},
@@ -197,7 +197,7 @@
       dialogVisibleStatus: function () {
         return this.$store.state.attachmentDialog.open;
       },
-      style() {
+      style () {
         let arr = [];
         arr.push('transform: rotate(' + this.currentZ + 'deg) scale(' + this.scale + ')');
         arr.push('top:' + this.moveOpt.imgPos.y + 'px');
@@ -214,6 +214,11 @@
       },
       currentId: function (val) {
         this.attachmentId = val;
+        this.moveOpt = {
+          moving: false,
+          dpos: {x: 0, y: 0},
+          imgPos: {x: 0, y: 0}
+        };
         this.getAttachment();
       }
     },
@@ -285,7 +290,7 @@
       changeZ: function (type) {
         this.currentZ = (this.currentZ + type * 90) % 360;
       },
-      changeScale(scale) {
+      changeScale (scale) {
         this.scale = this.scale * scale;
       },
       stop: function () {
@@ -329,7 +334,7 @@
         this.attachmentId = this.attachmentList[targetIndex].attachmentId;
         this.getAttachment();
       },
-      startMove(e) {
+      startMove (e) {
         let self = this;
         let oEvent = e || event;
         this.moveOpt.dpos = utils.getPos(oEvent);
@@ -350,7 +355,7 @@
 
         self.moveOpt.moving = true;
       },
-      listenMove(isRemove = false) {
+      listenMove (isRemove = false) {
 
         setTimeout(() => {
           let self = this;

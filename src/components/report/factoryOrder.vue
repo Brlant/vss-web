@@ -84,15 +84,15 @@
                       <el-tag type="success"  v-if="vaccine.vaccineSign==='2'">二类疫苗</el-tag>
                     </div>
                     <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="vaccine.code">货品编号</span>  {{vaccine.code}}
-                        </span>
+                      <!--<span class="select-other-info pull-left"><span-->
+                        <!--v-show="vaccine.code">货品编号</span>  {{vaccine.code}}-->
+                        <!--</span>-->
                       <span class="select-other-info pull-left"><span
                         v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
                         </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}
-                        </span>
+                      <!--<span class="select-other-info pull-left"><span-->
+                        <!--v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}-->
+                        <!--</span>-->
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
@@ -109,7 +109,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="单据时间" :span="5">
+              <oms-form-row label="完成时间" :span="5">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
@@ -192,7 +192,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, http } from '@/resources';
+  import { Goods } from '@/resources';
   //  import detail from './detail.vue';
   import utils from '@/tools/utils';
   import qs from 'qs';
@@ -253,7 +253,7 @@
           deleteFlag: false,
           keyWord: query
         });
-        http.get('/vaccine-info/valid', {params}).then(res => {
+        Goods.query(params).then(res => {
           this.vaccineList = res.data.list;
         });
       },
