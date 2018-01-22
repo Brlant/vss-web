@@ -135,7 +135,7 @@
       </div>
 
       <el-table :data="batches" class="header-list store" border :summary-method="getSummaries" show-summary
-                :header-row-class-name="'headerClass'" v-loading="loadingData"
+                :header-row-class-name="'headerClass'" ref="orderDetail"
                 max-height="600" v-show="showTable">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="createTime" label="订单时间" :sortable="true"
@@ -261,6 +261,9 @@
         this.pager.currentPage = pageNo;
         this.showTable = true;
         this.loadingData = true;
+        this.loadingInstance = this.$loading({
+          target: this.$refs['orderDetail'].$el
+        });
         let params = this.searchWord;
         params.pageNo = pageNo;
         params.pageSize = this.pager.pageSize;
@@ -274,6 +277,7 @@
           this.batches = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+          this.loadingInstance.close();
         });
       },
       getSummaries (param) {
