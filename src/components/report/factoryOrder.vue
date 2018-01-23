@@ -183,7 +183,7 @@
       </el-table>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
-      layout="total, sizes, prev, pager, next, jumper"
+      layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
       :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
       :current-page="pager.currentPage">
       </el-pagination>
@@ -256,6 +256,10 @@
         Goods.query(params).then(res => {
           this.vaccineList = res.data.list;
         });
+      },
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getBatches(1);
       },
       getBatches (pageNo) { // 得到订单列表
         this.pager.currentPage = pageNo;
