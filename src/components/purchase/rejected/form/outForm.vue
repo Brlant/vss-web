@@ -274,6 +274,10 @@
                 </el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="是否合格">
+              <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
+                         v-model="form.qualifiedFlag" @change="clearForm"></el-switch>
+            </el-form-item>
             <el-form-item label="运输条件" prop="transportationCondition">
               <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationCondition">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
@@ -526,6 +530,7 @@
           importedFlag: false,
           orgRelation: '',
           orgAddress: '',
+          qualifiedFlag: true,
           sameBatchNumber: false,
           actualConsignee: '',
           'thirdPartyNumber': '',
@@ -720,6 +725,25 @@
         this.form.transportationAddress = '';
         this.form.actualConsignee = '';
         this.form.orgAddress = '';
+      },
+      clearForm () {
+        this.accessoryList = [];
+        this.batchNumbers = [];
+        this.editItemProduct = {};
+        this.product = {
+          'amount': null,
+          'entrustment': false,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.form.detailDtoList = [];
       },
       editOrderInfo () {
         if (!this.orderId) return;

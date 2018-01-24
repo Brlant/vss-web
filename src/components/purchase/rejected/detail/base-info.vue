@@ -40,6 +40,9 @@
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
+            <oms-row label="疾控仓库地址" :span="span">
+              <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -54,15 +57,14 @@
             <oms-row label="预计出库时间" v-show="currentOrder.expectedTime">
               <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
             </oms-row>
+            <oms-row label="是否合格">
+              <span class="goods-span" v-show="currentOrder.qualifiedFlag">合格</span>
+              <span class="goods-span" v-show="!currentOrder.qualifiedFlag">不合格</span>
+            </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
           </el-col>
-        </el-row>
-        <el-row style="margin-bottom:0">
-          <oms-row label="疾控仓库地址" :span="3">
-            <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
-          </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
           <oms-row label="备注" :span="3">{{ currentOrder.remark }}</oms-row>
