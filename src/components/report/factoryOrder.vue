@@ -138,7 +138,7 @@
                 :header-row-class-name="'headerClass'" ref="orderDetail"
                 max-height="600" v-show="showTable">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="createTime" label="订单时间" :sortable="true"
+        <el-table-column prop="createTime" label="完成时间" :sortable="true"
                          width="120">
           <template slot-scope="scope">
             {{ scope.row.createTime | date}}
