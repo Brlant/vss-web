@@ -226,6 +226,9 @@
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
+                  <goods-row label="标准单价" :span="8">
+                    <span v-if="data.unitPrice">¥</span> {{ data.unitPrice | formatMoney}}
+                  </goods-row>
                   <goods-row label="中标价格" :span="8">
                     <span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}
                   </goods-row>

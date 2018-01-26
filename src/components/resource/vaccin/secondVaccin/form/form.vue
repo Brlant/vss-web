@@ -156,6 +156,11 @@
           <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in storageCondition"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="标准单价" prop="unitPrice">
+        <oms-input type="text" v-model="form.unitPrice" placeholder="请输入标准单价" @blur="formatPrice">
+          <template slot="prepend">¥</template>
+        </oms-input>
+      </el-form-item>
       <el-form-item label="中标价格" prop="bidPrice">
         <oms-input type="text" v-model="form.bidPrice" placeholder="请输入中标价格" @blur="formatPrice" @change="setPrice">
           <template slot="prepend">￥</template>
@@ -233,7 +238,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, SuccessfulBidder, Vaccine } from '@/resources';
+  import {BaseInfo, SuccessfulBidder, Vaccine} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -267,6 +272,9 @@
           ],
           name: [
             {required: true, message: '请输入疫苗名称', trigger: 'blur'}
+          ],
+          unitPrice: [
+            {required: true, message: '请输入标准单价', trigger: 'blur'}
           ],
           bidPrice: [
             {required: true, message: '请输入中标价格', trigger: 'blur'}
@@ -332,6 +340,9 @@
         this.goodsType = '';
         if (typeof val.id === 'string') {
           this.form = this.formItem;
+          if (this.form.unitPrice) {
+            this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice ? this.form.unitPrice.toString() : '');
+          }
           if (this.form.bidPrice) {
             this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
           }
@@ -358,6 +369,7 @@
             salesFirmName: '',
             goodsIsCombination: false,
             goodsNo: '',
+            unitPrice: '',
             bidPrice: '',
             sellPrice: '',
             procurementPrice: '',
