@@ -239,6 +239,13 @@ export default {
     if (cls.replace(/\s/g, '').length === 0) return false;
     return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
   },
+  getPos(e) { // 这是一个 获取鼠标位置的函数
+    let oEvent = e || event;
+    return {
+      x: oEvent.clientX + document.documentElement.scrollLeft || document.body.scrollLeft,
+      y: oEvent.clientY + document.documentElement.scrollTop || document.body.scrollTop
+    };
+  },
   addClass: function (elem, cls) {
     if (!this.hasClass(elem, cls)) {
       elem.className = elem.className === '' ? cls : elem.className + ' ' + cls;
