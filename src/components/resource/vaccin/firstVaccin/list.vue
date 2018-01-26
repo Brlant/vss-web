@@ -553,7 +553,7 @@
           deleteFlag: false
 
         }, this.filters);
-        Vaccine.queryFirstVaccine(params).then(res => {
+        Vaccine.query(params).then(res => {
           this.$store.commit('initBottomLoading', false);
 
           if (isContinue) {

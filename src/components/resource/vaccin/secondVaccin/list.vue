@@ -554,7 +554,7 @@
           keyWord: this.typeTxt,
           deleteFlag: false
         }, this.filters);
-        Vaccine.querySecondVaccine(params).then(res => {
+        Vaccine.query(params).then(res => {
           this.$store.commit('initBottomLoading', false);
 
           if (isContinue) {
