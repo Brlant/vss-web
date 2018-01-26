@@ -213,16 +213,16 @@
         row.isNoValid = row.actualCount > row.repertoryCount;
       },
       submit () {
-        let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);
-        if (valid) {
-          this.currentOrder.detailDtoList.forEach(i => {
-            i.isNoValid = i.actualCount > i.repertoryCount;
-          });
-          this.$notify.info({
-            message: '存在分配数量大于可用库存的要货明细，请进行调整'
-          });
-          return;
-        }
+        // let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);
+        // if (valid) {
+        //   this.currentOrder.detailDtoList.forEach(i => {
+        //     i.isNoValid = i.actualCount > i.repertoryCount;
+        //   });
+        //   this.$notify.info({
+        //     message: '存在分配数量大于可用库存的要货明细，请进行调整'
+        //   });
+        //   return;
+        // }
         let ary = this.currentOrder.detailDtoList.map(m => {
           return {
             detailId: m.id,
