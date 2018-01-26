@@ -300,7 +300,7 @@
           pageNo: pageNo,
           pageSize: this.typePager.pageSize,
           keyWord: this.typeTxt,
-          deleteFlag: false,
+          // deleteFlag: false,
           status: '1'
         });
         let nowTime = new Date();
