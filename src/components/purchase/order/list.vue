@@ -101,6 +101,9 @@
       width: auto;
     }
   }
+  .order-list-status-right {
+    justify-content: flex-end;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -205,17 +208,30 @@
           </el-row>
         </el-form>
       </div>
-
-
-      <div class="order-list-status container" style="margin-bottom:20px">
-        <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key === '6'}"
-             v-for="(item,key) in orgType"
-             @click="changeStatus(item,key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
-        </div>
-      </div>
+      <el-row >
+        <el-col :span="13">
+          <div class="order-list-status" style="margin-bottom:20px">
+            <div class="status-item"
+                 :class="{'active':key==activeStatus}"
+                 v-for="(item,key) in orgType" v-show="key < 4"
+                 @click="changeStatus(item,key)">
+              <div class="status-bg" :class="['b_color_'+key]"></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="11">
+          <div class="order-list-status  order-list-status-right" style="margin-bottom:20px">
+            <div class="status-item"
+                 :class="{'active':key==activeStatus}"
+                 v-for="(item,key) in orgType"
+                 @click="changeStatus(item,key)" v-show="key > 3">
+              <div class="status-bg" :class="['b_color_'+key]"></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
       <div class="order-list clearfix">
         <el-row class="order-list-header" :gutter="10">
           <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
