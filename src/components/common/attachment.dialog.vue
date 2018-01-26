@@ -109,7 +109,7 @@
       <div @click.stop="closeDialog" style="height:100%;width:100%;">
         <div v-if="type=='image'" class="dialog-image-rap">
           <div id="dialog-image-rap" :style="style">
-            <img :src="fileUrl" alt=''
+            <img :src="fileUrl+'?image&action=resize:w_'+windowSize.width+',h_'+(windowSize.height-50)+',m_2'" alt=''
             >
           </div>
         </div>
@@ -150,11 +150,11 @@
   </el-dialog>
 </template>
 <script>
-  import { http } from '../../resources';
+  import {http} from '../../resources';
   import utils from '@/tools/utils';
 
   export default {
-    data () {
+    data() {
       return {
         dialogVisible: false,
         Attachment: {},
@@ -197,12 +197,15 @@
       dialogVisibleStatus: function () {
         return this.$store.state.attachmentDialog.open;
       },
-      style () {
+      style() {
         let arr = [];
         arr.push('transform: rotate(' + this.currentZ + 'deg) scale(' + this.scale + ')');
         arr.push('top:' + this.moveOpt.imgPos.y + 'px');
         arr.push('left:' + this.moveOpt.imgPos.x + 'px');
         return arr.join(';');
+      },
+      windowSize: function () {
+        return this.$store.state.windowSize;
       }
 
     },
@@ -290,7 +293,7 @@
       changeZ: function (type) {
         this.currentZ = (this.currentZ + type * 90) % 360;
       },
-      changeScale (scale) {
+      changeScale(scale) {
         this.scale = this.scale * scale;
       },
       stop: function () {
@@ -334,7 +337,7 @@
         this.attachmentId = this.attachmentList[targetIndex].attachmentId;
         this.getAttachment();
       },
-      startMove (e) {
+      startMove(e) {
         let self = this;
         let oEvent = e || event;
         this.moveOpt.dpos = utils.getPos(oEvent);
@@ -345,7 +348,6 @@
           self.moveOpt.imgPos.x += dpos.x - self.moveOpt.dpos.x;
           self.moveOpt.imgPos.y += dpos.y - self.moveOpt.dpos.y;
           self.moveOpt.dpos = dpos; // todo 边界处理
-          console.log(self.moveOpt.imgPos.x, self.moveOpt.imgPos.y);
         };
 
         document.onmouseup = function (e) {
@@ -355,12 +357,11 @@
 
         self.moveOpt.moving = true;
       },
-      listenMove (isRemove = false) {
+      listenMove(isRemove = false) {
 
         setTimeout(() => {
           let self = this;
           let dom = document.getElementById('dialog-image-rap');
-          console.log(dom);
           if (!dom) return;
           dom.onmousedown = null;
 
