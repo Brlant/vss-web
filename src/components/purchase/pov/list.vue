@@ -67,7 +67,7 @@
           <span class="pull-right">
             <perm label="cargo-signal-add" class="opera-btn">
               <span @click="applyOrder" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
-                class="el-icon-t-plus"></i></a><span class="wave-title">分货申请</span></span>
+                class="el-icon-t-plus"></i></a><span class="wave-title">新增分货</span></span>
             </perm>
          </span>
           <span class="pull-right switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
