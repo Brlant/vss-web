@@ -517,6 +517,7 @@
         this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice);
         this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice);
         this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice);
+        this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
       remove () {
         this.$confirm('确认删除该信息?', '', {
