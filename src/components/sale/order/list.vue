@@ -208,7 +208,8 @@
 
   <div class="order-list-status container" style="margin-bottom:20px">
     <div class="status-item"
-         :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4' }"
+         :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4',
+          'cancelPosition': item.state==='5'}"
          v-for="(item,key) in orgType"
          @click="changeStatus(item,key)">
       <div class="status-bg" :class="['b_color_'+key]"></div>
