@@ -277,9 +277,9 @@
                 </el-col>
                 <el-col :span="12">
                   <goods-row label="存储类别" :span="8">
-                     <span v-for="type in data.goodsDto.storageType">
+                     <span v-for="(type,index) in data.goodsDto.storageType">
                        <dict :dict-group="'typeId'" :dict-key="type"></dict>
-                       <span v-if="data.goodsDto.storageType.length !== (index+1) ">/</span>
+                       <span v-if="(data.goodsDto.storageType.length-1) !== index ">/</span>
                        <!--<span v-if=" data.goodsDto.storageType.length!==0">/</span>-->
                     </span>
                   </goods-row>

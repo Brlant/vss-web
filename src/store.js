@@ -21,7 +21,8 @@ const state = {
   prints: [],
   logisticsCentreId: '6320790940790948456',
   bottomLoading: false,
-  isShowGoodsList: false
+  isShowGoodsList: false,
+  windowSize: {width: 1000, height: 500}
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -100,7 +101,8 @@ const mutations = {
     state.orgName = data;
   },
   setBodyHeight(state, data) {
-    state.bodyHeight = data;
+    state.bodyHeight = data.height;
+    state.windowSize = data.window;
   },
   initOrgLevel(state, data) {
     state.orgLevel = data;
@@ -121,13 +123,13 @@ const mutations = {
       state.prints.push(data);
     }
   },
-  initBottomLoading (state, data) {
+  initBottomLoading(state, data) {
     state.bottomLoading = data;
   },
-  initIsShowGoodsList (state, data) {
+  initIsShowGoodsList(state, data) {
     state.isShowGoodsList = data;
   },
-  initMenuParentIds (state, data) {
+  initMenuParentIds(state, data) {
     state.menuParentIds = data;
   }
 };

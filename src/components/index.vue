@@ -3,8 +3,6 @@
   @import "../assets/mixins.less";
   @import "../assets/oms.less";
 
-
-
   .layer-loading {
     text-align: center;
     background: #f9f9f9;
@@ -150,7 +148,7 @@
       next();
     },
     watch: {
-      $route () {
+      $route() {
         this.$store.commit('initBottomLoading', false);
       }
     },
@@ -246,7 +244,10 @@
         });
       },
       setBodyHeight: function () {
-        this.$store.commit('setBodyHeight', window.innerHeight - 200 + 'px');
+        this.$store.commit('setBodyHeight', {
+          height: window.innerHeight - 200 + 'px',
+          window: {width: window.innerWidth, height: window.innerHeight}
+        });
       }
     }
   };

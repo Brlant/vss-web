@@ -226,6 +226,9 @@
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
+                  <goods-row label="标准单价" :span="8">
+                    <span v-if="data.unitPrice">¥</span> {{ data.unitPrice | formatMoney}}
+                  </goods-row>
                   <goods-row label="中标价格" :span="8">
                     <span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}
                   </goods-row>
@@ -279,7 +282,7 @@
                   <goods-row label="存储类别" :span="8">
                      <span v-for="(item, index) in data.goodsDto.storageType">
                        <dict :dict-group="'storageType'" :dict-key="item"></dict>
-                       <span v-if="data.goodsDto.storageType.length !== (index+1) ">/</span>
+                       <span v-if="(data.goodsDto.storageType.length-1) !== index ">/</span>
                     </span>
                   </goods-row>
                   <goods-row label="储存条件" :span="8">
