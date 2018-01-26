@@ -240,7 +240,7 @@
               <el-select filterable remote placeholder="请输入名称搜索销售价格" :remote-method="filterPriceGroup"
                          :clearable="true" :default-first-option="true"
                          v-model="form.salePriceGroupId"
-                         @change="changeSelect" @click.native.once="filterPriceGroup('')" popperClass="good-selects">
+                         @change="changeSelect"  popperClass="good-selects">
                 <el-option :value="item.id" :key="item.id" :label="'￥' +item.unitPrice"
                            v-for="item in prices">
                   <div style="overflow: hidden">
@@ -319,6 +319,7 @@
           };
           this.prices = [];
           this.title = '新增疫苗授权';
+          this.filterPriceGroup();
         }
         this.filterPOV();
       }
@@ -340,9 +341,6 @@
         this.unitPrice = ary.length ? ary[0].unitPrice : '';
       },
       filterPriceGroup: function (query) {// 过滤POV
-        if (!query && this.prices.length && this.form.salePriceGroupId) {
-          return false;
-        }
         if (!this.currentItem.orgGoodsId) return false;
         let params = Object.assign({}, {
           keyWord: query,

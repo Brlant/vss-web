@@ -116,7 +116,7 @@
                 <span>{{ item.batchNumber }}</span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span>{{ packageType[item.packageScheme] }}</span>
+                <span>{{ packageType[item.packageScheme-1] }}</span>
               </el-col>
             </el-row>
           </div>
@@ -135,7 +135,7 @@
 </template>
 <script>
   import { http, OmsAttachment } from '@/resources';
-
+  import utils from '@/tools/utils';
   export default {
     props: {
       currentOrder: {
@@ -170,12 +170,7 @@
           count: 0,
           pageSize: 10
         },
-        packageType: [
-          '大包装',
-          '中包装',
-          '小包装',
-          '小包装'
-        ],
+        packageType: utils.packageType,
         doing: false
       };
     },

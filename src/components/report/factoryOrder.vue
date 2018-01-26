@@ -84,15 +84,15 @@
                       <el-tag type="success"  v-if="vaccine.vaccineSign==='2'">二类疫苗</el-tag>
                     </div>
                     <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="vaccine.code">货品编号</span>  {{vaccine.code}}
-                        </span>
+                      <!--<span class="select-other-info pull-left"><span-->
+                        <!--v-show="vaccine.code">货品编号</span>  {{vaccine.code}}-->
+                        <!--</span>-->
                       <span class="select-other-info pull-left"><span
                         v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
                         </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}
-                        </span>
+                      <!--<span class="select-other-info pull-left"><span-->
+                        <!--v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}-->
+                        <!--</span>-->
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
@@ -109,7 +109,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="单据时间" :span="5">
+              <oms-form-row label="完成时间" :span="5">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
@@ -135,10 +135,10 @@
       </div>
 
       <el-table :data="batches" class="header-list store" border :summary-method="getSummaries" show-summary
-                :header-row-class-name="'headerClass'" v-loading="loadingData"
+                :header-row-class-name="'headerClass'" ref="orderDetail"
                 max-height="600" v-show="showTable">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="createTime" label="订单时间" :sortable="true"
+        <el-table-column prop="createTime" label="完成时间" :sortable="true"
                          width="120">
           <template slot-scope="scope">
             {{ scope.row.createTime | date}}
@@ -183,7 +183,7 @@
       </el-table>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
-      layout="total, sizes, prev, pager, next, jumper"
+      layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
       :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
       :current-page="pager.currentPage">
       </el-pagination>
@@ -192,7 +192,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, http } from '@/resources';
+  import { Goods } from '@/resources';
   //  import detail from './detail.vue';
   import utils from '@/tools/utils';
   import qs from 'qs';
@@ -253,14 +253,21 @@
           deleteFlag: false,
           keyWord: query
         });
-        http.get('/vaccine-info/valid', {params}).then(res => {
+        Goods.query(params).then(res => {
           this.vaccineList = res.data.list;
         });
+      },
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getBatches(1);
       },
       getBatches (pageNo) { // 得到订单列表
         this.pager.currentPage = pageNo;
         this.showTable = true;
         this.loadingData = true;
+        this.loadingInstance = this.$loading({
+          target: this.$refs['orderDetail'].$el
+        });
         let params = this.searchWord;
         params.pageNo = pageNo;
         params.pageSize = this.pager.pageSize;
@@ -274,6 +281,7 @@
           this.batches = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+          this.loadingInstance.close();
         });
       },
       getSummaries (param) {
@@ -335,7 +343,7 @@
       searchInOrder: function () {// 搜索
         this.searchWord.createStartTime = this.formatTime(this.expectedTime[0]);
         this.searchWord.createEndTime = this.formatTime(this.expectedTime[1]);
-        this.getBatches();
+        this.getBatches(1);
       },
       resetSearchForm: function () {// 重置表单
         this.searchWord = {
@@ -351,7 +359,7 @@
           orgId: ''
         };
         this.expectedTime = '';
-        this.getBatches();
+        this.getBatches(1);
       },
       formatTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';

@@ -39,16 +39,16 @@
         right: 0;
         bottom: 0;
         top: 0;
-        overflow:hidden;
+        overflow: hidden;
         text-align: center;
         > div {
           position: absolute;
           left: 0;
           top: 0;
-          min-width:100%;
-          min-height:100%;
+          min-width: 100%;
+          min-height: 100%;
           text-align: center;
-          display:flex;
+          display: flex;
           align-items: center;
         }
         img {
@@ -109,7 +109,7 @@
       <div @click.stop="closeDialog" style="height:100%;width:100%;">
         <div v-if="type=='image'" class="dialog-image-rap">
           <div id="dialog-image-rap" :style="style">
-            <img :src="fileUrl" alt=''
+            <img :src="fileUrl+'?image&action=resize:w_'+windowSize.width+',h_'+(windowSize.height-50)+',m_2'" alt=''
             >
           </div>
         </div>
@@ -203,6 +203,9 @@
         arr.push('top:' + this.moveOpt.imgPos.y + 'px');
         arr.push('left:' + this.moveOpt.imgPos.x + 'px');
         return arr.join(';');
+      },
+      windowSize: function () {
+        return this.$store.state.windowSize;
       }
 
     },
@@ -214,6 +217,11 @@
       },
       currentId: function (val) {
         this.attachmentId = val;
+        this.moveOpt = {
+          moving: false,
+          dpos: {x: 0, y: 0},
+          imgPos: {x: 0, y: 0}
+        };
         this.getAttachment();
       }
     },
@@ -340,7 +348,6 @@
           self.moveOpt.imgPos.x += dpos.x - self.moveOpt.dpos.x;
           self.moveOpt.imgPos.y += dpos.y - self.moveOpt.dpos.y;
           self.moveOpt.dpos = dpos; // todo 边界处理
-          console.log(self.moveOpt.imgPos.x, self.moveOpt.imgPos.y);
         };
 
         document.onmouseup = function (e) {
@@ -355,7 +362,6 @@
         setTimeout(() => {
           let self = this;
           let dom = document.getElementById('dialog-image-rap');
-          console.log(dom);
           if (!dom) return;
           dom.onmousedown = null;
 

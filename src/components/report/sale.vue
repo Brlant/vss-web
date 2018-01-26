@@ -124,7 +124,7 @@
         <el-table-column prop="orderNo" label="货主订单号" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="customerName" label="客户" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="orgName" label="保管账" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="orgName" label="保管帐" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true" width="90"></el-table-column>
         <el-table-column prop="price" label="单价" :sortable="true" width="90"></el-table-column>

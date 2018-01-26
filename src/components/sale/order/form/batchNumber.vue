@@ -157,7 +157,8 @@
             orgId: this.form.orgId,
             orgGoodsId: m.orgGoodsId
           };
-          return this.$http.get('/erp-stock/valid/batch', {params});
+          return this.$http.get(this.form.bizType !== '1' ||
+          this.form.qualifiedFlag ? '/erp-stock/valid/batch' : '/erp-stock/unqualified/batch', {params});
         })).then(
           axios.spread((...args) => {
             this.batchNumbers.forEach((i, index) => {
