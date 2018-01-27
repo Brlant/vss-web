@@ -50,7 +50,7 @@
         </div>
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span=" filters.status === '3' ? 5 : 6">货主/订单号</el-col>
           <el-col :span="3">业务类型</el-col>
           <el-col :span="filters.status === '3' ? 5 : 6">接种点</el-col>

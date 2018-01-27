@@ -217,7 +217,7 @@
     </div>
   </div>
   <div class="order-list clearfix">
-    <el-row class="order-list-header" :gutter="10">
+    <el-row class="order-list-header">
       <el-col :span="filters.state === '0' ? 5: 6">货主/订单号</el-col>
       <el-col :span="4">业务类型</el-col>
       <el-col :span="filters.state === '0' ? 5: 6">接种点</el-col>

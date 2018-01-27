@@ -132,7 +132,7 @@
         </el-form>
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="4">接种时间</el-col>
           <el-col :span="10">接种疫苗</el-col>
           <el-col :span="4">批号</el-col>

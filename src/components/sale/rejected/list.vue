@@ -249,7 +249,7 @@
         </el-col>
       </el-row>
       <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
           <el-col :span="3">业务类型</el-col>
           <el-col :span="filters.state === '6' ? 5: 6">接种点</el-col>
@@ -281,7 +281,7 @@
                   {{item.orgName }}
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="3">
                 <div class="vertical-center">
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
@@ -289,7 +289,7 @@
               <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="5">
                 <div>
                   <span>下单</span>
                   ：{{item.createTime | minute }}

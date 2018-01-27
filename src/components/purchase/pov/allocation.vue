@@ -50,7 +50,7 @@
         </perm>
       </div>
       <div class="order-list clearfix ">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="status === 0 ? 4 : 6">疫苗</el-col>
           <el-col :span="status === 0 ? 4 : 6">供货厂商</el-col>
           <el-col :span="status === 0 ? 2 : 4">需求数</el-col>

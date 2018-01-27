@@ -157,7 +157,7 @@
         </div>
       </div>
       <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="8">疫苗名称</el-col>
           <el-col :span="4">供货厂商</el-col>
           <el-col :span="4">采购单价</el-col>

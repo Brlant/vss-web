@@ -140,7 +140,7 @@
 
 
       <div class="order-list clearfix " v-if="showFlag">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="5">疫苗名称</el-col>
           <el-col :span="3">疫苗规格</el-col>
           <el-col :span="5">生产厂商</el-col>
