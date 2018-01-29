@@ -101,6 +101,11 @@
       width: auto;
     }
   }
+  .order-list-status {
+    .status-item {
+      width: 90px;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
