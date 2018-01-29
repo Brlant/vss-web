@@ -343,7 +343,7 @@
                 <div class="base-pic-list">
                   <div v-for=" licence in businessRelationItem.followOrg.licenses" class="base-pic-item">
                     <div @click="watchPhoto(licence)">
-                      <img :src="licence.photoThumb+'?image&action=resize:w_180,h_180,m_2'">
+                      <img :src="licence.photoThumb+'?image&action=resize:w_180,h_180,m_0'">
                       <h3>{{licence.name}}</h3>
                       <div>有效期:{{licence.validStartTime | date}}至{{licence.validEndTime | date}}</div>
                       <div>
