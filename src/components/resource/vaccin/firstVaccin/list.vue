@@ -207,7 +207,7 @@
               <el-row>
                 <el-col :span="12" style="padding-left:50px;">
                   <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
-                    <img :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_2':'/static/img/userpic.png' "/>
+                    <img :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
                   </div>
                 </el-col>
                 <el-col :span="12">
