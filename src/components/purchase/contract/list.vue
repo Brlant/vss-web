@@ -295,13 +295,13 @@
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <page-right :show="showItemRight" class="specific-part-z-index" @right-close="resetRightBox"
+    <page-right :show="showItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
       <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
                 :action="action"
                 @right-close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="resetRightBox"
+    <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
       <edit-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
                  :action="action"
@@ -326,6 +326,7 @@
   import editForm from './form/editForm.vue';
   import orderForm from '../order/show.order.in.vue';
   import { BaseInfo, PurchaseContract} from '@/resources';
+  import OrderMixin from '@/mixins/orderMixin';
 
   export default {
     components: {
@@ -374,6 +375,7 @@
         purchase: {}
       };
     },
+    mixins: [OrderMixin],
     mounted() {
       this.getOrderList(1);
 //      let orderId = this.$route.params.id;
