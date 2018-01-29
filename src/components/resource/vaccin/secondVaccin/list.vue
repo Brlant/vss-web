@@ -298,28 +298,21 @@
                       v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ - {{ data.goodsDto.storageEndTemperature}} ℃
                     </span>
                   </goods-row>
-                  <goods-row label="最小发货单位" :span="8">
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="data.goodsDto.shipmentPackingUnit"
-                          v-show="data.goodsDto.packageSize"></dict>
-                    = {{ data.goodsDto.packageSize }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.largePacking"></dict>
-                  </goods-row>
-                  <goods-row label="大包装" :span="8" v-show="data.goodsDto.largePacking">
-                    {{ data.goodsDto.largePacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.largePacking"></dict>
-                  </goods-row>
-                  <goods-row label="中包装" :span="8" v-show="data.goodsDto.measurementUnit">
-                    {{ data.goodsDto.mediumPacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.mediumPacking"></dict>
-                  </goods-row>
-                  <goods-row label="小包装" :span="8" v-show="data.goodsDto.smallPacking">
-                    {{ data.goodsDto.smallPacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.smallPacking"></dict>
-                  </goods-row>
+                  <!--<goods-row label="最小发货单位" :span="8">-->
+                    <!--<dict :dict-group="'shipmentPackingUnit'" :dict-key="data.goodsDto.shipmentPackingUnit"-->
+                          <!--v-show="data.goodsDto.packageSize"></dict>-->
+                    <!--= {{ data.goodsDto.packageSize }}-->
+                    <!--<dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"-->
+                          <!--v-show="data.goodsDto.largePacking"></dict>-->
+                  <!--</goods-row>-->
+                  <span v-for="packageDto in data.goodsDto.packageDtoList">
+                    <goods-row :label="'包装层级第' + packageDto.sort + '级'" :span="8"
+                               v-show="packageDto.conversionCount">
+                      {{ packageDto.conversionCount }}
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
+                            v-show="packageDto.conversionCount"></dict>
+                    </goods-row>
+                  </span>
                 </el-col>
               </el-row>
 

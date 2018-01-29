@@ -109,8 +109,7 @@
       <div @click.stop="closeDialog" style="height:100%;width:100%;">
         <div v-if="type=='image'" class="dialog-image-rap">
           <div id="dialog-image-rap" :style="style">
-            <img :src="fileUrl+'?image&action=resize:w_'+windowSize.width+',h_'+(windowSize.height-50)+',m_0'" alt=''
-            >
+            <img :src="fileUrl+'?image&action=resize:'+ 'h_'+(windowSize.height-50)+',m_2'" alt=''>
           </div>
         </div>
         <div v-if="groupLen>1" class="img-button">
