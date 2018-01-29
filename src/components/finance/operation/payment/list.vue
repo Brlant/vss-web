@@ -168,7 +168,7 @@
         </div>
       </div>
       <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="5">付款单据编号</el-col>
           <el-col :span="7">付款单位</el-col>
           <el-col :span="2">付款方式</el-col>

@@ -121,7 +121,7 @@
             </el-row>
           </div>
           <div class="order-list clearfix " style="margin-top: 10px">
-            <el-row class="order-list-header" :gutter="10">
+            <el-row class="order-list-header">
               <el-col :span="20">疾控名称</el-col>
               <el-col :span="4">操作</el-col>
             </el-row>

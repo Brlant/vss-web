@@ -105,7 +105,7 @@
             </el-row>
           </div>
           <div class="order-list clearfix " style="margin-top: 10px">
-            <el-row class="order-list-header" :gutter="10">
+            <el-row class="order-list-header">
               <el-col :span="6">物料编号</el-col>
               <el-col :span="6">物料名称</el-col>
               <el-col :span="9">物料描述</el-col>

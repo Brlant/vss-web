@@ -146,7 +146,7 @@
         </el-form>
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="5">货品</el-col>
           <el-col :span="4">采购订单号</el-col>
           <el-col :span="5">疫苗厂商</el-col>

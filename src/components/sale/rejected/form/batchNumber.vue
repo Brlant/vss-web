@@ -215,7 +215,7 @@
           });
           return false;
         }
-        let isChecked = this.batchNumbers.every(item => item.lots.some(l => l.isChecked));
+        let isChecked = this.batchNumbers.some(item => item.lots.some(l => l.isChecked));
         if (!isChecked) {
           this.$notify.info({
             duration: 2000,
@@ -231,50 +231,50 @@
           });
           return false;
         }
-        if (!this.editItemProduct.orgGoodsId) {
-          let isPassed = true;
-          this.productList.forEach((item) => {
-            if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-              let list = item.list;
-              list.forEach(i => {
-                let count = 0;
-                this.batchNumbers.forEach(b => {
-                  if (b.orgGoodsId === i.accessory) {
-                    b.lots.forEach(bl => {
-                      if (bl.isChecked) {
-                        count += Number(bl.productCount);
-                      }
-                    });
-                  }
-                });
-                i.accessoryTotalCount = count;
-              });
-              let totalCount = 0;
-              this.batchNumbers.forEach(b => {
-                if (b.orgGoodsId === this.product.orgGoodsId) {
-                  b.lots.forEach(bl => {
-                    if (bl.isChecked) {
-                      totalCount += Number(bl.productCount);
-                    }
-                  });
-                }
-              });
-              list.forEach(i => {
-                let amount = Math.ceil(i.proportion * totalCount);
-                if (i.accessoryTotalCount !== amount) {
-                  isPassed = false;
-                }
-              });
-            }
-          });
-          if (!isPassed) {
-            this.$notify.warning({
-              duration: 2000,
-              message: '组合货品数量比例不匹配'
-            });
-            return false;
-          }
-        }
+        // if (!this.editItemProduct.orgGoodsId) {
+        //   let isPassed = true;
+        //   this.productList.forEach((item) => {
+        //     if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+        //       let list = item.list;
+        //       list.forEach(i => {
+        //         let count = 0;
+        //         this.batchNumbers.forEach(b => {
+        //           if (b.orgGoodsId === i.accessory) {
+        //             b.lots.forEach(bl => {
+        //               if (bl.isChecked) {
+        //                 count += Number(bl.productCount);
+        //               }
+        //             });
+        //           }
+        //         });
+        //         i.accessoryTotalCount = count;
+        //       });
+        //       let totalCount = 0;
+        //       this.batchNumbers.forEach(b => {
+        //         if (b.orgGoodsId === this.product.orgGoodsId) {
+        //           b.lots.forEach(bl => {
+        //             if (bl.isChecked) {
+        //               totalCount += Number(bl.productCount);
+        //             }
+        //           });
+        //         }
+        //       });
+        //       list.forEach(i => {
+        //         let amount = Math.ceil(i.proportion * totalCount);
+        //         if (i.accessoryTotalCount !== amount) {
+        //           isPassed = false;
+        //         }
+        //       });
+        //     }
+        //   });
+        //   if (!isPassed) {
+        //     this.$notify.warning({
+        //       duration: 2000,
+        //       message: '组合货品数量比例不匹配'
+        //     });
+        //     return false;
+        //   }
+        // }
         return true;
       }
     }

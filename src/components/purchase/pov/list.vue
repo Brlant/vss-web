@@ -40,8 +40,15 @@
   .order-list-status-right {
     justify-content: flex-end;
   }
-  .order-list .order-list-body .order-list-item .el-row .el-col.pl7 {
-    /*padding-left: 7px;*/
+  .special-col {
+    padding-left: 20px;
+    position: relative;
+    .el-checkbox {
+      position: absolute;
+      left:0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
 </style>
 <template>
@@ -154,11 +161,12 @@
         </el-col>
       </el-row>
       <div class="order-list clearfix " style="margin-top: 20px">
-        <el-row class="order-list-header" :gutter="10">
-          <el-col :span="1" v-show="filters.status === 1 || filters.status === 11">
-            <el-checkbox @change="checkAll" v-model="isCheckAll"></el-checkbox>
+        <el-row class="order-list-header">
+          <el-col :span="5">
+            <el-checkbox @change="checkAll" v-model="isCheckAll" v-show="filters.status === 1 || filters.status === 11">
+            </el-checkbox>
+            接种点要货申请编号
           </el-col>
-          <el-col :span="filters.status === 1 || filters.status === 11 ? 4: 5">接种点要货申请编号</el-col>
           <el-col :span="7">接种点</el-col>
           <el-col :span="3">到货需求日期</el-col>
           <el-col :span="5">需求单创建时间</el-col>
@@ -180,15 +188,12 @@
           <div class="order-list-item" v-for="item in demandList"
                :class="['status-'+activeStatus,{'active':currentItemId==item.id}]">
             <el-row>
-              <el-col :span="1" v-show="filters.status === 1 || filters.status === 11">
-                <div class="el-checkbox-warp" @click.stop.prevent="checkItem(item)">
+              <el-col :span="5" class="R pt10" :class="{'special-col': filters.status === 1 || filters.status === 11}">
+                <div class="el-checkbox-warp" @click.stop.prevent="checkItem(item)"
+                     v-show="filters.status === 1 || filters.status === 11">
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
-              </el-col>
-              <el-col :span="filters.status === 1 || filters.status === 11 ? 4: 5" class="R pt10">
-                <span>
                   {{ item.id }}
-                </span>
               </el-col>
               <el-col :span="7" class="pt">
                 <span>{{ item.povName }}</span>
@@ -207,8 +212,8 @@
                   查看详情
                   </span>
                 </div>
-                <div >
-                  <perm label="pull-signal-assign-actual">
+                <div>
+                  <perm label="demand-assignment-update">
                     <span @click.prevent="editOrder(item)" v-show="filters.status === 1 || filters.status === 2">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-edit"></i></a>

@@ -207,7 +207,7 @@
                 <el-col :span="12" style="padding-left:50px;">
                   <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
                     <img
-                      :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_2':'/static/img/userpic.png' "/>
+                      :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -554,7 +554,7 @@
           keyWord: this.typeTxt,
           deleteFlag: false
         }, this.filters);
-        Vaccine.querySecondVaccine(params).then(res => {
+        Vaccine.query(params).then(res => {
           this.$store.commit('initBottomLoading', false);
 
           if (isContinue) {

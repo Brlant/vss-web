@@ -101,6 +101,11 @@
       width: auto;
     }
   }
+  .order-list-status {
+    .status-item {
+      width: 90px;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -177,7 +182,7 @@
         </div>
       </div>
       <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="4">编号/合同名称</el-col>
           <el-col :span="8">供货厂商</el-col>
           <el-col :span="4">创建时间</el-col>

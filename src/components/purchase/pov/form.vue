@@ -78,7 +78,7 @@
         <div class="order-page">
           <div class="container">
             <div class="order-list clearfix ">
-              <el-row class="order-list-header" :gutter="10">
+              <el-row class="order-list-header">
                 <el-col :span="6">接种点</el-col>
                 <el-col :span="6">需求数</el-col>
                 <el-col :span="6">要货时间</el-col>

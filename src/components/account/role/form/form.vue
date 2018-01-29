@@ -148,6 +148,7 @@
         this.$refs.tree.filter(val);
       },
       formItem: function (val) {
+        this.filterText = '';
         this.getMenus();
         if (val.id) {
           this.form = JSON.parse(JSON.stringify(this.formItem));

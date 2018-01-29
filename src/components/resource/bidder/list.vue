@@ -190,7 +190,7 @@
         </div>
       </div>
       <div class="order-list clearfix ">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="5">疫苗名称</el-col>
           <el-col :span="3">规格型号</el-col>
           <el-col :span="5">生产厂商</el-col>

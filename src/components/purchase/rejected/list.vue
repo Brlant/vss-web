@@ -223,7 +223,7 @@
         </div>
       </div>
       <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="filters.state === '0' ? 5: 6">货主/订单号</el-col>
           <el-col :span="filters.state === '0' ? 3: 5">业务类型</el-col>
           <el-col :span="5">供货厂商</el-col>
@@ -300,7 +300,7 @@
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+    <page-right :show="showItemRight" @right-close="beforeCloseConfirm" :css="{'width':'1000px','padding':0}">
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
@@ -315,6 +315,7 @@
   import addForm from './form/outForm.vue';
   import receipt from './receipt.vue';
   import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import OrderMixin from '@/mixins/orderMixin';
 
   export default {
     components: {
@@ -376,6 +377,7 @@
         goodesList: []
       };
     },
+    mixins: [OrderMixin],
     mounted () {
       this.getOrderList(1);
       let orderId = this.$route.params.id;

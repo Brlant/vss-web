@@ -52,7 +52,7 @@
         </div>
       </div>
       <div class="order-list clearfix ">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="8">创建人</el-col>
           <el-col :span="4">创建时间</el-col>
           <el-col :span="4">状态</el-col>

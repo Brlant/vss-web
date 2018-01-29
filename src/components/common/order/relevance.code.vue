@@ -89,7 +89,7 @@
       </div>
       <div class="order-list clearfix" v-loading="loadingData">
 
-        <el-row class="order-list-header t-head" style="margin:0" :gutter="10">
+        <el-row class="order-list-header t-head">
           <el-col :span="8">追溯码</el-col>
           <el-col :span="8">货品名称</el-col>
           <el-col :span="5">批号</el-col>
