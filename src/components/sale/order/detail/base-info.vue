@@ -170,7 +170,7 @@
           <td width="70px">
             <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                         effect="light" placement="right">
-              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_60,h_60,m_0' "
+              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_60,m_0' "
                    class="product-img">
               <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_0' "
                    class="product-img">
