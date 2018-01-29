@@ -332,7 +332,7 @@
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+    <page-right :show="showItemRight" @right-close="beforeCloseConfirm" :css="{'width':'1000px','padding':0}">
       <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
@@ -343,6 +343,7 @@
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
   import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import OrderMixin from '@/mixins/orderMixin';
 
   export default {
     components: {
@@ -403,6 +404,7 @@
         goodesList: []
       };
     },
+    mixins: [OrderMixin],
     mounted () {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
