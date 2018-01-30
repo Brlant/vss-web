@@ -296,13 +296,6 @@
                       v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ - {{ data.goodsDto.storageEndTemperature}} ℃
                     </span>
                   </goods-row>
-                  <!--<goods-row label="最小发货单位" :span="8">-->
-                    <!--<dict :dict-group="'shipmentPackingUnit'" :dict-key="data.goodsDto.shipmentPackingUnit"-->
-                          <!--v-show="data.goodsDto.packageSize"></dict>-->
-                    <!--= {{ data.goodsDto.packageSize }}-->
-                    <!--<dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"-->
-                          <!--v-show="data.goodsDto.largePacking"></dict>-->
-                  <!--</goods-row>-->
                   <span v-for="packageDto in data.goodsDto.packageDtoList">
                     <goods-row :label="'包装层级第' + packageDto.sort + '级'" :span="8"
                                v-show="packageDto.conversionCount">
