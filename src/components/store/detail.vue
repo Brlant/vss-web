@@ -102,12 +102,6 @@
       return {
         loadingData: false,
         storeDetails: [],
-        packSizeTyps: [
-          '大包装',
-          '中包装',
-          '小包装',
-          '散件'
-        ],
         span: 9
       };
     },
@@ -130,12 +124,6 @@
           this.loadingData = false;
           this.storeDetails = res.data.list;
         });
-      },
-      formatSize (size) {
-        return size === 0 ? '大包装'
-          : size === 1 ? '中包装'
-            : size === 2 ? '小包装'
-              : size === 3 ? '散件' : '';
       }
     }
   };
