@@ -233,16 +233,9 @@
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <!--<div>-->
-                <!--</div>-->
-                <!--<perm label="purchasing-contract-add">-->
-                <!--<div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">-->
-                <!--<el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>-->
-                <!--</div>-->
-                <!--</perm>-->
                 <div>
                   <perm label="purchasing-contract-edit">
-                    <span @click.stop.prevent="createOrder(item)">
+                    <span @click.stop.prevent="createOrder(item)" v-if="!item.used">
                       <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-wave"></i></a>
                       批量生成采购订单
                     </span>
@@ -271,15 +264,6 @@
                     </span>
                   </perm>
                 </div>
-                <!--<div>-->
-                  <!--<perm label="purchasing-contract-edit">-->
-                    <!--<span @click.stop.prevent="startContract(item)" v-if="!item.availabilityStatus">-->
-                      <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
-                        <!--class="el-icon-t-start"></i></a>-->
-                      <!--启用-->
-                    <!--</span>-->
-                  <!--</perm>-->
-                <!--</div>-->
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
