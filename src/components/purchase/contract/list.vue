@@ -223,25 +223,16 @@
               </el-col>
               <el-col :span="4" class="opera-btn">
                 <div v-for="relation in item.relationList" v-if="item.relationList.length>0">
-                  <span v-if="relation.order">
-                    <span @click.stop.prevent="showOrderForm(relation.order,item.id)">
+                    <span @click.stop.prevent="showOrderForm(relation.order,item.id)" v-if="relation.order">
                       <a href="#" @click.prevent=""></a>
                       {{relation.order.orderNo }}
                     </span>
-                  </span>
                 </div>
                 <div v-if="item.relationList.length===0">
                   无
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <!--<div>-->
-                <!--</div>-->
-                <!--<perm label="purchasing-contract-add">-->
-                <!--<div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">-->
-                <!--<el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>-->
-                <!--</div>-->
-                <!--</perm>-->
                 <div>
                   <perm label="purchasing-contract-edit">
                     <span @click.stop.prevent="createOrder(item)" v-if="!item.used">
@@ -273,15 +264,6 @@
                     </span>
                   </perm>
                 </div>
-                <!--<div>-->
-                  <!--<perm label="purchasing-contract-edit">-->
-                    <!--<span @click.stop.prevent="startContract(item)" v-if="!item.availabilityStatus">-->
-                      <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
-                        <!--class="el-icon-t-start"></i></a>-->
-                      <!--启用-->
-                    <!--</span>-->
-                  <!--</perm>-->
-                <!--</div>-->
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
