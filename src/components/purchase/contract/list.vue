@@ -222,10 +222,12 @@
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <div v-for="order in item.relationList" v-if="item.relationList.length>0">
-                  <span @click.stop.prevent="showOrderForm(order.order,item.id)">
-                    <a href="#" @click.prevent=""></a>
-                    {{order.order.orderNo }}
+                <div v-for="relation in item.relationList" v-if="item.relationList.length>0">
+                  <span v-if="relation.order">
+                    <span @click.stop.prevent="showOrderForm(relation.order,item.id)">
+                      <a href="#" @click.prevent=""></a>
+                      {{relation.order.orderNo }}
+                    </span>
                   </span>
                 </div>
                 <div v-if="item.relationList.length===0">
@@ -320,12 +322,11 @@
   </div>
 </template>
 <script>
-  import utils from '@/tools/utils';
   import addForm from './form/InForm.vue';
   import showForm from './form/showForm.vue';
   import editForm from './form/editForm.vue';
   import orderForm from '../order/show.order.in.vue';
-  import { BaseInfo, PurchaseContract} from '@/resources';
+  import {BaseInfo, PurchaseContract} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
 
   export default {
