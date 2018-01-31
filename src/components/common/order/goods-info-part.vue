@@ -10,14 +10,6 @@
                 :dict-key="productInfo.fixInfo.goodsDto.smallPackageUnit"></dict>
           </span>
         </oms-row>
-        <oms-row label="中包装" :span="8">
-          <span v-show="productInfo.fixInfo.goodsDto.mediumPacking">
-            {{productInfo.fixInfo.goodsDto.mediumPacking}}
-          <dict :dict-group="'measurementUnit'" :dict-key="productInfo.fixInfo.goodsDto.measurementUnit"></dict>/
-          <dict :dict-group="'shipmentPackingUnit'"
-                :dict-key="productInfo.fixInfo.goodsDto.mediumPackageUnit"></dict>
-          </span>
-        </oms-row>
         <oms-row label="大包装" :span="8">
           <span v-show="productInfo.fixInfo.goodsDto.largePacking">
           {{productInfo.fixInfo.goodsDto.largePacking}}

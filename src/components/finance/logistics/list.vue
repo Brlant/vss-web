@@ -78,7 +78,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <!--<el-col :span="8">-->
             <!--<oms-form-row label="订单号" :span="6">-->
@@ -125,15 +126,15 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="入库时间" :span="6">-->
-            <!--<el-date-picker-->
-            <!--v-model="aryTime"-->
-            <!--type="daterange"-->
-            <!--placeholder="请选择" format="yyyy-MM-dd">-->
-            <!--</el-date-picker>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
+            <el-col :span="8">
+              <oms-form-row label="入库时间" :span="6">
+                <el-date-picker
+                  v-model="aryTime"
+                  type="daterange"
+                  placeholder="请选择" format="yyyy-MM-dd">
+                </el-date-picker>
+              </oms-form-row>
+            </el-col>
             <el-col :span="8">
               <el-row style="text-align: left;padding-left: 20px">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
