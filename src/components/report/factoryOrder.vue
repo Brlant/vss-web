@@ -265,7 +265,7 @@
         this.pager.currentPage = pageNo;
         this.showTable = true;
         this.loadingData = true;
-        this.loadingInstance = this.$loading({
+        let loadingInstance = this.$loading({
           target: this.$refs['orderDetail'].$el
         });
         let params = this.searchWord;
@@ -281,7 +281,7 @@
           this.batches = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
-          this.loadingInstance.close();
+          loadingInstance.close();
         });
       },
       getSummaries (param) {
