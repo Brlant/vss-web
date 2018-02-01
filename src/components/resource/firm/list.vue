@@ -375,7 +375,7 @@
               </div>
               <div style="overflow: hidden">
                   <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{item.manufacturerCode}}
+                    <span>系统代码:</span>{{item.manufacturerCode}}
                   </span>
               </div>
             </el-option>

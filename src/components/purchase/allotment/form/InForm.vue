@@ -301,17 +301,17 @@
                         组合
                       </el-tag>
                       <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
-                        v-show="item.orgGoodsDto.goodsDto.specifications">规格</span>  {{item.orgGoodsDto.goodsDto.specifications}}
+                        v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{item.orgGoodsDto.goodsDto.specifications}}
                       </span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                        v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left">
-                          <span>标准价格 ￥</span>{{ item.orgGoodsDto.unitPrice | formatMoney}}</span>
+                          <span>标准价格:￥</span>{{ item.orgGoodsDto.unitPrice | formatMoney}}</span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                       </span>
                     </div>
                   </el-option>
@@ -592,6 +592,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     watch: {
@@ -914,7 +917,15 @@
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+        let url = '';
+        if (this.orgLevel === 1) {
+          url = 'vaccine-info';
+          params.deleteFlag = false;
+          params.status = '1';
+        } else {
+          url = 'purchase-agreement/valid/org-goods';
+        }
+        http.get(url, {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }

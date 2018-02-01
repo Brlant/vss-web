@@ -44,10 +44,7 @@
 
 </template>
 <script>
-  import {TimelineItem, Timeline} from '../../components/common/timeline/index.js';
-
   export default {
-    components: {Timeline, TimelineItem},
     data: function () {
       return {};
     },

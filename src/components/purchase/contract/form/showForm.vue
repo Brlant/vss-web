@@ -340,10 +340,8 @@
 <script>
   import { Address, BaseInfo, http, PurchaseContract } from './../../../../resources';
   import utils from '@/tools/utils';
-  import Dict from '../../../common/dict.vue';
 
   export default {
-    components: {Dict},
     name: 'showForm',
     loading: false,
     props: {

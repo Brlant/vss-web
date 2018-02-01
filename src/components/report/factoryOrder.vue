@@ -88,7 +88,7 @@
                         <!--v-show="vaccine.code">货品编号</span>  {{vaccine.code}}-->
                         <!--</span>-->
                       <span class="select-other-info pull-left"><span
-                        v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
+                        v-show="vaccine.specifications">货品规格:</span>{{vaccine.specifications}}
                         </span>
                       <!--<span class="select-other-info pull-left"><span-->
                         <!--v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}-->
@@ -96,7 +96,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="vaccine.factoryName">生产厂商</span>  {{ vaccine.factoryName }}
+                          v-show="vaccine.factoryName">生产厂商:</span>{{ vaccine.factoryName }}
                         </span>
                     </div>
                   </el-option>
