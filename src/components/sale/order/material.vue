@@ -47,7 +47,8 @@
       queryMaterials (query) {
         let params = {
           deleteFlag: false,
-          keyWord: query
+          keyWord: query,
+          pageSize: 100
         };
         material.query(params).then(res => {
           this.materials = res.data.list;

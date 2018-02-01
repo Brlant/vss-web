@@ -468,7 +468,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
@@ -958,15 +958,26 @@
           this.searchProductList = [];
           return;
         }
-        let params = {
-          cdcId: this.form.orgId,
-          povId: this.form.customerId,
-          vaccineType: this.vaccineType,
-          keyWord: query
-        };
+        let params = {};
         let rTime = Date.now();
         this.requestTime = rTime;
-        http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
+        let Api = {};
+        if (this.vaccineType === '1') {
+         params = {
+           keyWord: query,
+           deleteFlag: false
+         };
+          Api = Vaccine.query(params);
+        } else {
+          params = {
+            cdcId: this.form.orgId,
+            povId: this.form.customerId,
+            vaccineType: this.vaccineType,
+            keyWord: query
+          };
+          Api = http.get('pov-sale-group/valid/org-goods', {params: params});
+        }
+        Api.then(res => {
           if (this.requestTime > rTime) {
             return;
           }
