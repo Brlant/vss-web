@@ -222,24 +222,17 @@
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <div v-for="order in item.relationList" v-if="item.relationList.length>0">
-                  <span @click.stop.prevent="showOrderForm(order.order,item.id)">
-                    <a href="#" @click.prevent=""></a>
-                    {{order.order.orderNo }}
-                  </span>
+                <div v-for="relation in item.relationList" v-if="item.relationList.length>0">
+                    <span @click.stop.prevent="showOrderForm(relation.order,item.id)" v-if="relation.order">
+                      <a href="#" @click.prevent=""></a>
+                      {{relation.order.orderNo }}
+                    </span>
                 </div>
                 <div v-if="item.relationList.length===0">
                   无
                 </div>
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <!--<div>-->
-                <!--</div>-->
-                <!--<perm label="purchasing-contract-add">-->
-                <!--<div style="margin-bottom: 10px" v-if="!form.purchaseContractIsUsed">-->
-                <!--<el-button type="success" @click="createOrder" style="width: 150px">批量生成采购订单</el-button>-->
-                <!--</div>-->
-                <!--</perm>-->
                 <div>
                   <perm label="purchasing-contract-edit">
                     <span @click.stop.prevent="createOrder(item)" v-if="!item.used">
@@ -271,15 +264,6 @@
                     </span>
                   </perm>
                 </div>
-                <!--<div>-->
-                  <!--<perm label="purchasing-contract-edit">-->
-                    <!--<span @click.stop.prevent="startContract(item)" v-if="!item.availabilityStatus">-->
-                      <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
-                        <!--class="el-icon-t-start"></i></a>-->
-                      <!--启用-->
-                    <!--</span>-->
-                  <!--</perm>-->
-                <!--</div>-->
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -320,12 +304,11 @@
   </div>
 </template>
 <script>
-  import utils from '@/tools/utils';
   import addForm from './form/InForm.vue';
   import showForm from './form/showForm.vue';
   import editForm from './form/editForm.vue';
   import orderForm from '../order/show.order.in.vue';
-  import { BaseInfo, PurchaseContract} from '@/resources';
+  import {BaseInfo, PurchaseContract} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
 
   export default {
