@@ -330,11 +330,9 @@
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
   import { BaseInfo, erpOrder, Vaccine } from '@/resources';
-  import GoodsSwitch from '@/components/common/order/goods-switch';
   import OrderMixin from '@/mixins/orderMixin';
   export default {
     components: {
-      GoodsSwitch,
       showForm, addForm
     },
     data: function () {

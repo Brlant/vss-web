@@ -29,10 +29,7 @@
 </template>
 <script>
   import { http } from '@/resources';
-  import { TimelineItem, Timeline } from '../../../../components/common/timeline/index.js';
-
   export default {
-    components: {TimelineItem, Timeline},
     props: {
       currentOrder: {
         type: Object,

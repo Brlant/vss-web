@@ -592,6 +592,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     watch: {
@@ -914,7 +917,15 @@
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+        let url = '';
+        if (this.orgLevel === 1) {
+          url = 'vaccine-info';
+          params.deleteFlag = false;
+          params.status = '1';
+        } else {
+          url = 'purchase-agreement/valid/org-goods';
+        }
+        http.get(url, {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }

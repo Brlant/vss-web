@@ -277,7 +277,6 @@
   import utils from '@/tools/utils';
   import editForm from './form/form.vue';
   import {BaseInfo, http, Vaccine} from '@/resources';
-  import OmsForbid from '../../common/forbid.vue';
 
   export default {
     components: {

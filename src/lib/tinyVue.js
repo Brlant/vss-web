@@ -65,27 +65,36 @@ import Transfer from 'element-ui/lib/transfer';
 import locale from 'element-ui/lib/locale';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 
-import remove from '../components/common/remove.vue';
-import forbid from '../components/common/forbid.vue';
-import dict from '../components/common/dict.vue';
-import nl2br from '../components/common/nl2br.vue';
+import {
+  Dict,
+  FA,
+  Forbid,
+  FormRow,
+  InputSingle,
+  LoadingBottom,
+  Nl2br,
+  PageRight,
+  Remove,
+  TimeLine,
+  TimeLineItem,
+  TinyInput,
+  TinyLoading,
+  TinyRow,
+  goodsSwitch,
+  TotalCount,
+  orgSelect,
+  orgGoodsSelect,
+  goodsSelect,
+  statusList
+} from '@dtop/dtop-web-common';
+
 import upload from '../components/common/upload.vue';
 import uploadRelation from '../components/common/upload.relation.vue';
 import perm from '../components/common/perm.vue';
-import omsRow from '../components/common/row.vue';
-import formRow from '../components/common/formRow.vue';
-import pageRight from '../components/common/page.right.vue';
-import omsInput from '../components/common/input.oms.vue';
-import singleInput from '../components/common/input.single.oms.vue';
-import omsLoading from '../components/common/oms.loading.vue';
 import ElForm from '../components/common/form/src/form.vue';
-import fa from '../components/common/fa.vue';
-import totalCount from '../components/common/count.total.vue';
-import bottomLoading from '../components/common/bottom.loading.vue';
 import goodsInfoPart from '@/components/common/order/goods-info-part';
 import cancelOrder from '@/components/common/order/cancel-order';
 import orderGoodsInfo from '@/components/common/order/order-goods-info';
-import goodsSwitch from '@/components/common/order/goods-switch';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
   Pagination,
@@ -147,27 +156,34 @@ const tinyVue = [
   ColorPicker,
   Transfer,
   CollapseTransition,
-  remove,
-  forbid,
-  dict,
-  nl2br,
   upload,
   uploadRelation,
   perm,
-  omsRow,
-  formRow,
-  pageRight,
-  omsInput,
-  singleInput,
-  omsLoading,
   ElForm,
-  fa,
-  totalCount,
-  bottomLoading,
   goodsInfoPart,
   cancelOrder,
   orderGoodsInfo,
-  goodsSwitch
+  // 公用组件
+  Dict,
+  FA,
+  Forbid,
+  FormRow,
+  InputSingle,
+  LoadingBottom,
+  Nl2br,
+  PageRight,
+  Remove,
+  TimeLine,
+  TimeLineItem,
+  TinyInput,
+  TinyLoading,
+  TinyRow,
+  goodsSwitch,
+  TotalCount,
+  orgSelect,
+  orgGoodsSelect,
+  goodsSelect,
+  statusList
 ];
 
 const install = function (Vue, opts = {}) {

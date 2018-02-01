@@ -54,12 +54,8 @@
 </template>
 <script>
   import { http } from '@/resources';
-  import { TimelineItem, Timeline } from './timeline/index.js';
 
   export default {
-    components: {
-      TimelineItem, Timeline
-    },
     props: {
       currentOrder: {
         type: Object,
