@@ -4,6 +4,7 @@ import tinyVue from './lib/tinyVue';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 import './assets/element-variables.scss';
+import './assets/dtop-variables.scss';
 import '../static/css/oms.css';
 import '../static/fonts/iconfont.css';
 import Vuex from 'vuex';

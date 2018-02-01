@@ -324,14 +324,10 @@
         });
       },
       filterOrgGoods (query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
-          keyWord: query,
-          orgId: orgId
+          keyWord: query
         });
-        let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
+        Vaccine.query(params).then(res => {
           this.orgGoods = res.data.list;
         });
       },
