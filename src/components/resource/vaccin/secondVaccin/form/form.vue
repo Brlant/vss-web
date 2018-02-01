@@ -112,18 +112,18 @@
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="item.code">货品编号</span>  {{item.code}}
+                  v-show="item.code">货品编号:</span>{{item.code}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.specifications">货品规格</span>  {{item.specifications}}
+                v-show="item.specifications">货品规格:</span>{{item.specifications}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.approvalNumber">批准文号</span>  {{item.approvalNumber}}
+                v-show="item.approvalNumber">批准文号:</span>{{item.approvalNumber}}
                 </span>
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.factoryName">生产厂商</span>  {{ item.factoryName }}
+                v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
               </span>
             </div>
           </el-option>
@@ -139,7 +139,7 @@
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left">
-                <span>系统代码</span> {{org.manufacturerCode}}
+                <span>系统代码:</span>{{org.manufacturerCode}}
               </span>
             </div>
           </el-option>
@@ -202,13 +202,13 @@
               </div>
               <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.goodsDto.code">平台货品编号</span>  {{item.orgGoodsDto.goodsDto.code}}
+                v-show="item.orgGoodsDto.goodsDto.code">平台货品编号:</span>{{item.orgGoodsDto.goodsDto.code}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                  v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                  v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
               </span>
               </div>
             </el-option>

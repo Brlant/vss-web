@@ -242,7 +242,7 @@
                   </div>
                   <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                   </div>
                 </el-option>
@@ -331,19 +331,19 @@
                           组合
                         </el-tag>
                         <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
-                          v-show="item.orgGoodsDto.goodsDto.specifications">规格</span>  {{item.orgGoodsDto.goodsDto.specifications}}
+                          v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{item.orgGoodsDto.goodsDto.specifications}}
                         </span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.sellPrice">销售价格 ￥{{ item.orgGoodsDto.sellPrice
+                          v-show="item.orgGoodsDto.sellPrice">销售价格:￥{{ item.orgGoodsDto.sellPrice
                           }}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                       </div>
                     </div>
@@ -368,8 +368,8 @@
                       <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                         <span style="margin-right: 10px"
-                              v-show="acce.sellPrice">¥ {{ acce.sellPrice | formatMoney }}</span>
-                       <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
+                              v-show="acce.sellPrice">销售价格:¥{{ acce.sellPrice | formatMoney }}</span>
+                       <span style="margin-right: 10px" v-show="acce.proportion">比例:{{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
                     </el-col>
