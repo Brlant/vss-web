@@ -958,26 +958,18 @@
           this.searchProductList = [];
           return;
         }
-        let params = {};
+        let params = {
+          cdcId: this.form.orgId,
+          povId: this.form.customerId,
+          vaccineType: this.vaccineType,
+          keyWord: query
+        };
         let rTime = Date.now();
         this.requestTime = rTime;
-        let Api = {};
         if (this.vaccineType === '1') {
-         params = {
-           keyWord: query,
-           deleteFlag: false
-         };
-          Api = Vaccine.query(params);
-        } else {
-          params = {
-            cdcId: this.form.orgId,
-            povId: this.form.customerId,
-            vaccineType: this.vaccineType,
-            keyWord: query
-          };
-          Api = http.get('pov-sale-group/valid/org-goods', {params: params});
+          params.vaccineType = undefined;
         }
-        Api.then(res => {
+        http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }
