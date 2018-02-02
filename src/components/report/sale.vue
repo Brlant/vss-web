@@ -119,7 +119,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight()"  border
+      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight"  border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="orderNo" label="货主订单号" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true" width="120"></el-table-column>
@@ -162,10 +162,12 @@
         isLoading: false
       };
     },
+    computed: {
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 110;
+      }
+    },
     methods: {
-      getHeight() {
-        return utils.getCurrentHeight(this.$refs['reportTable']);
-      },
       exportFile: function () {
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
