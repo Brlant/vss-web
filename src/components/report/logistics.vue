@@ -78,7 +78,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -95,7 +95,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -116,10 +116,10 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                     </div>
                   </el-option>
@@ -153,7 +153,7 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary border
-                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight()">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight">
         <el-table-column prop="type" label="出入库类型" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="date" label="日期" :sortable="true" width="100"></el-table-column>
@@ -203,10 +203,12 @@
         goodsStatusList: ['不合格', '合格']
       };
     },
+    computed: {
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 110;
+      }
+    },
     methods: {
-      getHeight() {
-        return utils.getCurrentHeight(this.$refs['reportTable']);
-      },
       exportFile: function () {
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
@@ -324,14 +326,10 @@
         });
       },
       filterOrgGoods (query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
-          keyWord: query,
-          orgId: orgId
+          keyWord: query
         });
-        let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
+        Vaccine.query(params).then(res => {
           this.orgGoods = res.data.list;
         });
       },

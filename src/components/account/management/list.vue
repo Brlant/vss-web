@@ -153,12 +153,10 @@
 <script>
   import { BaseInfo, OrgUser, User } from '../../../resources';
   import editForm from './form/form.vue';
-  import OmsRemove from '../../common/remove.vue';
-  import OmsForbid from '../../common/forbid.vue';
 
   export default {
     components: {
-      OmsRemove, editForm, OmsForbid
+      editForm
     },
     data: function () {
       return {

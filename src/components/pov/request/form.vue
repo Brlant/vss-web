@@ -264,13 +264,13 @@
                     </div>
                     <div class="clearfix">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
+                        v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}</span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.sellPrice">销售价格 ￥{{ item.sellPrice
+                        v-show="item.sellPrice">销售价格:￥{{ item.sellPrice
                         }}</span>
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}</span>
+                        v-show="item.factoryName">供货厂商:</span>{{ item.factoryName }}</span>
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->

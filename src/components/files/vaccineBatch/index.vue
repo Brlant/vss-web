@@ -93,7 +93,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -113,10 +113,10 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号</span>  {{org.goodsNo}}
+                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.saleFirmName">供货厂商</span>  {{ org.saleFirmName }}
+                        v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
                       </span>
                     </div>
                   </el-option>

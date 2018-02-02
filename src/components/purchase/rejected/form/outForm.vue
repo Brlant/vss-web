@@ -239,7 +239,7 @@
                   </div>
                   <div style="overflow: hidden">
                   <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.manufacturerCode}}
+                    <span>系统代码:</span>{{org.manufacturerCode}}
                   </span>
                   </div>
                 </el-option>
@@ -324,19 +324,19 @@
                           组合
                         </el-tag>
                         <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
-                          v-show="item.orgGoodsDto.goodsDto.specifications">规格</span>  {{item.orgGoodsDto.goodsDto.specifications}}
+                          v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{item.orgGoodsDto.goodsDto.specifications}}
                         </span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <!--<span class="select-other-info pull-left"><span-->
                         <!--v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice-->
                         <!--}}</span>-->
                         <!--</span>-->
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                       </div>
                     </el-option>
@@ -464,6 +464,7 @@
   import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from '@/components/sale/order/form/batchNumber';
+  import OrderMixin from '@/mixins/orderMixin';
 
   export default {
     name: 'addForm',
@@ -471,6 +472,7 @@
     components: {
       batchNumberPart
     },
+    mixins: [OrderMixin],
     props: {
       type: {
         type: String,
@@ -1160,7 +1162,7 @@
         });
       },
       onSubmit: function () {// 提交表单
-
+        if (!this.checkHasOrderNotAdded(this.product)) return;
         let self = this;
         this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {

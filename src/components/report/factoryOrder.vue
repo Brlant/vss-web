@@ -88,7 +88,7 @@
                         <!--v-show="vaccine.code">货品编号</span>  {{vaccine.code}}-->
                         <!--</span>-->
                       <span class="select-other-info pull-left"><span
-                        v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
+                        v-show="vaccine.specifications">货品规格:</span>{{vaccine.specifications}}
                         </span>
                       <!--<span class="select-other-info pull-left"><span-->
                         <!--v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}-->
@@ -96,7 +96,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="vaccine.factoryName">生产厂商</span>  {{ vaccine.factoryName }}
+                          v-show="vaccine.factoryName">生产厂商:</span>{{ vaccine.factoryName }}
                         </span>
                     </div>
                   </el-option>
@@ -183,7 +183,7 @@
       </el-table>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
-      layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+      layout="sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
       :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
       :current-page="pager.currentPage">
       </el-pagination>
@@ -279,7 +279,9 @@
           }
         }).then(res => {
           this.batches = res.data.list;
-          this.pager.count = res.data.count;
+          // this.pager.count = res.data.count;
+          //
+          this.pager.count = this.pager.currentPage * this.pager.pageSize + (this.batches.length === this.pager.pageSize ? 1 : 0);
           this.loadingData = false;
           loadingInstance.close();
         });

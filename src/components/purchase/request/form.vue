@@ -216,7 +216,7 @@
                   </div>
                   <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                   </div>
                 </el-option>
@@ -262,13 +262,13 @@
                     </div>
                     <div class="clearfix">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
+                        v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}</span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.sellPrice">销售价格 ￥{{ item.sellPrice
+                        v-show="item.sellPrice">销售价格:￥{{ item.sellPrice
                         }}</span>
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}</span>
+                        v-show="item.factoryName">供货厂商:</span>{{ item.factoryName }}</span>
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->
@@ -298,8 +298,8 @@
                       <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                        <span style="margin-right: 10px"
-                             v-show="acce.sellPrice">¥ {{ acce.sellPrice | formatMoney}}</span>
-                       <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
+                             v-show="acce.sellPrice">销售价格:¥{{ acce.sellPrice | formatMoney}}</span>
+                       <span style="margin-right: 10px" v-show="acce.proportion">比例:{{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
                     </el-col>

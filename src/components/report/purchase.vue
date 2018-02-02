@@ -64,7 +64,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -90,10 +90,10 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                     </div>
                   </el-option>
@@ -127,7 +127,7 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" border ref="reportTable" border
-                :header-row-class-name="'headerClass'" v-loading="loadingData" :maxHeight="getHeight()">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" :maxHeight="getHeight">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true"></el-table-column>
         <el-table-column prop="suppliersName" label="供应商" :sortable="true"></el-table-column>
@@ -169,10 +169,12 @@
         isLoading: false
       };
     },
+    computed: {
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 110;
+      }
+    },
     methods: {
-      getHeight() {
-        return utils.getCurrentHeight(this.$refs['reportTable']);
-      },
       exportFile: function () {
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);

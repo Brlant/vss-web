@@ -59,10 +59,10 @@
               </div>
               <div class="clearfix">
                             <span class="select-other-info pull-left">
-                              <span v-show="item.goodsNo">货品编号</span>{{item.goodsNo}}
+                              <span v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}
                             </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}
+                  v-show="item.factoryName">供货厂商:</span>{{ item.factoryName }}
                             </span>
               </div>
             </div>
