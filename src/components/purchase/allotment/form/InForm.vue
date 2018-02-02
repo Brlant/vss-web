@@ -419,10 +419,11 @@
 <script>
   import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
-
+  import OrderMixin from '@/mixins/orderMixin';
   export default {
     name: 'addForm',
     loading: false,
+    mixins: [OrderMixin],
     props: {
       type: {
         'type': String,
@@ -1072,6 +1073,7 @@
         this.searchProduct(item.orgGoodsName);
       },
       onSubmit: function () {// 提交表单
+        if (!this.checkHasOrderNotAdded(this.product)) return;
         let self = this;
         this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {

@@ -464,6 +464,7 @@
   import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from '@/components/sale/order/form/batchNumber';
+  import OrderMixin from '@/mixins/orderMixin';
 
   export default {
     name: 'addForm',
@@ -471,6 +472,7 @@
     components: {
       batchNumberPart
     },
+    mixins: [OrderMixin],
     props: {
       type: {
         type: String,
@@ -1160,7 +1162,7 @@
         });
       },
       onSubmit: function () {// 提交表单
-
+        if (!this.checkHasOrderNotAdded(this.product)) return;
         let self = this;
         this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {

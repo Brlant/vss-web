@@ -472,11 +472,12 @@
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
-
+  import OrderMixin from '@/mixins/orderMixin';
   export default {
     name: 'addForm',
     loading: false,
     components: {materialPart, batchNumberPart},
+    mixins: [OrderMixin],
     props: {
       type: {
         type: String,
@@ -1219,7 +1220,7 @@
         }
       },
       onSubmit: function () {// 提交表单
-
+        if (!this.checkHasOrderNotAdded(this.product)) return;
         let self = this;
         this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
