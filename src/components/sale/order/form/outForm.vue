@@ -472,11 +472,12 @@
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
-
+  import OrderMixin from '@/mixins/orderMixin';
   export default {
     name: 'addForm',
     loading: false,
     components: {materialPart, batchNumberPart},
+    mixins: [OrderMixin],
     props: {
       type: {
         type: String,
@@ -958,26 +959,18 @@
           this.searchProductList = [];
           return;
         }
-        let params = {};
+        let params = {
+          cdcId: this.form.orgId,
+          povId: this.form.customerId,
+          vaccineType: this.vaccineType,
+          keyWord: query
+        };
         let rTime = Date.now();
         this.requestTime = rTime;
-        let Api = {};
         if (this.vaccineType === '1') {
-         params = {
-           keyWord: query,
-           deleteFlag: false
-         };
-          Api = Vaccine.query(params);
-        } else {
-          params = {
-            cdcId: this.form.orgId,
-            povId: this.form.customerId,
-            vaccineType: this.vaccineType,
-            keyWord: query
-          };
-          Api = http.get('pov-sale-group/valid/org-goods', {params: params});
+          params.vaccineType = undefined;
         }
-        Api.then(res => {
+        http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }
@@ -1227,7 +1220,7 @@
         }
       },
       onSubmit: function () {// 提交表单
-
+        if (!this.checkHasOrderNotAdded(this.product)) return;
         let self = this;
         this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {

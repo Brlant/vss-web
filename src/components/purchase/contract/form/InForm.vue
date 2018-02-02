@@ -449,7 +449,7 @@
 <script>
   import { Address, BaseInfo, http, LogisticsCenter, PurchaseContract } from './../../../../resources';
   import utils from '@/tools/utils';
-
+  import OrderMixin from '@/mixins/orderMixin';
   export default {
     name: 'addForm',
     loading: false,
@@ -470,6 +470,7 @@
       orderId: String,
       vaccineType: String
     },
+    mixins: [OrderMixin],
     data: function () {
       return {
         loading: false,
@@ -1134,6 +1135,7 @@
         this.searchProduct(item.orgGoodsName);
       },
       onSubmit: function () {// 提交表单
+        if (!this.checkHasOrderNotAdded(this.product, '合同')) return;
         let self = this;
         this.changeExpectedTime(this.form.expectedTime);
         this.$refs['contractForm'].validate((valid) => {
