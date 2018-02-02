@@ -62,7 +62,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight()" border
+      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="goodsName" label="疫苗名称" width="160" :sortable="true"></el-table-column>
         <el-table-column prop="beforeStock" label="期前库存" :sortable="true"></el-table-column>
@@ -102,10 +102,12 @@
         isLoading: false
       };
     },
+    computed: {
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 70;
+      }
+    },
     methods: {
-      getHeight() {
-        return utils.getCurrentHeight(this.$refs['reportTable']);
-      },
       exportFile: function () {
         if (!this.bizDateAry || !this.bizDateAry.length) {
           this.$notify.info({

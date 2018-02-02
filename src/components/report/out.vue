@@ -70,7 +70,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight()" border
+      <el-table :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <template v-for="(item, index) in firstLine">
           <el-table-column :prop="item.key" :label="item.name"></el-table-column>
@@ -105,12 +105,12 @@
         if (!length) return 150;
         if (length > 0 && length < 8) return `${1080 / length}`;
         if (length > 7) return 150;
+      },
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 70;
       }
     },
     methods: {
-      getHeight() {
-        return utils.getCurrentHeight(this.$refs['reportTable']);
-      },
       exportFile: function () {
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
