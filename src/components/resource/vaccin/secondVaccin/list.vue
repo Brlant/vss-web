@@ -68,15 +68,13 @@
   }
 
   .base-pic-item {
-    border: 1px solid #eee;
+    border: 0px solid #eee;
     position: relative;
     cursor: pointer;
-    width: 380px;
     margin: 5px;
     padding: 10px;
     font-size: 12px;
     img {
-      width: 380px;
       display: block;
       background: #ccc;
     }
@@ -207,7 +205,7 @@
                 <el-col :span="12" style="padding-left:50px;">
                   <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
                     <img
-                      :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
+                      :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_'+imageWidth+',m_0':'/static/img/userpic.png' "/>
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -491,6 +489,11 @@
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = (height - 25) + 'px';
         return height;
+      },
+      imageWidth: function () {
+        let width = parseInt(this.$store.state.windowSize.width, 10);
+        width = width * 0.20;
+        return Math.ceil(width);
       }
     },
     methods: {
