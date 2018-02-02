@@ -176,6 +176,7 @@
           pageSize: 5
         };
         let orgId = this.user.userCompanyAddress;
+        if (!orgId) return;
         if (this.level === 3) {
           Object.assign(params, {povId: orgId, status: 0});
         } else {
@@ -186,6 +187,7 @@
         });
       },
       goUrl: function (item) {
+        if (!item.id) return;
         if (this.level === 3) {
           this.$router.push({path: '/pov/request', query: {id: item.id}});
         } else {
@@ -193,6 +195,7 @@
         }
       },
       goToOrderUrl (item) {
+        if (!item.id) return;
         if (this.level === 1) {
           this.$router.push(`purchase/order/one/class/${item.id}`);
         } else {
