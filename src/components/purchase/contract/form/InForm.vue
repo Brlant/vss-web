@@ -1135,7 +1135,7 @@
         this.searchProduct(item.orgGoodsName);
       },
       onSubmit: function () {// 提交表单
-        if (!this.checkHasOrderNotAdded(this.product)) return;
+        if (!this.checkHasOrderNotAdded(this.product, '合同')) return;
         let self = this;
         this.changeExpectedTime(this.form.expectedTime);
         this.$refs['contractForm'].validate((valid) => {
