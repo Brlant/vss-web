@@ -71,12 +71,14 @@
     border: 1px solid #eee;
     position: relative;
     cursor: pointer;
-    width: 380px;
     margin: 5px;
     padding: 10px;
     font-size: 12px;
     img {
-      width: 380px;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
       display: block;
       background: #ccc;
     }
