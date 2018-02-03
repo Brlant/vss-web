@@ -75,8 +75,8 @@
         <td colspan="2" class="t-head">批号</td>
         <td colspan="3" class="t-head">生产日期</td>
         <td colspan="3" class="t-head">有效期</td>
-        <td colspan="3" class="t-head">大包装数量</td>
-        <td colspan="3" class="t-head">小包装数量</td>
+        <td colspan="3" class="t-head">整件数量</td>
+        <td colspan="3" class="t-head">散件数量</td>
       </tr>
       <tr v-for="batchNumber in item.batchNumbers" :key="batchNumber.id"
           v-if="item.batchNumbers && item.batchNumbers.length > 0">
