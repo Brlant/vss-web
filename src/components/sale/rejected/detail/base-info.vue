@@ -117,7 +117,7 @@
           </td>
           <td width="80px" class="R">
             {{ item.batchNumber || '无' }}
-            <el-tag v-show="item.inEffectiveFlag" type="danger">近效期</el-tag>
+            <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
           </td>
           <td>{{ item.productionDate | date }}</td>
           <td>{{ item.expiryDate | date }}</td>

@@ -427,7 +427,7 @@
                 </td>
                 <td>
                   {{ product.no ? product.no : '无' }}
-                  <el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>
+                  <el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>
                 </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"

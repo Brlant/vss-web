@@ -51,7 +51,7 @@
             </td>
             <td>
               {{ batchNumber.no }}
-              <el-tag v-show="batchNumber.inEffectiveFlag" type="danger">近效期</el-tag>
+              <el-tag v-show="batchNumber.inEffectiveFlag" type="warning">近效期</el-tag>
             </td>
             <td>{{ batchNumber.count }}</td>
             <td>{{ batchNumber.productionDate | date }}</td>
