@@ -261,6 +261,9 @@
             <el-form-item label="实际收货人" v-show="showContent.isShowOtherContent">
               <oms-input type="text" placeholder="请输入实际收货人" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
+            <el-form-item label="收货人联系电话" v-show="showContent.isShowOtherContent">
+              <oms-input type="text" placeholder="请输入收货人联系电话" v-model="form.consigneePhone"></oms-input>
+            </el-form-item>
             <!--<el-form-item label="是否同批号">-->
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
@@ -541,6 +544,7 @@
           orgAddress: '',
           sameBatchNumber: false,
           actualConsignee: '',
+          'consigneePhone': '',
           'thirdPartyNumber': '',
           'expectedTime': '',
           'detailDtoList': [],
@@ -729,6 +733,7 @@
         this.$refs['orderAddForm'].resetFields();
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.actualConsignee = '';
+        this.form.consigneePhone = '';
         this.form.logisticsProviderId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
@@ -907,7 +912,10 @@
           this.orgList.forEach(i => {
             if (i.id === orgId) {
               this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
-              this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
+              if (i.orgRelationList.length) {
+                this.form.actualConsignee = i.orgRelationList[0].contactPerson;
+                this.form.consigneePhone = i.orgRelationList[0].contactPersonPhone;
+              }
             }
           });
           // *************************//
@@ -927,10 +935,12 @@
       changeWarehouseAdress: function (val) {
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.actualConsignee = ''; // 仓库改变时, 设置实际收货人
+          this.form.consigneePhone = ''; // 仓库改变时, 设置实际收货人
         }
         this.warehouses.forEach(item => {
           if (val === item.id) {
             this.form.actualConsignee = item.contact;
+            this.form.consigneePhone = item.telephone;
           }
         });
       },

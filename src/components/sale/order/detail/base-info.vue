@@ -69,6 +69,9 @@
           <el-form-item label="实际收货人">
             <oms-input type="text" placeholder="请输入实际收货人" v-model="currentOrder.actualConsignee"></oms-input>
           </el-form-item>
+          <el-form-item label="收货人联系电话">
+            <oms-input type="text" placeholder="请输入收货人联系电话" v-model="currentOrder.consigneePhone"></oms-input>
+          </el-form-item>
           <el-form-item label="运输条件" prop="transportationCondition">
             <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
               <el-option :value="item.key" :key="item.key" :label="item.label"
@@ -115,6 +118,9 @@
             </oms-row>
             <oms-row label="实际收货人" :span="span">
               <span class="goods-span">{{currentOrder.actualConsignee}}</span>
+            </oms-row>
+            <oms-row label="收货人联系电话" :span="span">
+              <span class="goods-span">{{currentOrder.consigneePhone}}</span>
             </oms-row>
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
@@ -353,9 +359,11 @@
       },
       changeWarehouseAdress: function (val) {
         this.currentOrder.actualConsignee = '';
+        this.currentOrder.consigneePhone = '';
         this.warehouses.forEach(item => {
           if (val === item.id) {
             this.currentOrder.actualConsignee = item.contact;
+            this.currentOrder.consigneePhone = item.consigneePhone;
           }
         });
       },
