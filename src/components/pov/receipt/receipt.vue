@@ -131,12 +131,6 @@
         types: [],
         doing: false,
         rules: {
-          largePackageCount: [
-            {required: true, type: 'number', message: '请输入大包装数量', trigger: 'blur'}
-          ],
-          smallPackageCount: [
-            {required: true, type: 'number', message: '请输入小包装数量', trigger: 'blur'}
-          ],
           bulkCount: [
             {required: true, type: 'number', message: '请输入散件数量', trigger: 'blur'}
           ]

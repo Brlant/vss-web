@@ -87,8 +87,9 @@
 <script>
   import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
-
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -104,7 +105,7 @@
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 70;
+        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
       }
     },
     methods: {
@@ -147,6 +148,7 @@
           res.data[res.data.length - 1].goodsName = '合计';
           this.reportList = res.data;
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       resetSearchForm: function () {

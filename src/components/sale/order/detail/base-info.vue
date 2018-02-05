@@ -153,7 +153,7 @@
       <table class="table no-border table-product-list" v-show="currentOrder.detailDtoList">
         <thead>
         <tr>
-          <td style="width: 30px">序号</td>
+          <td></td>
           <td></td>
           <td>名称</td>
           <td>批号</td>
@@ -166,11 +166,11 @@
         </thead>
         <tbody>
         <tr v-for="(item, index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
-          <td>{{index + 1}}</td>
-          <td width="70px">
+          <td width="10">{{index + 1}}</td>
+          <td width="80">
             <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                         effect="light" placement="right">
-              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_60,h_60,m_2' "
+              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_80,w_80,m_2' "
                    class="product-img">
               <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
                    class="product-img">
@@ -180,7 +180,7 @@
               <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
             </el-tooltip>
           </td>
-          <td width="160px">
+          <td>
             <div>
               <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
                 <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
@@ -197,12 +197,12 @@
               </el-tooltip>
             </div>
           </td>
-          <td width="80px" class="R">
+          <td width="100px" class="R">
             {{ item.batchNumber || '无' }}
-            <el-tag v-show="item.inEffectiveFlag" type="danger">近效期</el-tag>
+            <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
           </td>
           <!--<td>{{ item.productionDate | date }}</td>-->
-          <td>{{ item.expiryDate | date }}</td>
+          <td width="100px">{{ item.expiryDate | date }}</td>
           <td width="100px" class="text-center">
             {{item.amount}}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>

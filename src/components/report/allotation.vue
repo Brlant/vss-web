@@ -75,8 +75,9 @@
 <script>
   import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
-
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -92,7 +93,7 @@
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 70;
+        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
       }
     },
     methods: {
@@ -163,6 +164,7 @@
         this.$http.get('/erp-statement/first-vaccine-distribution', {params}).then(res => {
           this.reportList = res.data;
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       resetSearchForm: function () {

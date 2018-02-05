@@ -125,8 +125,9 @@
   import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
   import validMixin from '@/mixins/vaildMixin';
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
-    mixins: [validMixin],
+    mixins: [validMixin, ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -145,7 +146,7 @@
         return this.$route.meta.type;
       },
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 70;
+        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
       }
     },
     watch: {
@@ -243,6 +244,7 @@
           });
           this.reportList = res.data;
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       resetSearchForm: function () {

@@ -420,7 +420,7 @@
                   </td>
                   <td>
                     {{ product.no ? product.no : '无' }}
-                    <el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>
+                    <el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>
                   </td>
                   <td class="ar" v-show="vaccineType==='2'">
                    <span v-show="Number(product.unitPrice)">

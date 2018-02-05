@@ -140,8 +140,10 @@
 <script>
   import { BaseInfo, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
+  import ReportMixin from '@/mixins/reportMixin';
 
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -164,7 +166,7 @@
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 110;
+        return parseInt(this.$store.state.bodyHeight, 10) - 110 + this.fixedHeight;
       }
     },
     methods: {
@@ -201,6 +203,7 @@
             return m;
           });
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       resetSearchForm: function () {

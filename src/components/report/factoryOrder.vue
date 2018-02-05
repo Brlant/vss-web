@@ -136,7 +136,7 @@
 
       <el-table :data="batches" class="header-list store" border :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" ref="orderDetail"
-                max-height="600" v-show="showTable">
+                :maxHeight="getHeight" v-show="showTable">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="createTime" label="完成时间" :sortable="true"
                          width="120">
@@ -183,7 +183,7 @@
       </el-table>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
-      layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+      layout="sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
       :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
       :current-page="pager.currentPage">
       </el-pagination>
@@ -196,8 +196,10 @@
   //  import detail from './detail.vue';
   import utils from '@/tools/utils';
   import qs from 'qs';
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
 //    components: {detail},
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: true,
@@ -245,6 +247,9 @@
           i.key = '1-' + i.key;
         });
         return [].concat(inType, outType);
+      },
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 145 + this.fixedHeight;
       }
     },
     methods: {
@@ -279,9 +284,12 @@
           }
         }).then(res => {
           this.batches = res.data.list;
-          this.pager.count = res.data.count;
+          // this.pager.count = res.data.count;
+          //
+          this.pager.count = this.pager.currentPage * this.pager.pageSize + (this.batches.length === this.pager.pageSize ? 1 : 0);
           this.loadingData = false;
           loadingInstance.close();
+          this.setFixedHeight();
         });
       },
       getSummaries (param) {
