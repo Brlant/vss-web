@@ -63,7 +63,7 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary border
-                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :height="getHeight">
         <el-table-column prop="orgGoodsName" label="疫苗名称"  :sortable="true"></el-table-column>
         <el-table-column prop="count" label="配送数量" :sortable="true"  width="200"></el-table-column>
         <el-table-column prop="measurementUnit" label="基本单位" width="160" :sortable="true"></el-table-column>
