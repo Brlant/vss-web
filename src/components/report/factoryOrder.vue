@@ -136,7 +136,7 @@
 
       <el-table :data="batches" class="header-list store" border :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" ref="orderDetail"
-                height="600" v-show="showTable">
+                :maxHeight="getHeight" v-show="showTable">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="createTime" label="完成时间" :sortable="true"
                          width="120">
@@ -196,8 +196,10 @@
   //  import detail from './detail.vue';
   import utils from '@/tools/utils';
   import qs from 'qs';
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
 //    components: {detail},
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: true,
@@ -245,6 +247,9 @@
           i.key = '1-' + i.key;
         });
         return [].concat(inType, outType);
+      },
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 145 + this.fixedHeight;
       }
     },
     methods: {
@@ -285,6 +290,7 @@
           this.pager.count = this.pager.currentPage * this.pager.pageSize + (this.batches.length === this.pager.pageSize ? 1 : 0);
           this.loadingData = false;
           loadingInstance.close();
+          this.setFixedHeight();
         });
       },
       getSummaries (param) {

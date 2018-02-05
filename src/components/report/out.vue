@@ -70,7 +70,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="dataList" class="header-list" ref="reportTable"  :height="getHeight" border
+      <el-table :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <template v-for="(item, index) in firstLine">
           <el-table-column :prop="item.key" :label="item.name"></el-table-column>
@@ -82,8 +82,9 @@
 <script>
   import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
-
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -107,7 +108,7 @@
         if (length > 7) return 150;
       },
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 70;
+        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
       }
     },
     methods: {
@@ -138,6 +139,7 @@
           this.firstLine = res.data.map && res.data.map.firstLine || [];
           this.dataList = res.data.map && res.data.map.data || [];
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       resetSearchForm: function () {

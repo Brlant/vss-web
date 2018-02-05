@@ -118,12 +118,12 @@ const route = [
           {
             path: '/sale/order/one/class/:id',
             component: resolve => require(['./components/sale/order/list.vue'], resolve),
-            meta: {moduleId: 'sale', title: '销售订单', perm: 'sales-order', type: '1'}
+            meta: {moduleId: 'sale', title: '一类苗销售订单', perm: 'sales-order', type: '1'}
           },
           {
             path: '/sale/order/two/class/:id',
             component: resolve => require(['./components/sale/order/list.vue'], resolve),
-            meta: {moduleId: 'sale', title: '销售订单', perm: 'second-vaccine-sales-order', type: '2'}
+            meta: {moduleId: 'sale', title: '二类苗销售订单', perm: 'second-vaccine-sales-order', type: '2'}
           },
           {
             path: '/sale/pov/:id',
