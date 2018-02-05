@@ -127,7 +127,7 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" border ref="reportTable" border
-                :header-row-class-name="'headerClass'" v-loading="loadingData" :height="getHeight">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" :maxHeight="getHeight">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true"></el-table-column>
         <el-table-column prop="suppliersName" label="供应商" :sortable="true"></el-table-column>
@@ -147,8 +147,10 @@
 <script>
   import { BaseInfo, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
+  import ReportMixin from '@/mixins/reportMixin';
 
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -171,7 +173,7 @@
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 110;
+        return parseInt(this.$store.state.bodyHeight, 10) - 110 + this.fixedHeight;
       }
     },
     methods: {
@@ -208,6 +210,7 @@
             return m;
           });
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       resetSearchForm: function () {

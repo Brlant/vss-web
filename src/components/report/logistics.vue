@@ -153,7 +153,7 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary border
-                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :height="getHeight">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight">
         <el-table-column prop="type" label="出入库类型" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="date" label="日期" :sortable="true" width="100"></el-table-column>
@@ -175,7 +175,9 @@
   import { BaseInfo, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
   import qs from 'qs';
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -205,7 +207,7 @@
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 110;
+        return parseInt(this.$store.state.bodyHeight, 10) - 110 + this.fixedHeight;
       }
     },
     methods: {
@@ -254,6 +256,7 @@
             return m;
           });
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       getSummaries (param) {

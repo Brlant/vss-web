@@ -62,7 +62,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" ref="reportTable"  :height="getHeight" border
+      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="goodsName" label="疫苗名称" width="160" :sortable="true"></el-table-column>
         <el-table-column prop="beforeStock" label="期前库存" :sortable="true"></el-table-column>
@@ -87,8 +87,9 @@
 <script>
   import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
-
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -104,7 +105,7 @@
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 70;
+        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
       }
     },
     methods: {
@@ -147,6 +148,7 @@
           res.data[res.data.length - 1].goodsName = '合计';
           this.reportList = res.data;
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       resetSearchForm: function () {
