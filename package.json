@@ -15,7 +15,7 @@
     "@dtop/dtop-web-common": "git+https://gitee.com/tinygroup/dtop-web-common.git",
     "axios": "^0.16.2",
     "babel-polyfill": "^6.26.0",
-    "element-ui": "^2.1.0",
+    "element-ui": "2.0.11",
     "moment": "^2.20.1",
     "qs": "^6.5.1",
     "vue": "^2.5.13",
