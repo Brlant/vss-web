@@ -135,7 +135,7 @@ export const Access = resource('/oms/access', http, {
     return http.post('/erp-access', obj);
   },
   querySystemAccess: (params) => {
-    return http.get('/oms/access/', {params});
+    return http.get('/oms/access/menus/tree', {params});
   },
   saveSystem: (obj) => {
     return http.post('/erp-access/system', obj);
