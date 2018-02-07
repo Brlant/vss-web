@@ -200,10 +200,7 @@
 </style>
 
 <style>
-  .el-menu-item, .el-submenu__title {
-    height: 46px;
-    line-height: 46px;
-  }
+
 </style>
 <template>
   <div>
