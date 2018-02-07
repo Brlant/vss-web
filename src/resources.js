@@ -118,6 +118,9 @@ export const Access = resource('/oms/access', http, {
   getRoleMenus: (orgId) => {
     return http.get(`/erp-access/org/${orgId}/admin/menus/tree`);
   },
+  getOmsRoleMenus: () => {
+    return http.get('oms/access/menus/tree');
+  },
   getOrgRoleMenus: (orgId) => {
     return http.get('/oms/access/org/' + orgId + '/admin/menus/tree');
   },
@@ -135,7 +138,7 @@ export const Access = resource('/oms/access', http, {
     return http.post('/erp-access', obj);
   },
   querySystemAccess: (params) => {
-    return http.get('/oms/access/menus/tree', {params});
+    return http.get('/oms/access/', {params});
   },
   saveSystem: (obj) => {
     return http.post('/erp-access/system', obj);
