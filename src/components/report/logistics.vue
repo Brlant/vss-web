@@ -70,7 +70,8 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="关联单位" :span="6">
-                <el-select filterable remote placeholder="请输入关联单位查询" :remote-method="filterRelation" :clearable="true"
+                <el-select filterable remote placeholder="请输入关联单位查询" :remote-method="filterRelation"
+                           :clearable="true" :loading="selectLoading"
                            v-model="searchWord.customerId" @click.native.once="filterRelation('')" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
@@ -87,7 +88,8 @@
             </el-col>
             <el-col :span="9">
               <oms-form-row label="供/收货单位名称" :span="7">
-                <el-select filterable remote placeholder="请输入供/收货单位名称查询" :remote-method="filterProvide" :clearable="true"
+                <el-select filterable remote placeholder="请输入供/收货单位名称查询"
+                           :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
                            v-model="searchWord.factoryId" @click.native.once="filterProvide('')" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in provideList">
                     <div style="overflow: hidden">
@@ -181,6 +183,7 @@
     data () {
       return {
         loadingData: false,
+        selectLoading: false,
         reportList: [],
         showSearch: true,
         searchWord: {
@@ -309,8 +312,10 @@
         let params = {
           keyWord: query
         };
+        this.selectLoading = true;
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
+          this.selectLoading = false;
         });
       },
       filterProvide: function (query) {
@@ -319,8 +324,10 @@
         let params = {
           keyWord: query
         };
+        this.selectLoading = true;
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.provideList = res.data;
+          this.selectLoading = false;
         });
       },
       filterBatchNumber (query) {
