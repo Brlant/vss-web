@@ -48,6 +48,7 @@
           </el-col>
           <el-col :span="12">
             <oms-row label="可用库存" :span="span">{{ currentItem.availableCount }}</oms-row>
+            <oms-row label="待确定库存" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
             <oms-row label="实际合格库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
             <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
             <oms-row label="实际不合格库存" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
