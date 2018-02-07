@@ -36,8 +36,8 @@
         </div>
         <el-form class="advanced-query-form">
           <el-row>
-            <el-col :span="8">
-              <oms-form-row label="出入库类型" :span="5">
+            <el-col :span="7">
+              <oms-form-row label="出入库类型" :span="6">
                 <el-select v-model="searchWord.typeList" multiple filterable clearable placeholder="请选择">
                   <el-option v-for="(item, index) in typeList" :value="index" :key="index"
                              :label="item"></el-option>
@@ -45,15 +45,15 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="出入库详细" :span="5">
+              <oms-form-row label="出入库详细" :span="6">
                 <el-select v-model="searchWord.bizTypeList" multiple filterable clearable placeholder="请选择">
                   <el-option v-for="(item, index) in bizTypeList" :value="index" :key="index"
                              :label="item"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="业务日期" :span="5">
+            <el-col :span="9">
+              <oms-form-row label="业务日期" :span="4">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
@@ -63,13 +63,13 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="4" class="clearfix">
-              <oms-form-row label="区县" :span="5">
+            <el-col :span="7" class="clearfix">
+              <oms-form-row label="区县" :span="6">
                 <oms-input type="text" v-model="searchWord.areaCode" placeholder="请输入区县"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="9">
-              <oms-form-row label="关联单位" :span="5">
+            <el-col :span="8">
+              <oms-form-row label="关联单位" :span="6">
                 <el-select filterable remote placeholder="请输入关联单位查询" :remote-method="filterRelation" :clearable="true"
                            v-model="searchWord.customerId" @click.native.once="filterRelation('')" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -85,8 +85,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="11">
-              <oms-form-row label="供/收货单位名称" :span="6">
+            <el-col :span="9">
+              <oms-form-row label="供/收货单位名称" :span="7">
                 <el-select filterable remote placeholder="请输入供/收货单位名称查询" :remote-method="filterProvide" :clearable="true"
                            v-model="searchWord.factoryId" @click.native.once="filterProvide('')" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in provideList">
