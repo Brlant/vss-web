@@ -23,16 +23,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .oms-row {
     font-size: 14px;
     margin-bottom: 10px;
@@ -40,23 +30,6 @@
 
   .content-body {
     margin: 20px 0;
-  }
-
-  /*<!--.tr-right {-->*/
-  /*<!--cursor: pointer;-->*/
-  /*<!--&:hover, &.active {-->*/
-  /*<!--background: @dialog-left-bg;-->*/
-  /*<!--}-->*/
-  /*<!--}-->*/
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
   }
 
   .table > tbody > tr:first-child > td {
@@ -70,21 +43,9 @@
     }
   }
 
-  .advanced-query-form {
-    background: #fff;
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
 </style>
 <template>
-  <div>
+  <div class="order-page">
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">

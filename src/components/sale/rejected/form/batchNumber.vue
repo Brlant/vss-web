@@ -1,14 +1,4 @@
 <style lang="less">
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
 
   .no-batch-number-info {
     padding: 5px;

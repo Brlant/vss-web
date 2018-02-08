@@ -1,15 +1,4 @@
 <style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
   .opera-btn-group {
     margin: 10px 0;
   }

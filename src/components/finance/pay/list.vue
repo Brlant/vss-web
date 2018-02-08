@@ -23,16 +23,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .oms-row {
     font-size: 14px;
     margin-bottom: 10px;

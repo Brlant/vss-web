@@ -1,23 +1,4 @@
 <style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .pt {
-    padding-top: 8px;
-  }
 
   .align-word {
     letter-spacing: 1em;
@@ -93,17 +74,17 @@
                 <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
                      :class="[{'active':currentItemId==item.id}]" style="max-height: 500px;overflow-y: auto">
                   <el-row>
-                    <el-col :span="6" class="R pt">
+                    <el-col :span="6" class="R">
                       <span>{{ item.povName }}</span>
                     </el-col>
-                    <el-col :span="6" class="pt">
+                    <el-col :span="6">
                       <span>
                         {{ item.applyCount }}
                         <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                     </el-col>
                     <el-col :span="6">{{ item.applyTime | minute }}</el-col>
-                    <el-col :span="6" class="pt">
+                    <el-col :span="6">
                       <span v-show="status === 1 ">{{item.actualCount}}</span>
                       <perm label="demand-assignment-update">
                         <el-input v-show="status === 0 " v-model.number="item.actualCount"

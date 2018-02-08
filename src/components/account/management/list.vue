@@ -14,10 +14,6 @@
   .d-table-col-wrap {
     overflow: auto;
   }
-
-  .minor-part {
-    color: #999;
-  }
 </style>
 <template>
   <div>

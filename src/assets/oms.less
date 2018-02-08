@@ -15,6 +15,12 @@
   font-size: 20px;
 }
 
+
+.R {
+  word-wrap: break-word;
+  word-break: break-all;
+}
+
 .overflow-hidden {
   overflow: hidden;
 }
@@ -574,9 +580,19 @@
   // background: #f1f1f1;
   .advanced-query-form {
     background: #fff;
-    padding: 0 20px 20px;
+    padding: 20px;
+    .el-select {
+      display: block;
+      position: relative;
+    }
+    .el-date-editor.el-input {
+      width: 100%;
+    }
   }
+
 }
+
+
 
 .el-input.inline-input {
   width: auto;
@@ -847,37 +863,7 @@
   }
 }
 
-.opera-btn-group {
-  border: 2px solid #eeeeee;
-  margin: 10px -5px;
-  background: #f1f1f1;
-  .opera-icon {
-    line-height: 50px;
-    height: 50px;
-    padding: 0 10px;
-    border-bottom: 2px solid #eeeeee;
-  }
-  .switching-icon {
-    cursor: pointer;
-    .el-icon-arrow-up {
-      transition: all .5s ease-in-out;
-    }
-  }
-  &.up {
-    .advanced-query-form {
-      display: none;
-    }
-    .opera-icon {
-      border-bottom: 0;
-    }
-    .el-icon-arrow-up {
-      transform: rotate(180deg);
-    }
-  }
-  .el-checkbox-warp {
-    padding: 10px;
-  }
-}
+
 
 .el-button-group {
 
@@ -1164,4 +1150,66 @@
 
 .m-total-count {
   font-weight: 600;
+}
+
+
+
+.minor-part {
+  color: #999;
+}
+
+.search-input {
+  .el-select {
+    display: block;
+    position: relative;
+  }
+  .el-date-editor.el-input {
+    width: 100%;
+  }
+}
+
+.opera-btn-group {
+  border: 2px solid #eeeeee;
+  margin: 10px -5px;
+  background: #f1f1f1;
+  .opera-icon {
+    line-height: 50px;
+    height: 50px;
+    padding: 0 10px;
+    border-bottom: 2px solid #eeeeee;
+  }
+  .switching-icon {
+    cursor: pointer;
+    .el-icon-arrow-up {
+      transition: all .5s ease-in-out;
+    }
+  }
+  &.up {
+    .advanced-query-form {
+      display: none;
+    }
+    .opera-icon {
+      border-bottom: 0;
+    }
+    .el-icon-arrow-up {
+      transform: rotate(180deg);
+    }
+  }
+  .el-checkbox-warp {
+    padding: 10px;
+  }
+}
+
+
+
+
+.product-list-detail {
+  margin-top: 20px;
+  font-size: 12px;
+  h3 {
+    background: #eee;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: normal;
+  }
 }
