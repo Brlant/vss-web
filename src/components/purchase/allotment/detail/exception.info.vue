@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .bg-box-all {
     &.RejectionInfo-item {
       padding: 0;

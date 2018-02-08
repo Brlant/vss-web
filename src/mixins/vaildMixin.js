@@ -4,7 +4,12 @@ export default {
     cellMouseEnter (row, column, cell, event) {
       let e = event ? event : window.event;
       let target = e.target || e.srcElement;
-      if (this.isValid(row) === 1) {
+      const index = this.isValid(row);
+      if (index === 1 || index === 0) {
+        if (index === 0 && this.$route.path !== '/store/request') {
+          return;
+        }
+
         let body = document.body;
         let el = null;
         let pos = getMousePos(e);
@@ -13,7 +18,7 @@ export default {
         if (!el) {
           el = document.createElement('div');
           el.id = 'valid-tooltip';
-          el.innerText = '近效期';
+          el.innerText = index ? '近效期' : '已过期';
         }
         el.style.top = (pos.y - 20) + 'px';
         let value = clientWidth - pos.x;

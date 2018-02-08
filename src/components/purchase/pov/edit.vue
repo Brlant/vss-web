@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -22,16 +22,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .oms-row {
     font-size: 14px;
     margin-bottom: 10px;
@@ -40,16 +30,16 @@
   .content-body {
     margin: 20px 0;
   }
-  @leftWidth: 180px;
+  $leftWidth: 180px;
   .content-part {
     .content-left {
-      width: @leftWidth;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 

@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -19,16 +19,6 @@
     margin-bottom: 20px;
     .font-bold {
       font-size: 14px;
-    }
-  }
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
     }
   }
 

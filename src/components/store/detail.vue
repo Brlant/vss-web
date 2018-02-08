@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import "../../assets/mixins";
   .content-part {
     .content-right {
@@ -24,7 +24,7 @@
       background: #ffffff;
     }
     &:nth-child(even) {
-      background: @dialog-left-bg;
+      background: $dialog-left-bg;
     }
   }
 
@@ -48,7 +48,7 @@
           </el-col>
           <el-col :span="12">
             <oms-row label="可用库存" :span="span">{{ currentItem.availableCount }}</oms-row>
-            <oms-row label="待确定库存" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
+            <oms-row label="锁定库存" :span="span" v-show="isShowLock">{{ currentItem.undeterminedCount }}</oms-row>
             <oms-row label="实际合格库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
             <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
             <oms-row label="实际不合格库存" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
@@ -98,7 +98,7 @@
   import { http } from '@/resources';
 
   export default {
-    props: ['currentItem'],
+    props: ['currentItem', 'isShowLock'],
     data () {
       return {
         loadingData: false,

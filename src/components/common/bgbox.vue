@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .bg-box {
     display: flex;
     align-items: center;

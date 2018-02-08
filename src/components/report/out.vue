@@ -1,20 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
+<style lang="scss" scoped="">
 
   .el-table__body-wrapper, .el-table__footer-wrapper, .el-table__header-wrapper {
     width: auto;

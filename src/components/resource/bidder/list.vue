@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import '../../../assets/mixins';
 
   .page-right-part {
@@ -47,16 +47,6 @@
 
   }
 
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .exceptionPosition {
     /*margin-left: 40px;*/
     position: absolute;
@@ -103,7 +93,7 @@
 
   .opera-btn-bidder {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 </style>

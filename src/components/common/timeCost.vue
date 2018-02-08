@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   .cost-time-dom {
     display: inline-block;
     line-height: 26px;

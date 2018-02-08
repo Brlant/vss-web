@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .attachment-dialog {
     user-select: none;
     .el-dialog {

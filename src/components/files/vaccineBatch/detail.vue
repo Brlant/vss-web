@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .content-part {
     .content-right {
       > h3 {

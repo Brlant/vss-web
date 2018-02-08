@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
 
   .page-right-part {
     box-sizing: content-box;
@@ -45,17 +45,6 @@
     }
 
   }
-
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .exceptionPosition {
     /*margin-left: 40px;*/
     position: absolute;
@@ -96,11 +85,6 @@
     cursor: pointer;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
   .order-list-status-right {
     justify-content: flex-end;
   }

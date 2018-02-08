@@ -1,40 +1,7 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 300px;
-    }
-  }
-
-  .align-word {
-    letter-spacing: 1em;
-    margin-right: -1em;
-  }
+<style lang="scss" scoped="">
 
   .order-list-item {
     cursor: pointer;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
   }
 
   .header-list {
@@ -147,7 +114,7 @@
             <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="undeterminedCount" label="待确定库存" :render-header="formatHeader" :sortable="true"
+        <el-table-column prop="undeterminedCount" label="锁定库存" :render-header="formatHeader" :sortable="true"
                          width="110">
           <template slot-scope="scope">
             <span>{{scope.row.undeterminedCount}}</span>
@@ -295,8 +262,8 @@
             break;
           }
           case 4: {
-            content = '仓库内待确定的货品数量';
-            title = '待确定库存';
+            content = '仓库内质量状态待确定而不允许销售的库存数';
+            title = '锁定库存';
             break;
           }
           case 5: {
@@ -324,6 +291,9 @@
       formatRowClass(data) {
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
+        }
+        if (this.isValid(data.row) === 0) {
+          return 'danger-row';
         }
       },
       exportFile: function () {

@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   .mb2 {
     margin-bottom: 2px;
   }

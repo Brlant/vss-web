@@ -1,16 +1,5 @@
-<style lang="less">
-  @import "../../../assets/mixins.less";
-
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
+<style lang="scss">
+  @import "../../../assets/mixins.scss";
 
   .ar {
     text-align: right;
@@ -18,16 +7,10 @@
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-      height: 70px;
-    }
-  }
 
   .el-form--inline .el-form-item {
     margin-right: 0;

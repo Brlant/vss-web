@@ -1,15 +1,4 @@
-<style lang="less" scoped>
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
 
-</style>
 <template>
   <el-form ref="form" :rules="rules" :model="form" label-width="120px" class="demo-ruleForm">
     <h2 class="clearfix">{{showTitle}}区二类疫苗</h2>
