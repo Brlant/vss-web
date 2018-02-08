@@ -222,7 +222,7 @@
         },
         rules: {
           orgGoodsId: {required: true, message: '请选择货主货品', trigger: 'change'},
-          batchNumberId: {required: true, message: '请选择', trigger: 'change'},
+          batchNumberId: {required: true, message: '请选择批号', trigger: 'change'},
           warehouseId: {required: true, message: '请选择仓库', trigger: 'change'},
           adjustType: {required: true, message: '请输入原状态', trigger: 'change'},
           adjustNewType: {required: true, message: '请输入新状态', trigger: 'change'},
