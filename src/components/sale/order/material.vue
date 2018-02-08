@@ -9,7 +9,7 @@
 <template>
   <div class="material">
     <el-form-item label="物料数量" style="display: inline-block">
-      <oms-input type="number" v-model.number="form.count" :min="0">
+      <oms-input type="number" size="mini" v-model.number="form.count" :min="0">
         <el-select placeholder="请输入名称搜索物料" v-model="form.name" slot="append" filterable clearable remote
                    :remoteMethod="queryMaterials">
           <el-option :label="item.name" :value="item.name" :key="item.id" v-for="item in materials">
