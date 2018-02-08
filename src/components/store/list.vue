@@ -292,6 +292,9 @@
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
         }
+        if (this.isValid(data.row) === 0) {
+          return 'danger-row';
+        }
       },
       exportFile: function () {
         let params = Object.assign({}, this.filters);

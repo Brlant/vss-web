@@ -1133,7 +1133,10 @@ $leftWidth: 260px;
 .effective-row {
   color: $order_color_6;
 }
-
+/*库存查询，过期变色*/
+.danger-row {
+  color: $error-color;
+}
 
 #valid-tooltip {
   z-index: 2000;
