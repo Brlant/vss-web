@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .cancel-reason {
     display: flex;
     align-items: center;

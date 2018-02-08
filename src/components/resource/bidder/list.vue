@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import '../../../assets/mixins';
 
   .page-right-part {
@@ -93,7 +93,7 @@
 
   .opera-btn-bidder {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 </style>

@@ -1,15 +1,15 @@
-<style lang="less" scoped>
-  @leftWidth: 180px;
+<style lang="scss" scoped>
+  $leftWidth: 180px;
   .content-part {
     .content-left {
-      width: @leftWidth;
+      width: $leftWidth;
       text-align: center;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 

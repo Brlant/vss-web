@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .material {
     .el-input-group--append {
      > .el-input__inner {

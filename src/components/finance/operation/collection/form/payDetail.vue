@@ -1,9 +1,9 @@
-<style lang="less" scoped>
-  @import "../../../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../../../assets/mixins.scss";
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 

@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .d-table > div.d-table-right {
     padding: 10px 20px;
   }

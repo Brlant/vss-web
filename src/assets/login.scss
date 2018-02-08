@@ -1,4 +1,4 @@
-@import "../assets/mixins.less";
+@import "../assets/mixins.scss";
 
 .main-box-rap {
   min-height: 100vh;
@@ -45,7 +45,7 @@
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
     box-shadow: 0 0 12px 0 rgba(0, 0, 0, 0.26);
-    background:@activeColor;
+    background:$activeColor;
   }
 
   .box-card {
@@ -65,8 +65,8 @@
       font-weight: bold;
       font-size: 14px;
       &.active {
-        border-color: @activeColor;
-        color: @activeColor;
+        border-color: $activeColor;
+        color: $activeColor;
       }
     }
   }

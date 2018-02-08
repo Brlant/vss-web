@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../../../assets/mixins.scss";
 
-  @leftWidth: 220px;
+  $leftWidth: 220px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -16,13 +16,13 @@
   .content-part {
     .content-left {
       text-align: center;
-      width: @leftWidth;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 

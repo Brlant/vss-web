@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @import "../../../assets/mixins";
 
   .el-form .el-select {

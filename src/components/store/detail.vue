@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import "../../assets/mixins";
   .content-part {
     .content-right {
@@ -24,7 +24,7 @@
       background: #ffffff;
     }
     &:nth-child(even) {
-      background: @dialog-left-bg;
+      background: $dialog-left-bg;
     }
   }
 

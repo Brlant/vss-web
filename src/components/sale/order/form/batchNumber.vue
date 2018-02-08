@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
 
   .no-batch-number-info {
     padding: 5px;

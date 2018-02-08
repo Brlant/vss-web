@@ -1,5 +1,5 @@
-<style lang="less">
-  @import "../../../assets/mixins.less";
+<style lang="scss">
+  @import "../../../assets/mixins.scss";
 
   .ar {
     text-align: right;
@@ -7,7 +7,7 @@
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 

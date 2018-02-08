@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .order-cost-part {
     padding: 0 8px;
     margin-bottom: 20px;

@@ -1,17 +1,17 @@
-<style lang="less" scoped>
-  @import '../../../assets/mixins';
+<style lang="scss" scoped>
+  @import '../../../assets/mixins.scss';
 
-  @leftWidth: 280px;
+  $leftWidth: 280px;
   .content-part {
     .content-left {
       text-align: center;
-      width: @leftWidth;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 

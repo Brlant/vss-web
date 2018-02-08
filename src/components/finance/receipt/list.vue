@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @import "../../../assets/mixins";
 
   .el-form .el-select {
@@ -35,7 +35,7 @@
   .tr-right {
     cursor: pointer;
     &:hover, &.active {
-      background: @dialog-left-bg;
+      background: $dialog-left-bg;
     }
   }
 

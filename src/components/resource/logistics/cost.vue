@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .costs {
     font-size: 16px;
     .oms-row {
