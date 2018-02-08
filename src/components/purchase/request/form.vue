@@ -698,7 +698,8 @@
             arr.push(item);
           }
         });
-        this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        // this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        this.totalFilterProductList = arr;
         this.filterProductList = JSON.parse(JSON.stringify(this.totalFilterProductList));
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗

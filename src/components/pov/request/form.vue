@@ -214,12 +214,12 @@
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="订单类型" prop="type">
               <el-radio-group v-model.number="form.type" @change="changeType">
-                <el-radio :label="1">一类疫苗</el-radio>
-                <el-radio :label="2">二类疫苗</el-radio>
+                <el-radio :label="0">一类疫苗</el-radio>
+                <el-radio :label="1">二类疫苗</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="疾控中心" prop="cdcId">
-              <el-select placeholder="请选择疾控" v-model="form.cdcId" clearable>
+              <el-select placeholder="请选择疾控" v-model="form.cdcId" clearable @change="changeOrg">
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
               </el-select>
@@ -429,7 +429,7 @@
           povId: '',
           demandTime: '',
           cdcId: '',
-          type: 1
+          type: 0
         },
         rules: {
           warehouseId: [
@@ -481,7 +481,7 @@
           povId: '',
           demandTime: '',
           cdcId: '',
-          type: 1
+          type: 0
         };
         this.queryOnCDCs();
         this.currentList = [];
@@ -525,12 +525,12 @@
           id: this.currentOrder.id,
           cdcId: this.currentOrder.cdcId,
           demandTime: this.currentOrder.demandTime,
-          type: Number(this.currentOrder.vaccineSign),
+          type: Number(this.currentOrder.goodsType),
           warehouseId: this.currentOrder.warehouseId,
           detailDtoList: []
         };
         // ******2.0变化
-        this.changeType();
+        this.changeType('edit');
         // ******
         this.$nextTick(() => {
           this.form.detailDtoList = orgDetailGoods;
@@ -550,11 +550,11 @@
         this.form = {
           cdcId: this.currentOrder.cdcId,
           demandTime: this.currentOrder.demandTime,
-          type: Number(this.currentOrder.vaccineSign),
+          type: Number(this.currentOrder.goodsType),
           warehouseId: this.currentOrder.warehouseId,
           detailDtoList: []
         };
-        this.changeType();
+        this.changeType('edit');
         this.$nextTick(() => {
           this.form.detailDtoList = orgDetailGoods;
         });
@@ -566,7 +566,7 @@
       changeTime: function (date) {// 格式化时间
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      changeType () {
+      changeType (isEdited) {
         this.product = {
           'amount': null,
           'measurementUnit': '',
@@ -581,9 +581,24 @@
         this.accessoryList = [];
         this.currentList = [];
         this.form.detailDtoList = [];
+        this.$refs['orderAddForm'].clearValidate();
         this.$refs['orderGoodsForm'].resetFields();
         this.filterProduct();
         this.searchProduct();
+        this.changeOrg(isEdited);
+        this.totalFilterProductList = [];
+        this.filterProductList = [];
+      },
+      changeOrg (isEdited) {
+        if (isEdited === 'edit') return;
+        this.form.warehouseId = '';
+        // 以前去默认仓库地址
+        // 现在业务关系中维护地址
+        this.showCdcs.forEach(i => {
+          if (i.orgId === this.form.cdcId) {
+            this.form.warehouseId = i.addressId;
+          }
+        });
       },
       searchProduct: function () {
         this.searchProductList = [];
@@ -608,18 +623,21 @@
         });
       },
       filterProduct () {
-        this.showCdcs = this.cdcs.filter(f => f.level === this.form.type);
+        this.showCdcs = this.cdcs.filter(f => f.level === this.form.type + 1);
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
       searchWarehouses (isEdit) {
         let user = this.$store.state.user;
         Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress, auditedStatus: '1'}).then(res => {
           this.warehouses = res.data || [];
-          if (isEdit) return;
-          let fs = this.warehouses.filter(i => i.default)[0];
-          if (fs) {
-            this.form.warehouseId = fs.id;
-          }
+          if (isEdit === 'edit') return;
+          // 以前去默认仓库地址
+          // 现在业务关系中维护地址
+          this.showCdcs.forEach(i => {
+            if (i.orgId === this.form.cdcId) {
+              this.form.warehouseId = i.addressId;
+            }
+          });
         });
       },
       filterProducts: function () {
@@ -639,7 +657,8 @@
             arr.push(item);
           }
         });
-        this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.form.type.toString());
+        // this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.form.type.toString());
+        this.totalFilterProductList = arr;
         this.filterProductList = JSON.parse(JSON.stringify(this.totalFilterProductList));
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
@@ -775,6 +794,8 @@
             });
             return false;
           }
+          // 传给后台疫苗标志
+          saveData.goodsType = saveData.type;
           delete saveData.type;
           saveData.detailDtoList.forEach(item => {
             item.price = item.unitPrice;

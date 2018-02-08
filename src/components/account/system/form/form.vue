@@ -176,7 +176,7 @@
         return data.label.indexOf(value) !== -1;
       },
       getMenus: function () {
-        this.getRoleMenus().then(res => {
+        this.getOmsRoleMenus().then(res => {
           this.tree = res.data;
         });
       },

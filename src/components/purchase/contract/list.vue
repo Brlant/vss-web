@@ -439,7 +439,11 @@
         if (!item) {
           return;
         }
-        this.$confirm('确认按照采购合同《' + item.name + '》的信息批量生成采购订单?', '', {
+        let title = '';
+        if (item.name) {
+          title = '《' + item.name + '》';
+        }
+        this.$confirm('确认按照采购合同' + title + '的信息批量生成采购订单?', '', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'warning'

@@ -53,7 +53,7 @@
   <div class="order-page">
     <div class="container">
       <el-alert
-        title="请选择货品和批号输入调整部分库存数，如果是正数则增加库存，如果是负数则减少库存。"
+        title="请选择货品和批号输入调整部分库存状态，可用库存可以转换成待确定库存或实际不合格库存，待确定库存可以转成实际不合格库存和可用库存。"
         type="warning">
       </el-alert>
       <div class="opera-btn-group" :class="{up:!showSearch}">
@@ -112,45 +112,52 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="12">
+              <oms-form-row label="调整类型" :span="5">
+                <el-radio-group v-model="adjustType" style="margin-top: 10px; margin-left: 10px">
+                  <el-radio label="0">可用库存</el-radio>
+                  <el-radio label="1">待确定库存</el-radio>
+                </el-radio-group>
+              </oms-form-row>
+            </el-col>
           </el-row>
-          <el-row>
+          <el-row v-show="adjustType">
             <el-col :span="12">
               <el-col :span="12">
-                <oms-form-row label="可用库存" :span="8">
-                  <el-input  type="number" v-model.number="form.availableCount"></el-input>
+                <oms-form-row label="可用库存" :span="8" v-show="adjustType === '0'">
+                  <el-input type="number" v-model.number="form.availableCount"></el-input>
+                </oms-form-row>
+                <oms-form-row label="待确定库存" :span="8" v-show="adjustType === '1'">
+                  <el-input type="number" v-model.number="form.undeterminedCount"></el-input>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
-                <oms-form-row label="在途库存" :span="6">
-                  <el-input type="number" v-model.number="form.transitCount"></el-input>
+                <oms-form-row label="可用库存" :span="10" v-show="adjustType === '1'">
+                  <el-input type="number" v-model.number="form.availableCount"></el-input>
+                </oms-form-row>
+                <oms-form-row label="待确定库存" :span="8" v-show="adjustType === '0'">
+                  <el-input type="number" v-model.number="form.undeterminedCount"></el-input>
                 </oms-form-row>
               </el-col>
             </el-col>
             <el-col :span="12">
-              <el-col :span="12">
-                <oms-form-row label="实际合格库存" :span="10">
-                  <el-input type="number" v-model.number="form.qualifiedCount"></el-input>
-                </oms-form-row>
-              </el-col>
               <el-col :span="12">
                 <oms-form-row label="实际不合格库存" :span="10">
                   <el-input type="number" v-model.number="form.unqualifiedCount"></el-input>
                 </oms-form-row>
               </el-col>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <oms-form-row label="" :span="4">
-                <el-button type="primary" @click="onSubmit"  :disabled="doing">调整库存</el-button>
-              </oms-form-row>
+              <el-col :span="12">
+                <oms-form-row label="" :span="3">
+                  <el-button type="primary" @click="onSubmit" :disabled="doing">调整</el-button>
+                </oms-form-row>
+              </el-col>
             </el-col>
           </el-row>
         </el-form>
       </div>
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData"
-                :row-class-name="formatRowClass"
+                :row-class-name="formatRowClass" :summary-method="getSummaries" show-summary
                 :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
@@ -159,6 +166,12 @@
                          width="100">
           <template slot-scope="scope">
             <span>{{scope.row.availableCount}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="undeterminedCount" label="待确定库存" :render-header="formatHeader" :sortable="true"
+                         width="110">
+          <template slot-scope="scope">
+            <span>{{scope.row.undeterminedCount}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true"
@@ -194,7 +207,7 @@
 </template>
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import { BaseInfo, erpStock, http, Address } from '@/resources';
+  import { Address, BaseInfo, erpStock, http } from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
 
@@ -237,13 +250,13 @@
           'warning',
           'primary'
         ],
+        adjustType: '',
         batchNumberList: [],
         warehouses: [],
         form: {
           availableCount: '',
-          qualifiedCount: '',
-          transitCount: '',
-          unqualifiedCount: ''
+          unqualifiedCount: '',
+          undeterminedCount: ''
         },
         doing: false
       };
@@ -296,16 +309,21 @@
             break;
           }
           case 4: {
+            content = '仓库内待确定的货品数量';
+            title = '待确定库存';
+            break;
+          }
+          case 5: {
             content = '仓库内真实合格货品数量';
             title = '实际合格库存';
             break;
           }
-          case 5: {
+          case 6: {
             content = '在运输中的货品数量';
             title = '在途库存';
             break;
           }
-          case 6: {
+          case 7: {
             content = '仓库内真实不合格货品数量';
             title = '实际不合格库存';
             break;
@@ -321,19 +339,6 @@
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
         }
-      },
-      exportFile: function () {
-        let params = Object.assign({}, this.filters);
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/store/request'});
-        this.$http.get('/erp-stock/export', {params}).then(res => {
-          utils.download(res.data.path, '即时库存查询');
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/store/request'});
-        }).catch(error => {
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/store/request'});
-          this.$notify.error({
-            message: error.response.data && error.response.data.msg || '导出失败'
-          });
-        });
       },
       showDetail (item) {
         this.currentItemId = item.id;
@@ -355,7 +360,8 @@
             return;
           }
           if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' &&
-            column.property !== 'transitCount' && column.property !== 'unqualifiedCount') {
+            column.property !== 'transitCount' && column.property !== 'unqualifiedCount'
+            && column.property !== 'undeterminedCount') {
             sums[index] = '';
             return;
           }
@@ -385,20 +391,6 @@
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
         this.batches = [];
-      },
-      filterFactory (query) { // 生产厂商
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          return;
-        }
-        // 过滤来源单位
-        let params = {
-          keyWord: query,
-          orgRelationTypeList: ['Manufacture', 'Supplier']
-        };
-        BaseInfo.queryByOrgRelationTypeList(params).then(res => {
-          this.factories = res.data.list;
-        });
       },
       filterOrgGoods (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
@@ -445,7 +437,7 @@
           this.batchNumberList = res.data.list;
         });
       },
-      queryOrgWarehouse() {
+      queryOrgWarehouse () {
         let param = Object.assign({}, {
           deleteFlag: false,
           auditedStatus: '1',
@@ -462,43 +454,69 @@
       formatTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
+      setDefaultValue (obj, val) {
+        Object.keys(obj).forEach(k => obj[k] = obj[k] ? obj[k] : val)
+      },
       onSubmit () {
-        if (!this.searchWord.orgGoodsId) {
+        if (!this.batches.length) {
           this.$notify.info({
-            message: '请选择货主货品'
+            message: '无库存信息，请重新选择'
           });
           return;
         }
-        if (!this.searchWord.batchNumberId) {
-          this.$notify.info({
-            message: '请选择批号'
-          });
-          return;
+        if (this.adjustType === '0') {
+          if (!this.form.availableCount) {
+            this.$notify.info({
+              message: '请输入可用库存'
+            });
+            return;
+          }
+          if (this.form.availableCount !== (Number(this.form.unqualifiedCount) + Number(this.form.undeterminedCount))) {
+            this.$notify.info({
+              message: '需要调整的可用库存数量与分配到其他库存的数量总和不一致'
+            });
+            return;
+          }
+        }else {
+          if (!this.form.undeterminedCount) {
+            this.$notify.info({
+              message: '请输入待确定库存'
+            });
+            return;
+          }
+          if (this.form.undeterminedCount !== (Number(this.form.unqualifiedCount) + Number(this.form.availableCount))) {
+            this.$notify.info({
+              message: '需要调整的待确定库存数量与分配到其他库存的数量总和不一致'
+            });
+            return;
+          }
         }
-        this.$confirm('是否调整库存，请谨慎操作', '', {
+        this.$confirm('是否调整库存状态，请谨慎操作', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          let obj = Object.assign({}, this.form, this.searchWord);
+          let id = this.batches[0].id;
+          let url = this.adjustType === '0' ? `/erp-stock/${id}/conversion/qualified`
+            : `/erp-stock/${id}/conversion/undetermined`;
           this.doing = true;
-          this.$http.put('/erp-stock/adjust', obj).then(() => {
+          this.setDefaultValue(this.form, 0);
+          this.$http.put(url, this.form).then(() => {
             this.doing = false;
             this.$notify.success({
-              message: '调整库存成功'
+              message: '调整成功'
             });
             this.getBatches(1);
             this.form = {
               availableCount: '',
-              qualifiedCount: '',
-              transitCount: '',
-              unqualifiedCount: ''
+              unqualifiedCount: '',
+              undeterminedCount: ''
             };
           });
         }).catch(error => {
           this.doing = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '调整库存失败'
+            message: error.response.data && error.response.data.msg || '调整失败'
           });
         });
       }
