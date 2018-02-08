@@ -86,8 +86,8 @@
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
-                <oms-form-row label="待确定库存" :span="8">
-                  <el-input  type="number" v-model.number="form.undeterminedCount"></el-input>
+                <oms-form-row label="在途库存" :span="8">
+                  <el-input type="number" v-model.number="form.transitCount"></el-input>
                 </oms-form-row>
               </el-col>
             </el-col>
@@ -95,24 +95,19 @@
           <el-row>
             <el-col :span="12">
               <el-col :span="12">
-                <oms-form-row label="在途库存" :span="8">
-                  <el-input type="number" v-model.number="form.transitCount"></el-input>
-                </oms-form-row>
-              </el-col>
-              <el-col :span="12">
                 <oms-form-row label="实际合格库存" :span="10">
                   <el-input type="number" v-model.number="form.qualifiedCount"></el-input>
                 </oms-form-row>
               </el-col>
-            </el-col>
-            <el-col :span="12">
               <el-col :span="12">
                 <oms-form-row label="实际不合格库存" :span="10">
                   <el-input type="number" v-model.number="form.unqualifiedCount"></el-input>
                 </oms-form-row>
               </el-col>
+            </el-col>
+            <el-col :span="12">
               <el-col :span="12">
-                <oms-form-row label="" :span="3">
+                <oms-form-row label="" :span="10">
                   <el-button type="primary" @click="onSubmit"  :disabled="doing">调整库存</el-button>
                 </oms-form-row>
               </el-col>
@@ -140,7 +135,7 @@
             <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="undeterminedCount" label="待确定库存" :render-header="formatHeader" :sortable="true"
+        <el-table-column prop="undeterminedCount" label="锁定库存" :render-header="formatHeader" :sortable="true"
                          width="110">
           <template slot-scope="scope">
             <span>{{scope.row.undeterminedCount}}</span>
@@ -282,8 +277,8 @@
             break;
           }
           case 4: {
-            content = '仓库内待确定的货品数量';
-            title = '待确定库存';
+            content = '仓库内质量状态待确定而不允许销售的库存数';
+            title = '锁定库存';
             break;
           }
           case 5: {

@@ -222,7 +222,7 @@ const route = [
           },
           {
             path: '/store/adjust/status',
-            component: resolve => require(['./components/store/adjust-status-stock.vue'], resolve),
+            component: resolve => require(['./components/store/record/list'], resolve),
             meta: {moduleId: 'store', title: '库存状态调整', perm: 'cerp-stock-status-adjust'}
           },
           {

@@ -114,12 +114,12 @@
             <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
-        <!--<el-table-column prop="undeterminedCount" label="待确定库存" :render-header="formatHeader" :sortable="true"-->
-                         <!--width="110">-->
-          <!--<template slot-scope="scope">-->
-            <!--<span>{{scope.row.undeterminedCount}}</span>-->
-          <!--</template>-->
-        <!--</el-table-column>-->
+        <el-table-column prop="undeterminedCount" label="锁定库存" :render-header="formatHeader" :sortable="true"
+                         width="110">
+          <template slot-scope="scope">
+            <span>{{scope.row.undeterminedCount}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true"
                          width="120">
           <template slot-scope="scope">
@@ -261,22 +261,22 @@
             title = '可用库存';
             break;
           }
-          // case 4: {
-          //   content = '仓库内待确定的货品数量';
-          //   title = '待确定库存';
-          //   break;
-          // }
           case 4: {
+            content = '仓库内质量状态待确定而不允许销售的库存数';
+            title = '锁定库存';
+            break;
+          }
+          case 5: {
             content = '仓库内真实合格货品数量';
             title = '实际合格库存';
             break;
           }
-          case 5: {
+          case 6: {
             content = '在运输中的货品数量';
             title = '在途库存';
             break;
           }
-          case 6: {
+          case 7: {
             content = '仓库内真实不合格货品数量';
             title = '实际不合格库存';
             break;

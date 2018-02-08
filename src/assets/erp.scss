@@ -1214,3 +1214,7 @@ $leftWidth: 260px;
     font-weight: normal;
   }
 }
+
+.el-date-editor--datetimerange.el-input__inner {
+  width: auto;
+}

@@ -26,7 +26,7 @@
   <div class="order-page">
     <div class="container">
       <el-alert
-        title="请选择货品和批号输入调整部分库存状态，可用库存可以转换成待确定库存或实际不合格库存，待确定库存可以转成实际不合格库存和可用库存。"
+        title="请选择货品和批号输入调整部分库存状态，可用库存可以转换成锁定库存或实际不合格库存，锁定库存可以转成实际不合格库存和可用库存。"
         type="warning">
       </el-alert>
       <div class="opera-btn-group" :class="{up:!showSearch}">
@@ -35,10 +35,10 @@
             <i class="el-icon-t-adjust"></i>
           </span>
         </div>
-        <el-form class="advanced-query-form" onsubmit="return false">
+        <el-form class="advanced-query-form"  onsubmit="return false">
           <el-row>
             <el-col :span="12">
-              <oms-form-row label="货主货品" :span="4" :isRequire="true">
+              <oms-form-row label="货主货品" :span="3" :isRequire="true">
                 <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
@@ -61,7 +61,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="12">
-              <oms-form-row label="批号" :span="5" :isRequire="true">
+              <oms-form-row label="批号" :span="3" :isRequire="true">
                 <el-select v-model="searchWord.batchNumberId" filterable clearable remote @change="batchNumberChange"
                            :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号">
                   <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
@@ -75,7 +75,7 @@
           </el-row>
           <el-row>
             <el-col :span="12">
-              <oms-form-row label="仓库" :span="4">
+              <oms-form-row label="仓库" :span="3">
                 <el-select v-model="searchWord.warehouseId" filterable clearable
                            @change="warehouseChange"
                            placeholder="请选择仓库">
@@ -85,38 +85,34 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="12">
-              <oms-form-row label="调整类型" :span="5">
-                <el-radio-group v-model="adjustType" style="margin-top: 10px; margin-left: 10px">
-                  <el-radio label="0">可用库存</el-radio>
-                  <el-radio label="1">待确定库存</el-radio>
-                </el-radio-group>
-              </oms-form-row>
-            </el-col>
           </el-row>
-          <el-row v-show="adjustType">
+          <el-row>
             <el-col :span="12">
               <el-col :span="12">
-                <oms-form-row label="可用库存" :span="8" v-show="adjustType === '0'">
-                  <el-input type="number" v-model.number="form.availableCount"></el-input>
-                </oms-form-row>
-                <oms-form-row label="待确定库存" :span="8" v-show="adjustType === '1'">
-                  <el-input type="number" v-model.number="form.undeterminedCount"></el-input>
+                <oms-form-row label="原状态" :span="6">
+                  <el-select v-model="form.adjustType" filterable clearable
+                             placeholder="请选择原库存状态">
+                    <el-option v-for="item in adjustTypeList" :value="item.key" :key="item.key"
+                               :label="item.name" v-show="item.key !== 2">
+                    </el-option>
+                  </el-select>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
-                <oms-form-row label="可用库存" :span="10" v-show="adjustType === '1'">
-                  <el-input type="number" v-model.number="form.availableCount"></el-input>
-                </oms-form-row>
-                <oms-form-row label="待确定库存" :span="8" v-show="adjustType === '0'">
-                  <el-input type="number" v-model.number="form.undeterminedCount"></el-input>
+                <oms-form-row label="新状态" :span="5">
+                  <el-select v-model="form.adjustNewType" filterable clearable
+                             placeholder="请选择新库存状态">
+                    <el-option v-for="item in adjustTypeList" :value="item.key" :key="item.key"
+                               :label="item.name" v-show="item.key !== form.adjustType">
+                    </el-option>
+                  </el-select>
                 </oms-form-row>
               </el-col>
             </el-col>
             <el-col :span="12">
               <el-col :span="12">
-                <oms-form-row label="实际不合格库存" :span="10">
-                  <el-input type="number" v-model.number="form.unqualifiedCount"></el-input>
+                <oms-form-row label="数量" :span="6">
+                  <el-input type="number" v-model.number="form.count"></el-input>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
@@ -141,7 +137,7 @@
             <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="undeterminedCount" label="待确定库存" :render-header="formatHeader" :sortable="true"
+        <el-table-column prop="undeterminedCount" label="锁定库存" :render-header="formatHeader" :sortable="true"
                          width="110">
           <template slot-scope="scope">
             <span>{{scope.row.undeterminedCount}}</span>
@@ -174,7 +170,7 @@
     </div>
 
     <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
-      <detail :currentItem="currentItem" @close="resetRightBox"></detail>
+      <detail :currentItem="currentItem" :isShowLock="true" @close="resetRightBox"></detail>
     </page-right>
   </div>
 </template>
@@ -223,13 +219,17 @@
           'warning',
           'primary'
         ],
-        adjustType: '',
+        adjustTypeList: {
+          0: {key: 0, name: '可用库存'},
+          1: {key: 1, name: '锁定库存'},
+          2: {key: 2, name: '实际不合格库存'}
+        },
         batchNumberList: [],
         warehouses: [],
         form: {
-          availableCount: '',
-          unqualifiedCount: '',
-          undeterminedCount: ''
+          adjustType: '',
+          adjustNewType: '',
+          count: ''
         },
         doing: false
       };
@@ -254,6 +254,11 @@
           // this.getBatches(1);
         },
         deep: true
+      },
+      'form.adjustType' (val) {
+        if (!val) {
+          this.form.adjustNewType = '';
+        }
       }
     },
     methods: {
@@ -282,8 +287,8 @@
             break;
           }
           case 4: {
-            content = '仓库内待确定的货品数量';
-            title = '待确定库存';
+            content = '仓库内质量状态待确定而不允许销售的库存数';
+            title = '锁定库存';
             break;
           }
           case 5: {
@@ -413,7 +418,7 @@
       queryOrgWarehouse () {
         let param = Object.assign({}, {
           deleteFlag: false,
-          auditedStatus: '1',
+          auditedStatus: '1'
         });
         Address.queryAddress(param).then(res => {
           this.warehouses = res.data;
@@ -437,32 +442,23 @@
           });
           return;
         }
-        if (this.adjustType === '0') {
-          if (!this.form.availableCount) {
-            this.$notify.info({
-              message: '请输入可用库存'
-            });
-            return;
-          }
-          if (this.form.availableCount !== (Number(this.form.unqualifiedCount) + Number(this.form.undeterminedCount))) {
-            this.$notify.info({
-              message: '需要调整的可用库存数量与分配到其他库存的数量总和不一致'
-            });
-            return;
-          }
-        }else {
-          if (!this.form.undeterminedCount) {
-            this.$notify.info({
-              message: '请输入待确定库存'
-            });
-            return;
-          }
-          if (this.form.undeterminedCount !== (Number(this.form.unqualifiedCount) + Number(this.form.availableCount))) {
-            this.$notify.info({
-              message: '需要调整的待确定库存数量与分配到其他库存的数量总和不一致'
-            });
-            return;
-          }
+        if (!this.form.adjustType) {
+          this.$notify.info({
+            message: '请选择原状态'
+          });
+          return;
+        }
+        if (!this.form.adjustNewType) {
+          this.$notify.info({
+            message: '请选择新状态'
+          });
+          return;
+        }
+        if (!this.form.count) {
+          this.$notify.info({
+            message: '请输入数量'
+          });
+          return;
         }
         this.$confirm('是否调整库存状态，请谨慎操作', '', {
           confirmButtonText: '确定',
@@ -473,7 +469,6 @@
           let url = this.adjustType === '0' ? `/erp-stock/${id}/conversion/qualified`
             : `/erp-stock/${id}/conversion/undetermined`;
           this.doing = true;
-          this.setDefaultValue(this.form, 0);
           this.$http.put(url, this.form).then(() => {
             this.doing = false;
             this.$notify.success({

@@ -157,7 +157,7 @@
                 f.isChecked = false;
                 f.productCount = '';
                 if (this.form.bizType === '0') {
-                  f.disabled = this.isValid(f) === 0;
+                  f.disabled = this.isValid(f);
                 }
               });
               i.lots = args[index].data || [];
@@ -170,8 +170,7 @@
       isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expirationDate);
-        let days = b.diff(a, 'days');
-        return a < b ? days > 90 ? 2 : 1 : 0;
+        return a > b ;
       },
       /**
        * 编辑货品时，重设对应批号信息

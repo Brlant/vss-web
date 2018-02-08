@@ -10,17 +10,19 @@
   .d-table > div.d-table-right {
     padding: 10px 20px;
   }
+  .container {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
 </style>
 <template>
   <div class="order-page">
     <div class="container">
-      <div class="d-table">
-        <div class="d-table-right">
-          <div>
-            <el-row>
-              <el-col :span="8" class="search-input"></el-col>
-              <el-col :span="10" style="padding-left: 10px"></el-col>
-              <el-col :span="6" class="text-right">
+      <div>
+        <el-row>
+          <el-col :span="8" class="search-input"></el-col>
+          <el-col :span="10" style="padding-left: 10px"></el-col>
+          <el-col :span="6" class="text-right">
                   <span>
                    <span class="btn-search-toggle open" v-show="showSearch">
                       <single-input v-model="filters.keyWord" placeholder="请输入物料名称查询"
@@ -36,69 +38,67 @@
                         </a>
                     </perm>
                  </span>
-              </el-col>
-            </el-row>
-          </div>
-          <div class="order-list clearfix " style="margin-top: 10px">
-            <el-row class="order-list-header">
-              <el-col :span="6">物料编号</el-col>
-              <el-col :span="6">物料名称</el-col>
-              <el-col :span="9">物料描述</el-col>
-              <el-col :span="3">操作</el-col>
-            </el-row>
-            <el-row v-if="loadingData">
-              <el-col :span="24">
-                <oms-loading :loading="loadingData"></oms-loading>
-              </el-col>
-            </el-row>
-            <el-row v-else-if="materials.length == 0">
-              <el-col :span="24">
-                <div class="empty-info">
-                  暂无信息
-                </div>
-              </el-col>
-            </el-row>
-            <div v-else="" class="order-list-body flex-list-dom">
-              <div class="order-list-item order-list-item-bg" v-for="item in materials"
-                   :class="[{'active':currentId==item.id}]">
-                <el-row>
-                  <el-col :span="6" class="R pt10">
+          </el-col>
+        </el-row>
+      </div>
+      <div class="order-list clearfix " style="margin-top: 10px">
+        <el-row class="order-list-header">
+          <el-col :span="6">物料编号</el-col>
+          <el-col :span="6">物料名称</el-col>
+          <el-col :span="9">物料描述</el-col>
+          <el-col :span="3">操作</el-col>
+        </el-row>
+        <el-row v-if="loadingData">
+          <el-col :span="24">
+            <oms-loading :loading="loadingData"></oms-loading>
+          </el-col>
+        </el-row>
+        <el-row v-else-if="materials.length == 0">
+          <el-col :span="24">
+            <div class="empty-info">
+              暂无信息
+            </div>
+          </el-col>
+        </el-row>
+        <div v-else="" class="order-list-body flex-list-dom">
+          <div class="order-list-item order-list-item-bg" v-for="item in materials"
+               :class="[{'active':currentId==item.id}]">
+            <el-row>
+              <el-col :span="6" class="R pt10">
                     <span>
                       {{ item.id }}
                     </span>
-                  </el-col>
-                  <el-col :span="6" class="R pt10">
+              </el-col>
+              <el-col :span="6" class="R pt10">
                     <span>
                       {{ item.name }}
                     </span>
-                  </el-col>
-                  <el-col :span="9" class="R pt10">
+              </el-col>
+              <el-col :span="9" class="R pt10">
                     <span>
                       {{ item.parameters }}
                     </span>
-                  </el-col>
-                  <el-col :span="3" class="R pt10 btn-color">
-                    <perm label="supplies-update">
-                      <a href="#" @click.prevent="edit(item)"><i
-                        class="el-icon-t-edit"></i>编辑</a>
-                    </perm>
-                    <perm label="supplies-delete">
-                      <a href="#" @click.prevent="deleteItem(item)"><i
-                        class="el-icon-t-delete"></i> 删除</a>
-                    </perm>
-                  </el-col>
-                </el-row>
-              </div>
-            </div>
-          </div>
-          <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-            <el-pagination
-              layout="prev, pager, next"
-              :total="pager.count" :pageSize="pager.pageSize" @current-change="getMaPage"
-              :current-page="pager.currentPage">
-            </el-pagination>
+              </el-col>
+              <el-col :span="3" class="R pt10 btn-color">
+                <perm label="supplies-update">
+                  <a href="#" @click.prevent="edit(item)"><i
+                    class="el-icon-t-edit"></i>编辑</a>
+                </perm>
+                <perm label="supplies-delete">
+                  <a href="#" @click.prevent="deleteItem(item)"><i
+                    class="el-icon-t-delete"></i> 删除</a>
+                </perm>
+              </el-col>
+            </el-row>
           </div>
         </div>
+      </div>
+      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="getMaPage"
+          :current-page="pager.currentPage">
+        </el-pagination>
       </div>
     </div>
     <page-right :show="showPart" @right-close="resetRightBox"
