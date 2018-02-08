@@ -188,6 +188,9 @@
                 <el-form-item label="数量" prop="count">
                   <el-input type="number" v-model.number="form.count"></el-input>
                 </el-form-item>
+                <el-form-item label="调整理由">
+                  <el-input type="textarea" v-model.number="form.reason"></el-input>
+                </el-form-item>
               </div>
             </div>
           </el-form>
@@ -214,7 +217,8 @@
           warehouseId: '',
           adjustType: '',
           adjustNewType: '',
-          count: ''
+          count: '',
+          reason: ''
         },
         rules: {
           orgGoodsId: {required: true, message: '请选择货主货品', trigger: 'change'},
@@ -328,7 +332,8 @@
             newStatus: this.form.adjustNewType,
             count: this.form.count,
             stockId: this.batches[0].id,
-            warehouseId: this.form.warehouseId
+            warehouseId: this.form.warehouseId,
+            reason: this.form.reason
           };
           this.doing = true;
           this.$http.put(`/erp-stock/${obj.stockId}/adjust/stock`, obj).then(() => {

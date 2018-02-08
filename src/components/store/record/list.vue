@@ -107,13 +107,14 @@
 
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <el-col :span="3">原状态</el-col>
+          <el-col :span="2">原状态</el-col>
           <el-col :span="3">新状态</el-col>
           <el-col :span="2">数量</el-col>
-          <el-col :span="6">货主货品名称</el-col>
+          <el-col :span="4">货主货品名称</el-col>
           <el-col :span="3">批号</el-col>
           <el-col :span="3">创建人</el-col>
           <el-col :span="4">创建时间</el-col>
+          <el-col :span="3">调整理由</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -131,13 +132,14 @@
           <div class="order-list-item order-list-item-bg" v-for="item in materials"
                :class="[{'active':currentId==item.id}]">
             <el-row>
-              <el-col :span="3">{{ adjustTypeList[item.oldStatus] }}</el-col>
+              <el-col :span="2">{{ adjustTypeList[item.oldStatus] }}</el-col>
               <el-col :span="3">{{ adjustTypeList[item.newStatus] }}</el-col>
               <el-col :span="2" class="R">{{ item.count }}</el-col>
-              <el-col :span="6">{{ item.goodsName }}</el-col>
+              <el-col :span="4">{{ item.goodsName }}</el-col>
               <el-col :span="3">{{ item.batchNumber }}</el-col>
               <el-col :span="3" class="R">{{ item.createdName }}</el-col>
               <el-col :span="4">{{ item.createTime | time}}</el-col>
+              <el-col :span="3">{{ item.reason}}</el-col>
             </el-row>
           </div>
         </div>
