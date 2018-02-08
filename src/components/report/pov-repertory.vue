@@ -62,9 +62,10 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary :row-class-name="formatRowClass"
-                @cell-mouse-enter="cellMouseEnter"  @cell-mouse-leave="cellMouseLeave" border
-                ref="reportTable"  :maxHeight="getHeight" :header-row-class-name="'headerClass'" v-loading="loadingData">
+      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary
+                :row-class-name="formatRowClass"
+                @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave" border
+                ref="reportTable" :maxHeight="getHeight" :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="orgGoodsName" label="疫苗名称" width="160"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
         <el-table-column prop="expirationDate" label="效期" :sortable="true"></el-table-column>
@@ -122,10 +123,10 @@
   </div>
 </template>
 <script>
-  import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
   import validMixin from '@/mixins/vaildMixin';
   import ReportMixin from '@/mixins/reportMixin';
+
   export default {
     mixins: [validMixin, ReportMixin],
     data () {
@@ -176,16 +177,25 @@
         }
         this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
-        let params = Object.assign({}, this.searchWord, {type: this.type});
+        let params = Object.assign({}, this.searchWord, {type: this.type - 1});
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`});
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`
+        });
         this.$http.get('/erp-statement/pov-stock/export', {params}).then(res => {
           utils.download(res.data.path, '接种单位二类疫苗盘点表');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`});
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`
+          });
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`});
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`
+          });
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });
@@ -236,7 +246,7 @@
         }
         this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
-        let params = Object.assign({}, this.searchWord, {type: this.type});
+        let params = Object.assign({}, this.searchWord, {type: this.type - 1});
         this.loadingData = true;
         this.$http.get('/erp-statement/pov-stock', {params}).then(res => {
           res.data.forEach(i => {
