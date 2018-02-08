@@ -89,13 +89,6 @@
       }
     }
   }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 430px;
-    }
-  }
 </style>
 <template>
   <div>

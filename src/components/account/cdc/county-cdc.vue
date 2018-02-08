@@ -58,12 +58,6 @@
     }
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
-
   .minor-part {
     color: #999;
   }

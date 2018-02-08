@@ -170,20 +170,11 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    height: auto;
-  }
 
   .productItem-info {
     float: left;
   }
 
-  .order-good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: auto;
-    }
-  }
 
   .ar {
     /*text-align: right;*/

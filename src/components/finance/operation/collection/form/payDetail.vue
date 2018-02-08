@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="less" scoped>
   @import "../../../../../assets/mixins.less";
 
   .product-list-detail {
@@ -19,13 +19,6 @@
   .goods-btn {
     a:hover {
       color: @activeColor;
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-      height: 70px;
     }
   }
 

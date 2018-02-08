@@ -96,11 +96,6 @@
     cursor: pointer;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
 </style>
 <template>
   <div class="order-page">

@@ -15,13 +15,6 @@
     word-break: break-all;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 300px;
-    }
-  }
-
   .align-word {
     letter-spacing: 1em;
     margin-right: -1em;
@@ -31,11 +24,6 @@
     cursor: pointer;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
 
   .header-list {
     overflow: hidden;

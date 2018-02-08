@@ -22,12 +22,6 @@
     }
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-      height: 70px;
-    }
-  }
 
   .el-form--inline .el-form-item {
     margin-right: 0;

@@ -95,7 +95,7 @@
             </el-select>
           </el-form-item>
           <material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>
-          <el-form-item label="备注">
+          <el-form-item label="备注" class="clearfix">
             <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </el-form-item>

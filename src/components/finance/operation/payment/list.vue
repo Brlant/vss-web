@@ -97,10 +97,6 @@
   }
 
 
-  .el-select-dropdown__item {
-    height: auto;
-  }
-
 </style>
 <template>
   <div class="order-page">

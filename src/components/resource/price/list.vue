@@ -82,9 +82,6 @@
     padding-top: 20px;
   }
 
-  .el-select-dropdown__item {
-    height: auto;
-  }
 </style>
 <template>
   <div>

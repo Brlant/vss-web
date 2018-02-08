@@ -60,12 +60,6 @@
     }
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
-
   .btn-color {
     a:hover {
       color: @activeColor;

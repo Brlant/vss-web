@@ -10,12 +10,6 @@
     padding-top: 20px;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
-
   .loading-ht {
     height: 300px;
   }

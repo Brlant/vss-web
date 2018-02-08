@@ -9,13 +9,6 @@
     }
     padding-top: 20px;
   }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
-
   .opera-btn-group {
     margin: 10px 0;
   }

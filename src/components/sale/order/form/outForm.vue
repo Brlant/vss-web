@@ -171,29 +171,9 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    height: auto;
-  }
 
   .productItem-info {
     float: left;
-  }
-
-  .order-good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: auto;
-    }
-  }
-
-  .ar {
-    /*text-align: right;*/
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: 540px;
-    }
   }
 
   .goods-btn {
@@ -300,7 +280,7 @@
               </el-date-picker>
             </el-form-item>
             <material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>
-            <el-form-item label="备注">
+            <el-form-item label="备注" class="clearfix">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>

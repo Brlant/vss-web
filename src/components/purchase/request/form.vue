@@ -176,10 +176,6 @@
     float: left;
   }
 
-  .good-selects .el-select-dropdown__item {
-    width: auto;
-  }
-
   .ar {
     text-align: center;
   }

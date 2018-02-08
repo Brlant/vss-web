@@ -96,11 +96,6 @@
     cursor: pointer;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
   .order-list-status {
     .status-item {
       width: 90px;

@@ -19,13 +19,6 @@
     padding-top: 8px;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 300px;
-    }
-  }
-
   .align-word {
     letter-spacing: 1em;
     margin-right: -1em;
