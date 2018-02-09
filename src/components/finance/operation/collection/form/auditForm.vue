@@ -112,12 +112,26 @@
           padding-right: 5px;
         }
       }
+      &:hover {
+        background: $dialog-left-bg;
+      }
     }
   }
 
   .mb0 {
     margin-bottom: 0;
   }
+  .delete-icon {
+    &:hover {
+      color: $activeColor
+    }
+    cursor: pointer;
+    .el-icon-t-remove {
+      vertical-align: middle;
+      font-size: 20px;
+    }
+  }
+
 </style>
 
 <template>
@@ -160,20 +174,28 @@
                 v-show="form.detailList.length">
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
-                  <el-col :span="8">货品名称 </el-col>
+                  <el-col :span="form.status==='0'?6:8">货品名称 </el-col>
                   <el-col :span="2">数量</el-col>
-                  <el-col :span="6">订单号 </el-col>
+                  <el-col :span="form.status==='0'?5:6">订单号 </el-col>
                   <el-col :span="4">发生时间</el-col>
                   <el-col :span="4">本次收款金额 </el-col>
+                  <el-col :span="3" v-show="form.status ==='0'">操作</el-col>
                 </el-row>
               </li>
               <li class="show-item" v-for="item in form.detailList">
                 <el-row type="flex">
-                  <el-col :span="8">{{ item.goodsName }} </el-col>
+                  <el-col :span="form.status==='0'?6:8">{{ item.goodsName }} </el-col>
                   <el-col :span="2">{{ item.count }}</el-col>
-                  <el-col :span="6">{{ item.orderNo }} </el-col>
+                  <el-col :span="form.status==='0'?5:6">{{ item.orderNo }} </el-col>
                   <el-col :span="4">{{ item.createTime | date }}</el-col>
                   <el-col :span="4"> ￥{{item.paidMoney | formatMoney}} </el-col>
+                  <el-col :span="3" v-show="form.status ==='0'">
+                    <perm label="payment-receivable-audit">
+                      <span class="delete-icon" @click.stop.prevent="deleteDetailItem(item)">
+                          <i class="el-icon-t-remove"></i><span>删除</span>
+                      </span>
+                    </perm>
+                  </el-col>
                 </el-row>
               </li>
             </ul>
@@ -187,14 +209,16 @@
               </span>
             </el-form-item>
             <el-form-item style="margin-top: 10px">
-              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"
-                         native-type="submit">审核通过
-              </el-button>
-              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="danger"
-                         @click="notAudited"
-                         native-type="submit">
-                审核不通过
-              </el-button>
+              <perm label="payment-receivable-audit">
+                <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"
+                           native-type="submit">审核通过
+                </el-button>
+                <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="danger"
+                           @click="notAudited"
+                           native-type="submit">
+                  审核不通过
+                </el-button>
+              </perm>
             </el-form-item>
           </el-form>
 
@@ -248,6 +272,22 @@
     },
 
     methods: {
+      deleteDetailItem (item) {
+        this.$confirm('是否删除本条明细', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.delete(`/bill-receivable/detail/${item.detailId}`).then(() => {
+            this.form.detailList = this.form.detailList.filter(f => f.detailId !== item.detailId);
+          }).catch(() => {
+            this.$notify.error({
+              duration: 2000,
+              message: '删除失败'
+            });
+          });
+        });
+      },
       queryDetail (key) {
         http.get(`/bill-receivable/${key}`).then(res => {
           this.form = res.data;
