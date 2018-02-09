@@ -22,14 +22,11 @@
 
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <perm label="cerp-stock-status-adjust-insert">
+          <perm label="cerp-stock-status-adjust-insert" class="switching-icon">
              <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <a href="#" class="btn-circle" @click.stop.prevent="add">
                         <i class="el-icon-t-plus"></i>
-             </a>
+             </a>添加
           </span>
           </perm>
 

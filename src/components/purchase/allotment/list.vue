@@ -508,6 +508,8 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         });
+        // 明细查询
+        param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         if (this.filters.state !== '20') {
           erpOrder.query(param).then(res => {
             this.orderList = res.data.list;

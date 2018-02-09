@@ -1,4 +1,17 @@
 export default {
+  computed: {
+
+    isShowGoodsList () {
+      return this.$store.state.isShowGoodsList;
+    }
+  },
+  watch: {
+    isShowGoodsList () {
+      if (this.getOrderList) {
+        this.getOrderList(1);
+      }
+    }
+  },
   methods: {
     beforeCloseConfirm (str = '订单信息未保存,是否关闭') {
       this.$confirm(str, '', {
