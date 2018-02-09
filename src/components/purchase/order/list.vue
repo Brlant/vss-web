@@ -495,6 +495,8 @@
           pageSize: this.pager.pageSize,
           goodsType: this.vaccineType === '1' ? '0' : '1'
         });
+        // 明细查询
+        param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         if (this.filters.state !== '20') {
           erpOrder.query(param).then(res => {
             this.orderList = res.data.list;

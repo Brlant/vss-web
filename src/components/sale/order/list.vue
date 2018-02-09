@@ -463,6 +463,8 @@
           pageSize: this.pager.pageSize,
           goodsType: this.vaccineType === '1' ? '0' : '1'
         });
+        // 明细查询
+        param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         erpOrder.query(param).then(res => {
           this.orderList = res.data.list;
 //          this.pager.count = res.data.count;
