@@ -112,11 +112,25 @@
           padding-right: 5px;
         }
       }
+      &:hover {
+        background: $dialog-left-bg;
+      }
     }
   }
 
   .mb0 {
     margin-bottom: 0;
+  }
+
+  .delete-icon {
+    &:hover {
+      color: $activeColor
+    }
+    cursor: pointer;
+    .el-icon-t-remove {
+      vertical-align: middle;
+      font-size: 20px;
+    }
   }
 </style>
 
@@ -160,24 +174,32 @@
                 v-if="form.detailList.length">
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
-                  <el-col :span="form.billPayType === '1' ? 6 : 7">货品名称</el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">货品名称</el-col>
                   <el-col :span="2">数量</el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">订单号</el-col>
+                  <el-col :span="form.billPayType === '1' ? 4 : 5">订单号</el-col>
                   <el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>
                   <el-col :span="form.billPayType === '1' ? 4 : 5">发生时间</el-col>
-                  <el-col :span="form.billPayType === '1' ? 3 : 4">本次付款金额 </el-col>
+                  <el-col :span="form.billPayType === '1' ? 3 : 4">本次付款金额</el-col>
+                  <el-col :span="2" v-show="form.status ==='0'">操作</el-col>
                 </el-row>
               </li>
               <li class="show-item" v-for="item in form.detailList">
                 <el-row type="flex">
-                  <el-col :span="form.billPayType === '1' ? 6 : 7">{{ item.goodsName }}</el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.goodsName }}</el-col>
                   <el-col :span="2">{{ item.count }}</el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.orderNo }} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.orderNo }} </el-col>
                   <el-col :span="4" v-show="form.billPayType === '1'" class="break-word">
                     {{ item.invoiceNo ? item.invoiceNo : '无' }}
                   </el-col>
                   <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.createTime | date }}</el-col>
                   <el-col :span="form.billPayType === '1' ? 3 : 4"> ￥{{item.paidMoney | formatMoney}} </el-col>
+                  <el-col :span="2" v-show="form.status ==='0'">
+                    <perm label="payment-payable-audit">
+                      <span class="delete-icon" @click.stop.prevent="deleteDetailItem(item)">
+                          <i class="el-icon-t-remove"></i><span>删除</span>
+                      </span>
+                    </perm>
+                  </el-col>
                 </el-row>
               </li>
             </ul>
@@ -191,18 +213,20 @@
               </span>
             </el-form-item>
             <el-form-item style="margin-top: 10px">
-              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"
-                         native-type="submit">审核通过
-              </el-button>
-              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="danger"
-                         @click="notAudited"
-                         native-type="submit">
-                审核不通过
-              </el-button>
-              <el-button v-show="form.status ==='1'" style="width: 100px" :plain="true" type="danger" @click="review"
-                         native-type="submit">
-                通过复核
-              </el-button>
+              <perm label="payment-payable-audit">
+                <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"
+                           native-type="submit">审核通过
+                </el-button>
+                <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="danger"
+                           @click="notAudited"
+                           native-type="submit">
+                  审核不通过
+                </el-button>
+                <el-button v-show="form.status ==='1'" style="width: 100px" :plain="true" type="danger" @click="review"
+                           native-type="submit">
+                  通过复核
+                </el-button>
+              </perm>
             </el-form-item>
           </el-form>
         </div>
@@ -252,6 +276,22 @@
     mounted: function () {
     },
     methods: {
+      deleteDetailItem (item) {
+        this.$confirm('是否删除本条明细', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.delete(`/bill-receivable/detail/${item.detailId}`).then(() => {
+            this.form.detailList = this.form.detailList.filter(f => f.detailId !== item.detailId);
+          }).catch(() => {
+            this.$notify.error({
+              duration: 2000,
+              message: '删除失败'
+            });
+          });
+        });
+      },
       queryDetail (key) {
         http.get(`/bill-payable/${key}`).then(res => {
           this.form = res.data;
