@@ -363,25 +363,25 @@ const route = [
             component: resolve => require(['./components/resource/bidder/list.vue'], resolve),
             meta: {moduleId: 'resource', title: '中标疫苗', perm: 'successful-bidder-vaccine'}
           },
-          {
-            path: '/resource/first-vaccin/list',
-            component: resolve => require(['./components/resource/vaccin/firstVaccin/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
-          },
+          // {
+          //   path: '/resource/first-vaccin/list',
+          //   component: resolve => require(['./components/resource/vaccin/firstVaccin/list.vue'], resolve),
+          //   meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
+          // },
           {
             path: '/resource/second-vaccin/list',
             component: resolve => require(['./components/resource/vaccin/secondVaccin/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '二类疫苗产品资料', perm: 'second-vaccine-info'}
+            meta: {moduleId: 'resource', title: '疫苗产品资料', perm: 'second-vaccine-info'}
           },
-          {
-            path: '/resource/pov/first-vaccin/list',
-            component: resolve => require(['./components/resource/vaccin/pov/first/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '被授权一类疫苗', perm: 'pov-first-authorization-vaccine'}
-          },
+          // {
+          //   path: '/resource/pov/first-vaccin/list',
+          //   component: resolve => require(['./components/resource/vaccin/pov/first/list.vue'], resolve),
+          //   meta: {moduleId: 'resource', title: '被授权一类疫苗', perm: 'pov-first-authorization-vaccine'}
+          // },
           {
             path: '/resource/pov/second-vaccin/list',
             component: resolve => require(['./components/resource/vaccin/pov/second/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '被授权二类疫苗', perm: 'pov-second-authorization-vaccine'}
+            meta: {moduleId: 'resource', title: '被授权疫苗', perm: 'pov-second-authorization-vaccine'}
           },
           {
             path: '/resource/store',
