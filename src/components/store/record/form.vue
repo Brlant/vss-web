@@ -30,50 +30,6 @@
     display: block;
   }
 
-  .table-product-list {
-    font-size: 12px;
-    > tbody > tr > td, > thead > tr > th {
-      padding: 5px;
-    }
-  }
-
-  .order-product-box {
-    position: relative;
-    border-radius: 10px;
-    font-size: 12px;
-    line-height: 26px;
-    .product-info-fix {
-      background: #f6f6f6;
-      margin-top: 10px;
-      padding: 5px;
-      margin-bottom: 20px;
-    }
-    &:hover {
-      border-color: #aaa
-    }
-    .product-remove {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      cursor: pointer;
-      color: #666;
-      &:hover {
-        color: #333
-      }
-    }
-    .order-goods-info {
-      .col-label {
-        padding-top: 4px;
-      }
-    }
-
-  }
-
-
   .ml15 {
     margin-left: 40px;
   }
@@ -94,6 +50,15 @@
   .md-info {
     margin-bottom: 20px;
     min-height: 80px;
+  }
+  .md-inline-form {
+    .el-select{
+      width: 160px;
+    }
+    .el-input {
+      width: 100px;
+
+    }
   }
 </style>
 
@@ -168,8 +133,8 @@
                   <oms-row label="实际不合格库存" :sapn="span">{{item.unqualifiedCount}}</oms-row>
                 </el-col>
               </el-row>
-              <div v-if="batches.length">
-                <el-form-item label="原状态" prop="adjustType">
+              <div v-if="batches.length" class="md-inline-form">
+                <el-form-item label="原状态" prop="adjustType" class="pull-left">
                   <el-select v-model="form.adjustType" filterable clearable
                              placeholder="请选择原库存状态">
                     <el-option v-for="item in adjustTypeList" :value="item.key" :key="item.key"
@@ -177,7 +142,7 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="新状态" prop="adjustNewType">
+                <el-form-item label="新状态" prop="adjustNewType" class="pull-left">
                   <el-select v-model="form.adjustNewType" filterable clearable
                              placeholder="请选择新库存状态">
                     <el-option v-for="item in adjustTypeList" :value="item.key" :key="item.key"
@@ -185,10 +150,10 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="数量" prop="count">
+                <el-form-item label="数量" prop="count" class="pull-left">
                   <el-input type="number" v-model.number="form.count"></el-input>
                 </el-form-item>
-                <el-form-item label="调整理由">
+                <el-form-item label="调整理由" class="clearfix">
                   <el-input type="textarea" v-model.number="form.reason"></el-input>
                 </el-form-item>
               </div>
@@ -224,8 +189,8 @@
           orgGoodsId: {required: true, message: '请选择货主货品', trigger: 'change'},
           batchNumberId: {required: true, message: '请选择批号', trigger: 'change'},
           warehouseId: {required: true, message: '请选择仓库', trigger: 'change'},
-          adjustType: {required: true, message: '请输入原状态', trigger: 'change'},
-          adjustNewType: {required: true, message: '请输入新状态', trigger: 'change'},
+          adjustType: {required: true, message: '请选择原状态', trigger: 'change'},
+          adjustNewType: {required: true, message: '请选择新状态', trigger: 'change'},
           count: {required: true, message: '请输入数量', trigger: 'blur'}
         },
         adjustTypeList: {
@@ -242,6 +207,11 @@
     },
     mounted () {
       this.queryOrgWarehouse();
+    },
+    watch: {
+      'form.adjustType' (val) {
+        this.form.adjustNewType = '';
+      }
     },
     methods: {
       filterOrgGoods (query) {
@@ -342,7 +312,9 @@
             });
             this.doing = false;
             this.$refs['d-form'].resetFields();
+            this.form.reason = '';
             this.batches = [];
+            this.form.warehouseId = this.warehouses.length ? this.warehouses[0].id : '';
             this.$emit('refresh');
           }).catch(error => {
             this.doing = false;

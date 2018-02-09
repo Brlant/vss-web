@@ -1181,6 +1181,13 @@ $leftWidth: 260px;
   }
   .switching-icon {
     cursor: pointer;
+    &:hover {
+      color: $activeColor;
+      .btn-circle {
+        color: #fff;
+        background: $activeColor;
+      }
+    }
     .el-icon-arrow-up {
       transition: all .5s ease-in-out;
     }
