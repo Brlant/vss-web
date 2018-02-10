@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .batch-number-upload {
     margin-left: 10px;
     border-right: 2px solid #eee;

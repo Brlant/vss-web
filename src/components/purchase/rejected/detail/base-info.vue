@@ -1,8 +1,4 @@
-<style lang="less" scoped="">
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
+<style lang="scss" scoped="">
 
   .oms-row {
     margin-bottom: 8px;

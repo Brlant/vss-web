@@ -1,5 +1,5 @@
-<style lang="less" scoped=''>
-  @import "../../assets/mixins.less";
+<style lang="scss" scoped=''>
+  @import "../../assets/mixins.scss";
 
   .main-header {
     background: #607D8B;
@@ -7,7 +7,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: @topMenuHeight;
+    height: $topMenuHeight;
     z-index: 800;
     box-shadow: 0 5px 5px rgba(221, 221, 221, 0.22);
     ul, li {
@@ -21,8 +21,8 @@
 
     .top-logo {
       vertical-align: middle;
-      line-height: @topMenuHeight;
-      height: @topMenuHeight;
+      line-height: $topMenuHeight;
+      height: $topMenuHeight;
       margin-left: 15px;
       img {
         vertical-align: middle;
@@ -86,7 +86,7 @@
       margin: 10px 0;
     }
     a {
-      color: @activeColor;
+      color: $activeColor;
       font-size: 12px;
     }
   }
@@ -106,7 +106,7 @@
 
   .main-nav {
     position: fixed;
-    top: @topMenuHeight;
+    top: $topMenuHeight;
     background: rgb(238, 243, 246);
     border-right: 1px solid #f1f1f1;
     bottom: 0;
@@ -132,7 +132,7 @@
       text-align: center;
       padding: 5px;
       cursor: pointer;
-      background: rgb(238, 243, 246, 0.5);
+      background: rgba(238, 243, 246, 0.5);
       &:hover {
         background: #cbdce6;
       }
@@ -200,10 +200,7 @@
 </style>
 
 <style>
-  .el-menu-item, .el-submenu__title {
-    height: 46px;
-    line-height: 46px;
-  }
+
 </style>
 <template>
   <div>

@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .product-detail-list {
     margin-top: 20px;
     text-align: center;

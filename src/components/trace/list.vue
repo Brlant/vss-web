@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .date-line {
     h3 {
       margin: 0;

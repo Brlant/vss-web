@@ -1,21 +1,21 @@
-<style lang="less" scoped="">
-  @import "../assets/mixins.less";
+<style lang="scss" scoped="">
+  @import "../assets/mixins.scss";
 
-  @card-box-border-color: #eee;
+  $card-box-border-color: #eee;
   .card-box {
-    border: 1px solid @card-box-border-color;
+    border: 1px solid $card-box-border-color;
     margin-bottom: 20px;
     .card-box-header {
       padding: 15px 20px;
-      border-bottom: 1px solid @card-box-border-color;
-      background: @card-box-border-color*1.05;
+      border-bottom: 1px solid $card-box-border-color;
+      background: $card-box-border-color*1.05;
     }
     .card-box-body {
       overflow-x: hidden;
       padding: 0;
       background: #fff;
       .el-row {
-        border-bottom: 1px solid @card-box-border-color;
+        border-bottom: 1px solid $card-box-border-color;
         padding-top: 5px;
         padding-bottom: 4px;
         &:last-child {

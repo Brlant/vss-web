@@ -1,20 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
+<style lang="scss" scoped="">
 
   .loading-ht {
     height: 300px;
@@ -41,7 +25,7 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="业务日期" :span="5">
+              <oms-form-row label="上架时间" :span="5">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"

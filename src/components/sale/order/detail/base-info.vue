@@ -1,8 +1,4 @@
-<style lang="less" scoped="">
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
+<style lang="scss" scoped="">
 
   .oms-row {
     margin-bottom: 8px;
@@ -70,7 +66,7 @@
             <oms-input type="text" placeholder="请输入实际收货人" v-model="currentOrder.actualConsignee"></oms-input>
           </el-form-item>
           <el-form-item label="收货人联系电话">
-            <oms-input type="text" placeholder="请输入收货人联系电话" v-model="currentOrder.consigneePhone"></oms-input>
+            <oms-input type="text" placeholder="请输入收货人联系电话" v-model="currentOrder.consigneePhone" :maxlength="50"></oms-input>
           </el-form-item>
           <el-form-item label="运输条件" prop="transportationCondition">
             <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
@@ -95,7 +91,7 @@
             </el-select>
           </el-form-item>
           <material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>
-          <el-form-item label="备注">
+          <el-form-item label="备注" class="clearfix">
             <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </el-form-item>

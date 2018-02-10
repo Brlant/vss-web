@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -87,13 +87,6 @@
       &:hover {
         color: rgb(200, 0, 0)
       }
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 430px;
     }
   }
 </style>

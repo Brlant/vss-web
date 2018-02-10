@@ -1,5 +1,5 @@
-<style lang="less" scoped="">
-  @activeColor: #00bff3;
+<style lang="scss" scoped="">
+  $activeColor: #00bff3;
   .main-footer {
     position: absolute;
     left: 0;

@@ -1,7 +1,4 @@
-<style lang="less">
-  @import "../../static/css/oms.css";
-  @import "../assets/mixins.less";
-  @import "../assets/oms.less";
+<style lang="scss">
 
   .layer-loading {
     text-align: center;

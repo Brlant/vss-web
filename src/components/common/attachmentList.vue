@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   .list-item {
     position: relative;
     line-height: 20px;

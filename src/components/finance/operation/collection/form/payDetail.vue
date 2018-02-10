@@ -1,31 +1,9 @@
-<style lang="less">
-  @import "../../../../../assets/mixins.less";
-
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-  /*.ar {*/
-  /*text-align: right;*/
-  /*}*/
+<style lang="scss" scoped>
+  @import "../../../../../assets/mixins.scss";
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-      height: 70px;
+      color: $activeColor;
     }
   }
 
@@ -37,10 +15,6 @@
     .el-date-editor--datetimerange.el-input {
       width: 310px;
     }
-  }
-
-  .minor-part {
-    color: #999;
   }
 </style>
 <template>
@@ -77,7 +51,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+        <el-button type="primary" native-type="submit" @click.stop="searchInOrder">查询</el-button>
       </el-form-item>
     </el-form>
     <div class="product-list-detail">
