@@ -99,7 +99,7 @@
 </style>
 <template>
   <div>
-    <h2 class="clearfix">{{showTitle}}货主二类疫苗资料</h2>
+    <h2 class="clearfix">{{showTitle}}货主疫苗产品资料</h2>
     <el-form ref="goodSForm" :model="form" :rules="rules" label-width="120px" @submit.prevent="onSubmit('goodSForm')"
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
