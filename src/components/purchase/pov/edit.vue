@@ -120,7 +120,8 @@
           <tr v-for="row in currentOrder.detailDtoList">
 
             <td>
-              {{row.goodsName}}
+              <div>{{row.goodsName}}</div>
+              <div style="color: #888;font-size: 13px">散件包装数量: {{row.smallPackCount}}</div>
             </td>
             <td>
               <span>{{ row.specification }}</span>
@@ -142,7 +143,7 @@
             <td>
               <!--<el-input v-model.number="row.actualCount"></el-input>-->
               <input class="el-input__inner" :class="{error: row.isNoValid}" type="number"
-                     @input="inputHandler(row)"
+                     @input="inputHandler(row)" @blur="validPackage(row)"
                      v-model.number="row.actualCount"/>
             </td>
           </tr>
@@ -202,6 +203,13 @@
       inputHandler (row) {
         row.isNoValid = row.actualCount > row.repertoryCount;
       },
+      validPackage (row) {
+        if (row.actualCount % row.smallPackCount !== 0) {
+          this.$notify.info({
+            message: '货品' + row.goodsName + '，输入的分配数量不是散件倍数, 请调整'
+          });
+        }
+      },
       submit () {
         // let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);
         // if (valid) {
@@ -213,6 +221,13 @@
         //   });
         //   return;
         // }
+        let valid = this.currentOrder.detailDtoList.some(s => s.actualCount % s.smallPackCount !== 0);
+        if (valid) {
+          this.$notify.info({
+            message: '存在分配数量不是散件倍数的明细，请进行调整'
+          });
+          return;
+        }
         let ary = this.currentOrder.detailDtoList.map(m => {
           return {
             detailId: m.id,

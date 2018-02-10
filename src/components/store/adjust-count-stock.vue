@@ -20,7 +20,7 @@
   <div class="order-page">
     <div class="container">
       <el-alert
-        title="请选择货品和批号输入调整部分库存数，如果是正数则增加库存，如果是负数则减少库存。"
+        title="请选择货品和批号输入调整部分库存数，调整库存数必须是散件倍数，如果是正数则增加库存，如果是负数则减少库存。"
         type="warning">
       </el-alert>
       <div class="opera-btn-group" :class="{up:!showSearch}">
@@ -80,6 +80,18 @@
               </oms-form-row>
             </el-col>
             <el-col :span="12">
+              <el-col :span="12" v-show="searchWord.orgGoodsId">
+                <oms-form-row label="散件包装数量:" :span="10">
+                  <div style="margin-top: 7px">{{smallPackCount}}</div>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="12">
+
+              </el-col>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="12">
               <el-col :span="12">
                 <oms-form-row label="可用库存" :span="10">
                   <el-input  type="number" v-model.number="form.availableCount"></el-input>
@@ -91,8 +103,6 @@
                 </oms-form-row>
               </el-col>
             </el-col>
-          </el-row>
-          <el-row>
             <el-col :span="12">
               <el-col :span="12">
                 <oms-form-row label="实际合格库存" :span="10">
@@ -105,21 +115,14 @@
                 </oms-form-row>
               </el-col>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="12">
-              <el-col :span="12">
-                <oms-form-row label="" :span="10">
-                  <el-button type="primary" @click="onSubmit"  :disabled="doing">调整库存</el-button>
-                </oms-form-row>
-              </el-col>
+              <oms-form-row label="" :span="4">
+                <el-button type="primary" @click="onSubmit"  :disabled="doing">调整库存</el-button>
+              </oms-form-row>
             </el-col>
           </el-row>
-          <!--<el-row>-->
-            <!--<el-col :span="12">-->
-              <!--<oms-form-row label="" :span="4">-->
-                <!--<el-button type="primary" @click="onSubmit"  :disabled="doing">调整库存</el-button>-->
-              <!--</oms-form-row>-->
-            <!--</el-col>-->
-          <!--</el-row>-->
         </el-form>
       </div>
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
@@ -177,9 +180,12 @@
   import { BaseInfo, erpStock, http, Address } from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
+  import OmsRow from '@dtop/dtop-web-common/packages/row';
 
   export default {
-    components: {detail},
+    components: {
+      OmsRow,
+      detail},
     data () {
       return {
         loadingData: false,
@@ -241,7 +247,17 @@
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = height - 110;
         return height;
-      }
+      },
+      smallPackCount () {
+        let count = '';
+        if (!this.searchWord.orgGoodsId) return count;
+        this.orgGoods.forEach(i => {
+          if (i.id === this.searchWord.orgGoodsId) {
+            count = i.smallPackCount;
+          }
+        });
+        return count;
+      },
     },
     watch: {
       filters: {
@@ -459,6 +475,30 @@
         if (!this.searchWord.batchNumberId) {
           this.$notify.info({
             message: '请选择批号'
+          });
+          return;
+        }
+        if (typeof this.form.availableCount === 'number' && this.form.availableCount % this.smallPackCount !== 0) {
+          this.$notify.info({
+            message: '输入的可用库存不是散件倍数'
+          });
+          return;
+        }
+        if (typeof this.form.transitCount === 'number' && this.form.transitCount % this.smallPackCount !== 0) {
+          this.$notify.info({
+            message: '输入的在途库存不是散件倍数'
+          });
+          return;
+        }
+        if (typeof this.form.qualifiedCount === 'number' && this.form.qualifiedCount % this.smallPackCount !== 0) {
+          this.$notify.info({
+            message: '输入的实际合格库存不是散件倍数'
+          });
+          return;
+        }
+        if (typeof this.form.unqualifiedCount === 'number' && this.form.unqualifiedCount % this.smallPackCount !== 0) {
+          this.$notify.info({
+            message: '输入的实际不合格库存不是散件倍数'
           });
           return;
         }

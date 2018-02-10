@@ -40,7 +40,7 @@
           <el-col :span="8">
             <oms-form-row label="货主货品" :span="5">
               <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
-                         :clearable="true"
+                         :clearable="true" @change="orgGoodsChange"
                          v-model="filters.orgGoodsId" popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.goodsName"
                            v-for="org in orgGoods">
@@ -60,7 +60,7 @@
             </oms-form-row>
           </el-col>
           <el-col :span="6">
-            <oms-form-row label="批号" :span="3">
+            <oms-form-row label="批号" :span="4">
               <el-select v-model="filters.batchNumberId" filterable clearable remote
                          :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号">
                 <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
@@ -75,7 +75,7 @@
               <el-col :span="24">
                 <el-date-picker
                   v-model="expectedTime"
-                  type="datetimerange"
+                  type="daterange"
                   placeholder="请选择">
                 </el-date-picker>
               </el-col>
@@ -104,14 +104,14 @@
 
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <el-col :span="2">创建人</el-col>
-          <el-col :span="4">创建时间</el-col>
           <el-col :span="5">货主货品名称</el-col>
           <el-col :span="3">批号</el-col>
           <el-col :span="2">原状态</el-col>
           <el-col :span="3">新状态</el-col>
           <el-col :span="2">数量</el-col>
           <el-col :span="3">调整理由</el-col>
+          <el-col :span="2">创建人</el-col>
+          <el-col :span="4">创建时间</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -129,14 +129,14 @@
           <div class="order-list-item order-list-item-bg" v-for="item in materials"
                :class="[{'active':currentId==item.id}]">
             <el-row>
-              <el-col :span="2" class="R">{{ item.createdName }}</el-col>
-              <el-col :span="4">{{ item.createTime | time}}</el-col>
               <el-col :span="5">{{ item.goodsName }}</el-col>
               <el-col :span="3">{{ item.batchNumber }}</el-col>
               <el-col :span="2">{{ adjustTypeList[item.oldStatus] }}</el-col>
               <el-col :span="3">{{ adjustTypeList[item.newStatus] }}</el-col>
               <el-col :span="2" class="R">{{ item.count }}{{item.measurementUnit}}</el-col>
               <el-col :span="3">{{ item.reason}}</el-col>
+              <el-col :span="2" class="R">{{ item.createdName }}</el-col>
+              <el-col :span="4">{{ item.createTime | time}}</el-col>
             </el-row>
           </div>
         </div>
@@ -215,10 +215,13 @@
       searchInOrder: function () {// 搜索
         this.filters.startTime = this.formatTime(this.expectedTime[0]);
         this.filters.endTime = this.formatTime(this.expectedTime[1]);
+        if (this.filters.startTime && this.filters.startTime === this.filters.endTime) {
+          this.filters.endTime = this.filters.endTime.split(' ')[0] + ' 23:59:59';
+        }
         this.getMaPage(1);
       },
       formatTime (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD HH:MM:ss') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD') + ' 00:00:00' : '';
       },
       resetSearchForm: function () {// 重置表单
         this.filters = {
