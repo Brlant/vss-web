@@ -100,7 +100,13 @@
                 <div v-show="status === 0">
                   <el-row
                     style="height: 64px;background: #f1f1f1;margin-left: -5px;margin-right: -5px;">
-                    <el-col :span="12"></el-col>
+                    <el-col :span="8"></el-col>
+                    <el-col :span="4">
+                       <span style="font-size: 16px">散件包装数量
+                        {{ currentItem.smallPackCount }}
+                       <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
+                      </span>
+                    </el-col>
                     <el-col :span="4">
                       <span style="font-size: 16px">需求总计
                         {{ currentItem.requiredQuantity }}
@@ -170,6 +176,12 @@
       },
       submit (item) {
         if (typeof item.actualCount !== 'number') return;
+        if (item.actualCount % this.currentItem.smallPackCount !== 0) {
+          this.$notify.info({
+            message: '分配数量不是散件倍数，请进行调整'
+          });
+          return;
+        }
         let list = [];
         list.push(item);
         demandAssignment.allotVaccine(list).then(() => {

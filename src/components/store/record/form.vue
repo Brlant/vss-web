@@ -38,7 +38,6 @@
     color: #777
   }
 
-
   .productItem-info {
     float: left;
   }
@@ -51,13 +50,13 @@
     margin-bottom: 20px;
     min-height: 80px;
   }
+
   .md-inline-form {
-    .el-select{
-      width: 160px;
+    .el-select {
+      width: 260px;
     }
     .el-input {
-      width: 100px;
-
+      width: 260px;
     }
   }
 </style>
@@ -116,14 +115,15 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <div  v-loading="loadingData">
+            <div v-loading="loadingData">
               <div class="empty-info" v-show="!batches.length">暂无库存信息</div>
               <el-row class="md-info" v-for="item in batches" :key="item.id">
                 <el-col :span="14">
                   <oms-row label="货主货品名称" :sapn="span">{{item.goodsName}}</oms-row>
                   <oms-row label="生产厂商" :sapn="span">{{item.factoryName}}</oms-row>
                   <oms-row label="批号" :sapn="span">{{item.batchNumber}}</oms-row>
-                  <oms-row label="有效期" :sapn="span">{{item.expiryDate}}</oms-row>
+                  <oms-row label="有效期" :sapn="span">{{item.expiryDate | date}}</oms-row>
+                  <oms-row label="散件包装数量" :sapn="span">{{smallPackCount}}</oms-row>
                 </el-col>
                 <el-col :span="10">
                   <oms-row label="可用库存" :sapn="span">{{item.availableCount}}</oms-row>
@@ -150,10 +150,10 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="数量" prop="count" class="pull-left">
+                <el-form-item label="数量" prop="count" class="clearfix">
                   <el-input type="number" v-model.number="form.count"></el-input>
                 </el-form-item>
-                <el-form-item label="调整理由" class="clearfix">
+                <el-form-item label="调整理由">
                   <el-input type="textarea" v-model.number="form.reason"></el-input>
                 </el-form-item>
               </div>
@@ -165,7 +165,7 @@
   </div>
 </template>
 <script>
-  import {Address, http, erpStock } from '@/resources';
+  import { Address, erpStock, http } from '@/resources';
 
   export default {
     props: {
@@ -191,7 +191,10 @@
           warehouseId: {required: true, message: '请选择仓库', trigger: 'change'},
           adjustType: {required: true, message: '请选择原状态', trigger: 'change'},
           adjustNewType: {required: true, message: '请选择新状态', trigger: 'change'},
-          count: {required: true, message: '请输入数量', trigger: 'blur'}
+          count: [
+            {required: true, message: '请输入数量', trigger: 'blur'},
+            {validator: this.validatePackageMultiple, trigger: 'blur'}
+          ]
         },
         adjustTypeList: {
           0: {key: 0, name: '可用库存'},
@@ -213,7 +216,76 @@
         this.form.adjustNewType = '';
       }
     },
+    computed: {
+      smallPackCount () {
+        let count = '';
+        if (!this.form.orgGoodsId) return count;
+        this.orgGoods.forEach(i => {
+          if (i.id === this.form.orgGoodsId) {
+            count = i.smallPackCount;
+          }
+        });
+        return count;
+      },
+      totalCount () {
+        if (this.batches.length && typeof this.form.adjustType === 'number') {
+          return this.form.adjustType === 0 ? this.batches[0].availableCount : this.batches[0].undeterminedCount;
+        }
+        return 0;
+      }
+    },
     methods: {
+      validatePackageMultiple (rule, value, callback) {
+        let obj = this.validPackage(value, this.smallPackCount, this.totalCount);
+        switch (obj.type) {
+          case 0: {
+            callback();
+            break;
+          }
+          case 1: {
+            callback(new Error('缺少散件包装数量信息，请补充货品包装资料'));
+            break;
+          }
+          case 2: {
+            callback(new Error('输入数量大于总数量'));
+            break;
+          }
+          case 3: {
+            callback(new Error('输入数量不是散件的倍数,推荐数量' + obj.count));
+            break;
+          }
+          case 4: {
+            callback();
+            break;
+          }
+        }
+      },
+      /**
+       * 校验最小包装
+       * @param count
+       * @param packageCount
+       * @param total
+       * @returns {*}
+       */
+      validPackage (count, packageCount, total) {
+        const lack_count_data = 0; // 缺少输入数量
+        const lack_package_data = 1; // 缺少包装资料
+        const exceeded_number = 2; // 超过总数量
+        const not_package_multiple = 3; // 不是最小包装倍数
+        const correct = 4; // 正常
+        if (!count) return {type: lack_count_data};
+        if (!packageCount) return {type: lack_package_data};
+        if (count > total) return {type: exceeded_number};
+        let remainder = count % packageCount;
+        if (remainder === 0) return {type: correct};
+        let ig = Math.floor(count / packageCount);
+        let curCount = 0;
+        curCount = ((ig + 1) * packageCount > total) ? ig * packageCount : (ig + 1) * packageCount;
+        return {
+          type: not_package_multiple,
+          count: curCount
+        };
+      },
       filterOrgGoods (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
