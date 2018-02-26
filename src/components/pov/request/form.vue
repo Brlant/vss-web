@@ -142,7 +142,11 @@
                 @change="changeTime">
               </el-date-picker>
             </el-form-item>
-
+            <material-part @changeRemark="changeRemark" v-if="form.type === 0"></material-part>
+            <el-form-item label="备注" class="clearfix">
+              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
           </el-form>
 
           <el-form ref="orderGoodsForm" :rules="goodsRules" :model="product" @submit.prevent="onSubmit"
@@ -286,10 +290,12 @@
 <script>
   import { Address, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
+  import materialPart from '@/components/sale/order/material.vue';
 
   export default {
     name: 'addForm',
     loading: false,
+    components: {materialPart},
     props: {
       index: Number,
       currentOrder: Object
@@ -433,6 +439,7 @@
         // ******
         this.$nextTick(() => {
           this.form.detailDtoList = orgDetailGoods;
+          this.form.remark = this.currentOrder.remark;
         });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
@@ -443,7 +450,8 @@
             measurementUnit: m.unit,
             orgGoodsId: m.orgGoodsId,
             orgGoodsName: m.goodsName,
-            unitPrice: m.price
+            unitPrice: m.price,
+            specification: m.specification
           };
         });
         this.form = {
@@ -456,6 +464,7 @@
         this.changeType('edit');
         this.$nextTick(() => {
           this.form.detailDtoList = orgDetailGoods;
+          this.form.remark = this.currentOrder.remark;
         });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
@@ -482,6 +491,7 @@
         this.form.detailDtoList = [];
         this.$refs['orderAddForm'].clearValidate();
         this.$refs['orderGoodsForm'].resetFields();
+        this.form.remark = '';
         this.filterProduct();
         this.searchProduct();
         this.changeOrg(isEdited);
@@ -519,6 +529,12 @@
           this.cdcs = res.data;
           this.filterProduct();
           this.searchProduct();
+          // 得到疾控中心后,再得到地址
+          this.showCdcs.forEach(i => {
+            if (i.orgId === this.form.cdcId) {
+              this.form.warehouseId = i.addressId;
+            }
+          });
         });
       },
       filterProduct () {
@@ -538,6 +554,13 @@
             }
           });
         });
+      },
+      changeRemark (form) {
+        if (!this.form.remark) {
+          this.form.remark = form.count + form.name;
+        } else {
+          this.form.remark += '，' + form.count + form.name;
+        }
       },
       filterProducts: function () {
         let arr = [];

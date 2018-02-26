@@ -489,30 +489,6 @@
           });
           return;
         }
-        if (typeof this.form.availableCount === 'number' && this.form.availableCount % this.smallPackCount !== 0) {
-          this.$notify.info({
-            message: '输入的可用库存不是散件倍数'
-          });
-          return;
-        }
-        if (typeof this.form.transitCount === 'number' && this.form.transitCount % this.smallPackCount !== 0) {
-          this.$notify.info({
-            message: '输入的在途库存不是散件倍数'
-          });
-          return;
-        }
-        if (typeof this.form.qualifiedCount === 'number' && this.form.qualifiedCount % this.smallPackCount !== 0) {
-          this.$notify.info({
-            message: '输入的实际合格库存不是散件倍数'
-          });
-          return;
-        }
-        if (typeof this.form.unqualifiedCount === 'number' && this.form.unqualifiedCount % this.smallPackCount !== 0) {
-          this.$notify.info({
-            message: '输入的实际不合格库存不是散件倍数'
-          });
-          return;
-        }
         this.$confirm('是否调整库存，请谨慎操作', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
