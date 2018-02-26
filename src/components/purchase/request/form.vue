@@ -146,7 +146,11 @@
                 @change="changeTime">
               </el-date-picker>
             </el-form-item>
-
+            <material-part @changeRemark="changeRemark" v-if="type === 1"></material-part>
+            <el-form-item label="备注" class="clearfix">
+              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
           </el-form>
 
           <el-form ref="orderGoodsForm" :rules="goodsRules" :model="product" @submit.prevent="onSubmit"
@@ -286,10 +290,12 @@
 <script>
   import { Address, BaseInfo, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
+  import materialPart from '@/components/sale/order/material.vue';
 
   export default {
     name: 'addForm',
     loading: false,
+    components: {materialPart},
     props: {
       index: Number,
       currentOrder: Object
@@ -475,6 +481,13 @@
           this.form.detailDtoList = orgDetailGoods;
         });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
+      },
+      changeRemark (form) {
+        if (!this.form.remark) {
+          this.form.remark = form.count + form.name;
+        } else {
+          this.form.remark += '，' + form.count + form.name;
+        }
       },
       changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
