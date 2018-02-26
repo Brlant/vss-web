@@ -69,7 +69,7 @@
                           v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供应商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                     </div>
                   </el-option>
@@ -83,6 +83,24 @@
                            @click.native.once="filterBatchNumber('')">
                   <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
                              :label="item.batchNumber"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="供应商" :span="6">
+                <el-select filterable remote placeholder="请输入名称搜索供应商" :remote-method="filterOrg" :clearable="true"
+                           v-model="searchWord.factoryId" popperClass="good-selects"
+                           @click.native.once="filterOrg('')">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factoryList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码:</span>{{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -121,7 +139,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, Vaccine } from '@/resources';
+  import {BaseInfo, Vaccine} from '@/resources';
   import utils from '@/tools/utils';
   import ReportMixin from '@/mixins/reportMixin';
 
@@ -138,9 +156,11 @@
           createStartTime: '',
           createEndTime: '',
           batchNumberId: '',
-          orgGoodsId: ''
+          orgGoodsId: '',
+          factoryId: ''
         },
         orgList: [],
+        factoryList: [],
         orgGoods: [],
         batchNumberList: [],
         bizDateAry: '',
@@ -189,6 +209,17 @@
           this.setFixedHeight();
         });
       },
+      filterOrg: function (query) {// 过滤供货商
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          this.searchCondition.transactOrgId = '';
+          this.factoryList = [];
+          return;
+        }
+        BaseInfo.queryOrgByReation(orgId, {keyWord: query, relation: '1'}).then(res => {
+          this.factoryList = res.data;
+        });
+      },
       resetSearchForm: function () {
         this.searchWord = {
           suppliers: '',
@@ -196,7 +227,8 @@
           createStartTime: '',
           createEndTime: '',
           batchNumberId: '',
-          orgGoodsId: ''
+          orgGoodsId: '',
+          factoryId: ''
         };
         this.bizDateAry = '';
         this.search();
