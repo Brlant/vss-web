@@ -32,8 +32,9 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="12">
-              <oms-form-row label="货主货品" :span="4" :isRequire="true">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+              <oms-form-row :label="orgLevel===3?'被授权疫苗':'货主货品'" :span="4" :isRequire="true">
+                <el-select filterable remote :placeholder="orgLevel===3?'请输入名称搜索被授权疫苗':'请输入名称搜索货主货品'"
+                           :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
@@ -177,7 +178,7 @@
 </template>
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import { BaseInfo, erpStock, http, Address } from '@/resources';
+  import {Address, BaseInfo, erpStock, http} from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
   import OmsRow from '@dtop/dtop-web-common/packages/row';
@@ -404,15 +405,25 @@
         });
       },
       filterOrgGoods (query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
-        let params = Object.assign({}, {
-          deleteFlag: false,
-          orgId: orgId,
-          keyWord: query
-        });
-        http.get('/erp-stock/goods', {params}).then(res => {
-          this.orgGoods = res.data.list;
-        });
+        let level = this.$store.state.orgLevel;
+        if (level === 3) {
+          let params = Object.assign({}, {
+            keyWord: query
+          });
+          http.get('/vaccine-authorization/pov', {params}).then(res => {
+            this.orgGoods = res.data.list;
+          });
+        } else {
+          let orgId = this.$store.state.user.userCompanyAddress;
+          let params = Object.assign({}, {
+            deleteFlag: false,
+            orgId: orgId,
+            keyWord: query
+          });
+          http.get('/erp-stock/goods', {params}).then(res => {
+            this.orgGoods = res.data.list;
+          });
+        }
       },
       orgGoodsChange (val) {
         this.searchWord.batchNumberId = '';
