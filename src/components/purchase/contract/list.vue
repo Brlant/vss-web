@@ -159,7 +159,7 @@
 
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
+             :class="{'active':key==activeStatus}"
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
@@ -188,7 +188,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showContract(item)"
-               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentOrderId==item.id}]">
+               :class="['status-'+filterListColor(item.availabilityStatus,item.used),{'active':currentOrderId==item.id}]">
             <el-row>
               <el-col :span="4" class="pt10">
                 <div class="f-grey">
@@ -346,14 +346,6 @@
     mixins: [OrderMixin],
     mounted() {
       this.getOrderList(1);
-//      let orderId = this.$route.params.id;
-//      if (orderId === 'add') {
-//        this.add();
-//        this.purchase = {
-//          id: this.$route.query.id,
-//          count: this.$route.query.count
-//        };
-//      }
     },
     computed: {
       transportationMeansList: function () {
@@ -475,15 +467,6 @@
         this.showDetail = true;
         this.defaultIndex = 2;
       },
-      getOrderStatus: function (order) {
-        let state = '';
-        for (let key in this.orgType) {
-          if (order.state === this.orgType[key].state) {
-            state = this.orgType[key].title;
-          }
-        }
-        return state;
-      },
       searchInOrder: function () {// 搜索
         this.searchCondition.startDate = this.formatTime(this.createTimes[0]);
         this.searchCondition.endDate = this.formatTime(this.createTimes[1]);
@@ -556,13 +539,14 @@
           this.orgList = res.data;
         });
       },
-      filterListColor: function (flag) {// 过滤左边列表边角颜色
+      filterListColor: function (availabilityStatus, used) {// 过滤左边列表边角颜色
         let status = -1;
-        if (flag) {
+        if (availabilityStatus === true && used === false) {
           status = 0;
-        }
-        if (!flag) {
+        } else if (availabilityStatus === true && used === true) {
           status = 1;
+        } else {
+          status = 2;
         }
         return status;
       },
@@ -581,6 +565,8 @@
         return num;
       },
       changeStatus: function (item, key) {// 订单分类改变
+        console.log(item);
+        console.log(key);
         this.activeStatus = key;
         this.filters.availabilityStatus = item.availabilityStatus;
         this.filters.used = item.used;
