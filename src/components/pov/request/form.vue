@@ -432,7 +432,8 @@
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.goodsType),
           warehouseId: this.currentOrder.warehouseId,
-          detailDtoList: []
+          detailDtoList: [],
+          remark: ''
         };
         // ******2.0变化
         this.changeType('edit');
@@ -459,7 +460,8 @@
           demandTime: this.currentOrder.demandTime,
           type: Number(this.currentOrder.goodsType),
           warehouseId: this.currentOrder.warehouseId,
-          detailDtoList: []
+          detailDtoList: [],
+          remark: ''
         };
         this.changeType('edit');
         this.$nextTick(() => {
