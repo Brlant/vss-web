@@ -226,7 +226,7 @@
         Address.queryAddress(this.currentOrder.customerId, {
           deleteFlag: false,
           auditedStatus: '1',
-          orgId: this.currentOrder.customerId
+          orgId: this.currentOrder.customerId, status: 0
         }).then(res => {
           this.warehouses = res.data || [];
         });

@@ -490,7 +490,7 @@
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
-          auditedStatus: '1'
+          auditedStatus: '1', status: 0
         }).then(res => {
           this.cdcWarehouses = res.data;
           let defaultStore = res.data.filter(item => item.default);
