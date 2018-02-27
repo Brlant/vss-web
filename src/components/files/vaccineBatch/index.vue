@@ -135,7 +135,7 @@
 
       </div>
 
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <div class="text-center" v-show="batches.length && !loadingData">
         <el-pagination
           layout="prev, pager, next"
           :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatcheNumbers"
