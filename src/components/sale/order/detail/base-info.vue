@@ -348,7 +348,7 @@
         Address.queryAddress(this.currentOrder.customerId, {
           deleteFlag: false,
           auditedStatus: '1',
-          orgId: this.currentOrder.customerId
+          orgId: this.currentOrder.customerId, status: 0
         }).then(res => {
           this.warehouses = res.data || [];
         });
@@ -375,7 +375,7 @@
         Address.queryAddress(this.currentOrder.orgId, {
           deleteFlag: false,
           orgId: this.currentOrder.orgId,
-          auditedStatus: '1'
+          auditedStatus: '1', status: 0
         }).then(res => {
           this.LogisticsCenter = res.data;
         });

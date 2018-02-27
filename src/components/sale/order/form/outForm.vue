@@ -746,7 +746,8 @@
             Address.queryAddress(this.form.orgId, {
               deleteFlag: false,
               orgId: this.form.orgId,
-              auditedStatus: '1'
+              auditedStatus: '1',
+              status: 0
             }).then(res => {
               this.warehouses = res.data;
             });
@@ -794,7 +795,8 @@
           this.form.transportationAddress = '';
           return;
         }
-        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1'}).then(res => {
+        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0
+        }).then(res => {
           this.warehouses = res.data || [];
           // let fs = this.warehouses.filter(i => i.default)[0];
           // this.form.transportationAddress = fs && fs.id || '';
@@ -817,7 +819,8 @@
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
-          auditedStatus: '1'
+          auditedStatus: '1',
+          status: 0
         }).then(res => {
           this.LogisticsCenter = res.data;
           let defaultStore = res.data.filter(item => item.default);

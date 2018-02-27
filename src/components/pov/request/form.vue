@@ -543,7 +543,7 @@
       },
       searchWarehouses (isEdit) {
         let user = this.$store.state.user;
-        Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress, auditedStatus: '1'}).then(res => {
+        Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress, auditedStatus: '1', status: 0}).then(res => {
           this.warehouses = res.data || [];
           if (isEdit === 'edit') return;
           // 以前去默认仓库地址
