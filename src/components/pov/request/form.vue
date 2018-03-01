@@ -724,6 +724,7 @@
           saveData.detailDtoList.forEach(item => {
             item.price = item.unitPrice;
             item.applyCount = item.amount;
+            item.isCombination && (item.combinationSign = 1);
             delete item.fixInfo;
             delete item.mainOrgId;
             delete item.isCombination;
