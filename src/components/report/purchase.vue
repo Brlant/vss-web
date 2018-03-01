@@ -110,7 +110,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" border ref="reportTable" border
+      <el-table :data="reportList" class="header-list" border ref="reportTable" border :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :maxHeight="getHeight">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true"></el-table-column>
@@ -118,8 +118,16 @@
         <el-table-column prop="orgName" label="保管帐" :sortable="true"></el-table-column>
         <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true"></el-table-column>
-        <el-table-column prop="price" label="进货单价" :sortable="true"></el-table-column>
-        <el-table-column prop="totalMoney" label="金额" :sortable="true"></el-table-column>
+        <el-table-column prop="price" label="进货单价" :sortable="true">
+          <template slot-scope="scope">
+            <span>￥{{scope.row.price ? scope.row.price : 0}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="totalMoney" label="金额" :sortable="true">
+          <template slot-scope="scope">
+            <span>￥{{scope.row.totalMoney}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
         <el-table-column prop="expirationDate" label="有效期至" :sortable="true"></el-table-column>
         <el-table-column prop="operateTime" label="上架时间" :sortable="true"></el-table-column>
@@ -188,14 +196,45 @@
           this.reportList = res.data.map(m => {
             m.createTime = this.formatTime(m.createTime);
             m.expirationDate = this.formatTime(m.expirationDate);
-            m.price = m.price ? `￥${m.price}` : '';
-            m.totalMoney = `￥${m.totalMoney}`;
             m.operateTime = this.formatTime(m.operateTime, 'YYYY-MM-DD HH:mm');
             return m;
           });
           this.loadingData = false;
           this.setFixedHeight();
         });
+      },
+      getSummaries (param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (column.property !== 'count' && column.property !== 'totalMoney') {
+            sums[index] = '';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = '';
+          }
+        });
+        sums.forEach((i, index) => {
+          if (index === 7) {
+            sums[index] = '￥' + i;
+          }
+        });
+        return sums;
       },
       resetSearchForm: function () {
         this.searchWord = {
