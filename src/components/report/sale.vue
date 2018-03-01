@@ -120,7 +120,8 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight"  border
+      <el-table :data="reportChildList" class="header-list" ref="reportTable"
+                :maxHeight="getHeight"  border :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="orderNo" label="货主订单号" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true" width="120"></el-table-column>
@@ -128,13 +129,28 @@
         <el-table-column prop="orgName" label="保管帐" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true" width="90"></el-table-column>
-        <el-table-column prop="price" label="单价" :sortable="true" width="90"></el-table-column>
-        <el-table-column prop="totalMoney" label="金额" :sortable="true" width="90"></el-table-column>
+        <el-table-column prop="price" label="单价" :sortable="true" width="90">
+          <template slot-scope="scope">
+            <span>￥{{scope.row.price ? scope.row.price : 0}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="totalMoney" label="金额" :sortable="true" width="90">
+          <template slot-scope="scope">
+            <span>￥{{scope.row.totalMoney}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="expirationDate" label="有效期至" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="arriveDate" label="送达日期" :sortable="true" width="100"></el-table-column>
         <el-table-column prop="address" label="送货地址" :sortable="true" width="120"></el-table-column>
       </el-table>
+      <div class="text-center" v-show="pager.count > 20">
+        <el-pagination
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :total="pager.count" :page-sizes="[20,50,100]" :pageSize="pager.pageSize"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -149,6 +165,7 @@
       return {
         loadingData: false,
         reportList: [],
+        reportChildList: [],
         showSearch: true,
         searchWord: {
           suppliers: '',
@@ -164,12 +181,17 @@
         orgGoods: [],
         batchNumberList: [],
         bizDateAry: '',
-        isLoading: false
+        isLoading: false,
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20
+        }
       };
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 110 + this.fixedHeight;
+        return parseInt(this.$store.state.bodyHeight, 10) - 190 + this.fixedHeight;
       }
     },
     methods: {
@@ -195,19 +217,75 @@
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
+        this.pager.currentPage = 1;
         this.loadingData = true;
         this.$http.get('/erp-statement/sale-detail', {params}).then(res => {
           this.reportList = res.data.map(m => {
             m.createTime = this.formatTime(m.createTime);
             m.expirationDate = this.formatTime(m.expirationDate);
             m.arriveDate = this.formatTime(m.arriveDate);
-            m.price = m.price ? `￥${m.price}` : '';
-            m.totalMoney = `￥${m.totalMoney}`;
             return m;
           });
+          this.pager.count = this.reportList.length;
+          if (this.pager.count > 100) {
+            this.getCurrentList(1);
+          } else {
+            this.reportChildList = this.reportList;
+          }
           this.loadingData = false;
           this.setFixedHeight();
         });
+      },
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getCurrentList(1);
+      },
+      handleCurrentChange(val) {
+        this.getCurrentList(val);
+      },
+      getCurrentList (pageNo) {
+        this.loadingData = true;
+        this.pager.currentPage = pageNo;
+        const {pager} = this;
+        let start = (pageNo - 1) * pager.pageSize;
+        let end = pageNo * pager.pageSize;
+        this.reportChildList = end > pager.count ? this.reportList.slice(start) : this.reportList.slice(start, end);
+        setTimeout(() => {
+          this.loadingData = false;
+        }, 300);
+      },
+      getSummaries (param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (column.property !== 'count' && column.property !== 'totalMoney') {
+            sums[index] = '';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = '';
+          }
+        });
+        sums.forEach((i, index) => {
+          if (index === 7) {
+            sums[index] = '￥' + i;
+          }
+        });
+        return sums;
       },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.$store.state.user.userCompanyAddress;
@@ -261,6 +339,7 @@
           this.orgGoods = res.data.list;
         });
       },
+
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
