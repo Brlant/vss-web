@@ -144,7 +144,7 @@
         <el-table-column prop="arriveDate" label="送达日期" :sortable="true" width="100"></el-table-column>
         <el-table-column prop="address" label="送货地址" :sortable="true" width="120"></el-table-column>
       </el-table>
-      <div class="text-center" v-show="pager.count > 20">
+      <div class="text-center" v-show="reportChildList.length">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
           :total="pager.count" :page-sizes="[20,50,100]" :pageSize="pager.pageSize"
@@ -227,11 +227,7 @@
             return m;
           });
           this.pager.count = this.reportList.length;
-          if (this.pager.count > 100) {
-            this.getCurrentList(1);
-          } else {
-            this.reportChildList = this.reportList;
-          }
+          this.getCurrentList(1);
           this.loadingData = false;
           this.setFixedHeight();
         });
