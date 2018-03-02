@@ -110,7 +110,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" border ref="reportTable" border :summary-method="getSummaries" show-summary
+      <el-table :data="reportChildList" class="header-list" border ref="reportTable" border :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :maxHeight="getHeight">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true"></el-table-column>
@@ -132,6 +132,13 @@
         <el-table-column prop="expirationDate" label="有效期至" :sortable="true"></el-table-column>
         <el-table-column prop="operateTime" label="上架时间" :sortable="true"></el-table-column>
       </el-table>
+      <div class="text-center" v-show="reportChildList.length">
+        <el-pagination
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :total="pager.count" :page-sizes="[20,50,100]" :pageSize="pager.pageSize"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
     </div>
 
   </div>
@@ -147,6 +154,7 @@
       return {
         loadingData: false,
         reportList: [],
+        reportChildList: [],
         showSearch: true,
         searchWord: {
           suppliers: '',
@@ -160,12 +168,17 @@
         orgGoods: [],
         batchNumberList: [],
         bizDateAry: '',
-        isLoading: false
+        isLoading: false,
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20
+        }
       };
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 110 + this.fixedHeight;
+        return parseInt(this.$store.state.bodyHeight, 10) - 150 + this.fixedHeight;
       }
     },
     methods: {
@@ -199,9 +212,29 @@
             m.operateTime = this.formatTime(m.operateTime, 'YYYY-MM-DD HH:mm');
             return m;
           });
+          this.pager.count = this.reportList.length;
+          this.getCurrentList(1);
           this.loadingData = false;
           this.setFixedHeight();
         });
+      },
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getCurrentList(1);
+      },
+      handleCurrentChange(val) {
+        this.getCurrentList(val);
+      },
+      getCurrentList (pageNo) {
+        this.loadingData = true;
+        this.pager.currentPage = pageNo;
+        const {pager} = this;
+        let start = (pageNo - 1) * pager.pageSize;
+        let end = pageNo * pager.pageSize;
+        this.reportChildList = this.reportList.slice(start, end > pager.count ? pager.count : end);
+        setTimeout(() => {
+          this.loadingData = false;
+        }, 300);
       },
       getSummaries (param) {
         const {columns, data} = param;
