@@ -124,6 +124,17 @@
         min-width: 40px;
       }
     }
+    .main-nav-scrollbar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 30px;
+      left: 0;
+    }
+    .main-nav-scrollbar /deep/ .el-scrollbar__wrap {
+      overflow: hidden;
+      overflow-y: auto;
+    }
     .change-collapse {
       position: absolute;
       right: 0;
@@ -265,7 +276,11 @@
       </div>
     </header>
     <div class="main-nav" :style="'width:'+menuWidth">
-      <div class="menu-wrap" :style="isCollapse?'':'overflow-y:auto;'">
+      <el-scrollbar
+        tag="div"
+        ref="scrollbar"
+        class="main-nav-scrollbar"
+        v-show="menu.length > 0">
         <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="false"
                  :default-openeds="defaultOpenMenus" style="margin-bottom: 27px">
           <template v-for="item in menu">
@@ -288,7 +303,7 @@
             </el-menu-item>
           </template>
         </el-menu>
-      </div>
+      </el-scrollbar>
       <div class="change-collapse" @click="changeMenuCollapse">
         <f-a :name="isCollapse?'spread':'collapse'"></f-a>
       </div>
