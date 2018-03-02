@@ -24,9 +24,6 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
           <span class="pull-right" v-show="filters.status === 11">
           <perm label="purchansing-assignment-add" class="opera-btn">
             <span @click="createPurchaseDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
@@ -45,7 +42,7 @@
                 class="el-icon-t-plus"></i></a><span class="wave-title">新增分货</span></span>
             </perm>
          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
