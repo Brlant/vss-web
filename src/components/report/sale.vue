@@ -245,7 +245,7 @@
         const {pager} = this;
         let start = (pageNo - 1) * pager.pageSize;
         let end = pageNo * pager.pageSize;
-        this.reportChildList = end > pager.count ? this.reportList.slice(start) : this.reportList.slice(start, end);
+        this.reportChildList = this.reportList.slice(start, end > pager.count ? pager.count : end);
         setTimeout(() => {
           this.loadingData = false;
         }, 300);
