@@ -140,9 +140,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="接种点仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
+            <el-form-item label="接种点收货地址" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
                           v-show="showContent.isShowOtherContent" :clearable="true">
-              <el-select placeholder="请选择接种点仓库" v-model="form.transportationAddress" filterable clearable
+              <el-select placeholder="请选择接种点收货地址" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress" :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -160,11 +160,11 @@
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
-            <el-form-item label="疾控仓库地址" prop="orgAddress">
+            <el-form-item label="疾控发货地址" prop="orgAddress">
               <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true">
+              <el-select placeholder="请选择疾控发货地址" v-model="form.orgAddress" filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenter">
                   <span class="pull-left">{{ item.name }}</span>
@@ -464,13 +464,13 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择接种点仓库', trigger: 'change'}
+            {required: true, message: '请选择接种点收货地址', trigger: 'change'}
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
@@ -520,7 +520,7 @@
           isShowCustomerId: true, // 是否显示POV
           expectedTimeLabel: '预计出库时间'
         },
-        warehouses: [], // 接种点仓库列表
+        warehouses: [], // 接种点收货地址列表
         batchNumbers: [], // 货品批号列表
         selectBatchNumbers: [], // 已经选择的货品批号
         changeTotalNumber: utils.changeTotalNumber,
