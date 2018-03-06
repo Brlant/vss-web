@@ -52,8 +52,8 @@
                          v-for="item in transportationMeansList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="接种点仓库" prop="transportationAddress">
-            <el-select placeholder="请选择接种点仓库" v-model="currentOrder.transportationAddress"
+          <el-form-item label="接种点收货地址" prop="transportationAddress">
+            <el-select placeholder="请选择接种点收货地址" v-model="currentOrder.transportationAddress"
                        @change="changeWarehouseAdress"
                        filterable clearable>
               <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
@@ -81,8 +81,8 @@
               @change="changeExpectedTime">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="疾控仓库地址" prop="orgAddress">
-            <el-select placeholder="请选择疾控仓库地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
+          <el-form-item label="疾控发货地址" prop="orgAddress">
+            <el-select placeholder="请选择疾控发货地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
               <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                          v-for="item in LogisticsCenter">
                 <span class="pull-left">{{ item.name }}</span>
@@ -109,7 +109,7 @@
             <oms-row label="接种点" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
-            <oms-row label="接种点仓库" :span="span">
+            <oms-row label="接种点收货地址" :span="span">
               {{currentOrder.warehouseAddress}}
             </oms-row>
             <oms-row label="实际收货人" :span="span">
@@ -141,7 +141,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <oms-row label="疾控仓库地址" :span="4">
+          <oms-row label="疾控发货地址" :span="4">
             <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
           </oms-row>
         </el-row>
@@ -262,10 +262,10 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择接种点仓库', trigger: 'change'}
+            {required: true, message: '请选择接种点收货地址', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
