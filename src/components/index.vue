@@ -87,7 +87,7 @@
 <template>
   <div class="app-body full-width" :style="'padding-left:'+bodyLeft">
     <app-header :to-route="toRoute" v-if="userType" :level="level"></app-header>
-    <div class="main-body" style="padding:0 8px;">
+    <div class="main-body">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
         <router-view class="app-content-view"></router-view>
