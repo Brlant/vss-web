@@ -50,12 +50,12 @@ ul, ol, li {
 .full-width .container {
   width: auto;
   max-width: none;
-  margin-left: 15px;
-  margin-right: 15px;
+  margin-left: 10px;
+  margin-right: 10px;
 }
 
 .full-width .container.d-table {
-  width: calc(100% - 30px);
+  width: calc(100% - 20px);
 }
 
 .full-width .container .container {
