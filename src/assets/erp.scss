@@ -1,4 +1,5 @@
 
+@import "login";
 [v-cloak] {
   display: none
 }
@@ -13,6 +14,12 @@
 
 .f20 {
   font-size: 20px;
+}
+
+
+.R {
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 .overflow-hidden {
@@ -34,7 +41,7 @@
   background: #eee;
 }
 
-@leftWidth: 260px;
+$leftWidth: 260px;
 .content-part {
   position: absolute;
   top: 0;
@@ -43,13 +50,13 @@
   right: 0;
   overflow: auto;
   .content-left {
-    width: @leftWidth;
+    width: $leftWidth;
     position: absolute;
     left: 0;
     top: 0;
     bottom: 0;
     text-align: left;
-    background-color: @dialog-left-bg;
+    background-color: $dialog-left-bg;
     > h2 {
       text-align: center;
       padding: 0;
@@ -58,7 +65,7 @@
       font-weight: bold;
       line-height: 55px;
       border-bottom: 1px solid #ddd;
-      background-color: @dialog-left-bg;
+      background-color: $dialog-left-bg;
     }
 
     .list-style {
@@ -71,9 +78,9 @@
       }
       &.active {
         span {
-          background-color: @activeColor;
+          background-color: $activeColor;
           border-radius: 20px;
-          color: @activeColorFont
+          color: $activeColorFont
         }
         &.active.danger {
           span {
@@ -104,7 +111,7 @@
         text-align: center;
         cursor: pointer;
         &:hover, &.active {
-          background: @activeColor;
+          background: $activeColor;
           color: #fff;
         }
       }
@@ -123,7 +130,7 @@
         margin: 10px auto;
         border-radius: 5px;
         text-align: center;
-        background: @activeColor;
+        background: $activeColor;
         color: #fff;
         cursor: pointer;
       }
@@ -142,13 +149,13 @@
       top: 0;
       right: 0;
       height: 55px;
-      left: @leftWidth;
+      left: $leftWidth;
       background: #fff;
       z-index: 2;
     }
     position: absolute;
     top: 0;
-    left: @leftWidth;
+    left: $leftWidth;
     right: 0;
     bottom: 0;
     overflow: auto;
@@ -212,7 +219,7 @@
         font-weight: normal;
         a {
           &:hover {
-            color: @activeColor
+            color: $activeColor
           }
         }
       }
@@ -220,7 +227,7 @@
     }
   }
   td a:hover {
-    color: @activeColor;
+    color: $activeColor;
 
   }
 }
@@ -254,11 +261,11 @@
     .hover-show {
       display: block;
       a:hover {
-        color: @activeColor
+        color: $activeColor
       }
     }
     a.hover-show:hover {
-      color: @activeColor
+      color: $activeColor
     }
   }
 }
@@ -274,14 +281,14 @@
   cursor: pointer;
   &:hover {
     color: #fff;
-    background: @activeColor;
+    background: $activeColor;
   }
 
 }
 
 .page-right-part {
   position: fixed;
-  top: @topMenuHeight;
+  top: $topMenuHeight;
   bottom: 0;
   right: 0;
   z-index: 50;
@@ -295,7 +302,7 @@
 .page-right-part-bg {
   background: rgba(0, 0, 0, 0.5);
   position: fixed;
-  top: @topMenuHeight;
+  top: $topMenuHeight;
   bottom: 0;
   left: 0;
   right: 0;
@@ -341,8 +348,8 @@
     color: #333;
   }
   &:hover {
-    background: @activeColor;
-    color: @activeColorFont;
+    background: $activeColor;
+    color: $activeColorFont;
   }
 }
 
@@ -422,6 +429,13 @@
     &.active {
       width: 85px;
     }
+
+    &.cancelPosition {
+      position: absolute;
+      right: 0;
+      top: 50%;
+      transform: translateY(-50%);
+    }
   }
   align-items: center;
 }
@@ -433,8 +447,8 @@
   transform: translateY(-50%);
   margin-top: 15px;
   border: 1px solid #eee;
-  background: @activeColor;
-  color: @activeColorFont;
+  background: $activeColor;
+  color: $activeColorFont;
   padding: 8px 15px;
   font-size: 14px;
   border-radius: 5px;
@@ -454,8 +468,8 @@
     padding: 10px 20px;
     border-radius: 20px;
     &.active, &:hover {
-      background: @activeColor;
-      color: @activeColorFont;
+      background: $activeColor;
+      color: $activeColorFont;
     }
   }
 }
@@ -490,10 +504,6 @@
   text-align: center;
   color: #999;
   margin-top: 120px;
-  &.mini {
-    margin-top: 5px;
-    height: auto;
-  }
 }
 
 .empty-type-info {
@@ -504,56 +514,57 @@
   color: #999
 }
 
+
 .order-detail-info {
   font-size: 12px;
 }
 
 .b_color_0 {
-  background: @order_color_0;
+  background: $order_color_0;
 }
 
 .b_color_1 {
-  background: @order_color_1;
+  background: $order_color_1;
 }
 
 .b_color_2 {
-  background: @order_color_2;
+  background: $order_color_2;
 }
 
 .b_color_3 {
-  background: @order_color_3;
+  background: $order_color_3;
 }
 
 .b_color_4 {
-  background: @order_color_4;
+  background: $order_color_4;
 }
 
 .b_color_5 {
-  background: @order_color_5;
+  background: $order_color_5;
 }
 
 .b_color_6 {
-  background: @order_color_6;
+  background: $order_color_6;
 }
 
 .b_color_7 {
-  background: @order_color_7;
+  background: $order_color_7;
 }
 
 .b_color_8 {
-  background: @order_color_8;
+  background: $order_color_8;
 }
 
 .b_color_9 {
-  background: @order_color_9;
+  background: $order_color_9;
 }
 
 .b_color_10 {
-  background: @order_color_10;
+  background: $order_color_10;
 }
 
 .b_color_11 {
-  background: @order_color_11;
+  background: $order_color_11;
 }
 
 // 订单部分
@@ -567,9 +578,19 @@
   // background: #f1f1f1;
   .advanced-query-form {
     background: #fff;
-    padding: 0 20px 20px;
+    padding: 20px;
+    .el-select {
+      display: block;
+      position: relative;
+    }
+    .el-date-editor.el-input {
+      width: 100%;
+    }
   }
+
 }
+
+
 
 .el-input.inline-input {
   width: auto;
@@ -605,10 +626,10 @@
 .order-list {
 
   .order-list-header {
-    background: @tableHeaderColor;
+    background: $tableHeaderColor;
     line-height: 45px;
-    padding-left: 10px;
-    margin-bottom: 5px;
+    padding-left: 15px;
+    margin:0 -5px 5px -5px;
   }
   .order-list-body {
     .order-list-item {
@@ -616,7 +637,7 @@
       background: #fff;
       margin-left: -5px;
       margin-right: -5px;
-      padding: 10px 5px 10px 10px;
+      padding: 10px 5px 10px 15px;
       margin-top: 10px;
       box-shadow: 0 1px 2px rgba(51, 51, 51, 0.15);
       font-weight: 500;
@@ -634,194 +655,187 @@
       }
       &.order-list-item-bg {
         &:hover, &.active {
-          background: @dialog-left-bg;
+          background: $dialog-left-bg;
         }
       }
       .el-row {
         position: relative;
         z-index: 3;
-
         .f-grey {
           color: #888
         }
         .el-col {
-          padding-right: 5px;
-          padding-left: 5px;
+          padding-right: 10px;
         }
       }
-      //&:hover, &.active {
-      //  .order-list-item-bg {
-      //    background: #f00
-      //  }
-      //}
 
       &.status-0 {
         .order-list-item-bg {
-          border-left-color: @order_color_0
+          border-left-color: $order_color_0
         }
 
         &:hover, &.active {
           .order-list-item-bg {
-            //background: @order_color_0
+            //background: $order_color_0
             opacity: 1;
           }
-          box-shadow: 2px 0px 5px 2px @order_color_0
+          box-shadow: 2px 0px 5px 2px $order_color_0
         }
       }
 
       &.status-1 {
         .order-list-item-bg {
-          border-left-color: @order_color_1;
+          border-left-color: $order_color_1;
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity: 1;
-            //background: @order_color_1
-            //box-shadow: 0 0 5px 2px @order_color_1
+            //background: $order_color_1
+            //box-shadow: 0 0 5px 2px $order_color_1
           }
-          box-shadow: 2px 0px 5px 2px @order_color_1
+          box-shadow: 2px 0px 5px 2px $order_color_1
         }
       }
       &.status-2 {
         .order-list-item-bg {
-          border-left-color: @order_color_2
+          border-left-color: $order_color_2
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity: 1;
-            //background: @order_color_2
-            //box-shadow: 0 0 10px 2px @order_color_2
+            //background: $order_color_2
+            //box-shadow: 0 0 10px 2px $order_color_2
           }
-          box-shadow: 2px 0px 5px 2px @order_color_2
+          box-shadow: 2px 0px 5px 2px $order_color_2
         }
       }
       &.status-3 {
         .order-list-item-bg {
-          border-left-color: @order_color_3
+          border-left-color: $order_color_3
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity: 1;
-            //background: @order_color_3 //2px 0px 5px 2px #0c9
-            //box-shadow: 0 0 5px 2px @order_color_3
+            //background: $order_color_3 //2px 0px 5px 2px #0c9
+            //box-shadow: 0 0 5px 2px $order_color_3
             //box-shadow: 2px 0px 5px 2px #0c9
           }
-          box-shadow: 2px 0px 5px 2px @order_color_3
+          box-shadow: 2px 0px 5px 2px $order_color_3
         }
       }
       &.status-4 {
         .order-list-item-bg {
-          border-left-color: @order_color_4
+          border-left-color: $order_color_4
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity:1;
-            //background: @order_color_4
-            //box-shadow: 0 0 5px 2px @order_color_4
+            //background: $order_color_4
+            //box-shadow: 0 0 5px 2px $order_color_4
           }
-          box-shadow: 2px 0px 5px 2px @order_color_4
+          box-shadow: 2px 0px 5px 2px $order_color_4
         }
       }
       &.status-5 {
         .order-list-item-bg {
-          border-left-color: @order_color_5
+          border-left-color: $order_color_5
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity:1;
-            //background: @order_color_5
-            //box-shadow: 0 0 5px 2px @order_color_5
+            //background: $order_color_5
+            //box-shadow: 0 0 5px 2px $order_color_5
           }
-          box-shadow: 2px 0px 5px 2px @order_color_5
+          box-shadow: 2px 0px 5px 2px $order_color_5
         }
       }
       &.status-6 {
         .order-list-item-bg {
-          border-left-color: @order_color_6
+          border-left-color: $order_color_6
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity:1;
-            //background: @order_color_6
-            //box-shadow: 0 0 5px 2px @order_color_6
+            //background: $order_color_6
+            //box-shadow: 0 0 5px 2px $order_color_6
           }
-          box-shadow: 2px 0px 5px 2px @order_color_6
+          box-shadow: 2px 0px 5px 2px $order_color_6
         }
       }
       &.status-7 {
         .order-list-item-bg {
-          border-left-color: @order_color_7
+          border-left-color: $order_color_7
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity:1;
-            //background: @order_color_7
-            //box-shadow: 0 0 5px 2px @order_color_7
+            //background: $order_color_7
+            //box-shadow: 0 0 5px 2px $order_color_7
           }
-          box-shadow: 2px 0px 5px 2px @order_color_7
+          box-shadow: 2px 0px 5px 2px $order_color_7
         }
       }
       &.status-8 {
         .order-list-item-bg {
-          border-left-color: @order_color_8
+          border-left-color: $order_color_8
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity:1;
-            //background: @order_color_8
-            //box-shadow: 0 0 5px 2px @order_color_8
+            //background: $order_color_8
+            //box-shadow: 0 0 5px 2px $order_color_8
           }
-          box-shadow: 2px 0px 5px 2px @order_color_8
+          box-shadow: 2px 0px 5px 2px $order_color_8
         }
       }
       &.status-9 {
         .order-list-item-bg {
-          border-left-color: @order_color_9
+          border-left-color: $order_color_9
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity:1;
-            //background: @order_color_9
-            //box-shadow: 0 0 5px 2px @order_color_9
+            //background: $order_color_9
+            //box-shadow: 0 0 5px 2px $order_color_9
           }
-          box-shadow: 2px 0px 5px 2px @order_color_9
+          box-shadow: 2px 0px 5px 2px $order_color_9
         }
       }
       &.status-10 {
         .order-list-item-bg {
-          border-left-color: @order_color_10
+          border-left-color: $order_color_10
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity:1;
-            //background: @order_color_10
-            //box-shadow: 0 0 5px 2px @order_color_10
+            //background: $order_color_10
+            //box-shadow: 0 0 5px 2px $order_color_10
           }
-          box-shadow: 2px 0px 5px 2px @order_color_10
+          box-shadow: 2px 0px 5px 2px $order_color_10
         }
       }
       &.status-11 {
         .order-list-item-bg {
-          border-left-color: @order_color_11
+          border-left-color: $order_color_11
         }
 
         &:hover, &.active {
           .order-list-item-bg {
             opacity:1;
-            //background: @order_color_11
-            //box-shadow: 0 0 5px 2px @order_color_11
+            //background: $order_color_11
+            //box-shadow: 0 0 5px 2px $order_color_11
           }
-          box-shadow: 2px 0px 5px 2px @order_color_11
+          box-shadow: 2px 0px 5px 2px $order_color_11
         }
       }
     }
@@ -839,45 +853,15 @@
 }
 
 .opera-btn span:hover {
-  color: @activeColor;
+  color: $activeColor;
   cursor: pointer;
   a {
-    background: @activeColor;
+    background: $activeColor;
     color: #fff;
   }
 }
 
-.opera-btn-group {
-  border: 2px solid #eeeeee;
-  margin: 10px -5px;
-  background: #f1f1f1;
-  .opera-icon {
-    line-height: 50px;
-    height: 50px;
-    padding: 0 10px;
-    border-bottom: 2px solid #eeeeee;
-  }
-  .switching-icon {
-    cursor: pointer;
-    .el-icon-arrow-up {
-      transition: all .5s ease-in-out;
-    }
-  }
-  &.up {
-    .advanced-query-form {
-      display: none;
-    }
-    .opera-icon {
-      border-bottom: 0;
-    }
-    .el-icon-arrow-up {
-      transform: rotate(180deg);
-    }
-  }
-  .el-checkbox-warp {
-    padding: 10px;
-  }
-}
+
 
 .el-button-group {
 
@@ -906,29 +890,6 @@
   color: #999 !important;
 }
 
-.good-selects {
-  .el-select-dropdown__item {
-    height: auto;
-    width: 430px;
-  }
-}
-
-.el-select-dropdown__item {
-  padding-top: 4px;
-  padding-bottom: 4px;
-  span {
-    line-height: initial !important;
-  }
-  .el-tag {
-    line-height: 22px !important;
-    height: 22px;
-    float: left;
-    padding: 0 5px;
-  }
-  .select-other-info {
-    line-height: initial;
-  }
-}
 .select-other-info {
   color: #999;
   margin-left: 10px
@@ -1026,6 +987,26 @@
   }
 }
 
+
+.good-selects, .order-good-selects {
+  .el-select-dropdown__item {
+    padding-top: 4px;
+    padding-bottom: 4px;
+    height: auto;
+    span {
+      line-height: initial !important;
+    }
+    .el-tag {
+      line-height: 22px !important;
+      height: 22px;
+      float: left;
+      padding: 0 5px;
+    }
+    .select-other-info {
+      line-height: initial;
+    }
+  }
+}
 //2.0变化
 
 .app-body {
@@ -1042,6 +1023,12 @@
     height: 22px;
     line-height: 20px;
   }
+  .el-tag--small {
+    height: 24px;
+    padding: 0 8px;
+    line-height: 22px;
+    color: #00BFFF
+  }
   .el-button {
     padding: 10px 15px;
   }
@@ -1054,13 +1041,8 @@
   .el-input__inner {
     height: 36px;
   }
-  .el-form-item__content {
-    line-height: 36px;
-    position: relative;
-    font-size: 14px;
-  }
-  .el-form-item__label {
-    line-height: 36px;
+  .el-form-item {
+    margin-bottom: 20px;
   }
   .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
     max-width: 350px;
@@ -1110,7 +1092,14 @@
     overflow: visible;
     text-overflow: clip;
   }
+  .el-pagination {
+    margin-top: 8px;
+  }
 
+  .el-menu-item, .el-submenu__title {
+    height: 46px;
+    line-height: 46px;
+  }
 }
 
 .pay-part {
@@ -1137,9 +1126,12 @@
 
 /*库存查询，近效期变色*/
 .effective-row {
-  color: red;
+  color: $order_color_6;
 }
-
+/*库存查询，过期变色*/
+.danger-row {
+  color: $error-color;
+}
 
 #valid-tooltip {
   z-index: 2000;
@@ -1150,4 +1142,81 @@
   font-size: 12px;
   color: #ffffff;
 
+}
+
+.m-total-count {
+  font-weight: 600;
+}
+
+
+
+.minor-part {
+  color: #999;
+}
+
+.search-input {
+  .el-select {
+    display: block;
+    position: relative;
+  }
+  .el-date-editor.el-input {
+    width: 100%;
+  }
+}
+
+.opera-btn-group {
+  border: 2px solid #eeeeee;
+  margin: 10px -5px;
+  background: #f1f1f1;
+  .opera-icon {
+    line-height: 50px;
+    height: 50px;
+    padding: 0 10px;
+    border-bottom: 2px solid #eeeeee;
+  }
+  .switching-icon {
+    cursor: pointer;
+    &:hover {
+      color: $activeColor;
+      .btn-circle {
+        color: #fff;
+        background: $activeColor;
+      }
+    }
+    .el-icon-arrow-up {
+      transition: all .5s ease-in-out;
+    }
+  }
+  &.up {
+    .advanced-query-form {
+      display: none;
+    }
+    .opera-icon {
+      border-bottom: 0;
+    }
+    .el-icon-arrow-up {
+      transform: rotate(180deg);
+    }
+  }
+  .el-checkbox-warp {
+    padding: 10px;
+  }
+}
+
+
+
+
+.product-list-detail {
+  margin-top: 20px;
+  font-size: 12px;
+  h3 {
+    background: #eee;
+    padding: 10px 15px;
+    font-size: 14px;
+    font-weight: normal;
+  }
+}
+
+.el-date-editor--datetimerange.el-input__inner {
+  width: auto;
 }

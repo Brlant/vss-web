@@ -1,14 +1,4 @@
-<style lang="less">
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
+<style lang="scss">
 
   .no-batch-number-info {
     padding: 5px;
@@ -38,11 +28,11 @@
           <tbody>
           <tr v-for=" batchNumber in item.lots">
             <td>
-              <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
+              <el-checkbox v-model="batchNumber.isChecked" :disabled="batchNumber.disabled"></el-checkbox>
             </td>
             <td>
               <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                        @blur="isChangeValue(batchNumber, item)">
+                        @blur="isChangeValue(batchNumber, item)" :disabled="batchNumber.disabled">
                 <template slot="append">
                   <dict :dict-group="'measurementUnit'"
                         :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
@@ -51,7 +41,8 @@
             </td>
             <td>
               {{ batchNumber.no }}
-              <el-tag v-show="batchNumber.inEffectiveFlag" type="danger">近效期</el-tag>
+              <el-tag v-show="batchNumber.inEffectiveFlag" type="warning">近效期</el-tag>
+              <el-tag v-show="batchNumber.disabled" type="danger">已过期</el-tag>
             </td>
             <td>{{ batchNumber.count }}</td>
             <td>{{ batchNumber.productionDate | date }}</td>
@@ -157,13 +148,17 @@
             orgId: this.form.orgId,
             orgGoodsId: m.orgGoodsId
           };
-          return this.$http.get('/erp-stock/valid/batch', {params});
+          return this.$http.get(this.form.bizType !== '1' ||
+          this.form.qualifiedFlag ? '/erp-stock/valid/batch' : '/erp-stock/unqualified/batch', {params});
         })).then(
           axios.spread((...args) => {
             this.batchNumbers.forEach((i, index) => {
               args[index].data.forEach(f => {
                 f.isChecked = false;
                 f.productCount = '';
+                if (this.form.bizType === '0') {
+                  f.disabled = this.isValid(f);
+                }
               });
               i.lots = args[index].data || [];
             });
@@ -171,6 +166,11 @@
             this.doing = false;
           })
         );
+      },
+      isValid(item) {
+        let a = this.$moment();
+        let b = this.$moment(item.expirationDate);
+        return a > b ;
       },
       /**
        * 编辑货品时，重设对应批号信息
@@ -231,7 +231,7 @@
        */
       checkItemAll (item) {
         item.lots.forEach(l => {
-          l.isChecked = item.isCheckedAll;
+          l.isChecked = item.isCheckedAll && !l.disabled;
         });
       },
       /**

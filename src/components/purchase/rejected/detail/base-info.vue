@@ -1,8 +1,4 @@
-<style lang="less" scoped="">
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
+<style lang="scss" scoped="">
 
   .oms-row {
     margin-bottom: 8px;
@@ -40,6 +36,9 @@
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
+            <oms-row label="疾控仓库地址" :span="span">
+              <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -54,15 +53,14 @@
             <oms-row label="预计出库时间" v-show="currentOrder.expectedTime">
               <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
             </oms-row>
+            <oms-row label="是否合格">
+              <span class="goods-span" v-show="currentOrder.qualifiedFlag">合格</span>
+              <span class="goods-span" v-show="!currentOrder.qualifiedFlag">不合格</span>
+            </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
           </el-col>
-        </el-row>
-        <el-row style="margin-bottom:0">
-          <oms-row label="疾控仓库地址" :span="3">
-            <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
-          </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
           <oms-row label="备注" :span="3">{{ currentOrder.remark }}</oms-row>
@@ -76,6 +74,7 @@
         <thead>
         <tr>
           <td></td>
+          <td></td>
           <td>名称</td>
           <td class="text-center">供货厂商</td>
           <td>批号</td>
@@ -87,11 +86,12 @@
         </tr>
         </thead>
         <tbody>
-        <tr v-for="item in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
-          <td width="70px">
+        <tr v-for="(item,index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
+          <td width="10">{{index + 1}}</td>
+          <td width="80">
             <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                         effect="light" placement="right">
-              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_60,h_60,m_2' "
+              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
                    class="product-img">
               <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
                    class="product-img">
@@ -101,7 +101,7 @@
               <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
             </el-tooltip>
           </td>
-          <td width="160px">
+          <td>
             <div>
               <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
                 <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
@@ -140,7 +140,7 @@
           <!--</td>-->
         </tr>
         <tr class="text-center">
-          <td colspan="7" align="right">
+          <td colspan="8" align="right">
             <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
           </td>
           <!--<td colspan="2" align="right">-->
@@ -226,7 +226,7 @@
         Address.queryAddress(this.currentOrder.customerId, {
           deleteFlag: false,
           auditedStatus: '1',
-          orgId: this.currentOrder.customerId
+          orgId: this.currentOrder.customerId, status: 0
         }).then(res => {
           this.warehouses = res.data || [];
         });

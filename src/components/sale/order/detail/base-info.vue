@@ -1,8 +1,4 @@
-<style lang="less" scoped="">
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
+<style lang="scss" scoped="">
 
   .oms-row {
     margin-bottom: 8px;
@@ -56,8 +52,8 @@
                          v-for="item in transportationMeansList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="接种点仓库" prop="transportationAddress">
-            <el-select placeholder="请选择接种点仓库" v-model="currentOrder.transportationAddress"
+          <el-form-item label="接种点收货地址" prop="transportationAddress">
+            <el-select placeholder="请选择接种点收货地址" v-model="currentOrder.transportationAddress"
                        @change="changeWarehouseAdress"
                        filterable clearable>
               <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
@@ -68,6 +64,9 @@
           </el-form-item>
           <el-form-item label="实际收货人">
             <oms-input type="text" placeholder="请输入实际收货人" v-model="currentOrder.actualConsignee"></oms-input>
+          </el-form-item>
+          <el-form-item label="收货人联系电话">
+            <oms-input type="text" placeholder="请输入收货人联系电话" v-model="currentOrder.consigneePhone" :maxlength="50"></oms-input>
           </el-form-item>
           <el-form-item label="运输条件" prop="transportationCondition">
             <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
@@ -82,8 +81,8 @@
               @change="changeExpectedTime">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="疾控仓库地址" prop="orgAddress">
-            <el-select placeholder="请选择疾控仓库地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
+          <el-form-item label="疾控发货地址" prop="orgAddress">
+            <el-select placeholder="请选择疾控发货地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
               <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                          v-for="item in LogisticsCenter">
                 <span class="pull-left">{{ item.name }}</span>
@@ -92,7 +91,7 @@
             </el-select>
           </el-form-item>
           <material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>
-          <el-form-item label="备注">
+          <el-form-item label="备注" class="clearfix">
             <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </el-form-item>
@@ -110,11 +109,14 @@
             <oms-row label="接种点" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
-            <oms-row label="接种点仓库" :span="span">
+            <oms-row label="接种点收货地址" :span="span">
               {{currentOrder.warehouseAddress}}
             </oms-row>
             <oms-row label="实际收货人" :span="span">
               <span class="goods-span">{{currentOrder.actualConsignee}}</span>
+            </oms-row>
+            <oms-row label="收货人联系电话" :span="span">
+              <span class="goods-span">{{currentOrder.consigneePhone}}</span>
             </oms-row>
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
@@ -139,7 +141,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <oms-row label="疾控仓库地址" :span="4">
+          <oms-row label="疾控发货地址" :span="4">
             <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
           </oms-row>
         </el-row>
@@ -153,7 +155,7 @@
       <table class="table no-border table-product-list" v-show="currentOrder.detailDtoList">
         <thead>
         <tr>
-          <td style="width: 30px">序号</td>
+          <td></td>
           <td></td>
           <td>名称</td>
           <td>批号</td>
@@ -166,11 +168,11 @@
         </thead>
         <tbody>
         <tr v-for="(item, index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
-          <td>{{index + 1}}</td>
-          <td width="70px">
+          <td width="10">{{index + 1}}</td>
+          <td width="80">
             <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                         effect="light" placement="right">
-              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_60,h_60,m_2' "
+              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_80,w_80,m_2' "
                    class="product-img">
               <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
                    class="product-img">
@@ -180,7 +182,7 @@
               <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
             </el-tooltip>
           </td>
-          <td width="160px">
+          <td>
             <div>
               <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
                 <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
@@ -197,12 +199,12 @@
               </el-tooltip>
             </div>
           </td>
-          <td width="80px" class="R">
+          <td width="100px" class="R">
             {{ item.batchNumber || '无' }}
-            <el-tag v-show="item.inEffectiveFlag" type="danger">近效期</el-tag>
+            <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
           </td>
           <!--<td>{{ item.productionDate | date }}</td>-->
-          <td>{{ item.expiryDate | date }}</td>
+          <td width="100px">{{ item.expiryDate | date }}</td>
           <td width="100px" class="text-center">
             {{item.amount}}
             <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
@@ -260,10 +262,10 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择接种点仓库', trigger: 'change'}
+            {required: true, message: '请选择接种点收货地址', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
@@ -346,16 +348,18 @@
         Address.queryAddress(this.currentOrder.customerId, {
           deleteFlag: false,
           auditedStatus: '1',
-          orgId: this.currentOrder.customerId
+          orgId: this.currentOrder.customerId, status: 0
         }).then(res => {
           this.warehouses = res.data || [];
         });
       },
       changeWarehouseAdress: function (val) {
         this.currentOrder.actualConsignee = '';
+        this.currentOrder.consigneePhone = '';
         this.warehouses.forEach(item => {
           if (val === item.id) {
             this.currentOrder.actualConsignee = item.contact;
+            this.currentOrder.consigneePhone = item.consigneePhone;
           }
         });
       },
@@ -371,7 +375,7 @@
         Address.queryAddress(this.currentOrder.orgId, {
           deleteFlag: false,
           orgId: this.currentOrder.orgId,
-          auditedStatus: '1'
+          auditedStatus: '1', status: 0
         }).then(res => {
           this.LogisticsCenter = res.data;
         });

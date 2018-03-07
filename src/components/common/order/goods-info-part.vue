@@ -2,7 +2,7 @@
   <div v-if="productInfo.fixInfo">
     <el-row>
       <el-col :span="12">
-        <oms-row label="小包装" :span="8">
+        <oms-row label="散件" :span="8">
           <span v-show="productInfo.fixInfo.goodsDto.smallPacking">
                       {{productInfo.fixInfo.goodsDto.smallPacking}}
           <dict :dict-group="'measurementUnit'" :dict-key="productInfo.fixInfo.goodsDto.measurementUnit"></dict>/
@@ -10,15 +10,7 @@
                 :dict-key="productInfo.fixInfo.goodsDto.smallPackageUnit"></dict>
           </span>
         </oms-row>
-        <oms-row label="中包装" :span="8">
-          <span v-show="productInfo.fixInfo.goodsDto.mediumPacking">
-            {{productInfo.fixInfo.goodsDto.mediumPacking}}
-          <dict :dict-group="'measurementUnit'" :dict-key="productInfo.fixInfo.goodsDto.measurementUnit"></dict>/
-          <dict :dict-group="'shipmentPackingUnit'"
-                :dict-key="productInfo.fixInfo.goodsDto.mediumPackageUnit"></dict>
-          </span>
-        </oms-row>
-        <oms-row label="大包装" :span="8">
+        <oms-row label="整件" :span="8">
           <span v-show="productInfo.fixInfo.goodsDto.largePacking">
           {{productInfo.fixInfo.goodsDto.largePacking}}
           <dict :dict-group="'measurementUnit'" :dict-key="productInfo.fixInfo.goodsDto.measurementUnit"></dict>

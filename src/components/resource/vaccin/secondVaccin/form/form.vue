@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -89,17 +89,10 @@
       }
     }
   }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 430px;
-    }
-  }
 </style>
 <template>
   <div>
-    <h2 class="clearfix">{{showTitle}}货主二类疫苗资料</h2>
+    <h2 class="clearfix">{{showTitle}}货主疫苗产品资料</h2>
     <el-form ref="goodSForm" :model="form" :rules="rules" label-width="120px" @submit.prevent="onSubmit('goodSForm')"
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
@@ -112,18 +105,18 @@
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="item.code">货品编号</span>  {{item.code}}
+                  v-show="item.code">货品编号:</span>{{item.code}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.specifications">货品规格</span>  {{item.specifications}}
+                v-show="item.specifications">货品规格:</span>{{item.specifications}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.approvalNumber">批准文号</span>  {{item.approvalNumber}}
+                v-show="item.approvalNumber">批准文号:</span>{{item.approvalNumber}}
                 </span>
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.factoryName">生产厂商</span>  {{ item.factoryName }}
+                v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
               </span>
             </div>
           </el-option>
@@ -139,7 +132,7 @@
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left">
-                <span>系统代码</span> {{org.manufacturerCode}}
+                <span>系统代码:</span>{{org.manufacturerCode}}
               </span>
             </div>
           </el-option>
@@ -155,6 +148,11 @@
         <el-select placeholder="请选择储存条件" v-model="form.storageConditionId">
           <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in storageCondition"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="标准单价" prop="unitPrice">
+        <oms-input type="text" v-model="form.unitPrice" placeholder="请输入标准单价" @blur="formatPrice">
+          <template slot="prepend">¥</template>
+        </oms-input>
       </el-form-item>
       <el-form-item label="中标价格" prop="bidPrice">
         <oms-input type="text" v-model="form.bidPrice" placeholder="请输入中标价格" @blur="formatPrice" @change="setPrice">
@@ -197,13 +195,13 @@
               </div>
               <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.goodsDto.code">平台货品编号</span>  {{item.orgGoodsDto.goodsDto.code}}
+                v-show="item.orgGoodsDto.goodsDto.code">平台货品编号:</span>{{item.orgGoodsDto.goodsDto.code}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                  v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                  v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
               </span>
               </div>
             </el-option>
@@ -233,7 +231,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, SuccessfulBidder, Vaccine } from '@/resources';
+  import {BaseInfo, SuccessfulBidder, Vaccine} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -267,6 +265,9 @@
           ],
           name: [
             {required: true, message: '请输入疫苗名称', trigger: 'blur'}
+          ],
+          unitPrice: [
+            {required: true, message: '请输入标准单价', trigger: 'blur'}
           ],
           bidPrice: [
             {required: true, message: '请输入中标价格', trigger: 'blur'}
@@ -332,6 +333,9 @@
         this.goodsType = '';
         if (typeof val.id === 'string') {
           this.form = this.formItem;
+          if (this.form.unitPrice) {
+            this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice ? this.form.unitPrice.toString() : '');
+          }
           if (this.form.bidPrice) {
             this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
           }
@@ -358,6 +362,7 @@
             salesFirmName: '',
             goodsIsCombination: false,
             goodsNo: '',
+            unitPrice: '',
             bidPrice: '',
             sellPrice: '',
             procurementPrice: '',
@@ -505,6 +510,7 @@
         this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice);
         this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice);
         this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice);
+        this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
       remove () {
         this.$confirm('确认删除该信息?', '', {

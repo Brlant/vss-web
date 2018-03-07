@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -71,12 +71,14 @@
     border: 1px solid #eee;
     position: relative;
     cursor: pointer;
-    width: 380px;
     margin: 5px;
     padding: 10px;
     font-size: 12px;
     img {
-      width: 380px;
+      width: auto;
+      height: auto;
+      max-width: 100%;
+      max-height: 100%;
       display: block;
       background: #ccc;
     }
@@ -207,7 +209,8 @@
               <el-row>
                 <el-col :span="12" style="padding-left:50px;">
                   <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
-                    <img :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_2':'/static/img/userpic.png' "/>
+                    <img
+                      :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -220,9 +223,9 @@
                   <!--<goods-row label="疫苗分类" :span="8">-->
                   <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
                   <!--</goods-row>-->
-                  <goods-row label="疫苗标志" :span="8">
-                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
-                  </goods-row>
+                  <!--<goods-row label="疫苗标志" :span="8">-->
+                    <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                  <!--</goods-row>-->
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
@@ -277,9 +280,9 @@
                 </el-col>
                 <el-col :span="12">
                   <goods-row label="存储类别" :span="8">
-                     <span v-for="type in data.goodsDto.storageType">
+                     <span v-for="(type,index) in data.goodsDto.storageType">
                        <dict :dict-group="'typeId'" :dict-key="type"></dict>
-                       <span v-if="data.goodsDto.storageType.length !== (index+1) ">/</span>
+                       <span v-if="(data.goodsDto.storageType.length-1) !== index ">/</span>
                        <!--<span v-if=" data.goodsDto.storageType.length!==0">/</span>-->
                     </span>
                   </goods-row>
@@ -296,28 +299,14 @@
                       v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ - {{ data.goodsDto.storageEndTemperature}} ℃
                     </span>
                   </goods-row>
-                  <goods-row label="最小发货单位" :span="8">
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="data.goodsDto.shipmentPackingUnit"
-                          v-show="data.goodsDto.packageSize"></dict>
-                    = {{ data.goodsDto.packageSize }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.largePacking"></dict>
-                  </goods-row>
-                  <goods-row label="大包装" :span="8" v-show="data.goodsDto.largePacking">
-                    {{ data.goodsDto.largePacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.largePacking"></dict>
-                  </goods-row>
-                  <goods-row label="中包装" :span="8" v-show="data.goodsDto.measurementUnit">
-                    {{ data.goodsDto.mediumPacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.mediumPacking"></dict>
-                  </goods-row>
-                  <goods-row label="小包装" :span="8" v-show="data.goodsDto.smallPacking">
-                    {{ data.goodsDto.smallPacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.smallPacking"></dict>
-                  </goods-row>
+                  <span v-for="packageDto in data.goodsDto.packageDtoList">
+                    <goods-row :label="'包装层级第' + packageDto.sort + '级'" :span="8"
+                               v-show="packageDto.conversionCount">
+                      {{ packageDto.conversionCount }}
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
+                            v-show="packageDto.conversionCount"></dict>
+                    </goods-row>
+                  </span>
                 </el-col>
               </el-row>
 
@@ -329,7 +318,7 @@
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
                   [ 疾控专用 ]
                 </el-col>
-                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='2'">
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                   [ 器械专用 ]
                 </el-col>
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
@@ -342,21 +331,21 @@
                              v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.chemicalName }}
                   </goods-row>
-                  <goods-row label="器械生产许可证号" :span="12" v-if="data.goodsDto.typeId==='2'">
+                  <goods-row label="器械生产许可证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                     {{ data.goodsDto.propertyMap.productionLicense }}
                   </goods-row>
-                  <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId==='2'">
+                  <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                     {{ data.goodsDto.propertyMap.productionLicenseValidity | date }}
                   </goods-row>
-                  <goods-row label="厂家备案凭证号" :span="12" v-if="data.goodsDto.typeId==='2'||data.goodsDto.typeId==='3'">
+                  <goods-row label="厂家备案凭证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.recordNumber
                     }}
                   </goods-row>
                   <goods-row label="注册证书/备案凭证号" :span="12"
-                             v-if="data.goodsDto.typeId==='2'||data.goodsDto.typeId==='3'">
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.registrationRecordNumber }}
                   </goods-row>
-                  <goods-row label="备案凭证号有效期" :span="12" v-if="data.goodsDto.typeId==='2'||data.goodsDto.typeId==='3'">
+                  <goods-row label="备案凭证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.goodsRecordNOValidity | date }}
                   </goods-row>
                   <goods-row label="OTC标志" :span="12" v-if="data.goodsDto.typeId==='0'">
@@ -394,9 +383,9 @@
                     {{ data.goodsDto.propertyMap.instructionsCount
                     }}
                   </goods-row>
-                  <goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">
-                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
-                  </goods-row>
+                  <!--<goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">-->
+                    <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                  <!--</goods-row>-->
                   <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
                   </goods-row>
@@ -553,7 +542,7 @@
           deleteFlag: false
 
         }, this.filters);
-        Vaccine.queryFirstVaccine(params).then(res => {
+        Vaccine.query(params).then(res => {
           this.$store.commit('initBottomLoading', false);
 
           if (isContinue) {

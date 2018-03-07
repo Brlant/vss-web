@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -13,10 +13,6 @@
 
   .d-table-col-wrap {
     overflow: auto;
-  }
-
-  .minor-part {
-    color: #999;
   }
 </style>
 <template>
@@ -153,12 +149,10 @@
 <script>
   import { BaseInfo, OrgUser, User } from '../../../resources';
   import editForm from './form/form.vue';
-  import OmsRemove from '../../common/remove.vue';
-  import OmsForbid from '../../common/forbid.vue';
 
   export default {
     components: {
-      OmsRemove, editForm, OmsForbid
+      editForm
     },
     data: function () {
       return {

@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .power-style-part {
     margin: 12px 0;
     background-color: rgba(238, 238, 238, 0.5);
@@ -148,6 +148,7 @@
         this.$refs.tree.filter(val);
       },
       formItem: function (val) {
+        this.filterText = '';
         this.getMenus();
         if (val.id) {
           this.form = JSON.parse(JSON.stringify(this.formItem));

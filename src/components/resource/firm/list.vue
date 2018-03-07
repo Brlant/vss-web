@@ -1,5 +1,5 @@
-<style lang="less" scoped>
-  @import "../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../assets/mixins.scss";
 
   .margin-left {
     margin-left: 15px;
@@ -106,7 +106,7 @@
           margin-left: 8px;;
           font-size: 14px;
           &:hover {
-            color: @activeColor;
+            color: $activeColor;
           }
         }
       }
@@ -375,7 +375,7 @@
               </div>
               <div style="overflow: hidden">
                   <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{item.manufacturerCode}}
+                    <span>系统代码:</span>{{item.manufacturerCode}}
                   </span>
               </div>
             </el-option>

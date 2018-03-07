@@ -1,7 +1,7 @@
-import address from './address';
+import {Address} from '@dtop/dtop-web-common';
 
 export default {
-  address: address.value,
+  address: Address.value,
   requestType: {
     1: {'title': '待审批', status: 0, num: ''},
     2: {'title': '待疾控处理', status: 1, num: ''},
@@ -26,10 +26,10 @@ export default {
     0: {'title': '待生成销售汇总', status: 1, num: ''},
     1: {'title': '待分配销售', status: 2, num: ''},
     2: {'title': '已分配销售', status: 4, num: ''},
-    3: {'title': '取消销售', status: 3, num: ''},
+    3: {'title': '已取消销售', status: 3, num: ''},
     4: {'title': '待生成采购汇总', status: 11, num: ''},
     5: {'title': '已生成采购汇总', status: 12, num: ''},
-    6: {'title': '取消采购', status: 13, num: ''}
+    6: {'title': '已取消采购', status: 13, num: ''}
   },
   waveType: {
     0: {'title': '未分配', status: 0, num: ''},
@@ -50,7 +50,7 @@ export default {
     2: {'title': '执行中', state: '2', num: ''},
     3: {'title': '待收货', state: '3', num: ''},
     4: {'title': '已完成', state: '4', num: ''},
-    5: {'title': '取消订单', state: '5', num: ''}
+    5: {'title': '已取消', state: '5', num: ''}
   },
   outReturnOrderType: {
     0: {'title': '待确认', state: '0', num: ''},
@@ -58,7 +58,7 @@ export default {
     2: {'title': '执行中', state: '2', num: ''},
     3: {'title': '待发货', state: '3', num: ''},
     4: {'title': '已完成', state: '4', num: ''},
-    5: {'title': '取消订单', state: '5', num: ''}
+    5: {'title': '已取消', state: '5', num: ''}
   },
   paymentOperation: {
     0: {'title': '待审核', status: '0', num: ''},
@@ -99,6 +99,8 @@ export default {
     0: {'title': '待生成', status: 0, num: ''},
     1: {'title': '已生成', status: 1, num: ''}
   },
+  packageType: ['第一级包装', '第二级包装', '第三级包装', '第四级包装',
+    '第五级包装', '第六级包装', '第七级包装', '第八级包装', '第九级包装', '第十级包装'],
   /**
    * 格式化地址，已省/市/区显示
    * @param province
@@ -237,6 +239,13 @@ export default {
     if (cls.replace(/\s/g, '').length === 0) return false;
     return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
   },
+  getPos(e) { // 这是一个 获取鼠标位置的函数
+    let oEvent = e || event;
+    return {
+      x: oEvent.clientX + document.documentElement.scrollLeft || document.body.scrollLeft,
+      y: oEvent.clientY + document.documentElement.scrollTop || document.body.scrollTop
+    };
+  },
   addClass: function (elem, cls) {
     if (!this.hasClass(elem, cls)) {
       elem.className = elem.className === '' ? cls : elem.className + ' ' + cls;
@@ -276,13 +285,13 @@ export default {
     isMultiple = ri === 0;
     if (isMultiple) {
       this.$notify.info({
-        message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${integer}`
+        message: `数量${amount}不是散件的倍数，无法添加货品，已帮您调整为${integer}`
       });
       return integer;
     }
     let re = integer + smallPacking - ri;
     this.$notify.info({
-      message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
+      message: `数量${amount}不是散件的倍数，无法添加货品，已帮您调整为${re}`
     });
     return re;
   },
@@ -291,7 +300,7 @@ export default {
       this.$notify({
         duration: 2000,
         title: '货品资料不足',
-        message: '货品无最小包装单位，请补充资料，或者选择其他货品',
+        message: '货品无散件单位，请补充资料，或者选择其他货品',
         type: 'error'
       });
     }

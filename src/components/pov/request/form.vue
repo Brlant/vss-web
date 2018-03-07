@@ -1,7 +1,20 @@
-<style lang="less" scoped>
-  @import "../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../assets/mixins.scss";
 
-  @leftWidth: 220px;
+  $leftWidth: 220px;
+
+  .content-part {
+    .content-left {
+      text-align: center;
+      width: $leftWidth;
+    }
+    .content-right {
+      > h3 {
+        left: $leftWidth;
+      }
+      left: $leftWidth;
+    }
+  }
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -11,97 +24,6 @@
   .el-form .el-checkbox__inner {
     width: 14px;
     height: 14px;
-  }
-
-  .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
-    .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      text-align: left;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        padding: 0;
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
-    }
-    .content-right {
-      > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
-      }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-    }
-
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 20px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
-    }
   }
 
   .el-form .el-select {
@@ -151,19 +73,6 @@
 
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-
-
   .ml15 {
     margin-left: 40px;
   }
@@ -172,18 +81,8 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    height: auto;
-  }
-
   .productItem-info {
     float: left;
-  }
-
-  .order-good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-    }
   }
 
   .ar {
@@ -192,7 +91,7 @@
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 </style>
@@ -214,12 +113,12 @@
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="订单类型" prop="type">
               <el-radio-group v-model.number="form.type" @change="changeType">
-                <el-radio :label="1">一类疫苗</el-radio>
-                <el-radio :label="2">二类疫苗</el-radio>
+                <el-radio :label="0">一类疫苗</el-radio>
+                <el-radio :label="1">二类疫苗</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="疾控中心" prop="cdcId">
-              <el-select placeholder="请选择疾控" v-model="form.cdcId" clearable>
+              <el-select placeholder="请选择疾控" v-model="form.cdcId" clearable @change="changeOrg">
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
               </el-select>
@@ -243,7 +142,11 @@
                 @change="changeTime">
               </el-date-picker>
             </el-form-item>
-
+            <material-part @changeRemark="changeRemark" v-if="form.type === 0"></material-part>
+            <el-form-item label="备注" class="clearfix">
+              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
           </el-form>
 
           <el-form ref="orderGoodsForm" :rules="goodsRules" :model="product" @submit.prevent="onSubmit"
@@ -264,13 +167,13 @@
                     </div>
                     <div class="clearfix">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
+                        v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}</span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.sellPrice">销售价格 ￥{{ item.sellPrice
+                        v-show="item.sellPrice">销售价格:￥{{ item.sellPrice
                         }}</span>
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}</span>
+                        v-show="item.factoryName">供货厂商:</span>{{ item.factoryName }}</span>
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->
@@ -387,10 +290,12 @@
 <script>
   import { Address, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
+  import materialPart from '@/components/sale/order/material.vue';
 
   export default {
     name: 'addForm',
     loading: false,
+    components: {materialPart},
     props: {
       index: Number,
       currentOrder: Object
@@ -429,7 +334,7 @@
           povId: '',
           demandTime: '',
           cdcId: '',
-          type: 1
+          type: 0
         },
         rules: {
           warehouseId: [
@@ -481,7 +386,7 @@
           povId: '',
           demandTime: '',
           cdcId: '',
-          type: 1
+          type: 0
         };
         this.queryOnCDCs();
         this.currentList = [];
@@ -525,15 +430,17 @@
           id: this.currentOrder.id,
           cdcId: this.currentOrder.cdcId,
           demandTime: this.currentOrder.demandTime,
-          type: Number(this.currentOrder.vaccineSign),
+          type: Number(this.currentOrder.goodsType),
           warehouseId: this.currentOrder.warehouseId,
-          detailDtoList: []
+          detailDtoList: [],
+          remark: ''
         };
         // ******2.0变化
-        this.changeType();
+        this.changeType('edit');
         // ******
         this.$nextTick(() => {
           this.form.detailDtoList = orgDetailGoods;
+          this.form.remark = this.currentOrder.remark;
         });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
@@ -544,19 +451,22 @@
             measurementUnit: m.unit,
             orgGoodsId: m.orgGoodsId,
             orgGoodsName: m.goodsName,
-            unitPrice: m.price
+            unitPrice: m.price,
+            specification: m.specification
           };
         });
         this.form = {
           cdcId: this.currentOrder.cdcId,
           demandTime: this.currentOrder.demandTime,
-          type: Number(this.currentOrder.vaccineSign),
+          type: Number(this.currentOrder.goodsType),
           warehouseId: this.currentOrder.warehouseId,
-          detailDtoList: []
+          detailDtoList: [],
+          remark: ''
         };
-        this.changeType();
+        this.changeType('edit');
         this.$nextTick(() => {
           this.form.detailDtoList = orgDetailGoods;
+          this.form.remark = this.currentOrder.remark;
         });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
@@ -566,7 +476,7 @@
       changeTime: function (date) {// 格式化时间
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      changeType () {
+      changeType (isEdited) {
         this.product = {
           'amount': null,
           'measurementUnit': '',
@@ -581,9 +491,25 @@
         this.accessoryList = [];
         this.currentList = [];
         this.form.detailDtoList = [];
+        this.$refs['orderAddForm'].clearValidate();
         this.$refs['orderGoodsForm'].resetFields();
+        this.form.remark = '';
         this.filterProduct();
         this.searchProduct();
+        this.changeOrg(isEdited);
+        this.totalFilterProductList = [];
+        this.filterProductList = [];
+      },
+      changeOrg (isEdited) {
+        if (isEdited === 'edit') return;
+        this.form.warehouseId = '';
+        // 以前去默认仓库地址
+        // 现在业务关系中维护地址
+        this.showCdcs.forEach(i => {
+          if (i.orgId === this.form.cdcId) {
+            this.form.warehouseId = i.addressId;
+          }
+        });
       },
       searchProduct: function () {
         this.searchProductList = [];
@@ -605,22 +531,38 @@
           this.cdcs = res.data;
           this.filterProduct();
           this.searchProduct();
+          // 得到疾控中心后,再得到地址
+          this.showCdcs.forEach(i => {
+            if (i.orgId === this.form.cdcId) {
+              this.form.warehouseId = i.addressId;
+            }
+          });
         });
       },
       filterProduct () {
-        this.showCdcs = this.cdcs.filter(f => f.level === this.form.type);
+        this.showCdcs = this.cdcs.filter(f => f.level === this.form.type + 1);
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
       searchWarehouses (isEdit) {
         let user = this.$store.state.user;
-        Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress, auditedStatus: '1'}).then(res => {
+        Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress, auditedStatus: '1', status: 0}).then(res => {
           this.warehouses = res.data || [];
-          if (isEdit) return;
-          let fs = this.warehouses.filter(i => i.default)[0];
-          if (fs) {
-            this.form.warehouseId = fs.id;
-          }
+          if (isEdit === 'edit') return;
+          // 以前去默认仓库地址
+          // 现在业务关系中维护地址
+          this.showCdcs.forEach(i => {
+            if (i.orgId === this.form.cdcId) {
+              this.form.warehouseId = i.addressId;
+            }
+          });
         });
+      },
+      changeRemark (form) {
+        if (!this.form.remark) {
+          this.form.remark = form.count + form.name;
+        } else {
+          this.form.remark += '，' + form.count + form.name;
+        }
       },
       filterProducts: function () {
         let arr = [];
@@ -639,7 +581,8 @@
             arr.push(item);
           }
         });
-        this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.form.type.toString());
+        // this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.form.type.toString());
+        this.totalFilterProductList = arr;
         this.filterProductList = JSON.parse(JSON.stringify(this.totalFilterProductList));
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
@@ -775,10 +718,13 @@
             });
             return false;
           }
+          // 传给后台疫苗标志
+          saveData.goodsType = saveData.type;
           delete saveData.type;
           saveData.detailDtoList.forEach(item => {
             item.price = item.unitPrice;
             item.applyCount = item.amount;
+            item.isCombination && (item.combinationSign = 1);
             delete item.fixInfo;
             delete item.mainOrgId;
             delete item.isCombination;

@@ -1,16 +1,5 @@
-<style lang="less">
-  @import "../../../assets/mixins.less";
-
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
+<style lang="scss">
+  @import "../../../assets/mixins.scss";
 
   .ar {
     text-align: right;
@@ -18,16 +7,10 @@
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-      height: 70px;
-    }
-  }
 
   .el-form--inline .el-form-item {
     margin-right: 0;
@@ -55,10 +38,10 @@
             </div>
             <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
             </div>
           </el-option>

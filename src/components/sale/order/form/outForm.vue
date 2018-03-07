@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../../assets/mixins.scss";
 
-  @leftWidth: 200px;
+  $leftWidth: 200px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -14,92 +14,15 @@
   }
 
   .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
     .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
       text-align: center;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
+        left: $leftWidth;
       }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-    }
-
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 20px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
+      left: $leftWidth;
     }
   }
 
@@ -152,17 +75,6 @@
     }
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
   .ml15 {
     margin-left: 40px;
   }
@@ -171,34 +83,14 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    height: auto;
-  }
 
   .productItem-info {
     float: left;
   }
 
-  .order-good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: auto;
-    }
-  }
-
-  .ar {
-    /*text-align: right;*/
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: 540px;
-    }
-  }
-
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 
@@ -242,15 +134,15 @@
                   </div>
                   <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                   </div>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="接种点仓库" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
+            <el-form-item label="接种点收货地址" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
                           v-show="showContent.isShowOtherContent" :clearable="true">
-              <el-select placeholder="请选择接种点仓库" v-model="form.transportationAddress" filterable clearable
+              <el-select placeholder="请选择接种点收货地址" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress" :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -261,15 +153,18 @@
             <el-form-item label="实际收货人" v-show="showContent.isShowOtherContent">
               <oms-input type="text" placeholder="请输入实际收货人" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
+            <el-form-item label="收货人联系电话" v-show="showContent.isShowOtherContent">
+              <oms-input type="text" placeholder="请输入收货人联系电话" v-model="form.consigneePhone" :maxlength="50"></oms-input>
+            </el-form-item>
             <!--<el-form-item label="是否同批号">-->
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
-            <el-form-item label="疾控仓库地址" prop="orgAddress">
+            <el-form-item label="疾控发货地址" prop="orgAddress">
               <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true">
+              <el-select placeholder="请选择疾控发货地址" v-model="form.orgAddress" filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenter">
                   <span class="pull-left">{{ item.name }}</span>
@@ -297,7 +192,7 @@
               </el-date-picker>
             </el-form-item>
             <material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>
-            <el-form-item label="备注">
+            <el-form-item label="备注" class="clearfix">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
@@ -324,19 +219,19 @@
                           组合
                         </el-tag>
                         <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
-                          v-show="item.orgGoodsDto.goodsDto.specifications">规格</span>  {{item.orgGoodsDto.goodsDto.specifications}}
+                          v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{item.orgGoodsDto.goodsDto.specifications}}
                         </span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left" v-show="vaccineType==='2'"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left" v-show="vaccineType==='2'"><span
-                          v-show="item.orgGoodsDto.sellPrice">销售价格 ￥{{ item.orgGoodsDto.sellPrice
+                          v-show="item.orgGoodsDto.sellPrice">销售价格:￥{{ item.orgGoodsDto.sellPrice
                           }}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                       </div>
                     </el-option>
@@ -368,8 +263,8 @@
                         <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                        <span style="margin-right: 10px"
-                             v-show="acce.sellPrice">¥ {{ acce.sellPrice | formatMoney }}</span>
-                       <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
+                             v-show="acce.sellPrice">销售价格:¥{{ acce.sellPrice | formatMoney }}</span>
+                       <span style="margin-right: 10px" v-show="acce.proportion">比例:{{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                     </span>
                       </el-col>
@@ -420,7 +315,7 @@
                   </td>
                   <td>
                     {{ product.no ? product.no : '无' }}
-                    <el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>
+                    <el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>
                   </td>
                   <td class="ar" v-show="vaccineType==='2'">
                    <span v-show="Number(product.unitPrice)">
@@ -468,15 +363,16 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
-
+  import OrderMixin from '@/mixins/orderMixin';
   export default {
     name: 'addForm',
     loading: false,
     components: {materialPart, batchNumberPart},
+    mixins: [OrderMixin],
     props: {
       type: {
         type: String,
@@ -540,6 +436,7 @@
           orgAddress: '',
           sameBatchNumber: false,
           actualConsignee: '',
+          'consigneePhone': '',
           'thirdPartyNumber': '',
           'expectedTime': '',
           'detailDtoList': [],
@@ -567,13 +464,13 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择接种点仓库', trigger: 'change'}
+            {required: true, message: '请选择接种点收货地址', trigger: 'change'}
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
@@ -623,7 +520,7 @@
           isShowCustomerId: true, // 是否显示POV
           expectedTimeLabel: '预计出库时间'
         },
-        warehouses: [], // 接种点仓库列表
+        warehouses: [], // 接种点收货地址列表
         batchNumbers: [], // 货品批号列表
         selectBatchNumbers: [], // 已经选择的货品批号
         changeTotalNumber: utils.changeTotalNumber,
@@ -728,6 +625,7 @@
         this.$refs['orderAddForm'].resetFields();
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.actualConsignee = '';
+        this.form.consigneePhone = '';
         this.form.logisticsProviderId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
@@ -848,7 +746,8 @@
             Address.queryAddress(this.form.orgId, {
               deleteFlag: false,
               orgId: this.form.orgId,
-              auditedStatus: '1'
+              auditedStatus: '1',
+              status: 0
             }).then(res => {
               this.warehouses = res.data;
             });
@@ -896,7 +795,8 @@
           this.form.transportationAddress = '';
           return;
         }
-        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1'}).then(res => {
+        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0
+        }).then(res => {
           this.warehouses = res.data || [];
           // let fs = this.warehouses.filter(i => i.default)[0];
           // this.form.transportationAddress = fs && fs.id || '';
@@ -906,7 +806,10 @@
           this.orgList.forEach(i => {
             if (i.id === orgId) {
               this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
-              this.form.actualConsignee = i.orgRelationList.length ? i.orgRelationList[0].contactPerson : '';
+              if (i.orgRelationList.length) {
+                this.form.actualConsignee = i.orgRelationList[0].contactPerson;
+                this.form.consigneePhone = i.orgRelationList[0].contactPersonPhone;
+              }
             }
           });
           // *************************//
@@ -916,7 +819,8 @@
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
-          auditedStatus: '1'
+          auditedStatus: '1',
+          status: 0
         }).then(res => {
           this.LogisticsCenter = res.data;
           let defaultStore = res.data.filter(item => item.default);
@@ -926,10 +830,12 @@
       changeWarehouseAdress: function (val) {
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.actualConsignee = ''; // 仓库改变时, 设置实际收货人
+          this.form.consigneePhone = ''; // 仓库改变时, 设置实际收货人
         }
         this.warehouses.forEach(item => {
           if (val === item.id) {
             this.form.actualConsignee = item.contact;
+            this.form.consigneePhone = item.telephone;
           }
         });
       },
@@ -966,6 +872,9 @@
         };
         let rTime = Date.now();
         this.requestTime = rTime;
+        if (this.vaccineType === '1') {
+          params.vaccineType = undefined;
+        }
         http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
@@ -1216,7 +1125,7 @@
         }
       },
       onSubmit: function () {// 提交表单
-
+        if (!this.checkHasOrderNotAdded(this.product)) return;
         let self = this;
         this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {

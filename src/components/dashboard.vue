@@ -1,21 +1,21 @@
-<style lang="less" scoped="">
-  @import "../assets/mixins.less";
+<style lang="scss" scoped="">
+  @import "../assets/mixins.scss";
 
-  @card-box-border-color: #eee;
+  $card-box-border-color: #eee;
   .card-box {
-    border: 1px solid @card-box-border-color;
+    border: 1px solid $card-box-border-color;
     margin-bottom: 20px;
     .card-box-header {
       padding: 15px 20px;
-      border-bottom: 1px solid @card-box-border-color;
-      background: @card-box-border-color*1.05;
+      border-bottom: 1px solid $card-box-border-color;
+      background: $card-box-border-color*1.05;
     }
     .card-box-body {
       overflow-x: hidden;
       padding: 0;
       background: #fff;
       .el-row {
-        border-bottom: 1px solid @card-box-border-color;
+        border-bottom: 1px solid $card-box-border-color;
         padding-top: 5px;
         padding-bottom: 4px;
         &:last-child {
@@ -176,6 +176,7 @@
           pageSize: 5
         };
         let orgId = this.user.userCompanyAddress;
+        if (!orgId) return;
         if (this.level === 3) {
           Object.assign(params, {povId: orgId, status: 0});
         } else {
@@ -186,6 +187,7 @@
         });
       },
       goUrl: function (item) {
+        if (!item.id) return;
         if (this.level === 3) {
           this.$router.push({path: '/pov/request', query: {id: item.id}});
         } else {
@@ -193,6 +195,7 @@
         }
       },
       goToOrderUrl (item) {
+        if (!item.id) return;
         if (this.level === 1) {
           this.$router.push(`purchase/order/one/class/${item.id}`);
         } else {

@@ -1,26 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 300px;
-    }
-  }
+<style lang="scss" scoped="">
 
   .align-word {
     letter-spacing: 1em;
@@ -50,7 +28,7 @@
         </perm>
       </div>
       <div class="order-list clearfix ">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="6">疫苗</el-col>
           <el-col :span="6">供货厂商</el-col>
           <el-col :span="3">需求数</el-col>

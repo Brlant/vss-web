@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @import "../../../assets/mixins";
 
   .el-form .el-select {
@@ -23,16 +23,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .oms-row {
     font-size: 14px;
     margin-bottom: 10px;
@@ -45,7 +35,7 @@
   .tr-right {
     cursor: pointer;
     &:hover, &.active {
-      background: @dialog-left-bg;
+      background: $dialog-left-bg;
     }
   }
 
@@ -181,10 +171,10 @@
                       </div>
                         <div class="clearfix">
                             <span class="select-other-info pull-left">
-                              <span v-show="item.goodsNo">货品编号</span>{{item.goodsNo}}
+                              <span v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}
                             </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}
+                          v-show="item.factoryName">供货厂商:</span>{{ item.factoryName }}
                             </span>
                         </div>
                       </div>

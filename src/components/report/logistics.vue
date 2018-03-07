@@ -1,21 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
-
+<style lang="scss" scoped="">
   .opera-btn-group {
     margin: 10px 0;
   }
@@ -25,10 +8,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -36,8 +16,8 @@
         </div>
         <el-form class="advanced-query-form">
           <el-row>
-            <el-col :span="8">
-              <oms-form-row label="出入库类型" :span="5">
+            <el-col :span="7">
+              <oms-form-row label="出入库类型" :span="6">
                 <el-select v-model="searchWord.typeList" multiple filterable clearable placeholder="请选择">
                   <el-option v-for="(item, index) in typeList" :value="index" :key="index"
                              :label="item"></el-option>
@@ -45,15 +25,15 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="出入库详细" :span="5">
+              <oms-form-row label="出入库详细" :span="6">
                 <el-select v-model="searchWord.bizTypeList" multiple filterable clearable placeholder="请选择">
                   <el-option v-for="(item, index) in bizTypeList" :value="index" :key="index"
                              :label="item"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="业务日期" :span="5">
+            <el-col :span="9">
+              <oms-form-row label="业务日期" :span="4">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
@@ -63,14 +43,15 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="4" class="clearfix">
-              <oms-form-row label="区县" :span="5">
+            <el-col :span="7" class="clearfix">
+              <oms-form-row label="区县" :span="6">
                 <oms-input type="text" v-model="searchWord.areaCode" placeholder="请输入区县"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="9">
-              <oms-form-row label="关联单位" :span="5">
-                <el-select filterable remote placeholder="请输入关联单位查询" :remote-method="filterRelation" :clearable="true"
+            <el-col :span="8">
+              <oms-form-row label="关联单位" :span="6">
+                <el-select filterable remote placeholder="请输入关联单位查询" :remote-method="filterRelation"
+                           :clearable="true" :loading="selectLoading"
                            v-model="searchWord.customerId" @click.native.once="filterRelation('')" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
@@ -78,16 +59,17 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="11">
-              <oms-form-row label="供/收货单位名称" :span="6">
-                <el-select filterable remote placeholder="请输入供/收货单位名称查询" :remote-method="filterProvide" :clearable="true"
+            <el-col :span="9">
+              <oms-form-row label="供/收货单位名称" :span="7">
+                <el-select filterable remote placeholder="请输入供/收货单位名称查询"
+                           :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
                            v-model="searchWord.factoryId" @click.native.once="filterProvide('')" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in provideList">
                     <div style="overflow: hidden">
@@ -95,7 +77,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -116,10 +98,10 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                     </div>
                   </el-option>
@@ -153,7 +135,7 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary border
-                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight()">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight">
         <el-table-column prop="type" label="出入库类型" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="date" label="日期" :sortable="true" width="100"></el-table-column>
@@ -175,10 +157,13 @@
   import { BaseInfo, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
   import qs from 'qs';
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
+        selectLoading: false,
         reportList: [],
         showSearch: true,
         searchWord: {
@@ -203,10 +188,12 @@
         goodsStatusList: ['不合格', '合格']
       };
     },
+    computed: {
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 110 + this.fixedHeight;
+      }
+    },
     methods: {
-      getHeight() {
-        return utils.getCurrentHeight(this.$refs['reportTable']);
-      },
       exportFile: function () {
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
@@ -252,6 +239,7 @@
             return m;
           });
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       getSummaries (param) {
@@ -304,8 +292,10 @@
         let params = {
           keyWord: query
         };
+        this.selectLoading = true;
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
+          this.selectLoading = false;
         });
       },
       filterProvide: function (query) {
@@ -314,8 +304,10 @@
         let params = {
           keyWord: query
         };
+        this.selectLoading = true;
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.provideList = res.data;
+          this.selectLoading = false;
         });
       },
       filterBatchNumber (query) {
@@ -324,14 +316,10 @@
         });
       },
       filterOrgGoods (query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
-          keyWord: query,
-          orgId: orgId
+          keyWord: query
         });
-        let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
+        Vaccine.query(params).then(res => {
           this.orgGoods = res.data.list;
         });
       },

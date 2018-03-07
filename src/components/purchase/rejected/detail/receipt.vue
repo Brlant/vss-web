@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .product-detail-list {
     margin-top: 20px;
     text-align: center;
@@ -67,17 +67,6 @@
         <td colspan="2">{{ item.batchNumber || '无' }}</td>
         <td colspan="2">{{ item.productionDate | date }}</td>
         <td colspan="2">{{ item.expiryDate | date }}</td>
-        <!--<td colspan="2">-->
-        <!--<div v-show="item.largePackageCount">-->
-        <!--大包装 {{ item.largePackageCount }}-->
-        <!--</div>-->
-        <!--<div v-show="item.mediumPackageCount">-->
-        <!--中包装 {{ item.mediumPackageCount }}-->
-        <!--</div>-->
-        <!--<div v-show="item.smallPackageCount">-->
-        <!--小包装 {{ item.smallPackageCount }}-->
-        <!--</div>-->
-        <!--</td>-->
         <td colspan="2">
           {{ item.aggregateQuantity }}
         </td>
@@ -101,7 +90,6 @@
       return {
         details: [],
         plateNumber: '',
-        packageType: ['大包装', '中包装', '小包装'],
         loading: false
       };
     },

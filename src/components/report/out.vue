@@ -1,20 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
+<style lang="scss" scoped="">
 
   .el-table__body-wrapper, .el-table__footer-wrapper, .el-table__header-wrapper {
     width: auto;
@@ -33,10 +17,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -70,8 +51,9 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight()" border
+      <el-table :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
+        <el-table-column v-if="firstLine.length===0"></el-table-column>
         <template v-for="(item, index) in firstLine">
           <el-table-column :prop="item.key" :label="item.name"></el-table-column>
         </template>
@@ -82,8 +64,9 @@
 <script>
   import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
-
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -105,12 +88,12 @@
         if (!length) return 150;
         if (length > 0 && length < 8) return `${1080 / length}`;
         if (length > 7) return 150;
+      },
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
       }
     },
     methods: {
-      getHeight() {
-        return utils.getCurrentHeight(this.$refs['reportTable']);
-      },
       exportFile: function () {
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
@@ -138,6 +121,7 @@
           this.firstLine = res.data.map && res.data.map.firstLine || [];
           this.dataList = res.data.map && res.data.map.data || [];
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       resetSearchForm: function () {

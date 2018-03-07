@@ -1,20 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
+<style lang="scss" scoped="">
 
   .loading-ht {
     height: 300px;
@@ -29,10 +13,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -41,7 +22,7 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="业务日期" :span="5">
+              <oms-form-row label="上架时间" :span="5">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
@@ -64,7 +45,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -90,10 +71,10 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                     </div>
                   </el-option>
@@ -126,20 +107,35 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" border ref="reportTable" border
-                :header-row-class-name="'headerClass'" v-loading="loadingData" :maxHeight="getHeight()">
+      <el-table :data="reportChildList" class="header-list" border ref="reportTable" border :summary-method="getSummaries" show-summary
+                :header-row-class-name="'headerClass'" v-loading="loadingData" :maxHeight="getHeight">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true"></el-table-column>
         <el-table-column prop="suppliersName" label="供应商" :sortable="true"></el-table-column>
         <el-table-column prop="orgName" label="保管帐" :sortable="true"></el-table-column>
         <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true"></el-table-column>
-        <el-table-column prop="price" label="进货单价" :sortable="true"></el-table-column>
-        <el-table-column prop="totalMoney" label="金额" :sortable="true"></el-table-column>
+        <el-table-column prop="price" label="进货单价" :sortable="true">
+          <template slot-scope="scope">
+            <span>￥{{scope.row.price ? scope.row.price : 0}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="totalMoney" label="金额" :sortable="true">
+          <template slot-scope="scope">
+            <span>￥{{scope.row.totalMoney}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
         <el-table-column prop="expirationDate" label="有效期至" :sortable="true"></el-table-column>
         <el-table-column prop="operateTime" label="上架时间" :sortable="true"></el-table-column>
       </el-table>
+      <div class="text-center" v-show="reportChildList.length">
+        <el-pagination
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :total="pager.count" :page-sizes="[20,50,100]" :pageSize="pager.pageSize"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
     </div>
 
   </div>
@@ -147,12 +143,15 @@
 <script>
   import { BaseInfo, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
+  import ReportMixin from '@/mixins/reportMixin';
 
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
         reportList: [],
+        reportChildList: [],
         showSearch: true,
         searchWord: {
           suppliers: '',
@@ -166,13 +165,20 @@
         orgGoods: [],
         batchNumberList: [],
         bizDateAry: '',
-        isLoading: false
+        isLoading: false,
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20
+        }
       };
     },
+    computed: {
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 150 + this.fixedHeight;
+      }
+    },
     methods: {
-      getHeight() {
-        return utils.getCurrentHeight(this.$refs['reportTable']);
-      },
       exportFile: function () {
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
@@ -200,13 +206,65 @@
           this.reportList = res.data.map(m => {
             m.createTime = this.formatTime(m.createTime);
             m.expirationDate = this.formatTime(m.expirationDate);
-            m.price = m.price ? `￥${m.price}` : '';
-            m.totalMoney = `￥${m.totalMoney}`;
             m.operateTime = this.formatTime(m.operateTime, 'YYYY-MM-DD HH:mm');
             return m;
           });
+          this.pager.count = this.reportList.length;
+          this.getCurrentList(1);
           this.loadingData = false;
+          this.setFixedHeight();
         });
+      },
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getCurrentList(1);
+      },
+      handleCurrentChange(val) {
+        this.getCurrentList(val);
+      },
+      getCurrentList (pageNo) {
+        this.loadingData = true;
+        this.pager.currentPage = pageNo;
+        const {pager} = this;
+        let start = (pageNo - 1) * pager.pageSize;
+        let end = pageNo * pager.pageSize;
+        this.reportChildList = this.reportList.slice(start, end > pager.count ? pager.count : end);
+        setTimeout(() => {
+          this.loadingData = false;
+        }, 300);
+      },
+      getSummaries (param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (column.property !== 'count' && column.property !== 'totalMoney') {
+            sums[index] = '';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = '';
+          }
+        });
+        sums.forEach((i, index) => {
+          if (index === 7) {
+            sums[index] = '￥' + i;
+          }
+        });
+        return sums;
       },
       resetSearchForm: function () {
         this.searchWord = {

@@ -1,17 +1,17 @@
-<style lang="less" scoped>
-  @import '../../../assets/mixins';
+<style lang="scss" scoped>
+  @import '../../../assets/mixins.scss';
 
-  @leftWidth: 280px;
+  $leftWidth: 280px;
   .content-part {
     .content-left {
       text-align: center;
-      width: @leftWidth;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 
@@ -131,15 +131,6 @@
         types: [],
         doing: false,
         rules: {
-          largePackageCount: [
-            {required: true, type: 'number', message: '请输入大包装数量', trigger: 'blur'}
-          ],
-          mediumPackageCount: [
-            {required: true, type: 'number', message: '请输入中包装数量', trigger: 'blur'}
-          ],
-          smallPackageCount: [
-            {required: true, type: 'number', message: '请输入小包装数量', trigger: 'blur'}
-          ],
           bulkCount: [
             {required: true, type: 'number', message: '请输入散件数量', trigger: 'blur'}
           ]

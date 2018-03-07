@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../assets/mixins.scss";
 
-  @leftWidth: 220px;
+  $leftWidth: 220px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -14,93 +14,15 @@
   }
 
   .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
     .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      text-align: left;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        padding: 0;
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
+      text-align: center;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
+        left: $leftWidth;
       }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-    }
-
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 20px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
+      left: $leftWidth;
     }
   }
 
@@ -151,19 +73,6 @@
 
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-
-
   .ml15 {
     margin-left: 40px;
   }
@@ -176,17 +85,13 @@
     float: left;
   }
 
-  .good-selects .el-select-dropdown__item {
-    width: auto;
-  }
-
   .ar {
     text-align: center;
   }
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 </style>
@@ -216,7 +121,7 @@
                   </div>
                   <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                   </div>
                 </el-option>
@@ -241,7 +146,11 @@
                 @change="changeTime">
               </el-date-picker>
             </el-form-item>
-
+            <material-part @changeRemark="changeRemark" v-if="type === 1"></material-part>
+            <el-form-item label="备注" class="clearfix">
+              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
           </el-form>
 
           <el-form ref="orderGoodsForm" :rules="goodsRules" :model="product" @submit.prevent="onSubmit"
@@ -262,13 +171,13 @@
                     </div>
                     <div class="clearfix">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.goodsNo">货品编号</span>  {{item.goodsNo}}</span>
+                        v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}</span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.sellPrice">销售价格 ￥{{ item.sellPrice
+                        v-show="item.sellPrice">销售价格:￥{{ item.sellPrice
                         }}</span>
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.factoryName">供货厂商</span>  {{ item.factoryName }}</span>
+                        v-show="item.factoryName">供货厂商:</span>{{ item.factoryName }}</span>
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->
@@ -298,8 +207,8 @@
                       <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                        <span style="margin-right: 10px"
-                             v-show="acce.sellPrice">¥ {{ acce.sellPrice | formatMoney}}</span>
-                       <span style="margin-right: 10px" v-show="acce.proportion">比例 {{ acce.proportion }}</span>
+                             v-show="acce.sellPrice">销售价格:¥{{ acce.sellPrice | formatMoney}}</span>
+                       <span style="margin-right: 10px" v-show="acce.proportion">比例:{{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
                     </el-col>
@@ -381,10 +290,12 @@
 <script>
   import { Address, BaseInfo, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
+  import materialPart from '@/components/sale/order/material.vue';
 
   export default {
     name: 'addForm',
     loading: false,
+    components: {materialPart},
     props: {
       index: Number,
       currentOrder: Object
@@ -571,6 +482,13 @@
         });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
+      changeRemark (form) {
+        if (!this.form.remark) {
+          this.form.remark = form.count + form.name;
+        } else {
+          this.form.remark += '，' + form.count + form.name;
+        }
+      },
       changeNumber () {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
@@ -664,7 +582,7 @@
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
       searchWarehouses (val, isEdited) {
-        Address.queryAddress(this.form.povId, {deleteFlag: false, orgId: this.form.povId, auditedStatus: '1'}).then(res => {
+        Address.queryAddress(this.form.povId, {deleteFlag: false, orgId: this.form.povId, auditedStatus: '1', status: 0}).then(res => {
           this.warehouses = res.data || [];
           // let fs = this.warehouses.filter(i => i.default)[0];
           // if (fs) {
@@ -698,7 +616,8 @@
             arr.push(item);
           }
         });
-        this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        // this.totalFilterProductList = arr.filter(f => f.goodsTypeId === this.type.toString());
+        this.totalFilterProductList = arr;
         this.filterProductList = JSON.parse(JSON.stringify(this.totalFilterProductList));
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
@@ -838,6 +757,7 @@
           saveData.detailDtoList.forEach(item => {
             item.price = item.unitPrice;
             item.applyCount = item.amount;
+            item.isCombination && (item.combinationSign = 1);
             delete item.fixInfo;
             delete item.mainOrgId;
             delete item.isCombination;

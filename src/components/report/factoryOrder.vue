@@ -1,26 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 300px;
-    }
-  }
+<style lang="scss" scoped="">
 
   .align-word {
     letter-spacing: 1em;
@@ -29,12 +7,6 @@
 
   .order-list-item {
     cursor: pointer;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
   }
 
   .header-list {
@@ -46,10 +18,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -72,7 +41,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8" >
-              <oms-form-row label="货品" :span="5">
+              <oms-form-row label="平台货品" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索货品" :remote-method="filterVaccine"
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects">
@@ -80,15 +49,15 @@
                              :label="vaccine.name" v-for="vaccine in vaccineList">
                     <div style="overflow: hidden">
                       <span class="pull-left">{{vaccine.name}}</span>
-                      <el-tag type="success" v-if="vaccine.vaccineSign==='1'">一类疫苗</el-tag>
-                      <el-tag type="success"  v-if="vaccine.vaccineSign==='2'">二类疫苗</el-tag>
+                      <!--<el-tag type="success" v-if="vaccine.vaccineSign==='1'">一类疫苗</el-tag>-->
+                      <!--<el-tag type="success"  v-if="vaccine.vaccineSign==='2'">二类疫苗</el-tag>-->
                     </div>
                     <div style="overflow: hidden">
                       <!--<span class="select-other-info pull-left"><span-->
                         <!--v-show="vaccine.code">货品编号</span>  {{vaccine.code}}-->
                         <!--</span>-->
                       <span class="select-other-info pull-left"><span
-                        v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
+                        v-show="vaccine.specifications">货品规格:</span>{{vaccine.specifications}}
                         </span>
                       <!--<span class="select-other-info pull-left"><span-->
                         <!--v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}-->
@@ -96,7 +65,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="vaccine.factoryName">生产厂商</span>  {{ vaccine.factoryName }}
+                          v-show="vaccine.factoryName">生产厂商:</span>{{ vaccine.factoryName }}
                         </span>
                     </div>
                   </el-option>
@@ -136,9 +105,9 @@
 
       <el-table :data="batches" class="header-list store" border :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" ref="orderDetail"
-                max-height="600" v-show="showTable">
+                :maxHeight="getHeight" v-show="showTable">
         <el-table-column prop="orderNo" label="订单编号" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="createTime" label="订单时间" :sortable="true"
+        <el-table-column prop="createTime" label="完成时间" :sortable="true"
                          width="120">
           <template slot-scope="scope">
             {{ scope.row.createTime | date}}
@@ -157,7 +126,8 @@
             {{ scope.row.suppliersName }}
           </template>
         </el-table-column>
-        <el-table-column prop="orgGoodsName" label="货品" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="货主货品" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="goodsName" label="平台货品" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="specification" label="规格" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"
                          width="120"></el-table-column>
@@ -183,7 +153,7 @@
       </el-table>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
-      layout="total, sizes, prev, pager, next, jumper"
+      layout="sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
       :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
       :current-page="pager.currentPage">
       </el-pagination>
@@ -196,8 +166,10 @@
   //  import detail from './detail.vue';
   import utils from '@/tools/utils';
   import qs from 'qs';
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
 //    components: {detail},
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: true,
@@ -245,6 +217,9 @@
           i.key = '1-' + i.key;
         });
         return [].concat(inType, outType);
+      },
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 145 + this.fixedHeight;
       }
     },
     methods: {
@@ -257,14 +232,21 @@
           this.vaccineList = res.data.list;
         });
       },
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getBatches(1);
+      },
       getBatches (pageNo) { // 得到订单列表
         this.pager.currentPage = pageNo;
         this.showTable = true;
         this.loadingData = true;
-        this.loadingInstance = this.$loading({
+        let loadingInstance = this.$loading({
           target: this.$refs['orderDetail'].$el
         });
-        let params = this.searchWord;
+        let params = JSON.parse(JSON.stringify(this.searchWord));
+        params.goodsList = [];
+        this.searchWord.goodsId && params.goodsList.push(this.searchWord.goodsId);
+        params.goodsId = undefined;
         params.pageNo = pageNo;
         params.pageSize = this.pager.pageSize;
         params.goodsList = [this.searchWord.goodsId];
@@ -276,9 +258,12 @@
           }
         }).then(res => {
           this.batches = res.data.list;
-          this.pager.count = res.data.count;
+          // this.pager.count = res.data.count;
+          //
+          this.pager.count = this.pager.currentPage * this.pager.pageSize + (this.batches.length === this.pager.pageSize ? 1 : 0);
           this.loadingData = false;
-          this.loadingInstance.close();
+          loadingInstance.close();
+          this.setFixedHeight();
         });
       },
       getSummaries (param) {
@@ -316,8 +301,10 @@
         return sums;
       },
       exportFile: function () {
-        let params = this.searchWord;
-        params.goodsList = [this.searchWord.goodsId];
+        let params = JSON.parse(JSON.stringify(this.searchWord));
+        params.goodsList = [];
+        this.searchWord.goodsId && params.goodsList.push(this.searchWord.goodsId);
+        params.goodsId = undefined;
         this.$store.commit('initPrint', {
           isPrinting: true,
           moduleId: this.$route.path

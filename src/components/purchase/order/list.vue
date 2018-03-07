@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
 
   .page-right-part {
     box-sizing: content-box;
@@ -46,16 +46,6 @@
 
   }
 
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .exceptionPosition {
     /*margin-left: 40px;*/
     position: absolute;
@@ -96,10 +86,8 @@
     cursor: pointer;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
+  .order-list-status-right {
+    justify-content: flex-end;
   }
 </style>
 <template>
@@ -107,16 +95,13 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm :label="vaccineType === '1'?'purchasing-order-add': 'second-vaccine-purchasing-order-add' ">
                   <a href="#" class="btn-circle" @click.prevent=""><i
                     class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -150,7 +135,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -170,10 +155,10 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                     </div>
                   </el-option>
@@ -205,19 +190,32 @@
           </el-row>
         </el-form>
       </div>
-
-
-      <div class="order-list-status container" style="margin-bottom:20px">
-        <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key === '6'}"
-             v-for="(item,key) in orgType"
-             @click="changeStatus(item,key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
-        </div>
-      </div>
+      <el-row >
+        <el-col :span="13">
+          <div class="order-list-status" style="margin-bottom:20px">
+            <div class="status-item"
+                 :class="{'active':key==activeStatus}"
+                 v-for="(item,key) in orgType" v-show="key < 4"
+                 @click="changeStatus(item,key)">
+              <div class="status-bg" :class="['b_color_'+key]"></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+            </div>
+          </div>
+        </el-col>
+        <el-col :span="11">
+          <div class="order-list-status  order-list-status-right" style="margin-bottom:20px">
+            <div class="status-item"
+                 :class="{'active':key==activeStatus}"
+                 v-for="(item,key) in orgType"
+                 @click="changeStatus(item,key)" v-show="key > 3">
+              <div class="status-bg" :class="['b_color_'+key]"></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
       <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
           <el-col :span="3">业务类型</el-col>
           <el-col :span="filters.state === '6' ? 5: 6">供货厂商</el-col>
@@ -301,7 +299,7 @@
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox" :vaccineType="vaccineType"></show-form>
     </page-right>
-    <page-right :show="showItemRight" class="specific-part-z-index" @right-close="resetRightBox"
+    <page-right :show="showItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm"
                 :css="{'width':'1000px','padding':0}">
       <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
                 :action="action"
@@ -314,11 +312,9 @@
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
   import { BaseInfo, erpOrder, Vaccine } from '@/resources';
-  import GoodsSwitch from '@/components/common/order/goods-switch';
-
+  import OrderMixin from '@/mixins/orderMixin';
   export default {
     components: {
-      GoodsSwitch,
       showForm, addForm
     },
     data: function () {
@@ -374,6 +370,7 @@
         goodesList: []
       };
     },
+    mixins: [OrderMixin],
     mounted () {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
@@ -495,6 +492,8 @@
           pageSize: this.pager.pageSize,
           goodsType: this.vaccineType === '1' ? '0' : '1'
         });
+        // 明细查询
+        param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         if (this.filters.state !== '20') {
           erpOrder.query(param).then(res => {
             this.orderList = res.data.list;

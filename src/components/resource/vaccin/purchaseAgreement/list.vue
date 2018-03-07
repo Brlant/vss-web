@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -100,15 +100,12 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-      <span class="">
-      <i class="el-icon-t-search"></i> 筛选查询
-      </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addType">
         <perm label="purchase-agreement-add">
           <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-plus"></i> </a>添加
         </perm>
       </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
       <i class="el-icon-arrow-up"></i>
       <span v-show="showSearch">收起筛选</span>
       <span v-show="!showSearch">展开筛选</span>
@@ -131,7 +128,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -157,7 +154,7 @@
         </div>
       </div>
       <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="8">疫苗名称</el-col>
           <el-col :span="4">供货厂商</el-col>
           <el-col :span="4">采购单价</el-col>

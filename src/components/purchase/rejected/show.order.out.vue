@@ -1,14 +1,14 @@
-<style lang="less" scoped>
-  @leftWidth: 180px;
+<style lang="scss" scoped>
+  $leftWidth: 180px;
   .content-part {
     .content-left {
-      width: @leftWidth;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 
@@ -50,7 +50,6 @@
       <div class="content-right content-padding">
         <h3>{{ title }}</h3>
         <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
-        <receipt :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt>
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="1" v-show="index === 8"></relevance-code>
@@ -63,13 +62,12 @@
 <script>
   import basicInfo from './detail/base-info.vue';
   import log from '@/components/common/order.log.vue';
-  import receipt from './detail/receipt.vue';
   import { http, InWork, erpOrder } from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
 
   export default {
-    components: {basicInfo, log, receipt, orderAttachment, relevanceCode},
+    components: {basicInfo, log, orderAttachment, relevanceCode},
     props: {
       orderId: {
         type: String
@@ -96,9 +94,6 @@
         let perms = this.$store.state.permissions || [];
 
         menu.push({name: '订单详情', key: 0});
-//        if (this.state === '3') {
-//          menu.push({name: '收货详情', key: 1});
-//        }
         if (perms.includes('order-document-watch')) {
           menu.push({name: '附件管理', key: 3});
         }

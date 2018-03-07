@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import "../../assets/mixins";
   .content-part {
     .content-right {
@@ -24,7 +24,7 @@
       background: #ffffff;
     }
     &:nth-child(even) {
-      background: @dialog-left-bg;
+      background: $dialog-left-bg;
     }
   }
 
@@ -48,6 +48,7 @@
           </el-col>
           <el-col :span="12">
             <oms-row label="可用库存" :span="span">{{ currentItem.availableCount }}</oms-row>
+            <oms-row label="锁定库存" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
             <oms-row label="实际合格库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
             <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
             <oms-row label="实际不合格库存" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
@@ -97,17 +98,11 @@
   import { http } from '@/resources';
 
   export default {
-    props: ['currentItem'],
+    props: ['currentItem', 'isShowLock'],
     data () {
       return {
         loadingData: false,
         storeDetails: [],
-        packSizeTyps: [
-          '大包装',
-          '中包装',
-          '小包装',
-          '散件'
-        ],
         span: 9
       };
     },
@@ -130,12 +125,6 @@
           this.loadingData = false;
           this.storeDetails = res.data.list;
         });
-      },
-      formatSize (size) {
-        return size === 0 ? '大包装'
-          : size === 1 ? '中包装'
-            : size === 2 ? '小包装'
-              : size === 3 ? '散件' : '';
       }
     }
   };

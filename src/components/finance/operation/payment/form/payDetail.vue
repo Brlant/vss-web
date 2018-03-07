@@ -1,27 +1,9 @@
-<style lang="less">
-  @import "../../../../../assets/mixins.less";
-
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
+<style lang="scss" scoped>
+  @import "../../../../../assets/mixins.scss";
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-      height: 70px;
+      color: $activeColor;
     }
   }
 
@@ -35,9 +17,6 @@
     }
   }
 
-  .minor-part {
-    color: #999;
-  }
 </style>
 <template>
   <div>
@@ -55,10 +34,10 @@
             </div>
             <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
             </div>
           </el-option>
@@ -72,7 +51,7 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item>
-        <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+        <el-button type="primary" native-type="submit" @click.stop="searchInOrder">查询</el-button>
       </el-form-item>
     </el-form>
     <div class="product-list-detail">

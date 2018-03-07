@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
 
   .page-right-part {
     box-sizing: content-box;
@@ -46,16 +46,6 @@
 
   }
 
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .exceptionPosition {
     /*margin-left: 40px;*/
     position: absolute;
@@ -96,27 +86,19 @@
     cursor: pointer;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
 </style>
 <template>
   <div class="order-page">
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm :label="vaccineType === '1'?'sales-order-add': 'second-vaccine-sales-order-add' ">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -149,7 +131,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -169,10 +151,10 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                     </div>
                   </el-option>
@@ -208,7 +190,8 @@
 
   <div class="order-list-status container" style="margin-bottom:20px">
     <div class="status-item"
-         :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4' }"
+         :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4',
+          'cancelPosition': item.state==='5'}"
          v-for="(item,key) in orgType"
          @click="changeStatus(item,key)">
       <div class="status-bg" :class="['b_color_'+key]"></div>
@@ -216,7 +199,7 @@
     </div>
   </div>
   <div class="order-list clearfix">
-    <el-row class="order-list-header" :gutter="10">
+    <el-row class="order-list-header">
       <el-col :span="filters.state === '0' ? 5: 6">货主/订单号</el-col>
       <el-col :span="4">业务类型</el-col>
       <el-col :span="filters.state === '0' ? 5: 6">接种点</el-col>
@@ -293,7 +276,7 @@
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox" :vaccineType="vaccineType"></show-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+    <page-right :show="showItemRight" @right-close="beforeCloseConfirm" :css="{'width':'1000px','padding':0}">
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox" :vaccineType="vaccineType"></add-form>
     </page-right>
@@ -304,6 +287,7 @@
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
   import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import OrderMixin from '@/mixins/orderMixin';
 
   export default {
     components: {
@@ -362,6 +346,7 @@
         goodesList: []
       };
     },
+    mixins: [OrderMixin],
     mounted () {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
@@ -475,6 +460,8 @@
           pageSize: this.pager.pageSize,
           goodsType: this.vaccineType === '1' ? '0' : '1'
         });
+        // 明细查询
+        param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         erpOrder.query(param).then(res => {
           this.orderList = res.data.list;
 //          this.pager.count = res.data.count;

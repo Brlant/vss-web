@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @import "../../../assets/mixins";
 
   .el-form .el-select {
@@ -23,16 +23,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .oms-row {
     font-size: 14px;
     margin-bottom: 10px;
@@ -40,23 +30,6 @@
 
   .content-body {
     margin: 20px 0;
-  }
-
-  /*<!--.tr-right {-->*/
-  /*<!--cursor: pointer;-->*/
-  /*<!--&:hover, &.active {-->*/
-  /*<!--background: @dialog-left-bg;-->*/
-  /*<!--}-->*/
-  /*<!--}-->*/
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
   }
 
   .table > tbody > tr:first-child > td {
@@ -70,31 +43,13 @@
     }
   }
 
-  .advanced-query-form {
-    background: #fff;
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .el-select-dropdown__item {
-    height: auto;
-  }
 </style>
 <template>
-  <div>
+  <div class="order-page">
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -118,13 +73,13 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                        v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left">
-                      <span>销售价格</span>  {{item.orgGoodsDto.sellPrice | formatMoney}}
+                      <span>销售价格:</span>{{item.orgGoodsDto.sellPrice | formatMoney}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                       </span>
                     </div>
                   </el-option>

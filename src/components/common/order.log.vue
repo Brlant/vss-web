@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .order-cost-part {
     padding: 0 8px;
     margin-bottom: 20px;
@@ -54,12 +54,8 @@
 </template>
 <script>
   import { http } from '@/resources';
-  import { TimelineItem, Timeline } from './timeline/index.js';
 
   export default {
-    components: {
-      TimelineItem, Timeline
-    },
     props: {
       currentOrder: {
         type: Object,

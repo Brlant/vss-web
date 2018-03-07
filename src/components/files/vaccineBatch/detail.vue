@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .content-part {
     .content-right {
       > h3 {
@@ -63,7 +63,7 @@
                       <div class="base-pic-item">
                         <div @click="watchDrugControlReport(drugControlReportList[0])">
                           <img
-                            :src="drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_2'">
+                            :src="drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -84,7 +84,7 @@
                     <div class="base-pic-list" v-if="batchReleaseList.length>0">
                       <div class="base-pic-item">
                         <div @click="watchBatchRelease(batchReleaseList[0])">
-                          <img :src="batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_2'">
+                          <img :src="batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -108,7 +108,7 @@
                       <div class="base-pic-item">
                         <div @click="watchImportCertificate(importCertificateList[0])">
                           <img
-                            :src="importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_2'">
+                            :src="importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -129,7 +129,7 @@
                     <div class="base-pic-list" v-if="customsPassList.length>0">
                       <div class="base-pic-item">
                         <div @click="watchCustomsPass(customsPassList[0])">
-                          <img :src="customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_2'">
+                          <img :src="customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>

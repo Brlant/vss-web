@@ -20,7 +20,7 @@
   </div>
 </template>
 
-<style lang="less" scoped>
+<style lang="scss" scoped>
   .avatar-user-uploader .el-upload {
     border: 0;
     cursor: pointer;

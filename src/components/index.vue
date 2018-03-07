@@ -1,9 +1,4 @@
-<style lang="less">
-  @import "../../static/css/oms.css";
-  @import "../assets/mixins.less";
-  @import "../assets/oms.less";
-
-
+<style lang="scss">
 
   .layer-loading {
     text-align: center;
@@ -90,9 +85,9 @@
   }
 </style>
 <template>
-  <div class="app-body" :style="'padding-left:'+bodyLeft">
+  <div class="app-body full-width" :style="'padding-left:'+bodyLeft">
     <app-header :to-route="toRoute" v-if="userType" :level="level"></app-header>
-    <div class="main-body" style="padding:0 8px;">
+    <div class="main-body">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
         <router-view class="app-content-view"></router-view>
@@ -150,7 +145,7 @@
       next();
     },
     watch: {
-      $route () {
+      $route() {
         this.$store.commit('initBottomLoading', false);
       }
     },
@@ -246,7 +241,10 @@
         });
       },
       setBodyHeight: function () {
-        this.$store.commit('setBodyHeight', window.innerHeight - 200 + 'px');
+        this.$store.commit('setBodyHeight', {
+          height: window.innerHeight - 200 + 'px',
+          window: {width: window.innerWidth, height: window.innerHeight}
+        });
       }
     }
   };
