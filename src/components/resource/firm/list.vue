@@ -454,7 +454,7 @@
     },
     computed: {
       orgRelationList() {
-        return this.$store.state.dict['orgRelation'];
+        return this.$getDict('orgRelation');
       },
       companyAddress() {
         let province = this.businessRelationItem.followOrg.orgDto.province;

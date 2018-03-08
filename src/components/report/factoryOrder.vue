@@ -208,8 +208,8 @@
         return this.$store.state.orgLevel;
       },
       bizTypeList () {
-        let inType = JSON.parse(JSON.stringify(this.$store.state.dict['bizInType'] || []));
-        let outType = JSON.parse(JSON.stringify(this.$store.state.dict['bizOutType'] || []));
+        let inType = JSON.parse(JSON.stringify(this.$getDict('bizInType') || []));
+        let outType = JSON.parse(JSON.stringify(this.$getDict('bizOutType') || []));
         inType.forEach(i => {
           i.key = '0-' + i.key;
         });

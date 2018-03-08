@@ -222,7 +222,7 @@
     },
     computed: {
       PaymentMethod: function () {
-        return this.$store.state.dict['PaymentMethod'];
+        return this.$getDict('PaymentMethod');
       }
     },
     watch: {

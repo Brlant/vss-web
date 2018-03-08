@@ -58,7 +58,7 @@
     },
     computed: {
       cancelOrderReasons: function () {
-        return this.$store.state.dict['cancelOrderReason'];
+        return this.$getDict('cancelOrderReason');
       }
     },
     methods: {

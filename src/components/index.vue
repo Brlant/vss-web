@@ -211,9 +211,9 @@
           utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
           this.loading = false;
 
-          DictGroup.getAll().then(data => {
-            this.$store.commit('initDict', data);
-          });
+          // DictGroup.getAll().then(data => {
+          //   this.$store.commit('initDict', data);
+          // });
         });
       },
       // getRoleMenus(data) {

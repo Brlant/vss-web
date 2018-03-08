@@ -301,10 +301,10 @@
     },
     computed: {
       typeId() {
-        return this.$store.state.dict['typeId'];
+        return this.$getDict('typeId');
       },
       storageCondition() {
-        return this.$store.state.dict['storageCondition'];
+        return this.$getDict('storageCondition');
       },
       showTitle() {
         let tilet = '新增';

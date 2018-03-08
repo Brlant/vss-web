@@ -22,7 +22,8 @@ const state = {
   logisticsCentreId: '6320790940790948456',
   bottomLoading: false,
   isShowGoodsList: false,
-  windowSize: {width: 1000, height: 500}
+  windowSize: {width: 1000, height: 500},
+  requestingDictAry: []
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -131,6 +132,9 @@ const mutations = {
   },
   initMenuParentIds(state, data) {
     state.menuParentIds = data;
+  },
+  initRequestingDictAry (state, data) {
+    state.requestingDictAry = data;
   }
 };
 

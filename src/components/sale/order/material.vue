@@ -43,7 +43,7 @@
     },
     computed: {
       materialUnits () {
-        return this.$store.state.dict['materialUnit'];
+        return this.$getDict('materialUnit');
       }
     },
     mounted () {
