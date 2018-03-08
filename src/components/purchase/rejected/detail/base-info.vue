@@ -176,22 +176,22 @@
     },
     computed: {
       bizTypeList () {
-        return this.$store.state.dict['bizOutType'];
+        return this.$getDict('bizOutType');
       },
       transportationMeansList () {
-        return this.$store.state.dict['outTransportMeans'];
+        return this.$getDict('outTransportMeans');
       },
       transportationConditionList () {
-        return this.$store.state.dict['transportationCondition'];
+        return this.$getDict('transportationCondition');
       },
       shipmentPackingUnit () {
-        return this.$store.state.dict['shipmentPackingUnit'];
+        return this.$getDict('shipmentPackingUnit');
       },
       measurementUnitList () {
-        return this.$store.state.dict['measurementUnit'];
+        return this.$getDict('measurementUnit');
       },
       orgRelationList () {
-        return this.$store.state.dict['orgRelation'];
+        return this.$getDict('orgRelation');
       },
       totalMoney: function () {
         let totalMoney = 0.00;

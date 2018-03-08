@@ -346,10 +346,10 @@
     },
     computed: {
       transportationMeansList: function () {
-        return this.$store.state.dict['transportationMeans'];
+        return this.$getDict('transportationMeans');
       },
       bizInTypes: function () {
-        return this.$store.state.dict['bizInType'];
+        return this.$getDict('bizInType');
       },
       vaccineType() {
         return this.$route.meta.type;

@@ -488,19 +488,19 @@
     },
     computed: {
       bizTypeList: function () {
-        return this.$store.state.dict['bizInType'];
+        return this.$getDict('bizInType');
       },
       transportationMeansList: function () {
-        return this.$store.state.dict['transportationMeans'];
+        return this.$getDict('transportationMeans');
       },
       shipmentPackingUnit: function () {
-        return this.$store.state.dict['shipmentPackingUnit'];
+        return this.$getDict('shipmentPackingUnit');
       },
       measurementUnitList: function () {
-        return this.$store.state.dict['measurementUnit'];
+        return this.$getDict('measurementUnit');
       },
       transportationConditionList: function () {
-        return this.$store.state.dict['transportationCondition'];
+        return this.$getDict('transportationCondition');
       },
       totalMoney: function () {
         let totalMoney = 0.00;

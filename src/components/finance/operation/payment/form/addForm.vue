@@ -251,7 +251,7 @@
     },
     computed: {
       PaymentMethod: function () {
-        return this.$store.state.dict['PaymentMethod'];
+        return this.$getDict('PaymentMethod');
       },
       orgLevel () {
         return this.$store.state.orgLevel;

@@ -140,7 +140,7 @@
 
     computed: {
       'dictAddress': function () {
-        return this.$store.state.dict['orgAddress'];
+        return this.$getDict('orgAddress');
       }
     },
     methods: {

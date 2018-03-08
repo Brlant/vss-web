@@ -365,10 +365,10 @@
     },
     computed: {
       transportationMeansList: function () {
-        return this.$store.state.dict['outTransportMeans'];
+        return this.$getDict('outTransportMeans');
       },
       bizInTypes: function () {
-        return this.$store.state.dict['bizOutType'];
+        return this.$getDict('bizOutType');
       }
     },
     watch: {

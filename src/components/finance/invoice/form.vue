@@ -229,7 +229,7 @@
     },
     computed: {
       invoiceTypes: function () {
-        return this.$store.state.dict['invoiceType'];
+        return this.$getDict('invoiceType');
       }
     },
     methods: {
