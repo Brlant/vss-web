@@ -263,17 +263,15 @@
     </div>
     <page-right :show="showItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <add-form type="0" @change="onSubmit" :action="action" @right-close="resetRightBox"></add-form>
+      <add-form @change="onSubmit" :action="action" @right-close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <edit-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action"
-                 @right-close="resetRightBox"></edit-form>
+      <edit-form :orderId="currentOrderId" @change="onSubmit" :action="action" @right-close="resetRightBox"></edit-form>
     </page-right>
     <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
-      <show-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action"
-                 @right-close="resetRightBox"></show-form>
+      <show-form :orderId="currentOrderId" @right-close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
@@ -452,13 +450,11 @@
         } else {
           this.showItemRight = true;
         }
-        this.defaultIndex = 2;
       },
       showContract(item) {
         this.action = 'watch';
         this.currentOrderId = item.id;
         this.showDetail = true;
-        this.defaultIndex = 2;
       },
       searchInOrder: function () {// 搜索
         this.searchCondition.startDate = this.formatTime(this.createTimes[0]);

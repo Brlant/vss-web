@@ -375,15 +375,8 @@
       }
     },
     watch: {
-      index: function (val) {
-        this.productListSet.forEach((item) => {
-          if (item.key === val) {
-            this.currentPartName = item.name;
-          }
-        });
-      },
       orderId: function (val) {
-        if (val) {
+        if (val && this.action === 'edit') {
           this.orderId = val;
           this.editOrderInfo();
         }

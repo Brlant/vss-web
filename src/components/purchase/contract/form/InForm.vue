@@ -516,8 +516,8 @@
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       },
-      action() {
-        if (this.$store.state.user.userCompanyAddress) {
+      action(val) {
+        if (this.$store.state.user.userCompanyAddress && val === 'add') {
           BaseInfo.queryBaseInfo(this.$store.state.user.userCompanyAddress).then(res => {
             let myDate = new Date();
             this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
