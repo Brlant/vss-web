@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../../assets/mixins.scss";
 
-  @leftWidth: 200px;
+  $leftWidth: 200px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -14,93 +14,15 @@
   }
 
   .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
     .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
       text-align: center;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        padding: 0;
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
+        left: $leftWidth;
       }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-    }
-
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 20px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
+      left: $leftWidth;
     }
   }
 
@@ -151,18 +73,6 @@
 
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-
   .ml15 {
     margin-left: 40px;
   }
@@ -171,19 +81,9 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    height: auto;
-  }
 
   .productItem-info {
     float: left;
-  }
-
-  .order-good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: auto;
-    }
   }
 
   .ar {
@@ -192,7 +92,7 @@
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 </style>
@@ -201,7 +101,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">{{ defaultIndex === 2 ? '编辑采购合同' : '新增采购合同'}}</h2>
+        <h2 class="clearfix right-title">新增采购合同</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -447,29 +347,16 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, http, LogisticsCenter, PurchaseContract } from './../../../../resources';
+  import {Address, BaseInfo, http, LogisticsCenter, PurchaseContract} from './../../../../resources';
   import utils from '@/tools/utils';
   import OrderMixin from '@/mixins/orderMixin';
+
   export default {
     name: 'addForm',
     loading: false,
-    props: {
-      type: {
-        'type': String,
-        'default': '1'
-      },
-      defaultIndex: {
-        type: Number,
-        default: 0
-      },
-      action: {
-        type: String,
-        default: ''
-      },
-      purchase: Object,
-      orderId: String,
-      vaccineType: String
-    },
+    props: [
+      'action'
+    ],
     mixins: [OrderMixin],
     data: function () {
       return {
@@ -588,19 +475,19 @@
     },
     computed: {
       bizTypeList: function () {
-        return this.$store.state.dict['bizInType'];
+        return this.$getDict('bizInType');
       },
       transportationMeansList: function () {
-        return this.$store.state.dict['transportationMeans'];
+        return this.$getDict('transportationMeans');
       },
       shipmentPackingUnit: function () {
-        return this.$store.state.dict['shipmentPackingUnit'];
+        return this.$getDict('shipmentPackingUnit');
       },
       measurementUnitList: function () {
-        return this.$store.state.dict['measurementUnit'];
+        return this.$getDict('measurementUnit');
       },
       transportationConditionList: function () {
-        return this.$store.state.dict['transportationCondition'];
+        return this.$getDict('transportationCondition');
       },
       totalMoney: function () {
         let totalMoney = 0.00;
@@ -622,29 +509,6 @@
           }
         });
       },
-      defaultIndex (val) {
-        this.isStorageData = false;
-        this.index = 0;
-        this.idNotify = true;
-        let user = this.$store.state.user;
-        this.form.orgId = user.userCompanyAddress;
-        this.filterOrg();
-        this.filterLogistics();
-        this.filterAddress();
-        this.checkLicence(this.form.orgId);
-        if (this.purchase.id) {
-          this.createOrderInfo();
-        }
-        if (val === 2) {
-          this.editOrderInfo();
-        } else {
-          this.resetForm();
-          this.form.state = '';
-          this.form.id = null;
-          // 设默认值
-          this.setDefaultValue();
-        }
-      },
       form: {
         handler: 'autoSave',
         deep: true
@@ -665,6 +529,8 @@
       this.currentPartName = this.productListSet[0].name;
       this.initForm();
       this.filterLogisticsCenter();
+      this.filterOrg();
+      this.filterAddress();
     },
     methods: {
       filterAddressLabel (item) {
@@ -706,15 +572,6 @@
             this.accessoryList = res.data.list;
             this.product.amount = Math.abs(this.purchase.count);
           });
-//          this.$nextTick(() => {
-//            this.form.detailDtoList.push({
-//              amount: Math.abs(this.purchase.count),
-//              orgGoodsId: orgGoodsId,
-//              orgGoodsName: res.data.orgGoodsDto.name,
-//              unitPrice: res.data.orgGoodsDto.procurementPrice,
-//              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
-//            });
-//          });
         });
       },
       editOrderInfo () {
@@ -820,7 +677,7 @@
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
-          auditedStatus: '1'
+          auditedStatus: '1', status: 0
         }).then(res => {
           this.cdcWarehouses = res.data;
           let defaultStore = res.data.filter(item => item.default);
@@ -829,60 +686,6 @@
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
-      },
-      bizTypeChange: function (val) {// 业务类型改变
-        if (!this.isStorageData) {// 有缓存时，不重置表单
-          let orgId = this.form.orgId;
-          let bizType = this.form.bizType;
-          this.$refs['contractForm'].resetFields();
-          this.form.remark = '';
-          this.form.orgId = orgId;
-          this.form.bizType = bizType;
-        }
-        if (this.transportationMeansList && this.transportationMeansList.length) {
-          if (val === '1') {
-            this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '1');
-          } else {
-            this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '3');
-          }
-        }
-        switch (val) {
-          case '0' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: true, // 是否显示来源单位
-              expectedTimeLabel: '预计入库时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '1' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: true, // 是否显示来源单位
-              expectedTimeLabel: '拟退货时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '2' : {
-            this.showContent = {
-              isShowOtherContent: false, // 是否显示物流类型
-              isShowSupplierId: false, // 是否显示来源单位
-              expectedTimeLabel: ''
-            };
-            break;
-          }
-          case '3' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: false, // 是否显示来源单位
-              expectedTimeLabel: '预计入库时间'
-            };
-            break;
-          }
-        }
-
       },
       changeSupplier: function (val, isEdit) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
@@ -897,9 +700,8 @@
         if (this.form.transportationMeansId === '2') {
           Address.queryAddress(val, {
             deleteFlag: false,
-//                warehouseType: 0,
             orgId: val,
-            auditedStatus: '1'
+            auditedStatus: '1', status: 0
           }).then(res => {
             this.supplierWarehouses = res.data;
             // let defaultStore = res.data.filter(item => item.default);
@@ -943,7 +745,26 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.vaccineType) {
+        if (this.orgLevel === 1) {
+          if (!this.form.supplierId) {
+            this.searchProductList = [];
+            return;
+          }
+          let params = {
+            keyWord: query
+          };
+          let rTime = Date.now();
+          this.requestTime = rTime;
+          http.get(`/vaccine-info/${this.form.supplierId}/first-vaccine/valid`, {params: params}).then(res => {
+            if (this.requestTime > rTime) {
+              return;
+            }
+            this.searchProductList = res.data.list;
+            this.$nextTick(function () {
+              this.filterProducts();
+            });
+          });
+        } else {
           if (!this.form.supplierId) {
             this.searchProductList = [];
             return;
@@ -952,56 +773,18 @@
             keyWord: query,
             factoryId: this.form.supplierId
           };
+          let rTime = Date.now();
+          this.requestTime = rTime;
           http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+            if (this.requestTime > rTime) {
+              return;
+            }
             this.searchProductList = res.data.list;
             this.$nextTick(function () {
               this.filterProducts();
             });
           });
-        } else {
-          if (this.orgLevel === 1) {
-            if (!this.form.supplierId) {
-              this.searchProductList = [];
-              return;
-            }
-            let params = {
-              keyWord: query
-            };
-            let rTime = Date.now();
-            this.requestTime = rTime;
-            http.get(`/vaccine-info/${this.form.supplierId}/first-vaccine/valid`, {params: params}).then(res => {
-              if (this.requestTime > rTime) {
-                return;
-              }
-              this.searchProductList = res.data.list;
-              this.$nextTick(function () {
-                this.filterProducts();
-              });
-            });
-          } else {
-            if (!this.form.supplierId) {
-              this.searchProductList = [];
-              return;
-            }
-            let params = {
-              vaccineType: this.vaccineType,
-              keyWord: query,
-              factoryId: this.form.supplierId
-            };
-            let rTime = Date.now();
-            this.requestTime = rTime;
-            http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-              if (this.requestTime > rTime) {
-                return;
-              }
-              this.searchProductList = res.data.list;
-              this.$nextTick(function () {
-                this.filterProducts();
-              });
-            });
-          }
         }
-
       },
       filterProducts: function () {
         let arr = [];

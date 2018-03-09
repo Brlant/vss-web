@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .cancel-reason {
     display: flex;
     align-items: center;
@@ -58,7 +58,7 @@
     },
     computed: {
       cancelOrderReasons: function () {
-        return this.$store.state.dict['cancelOrderReason'];
+        return this.$getDict('cancelOrderReason');
       }
     },
     methods: {

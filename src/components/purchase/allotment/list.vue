@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
 
   .page-right-part {
     box-sizing: content-box;
@@ -46,16 +46,6 @@
 
   }
 
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .exceptionPosition {
     /*margin-left: 40px;*/
     position: absolute;
@@ -96,11 +86,6 @@
     cursor: pointer;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
   .order-list-status-right {
     justify-content: flex-end;
   }
@@ -110,16 +95,13 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="allocating-order-add">
                   <a href="#" class="btn-circle" @click.prevent=""><i
                     class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -433,10 +415,10 @@
     },
     computed: {
       transportationMeansList: function () {
-        return this.$store.state.dict['transportationMeans'];
+        return this.$getDict('transportationMeans');
       },
       bizInTypes: function () {
-        return this.$store.state.dict['bizInType'];
+        return this.$getDict('bizInType');
       }
     },
     watch: {
@@ -523,6 +505,8 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         });
+        // 明细查询
+        param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         if (this.filters.state !== '20') {
           erpOrder.query(param).then(res => {
             this.orderList = res.data.list;

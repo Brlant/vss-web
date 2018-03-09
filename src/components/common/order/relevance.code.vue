@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import '../../../assets/mixins';
 
   .product-code-list {
@@ -26,7 +26,7 @@
       margin-top: 10px;
       cursor: pointer;
       &:hover a {
-        color: @activeColor;
+        color: $activeColor;
       }
     }
   }

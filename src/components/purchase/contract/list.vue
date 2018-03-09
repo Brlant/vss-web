@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
 
   .page-right-part {
     box-sizing: content-box;
@@ -46,16 +46,6 @@
 
   }
 
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .exceptionPosition {
     /*margin-left: 40px;*/
     position: absolute;
@@ -96,11 +86,6 @@
     cursor: pointer;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
   .order-list-status {
     .status-item {
       width: 90px;
@@ -112,16 +97,13 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="purchasing-contract-add">
                   <a href="#" class="btn-circle" @click.prevent=""><i
                     class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -174,7 +156,7 @@
 
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
+             :class="{'active':key==activeStatus}"
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
@@ -203,7 +185,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showContract(item)"
-               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentOrderId==item.id}]">
+               :class="['status-'+filterListColor(item.availabilityStatus,item.used),{'active':currentOrderId==item.id}]">
             <el-row>
               <el-col :span="4" class="pt10">
                 <div class="f-grey">
@@ -281,19 +263,16 @@
     </div>
     <page-right :show="showItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
-                :action="action"
-                @right-close="resetRightBox"></add-form>
+      <add-form type="0" @change="onSubmit" :action="action" @right-close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <edit-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
-                 :action="action"
+      <edit-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action"
                  @right-close="resetRightBox"></edit-form>
     </page-right>
     <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
-      <show-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase" :action="action"
+      <show-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action"
                  @right-close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
@@ -352,7 +331,6 @@
           count: 0,
           pageSize: 20
         },
-        defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
         user: {},
         purchase: {}
@@ -361,21 +339,13 @@
     mixins: [OrderMixin],
     mounted() {
       this.getOrderList(1);
-//      let orderId = this.$route.params.id;
-//      if (orderId === 'add') {
-//        this.add();
-//        this.purchase = {
-//          id: this.$route.query.id,
-//          count: this.$route.query.count
-//        };
-//      }
     },
     computed: {
       transportationMeansList: function () {
-        return this.$store.state.dict['transportationMeans'];
+        return this.$getDict('transportationMeans');
       },
       bizInTypes: function () {
-        return this.$store.state.dict['bizInType'];
+        return this.$getDict('bizInType');
       },
       vaccineType() {
         return this.$route.meta.type;
@@ -439,7 +409,11 @@
         if (!item) {
           return;
         }
-        this.$confirm('确认按照采购合同《' + item.name + '》的信息批量生成采购订单?', '', {
+        let title = '';
+        if (item.name) {
+          title = '《' + item.name + '》';
+        }
+        this.$confirm('确认按照采购合同' + title + '的信息批量生成采购订单?', '', {
           confirmButtonText: '确认',
           cancelButtonText: '取消',
           type: 'warning'
@@ -486,15 +460,6 @@
         this.showDetail = true;
         this.defaultIndex = 2;
       },
-      getOrderStatus: function (order) {
-        let state = '';
-        for (let key in this.orgType) {
-          if (order.state === this.orgType[key].state) {
-            state = this.orgType[key].title;
-          }
-        }
-        return state;
-      },
       searchInOrder: function () {// 搜索
         this.searchCondition.startDate = this.formatTime(this.createTimes[0]);
         this.searchCondition.endDate = this.formatTime(this.createTimes[1]);
@@ -517,12 +482,10 @@
         this.showItemRight = false;
         this.showOrderRight = false;
         this.showEditItemRight = false;
-        this.defaultIndex = 0;
         this.action = '';
       },
       add: function () {
         this.showItemRight = true;
-        this.defaultIndex = 1;
         this.action = 'add';
       },
       onSubmit: function () {
@@ -567,13 +530,14 @@
           this.orgList = res.data;
         });
       },
-      filterListColor: function (flag) {// 过滤左边列表边角颜色
+      filterListColor: function (availabilityStatus, used) {// 过滤左边列表边角颜色
         let status = -1;
-        if (flag) {
+        if (availabilityStatus === true && used === false) {
           status = 0;
-        }
-        if (!flag) {
+        } else if (availabilityStatus === true && used === true) {
           status = 1;
+        } else {
+          status = 2;
         }
         return status;
       },

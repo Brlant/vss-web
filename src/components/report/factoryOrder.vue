@@ -1,26 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 300px;
-    }
-  }
+<style lang="scss" scoped="">
 
   .align-word {
     letter-spacing: 1em;
@@ -29,12 +7,6 @@
 
   .order-list-item {
     cursor: pointer;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
   }
 
   .header-list {
@@ -46,10 +18,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -72,7 +41,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8" >
-              <oms-form-row label="货品" :span="5">
+              <oms-form-row label="平台货品" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索货品" :remote-method="filterVaccine"
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects">
@@ -157,7 +126,8 @@
             {{ scope.row.suppliersName }}
           </template>
         </el-table-column>
-        <el-table-column prop="orgGoodsName" label="货品" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="货主货品" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="goodsName" label="平台货品" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="specification" label="规格" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"
                          width="120"></el-table-column>
@@ -238,8 +208,8 @@
         return this.$store.state.orgLevel;
       },
       bizTypeList () {
-        let inType = JSON.parse(JSON.stringify(this.$store.state.dict['bizInType'] || []));
-        let outType = JSON.parse(JSON.stringify(this.$store.state.dict['bizOutType'] || []));
+        let inType = JSON.parse(JSON.stringify(this.$getDict('bizInType') || []));
+        let outType = JSON.parse(JSON.stringify(this.$getDict('bizOutType') || []));
         inType.forEach(i => {
           i.key = '0-' + i.key;
         });
@@ -273,7 +243,10 @@
         let loadingInstance = this.$loading({
           target: this.$refs['orderDetail'].$el
         });
-        let params = this.searchWord;
+        let params = JSON.parse(JSON.stringify(this.searchWord));
+        params.goodsList = [];
+        this.searchWord.goodsId && params.goodsList.push(this.searchWord.goodsId);
+        params.goodsId = undefined;
         params.pageNo = pageNo;
         params.pageSize = this.pager.pageSize;
         this.$http({
@@ -327,12 +300,21 @@
         return sums;
       },
       exportFile: function () {
-        let params = this.searchWord;
+        let params = JSON.parse(JSON.stringify(this.searchWord));
+        params.goodsList = [];
+        this.searchWord.goodsId && params.goodsList.push(this.searchWord.goodsId);
+        params.goodsId = undefined;
         this.$store.commit('initPrint', {
           isPrinting: true,
           moduleId: this.$route.path
         });
-        this.$http.get('/order-statement/factory/export', {params}).then(res => {
+        this.$http({
+          url: '/order-statement/factory/export',
+          params,
+          paramsSerializer(params) {
+            return qs.stringify(params, {indices: false});
+          }
+        }).then(res => {
           utils.download(res.data.path, '出入库明细');
           this.$store.commit('initPrint', {
             isPrinting: false,

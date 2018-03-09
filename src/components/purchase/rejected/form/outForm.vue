@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../../assets/mixins.scss";
 
-  @leftWidth: 200px;
+  $leftWidth: 200px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -14,93 +14,15 @@
   }
 
   .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
     .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
       text-align: center;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        padding: 0;
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
+        left: $leftWidth;
       }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-    }
-
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 20px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
+      left: $leftWidth;
     }
   }
 
@@ -153,16 +75,6 @@
     }
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
 
   .ml15 {
     margin-left: 40px;
@@ -180,20 +92,13 @@
     float: left;
   }
 
-  .order-good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: auto;
-    }
-  }
-
   .ar {
     text-align: right;
   }
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 </style>
@@ -229,7 +134,7 @@
             </el-form-item>
             <el-form-item label="供货厂商" prop="customerId">
               <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.customerId" @change="changeCustomerId">
+                         v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -628,22 +533,22 @@
     },
     computed: {
       bizTypeList () {
-        return this.$store.state.dict['bizOutType'];
+        return this.$getDict('bizOutType');
       },
       transportationMeansList () {
-        return this.$store.state.dict['outTransportMeans'];
+        return this.$getDict('outTransportMeans');
       },
       transportationConditionList () {
-        return this.$store.state.dict['transportationCondition'];
+        return this.$getDict('transportationCondition');
       },
       shipmentPackingUnit () {
-        return this.$store.state.dict['shipmentPackingUnit'];
+        return this.$getDict('shipmentPackingUnit');
       },
       measurementUnitList () {
-        return this.$store.state.dict['measurementUnit'];
+        return this.$getDict('measurementUnit');
       },
       orgRelationList () {
-        return this.$store.state.dict['orgRelation'];
+        return this.$getDict('orgRelation');
       },
       totalMoney: function () {
         let totalMoney = 0.00;
@@ -852,7 +757,7 @@
               isShowCustomerId: false, // 是否显示POV
               expectedTimeLabel: '预计出库时间'
             };
-            Address.queryAddress(this.form.orgId, {deleteFlag: false, orgId: this.form.orgId, auditedStatus: '1'}).then(res => {
+            Address.queryAddress(this.form.orgId, {deleteFlag: false, orgId: this.form.orgId, auditedStatus: '1', status: 0}).then(res => {
               this.warehouses = res.data;
             });
             break;
@@ -899,7 +804,7 @@
           this.form.transportationAddress = '';
           return;
         }
-        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1'}).then(res => {
+        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0}).then(res => {
           this.warehouses = res.data || [];
           if (!this.isStorageData) {
             // let fs = this.warehouses.filter(i => i.default)[0];
@@ -933,7 +838,7 @@
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
-          auditedStatus: '1'
+          auditedStatus: '1', status: 0
         }).then(res => {
           this.LogisticsCenter = res.data;
           let defaultStore = res.data.filter(item => item.default);

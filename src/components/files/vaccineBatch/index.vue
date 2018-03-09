@@ -1,69 +1,6 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 300px;
-    }
-  }
-
-  .align-word {
-    letter-spacing: 1em;
-    margin-right: -1em;
-  }
-
-  .opera-btn-group {
-
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
+<style lang="scss" scoped="">
   .order-list-item {
     cursor: pointer;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
   }
 </style>
 <template>
@@ -71,10 +8,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -198,7 +132,7 @@
 
       </div>
 
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <div class="text-center" v-show="batches.length && !loadingData">
         <el-pagination
           layout="prev, pager, next"
           :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatcheNumbers"

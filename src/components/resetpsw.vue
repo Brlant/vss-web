@@ -1,5 +1,5 @@
-<style lang="less" scoped="">
-  @import "../assets/login.less";
+<style lang="scss" scoped="">
+  @import "../assets/login.scss";
 </style>
 <template>
   <div class="main-box-rap">

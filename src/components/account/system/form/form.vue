@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .power-style-part {
     margin: 12px 0;
     background-color: rgba(238, 238, 238, 0.5);
@@ -176,7 +176,7 @@
         return data.label.indexOf(value) !== -1;
       },
       getMenus: function () {
-        this.getRoleMenus().then(res => {
+        this.getOmsRoleMenus().then(res => {
           this.tree = res.data;
         });
       },

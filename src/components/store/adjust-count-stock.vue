@@ -1,40 +1,7 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 300px;
-    }
-  }
-
-  .align-word {
-    letter-spacing: 1em;
-    margin-right: -1em;
-  }
+<style lang="scss" scoped="">
 
   .order-list-item {
     cursor: pointer;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
   }
 
   .header-list {
@@ -53,7 +20,7 @@
   <div class="order-page">
     <div class="container">
       <el-alert
-        title="请选择货品和批号输入调整部分库存数，如果是正数则增加库存，如果是负数则减少库存。"
+        title="请选择货品和批号输入调整部分库存数，调整库存数必须是散件倍数，如果是正数则增加库存，如果是负数则减少库存。"
         type="warning">
       </el-alert>
       <div class="opera-btn-group" :class="{up:!showSearch}">
@@ -65,8 +32,9 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="12">
-              <oms-form-row label="货主货品" :span="4" :isRequire="true">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+              <oms-form-row :label="orgLevel===3?'被授权疫苗':'货主货品'" :span="4" :isRequire="true">
+                <el-select filterable remote :placeholder="orgLevel===3?'请输入名称搜索被授权疫苗':'请输入名称搜索货主货品'"
+                           :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
@@ -112,16 +80,26 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="12">
+              <el-col :span="12" v-show="searchWord.orgGoodsId">
+                <oms-form-row label="散件包装数量:" :span="10">
+                  <div style="margin-top: 7px">{{smallPackCount}}</div>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="12">
+
+              </el-col>
+            </el-col>
           </el-row>
           <el-row>
             <el-col :span="12">
               <el-col :span="12">
-                <oms-form-row label="可用库存" :span="8">
+                <oms-form-row label="可用库存" :span="10">
                   <el-input  type="number" v-model.number="form.availableCount"></el-input>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
-                <oms-form-row label="在途库存" :span="6">
+                <oms-form-row label="在途库存" :span="8">
                   <el-input type="number" v-model.number="form.transitCount"></el-input>
                 </oms-form-row>
               </el-col>
@@ -150,7 +128,7 @@
       </div>
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData"
-                :row-class-name="formatRowClass"
+                :row-class-name="formatRowClass" :summary-method="getSummaries"  show-summary
                 :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
@@ -159,6 +137,12 @@
                          width="100">
           <template slot-scope="scope">
             <span>{{scope.row.availableCount}}</span>
+          </template>
+        </el-table-column>
+        <el-table-column prop="undeterminedCount" label="锁定库存" :render-header="formatHeader" :sortable="true"
+                         width="110">
+          <template slot-scope="scope">
+            <span>{{scope.row.undeterminedCount}}</span>
           </template>
         </el-table-column>
         <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true"
@@ -194,12 +178,15 @@
 </template>
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import { BaseInfo, erpStock, http, Address } from '@/resources';
+  import {Address, BaseInfo, erpStock, http} from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
+  import OmsRow from '@dtop/dtop-web-common/packages/row';
 
   export default {
-    components: {detail},
+    components: {
+      OmsRow,
+      detail},
     data () {
       return {
         loadingData: false,
@@ -243,7 +230,8 @@
           availableCount: '',
           qualifiedCount: '',
           transitCount: '',
-          unqualifiedCount: ''
+          unqualifiedCount: '',
+          undeterminedCount: ''
         },
         doing: false
       };
@@ -260,7 +248,17 @@
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = height - 110;
         return height;
-      }
+      },
+      smallPackCount () {
+        let count = '';
+        if (!this.searchWord.orgGoodsId) return count;
+        this.orgGoods.forEach(i => {
+          if (i.id === this.searchWord.orgGoodsId) {
+            count = i.smallPackCount;
+          }
+        });
+        return count;
+      },
     },
     watch: {
       filters: {
@@ -296,16 +294,21 @@
             break;
           }
           case 4: {
+            content = '仓库内质量状态待确定而不允许销售的库存数';
+            title = '锁定库存';
+            break;
+          }
+          case 5: {
             content = '仓库内真实合格货品数量';
             title = '实际合格库存';
             break;
           }
-          case 5: {
+          case 6: {
             content = '在运输中的货品数量';
             title = '在途库存';
             break;
           }
-          case 6: {
+          case 7: {
             content = '仓库内真实不合格货品数量';
             title = '实际不合格库存';
             break;
@@ -355,7 +358,8 @@
             return;
           }
           if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' &&
-            column.property !== 'transitCount' && column.property !== 'unqualifiedCount') {
+            column.property !== 'transitCount' && column.property !== 'unqualifiedCount'
+            && column.property !== 'undeterminedCount') {
             sums[index] = '';
             return;
           }
@@ -401,15 +405,25 @@
         });
       },
       filterOrgGoods (query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
-        let params = Object.assign({}, {
-          deleteFlag: false,
-          orgId: orgId,
-          keyWord: query
-        });
-        http.get('/erp-stock/goods', {params}).then(res => {
-          this.orgGoods = res.data.list;
-        });
+        let level = this.$store.state.orgLevel;
+        if (level === 3) {
+          let params = Object.assign({}, {
+            keyWord: query
+          });
+          http.get('/vaccine-authorization/pov', {params}).then(res => {
+            this.orgGoods = res.data.list;
+          });
+        } else {
+          let orgId = this.$store.state.user.userCompanyAddress;
+          let params = Object.assign({}, {
+            deleteFlag: false,
+            orgId: orgId,
+            keyWord: query
+          });
+          http.get('/erp-stock/goods', {params}).then(res => {
+            this.orgGoods = res.data.list;
+          });
+        }
       },
       orgGoodsChange (val) {
         this.searchWord.batchNumberId = '';

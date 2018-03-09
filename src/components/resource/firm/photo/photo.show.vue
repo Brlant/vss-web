@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .c-photo-list {
     display: flex;
     flex-wrap: wrap;

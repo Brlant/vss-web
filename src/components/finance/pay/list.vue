@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @import "../../../assets/mixins";
 
   .el-form .el-select {
@@ -20,16 +20,6 @@
     margin-bottom: 20px;
     .font-bold {
       font-size: 14px;
-    }
-  }
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
     }
   }
 

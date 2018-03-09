@@ -1,15 +1,4 @@
-<style lang="less" scoped>
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
 
-</style>
 <template>
   <el-form ref="form" :rules="rules" :model="form" label-width="120px" class="demo-ruleForm">
     <h2 class="clearfix">{{showTitle}}区二类疫苗</h2>
@@ -101,10 +90,10 @@
         return title;
       },
       exceptionType: function () {
-        return this.$store.state.dict['exceptionType'];
+        return this.$getDict('exceptionType');
       },
       executionBody: function () {
-        return this.$store.state.dict['executionBody'];
+        return this.$getDict('executionBody');
       }
     },
     props: ['formItem', 'action', 'actionType'],

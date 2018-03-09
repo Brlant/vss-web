@@ -1,5 +1,5 @@
-<style lang="less" scoped>
-  @import "../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../assets/mixins.scss";
 
   .margin-left {
     margin-left: 15px;
@@ -106,7 +106,7 @@
           margin-left: 8px;;
           font-size: 14px;
           &:hover {
-            color: @activeColor;
+            color: $activeColor;
           }
         }
       }
@@ -454,7 +454,7 @@
     },
     computed: {
       orgRelationList() {
-        return this.$store.state.dict['orgRelation'];
+        return this.$getDict('orgRelation');
       },
       companyAddress() {
         let province = this.businessRelationItem.followOrg.orgDto.province;

@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -87,13 +87,6 @@
       &:hover {
         color: rgb(200, 0, 0)
       }
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 430px;
     }
   }
 </style>
@@ -308,10 +301,10 @@
     },
     computed: {
       typeId() {
-        return this.$store.state.dict['typeId'];
+        return this.$getDict('typeId');
       },
       storageCondition() {
-        return this.$store.state.dict['storageCondition'];
+        return this.$getDict('storageCondition');
       },
       showTitle() {
         let tilet = '新增';

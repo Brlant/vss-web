@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .el-form .el-select {
     display: block;
   }
@@ -140,7 +140,7 @@
 
     computed: {
       'dictAddress': function () {
-        return this.$store.state.dict['orgAddress'];
+        return this.$getDict('orgAddress');
       }
     },
     methods: {

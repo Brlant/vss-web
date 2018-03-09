@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @import "../../../assets/mixins";
   .table {
     margin-top: 10px;

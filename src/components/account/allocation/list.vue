@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -15,9 +15,6 @@
     overflow: auto;
   }
 
-  .minor-part {
-    color: #999;
-  }
 </style>
 <template>
   <div>

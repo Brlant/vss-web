@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
 
 
   .margin-left {
@@ -254,7 +254,7 @@
     },
     methods: {
       getMenuList: function (cache = true) {
-        this.getRoleMenus(cache).then(res => {
+        this.getOmsRoleMenus(cache).then(res => {
           this.menuList = res.data;
         });
       },

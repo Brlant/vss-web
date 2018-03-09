@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -89,17 +89,10 @@
       }
     }
   }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: 430px;
-    }
-  }
 </style>
 <template>
   <div>
-    <h2 class="clearfix">{{showTitle}}货主二类疫苗资料</h2>
+    <h2 class="clearfix">{{showTitle}}货主疫苗产品资料</h2>
     <el-form ref="goodSForm" :model="form" :rules="rules" label-width="120px" @submit.prevent="onSubmit('goodSForm')"
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
@@ -316,10 +309,10 @@
     },
     computed: {
       typeId () {
-        return this.$store.state.dict['typeId'];
+        return this.$getDict('typeId');
       },
       storageCondition () {
-        return this.$store.state.dict['storageCondition'];
+        return this.$getDict('storageCondition');
       },
       showTitle() {
         let tilet = '新增';

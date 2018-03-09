@@ -1,7 +1,4 @@
-<style lang="less">
-  @import "../../static/css/oms.css";
-  @import "../assets/mixins.less";
-  @import "../assets/oms.less";
+<style lang="scss">
 
   .layer-loading {
     text-align: center;
@@ -88,9 +85,9 @@
   }
 </style>
 <template>
-  <div class="app-body" :style="'padding-left:'+bodyLeft">
+  <div class="app-body full-width" :style="'padding-left:'+bodyLeft">
     <app-header :to-route="toRoute" v-if="userType" :level="level"></app-header>
-    <div class="main-body" style="padding:0 8px;">
+    <div class="main-body">
       <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
         <router-view class="app-content-view"></router-view>
@@ -214,9 +211,9 @@
           utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
           this.loading = false;
 
-          DictGroup.getAll().then(data => {
-            this.$store.commit('initDict', data);
-          });
+          // DictGroup.getAll().then(data => {
+          //   this.$store.commit('initDict', data);
+          // });
         });
       },
       // getRoleMenus(data) {

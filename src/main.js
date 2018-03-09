@@ -7,6 +7,9 @@ import './assets/element-variables.scss';
 import './assets/dtop-variables.scss';
 import '../static/css/oms.css';
 import '../static/fonts/iconfont.css';
+
+import '@/assets/erp.scss';
+
 import Vuex from 'vuex';
 import store from './store';
 
@@ -92,6 +95,31 @@ Vue.prototype.$scrollLoadingData = function (event) {
     }
   }
 };
+
+Vue.prototype.$getDict = function (groupName) {
+  if (!groupName) return [];
+  const state = this.$store.state;
+  if (state.dict[groupName]) {
+    return state.dict[groupName];
+  } else {
+    const ary = state.requestingDictAry;
+    if (ary.includes(groupName)) return [];
+    ary.push(groupName);
+    this.$store.commit('initRequestingDictAry', ary);
+    this.$http.get(`/dictGroup/${groupName}/items`).then(res => {
+      state.dict[groupName] = res.data;
+      this.$store.commit('initDict', state.dict);
+      const ary_new = state.requestingDictAry;
+      let index = ary_new.indexOf(groupName);
+      if (index !== -1) {
+        ary_new.splice(index, 1);
+      }
+      this.$store.commit('initRequestingDictAry', ary_new);
+    });
+    return [];
+  }
+};
+
 new Vue({
   template: '<router-view id="app"></router-view>',
   router,

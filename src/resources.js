@@ -118,6 +118,9 @@ export const Access = resource('/oms/access', http, {
   getRoleMenus: (orgId) => {
     return http.get(`/erp-access/org/${orgId}/admin/menus/tree`);
   },
+  getOmsRoleMenus: () => {
+    return http.get('oms/access/menus/tree');
+  },
   getOrgRoleMenus: (orgId) => {
     return http.get('/oms/access/org/' + orgId + '/admin/menus/tree');
   },
@@ -836,6 +839,7 @@ export const BaseInfo = resource('/orgs', http, {
   },
   // 根据业务关系查询相关的单位
   queryOrgByValidReation: (orgId, obj) => {
+    obj.size = -1;
     return http.get('/orgs/' + orgId + '/valid-relation/', {params: obj});
   },
   // 校验邮箱

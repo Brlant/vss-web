@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -130,7 +130,7 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="el-icon-t-search"></i> </a>
                 </span>
-              被授权二类疫苗
+              被授权疫苗
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -203,9 +203,9 @@
                     <!--<goods-row label="疫苗分类" :span="8">-->
                     <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
                     <!--</goods-row>-->
-                    <goods-row label="疫苗标志" :span="8">
-                      <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
-                    </goods-row>
+                    <!--<goods-row label="疫苗标志" :span="8">-->
+                      <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                    <!--</goods-row>-->
                     <goods-row label="储存条件" :span="8">
                       <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                     </goods-row>
@@ -283,7 +283,7 @@
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
                   [ 疾控专用 ]
                 </el-col>
-                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='2'">
+                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                   [ 器械专用 ]
                 </el-col>
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
@@ -296,21 +296,21 @@
                              v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.chemicalName }}
                   </goods-row>
-                  <goods-row label="器械生产许可证号" :span="12" v-if="data.goodsDto.typeId==='2'">
+                  <goods-row label="器械生产许可证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                     {{ data.goodsDto.propertyMap.productionLicense }}
                   </goods-row>
-                  <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId==='2'">
+                  <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                     {{ data.goodsDto.propertyMap.productionLicenseValidity | date }}
                   </goods-row>
-                  <goods-row label="厂家备案凭证号" :span="12" v-if="data.goodsDto.typeId==='2'||data.goodsDto.typeId==='3'">
+                  <goods-row label="厂家备案凭证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.recordNumber
                     }}
                   </goods-row>
                   <goods-row label="注册证书/备案凭证号" :span="12"
-                             v-if="data.goodsDto.typeId==='2'||data.goodsDto.typeId==='3'">
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.registrationRecordNumber }}
                   </goods-row>
-                  <goods-row label="备案凭证号有效期" :span="12" v-if="data.goodsDto.typeId==='2'||data.goodsDto.typeId==='3'">
+                  <goods-row label="备案凭证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.goodsRecordNOValidity | date }}
                   </goods-row>
                   <goods-row label="OTC标志" :span="12" v-if="data.goodsDto.typeId==='0'">
@@ -348,9 +348,9 @@
                     {{ data.goodsDto.propertyMap.instructionsCount
                     }}
                   </goods-row>
-                  <goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">
-                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
-                  </goods-row>
+                  <!--<goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">-->
+                    <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                  <!--</goods-row>-->
                   <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
                   </goods-row>

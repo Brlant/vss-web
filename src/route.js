@@ -216,9 +216,14 @@ const route = [
             meta: {moduleId: 'store', title: '即时库存', perm: 'cerp-stock-query'}
           },
           {
-            path: '/store/adjust',
-            component: resolve => require(['./components/store/adjust-stock.vue'], resolve),
-            meta: {moduleId: 'store', title: '库存调整', perm: 'cerp-stock-adjust'}
+            path: '/store/adjust/count',
+            component: resolve => require(['./components/store/adjust-count-stock.vue'], resolve),
+            meta: {moduleId: 'store', title: '库存数量调整', perm: 'cerp-stock-adjust'}
+          },
+          {
+            path: '/store/adjust/status',
+            component: resolve => require(['./components/store/record/list'], resolve),
+            meta: {moduleId: 'store', title: '库存状态调整', perm: 'cerp-stock-status-adjust'}
           },
           {
             path: '/store/allotment/:id',
@@ -358,25 +363,25 @@ const route = [
             component: resolve => require(['./components/resource/bidder/list.vue'], resolve),
             meta: {moduleId: 'resource', title: '中标疫苗', perm: 'successful-bidder-vaccine'}
           },
-          {
-            path: '/resource/first-vaccin/list',
-            component: resolve => require(['./components/resource/vaccin/firstVaccin/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
-          },
+          // {
+          //   path: '/resource/first-vaccin/list',
+          //   component: resolve => require(['./components/resource/vaccin/firstVaccin/list.vue'], resolve),
+          //   meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
+          // },
           {
             path: '/resource/second-vaccin/list',
             component: resolve => require(['./components/resource/vaccin/secondVaccin/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '二类疫苗产品资料', perm: 'second-vaccine-info'}
+            meta: {moduleId: 'resource', title: '疫苗产品资料', perm: 'second-vaccine-info'}
           },
-          {
-            path: '/resource/pov/first-vaccin/list',
-            component: resolve => require(['./components/resource/vaccin/pov/first/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '被授权一类疫苗', perm: 'pov-first-authorization-vaccine'}
-          },
+          // {
+          //   path: '/resource/pov/first-vaccin/list',
+          //   component: resolve => require(['./components/resource/vaccin/pov/first/list.vue'], resolve),
+          //   meta: {moduleId: 'resource', title: '被授权一类疫苗', perm: 'pov-first-authorization-vaccine'}
+          // },
           {
             path: '/resource/pov/second-vaccin/list',
             component: resolve => require(['./components/resource/vaccin/pov/second/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '被授权二类疫苗', perm: 'pov-second-authorization-vaccine'}
+            meta: {moduleId: 'resource', title: '被授权疫苗', perm: 'pov-second-authorization-vaccine'}
           },
           {
             path: '/resource/store',

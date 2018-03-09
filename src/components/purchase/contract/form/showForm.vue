@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../../assets/mixins.scss";
 
-  @leftWidth: 200px;
+  $leftWidth: 200px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -14,96 +14,17 @@
   }
 
   .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
     .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
       text-align: center;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        padding: 0;
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
+        left: $leftWidth;
       }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-    }
-
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 5px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
+      left: $leftWidth;
     }
   }
-
   .el-form .el-select {
     display: block;
   }
@@ -151,18 +72,6 @@
 
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-
   .ml15 {
     margin-left: 40px;
   }
@@ -171,19 +80,9 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    height: auto;
-  }
 
   .productItem-info {
     float: left;
-  }
-
-  .order-good-selects {
-    .el-select-dropdown__item {
-      height: auto;
-      width: auto;
-    }
   }
 
   .ar {
@@ -192,7 +91,7 @@
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 
@@ -204,6 +103,10 @@
     z-index: 1;
     text-align: center;
     padding: 15px;
+  }
+
+  .el-form-item {
+    margin-bottom: 10px;
   }
 </style>
 
@@ -338,26 +241,17 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, http, PurchaseContract } from './../../../../resources';
+  import {Address, BaseInfo, http, PurchaseContract} from './../../../../resources';
   import utils from '@/tools/utils';
 
   export default {
     name: 'showForm',
     loading: false,
     props: {
-      type: {
-        'type': String,
-        'default': '1'
-      },
-      defaultIndex: {
-        type: Number,
-        default: 0
-      },
       action: {
         type: String,
         default: ''
       },
-      purchase: Object,
       orderId: String
     },
     data: function () {
@@ -381,25 +275,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
-          'purchaseContractNo': '',
-          'purchaseContractName': '',
-          'availabilityStatus': true,
-          'orgId': '',
-          'customerId': '',
-          'bizType': '0',
-          'type': this.type,
-          'logisticsProviderId': '',
-          'transportationCondition': '',
-          'transportationMeansId': '1',
-          'transportationAddress': '',
-          'importedFlag': '',
-          'orgRelation': '',
-          'logisticsCentreId': '',
-          'expectedTime': '',
-          'detailDtoList': [],
-          'supplierId': '',
-          'remark': '',
-          'pickUpAddress': ''
+          detailDtoList: []
         },
         rules: {},
         orderGoodsRules: {},
@@ -434,19 +310,19 @@
     },
     computed: {
       bizTypeList: function () {
-        return this.$store.state.dict['bizInType'];
+        return this.$getDict('bizInType');
       },
       transportationMeansList: function () {
-        return this.$store.state.dict['transportationMeans'];
+        return this.$getDict('transportationMeans');
       },
       shipmentPackingUnit: function () {
-        return this.$store.state.dict['shipmentPackingUnit'];
+        return this.$getDict('shipmentPackingUnit');
       },
       measurementUnitList: function () {
-        return this.$store.state.dict['measurementUnit'];
+        return this.$getDict('measurementUnit');
       },
       transportationConditionList: function () {
-        return this.$store.state.dict['transportationCondition'];
+        return this.$getDict('transportationCondition');
       },
       totalMoney: function () {
         let totalMoney = 0.00;
@@ -465,25 +341,10 @@
           }
         });
       },
-      defaultIndex (val) {
-        this.isStorageData = false;
-        this.index = 0;
-        this.idNotify = true;
-        let user = this.$store.state.user;
-        this.form.orgId = user.userCompanyAddress;
-        this.filterOrg();
-        this.filterLogistics();
-        this.filterAddress();
-        this.checkLicence(this.form.orgId);
-        if (this.purchase.id) {
-          this.createOrderInfo();
-        }
-        if (val === 2) {
+      orderId: function (val) {
+        if (val) {
+          this.orderId = val;
           this.editOrderInfo();
-        } else {
-          this.resetForm();
-          this.form.state = '';
-          this.form.id = null;
         }
       },
       transportationMeansList: function (val) {
@@ -591,7 +452,7 @@
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
-          auditedStatus: '1'
+          auditedStatus: '1', status: 0
         }).then(res => {
           this.cdcWarehouses = res.data;
           let defaultStore = res.data.filter(item => item.default);
