@@ -218,28 +218,18 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, http, LogisticsCenter, PurchaseContract } from './../../../../resources';
+  import {Address, BaseInfo, http, LogisticsCenter, PurchaseContract} from './../../../../resources';
   import utils from '@/tools/utils';
 
   export default {
     name: 'editForm',
     loading: false,
     props: {
-      type: {
-        'type': String,
-        'default': '1'
-      },
-      defaultIndex: {
-        type: Number,
-        default: 0
-      },
       action: {
         type: String,
         default: ''
       },
-      purchase: Object,
-      orderId: String,
-      vaccineType: String
+      orderId: String
     },
     data: function () {
       return {
@@ -392,27 +382,10 @@
           }
         });
       },
-      defaultIndex(val) {
-        this.isStorageData = false;
-        this.index = 0;
-        this.idNotify = true;
-        let user = this.$store.state.user;
-        this.form.orgId = user.userCompanyAddress;
-        this.filterOrg();
-        this.filterLogistics();
-        this.filterAddress();
-        this.checkLicence(this.form.orgId);
-        if (this.purchase.id) {
-          this.createOrderInfo();
-        }
-        if (val === 2) {
+      orderId: function (val) {
+        if (val) {
+          this.orderId = val;
           this.editOrderInfo();
-        } else {
-          this.resetForm();
-          this.form.state = '';
-          this.form.id = null;
-          // 设默认值
-          this.setDefaultValue();
         }
       },
       transportationMeansList: function (val) {

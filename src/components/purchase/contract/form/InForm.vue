@@ -101,7 +101,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">{{ defaultIndex === 2 ? '编辑采购合同' : '新增采购合同'}}</h2>
+        <h2 class="clearfix right-title">新增采购合同</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -347,29 +347,16 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, http, LogisticsCenter, PurchaseContract } from './../../../../resources';
+  import {Address, BaseInfo, http, LogisticsCenter, PurchaseContract} from './../../../../resources';
   import utils from '@/tools/utils';
   import OrderMixin from '@/mixins/orderMixin';
+
   export default {
     name: 'addForm',
     loading: false,
-    props: {
-      type: {
-        'type': String,
-        'default': '1'
-      },
-      defaultIndex: {
-        type: Number,
-        default: 0
-      },
-      action: {
-        type: String,
-        default: ''
-      },
-      purchase: Object,
-      orderId: String,
-      vaccineType: String
-    },
+    props: [
+      'action'
+    ],
     mixins: [OrderMixin],
     data: function () {
       return {
@@ -522,29 +509,6 @@
           }
         });
       },
-      defaultIndex (val) {
-        this.isStorageData = false;
-        this.index = 0;
-        this.idNotify = true;
-        let user = this.$store.state.user;
-        this.form.orgId = user.userCompanyAddress;
-        this.filterOrg();
-        this.filterLogistics();
-        this.filterAddress();
-        this.checkLicence(this.form.orgId);
-        if (this.purchase.id) {
-          this.createOrderInfo();
-        }
-        if (val === 2) {
-          this.editOrderInfo();
-        } else {
-          this.resetForm();
-          this.form.state = '';
-          this.form.id = null;
-          // 设默认值
-          this.setDefaultValue();
-        }
-      },
       form: {
         handler: 'autoSave',
         deep: true
@@ -565,6 +529,8 @@
       this.currentPartName = this.productListSet[0].name;
       this.initForm();
       this.filterLogisticsCenter();
+      this.filterOrg();
+      this.filterAddress();
     },
     methods: {
       filterAddressLabel (item) {
@@ -606,15 +572,6 @@
             this.accessoryList = res.data.list;
             this.product.amount = Math.abs(this.purchase.count);
           });
-//          this.$nextTick(() => {
-//            this.form.detailDtoList.push({
-//              amount: Math.abs(this.purchase.count),
-//              orgGoodsId: orgGoodsId,
-//              orgGoodsName: res.data.orgGoodsDto.name,
-//              unitPrice: res.data.orgGoodsDto.procurementPrice,
-//              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
-//            });
-//          });
         });
       },
       editOrderInfo () {
@@ -730,60 +687,6 @@
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
       },
-      bizTypeChange: function (val) {// 业务类型改变
-        if (!this.isStorageData) {// 有缓存时，不重置表单
-          let orgId = this.form.orgId;
-          let bizType = this.form.bizType;
-          this.$refs['contractForm'].resetFields();
-          this.form.remark = '';
-          this.form.orgId = orgId;
-          this.form.bizType = bizType;
-        }
-        if (this.transportationMeansList && this.transportationMeansList.length) {
-          if (val === '1') {
-            this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '1');
-          } else {
-            this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '3');
-          }
-        }
-        switch (val) {
-          case '0' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: true, // 是否显示来源单位
-              expectedTimeLabel: '预计入库时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '1' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: true, // 是否显示来源单位
-              expectedTimeLabel: '拟退货时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '2' : {
-            this.showContent = {
-              isShowOtherContent: false, // 是否显示物流类型
-              isShowSupplierId: false, // 是否显示来源单位
-              expectedTimeLabel: ''
-            };
-            break;
-          }
-          case '3' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowSupplierId: false, // 是否显示来源单位
-              expectedTimeLabel: '预计入库时间'
-            };
-            break;
-          }
-        }
-
-      },
       changeSupplier: function (val, isEdit) {// 业务单位改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.supplierWarehouses = [];
@@ -797,7 +700,6 @@
         if (this.form.transportationMeansId === '2') {
           Address.queryAddress(val, {
             deleteFlag: false,
-//                warehouseType: 0,
             orgId: val,
             auditedStatus: '1', status: 0
           }).then(res => {
@@ -868,7 +770,6 @@
             return;
           }
           let params = {
-            vaccineType: this.vaccineType,
             keyWord: query,
             factoryId: this.form.supplierId
           };
