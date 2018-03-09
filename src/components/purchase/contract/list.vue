@@ -271,7 +271,7 @@
     </page-right>
     <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
-      <show-form :orderId="currentOrderId" @right-close="resetRightBox"></show-form>
+      <show-form :orderId="currentOrderId" :action="action" @right-close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">

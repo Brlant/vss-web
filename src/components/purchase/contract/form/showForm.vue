@@ -248,7 +248,8 @@
     name: 'showForm',
     loading: false,
     props: {
-      orderId: String
+      orderId: String,
+      action: String
     },
     data: function () {
       return {
