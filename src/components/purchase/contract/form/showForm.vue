@@ -157,7 +157,7 @@
             </el-form-item>
             <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              {{form.logisticsProviderId}}
+              {{form.logisticsProviderName}}
             </el-form-item>
             <el-form-item label="提货地址" v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' "
                           :clearable="true">
@@ -170,7 +170,7 @@
               {{form.centreName}}
             </el-form-item>
             <el-form-item label="疾控仓库地址">
-              {{ getWarehouseAddress(form)}}
+              {{ form.warehouseAddress}}
             </el-form-item>
             <!--<el-form-item label="是否进口">-->
             <!--{{form.importedFlag | formatStatus}}-->
@@ -241,17 +241,13 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, http, PurchaseContract} from './../../../../resources';
+  import {PurchaseContract} from './../../../../resources';
   import utils from '@/tools/utils';
 
   export default {
     name: 'showForm',
     loading: false,
     props: {
-      action: {
-        type: String,
-        default: ''
-      },
       orderId: String
     },
     data: function () {
@@ -275,7 +271,25 @@
         searchProductList: [],
         filterProductList: [],
         form: {
-          detailDtoList: []
+          'purchaseContractNo': '',
+          'purchaseContractName': '',
+          'availabilityStatus': true,
+          'orgId': '',
+          'customerId': '',
+          'bizType': '0',
+          'type': this.type,
+          'logisticsProviderId': '',
+          'transportationCondition': '0',
+          'transportationMeansId': '1',
+          'transportationAddress': '',
+          'importedFlag': '',
+          'orgRelation': '',
+          'logisticsCentreId': this.$store.state.logisticsCentreId,
+          'expectedTime': '',
+          'detailDtoList': [],
+          'supplierId': '',
+          'remark': '',
+          'pickUpAddress': ''
         },
         rules: {},
         orderGoodsRules: {},
@@ -285,16 +299,7 @@
           {name: '基本信息', key: 0},
           {name: '查看货品', key: 1}
         ],
-        orgList: [],
-        customerList: [],
-        logisticsList: [],
-        goodsList: {},
-        relationList: [],
-        LogisticsCenter: [],
-        doing: false,
-        isSupplierOrOrg: false, // 是不是货主或业务单位
         saveKey: 'inOrderForm',
-        isStorageData: true, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
           isShowSupplierId: true, // 是否显示来源单位
@@ -305,25 +310,11 @@
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
-        isPrinting: false
+        isPrinting: false,
+        purchaseContractId: ''
       };
     },
     computed: {
-      bizTypeList: function () {
-        return this.$getDict('bizInType');
-      },
-      transportationMeansList: function () {
-        return this.$getDict('transportationMeans');
-      },
-      shipmentPackingUnit: function () {
-        return this.$getDict('shipmentPackingUnit');
-      },
-      measurementUnitList: function () {
-        return this.$getDict('measurementUnit');
-      },
-      transportationConditionList: function () {
-        return this.$getDict('transportationCondition');
-      },
       totalMoney: function () {
         let totalMoney = 0.00;
         if (!this.form.detailDtoList.length) return totalMoney;
@@ -334,147 +325,44 @@
       }
     },
     watch: {
-      index: function (val) {
-        this.productListSet.forEach((item) => {
-          if (item.key === val) {
-            this.currentPartName = item.name;
-          }
-        });
-      },
       orderId: function (val) {
-        if (val) {
-          this.orderId = val;
-          this.editOrderInfo();
+        if (val && this.action === 'watch') {
+          this.queryInfo(val);
         }
-      },
-      transportationMeansList: function (val) {
-        this.currentTransportationMeans = val.slice();
       }
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
     },
     methods: {
-      getWarehouseAddress: function (item) { // 得到仓库地址
-        if (!item.warehouseAddress) {
-          return '';
-        }
-        return item.warehouseAddress;
-      },
-      createOrderInfo () {
-        this.form.detailDtoList = [];
-        let orgGoodsId = this.purchase.id;
-        if (!orgGoodsId) return;
-        http.get(`/purchase-agreement/org-goods/${orgGoodsId}`).then(res => {
-          this.form.transportationMeansId = '1';
-          this.form.transportationCondition = '0';
-          this.form.remark = '';
-          if (!res.data.orgGoodsDto.salesFirm) return;
-          this.orgList.push({
-            id: res.data.orgGoodsDto.salesFirm,
-            name: res.data.orgGoodsDto.salesFirmName,
-            relationList: []
-          });
-
-          this.form.supplierId = res.data.orgGoodsDto.salesFirm;
-          this.$nextTick(() => {
-            this.filterProductList.push({
-              orgGoodsDto: res.data.orgGoodsDto || {},
-              list: []
-            });
-            this.product.orgGoodsId = res.data.orgGoodsDto.id;
-            this.product.fixInfo = res.data.orgGoodsDto;
-            let price = res.data.orgGoodsDto.procurementPrice;
-            this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
-            this.product.measurementUnit = res.data.orgGoodsDto.goodsDto.measurementUnit;
-            this.accessoryList = res.data.list;
-            this.product.amount = Math.abs(this.purchase.count);
-          });
-        });
-      },
-      editOrderInfo () {
-        if (!this.orderId) return;
-        PurchaseContract.queryContractDetail(this.orderId).then(res => {
-//          this.currentOrder = res.data;
-          this.resetForm();
-          this.isStorageData = true;
-          res.data.detailDtoList.forEach(f => {
+      queryInfo(val) {
+        if (!val) return;
+        PurchaseContract.queryContractDetail(val).then(res => {
+          this.form = {
+            'purchaseContractNo': res.data.purchaseContractNo,
+            'purchaseContractName': res.data.purchaseContractName,
+            'centreName': res.data.centreName,
+            'pickUpWarehouseName': res.data.pickUpWarehouseName,
+            'logisticsProviderName': res.data.logisticsProviderName,
+            'supplierName': res.data.supplierName,
+            'transportationCondition': res.data.transportationCondition,
+            'transportationMeansId': res.data.transportationMeansId,
+            'warehouseAddress': res.data.warehouseAddress,
+            'availabilityStatus': res.data.availabilityStatus,
+            'purchaseContractIsUsed': res.data.purchaseContractIsUsed,
+            'remark': res.data.remark,
+            'detailDtoList': res.data.detailDtoList
+          };
+          this.form.detailDtoList.forEach(f => {
             f.orgGoodsName = f.name;
           });
-          this.form = JSON.parse(JSON.stringify(res.data));
-          this.$nextTick(() => {
-            this.isStorageData = true;
-          });
         });
-      },
-      resetForm: function () {// 重置表单
-        this.form.supplierId = '';
-        this.form.actualConsignee = '';
-        this.form.logisticsProviderId = '';
-        this.form.logisticsCentreId = '';
-        this.form.remark = '';
-        this.form.detailDtoList = [];
       },
       setIndexValue: function (value) {// 左侧显示页切换
         this.index = value;
       },
       doClose: function () {
         this.$emit('right-close');
-      },
-      filterOrg: function (query) {// 过滤来源单位
-        let orgId = this.form.orgId;
-        let bizType = this.form.bizType;
-        if (!orgId || !bizType) {
-          this.orgList = [];
-          this.form.supplierId = '';
-          return;
-        }
-        let params = {
-          keyWord: query,
-          relation: '1'
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.orgList = res.data;
-        });
-      },
-      filterLogistics: function (query) {// 过滤物流商
-        let orgId = this.form.orgId;
-        if (!orgId) {
-          this.logisticsList = [];
-          this.form.logisticsProviderId = '';
-          return;
-        }
-        BaseInfo.queryOrgByValidReation(orgId, {keyWord: query, relation: '3'}).then(res => {
-          this.logisticsList = res.data;
-        });
-      },
-      filterAddress () {
-        Address.queryAddress(this.form.orgId, {
-          deleteFlag: false,
-          orgId: this.form.orgId,
-          auditedStatus: '1', status: 0
-        }).then(res => {
-          this.cdcWarehouses = res.data;
-          let defaultStore = res.data.filter(item => item.default);
-          this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
-        });
-      },
-      checkLicence: function (val) {// 校验单位和货主证照是否过期
-        if (!val || !this.action) return;
-        http.get('/order-licence/org/' + val + '/overdue').then(res => {
-          if (!res.data.length) return;
-          let msg = '';
-          res.data.forEach(item => {
-            msg += '"' + item.name + '",';
-          });
-          msg = msg.substring(0, msg.length - 1);
-          this.$notify({
-            duration: 2000,
-            title: '证照信息过期',
-            message: msg + '证照信息已过期,无法创建合同',
-            type: 'error'
-          });
-        });
       },
       synchroOrder: function () {
         this.$confirm('确认对采购合同《' + this.form.purchaseContractName + '》进行同步信息操作?', '', {
