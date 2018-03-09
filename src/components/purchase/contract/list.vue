@@ -263,19 +263,16 @@
     </div>
     <page-right :show="showItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
-                :action="action"
-                @right-close="resetRightBox"></add-form>
+      <add-form type="0" @change="onSubmit" :action="action" @right-close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <edit-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
-                 :action="action"
+      <edit-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action"
                  @right-close="resetRightBox"></edit-form>
     </page-right>
     <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
-      <show-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase" :action="action"
+      <show-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action"
                  @right-close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
@@ -334,7 +331,6 @@
           count: 0,
           pageSize: 20
         },
-        defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
         user: {},
         purchase: {}
@@ -486,12 +482,10 @@
         this.showItemRight = false;
         this.showOrderRight = false;
         this.showEditItemRight = false;
-        this.defaultIndex = 0;
         this.action = '';
       },
       add: function () {
         this.showItemRight = true;
-        this.defaultIndex = 1;
         this.action = 'add';
       },
       onSubmit: function () {
@@ -562,8 +556,6 @@
         return num;
       },
       changeStatus: function (item, key) {// 订单分类改变
-        console.log(item);
-        console.log(key);
         this.activeStatus = key;
         this.filters.availabilityStatus = item.availabilityStatus;
         this.filters.used = item.used;

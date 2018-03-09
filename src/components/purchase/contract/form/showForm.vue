@@ -104,6 +104,10 @@
     text-align: center;
     padding: 15px;
   }
+
+  .el-form-item {
+    margin-bottom: 10px;
+  }
 </style>
 
 <template>
@@ -237,26 +241,17 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, http, PurchaseContract } from './../../../../resources';
+  import {Address, BaseInfo, http, PurchaseContract} from './../../../../resources';
   import utils from '@/tools/utils';
 
   export default {
     name: 'showForm',
     loading: false,
     props: {
-      type: {
-        'type': String,
-        'default': '1'
-      },
-      defaultIndex: {
-        type: Number,
-        default: 0
-      },
       action: {
         type: String,
         default: ''
       },
-      purchase: Object,
       orderId: String
     },
     data: function () {
@@ -280,25 +275,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
-          'purchaseContractNo': '',
-          'purchaseContractName': '',
-          'availabilityStatus': true,
-          'orgId': '',
-          'customerId': '',
-          'bizType': '0',
-          'type': this.type,
-          'logisticsProviderId': '',
-          'transportationCondition': '',
-          'transportationMeansId': '1',
-          'transportationAddress': '',
-          'importedFlag': '',
-          'orgRelation': '',
-          'logisticsCentreId': '',
-          'expectedTime': '',
-          'detailDtoList': [],
-          'supplierId': '',
-          'remark': '',
-          'pickUpAddress': ''
+          detailDtoList: []
         },
         rules: {},
         orderGoodsRules: {},
@@ -364,25 +341,10 @@
           }
         });
       },
-      defaultIndex (val) {
-        this.isStorageData = false;
-        this.index = 0;
-        this.idNotify = true;
-        let user = this.$store.state.user;
-        this.form.orgId = user.userCompanyAddress;
-        this.filterOrg();
-        this.filterLogistics();
-        this.filterAddress();
-        this.checkLicence(this.form.orgId);
-        if (this.purchase.id) {
-          this.createOrderInfo();
-        }
-        if (val === 2) {
+      orderId: function (val) {
+        if (val) {
+          this.orderId = val;
           this.editOrderInfo();
-        } else {
-          this.resetForm();
-          this.form.state = '';
-          this.form.id = null;
         }
       },
       transportationMeansList: function (val) {
