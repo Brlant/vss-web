@@ -525,9 +525,9 @@
             let myDate = new Date();
             this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
           });
+          this.filterOrg();
           this.initForm();
           this.filterLogisticsCenter();
-          this.filterOrg();
           this.filterAddress();
         }
       },
@@ -643,7 +643,7 @@
         this.$emit('right-close');
       },
       filterOrg: function (query) {// 过滤来源单位
-        let orgId = this.form.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.orgList = [];
           this.form.supplierId = '';
@@ -658,7 +658,7 @@
         });
       },
       filterLogistics: function (query) {// 过滤物流商
-        let orgId = this.form.orgId;
+        let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.logisticsList = [];
           this.form.logisticsProviderId = '';
@@ -679,7 +679,7 @@
       filterAddress () {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
-          orgId: this.form.orgId,
+          orgId: this.$store.state.user.userCompanyAddress,
           auditedStatus: '1', status: 0
         }).then(res => {
           this.cdcWarehouses = res.data;
