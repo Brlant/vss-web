@@ -46,7 +46,7 @@
                 :row-class-name="formatRowClass"
                 @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave" border
                 ref="reportTable" :maxHeight="getHeight" :header-row-class-name="'headerClass'" v-loading="loadingData">
-        <el-table-column prop="orgGoodsName" label="疫苗名称" width="160"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="疫苗名称" min-width="100"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
         <el-table-column prop="expirationDate" label="效期" :sortable="true"></el-table-column>
         <el-table-column prop="restStockCount" label="期前库存" :sortable="true"></el-table-column>

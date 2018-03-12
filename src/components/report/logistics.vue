@@ -136,15 +136,15 @@
       </div>
       <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary border
                 :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight">
-        <el-table-column prop="type" label="出入库类型" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="bizType" label="出入库详细" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="date" label="日期" :sortable="true" width="100"></el-table-column>
-        <el-table-column prop="area" label="区县" :sortable="true" width="80"></el-table-column>
-        <el-table-column prop="customerCode" label="关联单位" :sortable="true" width="100"></el-table-column>
-        <el-table-column prop="factoryName" label="供/收货单位名称" :sortable="true" width="180"></el-table-column>
-        <el-table-column prop="orgGoodsName" label="产品名称" :sortable="true" width="200"></el-table-column>
+        <el-table-column prop="type" label="出入库类型" :sortable="true" min-width="120"></el-table-column>
+        <el-table-column prop="bizType" label="出入库详细" :sortable="true" min-width="120"></el-table-column>
+        <el-table-column prop="date" label="日期" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="area" label="区县" :sortable="true" width="100"></el-table-column>
+        <el-table-column prop="customerCode" label="关联单位" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="factoryName" label="供/收货单位名称" :sortable="true" min-width="180"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="产品名称" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="90"></el-table-column>
-        <el-table-column prop="expirationDate" label="有效期至" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="expirationDate" label="有效期至" :sortable="true" min-width="120"></el-table-column>
         <el-table-column prop="measurementUnit" label="计量单位" :sortable="true" width="100"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true" width="80"></el-table-column>
         <el-table-column prop="goodsStatus" label="合格/不合格" :sortable="true" width="120"></el-table-column>

@@ -120,11 +120,11 @@
       <el-table :data="reportChildList" class="header-list" ref="reportTable"
                 :maxHeight="getHeight"  border :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
-        <el-table-column prop="orderNo" label="货主订单号" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="createTime" label="业务日期" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="customerName" label="客户" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="orgName" label="保管帐" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="orderNo" label="货主订单号" :sortable="true" min-width="120"></el-table-column>
+        <el-table-column prop="createTime" label="业务日期" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="customerName" label="客户" :sortable="true" ></el-table-column>
+        <el-table-column prop="orgName" label="保管帐" :sortable="true"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true" width="90"></el-table-column>
         <el-table-column prop="price" label="单价" :sortable="true" width="90">
           <template slot-scope="scope">
@@ -136,10 +136,10 @@
             <span>￥{{scope.row.totalMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="expirationDate" label="有效期至" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="arriveDate" label="送达日期" :sortable="true" width="100"></el-table-column>
-        <el-table-column prop="address" label="送货地址" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="batchNumber" label="批号" :sortable="true" ></el-table-column>
+        <el-table-column prop="expirationDate" label="有效期至" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="arriveDate" label="送达日期" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="address" label="送货地址" :sortable="true" min-width="100"></el-table-column>
       </el-table>
       <div class="text-center" v-show="reportChildList.length">
         <el-pagination
