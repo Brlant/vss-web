@@ -236,7 +236,7 @@
                     ￥{{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="invoceId" label="是否发票已到" :sortable="true" width="120">
+                <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100">
                   <template slot-scope="scope">
                     {{ scope.row.invoiceId ? '是' : '否' }}
                   </template>
