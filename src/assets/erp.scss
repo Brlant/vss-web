@@ -185,6 +185,7 @@ $leftWidth: 260px;
     &.d-table-left {
       position: relative;
       width: 280px;
+      min-width: 280px;
       background: #fff;
       border: 1px solid #eee;
       h2 {

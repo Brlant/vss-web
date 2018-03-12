@@ -45,7 +45,7 @@
       </div>
       <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
-        <el-table-column prop="goodsName" label="疫苗名称" width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="疫苗名称" min-width="100" :sortable="true"></el-table-column>
         <el-table-column prop="restStockCount" label="期前库存" :sortable="true"></el-table-column>
         <el-table-column prop="purchaseCount" label="进苗数量" :sortable="true"></el-table-column>
         <el-table-column prop="saleCount" label="发苗数量" :sortable="true"></el-table-column>

@@ -208,25 +208,25 @@
             </div>
             <el-table :data="payDetails" class="header-list" border
                       :header-row-class-name="'headerClass'" v-loading="loadingData">
-              <el-table-column prop="orderNo" label="订单号" width="85" :sortable="true"></el-table-column>
-              <el-table-column prop="goodsName" label="货品名称" :sortable="true"></el-table-column>
-              <el-table-column prop="goodsCount" label="数量" width="60" :sortable="true"></el-table-column>
-              <el-table-column prop="createTime" label="发生时间" width="90" :sortable="true">
+              <el-table-column prop="orderNo" label="订单号" min-width="85" :sortable="true"></el-table-column>
+              <el-table-column prop="goodsName" label="货品名称" :sortable="true" min-width="120"></el-table-column>
+              <el-table-column prop="goodsCount" label="数量" width="80" :sortable="true"></el-table-column>
+              <el-table-column prop="createTime" label="发生时间" min-width="110" :sortable="true">
                 <template slot-scope="scope">
                   {{ scope.row.createTime | date }}
                 </template>
               </el-table-column>
-              <el-table-column prop="billAmount" label="应付金额" width="90" :sortable="true">
+              <el-table-column prop="billAmount" label="应付金额" width="110" :sortable="true">
                 <template slot-scope="scope">
                   ￥{{ scope.row.billAmount | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="salePrice" label="待付金额" width="90" :sortable="true">
+              <el-table-column prop="salePrice" label="待付金额" width="100" :sortable="true">
                 <template slot-scope="scope">
                   ￥{{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="invoceId" label="是否发票已到" :sortable="true">
+              <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100">
                 <template slot-scope="scope">
                   {{ scope.row.invoiceId ? '是' : '否' }}
                 </template>
