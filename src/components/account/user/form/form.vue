@@ -63,7 +63,8 @@
           if (!re.test(value)) {
             callback(new Error('请输入正确的邮箱'));
           }
-          User.checkEmail(value, this.form.id, this.form.orgId).then(function (res) {
+          let orgId = this.$store.state.user.userCompanyAddress;
+          User.checkEmail(value, this.form.id, orgId).then(function (res) {
             if (res.data.valid) {
               callback();
             } else {
@@ -80,7 +81,8 @@
           if (!re.test(value)) {
             callback(new Error('请输入正确的手机号码'));
           }
-          User.checkPhone(value, this.form.id, this.form.orgId).then(function (res) {
+          let orgId = this.$store.state.user.userCompanyAddress;
+          User.checkPhone(value, this.form.id, orgId).then(function (res) {
             if (res.data.valid) {
               callback();
             } else {
