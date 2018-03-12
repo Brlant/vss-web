@@ -501,7 +501,7 @@
         return this.$store.state.orgLevel;
       },
       user() {
-        // this.form.orgId = this.$store.state.user.userCompanyAddress;
+        this.form.orgId = this.$store.state.user.userCompanyAddress;
       }
     },
     watch: {
