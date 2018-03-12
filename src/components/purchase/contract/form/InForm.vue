@@ -525,8 +525,8 @@
             let myDate = new Date();
             this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
           });
-          this.filterOrg();
           this.initForm();
+          this.filterOrg();
           this.filterLogisticsCenter();
           this.filterAddress();
         }
