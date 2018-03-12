@@ -644,16 +644,11 @@
       },
       filterOrg: function (query) {// 过滤来源单位
         let orgId = this.form.orgId;
-        let bizType = this.form.bizType;
-        if (!orgId || !bizType) {
+        if (!orgId) {
           this.orgList = [];
           this.form.supplierId = '';
           return;
         }
-//        let relation = '';
-//        if (bizType === '0') relation = '0';
-//        if (bizType === '1') relation = '1';
-//        if (!relation) return;
         let params = {
           keyWord: query,
           relation: '1'
