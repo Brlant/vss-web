@@ -247,10 +247,7 @@
   export default {
     name: 'showForm',
     loading: false,
-    props: {
-      orderId: String,
-      action: String
-    },
+    props: ['action', 'type', 'orderId'],
     data: function () {
       return {
         loading: false,

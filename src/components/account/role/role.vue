@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="less" scoped="">
 
 
   .margin-left {
@@ -57,7 +57,7 @@
       </div>
       <div class="container d-table">
         <div class="d-table-left">
-          <div class="d-table-col-wrap">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
             <h2 class="header">
                 <span class="pull-right">
                   <perm label="access-role-add">
@@ -92,6 +92,12 @@
                 </li>
               </ul>
             </div>
+            <div class="btn-left-list-more">
+              <bottom-loading></bottom-loading>
+              <div @click.stop="getMore" v-show="!$store.state.bottomLoading">
+                <el-button v-show="pager.currentPage<pager.totalPage">加载更多</el-button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="d-table-right">
@@ -101,30 +107,32 @@
             </div>
             <div v-else>
               <h2 class="clearfix">
-              <span class="pull-right">
-               <el-button-group>
-                 <perm label="access-role-edit">
-                   <el-button @click="edit()">
-                     <i class="el-icon-t-edit"></i>
-                     编辑
-                   </el-button>
-                 </perm>
-                <perm label="access-role-stop">
-                  <el-button @click="forbid()" v-show="resData.usableStatus == 1">
-                    <i class="el-icon-t-forbidden"></i>
-                    停用
-                  </el-button>
-                </perm>
-                 <perm label="access-role-start">
-                   <el-button @click="useNormal()" v-show="resData.usableStatus == 0">
-                     <i class="el-icon-t-start"></i>启用
-                   </el-button>
-                 </perm>
-                <perm label="access-role-delete">
-                   <el-button @click="remove()"><i class="el-icon-t-delete"></i>删除</el-button>
-                </perm>
-                </el-button-group>
-              </span>
+                <span class="pull-right">
+                 <el-button-group>
+                     <perm label="access-role-edit">
+                       <el-button @click="edit()">
+                         <i class="el-icon-t-edit"></i>
+                         编辑
+                       </el-button>
+                     </perm>
+                      <perm label="access-role-stop">
+                        <el-button @click="forbid()" v-show="resData.usableStatus == 1">
+                          <i class="el-icon-t-forbidden"></i>
+                          停用
+                        </el-button>
+                      </perm>
+                       <perm label="access-role-start">
+                         <el-button @click="useNormal()" v-show="resData.usableStatus == 0">
+                           <i class="el-icon-t-start"></i>启用
+                         </el-button>
+                       </perm>
+                      <perm label="access-role-delete">
+                         <el-button @click="remove()">
+                           <i class="el-icon-t-delete"></i>删除
+                         </el-button>
+                      </perm>
+                  </el-button-group>
+                </span>
               </h2>
               <div class="page-main-body">
                 <el-row>
@@ -217,7 +225,13 @@
           keyWord: ''
         },
         activeStatus: 1,
-        menuList: []
+        menuList: [],
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20,
+          totalPage: 1
+        }
       };
     },
     computed: {
@@ -238,13 +252,13 @@
       }
     },
     mounted() {
-      this.getPageList();
+      this.getPageList(1);
       this.getMenuList();
     },
     watch: {
       filters: {
         handler: function () {
-          this.getPageList();
+          this.getPageList(1);
         },
         deep: true
       },
@@ -253,6 +267,12 @@
       }
     },
     methods: {
+      getMore: function () {
+        this.getPageList(this.pager.currentPage + 1, true);
+      },
+      scrollLoadingData(event) {
+        this.$scrollLoadingData(event);
+      },
       getMenuList: function (cache = true) {
         this.getRoleMenus(cache).then(res => {
           this.menuList = res.data;
@@ -275,17 +295,30 @@
         });
         this.getCheckedMenu(checkedMenuList, permissionIdList);
       },
-      getPageList: function () {// 查询角色列表
+      getPageList: function (pageNo, isContinue = false) {
+        this.pager.currentPage = pageNo;
         let param = Object.assign({}, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize,
           keyword: this.typeTxt,
           deleteFlag: false,
           objectId: 'cerp-system'
         }, this.filters);
-        Access.queryERPAccess(param).then(res => {
-          this.showTypeList = res.data.list;
-          this.typeList = res.data.list;
-          this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);
-          this.queryRoleDetail(this.currentItem.id);
+        Access.query(param).then(res => {
+          this.$store.commit('initBottomLoading', false);
+          if (isContinue) {
+            this.showTypeList = this.showTypeList.concat(res.data.list);
+          } else {
+            this.showTypeList = res.data.list;
+            this.typeList = res.data.list;
+            this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);
+            if (res.data.list.length !== 0) {
+              this.queryRoleDetail(this.currentItem.id);
+            } else {
+              this.resData = {};
+            }
+          }
+          this.pager.totalPage = res.data.totalPage;
         });
       },
       queryRoleDetail: function (id) {
@@ -327,7 +360,7 @@
           itemTemp.usableStatus = 0;
           Access.update(itemTemp.id, itemTemp).then(() => {
             this.resData.usableStatus = 0;
-            this.getPageList();
+            this.getPageList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功停用角色"' + this.resData.title + '"'
@@ -345,7 +378,7 @@
           itemTemp.usableStatus = 1;
           Access.update(itemTemp.id, itemTemp).then(() => {
             this.resData.usableStatus = 1;
-            this.getPageList();
+            this.getPageList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功启用角色"' + this.resData.title + '"'
@@ -360,7 +393,7 @@
           type: 'warning'
         }).then(() => {
           Access.delete(this.resData.id).then(() => {
-            this.getPageList();
+            this.getPageList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功删除角色"' + this.resData.title + '"'
@@ -370,7 +403,7 @@
       },
       removeType: function (item) {
         Access.delete(item.id).then(() => {
-          this.getPageList();
+          this.getPageList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功删除角色"' + item.title + '"'
@@ -383,7 +416,7 @@
       },
       change: function (item) {
         if (this.action === 'add') {
-          this.getPageList();
+          this.getPageList(1);
           this.showRight = false;
         } else {
           this.resData = item;
@@ -393,7 +426,7 @@
               roleItem.title = item.title;
             }
           });
-          // // 重新过滤树
+          // 重新过滤树
           // this.getMenus(this.resData.permissionList);
           this.showRight = false;
         }
