@@ -382,7 +382,7 @@
           'purchaseContractNo': '',
           'purchaseContractName': '',
           'availabilityStatus': true,
-          'orgId': '',
+          'orgId': this.$store.state.user.userCompanyAddress,
           'customerId': '',
           'bizType': '0',
           'type': this.type,
