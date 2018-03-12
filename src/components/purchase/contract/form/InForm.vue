@@ -133,7 +133,7 @@
             </el-form-item>
             <el-form-item label="供货厂商" prop="supplierId">
               <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.supplierId" @change="changeSupplier">
+                         v-model="form.supplierId" @change="changeSupplier" @click.native.once="filterOrg('')">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -382,7 +382,7 @@
           'purchaseContractNo': '',
           'purchaseContractName': '',
           'availabilityStatus': true,
-          'orgId': this.$store.state.user.userCompanyAddress,
+          'orgId': '',
           'customerId': '',
           'bizType': '0',
           'type': this.type,
@@ -499,6 +499,9 @@
       },
       orgLevel () {
         return this.$store.state.orgLevel;
+      },
+      user() {
+        // this.form.orgId = this.$store.state.user.userCompanyAddress;
       }
     },
     watch: {
@@ -522,15 +525,15 @@
             let myDate = new Date();
             this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
           });
+          this.initForm();
+          this.filterLogisticsCenter();
+          this.filterOrg();
+          this.filterAddress();
         }
       }
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.initForm();
-      this.filterLogisticsCenter();
-      this.filterOrg();
-      this.filterAddress();
     },
     methods: {
       filterAddressLabel (item) {
