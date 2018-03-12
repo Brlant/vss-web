@@ -501,7 +501,7 @@
         return this.$store.state.orgLevel;
       },
       user() {
-        this.form.orgId = this.$store.state.user.userCompanyAddress;
+        return this.$store.state.user.userCompanyAddress;
       }
     },
     watch: {
@@ -529,6 +529,11 @@
           this.filterLogisticsCenter();
           this.filterOrg();
           this.filterAddress();
+        }
+      },
+      user(val) {
+        if (val) {
+          this.form.orgId = val;
         }
       }
     },
