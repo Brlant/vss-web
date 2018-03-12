@@ -263,11 +263,11 @@
     </div>
     <page-right :show="showItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <add-form type="0" @change="onSubmit" :action="action" @right-close="resetRightBox"></add-form>
+      <add-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action" @right-close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <edit-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action"
+      <edit-form type="0" :orderId="currentOrderId" :action="action" @change="onSubmit"
                  @right-close="resetRightBox"></edit-form>
     </page-right>
     <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
