@@ -224,13 +224,7 @@
   export default {
     name: 'editForm',
     loading: false,
-    props: {
-      action: {
-        type: String,
-        default: ''
-      },
-      orderId: String
-    },
+    props: ['action', 'type', 'orderId'],
     data: function () {
       return {
         loading: false,
@@ -377,8 +371,7 @@
     watch: {
       orderId: function (val) {
         if (val && this.action === 'edit') {
-          this.orderId = val;
-          this.editOrderInfo();
+          this.queryInfo(val);
         }
       },
       transportationMeansList: function (val) {
@@ -438,17 +431,26 @@
 
         });
       },
-      editOrderInfo() {
-        if (!this.orderId) return;
-        PurchaseContract.queryContractDetail(this.orderId).then(res => {
-          this.resetForm();
-          this.isStorageData = true;
-          res.data.detailDtoList.forEach(f => {
+      queryInfo(val) {
+        if (!val) return;
+        PurchaseContract.queryContractDetail(val).then(res => {
+          this.form = {
+            'purchaseContractNo': res.data.purchaseContractNo,
+            'purchaseContractName': res.data.purchaseContractName,
+            'centreName': res.data.centreName,
+            'pickUpWarehouseName': res.data.pickUpWarehouseName,
+            'logisticsProviderName': res.data.logisticsProviderName,
+            'supplierName': res.data.supplierName,
+            'transportationCondition': res.data.transportationCondition,
+            'transportationMeansId': res.data.transportationMeansId,
+            'warehouseAddress': res.data.warehouseAddress,
+            'availabilityStatus': res.data.availabilityStatus,
+            'purchaseContractIsUsed': res.data.purchaseContractIsUsed,
+            'remark': res.data.remark,
+            'detailDtoList': res.data.detailDtoList
+          };
+          this.form.detailDtoList.forEach(f => {
             f.orgGoodsName = f.name;
-          });
-          this.form = JSON.parse(JSON.stringify(res.data));
-          this.$nextTick(() => {
-            this.isStorageData = true;
           });
         });
       },

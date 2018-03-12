@@ -101,7 +101,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">新增采购合同</h2>
+        <h2 class="clearfix right-title">{{showTitle}}采购合同</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -320,7 +320,7 @@
                   <span v-if="!Number(product.unitPrice)">-</span>
                 </td>
                 <td class="goods-btn">
-                  <div v-show="defaultIndex === 2">
+                  <div v-show="index === 2">
                     <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
                       class="el-icon-t-edit"></i> 编辑</a>
                   </div>
@@ -354,9 +354,7 @@
   export default {
     name: 'addForm',
     loading: false,
-    props: [
-      'action'
-    ],
+    props: ['action', 'type', 'orderId'],
     mixins: [OrderMixin],
     data: function () {
       return {
@@ -382,7 +380,7 @@
           'purchaseContractNo': '',
           'purchaseContractName': '',
           'availabilityStatus': true,
-          'orgId': '',
+          'orgId': this.$store.state.user.userCompanyAddress,
           'customerId': '',
           'bizType': '0',
           'type': this.type,
@@ -502,6 +500,13 @@
       },
       user() {
         return this.$store.state.user.userCompanyAddress;
+      },
+      showTitle() {
+        let title = '新增';
+        if (this.action === 'edit') {
+          title = '编辑';
+        }
+        return title;
       }
     },
     watch: {
@@ -529,11 +534,16 @@
           this.filterOrg();
           this.filterLogisticsCenter();
           this.filterAddress();
+        } else if (this.orderId && val === 'edit') {
+          this.editOrderInfo();
+          this.filterOrg(this.form.supplierName);
+          this.filterLogisticsCenter(this.form.logisticsProviderName);
+          this.filterAddress(this.form.warehouseAddress);
         }
       },
-      user(val) {
+      orderId(val) {
         if (val) {
-          this.form.orgId = val;
+          this.orderId = val;
         }
       }
     },
@@ -588,13 +598,14 @@
 //          this.currentOrder = res.data;
           this.resetForm();
           this.isStorageData = true;
+          this.form = JSON.parse(JSON.stringify(res.data));
           res.data.detailDtoList.forEach(f => {
             f.orgGoodsName = f.name;
           });
-          this.form = JSON.parse(JSON.stringify(res.data));
           // ******2.0变化
           this.changeSupplier(this.form.supplierId, true);
           this.changeTransportationMeans(this.form.transportationMeansId);
+          this.form.detailDtoList = res.data.detailDtoList;
           // ******
           this.$nextTick(() => {
             this.isStorageData = true;
@@ -691,11 +702,11 @@
         return item.detail;
       },
       changeSupplier: function (val, isEdit) {// 业务单位改变
+        this.form.detailDtoList = [];
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.supplierWarehouses = [];
           this.form.pickUpAddress = '';
           this.product.orgGoodsId = '';
-          this.form.detailDtoList = [];
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
         }
