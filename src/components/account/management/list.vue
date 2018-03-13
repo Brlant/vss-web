@@ -22,6 +22,11 @@
         <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
           <h2 class="header" style="overflow: hidden">
           <span class="pull-right">
+            <perm label="erp-system-account-export">
+            <a href="#" class="btn-circle" @click.prevent="exportFile"
+               style="margin-right: 5px"><i
+              class="el-icon-t-wave"></i> </a>
+              </perm>
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
                 class="el-icon-t-search"></i> </a>
           </span>
@@ -147,8 +152,9 @@
 
 </template>
 <script>
-  import { BaseInfo, OrgUser, User } from '../../../resources';
+  import {BaseInfo, OrgUser, User} from '../../../resources';
   import editForm from './form/form.vue';
+  import utils from '@/tools/utils';
 
   export default {
     components: {
@@ -227,6 +233,28 @@
       }
     },
     methods: {
+      exportFile: function () {
+        let params = Object.assign({}, this.filters);
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: '/account/system/management'
+        });
+        this.$http.get('erp-org/relation-list/export', {params}).then(res => {
+          utils.download(res.data.path, '系统用户角色表');
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/account/system/management'
+          });
+        }).catch(error => {
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/account/system/management'
+          });
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
       scrollLoadingData (event) {
         this.$scrollLoadingData(event);
       },
