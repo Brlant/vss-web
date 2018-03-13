@@ -228,12 +228,12 @@
                 </el-table-column>
                 <el-table-column prop="billAmount" label="应收金额" width="110" :sortable="true">
                   <template slot-scope="scope">
-                    ￥{{ scope.row.billAmount | formatMoney}}
+                    {{ scope.row.billAmount | formatMoney}}
                   </template>
                 </el-table-column>
                 <el-table-column prop="salePrice" label="待收金额" width="100" :sortable="true">
                   <template slot-scope="scope">
-                    ￥{{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
+                    {{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                   </template>
                 </el-table-column>
                 <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100">
