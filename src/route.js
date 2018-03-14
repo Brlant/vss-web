@@ -459,6 +459,11 @@ const route = [
             meta: {moduleId: 'report', title: '进销存盘点表', perm: 'inventory-form-manager'}
           },
           {
+            path: '/report/first/out/manager',
+            component: resolve => require(['./components/report/one-out.vue'], resolve),
+            meta: {moduleId: 'report', title: '一类疫苗各区出货统计表', perm: 'first-vaccine-out-form-manager'}
+          },
+          {
             path: '/report/month/repertory',
             component: resolve => require(['./components/report/month-end-repertory.vue'], resolve),
             meta: {moduleId: 'report', title: '二类疫苗月终库存盘点表', perm: 'month-stock-inventory-form-manager'}
