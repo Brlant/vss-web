@@ -151,10 +151,10 @@
               </el-select>
             </el-form-item>
             <el-form-item label="实际收货人" v-show="showContent.isShowOtherContent">
-              <oms-input type="text" placeholder="请输入实际收货人" v-model="form.actualConsignee"></oms-input>
+              <oms-input type="text" placeholder="请输入实际收货人" :maxlength="50" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
             <el-form-item label="收货人联系电话" v-show="showContent.isShowOtherContent">
-              <oms-input type="text" placeholder="请输入收货人联系电话" v-model="form.consigneePhone" :maxlength="50"></oms-input>
+              <oms-input type="text" placeholder="请输入收货人联系电话" :maxlength="50" v-model="form.consigneePhone" ></oms-input>
             </el-form-item>
             <!--<el-form-item label="是否同批号">-->
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
