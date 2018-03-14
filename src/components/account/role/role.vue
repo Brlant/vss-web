@@ -304,7 +304,7 @@
           deleteFlag: false,
           objectId: 'cerp-system'
         }, this.filters);
-        Access.query(param).then(res => {
+        Access.queryERPAccess(param).then(res => {
           this.$store.commit('initBottomLoading', false);
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
