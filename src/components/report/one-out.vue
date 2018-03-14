@@ -38,7 +38,7 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row label="" :span="2">
-                <perm label="shipment-form-export">
+                <perm label="first-vaccine-out-form-manager-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
                   </el-button>
@@ -99,26 +99,25 @@
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry ? this.bizDateAry[1] : '');
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/out'});
-        this.$http.get('/erp-statement/out-warehouse/export', {params}).then(res => {
-          utils.download(res.data.path, '出库一览表');
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/first/out/manager'});
+        this.$http.get('/erp-statement/first-vaccine/out-warehouse/export', {params}).then(res => {
+          utils.download(res.data.path, '一类疫苗各区出货统计表');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/first/out/manager'});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/first/out/manager'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },
       search: function () {// 搜索
-        if (!this.bizDateAry) return;
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.formatTime(this.bizDateAry ? this.bizDateAry[0] : '');
+        this.searchWord.createEndTime = this.formatTime(this.bizDateAry ? this.bizDateAry[1] : '');
         let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
-        this.$http.get('/erp-statement/out-warehouse', {params}).then(res => {
+        this.$http.get('/erp-statement/first-vaccine/out-warehouse', {params}).then(res => {
           this.firstLine = res.data.map && res.data.map.firstLine || [];
           this.dataList = res.data.map && res.data.map.data || [];
           this.loadingData = false;
