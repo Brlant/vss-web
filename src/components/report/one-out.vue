@@ -51,13 +51,14 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
+      <el-table v-show="dataList.length" :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column v-if="firstLine.length===0"></el-table-column>
         <template v-for="(item, index) in firstLine">
-          <el-table-column :prop="item.key" :label="item.name"></el-table-column>
+          <el-table-column :prop="item.key" :label="item.name" :min-width="index === 0 ? 200 : 0"></el-table-column>
         </template>
       </el-table>
+      <div class="empty-info" v-show="!dataList.length">暂无数据</div>
     </div>
   </div>
 </template>
