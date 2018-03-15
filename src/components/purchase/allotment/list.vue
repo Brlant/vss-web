@@ -317,7 +317,7 @@
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
+    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
@@ -530,7 +530,7 @@
       },
       refreshOrder () {
         this.currentOrderId = '';
-        this.getOrderList(1);
+        this.getOrderList(this.pager.currentPage);
       },
 //      filterOrg: function (query) {// 过滤供货商
 //        let orgId = this.$store.state.user.userCompanyAddress;

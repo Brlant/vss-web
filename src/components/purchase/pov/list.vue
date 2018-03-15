@@ -217,14 +217,14 @@
         </el-pagination>
       </div>
     </div>
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
       <show-form :currentItem="currentItem" @close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form @change="onSubmit" :currentOrder="currentItem" :index="index" @close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showEditPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
+    <page-right :show="showEditPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <edit-form @change="onSubmit" :currentItem="currentItem" :showEditPart="showEditPart"  @close="resetRightBox"></edit-form>
     </page-right>
   </div>
@@ -408,7 +408,7 @@
         this.showEditPart = false;
         this.$router.push('list');
         if (para) {
-          this.getDemandList(1);
+          this.getDemandList(this.pager.currentPage);
         }
       },
       checkStatus (item, key) {

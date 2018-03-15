@@ -239,7 +239,7 @@
                 class="order-detail-info" partClass="pr-no-animation">
       <audit-form :detailId="billInfo.id" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
+    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form @change="onSubmit" @right-close="resetRightBox" :defaultIndex="defaultIndex"></add-form>
     </page-right>
   </div>
@@ -368,7 +368,7 @@
         this.billInfo = item;
       },
       onSubmit: function () {
-        this.getBillList(1);
+        this.getBillList(this.pager.currentPage);
       },
       getBillList: function (pageNo) {
         this.pager.currentPage = pageNo;

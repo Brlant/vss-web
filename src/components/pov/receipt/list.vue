@@ -171,7 +171,7 @@
       },
       refreshOrder () {
         this.currentOrderId = '';
-        this.queryOrderList(1);
+        this.queryOrderList(this.pager.currentPage);
       },
       obtionStatusNum: function (num) {
         if (typeof num !== 'number') {

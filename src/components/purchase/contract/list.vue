@@ -274,7 +274,7 @@
                 :css="{'width':'1000px','padding':0}">
       <show-form type="0" :orderId="showOrderId" :action="action" @right-close="resetRightBox"></show-form>
     </page-right>
-    <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
+    <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <order-form :orderId="orderId" :state="state" @refreshOrder="refreshOrder"
                   @close="resetRightBox" :vaccineType="vaccineType"></order-form>
@@ -436,7 +436,7 @@
       },
       refreshOrder() {
         this.currentOrderId = '';
-        this.getOrderList(1);
+        this.getOrderList(this.pager.currentPage);
       },
       showOrderForm: function (order, contractId) {
         this.orderId = order.id;

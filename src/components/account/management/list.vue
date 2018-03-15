@@ -367,7 +367,7 @@
         this.currentItem = item;
       },
       itemChange: function (item) {
-        this.getPageList(1);
+        this.getPageList(this.pager.currentPage);
         this.showRight = false;
       },
       formatStatus: function (value) {

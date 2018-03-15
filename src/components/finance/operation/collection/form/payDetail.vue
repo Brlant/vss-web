@@ -235,7 +235,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filterRights);
-        this.$http.get(`/accounts-receivable/payer/${this.factoryId}/detail`, {params}).then(res => {
+        this.$http.get(`/accounts-receivable/${this.factoryId}/valid-detail`, {params}).then(res => {
           this.loadingData = false;
           res.data.list.forEach(item => {
             let count = item.billAmount - item.prepaidAccounts;

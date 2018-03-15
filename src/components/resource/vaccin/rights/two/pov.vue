@@ -352,7 +352,7 @@
         });
       },
       refreshDetails () {
-        this.getPageList(1);
+        this.getPageList(this.pager.currentPage);
         this.showRight = false;
       },
       removeVaccine: function (item) {
