@@ -361,7 +361,7 @@
         else return '未生效';
       },
       itemChange: function (item) {
-        this.getPageList(1);
+        this.getPageList(this.pager.currentPage);
         this.showRight = false;
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色

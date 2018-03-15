@@ -146,7 +146,7 @@
       <!--</div>-->
     </div>
 
-    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
+    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <allot-form :currentItem="currentItem" @change="change" :status="status" @close="resetRightBox"></allot-form>
     </page-right>
     <page-right :show="showOrderForm" class="specific-part-z-index" @right-close="resetRightBox"

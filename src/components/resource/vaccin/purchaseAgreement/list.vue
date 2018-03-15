@@ -387,7 +387,7 @@
         this.filters.availabilityStatus = item.availabilityStatus;
       },
       onSubmit: function () {
-        this.getGoodsList(1);
+        this.getGoodsList(this.pager.currentPage);
 //        } else {
 //          let self = this;
 //          self.showTypeList.forEach(function (val, index) {
