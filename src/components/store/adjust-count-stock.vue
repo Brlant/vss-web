@@ -171,7 +171,7 @@
       </el-table>
     </div>
 
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <detail :currentItem="currentItem" @close="resetRightBox"></detail>
     </page-right>
   </div>

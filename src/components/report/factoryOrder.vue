@@ -27,7 +27,7 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="出入库类型" :span="5">
+              <oms-form-row label="出入库类型" :span="6">
                 <el-select v-model="searchWord.bizTypeList" multiple filterable clearable placeholder="请选择">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
                              v-for="item in bizTypeList">
@@ -73,7 +73,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8" class="clearfix">
-              <oms-form-row label="批号" :span="5">
+              <oms-form-row label="批号" :span="6">
                 <oms-input type="text" v-model="searchWord.batchNumber" placeholder="请输入批号"></oms-input>
               </oms-form-row>
             </el-col>

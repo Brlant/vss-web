@@ -525,6 +525,7 @@
         this.currentTransportationMeans = val.slice();
       },
       action(val) {
+        this.index = 0;
         if (this.$store.state.user.userCompanyAddress && val === 'add') {
           BaseInfo.queryBaseInfo(this.$store.state.user.userCompanyAddress).then(res => {
             let myDate = new Date();
@@ -622,7 +623,7 @@
       },
       initForm: function () {// 根据缓存，回设form
         let oldForm = window.localStorage.getItem(this.saveKey);
-        if (oldForm && !this.form.id) {
+        if (oldForm && this.action === 'add') {
           this.form = Object.assign({}, this.form, JSON.parse(oldForm));
         }
       },
@@ -987,6 +988,7 @@
                 type: 'success'
               });
               window.localStorage.removeItem(this.saveKey);
+              this.resetForm();
               this.$emit('change', res.data);
               this.$nextTick(() => {
                 this.doing = false;
