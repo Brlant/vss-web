@@ -267,12 +267,12 @@
     </page-right>
     <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <edit-form type="0" :orderId="currentOrderId" :action="action" @change="onSubmit"
+      <edit-form type="0" :orderId="editOrderId" :action="action" @change="onSubmit"
                  @right-close="resetRightBox"></edit-form>
     </page-right>
     <page-right :show="showDetail" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
-      <show-form type="0" :orderId="currentOrderId" :action="action" @right-close="resetRightBox"></show-form>
+      <show-form type="0" :orderId="showOrderId" :action="action" @right-close="resetRightBox"></show-form>
     </page-right>
     <page-right :show="showOrderRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
@@ -303,6 +303,8 @@
         showEditItemRight: false,
         showSearch: false,
         currentOrderId: '',
+        editOrderId: '',
+        showOrderId: '',
         orderId: '',
         state: '',
         orderList: [],
@@ -448,13 +450,14 @@
         this.currentOrderId = item.id;
         if (item.used) {
           this.showEditItemRight = true;
+          this.editOrderId = item.id;
         } else {
           this.showItemRight = true;
         }
       },
       showContract(item) {
         this.action = 'watch';
-        this.currentOrderId = item.id;
+        this.showOrderId = item.id;
         this.showDetail = true;
       },
       searchInOrder: function () {// 搜索
