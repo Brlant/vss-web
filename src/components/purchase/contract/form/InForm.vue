@@ -979,7 +979,7 @@
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
-          if (saveData.id) {
+          if (saveData.id && this.action === 'edit') {
             PurchaseContract.updateOrder(saveData.id, saveData).then(res => {
               this.resetForm();
               this.$notify({
@@ -1001,7 +1001,7 @@
                 type: 'error'
               });
             });
-          } else {
+          } else if (this.action === 'add') {
             PurchaseContract.save(saveData).then(res => {
               this.$notify({
                 duration: 2000,
