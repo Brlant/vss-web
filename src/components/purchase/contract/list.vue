@@ -447,12 +447,12 @@
       },
       editContract(item) {
         this.action = 'edit';
-        this.currentOrderId = item.id;
         if (item.used) {
           this.showEditItemRight = true;
           this.editOrderId = item.id;
         } else {
           this.showItemRight = true;
+          this.currentOrderId = item.id;
         }
       },
       showContract(item) {
@@ -486,6 +486,7 @@
       },
       add: function () {
         this.showItemRight = true;
+        this.currentOrderId = '';
         this.action = 'add';
       },
       onSubmit: function () {

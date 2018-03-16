@@ -531,6 +531,27 @@
             let myDate = new Date();
             this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
           });
+          this.form = {
+            'purchaseContractNo': '',
+            'purchaseContractName': '',
+            'availabilityStatus': true,
+            'orgId': this.$store.state.user.userCompanyAddress,
+            'customerId': '',
+            'bizType': '0',
+            'type': this.type,
+            'logisticsProviderId': '',
+            'transportationCondition': '0',
+            'transportationMeansId': '1',
+            'transportationAddress': '',
+            'importedFlag': '',
+            'orgRelation': '',
+            'logisticsCentreId': this.$store.state.logisticsCentreId,
+            'expectedTime': '',
+            'detailDtoList': [],
+            'supplierId': '',
+            'remark': '',
+            'pickUpAddress': ''
+          };
           this.initForm();
           this.filterOrg();
           this.filterLogisticsCenter();
@@ -958,7 +979,7 @@
           });
           this.doing = true;
           if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
-          if (saveData.id && this.action === 'edit') {
+          if (saveData.id) {
             PurchaseContract.updateOrder(saveData.id, saveData).then(res => {
               this.resetForm();
               this.$notify({
