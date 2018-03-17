@@ -426,7 +426,7 @@
         form: {
           'orgId': '',
           'customerId': '',
-          'bizType': '1-0',
+          'bizType': '2-0',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '',
