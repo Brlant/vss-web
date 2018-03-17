@@ -148,7 +148,7 @@
             orgId: this.form.orgId,
             orgGoodsId: m.orgGoodsId
           };
-          return this.$http.get(this.form.bizType !== '1-1' ||
+          return this.$http.get(this.form.bizType !== '2-1' ||
           this.form.qualifiedFlag ? '/erp-stock/valid/batch' : '/erp-stock/unqualified/batch', {params});
         })).then(
           axios.spread((...args) => {
@@ -156,7 +156,7 @@
               args[index].data.forEach(f => {
                 f.isChecked = false;
                 f.productCount = '';
-                if (this.form.bizType === '1-0') {
+                if (this.form.bizType === '2-0') {
                   f.disabled = this.isValid(f);
                 }
               });
