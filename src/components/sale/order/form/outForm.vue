@@ -712,7 +712,7 @@
           this.form.bizType = bizType;
         }
         switch (val) {
-          case '0' : {
+          case '2-0' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowCustomerId: true, // 是否显示POV
@@ -721,7 +721,7 @@
             this.filterPOV();
             break;
           }
-          case '1' : {
+          case '2-1' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowCustomerId: true, // 是否显示POV
@@ -730,7 +730,7 @@
             this.filterPOV();
             break;
           }
-          case '2' : {
+          case '2-2' : {
             this.showContent = {
               isShowOtherContent: false, // 是否显示物流类型
               isShowCustomerId: false, // 是否显示POV
@@ -738,7 +738,7 @@
             };
             break;
           }
-          case '3' : {
+          case '2-3' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowCustomerId: false, // 是否显示POV
