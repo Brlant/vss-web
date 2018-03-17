@@ -531,6 +531,27 @@
             let myDate = new Date();
             this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
           });
+          this.form = {
+            'purchaseContractNo': '',
+            'purchaseContractName': '',
+            'availabilityStatus': true,
+            'orgId': this.$store.state.user.userCompanyAddress,
+            'customerId': '',
+            'bizType': '0',
+            'type': this.type,
+            'logisticsProviderId': '',
+            'transportationCondition': '0',
+            'transportationMeansId': '1',
+            'transportationAddress': '',
+            'importedFlag': '',
+            'orgRelation': '',
+            'logisticsCentreId': this.$store.state.logisticsCentreId,
+            'expectedTime': '',
+            'detailDtoList': [],
+            'supplierId': '',
+            'remark': '',
+            'pickUpAddress': ''
+          };
           this.initForm();
           this.filterOrg();
           this.filterLogisticsCenter();
@@ -980,7 +1001,7 @@
                 type: 'error'
               });
             });
-          } else {
+          } else if (this.action === 'add') {
             PurchaseContract.save(saveData).then(res => {
               this.$notify({
                 duration: 2000,
