@@ -216,6 +216,11 @@ const route = [
             meta: {moduleId: 'store', title: '即时库存', perm: 'cerp-stock-query'}
           },
           {
+            path: '/store/regulation',
+            component: resolve => require(['./components/store/repertory-regulation.vue'], resolve),
+            meta: {moduleId: 'store', title: '即时库存监管', perm: 'cerp-stock-regulatory'}
+          },
+          {
             path: '/store/adjust/count',
             component: resolve => require(['./components/store/adjust-count-stock.vue'], resolve),
             meta: {moduleId: 'store', title: '库存数量调整', perm: 'cerp-stock-adjust'}
