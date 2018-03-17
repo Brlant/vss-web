@@ -726,7 +726,7 @@
           }
         }
         switch (val) {
-          case '0' : {
+          case '1-0' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowSupplierId: true, // 是否显示来源单位
@@ -735,7 +735,7 @@
             this.filterOrg();
             break;
           }
-          case '1' : {
+          case '1-1' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowSupplierId: true, // 是否显示来源单位
@@ -744,7 +744,7 @@
             this.filterOrg();
             break;
           }
-          case '2' : {
+          case '1-2' : {
             this.showContent = {
               isShowOtherContent: false, // 是否显示物流类型
               isShowSupplierId: false, // 是否显示来源单位
@@ -752,7 +752,7 @@
             };
             break;
           }
-          case '3' : {
+          case '1-3' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowSupplierId: false, // 是否显示来源单位
