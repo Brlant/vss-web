@@ -317,9 +317,10 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import OrderMixin from '@/mixins/orderMixin';
+
   export default {
     name: 'addForm',
     loading: false,
@@ -377,7 +378,7 @@
         form: {
           'orgId': '',
           'customerId': '',
-          'bizType': '3',
+          'bizType': '1-3',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '',
@@ -713,14 +714,14 @@
           this.form.bizType = bizType;
         }
         if (this.transportationMeansList && this.transportationMeansList.length) {
-          if (val === '1') {
+          if (val === '1-1') {
             this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '1');
           } else {
             this.currentTransportationMeans = this.transportationMeansList.filter(item => item.key !== '3');
           }
         }
         switch (val) {
-          case '0' : {
+          case '1-0' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowSupplierId: true, // 是否显示来源单位
@@ -729,7 +730,7 @@
             this.filterOrg();
             break;
           }
-          case '1' : {
+          case '1-1' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowSupplierId: true, // 是否显示来源单位
@@ -738,7 +739,7 @@
             this.filterOrg();
             break;
           }
-          case '2' : {
+          case '1-2' : {
             this.showContent = {
               isShowOtherContent: false, // 是否显示物流类型
               isShowSupplierId: false, // 是否显示来源单位
@@ -746,7 +747,7 @@
             };
             break;
           }
-          case '3' : {
+          case '1-3' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowSupplierId: false, // 是否显示来源单位
@@ -997,7 +998,7 @@
             delete item.orgGoodsDto;
           });
           this.doing = true;
-          if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
+          if (saveData.bizType !== '1-1' || saveData.bizType !== '1-0') saveData.supplierId = saveData.orgId;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
               this.$notify({

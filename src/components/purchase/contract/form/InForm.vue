@@ -382,7 +382,7 @@
           'availabilityStatus': true,
           'orgId': this.$store.state.user.userCompanyAddress,
           'customerId': '',
-          'bizType': '0',
+          'bizType': '1-0',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '0',
@@ -537,7 +537,7 @@
             'availabilityStatus': true,
             'orgId': this.$store.state.user.userCompanyAddress,
             'customerId': '',
-            'bizType': '0',
+            'bizType': '1-0',
             'type': this.type,
             'logisticsProviderId': '',
             'transportationCondition': '0',
@@ -978,7 +978,7 @@
             delete item.orgGoodsDto;
           });
           this.doing = true;
-          if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
+          if (saveData.bizType !== '1-1' || saveData.bizType !== '1-0') saveData.supplierId = saveData.orgId;
           if (saveData.id && this.action === 'edit') {
             PurchaseContract.updateOrder(saveData.id, saveData).then(res => {
               this.resetForm();

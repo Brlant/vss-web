@@ -129,7 +129,7 @@
                          @change="changeTransportationMeans">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
                            v-for="item in transportationMeansList"
-                           v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2' "></el-option>
+                           v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2-2' "></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="供货厂商" prop="customerId">
@@ -366,7 +366,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from '@/components/sale/order/form/batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
@@ -428,7 +428,7 @@
         form: {
           'orgId': '',
           'customerId': '',
-          'bizType': '1',
+          'bizType': '2-1',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '',
@@ -725,7 +725,7 @@
           this.form.bizType = bizType;
         }
         switch (val) {
-          case '0' : {
+          case '2-0' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowCustomerId: true, // 是否显示POV
@@ -734,7 +734,7 @@
             this.filterOrg();
             break;
           }
-          case '1' : {
+          case '2-1' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowCustomerId: true, // 是否显示POV
@@ -743,7 +743,7 @@
             this.filterOrg();
             break;
           }
-          case '2' : {
+          case '2-2' : {
             this.showContent = {
               isShowOtherContent: false, // 是否显示物流类型
               isShowCustomerId: false, // 是否显示POV
@@ -751,7 +751,7 @@
             };
             break;
           }
-          case '3' : {
+          case '2-3' : {
             this.showContent = {
               isShowOtherContent: true, // 是否显示物流类型
               isShowCustomerId: false, // 是否显示POV
@@ -768,7 +768,7 @@
         switch (val) {
           case '0': {
             this.showContent.expectedTimeLabel = '预计送货时间';
-            if (this.form.bizType === '1') {
+            if (this.form.bizType === '2-1') {
               this.showContent.expectedTimeLabel = '预计出库时间';
             }
             break;
@@ -782,7 +782,7 @@
             break;
           }
         }
-        if (this.form.bizType === '2') {
+        if (this.form.bizType === '2-2') {
           this.showContent.expectedTimeLabel = '';
         }
       },
@@ -1091,7 +1091,7 @@
             delete item.proportion;
           });
           this.doing = true;
-          if (saveData.bizType > 1) saveData.customerId = saveData.orgId;
+          if (saveData.bizType !== '2-0' || saveData.bizType !== '2-1') saveData.customerId = saveData.orgId;
 
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {

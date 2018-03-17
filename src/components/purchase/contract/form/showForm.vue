@@ -274,7 +274,7 @@
           'availabilityStatus': true,
           'orgId': '',
           'customerId': '',
-          'bizType': '0',
+          'bizType': '1-0',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '0',

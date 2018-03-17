@@ -361,10 +361,11 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
+
   export default {
     name: 'addForm',
     loading: false,
@@ -422,7 +423,7 @@
         form: {
           'orgId': '',
           'customerId': '',
-          'bizType': '1',
+          'bizType': '1-1',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '',
@@ -1079,7 +1080,7 @@
             delete item.orgGoodsDto;
           });
           this.doing = true;
-          if (saveData.bizType > 1) saveData.supplierId = saveData.orgId;
+          if (saveData.bizType === '1-2' || saveData.bizType === '1-3') saveData.supplierId = saveData.orgId;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
               this.$notify({

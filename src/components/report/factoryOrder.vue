@@ -162,11 +162,12 @@
   </div>
 </template>
 <script>
-  import { Goods } from '@/resources';
+  import {Goods} from '@/resources';
   //  import detail from './detail.vue';
   import utils from '@/tools/utils';
   import qs from 'qs';
   import ReportMixin from '@/mixins/reportMixin';
+
   export default {
 //    components: {detail},
     mixins: [ReportMixin],
@@ -211,10 +212,10 @@
         let inType = JSON.parse(JSON.stringify(this.$getDict('bizInType') || []));
         let outType = JSON.parse(JSON.stringify(this.$getDict('bizOutType') || []));
         inType.forEach(i => {
-          i.key = '0-' + i.key;
+          i.key = '0|' + i.key;
         });
         outType.forEach(i => {
-          i.key = '1-' + i.key;
+          i.key = '1|' + i.key;
         });
         return [].concat(inType, outType);
       },
