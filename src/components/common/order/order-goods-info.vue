@@ -83,7 +83,7 @@
     },
     computed: {
       isShowbatch () {
-        return this.orderItem.type === '1' || (this.orderItem.type === '0' && this.orderItem.bizType === '1');
+        return this.orderItem.type === '1' || (this.orderItem.type === '0' && this.orderItem.bizType === '1-1');
       },
       level () {
         return this.$store.state.orgLevel;

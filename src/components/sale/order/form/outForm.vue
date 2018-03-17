@@ -122,7 +122,7 @@
                          @change="changeTransportationMeans">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
                            v-for="item in transportationMeansList"
-                           v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2' "></el-option>
+                           v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2-2' "></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="接种点" prop="customerId">
@@ -363,11 +363,12 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter, Vaccine } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
+
   export default {
     name: 'addForm',
     loading: false,
@@ -425,7 +426,7 @@
         form: {
           'orgId': '',
           'customerId': '',
-          'bizType': '0',
+          'bizType': '1-0',
           'type': this.type,
           'logisticsProviderId': '',
           'transportationCondition': '',
@@ -759,7 +760,7 @@
         switch (val) {
           case '0': {
             this.showContent.expectedTimeLabel = '预计送货时间';
-            if (this.form.bizType === '1') {
+            if (this.form.bizType === '2-1') {
               this.showContent.expectedTimeLabel = '预计出库时间';
             }
             break;
@@ -773,7 +774,7 @@
             break;
           }
         }
-        if (this.form.bizType === '2') {
+        if (this.form.bizType === '2-2') {
           this.showContent.expectedTimeLabel = '';
         }
       },
@@ -1150,7 +1151,7 @@
             delete item.orgGoodsDto;
           });
           this.doing = true;
-          if (saveData.bizType > 1) saveData.customerId = saveData.orgId;
+          if (saveData.bizType === '2-2' || saveData.bizType === '2-3') saveData.customerId = saveData.orgId;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
               this.$notify({

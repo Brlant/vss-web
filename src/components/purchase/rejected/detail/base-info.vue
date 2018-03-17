@@ -19,7 +19,7 @@
     </div>
     <div v-else="" class="page-main-body padding">
       <div>
-        <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2' ">
+        <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2-2' ">
           <el-col :span="12">
             <oms-row label="货主订单号" :span="span">
               {{currentOrder.orderNo}}
@@ -211,7 +211,7 @@
     },
     methods: {
       getTimeTitle: function (item) {
-        return item.transportationMeansId === '0' ? item.bizType === '1' ? '预计出库' : '预计送货'
+        return item.transportationMeansId === '0' ? item.bizType === '2-1' ? '预计出库' : '预计送货'
           : item.transportationMeansId === '1' ? '预计提货'
             : item.transportationMeansId === '2' ? '预计发货' : '';
       },

@@ -315,7 +315,7 @@
           expectedEndTime: '',
           createStartTime: '',
           createEndTime: '',
-          bizType: '1',
+          bizType: '2-1',
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: '',
@@ -540,7 +540,7 @@
         switch (item.transportationMeansId) {
           case '0': {
             title = '预计送货：';
-            if (item.bizType === '1') {
+            if (item.bizType === '2-1') {
               title = '预计出库：';
             }
             break;
@@ -554,7 +554,7 @@
             break;
           }
         }
-        if (item.bizType === '2') {
+        if (item.bizType === '2-2') {
           title = '';
         }
         return title;

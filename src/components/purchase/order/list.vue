@@ -331,7 +331,7 @@
           logisticsProviderId: '',
           createStartTime: '',
           createEndTime: '',
-          bizType: '0',
+          bizType: '1-0',
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: '',

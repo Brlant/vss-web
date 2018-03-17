@@ -357,7 +357,7 @@
           expectedEndTime: '',
           createStartTime: '',
           createEndTime: '',
-          bizType: '3',
+          bizType: '1-3',
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: '',
