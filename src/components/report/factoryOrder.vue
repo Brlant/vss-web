@@ -115,7 +115,7 @@
         </el-table-column>
         <el-table-column prop="bizType" label="订单类型" :sortable="true" width="120">
           <template slot-scope="scope">
-            {{bizTypes[scope.row.bizType]}}
+            {{showOrderType(scope.row.bizType)}}
             <!--<dict :dict-group="scope.row.type === '0' ? 'bizInType' : 'bizOutType' " :dict-key="scope.row.bizType" ></dict>-->
           </template>
         </el-table-column>
@@ -197,8 +197,7 @@
         expectedTime: '',
         showTable: false,
         vaccineList: [],
-        typeList: ['入库', '出库'],
-        bizTypes: ['采购订单', '销售退货', '盘盈入库', '调拨入库', '销售出库', '采购退货出库', '盘亏出库', '调拨出库']
+        typeList: ['入库', '出库']
       };
     },
     mounted () {
@@ -224,6 +223,34 @@
       }
     },
     methods: {
+      showOrderType: function (item) {
+        let title = '';
+        if (item === '1-0') {
+          title = '采购订单';
+        }
+        if (item === '1-1') {
+          title = '销售退货';
+        }
+        if (item === '1-2') {
+          title = '盘盈入库';
+        }
+        if (item === '1-3') {
+          title = '调拨入库';
+        }
+        if (item === '2-0') {
+          title = '销售出库';
+        }
+        if (item === '2-1') {
+          title = '采购退货';
+        }
+        if (item === '2-2') {
+          title = '盘亏出库';
+        }
+        if (item === '2-3') {
+          title = '调拨出库';
+        }
+        return title;
+      },
       filterVaccine: function (query) {
         let params = Object.assign({}, {
           deleteFlag: false,
