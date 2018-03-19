@@ -1091,7 +1091,6 @@
             delete item.proportion;
           });
           this.doing = true;
-          if (saveData.bizType !== '2-0' || saveData.bizType !== '2-1') saveData.customerId = saveData.orgId;
 
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
