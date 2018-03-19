@@ -1151,7 +1151,6 @@
             delete item.orgGoodsDto;
           });
           this.doing = true;
-          if (saveData.bizType === '2-2' || saveData.bizType === '2-3') saveData.customerId = saveData.orgId;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
               this.$notify({
