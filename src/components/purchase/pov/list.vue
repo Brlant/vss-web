@@ -88,8 +88,8 @@
               </el-row>
             </el-col>
             <el-col :span="8" class="clearfix">
-              <oms-form-row label="组织区域代码" :span="7">
-                <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入组织区域代码"></oms-input>
+              <oms-form-row label="单位区域代码" :span="7">
+                <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="16">
