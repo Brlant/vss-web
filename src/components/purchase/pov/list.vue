@@ -329,7 +329,7 @@
           cdcId: orgId
         }, searchCondition);
         this.loadingData = true;
-        pullSignal.query(params).then(res => {
+        pullSignal.queryCDC(params).then(res => {
           res.data.list.forEach(item => {
             item.isChecked = false;
           });
