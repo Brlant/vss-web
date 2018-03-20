@@ -347,6 +347,11 @@ const route = [
             meta: {moduleId: 'account', title: '用户管理', perm: 'erp-user-manager'}
           },
           {
+            path: '/account/log',
+            component: () => import('./components/common/log/list.vue'),
+            meta: {topMould: 'permission', title: '系统日志', perm: 'erp-system-log'}
+          },
+          {
             path: '/account/system/management',
             component: resolve => require(['./components/account/management/list.vue'], resolve),
             meta: {moduleId: 'account', title: '系统账号管理', perm: 'erp-system-account-manager', type: 1}
