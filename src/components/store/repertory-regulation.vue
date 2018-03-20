@@ -151,7 +151,7 @@
 
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
-      layout="total, prev, pager, next"
+      layout="total, sizes, prev, pager, next, jumper"  @size-change="handleSizeChange"
       :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
       :current-page="pager.currentPage">
       </el-pagination>
@@ -250,6 +250,10 @@
         let b = this.$moment(item.expiryDate);
         let days = b.diff(a, 'days');
         return a < b ? days > 90 ? 2 : 1 : 0;
+      },
+      handleSizeChange (val) {
+        this.pager.pageSize = val;
+        this.getBatches(1);
       },
       getBatches(pageNo) { // 得到波次列表
         this.totalInfo = {};
