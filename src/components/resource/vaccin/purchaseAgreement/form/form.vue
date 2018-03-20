@@ -140,7 +140,7 @@
         this.form.supplyCompanyId = '';
         this.form.unitPrice = '';
       },
-      getOmsGoods: function (keyWord) {// 得到组织疫苗列表
+      getOmsGoods: function (keyWord) {// 得到单位疫苗列表
         this.goodsList = [];
         let params = {
           keyWord: keyWord,

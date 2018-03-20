@@ -154,10 +154,11 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, Vaccine } from '@/resources';
+  import {BaseInfo, Vaccine} from '@/resources';
   import utils from '@/tools/utils';
   import qs from 'qs';
   import ReportMixin from '@/mixins/reportMixin';
+
   export default {
     mixins: [ReportMixin],
     data () {
@@ -232,7 +233,7 @@
         }).then(res => {
           this.reportList = res.data.map(m => {
             m.type = this.typeList[m.type];
-            m.bizType = this.bizTypeList[m.bizType];
+            m.bizType = this.showOrderType(m.bizType);
             m.date = this.formatTime(m.date);
             m.expirationDate = this.formatTime(m.expirationDate);
             m.goodsStatus = this.goodsStatusList[m.goodsStatus];
@@ -241,6 +242,34 @@
           this.loadingData = false;
           this.setFixedHeight();
         });
+      },
+      showOrderType: function (item) {
+        let title = '';
+        if (item === '1-0') {
+          title = '采购订单';
+        }
+        if (item === '1-1') {
+          title = '销售退货';
+        }
+        if (item === '1-2') {
+          title = '盘盈入库';
+        }
+        if (item === '1-3') {
+          title = '调拨入库';
+        }
+        if (item === '2-0') {
+          title = '销售出库';
+        }
+        if (item === '2-1') {
+          title = '采购退货';
+        }
+        if (item === '2-2') {
+          title = '盘亏出库';
+        }
+        if (item === '2-3') {
+          title = '调拨出库';
+        }
+        return title;
       },
       getSummaries (param) {
         const {columns, data} = param;

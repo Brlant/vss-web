@@ -811,7 +811,7 @@ export const Goods = resource('/goods', http, {
 
 // 货主-基本信息
 export const BaseInfo = resource('/orgs', http, {
-  // 根据组织机构关系类型列表分页查询组织信息
+  // 根据单位机构关系类型列表分页查询单位信息
   queryByOrgRelationTypeList: (params) => {
     return http({
       url: '/orgs/relationType',
@@ -829,7 +829,7 @@ export const BaseInfo = resource('/orgs', http, {
   turnToOwner: (orgId) => {
     return http.put('/orgs/transform/consignor/' + orgId, {});
   },
-  // 一键审核组织基础信息(同时审核单位基本信息、经营范围、执照信息,并审核基础信息模块)
+  // 一键审核单位基础信息(同时审核单位基本信息、经营范围、执照信息,并审核基础信息模块)
   auditBaseInfo: (orgId, obj) => {
     return http.put('/orgs/' + orgId + '/check', obj);
   },

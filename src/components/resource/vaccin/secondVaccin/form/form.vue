@@ -185,8 +185,8 @@
       </el-form-item>
       <div v-show="form.goodsIsCombination">
         <!--<el-form ref="otherGoodsForm" :model="form" :rules="otherGoodsRules" label-width="120px">-->
-        <el-form-item label="其他组织疫苗">
-          <el-select placeholder="请选择组织疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects" remote
+        <el-form-item label="其他单位疫苗">
+          <el-select placeholder="请选择单位疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects" remote
                      :remote-method="queryCombinationGoods" @click.native="queryCombinationGoods('')" :clearable="true">
             <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                        v-for="item in otherGoodsList">
@@ -214,7 +214,7 @@
         </el-form-item>
         <!--</el-form>-->
         <ul class="show-list" v-show="selectGoodsList.length">
-          <li class="list-item"><span>其他组织疫苗</span> <span style="position: absolute;right: 200px">数量</span></li>
+          <li class="list-item"><span>其他单位疫苗</span> <span style="position: absolute;right: 200px">数量</span></li>
           <li v-for="item in selectGoodsList" class="list-item">
             <span style="display: inline-block;width: 260px">{{ item.name }}</span>
             <span style="position: absolute;right: 200px;display: inline-block;">{{ item.proportion }}</span>
@@ -279,7 +279,7 @@
             {required: true, message: '请输入销售价格', trigger: 'blur'}
           ],
           accessory: [
-            {required: true, message: '请输入其他组织疫苗', trigger: 'change'}
+            {required: true, message: '请输入其他单位疫苗', trigger: 'change'}
           ],
           proportion: [
             {type: 'number', message: '比例必须为数字值'}
@@ -295,7 +295,7 @@
           accessory: '',
           proportion: null
         },
-        goodsList: [], // 组织疫苗列表
+        goodsList: [], // 单位疫苗列表
         otherGoodsList: [], // 其他oms组合疫苗列表
         invariantOtherGoodslist: [], // 所有的oms组合疫苗列表
         selectGoodsList: [], // 已经选择的疫苗列表
@@ -421,7 +421,7 @@
           this.form.sellPrice = this.form.bidPrice;
         }
       },
-      getOmsGoods: function (keyWord) {// 得到组织疫苗列表
+      getOmsGoods: function (keyWord) {// 得到单位疫苗列表
           let params = {
             keyWord: keyWord,
             availabilityStatus: true
@@ -477,7 +477,7 @@
           });
         }
       },
-      filtersCombinationGoods () {// 过滤已有的组织疫苗和本身
+      filtersCombinationGoods () {// 过滤已有的单位疫苗和本身
         let array = [];
         let isNotSame = false;
         this.invariantOtherGoodslist.forEach(tItem => {
@@ -497,7 +497,7 @@
         this.otherGoodsList = [];
         this.otherGoodsList = array;
       },
-      filterSelectGoodsList: function (data) {// 过滤选择的组合组织疫苗
+      filterSelectGoodsList: function (data) {// 过滤选择的组合单位疫苗
         this.selectGoodsList = [];
         if (data.length === 0) return;
         data.forEach(item => {
@@ -547,7 +547,7 @@
           if (this.selectGoodsList && this.selectGoodsList.length === 0) {
             this.$notify.info({
               duration: 1500,
-              message: '请先添加其他组织疫苗'
+              message: '请先添加其他单位疫苗'
             });
             return;
           }
@@ -574,13 +574,13 @@
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '新增组织疫苗"' + data.orgGoodsDto.name + '"成功'
+                message: '新增单位疫苗"' + data.orgGoodsDto.name + '"成功'
               });
               this.$emit('change', data);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '新增组织疫苗"' + data.orgGoodsDto.name + '"失败'
+                message: '新增单位疫苗"' + data.orgGoodsDto.name + '"失败'
               });
               this.doing = false;
             });
@@ -590,13 +590,13 @@
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '修改组织疫苗"' + data.orgGoodsDto.name + '"成功'
+                message: '修改单位疫苗"' + data.orgGoodsDto.name + '"成功'
               });
               this.$emit('change', data);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '修改组织疫苗"' + data.orgGoodsDto.name + '"失败'
+                message: '修改单位疫苗"' + data.orgGoodsDto.name + '"失败'
               });
               this.doing = false;
             });
