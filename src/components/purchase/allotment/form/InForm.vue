@@ -632,6 +632,8 @@
         this.form.remark = '';
         this.form.detailDtoList = [];
         this.form.pickUpAddress = '';
+        this.searchProductList = [];
+        this.filterProductList = [];
       },
       formatPrice: function () {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
