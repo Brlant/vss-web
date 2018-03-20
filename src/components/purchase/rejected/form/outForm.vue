@@ -632,6 +632,8 @@
         this.form.transportationAddress = '';
         this.form.actualConsignee = '';
         this.form.orgAddress = '';
+        this.searchProductList = [];
+        this.filterProductList = [];
       },
       clearForm () {
         this.accessoryList = [];
@@ -865,6 +867,7 @@
       searchProduct: function (query) {
         if (!this.form.customerId) {
           this.searchProductList = [];
+          this.filterProductList = [];
           return;
         }
         let params = {

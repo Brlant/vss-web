@@ -622,7 +622,7 @@ export const pullSignal = resource('/pull-signal', http, {
   queryCount(params) {
     return http.get('/pull-signal/count', {params});
   },
-  query (params) {
+  queryCDC (params) {
     return http.get('/pull-signal/cdc', {params});
   }
 });
