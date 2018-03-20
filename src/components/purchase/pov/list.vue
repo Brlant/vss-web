@@ -193,7 +193,7 @@
                         取消需求单
                       </span>
                   </perm>
-                  <perm label="pull-signal-generate-order">
+                  <perm label="demand-assignment-add">
                     <span @click.prevent="createSaleOrder(item)" v-show="filters.status === 2 && item.singleFlag">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-sale"></i></a>
