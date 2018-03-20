@@ -309,7 +309,7 @@ const route = [
       {
         path: '/account',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'account', title: '组织账户管理', icon: 'user', perm: 'erp-bind-account-manager'},
+        meta: {moduleId: 'account', title: '单位账户管理', icon: 'user', perm: 'erp-bind-account-manager'},
         children: [
           {
             path: '/account/cdc',

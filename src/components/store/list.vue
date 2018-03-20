@@ -111,6 +111,12 @@
             <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="totalCount" label="库存总数"  :sortable="true"
+                         width="100">
+          <template slot-scope="scope">
+            <span>{{scope.row.totalCount}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="undeterminedCount" label="锁定库存" :render-header="formatHeader" :sortable="true"
                          width="110">
           <template slot-scope="scope">
@@ -243,6 +249,9 @@
         let params = Object.assign({}, this.filters);
         this.loadingData = true;
         erpStock.query(params).then(res => {
+          res.data.forEach(i => {
+             i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
+          });
           this.batches = res.data;
           this.loadingData = false;
           setTimeout(() => {this.fixedHeight = Math.abs(this.fixedHeight - 1);}, 100);
@@ -258,22 +267,22 @@
             title = '可用库存';
             break;
           }
-          case 4: {
+          case 5: {
             content = '仓库内质量状态待确定而不允许销售的库存数';
             title = '锁定库存';
             break;
           }
-          case 5: {
+          case 6: {
             content = '仓库内真实合格货品数量';
             title = '实际合格库存';
             break;
           }
-          case 6: {
+          case 7: {
             content = '在运输中的货品数量';
             title = '在途库存';
             break;
           }
-          case 7: {
+          case 8: {
             content = '仓库内真实不合格货品数量';
             title = '实际不合格库存';
             break;
@@ -327,7 +336,7 @@
           }
           if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' &&
             column.property !== 'transitCount' && column.property !== 'unqualifiedCount'
-            && column.property !== 'undeterminedCount') {
+            && column.property !== 'undeterminedCount' && column.property !== 'totalCount') {
             sums[index] = '';
             return;
           }
