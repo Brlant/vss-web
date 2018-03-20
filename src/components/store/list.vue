@@ -102,8 +102,8 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主货品名称"  min-width="200" :sortable="true"></el-table-column>
+        <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
                          width="100">
@@ -111,7 +111,7 @@
             <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="totalCount" label="库存总数"  :sortable="true"
+        <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader"  :sortable="true"
                          width="100">
           <template slot-scope="scope">
             <span>{{scope.row.totalCount}}</span>
@@ -265,6 +265,11 @@
           case 3: {
             content = '用于出库订单的控制，表明可销售的数量';
             title = '可用库存';
+            break;
+          }
+          case 4: {
+            content = '用于计算资产';
+            title = '库存总数';
             break;
           }
           case 5: {
