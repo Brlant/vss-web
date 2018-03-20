@@ -633,6 +633,8 @@
         this.form.customerId = '';
         this.form.transportationAddress = '';
         this.form.orgAddress = '';
+        this.searchProductList = [];
+        this.filterProductList = [];
       },
       editOrderInfo () {
         if (!this.orderId) return;
@@ -863,6 +865,7 @@
       searchProduct: function (query) {
         if (!this.form.customerId || !this.form.orgId) {
           this.searchProductList = [];
+          this.filterProductList = [];
           return;
         }
         let params = {
