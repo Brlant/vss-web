@@ -347,6 +347,11 @@ const route = [
             meta: {moduleId: 'account', title: '用户管理', perm: 'erp-user-manager'}
           },
           {
+            path: '/account/log',
+            component: () => import('./components/common/log/list.vue'),
+            meta: {topMould: 'permission', title: '系统日志', perm: 'erp-system-log'}
+          },
+          {
             path: '/account/system/management',
             component: resolve => require(['./components/account/management/list.vue'], resolve),
             meta: {moduleId: 'account', title: '系统账号管理', perm: 'erp-system-account-manager', type: 1}
@@ -483,15 +488,15 @@ const route = [
             component: resolve => require(['./components/report/allotation.vue'], resolve),
             meta: {moduleId: 'report', title: '出货货品统计表', perm: 'first-vaccine-distribution-manager'}
           },
-          {
-            path: '/report/pov/one/repertory',
-            component: resolve => require(['./components/report/pov-repertory.vue'], resolve),
-            meta: {moduleId: 'report', title: '接种单位一类疫苗盘点表', perm: 'pov-stock-form-manager', type: 1}
-          },
+          // {
+          //   path: '/report/pov/one/repertory',
+          //   component: resolve => require(['./components/report/pov-repertory.vue'], resolve),
+          //   meta: {moduleId: 'report', title: '接种单位一类疫苗盘点表', perm: 'pov-stock-form-manager', type: 1}
+          // },
           {
             path: '/report/pov/two/repertory',
             component: resolve => require(['./components/report/pov-repertory.vue'], resolve),
-            meta: {moduleId: 'report', title: '接种单位二类疫苗盘点表', perm: 'pov-stock-form-manager', type: 2}
+            meta: {moduleId: 'report', title: '接种单位疫苗盘点表', perm: 'pov-stock-form-manager', type: 2}
           },
           {
             path: '/report/pov/detail',
