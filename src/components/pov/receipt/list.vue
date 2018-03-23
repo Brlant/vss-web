@@ -101,10 +101,10 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <receipt-info :orderId="currentOrderId" @close="resetRightBox" @refreshOrder="refreshOrder"></receipt-info>
+      <receipt-info :orderId="currentOrderId" :showRight="showRight" @close="resetRightBox" @refreshOrder="refreshOrder"></receipt-info>
     </page-right>
     <page-right :show="showDetailRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <show-detail :orderId="currentOrderId" @close="resetRightBox"></show-detail>
+      <show-detail :orderId="currentOrderId" :showRight="showDetailRight" @close="resetRightBox"></show-detail>
     </page-right>
   </div>
 </template>
