@@ -40,12 +40,14 @@
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
-        <span class="pull-right" style="margin-top: 8px">
-           <perm label="pull-signal-add">
+        <span class="pull-right opera-btn" style="margin-top: 8px">
+          <span>
+             <perm label="pull-signal-add">
              <a href="#" class="btn-circle" @click.stop.prevent="add">
                 <i class="el-icon-t-plus"></i>
-            </a>
+            </a>添加
            </perm>
+          </span>
        </span>
       </div>
       <div class="d-table" style="margin-top: 20px">
@@ -59,7 +61,7 @@
               要货申请单列表
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
-              <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
+              <oms-input v-model="filters.keyWord" placeholder="请输入编号搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!currentItem.id" class="empty-info">
               暂无信息
@@ -69,10 +71,10 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    要货申请编号 {{item.id }}
+                    申请时间: {{item.applyTime | time }}
                   </div>
                   <div>
-                    {{item.povName }}
+                    申请编号: {{item.id }}
                   </div>
                 </li>
               </ul>
@@ -304,6 +306,7 @@
       getOrgsList: function (pageNo, isContinue = false) {
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
+        // this.filters.id = this.filters.keyWord;
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,

@@ -310,9 +310,10 @@
     watch: {
       currentOrder (val) {
         if (!val.id) return;
-        this.searchWarehouses();
-//        this.filterLogisticsCenter();
-        this.filterAddress();
+        if (val.state === '0') {
+          this.searchWarehouses();
+          this.filterAddress();
+        }
       },
       isCheck (val) {
         if (val) {

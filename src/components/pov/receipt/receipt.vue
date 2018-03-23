@@ -115,7 +115,8 @@
 
   export default {
     props: {
-      orderId: String
+      orderId: String,
+      showRight: Boolean
     },
     data () {
       return {
@@ -138,7 +139,8 @@
       };
     },
     watch: {
-      orderId () {
+      showRight (val) {
+        if (!val) return;
         this.queryOrderDetail();
       }
     },

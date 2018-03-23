@@ -95,7 +95,8 @@
       index: {
         type: Number,
         default: -1
-      }
+      },
+      showRight: Boolean
     },
     data () {
       return {
@@ -105,8 +106,8 @@
       };
     },
     watch: {
-      index (val) {
-        if (val !== 1) return;
+      showRight (val) {
+        if (!val) return;
         this.details = [];
         this.getGoodsDetails();
       }
