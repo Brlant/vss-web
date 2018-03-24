@@ -548,7 +548,15 @@
             this.currentItem = Object.assign({orgGoodsDto: {}, list: []}, this.orgGoodsList[0]);
           }
           this.typePager.totalPage = res.data.totalPage;
+          this.queryStatusNum(params);
           this.queryOrgGoods();
+        });
+      },
+      queryStatusNum: function (params) {
+        Vaccine.queryStateNum(params).then(res => {
+          let data = res.data;
+          this.vaccineType[0].num = data['normal'];
+          this.vaccineType[1].num = data['disable'];
         });
       },
       queryOrgGoods() {

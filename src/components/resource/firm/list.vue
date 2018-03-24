@@ -132,7 +132,8 @@
              v-for="(item,key) in firmType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}
+            <span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="container d-table">
@@ -400,7 +401,7 @@
 
 </template>
 <script>
-  import { BaseInfo, Vendor } from '@/resources';
+  import {BaseInfo, Vendor} from '@/resources';
   import utils from '@/tools/utils';
   import photoShow from './photo/photo.show.vue';
 
@@ -545,7 +546,15 @@
             this.getBusinessRelationItem(this.currentItem.id);
           }
           this.typePager.totalPage = res.data.totalPage;
+          this.queryStatusNum(params);
           this.loadingListData = false;
+        });
+      },
+      queryStatusNum: function (params) {
+        Vendor.queryStateNum(params).then(res => {
+          let data = res.data;
+          this.firmType[0].num = data['normal'];
+          this.firmType[1].num = data['disable'];
         });
       },
       getBusinessRelationItem: function (id) {
