@@ -41,6 +41,7 @@
       overflow: auto;
     }
   }
+
 </style>
 <template>
   <div>
@@ -52,7 +53,7 @@
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div class="status-title"><i class="el-icon-caret-right"
                                        v-if="item.usableStatus==filters.usableStatus"></i>{{item.title}}
-            <!--<span class="status-num">{{item.num}}</span>--></div>
+            <span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="container d-table">
@@ -216,9 +217,9 @@
         roleText: '',
         currentItem: {},
         orgType: {
-          0: {'title': '所有', 'num': 8, 'usableStatus': null},
-          1: {'title': '正常', 'num': 6, 'usableStatus': 1},
-          2: {'title': '停用', 'num': 2, 'usableStatus': 0}
+          0: {'title': '所有', 'num': 0, 'usableStatus': null},
+          1: {'title': '正常', 'num': 0, 'usableStatus': 1},
+          2: {'title': '停用', 'num': 0, 'usableStatus': 0}
         },
         filters: {
           usableStatus: 1,
@@ -319,6 +320,15 @@
             }
           }
           this.pager.totalPage = res.data.totalPage;
+          this.queryStatusNum(param);
+        });
+      },
+      queryStatusNum: function (params) {
+        Access.queryErpStateNum(params).then(res => {
+          let data = res.data;
+          this.orgType[0].num = data['all'];
+          this.orgType[1].num = data['valid'];
+          this.orgType[2].num = data['stop'];
         });
       },
       queryRoleDetail: function (id) {

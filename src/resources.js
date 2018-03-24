@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui/lib/notification';
+import {Notification} from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -137,6 +137,12 @@ export const Access = resource('/oms/access', http, {
   save: (obj) => {
     return http.post('/erp-access', obj);
   },
+  queryStateNum: (params) => {
+    return http.get('/oms/access/platform/count', {params});
+  },
+  queryErpStateNum: (params) => {
+    return http.get('/erp-access/platform/count', {params});
+  },
   querySystemAccess: (params) => {
     return http.get('/oms/access/', {params});
   },
@@ -214,6 +220,9 @@ export const Vendor = resource('/vendor-info', http, {
   save: obj => http.post('/vendor-info', obj),
   update: (id, obj) => {
     return http.put('/vendor-info', obj);
+  },
+  queryStateNum: (params) => {
+    return http.get('/vendor-info/count', {params});
   }
 });
 
@@ -646,6 +655,9 @@ export const Vaccine = resource('/vaccine-info', http, {
   },
   queryLevelVaccine() {
     return http.get('/vaccine-info/filter');
+  },
+  queryStateNum(params) {
+    return http.get('/vaccine-info/count', {params});
   }
 });
 
