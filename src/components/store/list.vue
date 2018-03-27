@@ -308,7 +308,7 @@
         }
       },
       exportFile: function () {
-        let params = Object.assign({}, this.filters);
+        let params = Object.assign({}, this.filters, this.searchWord);
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/store/request'});
         this.$http.get('/erp-stock/export', {params}).then(res => {
           utils.download(res.data.path, '即时库存查询');
