@@ -364,7 +364,7 @@
     <page-right :show="showRight" @right-close="resetRightBox">
       <el-form ref="relationForm" :rules="rules" :model="form" label-width="100px" class="demo-ruleForm"
                @submit.prevent="onSubmit('relationForm')" onsubmit="return false">
-        <h2 class="clearfix">添加厂商</h2>
+        <h2 class="clearfix">{{!form.id ? '添加厂商' : '修改厂商'}}</h2>
         <el-form-item label="往来单位" prop="followOrgId">
           <el-select placeholder="请输入名称搜索厂商" remote :remote-method="queryOtherBusiness" :clearable="true"
                      v-model="form.followOrgId"
