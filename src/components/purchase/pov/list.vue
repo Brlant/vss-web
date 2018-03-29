@@ -321,8 +321,9 @@
           });
           searchCondition.status = undefined;
         } else {
-          searchCondition = this.filters;
+          searchCondition = Object.assign({},  this.filters);
         }
+        if (searchCondition.status === 3) searchCondition.cancelFlag = '0';
         let params = Object.assign({
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
@@ -347,7 +348,7 @@
           this.assignType[0].num = res.data['audited'];
           this.assignType[1].num = res.data['create-wave'];
           this.assignType[2].num = res.data['assigned'];
-          this.assignType[3].num = res.data['canceled'];
+          this.assignType[3].num = res.data['cdc-canceled'];
           this.assignType[4].num = res.data['procurement-pending-audit'];
           this.assignType[5].num = res.data['procurement-audited'];
           this.assignType[6].num = res.data['procurement-canceled'];
