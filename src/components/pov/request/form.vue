@@ -423,7 +423,8 @@
             orgGoodsId: m.orgGoodsId,
             orgGoodsName: m.goodsName,
             unitPrice: m.price,
-            specification: m.specification
+            specification: m.specification,
+            combinationSign: m.combinationSign
           };
         });
         this.form = {
@@ -452,7 +453,8 @@
             orgGoodsId: m.orgGoodsId,
             orgGoodsName: m.goodsName,
             unitPrice: m.price,
-            specification: m.specification
+            specification: m.specification,
+            combinationSign: m.combinationSign
           };
         });
         this.form = {
