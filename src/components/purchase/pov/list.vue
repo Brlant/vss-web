@@ -328,7 +328,7 @@
           });
           searchCondition.status = undefined;
         } else {
-          searchCondition = Object.assign({},  this.filters);
+          searchCondition = Object.assign({}, this.filters);
         }
         if (searchCondition.status === 3) searchCondition.cancelFlag = '0';
         let params = Object.assign({
