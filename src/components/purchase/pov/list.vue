@@ -209,10 +209,10 @@
 
       </div>
 
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <div class="text-center" v-show="demandList.length && !loadingData">
         <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="getDemandList"
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :total="pager.count" :page-sizes="[15, 30, 50, 100, 200, 500]" :pageSize="pager.pageSize"
           :current-page="pager.currentPage">
         </el-pagination>
       </div>
@@ -309,6 +309,13 @@
       }
     },
     methods: {
+      handleSizeChange (val) {
+        this.pager.pageSize = val;
+        this.getDemandList(1);
+      },
+      handleCurrentChange (val) {
+        this.getDemandList(val);
+      },
       getDemandList (pageNo) { // 得到需求列表
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
