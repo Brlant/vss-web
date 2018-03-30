@@ -32,6 +32,32 @@ export default {
         return false;
       }
       return true;
+    },
+    handleRepetitiveOrgGoods (isHasBatchNumberInfo) {
+      if (this.product.orgGoodsId !== this.editItemProduct.orgGoodsId) return;
+      this.product.orgGoodsName = this.editItemProduct.orgGoodsName;
+      let totalAmount = 0;
+      // 判断时候需要批号信息
+      if (!isHasBatchNumberInfo) {
+        this.batchNumbers.forEach(b => {
+          if (b.orgGoodsId === this.product.orgGoodsId) {
+            b.lots.forEach(bl => {
+              if (bl.isChecked) {
+                let product = JSON.parse(JSON.stringify(this.product));
+                product.batchNumberId = bl.id;
+                product.no = bl.no;
+                product.amount = bl.productCount;
+                product.measurementUnit = this.editItemProduct.measurementUnit;
+                this.form.detailDtoList.push(product);
+                totalAmount += bl.productCount;
+              }
+            });
+          }
+        });
+      } else {
+        this.product.measurementUnit = this.editItemProduct.measurementUnit;
+        this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
+      }
     }
   }
 };

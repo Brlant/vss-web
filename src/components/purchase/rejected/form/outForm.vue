@@ -967,8 +967,10 @@
           if (!valid) {
             return false;
           }
+          let isHasInSearchProductList = false;
           this.searchProductList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+              isHasInSearchProductList = true;
               this.product.orgGoodsName = item.orgGoodsDto.name;
               let totalAmount = 0;
               if (this.batchNumbers.length) {
@@ -1006,6 +1008,7 @@
               });
             }
           });
+          !isHasInSearchProductList && this.handleRepetitiveOrgGoods(!this.batchNumbers.length);
           this.$nextTick(function () {
             this.product = {
               'amount': null,
@@ -1022,6 +1025,7 @@
             this.$refs['orderGoodsAddForm'].resetFields();
             this.accessoryList = [];
             this.batchNumbers = [];
+            this.editItemProduct = {};
             this.searchProduct();
 
           });

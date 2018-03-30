@@ -345,7 +345,7 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="4" align="right">
+                  <td colspan="5" align="right">
                     <total-count property="amount" :list="form.detailDtoList"></total-count>
                   </td>
                   <td colspan="2" style="font-weight: 600" v-show="vaccineType==='2'">
@@ -368,7 +368,6 @@
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
-
   export default {
     name: 'addForm',
     loading: false,
@@ -967,8 +966,10 @@
           if (!valid) {
             return false;
           }
+         let isHasInSearchProductList = false;
           this.searchProductList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+              isHasInSearchProductList = true;
               this.product.orgGoodsName = item.orgGoodsDto.name;
               let totalAmount = 0;
               // 判断时候需要批号信息
@@ -1054,6 +1055,7 @@
               }
             }
           });
+          !isHasInSearchProductList && this.handleRepetitiveOrgGoods(this.isHasBatchNumberInfo);
           this.resetProductForm();
         });
       },
