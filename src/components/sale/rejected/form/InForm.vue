@@ -924,8 +924,10 @@
           if (!valid) {
             return false;
           }
+          let isHasInSearchProductList = false;
           this.searchProductList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+              isHasInSearchProductList = true;
               this.product.orgGoodsName = item.orgGoodsDto.name;
               let totalAmount = 0;
               this.batchNumbers.forEach(b => {
@@ -989,6 +991,7 @@
               });
             }
           });
+          !isHasInSearchProductList && this.handleRepetitiveOrgGoods(false);
           this.$nextTick(function () {
             this.product = {
               'amount': null,

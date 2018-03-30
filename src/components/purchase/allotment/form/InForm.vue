@@ -468,7 +468,8 @@
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
-        requestTime: ''
+        requestTime: '',
+        editItemProduct: {}
       };
     },
     computed: {
@@ -874,6 +875,7 @@
           };
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
+          this.editItemProduct = {};
           return;
         }
         this.searchProductList.forEach(item => {
@@ -907,8 +909,10 @@
           if (!valid) {
             return false;
           }
+          let isHasInSearchProductList = false;
           this.searchProductList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+             isHasInSearchProductList = true;
               this.product.orgGoodsName = item.orgGoodsDto.name;
               this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
               this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
@@ -928,6 +932,7 @@
               });
             }
           });
+          !isHasInSearchProductList && this.handleRepetitiveOrgGoods(true);
           this.$nextTick(function () {
             this.product = {
               'amount': null,
@@ -943,6 +948,7 @@
             };
             this.$refs['orderGoodsAddForm'].resetFields();
             this.accessoryList = [];
+            this.editItemProduct = {};
             this.searchProduct();
           });
         });
@@ -971,6 +977,7 @@
         this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
         this.product.amount = item.amount;
         this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+        this.editItemProduct = JSON.parse(JSON.stringify(item));
         // 2.0变化
         this.deleteItem(item);
         this.searchProduct(item.orgGoodsName);
