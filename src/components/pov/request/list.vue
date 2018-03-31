@@ -425,8 +425,8 @@
       },
       exportExcel () {
         this.printing = true;
-        this.$http(`/pov-order-export/${this.currentOrder.id}`).then(res => {
-          utils.download(res.data.path);
+        this.$http(`/pov-order-export/${this.currentOrder.orderId}`).then(res => {
+          utils.download(res.data);
           this.printing = false;
         }).catch(error => {
           this.printing = false;
