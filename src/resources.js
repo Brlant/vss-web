@@ -9,9 +9,9 @@ export const http = axios.create({
   withCredentials: true
 });
 
-// axios.defaults.retry = 1; // 重试次数
-// axios.defaults.retryDelay = 0;// 重试延时
-// axios.defaults.shouldRetry = () => true;// 重试条件，默认只要是错误都需要重试
+axios.defaults.retry = 1; // 重试次数
+axios.defaults.retryDelay = 0;// 重试延时
+axios.defaults.shouldRetry = () => true;// 重试条件，默认只要是错误都需要重试
 
 function twoRequest (response) {
   const config = response.config;
@@ -51,7 +51,7 @@ function twoRequest (response) {
 }
 
 http.interceptors.response.use(response => {
-  // twoRequest(response);
+  twoRequest(response);
   return response;
 }, error => {
   let noticeTipKey = 'noticeError';
