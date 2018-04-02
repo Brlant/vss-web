@@ -102,7 +102,7 @@
                     style="height: 64px;background: #f1f1f1;margin-left: -5px;margin-right: -5px;">
                     <el-col :span="8"></el-col>
                     <el-col :span="4">
-                       <span style="font-size: 16px">散件包装数量
+                       <span style="font-size: 16px">最小包装数量
                         {{ currentItem.smallPackCount }}
                        <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>

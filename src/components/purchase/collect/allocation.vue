@@ -24,7 +24,7 @@
         <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/purchase/allocation')">返回采购汇总
         </el-button>
         <perm label="submit-purchansing-plan" v-show="!$route.query.type">
-          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 ">生成采购合同</el-button>
+          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 " :disabled="doing">生成采购合同</el-button>
         </perm>
       </div>
       <div class="order-list clearfix ">
@@ -139,7 +139,8 @@
         currentItem: {},
         defaultIndex: -1,
         purchase: {},
-        vaccineType: ''
+        vaccineType: '',
+        doing: false
       };
     },
     mounted () {
@@ -222,12 +223,15 @@
         });
       },
       submit () {
+        this.doing = true;
         procurementCollect.createOrder(this.$route.query.id).then(() => {
+          this.doing = false;
           this.$notify.success({
             message: '生成采购合同成功'
           });
           this.$router.push('/purchase/allocation');
         }).catch(error => {
+          this.doing = false;
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '生成采购合同失败'
           });

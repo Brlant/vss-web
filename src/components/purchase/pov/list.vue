@@ -8,12 +8,13 @@
   .order-list-status-right {
     justify-content: flex-end;
   }
+
   .special-col {
     padding-left: 20px;
     position: relative;
     .el-checkbox {
       position: absolute;
-      left:0;
+      left: 0;
       top: 50%;
       transform: translateY(-50%);
     }
@@ -97,7 +98,7 @@
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
                 <el-button @click="exportExcel" :plain="true" type="success">导出EXCEL</el-button>
-                <el-button  @click="exportNoSaleExcel" :plain="true" type="success">导出待生成销售汇总</el-button>
+                <el-button @click="exportNoSaleExcel" :plain="true" type="success">导出待生成销售汇总</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -158,7 +159,7 @@
                      v-show="filters.status === 1 || filters.status === 11">
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
-                  {{ item.id }}
+                {{ item.id }}
               </el-col>
               <el-col :span="7" class="pt">
                 <span>{{ item.povName }}</span>
@@ -211,7 +212,8 @@
 
       <div class="text-center" v-show="demandList.length && !loadingData">
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
           :total="pager.count" :page-sizes="[15, 30, 50, 100, 200, 500]" :pageSize="pager.pageSize"
           :current-page="pager.currentPage">
         </el-pagination>
@@ -225,7 +227,8 @@
       <add-form @change="onSubmit" :currentOrder="currentItem" :index="index" @close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showEditPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <edit-form @change="onSubmit" :currentItem="currentItem" :showEditPart="showEditPart"  @close="resetRightBox"></edit-form>
+      <edit-form @change="onSubmit" :currentItem="currentItem" :showEditPart="showEditPart"
+                 @close="resetRightBox"></edit-form>
     </page-right>
   </div>
 </template>
@@ -236,6 +239,7 @@
   import addForm from '../request/form';
   import editForm from './edit';
   import Perm from '@/components/common/perm';
+
   export default {
     components: {
       Perm,
@@ -317,6 +321,8 @@
         this.getDemandList(val);
       },
       getDemandList (pageNo) { // 得到需求列表
+        this.isCheckAll = false;
+        this.checkList = [];
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
         this.pager.currentPage = pageNo;
@@ -561,7 +567,7 @@
           return;
         }
         let list = [];
-        this.checkList.forEach(i => list.push(i.id));
+        this.checkList.forEach(i => !list.includes(i.id) && list.push(i.id));
         demandAssignment.save({list}).then(res => {
           this.$notify.success({
             message: '生成销售汇总单成功'

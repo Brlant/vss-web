@@ -58,7 +58,7 @@
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
                 <perm label="erp-bind-pov-add">
-                  <el-button type="primary" @click="bindDistrict">绑定接种点</el-button>
+                  <el-button type="primary" @click="bindDistrict" :disabled="doing">绑定接种点</el-button>
                 </perm>
               </el-col>
               <el-col :span="11" class="text-right">
@@ -148,7 +148,8 @@
           count: 0,
           pageSize: 15
         },
-        level: window.localStorage.getItem('logLevel')
+        level: window.localStorage.getItem('logLevel'),
+        doing: false
       };
     },
     computed: {
@@ -199,7 +200,9 @@
         }
         let cdcId = this.cdcItem.subordinateId;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/pov', text: '正在绑定'});
+        this.doing = true;
         cerpAccess.bindPov(cdcId, this.orgId).then(() => {
+          this.doing = false;
           this.$notify.success({
             message: '绑定接种点成功'
           });
@@ -207,6 +210,7 @@
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/pov', text: '正在绑定'});
           this.getPovPage(1);
         }).catch(error => {
+          this.doing = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/pov', text: '正在绑定'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '绑定接种点失败'
