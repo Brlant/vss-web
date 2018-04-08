@@ -71,7 +71,8 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="item.attachmentMap.drugControlReports.length>0">
-                      <div class="base-pic-item">
+                      <div class="base-pic-item"
+                           v-if="Util.getType(item.attachmentMap.drugControlReports[0].attachmentStoragePath)">
                         <div @click="watchPhoto(item.attachmentMap.drugControlReports[0])">
                           <img
                             :src="item.attachmentMap.drugControlReports[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
@@ -93,7 +94,8 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="item.attachmentMap.batchReleases.length>0">
-                      <div class="base-pic-item">
+                      <div class="base-pic-item"
+                           v-if="Util.getType(item.attachmentMap.batchReleases[0].attachmentStoragePath)">
                         <div @click="watchPhoto(item.attachmentMap.batchReleases[0])">
                           <img
                             :src="item.attachmentMap.batchReleases[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
@@ -117,7 +119,8 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="item.attachmentMap.importCertificates.length>0">
-                      <div class="base-pic-item">
+                      <div class="base-pic-item"
+                           v-if="Util.getType(item.attachmentMap.importCertificates[0].attachmentStoragePath)">
                         <div @click="watchPhoto(item.attachmentMap.importCertificates[0])">
                           <img
                             :src="item.attachmentMap.importCertificates[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
@@ -139,7 +142,8 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="item.attachmentMap.customsPass.length>0">
-                      <div class="base-pic-item">
+                      <div class="base-pic-item"
+                           v-if="Util.getType(item.attachmentMap.customsPass[0].attachmentStoragePath)">
                         <div @click="watchPhoto(item.attachmentMap.customsPass[0])">
                           <img
                             :src="item.attachmentMap.customsPass[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
@@ -184,7 +188,7 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
   import attachmentShow from './attachmentShow.vue';
   import attachmentLists from './../../../common/attachmentList.vue';
 

@@ -328,6 +328,28 @@ export default {
       }
     }
     return defaultHeight;
+  },
+  /**
+   * 得到附件类型 1 图片 0 非图片
+   * @returns {string}
+   */
+  getType(attachmentStoragePath) {
+    let type = '';
+    let url = attachmentStoragePath;
+    let images = ['jpg', 'png', 'gif', 'jpeg'];
+    let docs = ['txt', 'doc', 'docx', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx'];
+    if (url) {
+      type = url.substring(url.lastIndexOf('.'));
+    }
+    if (type) {
+      type = type.substring(1).toLowerCase();
+    }
+    if (docs.indexOf(type) !== -1) {
+      type = 0;
+    } else if (images.indexOf(type) !== -1) {
+      type = 1;
+    }
+    return type;
   }
 };
 
