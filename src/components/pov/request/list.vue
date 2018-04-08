@@ -38,7 +38,8 @@
         <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
              v-for="(item,key) in requestType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
         <span class="pull-right opera-btn" style="margin-top: 8px">
           <span>
@@ -109,7 +110,11 @@
                       <el-button @click="editOrder()"><i
                         class="el-icon-t-edit"></i>编辑</el-button>
                     </perm>
-
+                    <perm label="signal-export">
+                      <el-button @click="exportExcel" v-show="currentOrder.status === 4" :loading="printing">
+                        <i class="el-icon-t-print"></i>{{printing ? '正在导出' : '导出'}}
+                      </el-button>
+                    </perm>
                     <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
                       <el-button @click="cancel()"><i
                         class="el-icon-t-verify"></i>取消</el-button>
@@ -261,7 +266,8 @@
         vaccines: [], // 疫苗列表
         vaccineId: '',
         currentOrder: {},
-        index: 0
+        index: 0,
+        printing: false
       };
     },
     computed: {
@@ -414,6 +420,18 @@
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '申请单审核失败'
             });
+          });
+        });
+      },
+      exportExcel () {
+        this.printing = true;
+        this.$http(`/pov-order-export/${this.currentOrder.orderId}`).then(res => {
+          utils.download(res.data);
+          this.printing = false;
+        }).catch(error => {
+          this.printing = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },

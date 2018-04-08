@@ -285,13 +285,13 @@ export default {
     isMultiple = ri === 0;
     if (isMultiple) {
       this.$notify.info({
-        message: `数量${amount}不是散件的倍数，无法添加货品，已帮您调整为${integer}`
+        message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${integer}`
       });
       return integer;
     }
     let re = integer + smallPacking - ri;
     this.$notify.info({
-      message: `数量${amount}不是散件的倍数，无法添加货品，已帮您调整为${re}`
+      message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
     });
     return re;
   },
@@ -300,7 +300,7 @@ export default {
       this.$notify({
         duration: 2000,
         title: '货品资料不足',
-        message: '货品无散件单位，请补充资料，或者选择其他货品',
+        message: '货品无最小包装单位，请补充资料，或者选择其他货品',
         type: 'error'
       });
     }

@@ -24,7 +24,7 @@
         <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/sale/allocation')">返回销售分配
         </el-button>
         <perm label="submit-allocation-plan" v-show="!$route.query.type">
-          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 ">提交分配方案</el-button>
+          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0" :disabled="doing">提交分配方案</el-button>
         </perm>
       </div>
       <div class="order-list clearfix ">
@@ -183,7 +183,8 @@
         currentItem: {},
         defaultIndex: -1,
         purchase: {},
-        vaccineType: ''
+        vaccineType: '',
+        doing: false
       };
     },
     mounted () {
@@ -264,12 +265,15 @@
           });
           return;
         }
+        this.doing = true;
         demandAssignment.createOrder(this.$route.query.id).then(() => {
           this.$notify.success({
             message: '提交分配方案成功'
           });
+          this.doing = false;
           this.$router.push('/sale/allocation');
         }).catch(error => {
+          this.doing = false;
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '提交分配方案失败'
           });

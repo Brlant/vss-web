@@ -212,6 +212,7 @@
             message: '货品' + row.goodsName + '，输入的分配数量不是散件倍数, 请调整'
           });
         }
+        row.actualCount = row.actualCount || 0;
       },
       submit () {
         // let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);

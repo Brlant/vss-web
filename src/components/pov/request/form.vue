@@ -363,7 +363,8 @@
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
         doing: false,
-        totalFilterProductList: []
+        totalFilterProductList: [],
+        editItemProduct: {}
       };
     },
     computed: {
@@ -423,7 +424,8 @@
             orgGoodsId: m.orgGoodsId,
             orgGoodsName: m.goodsName,
             unitPrice: m.price,
-            specification: m.specification
+            specification: m.specification,
+            combinationSign: m.combinationSign
           };
         });
         this.form = {
@@ -452,7 +454,8 @@
             orgGoodsId: m.orgGoodsId,
             orgGoodsName: m.goodsName,
             unitPrice: m.price,
-            specification: m.specification
+            specification: m.specification,
+            combinationSign: m.combinationSign
           };
         });
         this.form = {
@@ -640,8 +643,10 @@
         if (!isCheck) return;
         let ary = this.filterProductList.filter(f => f.orgGoodsId === this.product.orgGoodsId);
         let currentObj = ary.length > 0 ? ary[0] : '0';
+        let isHasInSearchProductList = false;
         this.currentList.forEach((item) => {
           if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+            isHasInSearchProductList = true;
             this.product.orgGoodsName = item.orgGoodsDto.name;
             let sellPrice = currentObj.sellPrice;
             this.product.unitPrice = utils.autoformatDecimalPoint(sellPrice ? sellPrice.toString() : '');
@@ -663,6 +668,7 @@
             });
           }
         });
+        !isHasInSearchProductList && this.handleRepetitiveOrgGoods(true);
         this.searchProduct();
         this.$nextTick(() => {
           this.product = {
