@@ -108,13 +108,13 @@
 
         <el-table-column label="实物库存" align="center">
           <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
-                           width="130">
+                           width="100">
             <template slot-scope="scope">
               <span>{{scope.row.qualifiedCount}}</span>
             </template>
           </el-table-column>
           <el-table-column prop="unqualifiedCount" label="不合格" :render-header="formatHeader" :sortable="true"
-                           width="140">
+                           width="100">
             <template slot-scope="scope">
               <span>{{scope.row.unqualifiedCount}}</span>
             </template>
