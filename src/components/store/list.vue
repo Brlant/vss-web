@@ -98,48 +98,59 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="batches" class="header-list store" border @row-click="showDetail"
+      <el-table :data="batches" class="header-list store border-black" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主货品名称"  min-width="200" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
-        <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.availableCount}}</span>
-          </template>
+
+        <el-table-column label="实物库存" align="center">
+          <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
+                           width="130">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="unqualifiedCount" label="不合格" :render-header="formatHeader" :sortable="true"
+                           width="140">
+            <template slot-scope="scope">
+              <span>{{scope.row.unqualifiedCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.transitCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader"  :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.totalCount}}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
-        <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader"  :sortable="true"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.totalCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="undeterminedCount" label="锁定库存" :render-header="formatHeader" :sortable="true"
-                         width="110">
-          <template slot-scope="scope">
-            <span>{{scope.row.undeterminedCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true"
-                         width="120">
-          <template slot-scope="scope">
-            <span>{{scope.row.qualifiedCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.transitCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="unqualifiedCount" label="实际不合格库存" :render-header="formatHeader" :sortable="true"
-                         width="140">
-          <template slot-scope="scope">
-            <span>{{scope.row.unqualifiedCount}}</span>
-          </template>
+        <el-table-column label="业务库存" align="center">
+          <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.availableCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="unqualifiedBizCount" label="不合格" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.unqualifiedBizCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="undeterminedCount" label="业务停销" :render-header="formatHeader" :sortable="true"
+                           width="110">
+            <template slot-scope="scope">
+              <span>{{scope.row.undeterminedCount}}</span>
+            </template>
+          </el-table-column>
         </el-table-column>
         <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
           <template slot-scope="scope">
@@ -258,38 +269,43 @@
         });
       },
       formatHeader(h, col) {
-        let index = col.$index;
+        let property = col.column.property;
         let content = '';
         let title = '';
-        switch (index) {
-          case 3: {
-            content = '用于出库订单的控制，表明可销售的数量';
-            title = '可用库存';
-            break;
-          }
-          case 4: {
-            content = '用于计算资产';
-            title = '库存总数';
-            break;
-          }
-          case 5: {
-            content = '仓库内质量状态待确定而不允许销售的库存数';
-            title = '锁定库存';
-            break;
-          }
-          case 6: {
+        switch (property) {
+          case 'qualifiedCount': {
             content = '仓库内真实合格货品数量';
-            title = '实际合格库存';
+            title = '合格';
             break;
           }
-          case 7: {
+          case 'unqualifiedCount': {
+            content = '仓库内真实不合格货品数量';
+            title = '不合格';
+            break;
+          }
+          case 'transitCount': {
             content = '在运输中的货品数量';
             title = '在途库存';
             break;
           }
-          case 8: {
-            content = '仓库内真实不合格货品数量';
-            title = '实际不合格库存';
+          case 'totalCount': {
+            content = '用于计算资产';
+            title = '库存总数';
+            break;
+          }
+          case 'availableCount': {
+            content = '用于出库订单的控制，表明可销售的数量';
+            title = '合格';
+            break;
+          }
+          case 'unqualifiedBizCount': {
+            content = '用于不合格品退货订单控制';
+            title = '不合格';
+            break;
+          }
+          case 'undeterminedCount': {
+            content = '仓库内质量状态待确定而不允许销售的库存数';
+            title = '业务停销';
             break;
           }
         }
@@ -341,7 +357,7 @@
           }
           if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' &&
             column.property !== 'transitCount' && column.property !== 'unqualifiedCount'
-            && column.property !== 'undeterminedCount' && column.property !== 'totalCount') {
+            && column.property !== 'undeterminedCount' && column.property !== 'totalCount' && column.property !== 'unqualifiedBizCount') {
             sums[index] = '';
             return;
           }

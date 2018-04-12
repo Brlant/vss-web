@@ -1,5 +1,5 @@
-
 @import "login";
+
 [v-cloak] {
   display: none
 }
@@ -15,7 +15,6 @@
 .f20 {
   font-size: 20px;
 }
-
 
 .R {
   word-wrap: break-word;
@@ -515,7 +514,6 @@ $leftWidth: 260px;
   color: #999
 }
 
-
 .order-detail-info {
   font-size: 12px;
 }
@@ -591,8 +589,6 @@ $leftWidth: 260px;
 
 }
 
-
-
 .el-input.inline-input {
   width: auto;
 }
@@ -630,7 +626,7 @@ $leftWidth: 260px;
     background: $tableHeaderColor;
     line-height: 45px;
     padding-left: 15px;
-    margin:0 -5px 5px -5px;
+    margin: 0 -5px 5px -5px;
   }
   .order-list-body {
     .order-list-item {
@@ -734,7 +730,7 @@ $leftWidth: 260px;
 
         &:hover, &.active {
           .order-list-item-bg {
-            opacity:1;
+            opacity: 1;
             //background: $order_color_4
             //box-shadow: 0 0 5px 2px $order_color_4
           }
@@ -748,7 +744,7 @@ $leftWidth: 260px;
 
         &:hover, &.active {
           .order-list-item-bg {
-            opacity:1;
+            opacity: 1;
             //background: $order_color_5
             //box-shadow: 0 0 5px 2px $order_color_5
           }
@@ -762,7 +758,7 @@ $leftWidth: 260px;
 
         &:hover, &.active {
           .order-list-item-bg {
-            opacity:1;
+            opacity: 1;
             //background: $order_color_6
             //box-shadow: 0 0 5px 2px $order_color_6
           }
@@ -776,7 +772,7 @@ $leftWidth: 260px;
 
         &:hover, &.active {
           .order-list-item-bg {
-            opacity:1;
+            opacity: 1;
             //background: $order_color_7
             //box-shadow: 0 0 5px 2px $order_color_7
           }
@@ -790,7 +786,7 @@ $leftWidth: 260px;
 
         &:hover, &.active {
           .order-list-item-bg {
-            opacity:1;
+            opacity: 1;
             //background: $order_color_8
             //box-shadow: 0 0 5px 2px $order_color_8
           }
@@ -804,7 +800,7 @@ $leftWidth: 260px;
 
         &:hover, &.active {
           .order-list-item-bg {
-            opacity:1;
+            opacity: 1;
             //background: $order_color_9
             //box-shadow: 0 0 5px 2px $order_color_9
           }
@@ -818,7 +814,7 @@ $leftWidth: 260px;
 
         &:hover, &.active {
           .order-list-item-bg {
-            opacity:1;
+            opacity: 1;
             //background: $order_color_10
             //box-shadow: 0 0 5px 2px $order_color_10
           }
@@ -832,7 +828,7 @@ $leftWidth: 260px;
 
         &:hover, &.active {
           .order-list-item-bg {
-            opacity:1;
+            opacity: 1;
             //background: $order_color_11
             //box-shadow: 0 0 5px 2px $order_color_11
           }
@@ -861,8 +857,6 @@ $leftWidth: 260px;
     color: #fff;
   }
 }
-
-
 
 .el-button-group {
 
@@ -942,11 +936,35 @@ $leftWidth: 260px;
   }
 }
 
+$borderColor: rgba(82, 82, 82, 0.23);
+
+.el-table.border-black.el-table--border.el-table--group {
+  border: 1px solid $borderColor;
+  th, th.is-leaf{
+    border-bottom: 1px solid $borderColor;
+    border-right: 1px solid $borderColor;
+  }
+  td {
+    border-bottom: 1px solid $borderColor;
+    border-right: 1px solid $borderColor;
+  }
+  .el-table__footer-wrapper td {
+    border-top: 1px solid $borderColor;
+  }
+}
+
+
 .header-list {
   &.el-table th {
     background-color: #f1f1f1;
     div {
       background-color: #f1f1f1;
+    }
+  }
+  &.el-table thead.is-group th {
+    background: #f1f1f1;
+    .cell {
+      background: #f1f1f1;
     }
   }
   &.el-table {
@@ -988,7 +1006,6 @@ $leftWidth: 260px;
   }
 }
 
-
 .good-selects, .order-good-selects {
   .el-select-dropdown__item {
     padding-top: 4px;
@@ -1008,6 +1025,7 @@ $leftWidth: 260px;
     }
   }
 }
+
 //2.0变化
 
 .app-body {
@@ -1129,6 +1147,7 @@ $leftWidth: 260px;
 .effective-row {
   color: $order_color_6;
 }
+
 /*库存查询，过期变色*/
 .danger-row {
   color: $error-color;
@@ -1148,8 +1167,6 @@ $leftWidth: 260px;
 .m-total-count {
   font-weight: 600;
 }
-
-
 
 .minor-part {
   color: #999;
@@ -1203,9 +1220,6 @@ $leftWidth: 260px;
     padding: 10px;
   }
 }
-
-
-
 
 .product-list-detail {
   margin-top: 20px;
