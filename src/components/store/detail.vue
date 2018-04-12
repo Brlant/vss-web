@@ -48,11 +48,13 @@
             <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
           </el-col>
           <el-col :span="12">
-            <oms-row label="可用库存" :span="span">{{ currentItem.availableCount }}</oms-row>
-            <oms-row label="锁定库存" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
-            <oms-row label="实际合格库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
+            <oms-row label="合格业务库存" :span="span">{{ currentItem.availableCount }}</oms-row>
+            <oms-row label="不合格业务库存" :span="span">{{ currentItem.unqualifiedBizCount }}</oms-row>
+            <oms-row label="业务停销" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
+            <oms-row label="合格实物库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
+            <oms-row label="不合格实物库存" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
             <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
-            <oms-row label="实际不合格库存" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
+            <oms-row label="库存总数" :span="span">{{ currentItem.totalCount }}</oms-row>
           </el-col>
         </el-row>
         <table class="table clearfix">

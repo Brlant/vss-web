@@ -161,7 +161,7 @@
 
             </div>
           </div>
-          <div class="lot-load">
+          <div class="btn-left-list-more">
             <bottom-loading></bottom-loading>
             <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
               <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
