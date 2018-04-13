@@ -1243,3 +1243,8 @@ $borderColor: rgba(82, 82, 82, 0.23);
 .el-date-editor--datetimerange.el-input__inner {
   width: auto;
 }
+
+.order-col-wrap {
+  overflow-y: auto;
+  overflow-x: hidden;
+}

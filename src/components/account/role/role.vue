@@ -58,7 +58,6 @@
       </div>
       <div class="container d-table">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
             <h2 class="header">
                 <span class="pull-right">
                   <perm label="access-role-add">
@@ -69,7 +68,8 @@
                 </span>
               角色管理
             </h2>
-            <div class="search-left-box" v-show="showTypeSearch">
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
+          <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!currentItem.title" class="empty-info">
@@ -102,7 +102,7 @@
           </div>
         </div>
         <div class="d-table-right">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight  + 'px'">
             <div v-if="!currentItem.title" class="empty-info">
               暂无信息
             </div>
@@ -236,7 +236,7 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 20) + 'px';
+        height = (height - 20);
         return height;
       },
       user() {

@@ -139,10 +139,9 @@
       <div class="container d-table">
 
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
-            <h2 class="header" style="overflow: hidden">
-              厂商资料
-              <span class="pull-right">
+          <h2 class="header" style="overflow: hidden">
+            厂商资料
+            <span class="pull-right">
                    <perm label="manufacturer-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType"><i
                         class="el-icon-t-plus"></i> </a>
@@ -150,12 +149,13 @@
                       <a href="#" class="btn-circle" @click.prevent="searchType"><i
                         class="el-icon-t-search"></i> </a>
                 </span>
-            </h2>
+          </h2>
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
             <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <!--<div v-if="loadingListData">-->
-              <!--<oms-loading :loading="loadingListData"></oms-loading>-->
+            <!--<oms-loading :loading="loadingListData"></oms-loading>-->
             <!--</div>-->
             <div v-if="businessRelationList.length == 0" class="empty-info">
               暂无信息
@@ -189,7 +189,7 @@
           <div v-else-if="!businessRelationItem.followOrg" class="empty-info">
             暂无信息
           </div>
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" v-else>
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight  + 'px'" v-else>
             <h2 class="clearfix">
               <span class="pull-right">
                  <!--<perm label="org-relation-edit">-->
@@ -235,18 +235,18 @@
                   {{ businessRelationItem.followOrg.orgDto.creditCode }}
                 </el-col>
                 <!--<el-col :span="4" class="text-right">-->
-                  <!--建立日期：-->
+                <!--建立日期：-->
                 <!--</el-col>-->
                 <!--<el-col :span="8">-->
-                  <!--{{ businessRelationItem.followOrg.orgDto.createTime | minute}}-->
+                <!--{{ businessRelationItem.followOrg.orgDto.createTime | minute}}-->
                 <!--</el-col>-->
               </el-row>
               <el-row>
                 <!--<el-col :span="5" class="text-right">-->
-                  <!--法人代表：-->
+                <!--法人代表：-->
                 <!--</el-col>-->
                 <!--<el-col :span="7">-->
-                  <!--{{ businessRelationItem.followOrg.orgDto.legalRepresentative }}-->
+                <!--{{ businessRelationItem.followOrg.orgDto.legalRepresentative }}-->
                 <!--</el-col>-->
 
                 <el-col :span="5" class="text-right">
@@ -288,10 +288,10 @@
               </el-row>
               <el-row>
                 <!--<el-col :span="5" class="text-right">-->
-                  <!--备注：-->
+                <!--备注：-->
                 <!--</el-col>-->
                 <!--<el-col :span="7">-->
-                  <!--{{ businessRelationItem.followOrg.orgDto.remarks }}-->
+                <!--{{ businessRelationItem.followOrg.orgDto.remarks }}-->
                 <!--</el-col>-->
 
                 <el-col :span="5" class="text-right">
@@ -401,7 +401,7 @@
 
 </template>
 <script>
-  import {BaseInfo, Vendor} from '@/resources';
+  import { BaseInfo, Vendor } from '@/resources';
   import utils from '@/tools/utils';
   import photoShow from './photo/photo.show.vue';
 
@@ -454,10 +454,10 @@
       };
     },
     computed: {
-      orgRelationList() {
+      orgRelationList () {
         return this.$getDict('orgRelation');
       },
-      companyAddress() {
+      companyAddress () {
         let province = this.businessRelationItem.followOrg.orgDto.province;
         let city = this.businessRelationItem.followOrg.orgDto.city;
         let region = this.businessRelationItem.followOrg.orgDto.region;
@@ -465,13 +465,13 @@
       },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 25) + 'px';
+        height = (height - 25);
         return height;
       }
     },
     watch: {
       filters: {
-        handler() {
+        handler () {
           this.getBusinessRelationList(1);
         },
         deep: true
@@ -482,7 +482,7 @@
         }
       }
     },
-    mounted() {
+    mounted () {
       this.getBusinessRelationList(1);
     },
     methods: {
@@ -498,7 +498,7 @@
         };
         this.resetRightBox();
       },
-      watchPhoto(item) {
+      watchPhoto (item) {
         if (item.photos.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item.photos[0].attachmentId,
@@ -526,7 +526,7 @@
         }
         return state;
       },
-      getBusinessRelationList(pageNo, isContinue = false) {
+      getBusinessRelationList (pageNo, isContinue = false) {
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -696,7 +696,7 @@
           }
         });
       },
-      doClose() {
+      doClose () {
         this.showRight = false;
         this.$refs['relationForm'].resetFields();
       },
