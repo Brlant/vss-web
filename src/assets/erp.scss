@@ -951,6 +951,14 @@ $borderColor: rgba(82, 82, 82, 0.23);
   .el-table__footer-wrapper td {
     border-top: 1px solid $borderColor;
   }
+  .el-table__header {
+    .headerClass:first-child {
+      .gutter {
+        border-bottom: 0;
+      }
+    }
+
+  }
 }
 
 
