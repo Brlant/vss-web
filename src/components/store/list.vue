@@ -106,6 +106,28 @@
         <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
+        <el-table-column label="业务库存" align="center">
+          <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.availableCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="unqualifiedBizCount" label="不合格" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.unqualifiedBizCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="undeterminedCount" label="业务停销" :render-header="formatHeader" :sortable="true"
+                           width="110">
+            <template slot-scope="scope">
+              <span>{{scope.row.undeterminedCount}}</span>
+            </template>
+          </el-table-column>
+        </el-table-column>
+
+
         <el-table-column label="实物库存" align="center">
           <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
                            width="100">
@@ -132,26 +154,8 @@
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column label="业务库存" align="center">
-          <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
-                           width="100">
-            <template slot-scope="scope">
-              <span>{{scope.row.availableCount}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="unqualifiedBizCount" label="不合格" :render-header="formatHeader" :sortable="true"
-                           width="100">
-            <template slot-scope="scope">
-              <span>{{scope.row.unqualifiedBizCount}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="undeterminedCount" label="业务停销" :render-header="formatHeader" :sortable="true"
-                           width="110">
-            <template slot-scope="scope">
-              <span>{{scope.row.undeterminedCount}}</span>
-            </template>
-          </el-table-column>
-        </el-table-column>
+
+
         <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
           <template slot-scope="scope">
             <span>{{ scope.row.expiryDate | date}}</span>
