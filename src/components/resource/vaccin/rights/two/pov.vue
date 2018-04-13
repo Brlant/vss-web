@@ -32,7 +32,8 @@
       border: 0;
     }
   }
- .d-table-left {
+
+  .d-table-left {
     .list-item {
       padding-right: 0;
     }
@@ -42,14 +43,15 @@
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
-          <h2 class="header">
+        <h2 class="header">
           <span class="pull-right">
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
               class="el-icon-t-search"></i> </a>
           </span>
-            区二类疫苗采购目录
-          </h2>
+          区二类疫苗采购目录
+        </h2>
+        <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
+
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
@@ -78,7 +80,7 @@
         </div>
       </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight + 'px'">
           <el-row>
             <el-col :span="22">
               <el-form class="rightForm" ref="rightForm" inline onsubmit="return false">
@@ -98,7 +100,7 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item >
+                <el-form-item>
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                   <perm label="second-vaccine-authorization-delete">
@@ -238,7 +240,7 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height + 10) + 'px';
+        height = (height + 10);
         return height;
       }
     },
@@ -423,7 +425,7 @@
         }
         this.showRight = false;
       },
-      onceCancelRights() {
+      onceCancelRights () {
         this.$confirm('是否取消疫苗"' + this.currentItem.orgGoodsName + '"的所有接种点授权', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

@@ -19,7 +19,6 @@
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
           <h2 class="header" style="overflow: hidden">
           <span class="pull-right">
             <perm label="erp-system-account-export">
@@ -32,7 +31,8 @@
           </span>
             {{ type === 1 ? '系统账号管理' : '账号分配' }}
           </h2>
-          <div class="search-left-box" v-show="showTypeSearch">
+        <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60) + 'px'" @scroll="scrollLoadingData">
+        <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
           <div v-if="!currentItem.id" class="empty-info">
@@ -60,7 +60,7 @@
         </div>
       </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight  + 'px'">
          <span class="pull-right" style="margin-top: 8px">
            <span class="btn-search-toggle open" v-show="showSearch">
               <single-input v-model="keyTxt" placeholder="请输入名称搜索" :showFocus="showSearch"></single-input>
@@ -200,7 +200,7 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height + 50) + 'px';
+        height = (height + 50);
         return height;
       },
       type () {

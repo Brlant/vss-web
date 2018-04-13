@@ -82,21 +82,21 @@
       </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
-            <h2 class="header">
+          <h2 class="header">
             <span class="pull-right">
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
                   class="el-icon-t-search"></i> </a>
             </span>
-              <!--<span class="pull-right" style="margin-right: 8px">-->
-              <!--<perm label="accounts-receivable-add">-->
-              <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
-              <!--<i class="el-icon-t-plus"></i>-->
-              <!--</a>-->
-              <!--</perm>-->
-              <!--</span>-->
-              所有应收款
-            </h2>
+            <!--<span class="pull-right" style="margin-right: 8px">-->
+            <!--<perm label="accounts-receivable-add">-->
+            <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
+            <!--<i class="el-icon-t-plus"></i>-->
+            <!--</a>-->
+            <!--</perm>-->
+            <!--</span>-->
+            所有应收款
+          </h2>
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
             <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
@@ -135,7 +135,7 @@
           <div v-if="!currentItem.id">
             <div class="empty-info">暂无信息</div>
           </div>
-          <div v-else="" class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div v-else="" class="d-table-col-wrap" :style="'height:'+bodyHeight   + 'px'">
             <div class="content-body clearfix">
               <el-row>
                 <el-col :span="15">
@@ -168,13 +168,13 @@
                       <div>
                         <div>
                           <span class="pull-left">{{item.goodsName}}</span>
-                      </div>
+                        </div>
                         <div class="clearfix">
                             <span class="select-other-info pull-left">
                               <span v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}
                             </span>
-                        <span class="select-other-info pull-left"><span
-                          v-show="item.factoryName">供货厂商:</span>{{ item.factoryName }}
+                          <span class="select-other-info pull-left"><span
+                            v-show="item.factoryName">供货厂商:</span>{{ item.factoryName }}
                             </span>
                         </div>
                       </div>
@@ -221,7 +221,7 @@
                 <el-table-column prop="orderNo" label="订单号" min-width="85" :sortable="true"></el-table-column>
                 <el-table-column prop="goodsName" label="货品名称" :sortable="true" min-width="120"></el-table-column>
                 <el-table-column prop="goodsCount" label="数量" width="80" :sortable="true"></el-table-column>
-                <el-table-column prop="createTime" label="发生时间"  min-width="110" :sortable="true">
+                <el-table-column prop="createTime" label="发生时间" min-width="110" :sortable="true">
                   <template slot-scope="scope">
                     {{ scope.row.createTime | date }}
                   </template>
@@ -345,7 +345,7 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 30) + 'px';
+        height = (height - 30);
         return height;
       },
       user () {
