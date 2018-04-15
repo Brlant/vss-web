@@ -6,7 +6,7 @@ export default {
       let target = e.target || e.srcElement;
       const index = this.isValid(row);
       if (index === 1 || index === 0) {
-        if (index === 0 && this.$route.path !== '/store/request') {
+        if (index === 0 && this.$route.path !== '/store/request' && this.$route.path !== '/store/regulation') {
           return;
         }
 
