@@ -132,6 +132,7 @@
     },
     watch: {
       formItem: function (val) {
+        this.$refs['accountform'].clearValidate();
         if (val.id) {
           this.form = this.formItem;
           this.form.list = this.formItem.list.map(m => m.roleId);

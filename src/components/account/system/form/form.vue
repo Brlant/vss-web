@@ -148,6 +148,7 @@
         this.$refs.tree.filter(val);
       },
       formItem: function (val) {
+        this.$refs['roleform'].clearValidate();
         this.filterText = '';
         this.getMenus();
         if (val.id) {
