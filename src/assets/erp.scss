@@ -1248,3 +1248,12 @@ $borderColor: rgba(82, 82, 82, 0.23);
   overflow-y: auto;
   overflow-x: hidden;
 }
+
+.contact-check {
+  position: relative;
+  .el-icon-loading {
+    position: absolute;
+    top: 0;
+    right: 0;
+  }
+}
