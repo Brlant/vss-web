@@ -28,28 +28,38 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row label="货主" :span="5">
-                <org-select v-model="searchWord.orgId" :list="orgList"
-                            :remoteMethod="queryOrg" placeholder="请输入名称搜索货主信息"></org-select>
+                <el-select multiple filterable remote placeholder="请输入名称搜索货主信息" :remote-method="queryOrg" :clearable="true"
+                           @click.native.once="queryOrg('')"
+                           v-model="searchWord.orgIdList" popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <slot :row="org">
+                      <div style="overflow: hidden">
+                        <span class="pull-left" style="clear: right">{{org.name}}</span>
+                      </div>
+                      <div style="overflow: hidden">
+                          <span class="select-other-info pull-left">
+                            <span>系统代码:</span>{{org.manufacturerCode}}
+                          </span>
+                      </div>
+                    </slot>
+                  </el-option>
+                </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="货主货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
-                           :clearable="true"
-                           v-model="searchWord.orgGoodsId" popper-class="good-selects"
-                           @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
-                  <el-option :value="org.id" :key="org.id" :label="org.goodsName"
-                             v-for="org in orgGoods">
+              <oms-form-row label="平台货品" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索平台货品" :remote-method="filterVaccine"
+                           :clearable="true" @change="goodsChange" @click.native.once="filterVaccine('')"
+                           v-model="searchWord.goodsId" popper-class="good-selects">
+                  <el-option :value="vaccine.goodsId" :key="vaccine.goodsId"
+                             :label="vaccine.goodsName" v-for="vaccine in vaccineList">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{org.goodsName}}</span>
+                      <span class="pull-left">{{vaccine.goodsName}}</span>
                     </div>
                     <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
-                      </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
-                      </span>
+                        <span class="select-other-info pull-left">
+                          生产厂商:{{ vaccine.saleFirmName }}
+                        </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -67,7 +77,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" class="clearfix">
               <oms-form-row label="生产厂商" :span="5">
                 <el-select filterable remote placeholder="请输入名称生产厂商" :remote-method="filterFactory" :clearable="true"
                            v-model="searchWord.factoryId" popperClass="good-selects"
@@ -96,9 +106,9 @@
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                <!--<el-button :plain="true" type="success" @click="exportFile">-->
-                  <!--导出Excel-->
-                <!--</el-button>-->
+                <el-button :plain="true" type="success" v-show="batches.length" @click="exportFile">
+                  导出Excel
+                </el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -110,9 +120,9 @@
                 show-summary :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="orgName" label="货主" min-width="160"  :sortable="true"></el-table-column>
         <el-table-column prop="goodsName" label="货主货品名称"  min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="platformGoodsName" label="平台货品名称"  min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
-
         <el-table-column label="业务库存" align="center">
           <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
                            width="100">
@@ -186,11 +196,11 @@
 </template>
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import {BaseInfo, erpStock, http} from '@/resources';
+  import {BaseInfo, erpStock, http, Goods} from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
   import validMixin from '@/mixins/vaildMixin';
-
+  import qs from 'qs';
   export default {
     components: {detail},
     mixins: [validMixin],
@@ -201,17 +211,17 @@
         showDetailPart: false,
         batches: [],
         filters: {
-          orgId: '',
+          orgIdList: [],
           factoryId: '',
           batchNumberId: '',
-          orgGoodsId: '',
+          goodsId: '',
           nearTermDays: ''
         },
         searchWord: {
-          orgId: '',
+          orgIdList: [],
           factoryId: '',
           batchNumberId: '',
-          orgGoodsId: '',
+          goodsId: '',
           nearTermDays: ''
         },
         factories: [], // 厂商列表
@@ -236,7 +246,8 @@
           'primary'
         ],
         batchNumberList: [],
-        fixedHeight: 0
+        fixedHeight: 0,
+        vaccineList: []
       };
     },
     mounted() {
@@ -285,7 +296,13 @@
           pageSize: this.pager.pageSize
         }, this.filters);
         this.loadingData = true;
-        this.$http('erp-stock/total', {params}).then(res => {
+        this.$http({
+            url: 'erp-stock/total',
+            params,
+            paramsSerializer(params) {
+              return qs.stringify(params, {indices: false});
+            }
+          }).then(res => {
           res.data.list.forEach(i => {
             i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
           });
@@ -353,8 +370,14 @@
       exportFile: function () {
         let params = Object.assign({}, this.filters);
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/store/request'});
-        this.$http.get('/erp-stock/export', {params}).then(res => {
-          utils.download(res.data.path, '即时库存查询');
+        this.$http({
+          url: '/erp-stock/regulatory/export',
+          params,
+          paramsSerializer(params) {
+            return qs.stringify(params, {indices: false});
+          }
+        }).then(res => {
+          utils.download(res.data.path, '即时库存');
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/store/request'});
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/store/request'});
@@ -406,10 +429,10 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          orgId: '',
+          orgIdList: [],
           factoryId: '',
           batchNumberId: '',
-          orgGoodsId: '',
+          goodsId: '',
           nearTermDays: ''
         };
         Object.assign(this.searchWord, temp);
@@ -429,39 +452,29 @@
           this.factories = res.data.list;
         });
       },
-      filterOrgGoods(query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
-        let params = Object.assign({}, {
-          deleteFlag: false,
-          orgId: orgId,
-          keyWord: query
-        });
-        http.get('/erp-stock/goods', {params}).then(res => {
-          this.orgGoods = res.data.list;
-        });
-      },
-      orgGoodsChange(val) {
+      goodsChange(val) {
         this.searchWord.batchNumberId = '';
         this.batchNumberList = [];
         this.filterBatchNumber();
       },
       filterBatchNumber(query) {
-        if (!this.searchWord.orgGoodsId) return;
-
-        let goodsId = '';
-        this.orgGoods.forEach(i => {
-          if (i.id === this.searchWord.orgGoodsId) {
-            goodsId = i.goodsId;
-          }
-        });
-        if (!goodsId) return;
+        if (!this.searchWord.goodsId) return;
         this.$http.get('/batch-number/pager', {
           params: {
             keyWord: query,
-            goodsId
+            goodsId:this.searchWord.goodsId
           }
         }).then(res => {
           this.batchNumberList = res.data.list;
+        });
+      },
+      filterVaccine: function (query) {
+        let params = Object.assign({}, {
+          deleteFlag: false,
+          keyWord: query
+        });
+        this.$http.get('erp-stock/regulatory/goods', {params}).then(res => {
+          this.vaccineList = res.data.list;
         });
       },
       formatTime(date) {
