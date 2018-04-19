@@ -3,7 +3,7 @@
   .table {
     margin-top: 10px;
     font-size: 12px;
-    padding-left: 5px;
+    /*padding-left: 5px;*/
     font-weight: 400;
     .order-list-item {
       color: #999;
@@ -46,6 +46,7 @@
     <table class="table no-border table-product-list" v-show="orderItem.detailDtoList" >
       <thead>
       <tr>
+        <th class="text-center">序号</th>
         <th>货主货品</th>
         <th v-show="isShowbatch">批号</th>
         <th v-show="isShowbatch">有效期</th>
@@ -55,6 +56,7 @@
       </thead>
       <tbody>
       <tr v-for="product in orderItem.detailDtoList" v-if="product.orgGoodsDto">
+        <td width="30" class="text-center">{{product.sort}}</td>
         <td style="width: 480px">
           <span>{{product.name}}</span>
         </td>
