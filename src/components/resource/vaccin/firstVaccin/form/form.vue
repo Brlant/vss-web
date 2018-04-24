@@ -219,7 +219,7 @@
         </ul>
       </div>
       <el-form-item style="margin-top: 20px" label-width="120px">
-        <el-button type="primary" @click="onSubmit('goodSForm')" native-type="submit">保存</el-button>
+        <el-button type="primary" @click="onSubmit('goodSForm')" native-type="submit" :disabled="doing">保存</el-button>
         <el-button @click="doClose">取消</el-button>
       </el-form-item>
     </el-form>

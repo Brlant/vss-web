@@ -97,7 +97,7 @@
         <h2 class="clearfix right-title" style="font-size: 16px">修改实收金额</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
           </li>
         </ul>
       </div>
@@ -119,7 +119,7 @@
 </template>
 <script>
   import utils from '@/tools/utils';
-  import { receipt } from '@/resources';
+  import {receipt} from '@/resources';
 
   export default {
     props: {
@@ -133,7 +133,8 @@
         },
         rules: {
           paymentAmount: {required: true, message: '请输入实收金额', trigger: 'blur'}
-        }
+        },
+        doing: false
       };
     },
     methods: {
@@ -147,16 +148,19 @@
           }
           this.form.detailId = this.formItem.id;
           this.form.paymentAmount = parseFloat(this.form.paymentAmount);
+          this.doing = true;
           receipt.modifyDetail(this.formItem.id, this.form).then(() => {
             this.$notify.success({
               message: '增加实收金额成功'
             });
+            this.doing = false;
             this.$refs['form'].resetFields();
             this.$emit('refreshDetails');
           }).catch(error => {
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '增加实收金额失败'
             });
+            this.doing = false;
           });
         });
       }
