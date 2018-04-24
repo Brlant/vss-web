@@ -96,7 +96,7 @@
         <h2 class="clearfix right-title" style="font-size: 16px">{{setTitle}}二类疫苗物流费用</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
           </li>
         </ul>
       </div>
@@ -127,7 +127,7 @@
   </div>
 </template>
 <script>
-  import { logisticsCost } from '../../../resources';
+  import {logisticsCost} from '../../../resources';
   import utils from '../../../tools/utils';
 
   export default {
@@ -145,7 +145,8 @@
           model: {required: true, message: '请选择物流费用模式', trigger: 'blur'},
           price: {required: true, message: '请输入二类疫苗物流费用', trigger: 'blur'},
           proportion: {required: true, message: '请输入二类疫苗物流费用比例', trigger: 'blur'}
-        }
+        },
+        doing: false
       };
     },
     props: ['formItem', 'formType'],
@@ -202,29 +203,34 @@
             let price = this.form.proportion / 100;
             this.form.price = price;
           }
+          this.doing = true;
           if (this.formType === 'add') {
             logisticsCost.save(this.form).then(() => {
               this.$notify.success({
                 message: '添加二类疫苗物流费用成功'
               });
+              this.doing = false;
               this.$refs['d-form'].resetFields();
               this.$emit('close');
             }).catch(error => {
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '添加二类疫苗物流费用失败'
               });
+              this.doing = false;
             });
           } else {
             logisticsCost.update(this.form.id, this.form).then(() => {
               this.$notify.success({
                 message: '修改二类疫苗物流费用成功'
               });
+              this.doing = false;
               this.$refs['d-form'].resetFields();
               this.$emit('close');
             }).catch(error => {
               this.$notify.error({
                 message: error.response.data && error.response.data.msg || '修改二类疫苗物流费用失败'
               });
+              this.doing = false;
             });
           }
         });

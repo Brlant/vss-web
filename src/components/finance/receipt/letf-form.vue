@@ -100,7 +100,7 @@
         <h2 class="clearfix right-title" style="font-size: 16px">新增应收账单</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit">保存</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
           </li>
         </ul>
       </div>
@@ -124,7 +124,7 @@
   </div>
 </template>
 <script>
-  import { receipt } from '@/resources';
+  import {receipt} from '@/resources';
 
   export default {
     data () {
@@ -135,7 +135,8 @@
         rules: {
           payerId: {required: true, message: '请选择接种点', trigger: 'change'}
         },
-        povs: [] // 订单列表
+        povs: [], // 订单列表
+        doing: false
       };
     },
     methods: {
@@ -153,16 +154,19 @@
           if (!valid) {
             return false;
           }
+          this.doing = true;
           receipt.save(this.form).then(() => {
             this.$notify.success({
               message: '付款方添加成功'
             });
+            this.doing = false;
             this.$refs['d-form'].resetFields();
             this.$emit('refresh');
           }).catch(error => {
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '付款方添加失败'
             });
+            this.doing = false;
           });
         });
       }
