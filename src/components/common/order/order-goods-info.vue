@@ -1,9 +1,10 @@
 <style lang="scss" scoped>
   @import "../../../assets/mixins";
   .table {
+    table-layout: fixed;
     margin-top: 10px;
     font-size: 12px;
-    padding-left: 5px;
+    /*padding-left: 5px;*/
     font-weight: 400;
     .order-list-item {
       color: #999;
@@ -46,7 +47,8 @@
     <table class="table no-border table-product-list" v-show="orderItem.detailDtoList" >
       <thead>
       <tr>
-        <th>货主货品</th>
+        <th width="30" class="text-center">序号</th>
+        <th width="400">货主货品</th>
         <th v-show="isShowbatch">批号</th>
         <th v-show="isShowbatch">有效期</th>
         <th>数量</th>
@@ -55,7 +57,8 @@
       </thead>
       <tbody>
       <tr v-for="product in orderItem.detailDtoList" v-if="product.orgGoodsDto">
-        <td style="width: 480px">
+        <td width="30" class="text-center">{{product.sort}}</td>
+        <td style="width: 400px">
           <span>{{product.name}}</span>
         </td>
         <td align="left" class="R" v-show="isShowbatch">

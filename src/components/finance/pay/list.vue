@@ -75,21 +75,22 @@
       </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
-            <h2 class="header">
+          <h2 class="header">
             <span class="pull-right">
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
                   class="el-icon-t-search"></i> </a>
             </span>
-              <!--<span class="pull-right" style="margin-right: 8px">-->
-              <!--<perm label="accounts-payable-add">-->
-              <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
-              <!--<i class="el-icon-t-plus"></i>-->
-              <!--</a>-->
-              <!--</perm>-->
-              <!--</span>-->
-              所有应付款
-            </h2>
+            <!--<span class="pull-right" style="margin-right: 8px">-->
+            <!--<perm label="accounts-payable-add">-->
+            <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
+            <!--<i class="el-icon-t-plus"></i>-->
+            <!--</a>-->
+            <!--</perm>-->
+            <!--</span>-->
+            所有应付款
+          </h2>
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
+
             <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
@@ -128,7 +129,7 @@
           <div v-if="!currentItem.id">
             <div class="empty-info">暂无信息</div>
           </div>
-          <div v-else="" class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div v-else="" class="d-table-col-wrap" :style="'height:'+bodyHeight   + 'px'">
             <div class="content-body clearfix">
               <el-row>
                 <el-col :span="15">
@@ -336,7 +337,7 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 30) + 'px';
+        height = (height - 30);
         return height;
       },
       user () {

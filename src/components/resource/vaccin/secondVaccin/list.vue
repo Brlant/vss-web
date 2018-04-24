@@ -124,7 +124,6 @@
       </div>
       <div class="d-table">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
             <h2 class="header">
                 <span class="pull-right">
                   <perm label="second-vaccine-info-add">
@@ -137,6 +136,8 @@
                 </span>
               货主疫苗产品资料
             </h2>
+            <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
+
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
@@ -161,7 +162,7 @@
 
             </div>
           </div>
-          <div class="lot-load">
+          <div class="btn-left-list-more">
             <bottom-loading></bottom-loading>
             <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
               <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
@@ -172,7 +173,7 @@
           <div v-if="!data.id" class="empty-info">
             暂无疫苗产品资料
           </div>
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" v-else>
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight + 'px'" v-else>
             <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
@@ -485,7 +486,7 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 25) + 'px';
+        height = (height - 25);
         return height;
       }
     },

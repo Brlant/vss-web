@@ -101,26 +101,27 @@
              v-for="(item, key) in priceGroupType"
              @click="changeStatus(item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="item.availabilityStatus===activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="item.availabilityStatus===activeStatus"></i>{{item.title}}<span
+            class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
-            <h2 class="header">
-              <!--<span class="pull-right">-->
-              <!--<a href="#" class="btn-circle" @click.prevent="searchType"><i-->
-              <!--class="el-icon-t-search"></i> </a>-->
-              <!--</span>-->
-              <span class="pull-right" style="margin-right: 8px">
+          <h2 class="header">
+            <!--<span class="pull-right">-->
+            <!--<a href="#" class="btn-circle" @click.prevent="searchType"><i-->
+            <!--class="el-icon-t-search"></i> </a>-->
+            <!--</span>-->
+            <span class="pull-right" style="margin-right: 8px">
                 <perm label="sale-price-group-add">
                   <a href="#" class="btn-circle" @click.stop.prevent="addDetail">
                   <i class="el-icon-t-plus"></i>
                   </a>
                 </perm>
               </span>
-              二类苗销售价格组
-            </h2>
+            二类苗销售价格组
+          </h2>
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
             <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
@@ -149,7 +150,7 @@
           </div>
         </div>
         <div class="d-table-right">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight  + 'px'">
             <!--<span class="pull-right" style="margin-right: 8px">-->
             <!--<perm label="accounts-receivable-detail-add">-->
             <!--<a href="#" class="btn-circle" @click.stop.prevent="add">-->
@@ -340,14 +341,14 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 20) + 'px';
+        height = (height - 90);
         return height;
       },
-      user() {
+      user () {
         return this.$store.state.user;
       }
     },
-    mounted() {
+    mounted () {
       this.getOrgsList(1);
     },
     watch: {
@@ -363,7 +364,7 @@
         },
         deep: true
       },
-      user(val) {
+      user (val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
         }
@@ -407,7 +408,7 @@
         });
         this.querySum(params);
       },
-      querySum(params) {
+      querySum (params) {
         let para = Object.assign({}, params);
         para.availabilityStatus = undefined;
         BriceGroup.querySum(para).then(res => {
@@ -415,11 +416,11 @@
           this.priceGroupType[1].num = res.data['invalid'];
         });
       },
-      refresh() {
+      refresh () {
         this.getOrgsList(1);
         this.resetRightBox();
       },
-      refreshDetails() {
+      refreshDetails () {
         this.getDetail();
         this.resetRightBox();
       },
@@ -459,7 +460,7 @@
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
       },
-      bindPov() {
+      bindPov () {
         let form = {
           'salePriceGroupId': this.currentItem.id,
           'povId': this.povId
@@ -482,7 +483,7 @@
           });
         });
       },
-      removePov(item) {
+      removePov (item) {
         this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -507,7 +508,7 @@
         this.currentItem = item;
         this.getDetail(1);
       },
-      showDetail(item) {
+      showDetail (item) {
         this.orderId = item.orderId;
         this.showPart = true;
         this.currentDetail = item;
@@ -521,10 +522,10 @@
         //   this.filterPOVs();
         // });
       },
-      filterPOVs() {
+      filterPOVs () {
         this.showOrgList = this.orgList.filter(f => !this.receiptDetails.some(s => f.subordinateId === s.povId));
       },
-      add() {
+      add () {
         if (!this.currentItem.id) {
           this.$notify.info({
             message: '请先添加付款方'
@@ -533,15 +534,15 @@
         }
         this.showRight = true;
       },
-      addDetail() {
+      addDetail () {
         this.showLeft = true;
         this.form = {};
       },
-      edit(row) {
+      edit (row) {
         this.form = row;
         this.showLeft = true;
       },
-      deletePriceGroup(item) {
+      deletePriceGroup (item) {
         this.$confirm('是否删除销售价格组"' + item.name + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -563,7 +564,7 @@
         this.activeStatus = item.availabilityStatus;
         this.filters.availabilityStatus = item.availabilityStatus;
       },
-      onSubmit() {
+      onSubmit () {
         this.getOrgsList();
       }
     }

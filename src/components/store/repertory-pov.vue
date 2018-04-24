@@ -297,7 +297,7 @@
         }, this.filters);
         this.loadingData = true;
         this.$http({
-            url: 'erp-stock/total',
+            url: '/erp-stock/pov/total',
             params,
             paramsSerializer(params) {
               return qs.stringify(params, {indices: false});
@@ -371,7 +371,7 @@
         let params = Object.assign({}, this.filters);
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/store/request'});
         this.$http({
-          url: '/erp-stock/regulatory/export',
+          url: '/erp-stock/regulatory/pov/export',
           params,
           paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
