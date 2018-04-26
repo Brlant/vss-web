@@ -259,6 +259,7 @@
                   <div class="last-login">上次登录时间:{{user.userLastLoginTime | time}}</div>
                   <div class="wechat-info" v-if="weChatInfo.nickname">
                     <img v-if="weChatInfo.avatarUrl" class="weChat-img" :src="weChatInfo.avatarUrl">
+                    <img v-else src="/static/img/logo_user_default.png" class="weChat-img"/>
                     <span class="wechat-nick"
                           v-if="weChatInfo.nickname">微信：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
                       }}<span v-if="weChatInfo.nickname && weChatInfo.nickname.length > 3">...</span></span>

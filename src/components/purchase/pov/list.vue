@@ -133,10 +133,10 @@
             </el-checkbox>
             接种点要货申请编号
           </el-col>
-          <el-col :span="7">接种点</el-col>
+          <el-col :span="6">接种点</el-col>
           <el-col :span="3">到货需求日期</el-col>
-          <el-col :span="5">需求单创建时间</el-col>
-          <el-col :span="4">操作</el-col>
+          <el-col :span="5">时间</el-col>
+          <el-col :span="5">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -161,16 +161,17 @@
                 </div>
                 {{ item.id }}
               </el-col>
-              <el-col :span="7" class="pt">
+              <el-col :span="6" class="pt">
                 <span>{{ item.povName }}</span>
               </el-col>
               <el-col :span="3" class="pt pl7">
                 <span>{{ item.demandTime | date }}</span>
               </el-col>
               <el-col :span="5" class="pt pl7">
-                <span>{{ item.applyTime | time }}</span>
+                <div>[建]{{ item.applyTime | time }}</div>
+                <div>[审]{{ item.auditTime | time }}</div>
               </el-col>
-              <el-col :span="4" class="opera-btn pl7">
+              <el-col :span="5" class="opera-btn pl7">
                 <div>
                   <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
@@ -186,7 +187,6 @@
                         编辑
                   </span>
                   </perm>
-
                   <perm label="demand-assignment-cancel" v-show="filters.status === 1 || filters.status === 11">
                      <span @click.prevent="cancel(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
