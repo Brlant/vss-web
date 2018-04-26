@@ -1257,3 +1257,11 @@ $borderColor: rgba(82, 82, 82, 0.23);
     right: 0;
   }
 }
+
+.productItem-info {
+  .el-form-item__content {
+    .el-input-group--append {
+      vertical-align: middle;
+    }
+  }
+}
