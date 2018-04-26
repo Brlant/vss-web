@@ -148,7 +148,7 @@
 </template>
 <script>
   //  import order from '../../../tools/orderList';
-  import { BaseInfo } from '../../../resources';
+  import {BaseInfo} from '../../../resources';
   import detail from './detail.vue';
 
   export default {
@@ -260,10 +260,9 @@
           pageNo: 1,
           pageSize: 20,
           orgId: orgId,
-          keyWord: query,
-          deleteFlag: false
+          keyWord: query
         });
-        this.$http.get('/erp-stock/goods', {params}).then(res => {
+        this.$http.get('/erp-stock/goods-list', {params}).then(res => {
           this.orgGoods = res.data.list;
         });
       }
