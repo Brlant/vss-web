@@ -40,18 +40,26 @@
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')">
-                  <el-option :value="org.goodsId" :key="org.id" :label="org.goodsName"
-                             v-for="org in orgGoods">
+                  <el-option :value="vaccine.orgGoodsDto.goodsDto.id" :key="vaccine.orgGoodsDto.goodsDto.id"
+                             :label="vaccine.orgGoodsDto.goodsDto.name" v-for="vaccine in orgGoods">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{org.goodsName}}</span>
+                      <span class=" pull-left">{{ vaccine.orgGoodsDto.goodsDto.name }}</span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="vaccine.orgGoodsDto.goodsDto.code">货品编号:</span>{{vaccine.orgGoodsDto.goodsDto.code}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
+                        v-show="vaccine.orgGoodsDto.goodsDto.specifications">货品规格:</span>{{vaccine.orgGoodsDto.goodsDto.specifications}}
                       </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="vaccine.orgGoodsDto.goodsDto.approvalNumber">批准文号:</span>{{vaccine.orgGoodsDto.goodsDto.approvalNumber}}
+                      </span>
+                    </div>
+                    <div style="overflow: hidden">
+                    <span class="select-other-info pull-left"><span
+                      v-show="vaccine.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ vaccine.orgGoodsDto.goodsDto.factoryName }}
+                    </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -148,7 +156,7 @@
 </template>
 <script>
   //  import order from '../../../tools/orderList';
-  import { BaseInfo } from '../../../resources';
+  import {BaseInfo, Vaccine} from '../../../resources';
   import detail from './detail.vue';
 
   export default {
@@ -260,10 +268,9 @@
           pageNo: 1,
           pageSize: 20,
           orgId: orgId,
-          keyWord: query,
-          deleteFlag: false
+          keyWord: query
         });
-        this.$http.get('/erp-stock/goods', {params}).then(res => {
+        Vaccine.query(params).then(res => {
           this.orgGoods = res.data.list;
         });
       }
