@@ -146,6 +146,8 @@
       }
     },
     mounted: function () {
+      // 清空权限列表
+      this.$store.commit('initPermissions', []);
       this.isFocusIndex();
     }
   };
