@@ -134,7 +134,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary border
+      <el-table :data="reportChildList" class="header-list" :summary-method="getSummaries" show-summary border
                 :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight">
         <el-table-column prop="type" label="出入库类型" :sortable="true" min-width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" min-width="120"></el-table-column>
@@ -150,6 +150,13 @@
         <el-table-column prop="goodsStatus" label="合格/不合格" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="remark" label="订单备注项" :sortable="true" width="120"></el-table-column>
       </el-table>
+      <div class="text-center" v-show="reportChildList.length">
+        <el-pagination
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :total="pager.count" :page-sizes="[20,50,100]" :pageSize="pager.pageSize"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
@@ -166,6 +173,12 @@
         loadingData: false,
         selectLoading: false,
         reportList: [],
+        reportChildList: [],
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20
+        },
         showSearch: true,
         searchWord: {
           typeList: [],
@@ -191,7 +204,7 @@
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 110 + this.fixedHeight;
+        return parseInt(this.$store.state.bodyHeight, 10) - 210 + this.fixedHeight;
       }
     },
     methods: {
@@ -220,6 +233,9 @@
         });
       },
       search: function () {// 搜索
+        // if (!this.isSelectCondition()) {
+        //   return this.$notify.info({message: '请选择查询条件'});
+        // }
         this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
@@ -239,10 +255,40 @@
             m.goodsStatus = this.goodsStatusList[m.goodsStatus];
             return m;
           });
+          this.pager.count = this.reportList.length;
+          this.getCurrentList(1);
           this.loadingData = false;
           this.setFixedHeight();
         });
       },
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getCurrentList(1);
+      },
+      handleCurrentChange(val) {
+        this.getCurrentList(val);
+      },
+      getCurrentList (pageNo) {
+        this.loadingData = true;
+        this.pager.currentPage = pageNo;
+        const {pager} = this;
+        let start = (pageNo - 1) * pager.pageSize;
+        let end = pageNo * pager.pageSize;
+        this.reportChildList = this.reportList.slice(start, end > pager.count ? pager.count : end);
+        setTimeout(() => {
+          this.loadingData = false;
+        }, 300);
+      },
+      // isSelectCondition () {
+      //   let isSelected = false;
+      //   let s = this.searchWord;
+      //   if (this.bizDateAry && this.bizDateAry.length) return true;
+      //   Object.keys(s).forEach(k => {
+      //     Array.isArray(s[k]) ? s[k].length && (isSelected = true) : s[k] && (isSelected = true);
+      //     console.log(s[k], isSelected);
+      //   });
+      //   return isSelected;
+      // },
       showOrderType: function (item) {
         let title = '';
         if (item === '1-0') {
@@ -313,7 +359,7 @@
           batchNumberId: ''
         };
         this.bizDateAry = '';
-        this.search();
+        this.reportList = [];
       },
       filterRelation: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
