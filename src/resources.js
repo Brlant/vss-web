@@ -334,6 +334,9 @@ export const PurchaseContract = resource('/purchase-contract', http, {
   updateOrder (orderId, obj) {
     return http.put(`/purchase-contract/${orderId}/detail`, obj);
   },
+  updatePurchaseContractName (orderId, obj) {
+    return http.put(`/purchase-contract/${orderId}/detail/name`, obj);
+  },
   cancel (orderId) {
     return http.put(`/purchase-contract/${orderId}/cancel`);
   },
