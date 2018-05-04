@@ -284,7 +284,7 @@
         if (!item.warehouseAddress) {
           return '';
         }
-        return utils.formatAddress(item.warehouseProvince, item.warehouseCity, item.warehouseRegion) + '/' + item.warehouseAddress;
+        return item.warehouseAddress;
       },
       queryInfo(val) {
         if (!val) return;
@@ -326,7 +326,7 @@
           }
           this.doing = true;
           if (this.orderId) {
-            PurchaseContract.updateOrder(this.orderId, this.form).then(res => {
+            PurchaseContract.updatePurchaseContractName(this.orderId, this.form).then(res => {
               this.$notify({
                 duration: 2000,
                 message: '编辑采购合同成功',

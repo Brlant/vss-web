@@ -323,9 +323,9 @@
       }
     },
     watch: {
-      orderId: function (val) {
-        if (val && this.action === 'watch') {
-          this.queryInfo(val);
+      action: function (val) {
+        if (val === 'watch') {
+          this.queryInfo(this.orderId);
         }
       }
     },

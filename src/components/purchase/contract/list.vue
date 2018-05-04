@@ -450,6 +450,7 @@
         if (item.used) {
           this.showEditItemRight = true;
           this.editOrderId = item.id;
+          this.currentOrderId = item.id;
         } else {
           this.showItemRight = true;
           this.currentOrderId = item.id;
@@ -458,6 +459,7 @@
       showContract(item) {
         this.action = 'watch';
         this.showOrderId = item.id;
+        this.currentOrderId = item.id;
         this.showDetail = true;
       },
       searchInOrder: function () {// 搜索
