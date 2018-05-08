@@ -98,7 +98,7 @@
     <print-dialog></print-dialog>
 
     <div class="cdc-shade" v-if="isPermission">
-      <el-button class="btn" type="primary" @click="queryRoles">我是市疾控</el-button>
+      <!--<el-button class="btn" type="primary" @click="queryRoles">我是市疾控</el-button>-->
     </div>
   </div>
 
