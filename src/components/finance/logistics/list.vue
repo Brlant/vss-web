@@ -59,7 +59,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="入库时间" :span="6">
+              <oms-form-row label="出入库时间" :span="6">
                 <el-date-picker
                   v-model="aryTime"
                   type="daterange"
@@ -80,11 +80,11 @@
         <el-row class="order-list-header">
           <!--<el-col :span="4">货品</el-col>-->
           <!--<el-col :span="2">疫苗类型</el-col>-->
-          <el-col :span="6">采购订单号</el-col>
+          <el-col :span="6">采购（退）订单</el-col>
           <el-col :span="6">物流厂商</el-col>
-          <el-col :span="4">实际到货数量</el-col>
+          <el-col :span="4">数量</el-col>
           <el-col :span="4">物流费用</el-col>
-          <el-col :span="4">入库时间</el-col>
+          <el-col :span="4">出入库时间</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
