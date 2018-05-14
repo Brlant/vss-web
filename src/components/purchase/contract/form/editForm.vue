@@ -219,7 +219,6 @@
 
 <script>
   import {PurchaseContract} from './../../../../resources';
-  import utils from '@/tools/utils';
 
   export default {
     name: 'editForm',
