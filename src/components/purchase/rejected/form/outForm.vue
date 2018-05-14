@@ -1097,8 +1097,8 @@
             delete item.isCombination;
             delete item.proportion;
           });
+          saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
           this.doing = true;
-
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
               this.$notify({

@@ -58,6 +58,53 @@ export default {
         this.product.measurementUnit = this.editItemProduct.measurementUnit;
         this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
       }
+    },
+    /**
+     * 出库， 添加订单，合并同货主货品，同批号的订单货品
+     * @param list
+     * @returns {*}
+     */
+    mergeSameOrgGoodsIdAndBatchNumberWhenOut(list) {
+      let a1 = new Set();
+      list.forEach(i => {
+         let ary1 = list.filter(f => f.orgGoodsId === i.orgGoodsId && f.batchNumberId === i.batchNumberId);
+         if (ary1.length > 1) {
+           a1.add(ary1[0].orgGoodsId + ',' + ary1[0].batchNumberId);
+         }
+      });
+      [...a1].forEach(i => {
+        let s1 = i.split(',');
+        let a2 = list.filter(f => f.orgGoodsId === s1[0] && f.batchNumberId === s1[1]);
+        let amount = 0;
+        a2.forEach(r => (amount = amount + r.amount));
+        a2[0].amount = amount;
+        list = list.filter(f => !(f.orgGoodsId === s1[0] && f.batchNumberId === s1[1]));
+        list.push(a2[0]);
+      });
+      return list;
+    },
+    /**
+     * 出库，添加订单，合并同货主货品的订单货品
+     * @param list
+     * @returns {*}
+     */
+    mergeSameOrgGoodsWhenIn (list) {
+      let a1 = new Set();
+      list.forEach(i => {
+        let ary1 = list.filter(f => f.orgGoodsId === i.orgGoodsId);
+        if (ary1.length > 1) {
+          a1.add(ary1[0].orgGoodsId);
+        }
+      });
+      [...a1].forEach(i => {
+        let a2 = list.filter(f => f.orgGoodsId === i);
+        let amount = 0;
+        a2.forEach(r => (amount = amount + r.amount));
+        a2[0].amount = amount;
+        list = list.filter(f => f.orgGoodsId !== i);
+        list.push(a2[0]);
+      });
+      return list;
     }
   }
 };
