@@ -977,6 +977,7 @@
             delete item.isCombination;
             delete item.orgGoodsDto;
           });
+          saveData.detailDtoList = this.mergeSameOrgGoodsWhenIn(saveData.detailDtoList);
           this.doing = true;
           if (saveData.id && this.action === 'edit') {
             PurchaseContract.updateOrder(saveData.id, saveData).then(res => {

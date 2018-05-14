@@ -1068,6 +1068,7 @@
             delete item.isCombination;
             delete item.orgGoodsDto;
           });
+          saveData.detailDtoList = this.mergeSameOrgGoodsWhenIn(saveData.detailDtoList);
           this.doing = true;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
