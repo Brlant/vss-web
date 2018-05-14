@@ -277,6 +277,7 @@
         params.goodsId = undefined;
         params.pageNo = pageNo;
         params.pageSize = this.pager.pageSize;
+        params.goodsList = [this.searchWord.goodsId];
         this.$http({
           url: '/order-statement/factory',
           params,
