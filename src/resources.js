@@ -38,14 +38,14 @@ function twoRequest (response) {
   config.__retryCount += 1;
 
   // 延时处理
-  const backoff = new Promise(function(resolve) {
-    setTimeout(function() {
+  const backoff = new Promise(function (resolve) {
+    setTimeout(function () {
       resolve();
     }, config.retryDelay || 1);
   });
 
   // 重新发起axios请求
-  backoff.then(function() {
+  backoff.then(function () {
     return axios(config);
   });
 }
@@ -99,6 +99,45 @@ http.interceptors.response.use(response => {
 });
 
 Vue.prototype.$http = http;
+
+// CDC收款
+export const CDCReceipt = resource('/cdc-bill', http, {
+  audit: (id, obj) => {
+    return http.put(`/cdc-bill/audit/${id}`, obj);
+  },
+  review: (id) => {
+    return http.put(`/cdc-bill/review/${id}`);
+  }
+});
+
+// POV付款
+export const POVPayment = resource('/pov-bill', http, {
+  audit: (id, obj) => {
+    return http.put(`/pov-bill/audit/${id}`, obj);
+  },
+  queryStateNum (params) {
+   return http.get('/pov-bill/count', {params});
+  }
+});
+
+// 预付款作业对象
+export const PaymentPending = resource('/advance-payment', http, {
+  query (type, params) {
+    return http.get(type === 1 ? '/advance-payment/log/pov/pager' : '/advance-payment/log/cdc/pager', {params});
+  },
+  save (type, obj) {
+    return http.post(type === 1 ? '/advance-payment' : '/advance-payment/cdc', obj);
+  },
+  queryStateNum (type, params) {
+    return http.get(`/advance-payment/count/${type === 1 ? 'pov' : 'cdc'}`, {params});
+  },
+  queryPaymentTotal (params) {
+    return http.get('/advance-payment/detail', {params});
+  },
+  queryPaymentTotalList (params) {
+    return http.get('/advance-payment/pager', {params});
+  }
+});
 
 // logisticsCenter物流中心对象
 export const LogisticsCenter = resource('/logisticsCenter', http, {});

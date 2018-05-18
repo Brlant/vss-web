@@ -273,9 +273,39 @@ const route = [
             meta: {moduleId: 'finance', title: '付款作业', perm: 'payment-payable'}
           },
           {
+            path: '/pending/payment',
+            component: resolve => require(['./components/finance/pending/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '预付款管理', perm: 'cdc-advance-payable', type: 1}
+          },
+          {
+            path: '/pending/receive',
+            component: resolve => require(['./components/finance/pending/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '预收款管理', perm: 'pov-advance-receivable', type: 2}
+          },
+          {
             path: '/collection/operation',
             component: resolve => require(['./components/finance/operation/collection/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '收款作业', perm: 'payment-receivable'}
+            meta: {moduleId: 'finance', title: 'CDC收款作业', perm: 'cdc-payment-receivable', type: 2,
+              perms: ['cdc-payment-receivable-add', 'cdc-payment-receivable-audit',
+                'cdc-payment-receivable-review', 'cdc-payment-receivable-cancel']}
+          },
+          {
+            path: '/collection/pov',
+            component: resolve => require(['./components/finance/operation/collection/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: 'POV付款作业', perm: 'pov-payment-payable', type: 1,
+              perms: ['pov-payment-payable-add', 'pov-payment-payable-audit', 'pov-payment-payable-cancel']}
+          },
+          {
+            path: '/payment/pending',
+            component: resolve => require(['./components/finance/operation/advance/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '预付款作业', perm: 'advance-payable', type: 1,
+              perms: ['advance-payable-add', 'advance-payable-audit', 'advance-payable-cancel']}
+          },
+          {
+            path: '/collection/pending',
+            component: resolve => require(['./components/finance/operation/advance/list.vue'], resolve),
+            meta: {moduleId: 'finance', title: '预收款作业', perm: 'advance-receivable', type: 2,
+              perms: ['advance-receivable-add', 'advance-receivable-audit', 'advance-receivable-review', 'advance-receivable-cancel']}
           },
           {
             path: '/finance/org',

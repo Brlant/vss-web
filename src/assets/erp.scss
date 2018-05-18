@@ -1272,3 +1272,9 @@ $borderColor: rgba(82, 82, 82, 0.23);
     line-height: 1;
   }
 }
+
+.create-date {
+  .el-date-editor--daterange.el-input__inner {
+    width: 240px;
+  }
+}

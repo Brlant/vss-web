@@ -133,6 +133,42 @@ Vue.prototype.$getDict = function (groupName) {
   }
 };
 
+// 确认框方法
+Vue.prototype.$confirmOpera = function (tip, callback) {
+  this.$confirm(tip, '', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    callback();
+  });
+};
+
+// 通用请求方法
+Vue.prototype.$httpRequestOpera = function (httpPromise, option = {
+  successTitle: '操作成功',
+  errorTitle: '操作失败',
+  success: res => {
+  },
+  error: res => {
+  }
+}) {
+  const {successTitle, errorTitle, success, error} = option;
+  httpPromise.then(res => {
+    this.$notify.success({
+      duration: 2000,
+      message: successTitle
+    });
+    success(res);
+  }).catch(e => {
+    this.$notify.error({
+      duration: 2000,
+      message: e.response && e.response.data && e.response.data.msg || errorTitle
+    });
+    error(e);
+  });
+};
+
 new Vue({
   template: '<router-view id="app"></router-view>',
   router,

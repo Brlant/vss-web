@@ -25,6 +25,7 @@
       left: $leftWidth;
     }
   }
+
   .el-form .el-select {
     display: block;
   }
@@ -34,42 +35,6 @@
     > tbody > tr > td, > thead > tr > th {
       padding: 5px;
     }
-  }
-
-  .order-product-box {
-    position: relative;
-    border-radius: 10px;
-    font-size: 12px;
-    line-height: 26px;
-    .product-info-fix {
-      background: #f6f6f6;
-      margin-top: 10px;
-      padding: 5px;
-      margin-bottom: 20px;
-    }
-    &:hover {
-      border-color: #aaa
-    }
-    .product-remove {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      cursor: pointer;
-      color: #666;
-      &:hover {
-        color: #333
-      }
-    }
-    .order-goods-info {
-      .col-label {
-        padding-top: 4px;
-      }
-    }
-
   }
 
   .ml15 {
@@ -91,63 +56,71 @@
   .ar {
     text-align: right;
   }
+
+  .content-part .content-left .list-style {
+    .pay-count {
+      display: inline;
+      padding: 0;
+    }
+    span {
+      padding: 8px 20px;
+    }
+  }
+
 </style>
 
 <template>
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">新增收款申请</h2>
+        <h2 class="clearfix right-title">新增{{titleAry[type][0]}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="index = item.key"
-              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
-          </li>
-          <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
+              v-bind:class="{ 'active' : index===item.key}">
+            <span>
+              {{ item.name }}<span class="pay-count" v-show="selectPayments.length && item.key === 2"> ({{selectPayments.length}})</span>
+            </span>
           </li>
         </ul>
       </div>
       <div class="content-right min-gutter">
-        <h3>新增收款作业申请</h3>
+        <h3>新增{{titleAry[type][0]}}</h3>
 
-        <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-          <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
+        <div class="hide-content" v-bind:class="{'show-content' : index===0}">
+          <el-form ref="addForm" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="接种点" prop="orgId">
-              <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.orgId" popper-class="good-selects" @change="setAccountsPayableId"
-                         @click.native.once="filterOrg('')">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                  <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.name}}</span>
-                  </div>
-                  <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{org.manufacturerCode}}
-                      </span>
-                  </div>
-                </el-option>
-              </el-select>
+            <el-form-item :label="`${titleAry[type][2]}总金额:`" v-show="form.amount">
+              ￥{{form.amount}}
             </el-form-item>
-            <el-form-item label="收款方式" prop="payType">
-              <el-select placeholder="请选择收款方式" v-model="form.payType">
-                <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in PaymentMethod"/>
-              </el-select>
+            <el-form-item :label="`${titleAry[type][2]}方式`" prop="payType"
+                          :rules="{required: true, message: `请选择${titleAry[type][2]}方式`, trigger: 'change'}">
+              <el-radio-group v-model="form.payType" @change="payTypeChange">
+                <el-radio :label="item.key" :key="item.key" v-for="item in PaymentMethod">
+                  {{item.label}}
+                </el-radio>
+              </el-radio-group>
             </el-form-item>
-            <el-form-item label="金额" prop="amount">
-              <oms-input type="text" v-model="form.amount" placeholder="请选择收款明细，自动计算总额" disabled>
-                <template slot="prepend">¥</template>
-              </oms-input>
+            <el-form-item :label="`${titleAry[type][2]}来源:`" v-if="form.payType === '3'">
+              <div :style="{'line-height': payPendingMoney - form.amount < 0 ? '24px' : 'inherit' }">
+                <el-tag type="primary">预付款</el-tag>￥{{payPendingMoney | formatMoney}}
+              </div>
+              <div style="line-height: 24px" v-if="payPendingMoney - form.amount < 0">
+                <el-tag type="primary">其他</el-tag>￥{{(form.amount-payPendingMoney) | formatMoney}}
+              </div>
             </el-form-item>
+
             <el-form-item label="说明">
-              <oms-input type="textarea" v-model="form.explain" placeholder="请输入备注信息"
+              <oms-input type="textarea" v-model="form.explain" placeholder="请输入说明"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
+            <el-form-item>
+              <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
             </el-form-item>
           </el-form>
         </div>
-        <div class="hide-content" v-bind:class="{'show-content' : index==1}">
-          <pay-detail :selectPayments="selectPayments"
-                      :factoryId="form.orgId" :amount="form.amount"></pay-detail>
+        <div class="hide-content show-content">
+          <pay-detail ref="payDetail" :selectPayments="selectPayments" :type="type" :titleAry="titleAry"
+                      :factoryId="form.orgId" :amount="form.amount" :index="index" :defaultIndex="defaultIndex"></pay-detail>
         </div>
       </div>
     </div>
@@ -155,7 +128,7 @@
 </template>
 
 <script>
-  import { BaseInfo, BillReceivable } from '../../../../../resources';
+  import { POVPayment, CDCReceipt, PaymentPending } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
   import payDetail from './payDetail.vue';
 
@@ -163,17 +136,11 @@
     name: 'addForm',
     loading: false,
     props: {
-      type: {
-        'type': String,
-        'default': '1'
-      },
+      type: Number,
+      titleAry: Object,
       defaultIndex: {
         type: Number,
         default: 0
-      },
-      action: {
-        type: String,
-        default: ''
       }
     },
     components: {
@@ -188,41 +155,31 @@
           orgId: '',
           explain: '',
           amount: '',
-          billPayType: '',
           accountsPayableId: '',
           relationList: []
         },
         payableTotalAmount: '',
         practicalTotalAmount: '',
         notTotalAmount: '',
-        rules: {
-          billPayType: [
-            {required: true, message: '请选择收款类型', trigger: 'change'}
-          ],
-          payType: [
-            {required: true, message: '请选择收款方式', trigger: 'change'}
-          ],
-          orgId: [
-            {required: true, message: '请选择接种点', trigger: 'change'}
-          ],
-          amount: [
-            {required: true, message: '请选择收款明细，自动计算总额', trigger: 'blur'}
-          ]
-        },
         orgList: [],
         logisticsList: [],
         doing: false,
-        productListSet: [
-          {name: '基本信息', key: 0},
-          {name: '收款明细', key: 1}
-        ],
-        index: 0,
-        selectPayments: []
+        index: 1,
+        selectPayments: [],
+        payPendingMoney: 0
       };
     },
     computed: {
       PaymentMethod: function () {
         return this.$getDict('PaymentMethod');
+      },
+      productListSet () {
+        let {titleAry, type} = this;
+        return [
+          {name: `可选${titleAry[type][2]}明细`, key: 1},
+          {name: `已选${titleAry[type][2]}明细`, key: 2},
+          {name: `${titleAry[type][2]}方式`, key: 0}
+        ];
       }
     },
     watch: {
@@ -249,32 +206,18 @@
           orgId: '',
           explain: '',
           amount: '',
-          billPayType: '',
           accountsPayableId: '',
           relationList: []
         };
-        this.index = 0;
+        this.index = 1;
         this.selectPayments = [];
         this.$refs['addForm'].resetFields();
       }
     },
     mounted: function () {
-      this.filterOrg();
+
     },
     methods: {
-      setAccountsPayableId: function () {
-        this.selectPayments = [];
-        if (this.form.orgId) {
-          this.filterOrg();
-        }
-      },
-      changeBillPayType: function () {
-        this.form.orgId = '';
-        this.orgList = [];
-        this.logisticsList = [];
-        this.selectPayments = [];
-        this.filterOrg();
-      },
       resetForm: function () {// 重置表单
         this.$refs['addForm'].resetFields();
         this.payableTotalAmount = '';
@@ -290,46 +233,59 @@
       doClose: function () {
         this.$emit('close');
       },
-      filterOrg: function (query) {// 过滤来源单位
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) return;
-        let params = {
-          keyWord: query,
-          relation: '0'
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.orgList = res.data;
-        });
+      payTypeChange (val) {
+        this.payPendingMoney = 0;
+        if (val === '3') {
+          let o1 = this.$store.state.user.userCompanyAddress;
+          let o2 = this.$refs.payDetail.searchCondition.orgId;
+          if (!o1 || !o2) return;
+          let params = {
+            povId: this.type === 1 ? o1 : o2,
+            cdcId: this.type === 1 ? o2 : o1
+          };
+          PaymentPending.queryPaymentTotal(params).then(res => {
+            this.payPendingMoney = res.data.money;
+          });
+        }
       },
       onSubmit: function () {// 提交表单
+        let {titleAry, type} = this;
+        let title = titleAry[type][2];
+        if (!this.selectPayments.length) {
+          return this.$notify.info({
+            message: `请选择${title}明细`
+          });
+        }
         let isQualified = this.selectPayments.some(s => !s.payment);
         if (isQualified) {
           this.$notify.info({
-            message: '收款明细中，存在本次收款金额为0的情况，请调整后，再进行保存'
+            message: `${title}明细中，存在本次${title}金额为0的情况，请调整后，再进行保存`
           });
           return;
         }
         isQualified = this.selectPayments.some(s => s.payment && s.payment > (s.billAmount - s.prepaidAccounts));
         if (isQualified) {
           this.$notify.info({
-            message: '收款明细中，存在本次收款金额大于待收金额的明细，请调整后，再进行保存'
+            message: `${title}明细中，存在本次${title}金额大于待${title}金额的明细，请调整后，再进行保存`
           });
           return;
         }
         isQualified = this.selectPayments.some(s => s.payment < 0 && s.payment < (s.billAmount - s.prepaidAccounts));
         if (isQualified) {
           this.$notify.info({
-            message: '收款明细中，存在本次收款金额小于待收金额的明细，请调整后，再进行保存'
+            message: `${title}明细中，存在本次${title}金额小于待${title}金额的明细，请调整后，再进行保存`
           });
           return;
         }
+        this.form[type === 1 ? 'cdcId' : 'povId'] = this.$refs.payDetail.searchCondition.orgId;
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;
             return;
           }
           this.doing = true;
-          BillReceivable.save(this.form).then(res => {
+          const http = type === 1 ? POVPayment.save : CDCReceipt.save;
+          http(this.form).then(res => {
             this.resetForm();
             this.$notify({
               duration: 2000,

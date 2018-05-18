@@ -86,6 +86,11 @@
     cursor: pointer;
   }
 
+  .order-list-status {
+    .status-item {
+      width: 90px;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -94,7 +99,7 @@
         <div class="opera-icon">
 
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <perm label="payment-receivable-add">
+            <perm :label="perms[0]">
                   <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
@@ -104,28 +109,35 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="收款单据编号" :span="7">
-                <oms-input type="text" v-model="searchCondition.keyWord" placeholder="请输入收款单据编号"></oms-input>
+              <oms-form-row :label="`${titleAry[type][2]}单据编号`" :span="7">
+                <oms-input type="text" v-model.trim="searchCondition.keyWord" placeholder="请输入收款单据编号"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="收款单位" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row :label="`${titleAry[type][3]}`" :span="6">
+                <el-select filterable remote :placeholder="`请输入名称搜索${titleAry[type][3]}`"
+                           :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.orgId" popper-class="good-selects"
                            @click.native.once="filterOrg('')">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                    <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    </div>
-                    <div style="overflow: hidden">
+                  <div v-if="type === 2">
+                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                      <div style="overflow: hidden">
+                        <span class="pull-left" style="clear: right">{{org.name}}</span>
+                      </div>
+                      <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
                         <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
-                    </div>
-                  </el-option>
+                      </div>
+                    </el-option>
+                  </div>
+                  <div v-else>
+                    <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in orgList"/>
+                  </div>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -142,28 +154,29 @@
 
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
+             :class="{'active':key==activeStatus,'exceptionPosition':key === '3'}"
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="4">收款单据编号</el-col>
-          <el-col :span="5">收款单位</el-col>
-          <el-col :span="2">收款方式</el-col>
-          <el-col :span="4">收款金额</el-col>
-          <el-col :span="5">收款说明</el-col>
-          <el-col :span="4">操作</el-col>
+          <el-col :span="4">{{titleAry[type][2]}}单据编号</el-col>
+          <el-col :span="6">{{titleAry[type][3]}}</el-col>
+          <el-col :span="2">{{titleAry[type][2]}}方式</el-col>
+          <el-col :span="4">{{titleAry[type][2]}}金额</el-col>
+          <el-col :span="5">{{titleAry[type][2]}}说明</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
             <oms-loading :loading="loadingData"></oms-loading>
           </el-col>
         </el-row>
-        <el-row v-else-if="billList.length == 0">
+        <el-row v-else-if="!billList.length">
           <el-col :span="24">
             <div class="empty-info">
               暂无信息
@@ -172,7 +185,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in billList"
-               :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]"
+               :class="['status-'+filterListColor(item.status),{'active':currentId===item.id}]"
                @click.stop="audit(item)">
             <el-row>
               <el-col :span="4">
@@ -180,11 +193,11 @@
                   {{item.no }}
                 </div>
               </el-col>
-              <el-col :span="5" class="pt10">
+              <el-col :span="6" class="pt10">
                 <div class="f-grey">
                   系统代码{{item.orgNo }}
                 </div>
-                <div>{{item.orgName }}</div>
+                <div>{{item[type ===1 ? 'ownerName' : 'orgName'] }}</div>
               </el-col>
               <el-col :span="2">
                 <div>
@@ -201,13 +214,11 @@
                   {{item.explain}}
                 </div>
               </el-col>
-              <el-col :span="4">
-                <div>
-                  <el-button :plain="true" type="success" @click.prevent.stop="exportFile(item.id)"
-                             v-if="item.status==='1'">
-                    生成收款单
-                  </el-button>
-                </div>
+              <el-col :span="3">
+                <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)"
+                           v-if="item.status==='1'">
+                  生成{{titleAry[type][2]}}单
+                </el-button>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -224,23 +235,28 @@
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
-      <audit-form :formItem="billInfo" @change="onSubmit" @right-close="resetRightBox"></audit-form>
+      <audit-form :titleAry="titleAry" :type="type" :formItem="billInfo" :perms="perms" @change="onSubmit"
+                  :getOrderStatus="getOrderStatus"
+                  @right-close="resetRightBox"></audit-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form @change="onSubmit" @right-close="resetRightBox" :defaultIndex="defaultIndex"></add-form>
+      <add-form :titleAry="titleAry" :type="type" @change="onSubmit" @right-close="resetRightBox"
+                :defaultIndex="defaultIndex"></add-form>
     </page-right>
   </div>
 </template>
 <script>
-  import utils from '../../../../tools/utils';
+  import utils from '@/tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import { BaseInfo, BillReceivable } from '../../../../resources';
+  import { CDCReceipt, POVPayment } from '@/resources';
+  import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
     components: {
       auditForm, addForm
     },
+    mixins: [methodsMixin],
     data: function () {
       return {
         orgList: [],
@@ -259,7 +275,6 @@
           orgId: ''
         },
         expectedTime: '',
-        orgType: utils.receiptOperation,
         activeStatus: 0,
         currentId: '',
         pager: {
@@ -268,18 +283,43 @@
           pageSize: 20
         },
         billInfo: {},
-        defaultIndex: -1
+        defaultIndex: -1,
+        titleAry: {
+          1: ['POV付款作业', 'POV付款', '付款', '收款单位'],
+          2: ['CDC收款作业', 'CDC收款', '收款', '付款单位']
+        },
+        statusNum: null
       };
     },
-    mounted() {
+    mounted () {
       this.getBillList(1);
     },
     computed: {
-      transportationMeansList: function () {
-        return this.$getDict('transportationMeans');
+      type () {
+        return this.$route.meta.type;
       },
-      bizInTypes: function () {
-        return this.$getDict('bizInType');
+      perms () {
+        return this.$route.meta.perms;
+      },
+      orgType () {
+        let ary = this.type === 1 ? {
+          0: {'title': '待审核', status: '0', num: ''},
+          1: {'title': 'CDC待复核', status: '1', num: ''},
+          2: {'title': '已完成', status: '2', num: ''},
+          3: {'title': '已取消', status: '3', num: ''}
+        } : {
+          0: {'title': '待审核', status: '-1', num: ''},
+          1: {'title': '待复核', status: '1', num: ''},
+          2: {'title': '已完成', status: '2', num: ''},
+          3: {'title': '已取消', status: '3', num: ''}
+        };
+        if (this.statusNum) {
+          ary[0].num = this.obtionStatusNum(this.statusNum[this.type === 1 ? 'pov_audit' : 'cdc_audit']);
+          ary[1].num = this.obtionStatusNum(this.statusNum['review']);
+          ary[2].num = this.obtionStatusNum(this.statusNum['complete']);
+          ary[3].num = this.obtionStatusNum(this.statusNum['cancel']);
+        }
+        return ary;
       }
     },
     watch: {
@@ -288,6 +328,12 @@
           this.getBillList(1);
         },
         deep: true
+      },
+      type () {
+        this.getBillList(1);
+        this.filterOrg();
+        this.searchCondition.orgId = '';
+        this.statusNum = null;
       }
     },
     methods: {
@@ -301,7 +347,7 @@
           moduleId: '/collection/operation'
         });
         this.$http.get('/bill-receivable/' + id + '/export', {params}).then(res => {
-          utils.download(res.data.path, '即时库存查询');
+          utils.download(res.data.path);
           this.$store.commit('initPrint', {
             isPrinting: false,
             moduleId: '/collection/operation'
@@ -316,21 +362,10 @@
           });
         });
       },
-      filterOrg: function (query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) return;
-        let params = {
-          keyWord: query,
-          relation: '0'
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.orgList = res.data;
-        });
-      },
       getOrderStatus: function (order) {
         let state = '';
         for (let key in this.orgType) {
-          if (order.state === this.orgType[key].state) {
+          if (order.status === this.orgType[key].status) {
             state = this.orgType[key].title;
           }
         }
@@ -375,16 +410,21 @@
       getBillList: function (pageNo) {
         this.pager.currentPage = pageNo;
         this.loadingData = true;
+        this.filters.status === '0' && this.type === 2 && (this.filters.status = '-1');
+        if (this.type === 1) {
+          this.filters.ownerId = this.filters.orgId;
+          this.filters.orgId = null;
+        }
         let param = Object.assign({}, this.filters, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          type: '1'
+          pageSize: this.pager.pageSize
         });
-        BillReceivable.query(param).then(res => {
+        const http = this.type === 1 ? POVPayment.query : CDCReceipt.query;
+        http(param).then(res => {
           this.billList = res.data.list;
-            this.pager.count = res.data.count;
-            this.loadingData = false;
-          });
+          this.pager.count = res.data.count;
+          this.loadingData = false;
+        });
         this.queryStatusNum(param);
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色
@@ -396,12 +436,10 @@
         }
         return status;
       },
-      queryStatusNum: function (params) {
-        BillReceivable.queryStateNum(params).then(res => {
-          let data = res.data;
-          this.orgType[0].num = this.obtionStatusNum(data['audit']);
-          this.orgType[1].num = this.obtionStatusNum(data['complete']);
-          this.orgType[2].num = this.obtionStatusNum(data['notAudit']);
+      queryStatusNum: function (param) {
+        const params = Object.assign({}, param, {status: null});
+        this.$http.get(this.type === 1 ? '/pov-bill/count' : 'cdc-bill/count', {params}).then(res => {
+          this.statusNum = res.data;
         });
       },
       obtionStatusNum: function (num) {
