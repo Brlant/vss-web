@@ -96,13 +96,13 @@
                           :rules="{required: true, message: `请选择${titleAry[type][2]}方式`, trigger: 'change'}">
               <el-radio-group v-model="form.payType" @change="payTypeChange">
                 <el-radio :label="item.key" :key="item.key" v-for="item in PaymentMethod">
-                  {{item.label}}
+                  {{item.key === '3' ? '预'+ titleAry[type][2] : item.label}}
                 </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item :label="`${titleAry[type][2]}来源:`" v-if="form.payType === '3'">
               <div :style="{'line-height': payPendingMoney - form.amount < 0 ? '24px' : 'inherit' }">
-                <el-tag type="primary">预付款</el-tag>￥{{payPendingMoney | formatMoney}}
+                <el-tag type="primary">预{{titleAry[type][2]}}</el-tag>￥{{payPendingMoney | formatMoney}}
               </div>
               <div style="line-height: 24px" v-if="payPendingMoney - form.amount < 0">
                 <el-tag type="primary">其他</el-tag>￥{{(form.amount-payPendingMoney) | formatMoney}}
