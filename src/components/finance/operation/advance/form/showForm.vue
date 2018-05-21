@@ -161,7 +161,7 @@
             <el-form-item style="margin-top: 10px">
               <div v-if="type===1">
                 <perm :label="perms[1]" v-show="billInfo.status === '0'">
-                  <el-button  plain :disabled="doing" type="success" @click="audited">审核通过</el-button>
+                  <el-button plain :disabled="doing" type="success" @click="audited('审核')">审核通过</el-button>
                 </perm>
                 <perm :label="perms[2]">
                   <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
@@ -169,10 +169,10 @@
               </div>
               <div v-else>
                 <perm :label="perms[1]" v-show="billInfo.status === '3'">
-                  <el-button  plain :disabled="doing" type="success" @click="audited">审核通过</el-button>
+                  <el-button plain :disabled="doing" type="success" @click="audited('审核')">审核通过</el-button>
                 </perm>
                 <perm :label="perms[2]" v-show="billInfo.status === '1'">
-                  <el-button  plain :disabled="doing" type="success" @click="audited">审核通过</el-button>
+                  <el-button plain :disabled="doing" type="success" @click="audited('确认')">确认通过</el-button>
                 </perm>
                 <perm :label="perms[3]">
                   <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
@@ -224,9 +224,9 @@
       doClose: function () {
         this.$emit('close');
       },
-      audited: function () {
+      audited: function (title = '审核') {
         if (this.doing) return;
-        this.$confirmOpera('确认审核通过?', () => {
+        this.$confirmOpera(`是否${title}通过?`, () => {
           this.doing = true;
           let {type, $http, billInfo} = this;
           let url = {
@@ -236,8 +236,8 @@
           };
           let httpRequest = $http.put(url[billInfo.status]);
           this.$httpRequestOpera(httpRequest, {
-            successTitle: '审核通过',
-            errorTitle: '审核失败',
+            successTitle: `${title}通过`,
+            errorTitle: `${title}失败`,
             success: res => {
               this.doing = false;
               this.$emit('change');

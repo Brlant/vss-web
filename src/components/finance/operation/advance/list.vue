@@ -209,7 +209,7 @@
       <audit-form :billInfo="billInfo" :title="title" :type="type" :perms="perms" @change="onSubmit"
                   @right-close="resetRightBox" :getOrderStatus="getOrderStatus"></audit-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'800px','padding':0}">
+    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'900px','padding':0}">
       <add-form @change="onSubmit" :title="title" :type="type" @right-close="resetRightBox"
                 :defaultIndex="defaultIndex"></add-form>
     </page-right>
@@ -265,12 +265,12 @@
       statusType () {
         let ary = this.type === 1 ? {
           0: {'title': '待审批', status: '0', num: ''},
-          1: {'title': 'CDC待复核', status: '1', num: ''},
+          1: {'title': 'CDC待确认', status: '1', num: ''},
           2: {'title': '已完成', status: '2', num: ''},
           3: {'title': '已取消', status: '4', num: ''}
         } : {
           0: {'title': '待审批', status: '3', num: ''},
-          1: {'title': '待复核', status: '1', num: ''},
+          1: {'title': '预收确认', status: '1', num: ''},
           2: {'title': '已完成', status: '2', num: ''},
           3: {'title': '已取消', status: '4', num: ''}
         };

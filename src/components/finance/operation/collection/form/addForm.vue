@@ -88,19 +88,24 @@
 
         <div class="hide-content" v-bind:class="{'show-content' : index===0}">
           <el-form ref="addForm" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
-                   label-width="100px" style="padding-right: 20px">
+                   label-width="110px" style="padding-right: 20px">
             <el-form-item :label="`${titleAry[type][2]}总金额:`" v-show="form.amount">
               ￥{{form.amount}}
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}方式`" prop="payType"
+            <el-form-item :label="`使用预${titleAry[type][2]}`" >
+              <el-switch v-model="form.advancePaymentFlag"
+                         active-text="是" inactive-text="否" @change="advancePaymentFlagChange"></el-switch>
+            </el-form-item>
+            <el-form-item :label="`${form.advancePaymentFlag ? '其他' : ''}${titleAry[type][2]}方式`" prop="payType"
+                          v-if="(payPendingMoney - form.amount < 0) && form.advancePaymentFlag || !form.advancePaymentFlag"
                           :rules="{required: true, message: `请选择${titleAry[type][2]}方式`, trigger: 'change'}">
-              <el-radio-group v-model="form.payType" @change="payTypeChange">
+              <el-radio-group v-model="form.payType">
                 <el-radio :label="item.key" :key="item.key" v-for="item in PaymentMethod">
-                  {{item.key === '3' ? '预'+ titleAry[type][2] : item.label}}
+                  {{item.label}}
                 </el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}来源:`" v-if="form.payType === '3'">
+            <el-form-item :label="`${titleAry[type][2]}来源:`" v-if="form.advancePaymentFlag">
               <div :style="{'line-height': payPendingMoney - form.amount < 0 ? '24px' : 'inherit' }">
                 <el-tag type="primary">预{{titleAry[type][2]}}</el-tag>￥{{payPendingMoney | formatMoney}}
               </div>
@@ -119,7 +124,7 @@
           </el-form>
         </div>
         <div class="hide-content show-content">
-          <pay-detail ref="payDetail" :selectPayments="selectPayments" :type="type" :titleAry="titleAry"
+          <pay-detail ref="payDetail" :selectPayments="selectPayments" :type="type" :titleAry="titleAry" @orgChange="orgChange"
                       :factoryId="form.orgId" :amount="form.amount" :index="index" :defaultIndex="defaultIndex"></pay-detail>
         </div>
       </div>
@@ -151,7 +156,8 @@
         loading: false,
         form: {
           type: '1',
-          payType: '2',
+          payType: '',
+          advancePaymentFlag: true,
           orgId: '',
           explain: '',
           amount: '',
@@ -202,7 +208,8 @@
       defaultIndex (val) {
         this.form = {
           type: '1',
-          payType: '2',
+          payType: '',
+          advancePaymentFlag: true,
           orgId: '',
           explain: '',
           amount: '',
@@ -235,7 +242,7 @@
       },
       payTypeChange (val) {
         this.payPendingMoney = 0;
-        if (val === '3') {
+        if (val) {
           let o1 = this.$store.state.user.userCompanyAddress;
           let o2 = this.$refs.payDetail.searchCondition.orgId;
           if (!o1 || !o2) return;
@@ -247,6 +254,13 @@
             this.payPendingMoney = res.data.money;
           });
         }
+      },
+      orgChange () {
+        this.payTypeChange(this.form.advancePaymentFlag);
+      },
+      advancePaymentFlagChange (val) {
+        this.form.payType = '';
+        this.payTypeChange(val);
       },
       onSubmit: function () {// 提交表单
         let {titleAry, type} = this;

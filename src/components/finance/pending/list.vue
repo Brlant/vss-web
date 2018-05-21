@@ -137,7 +137,7 @@
               <el-table-column prop="billNo" label="单据号" min-width="85"></el-table-column>
               <el-table-column prop="rechargeAmount" label="抵扣金额">
                 <template slot-scope="scope">
-                  ￥{{ scope.row.rechargeAmount}}
+                  ￥{{ Math.abs(scope.row.rechargeAmount)}}
                 </template>
               </el-table-column>
               <el-table-column prop="salePrice" label="创建时间">
