@@ -216,7 +216,7 @@
               </el-col>
               <el-col :span="3">
                 <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)"
-                           v-if="item.status==='1'">
+                           v-if="item.status==='2'">
                   生成{{titleAry[type][2]}}单
                 </el-button>
               </el-col>
