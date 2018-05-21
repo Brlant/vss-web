@@ -1,7 +1,7 @@
 <style lang="scss" scoped>
   @import "../../../../../assets/mixins.scss";
 
-  $leftWidth: 0;
+  $leftWidth: 180px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -110,14 +110,23 @@
 <template>
   <div>
     <div class="content-part">
+      <div class="content-left">
+        <h2 class="clearfix right-title">{{`添加${title}作业`}}</h2>
+        <ul>
+          <li class="list-style" v-for="item in tabList" @click="index = item.key"
+              v-bind:class="{ 'active' : index===item.key}">
+            <span>{{ item.name }}</span>
+          </li>
+        </ul>
+      </div>
       <div class="content-right min-gutter">
-        <h3>{{`添加${title}作业`}}</h3>
-        <div class="hide-content show-content">
-          <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
-                   label-width="100px" style="padding-right: 20px">
+        <h3>{{tabList[index].name}}</h3>
+        <el-form ref="addForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
+                 label-width="130px">
+          <div v-show="index === 0">
             <el-form-item :label="`${title}单位`" prop="orgId">
               <el-select v-if="type === 2" filterable remote :placeholder="`请输入名称搜索${title}单位`"
-                         :remote-method="filterOrg" :clearable="true"
+                         :remote-method="filterOrg" :clearable="true" @change="orgIdChange"
                          v-model="form.orgId" popper-class="good-selects"
                          @click.native.once="filterOrg('')">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -125,39 +134,74 @@
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
                   </div>
                   <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{org.manufacturerCode}}
-                      </span>
+                    <span class="select-other-info pull-left">
+                      <span>系统代码:</span>{{org.manufacturerCode}}
+                    </span>
                   </div>
                 </el-option>
               </el-select>
-              <el-radio-group v-else v-model="form.orgId" class="el-radio--group--custom">
+              <el-radio-group v-else v-model="form.orgId" class="el-radio--group--custom" @change="orgIdChange">
                 <el-radio class="el-radio--custom" :label="item.orgId" :key="item.orgId" v-for="item in orgList">
                   {{item.orgName}}
                 </el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="金额" prop="amount">
+            <el-form-item label="发生时间">
+              <el-date-picker
+                v-model="createTimes"
+                type="daterange" @change="createTimeChange"
+                placeholder="请选择">
+              </el-date-picker>
+              <el-button type="primary" class="ml-15" @click.stop="searchInOrder">查询</el-button>
+            </el-form-item>
+            <h3 style="background: #f1f1f1;overflow: hidden;margin: 0;padding: 4px">
+              <span style="float: right">总金额：￥{{ totalMoney.unitPrice | formatMoney }}</span>
+            </h3>
+            <table class="table" v-loading="detailLoading">
+              <thead>
+              <tr>
+                <th style="width: 280px">货品名称</th>
+                <th>订单号</th>
+                <th>{{type === 1 ? '待付款' : '待收款'}}金额</th>
+                <th>发生时间</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr v-if="!orderDetailList.length">
+                <td colspan="6">
+                  <div class="empty-info mini">暂无{{type === 1 ? '付款' : '收款'}}明细</div>
+                </td>
+              </tr>
+              <tr v-for="product in orderDetailList">
+                <td><span>{{product.name}}</span></td>
+                <td><span>{{product.orderNo}}</span></td>
+                <td><span> ¥{{ product.unitPrice * product.amount }}</span></td>
+                <td><span> {{ product.createTime | date }}</span></td>
+              </tr>
+              </tbody>
+            </table>
+          </div>
+          <div v-show="index === 1">
+            <el-form-item :label="`${type === 1 ? '付款' : '收款'}明细总金额:`" prop="amount">
+              ￥{{ totalMoney.unitPrice | formatMoney }}
+            </el-form-item>
+            <el-form-item :label="title+'金额'" prop="amount">
               <oms-input type="text" v-model.number="form.amount" placeholder="请输入金额">
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
-            <!--<el-form-item label="备注">-->
-              <!--<oms-input type="textarea" v-model="form.explain" placeholder="请输入备注"-->
-                         <!--:autosize="{ minRows: 2, maxRows: 5}"></oms-input>-->
-            <!--</el-form-item>-->
             <el-form-item>
               <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
             </el-form-item>
-          </el-form>
-        </div>
+          </div>
+        </el-form>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-  import { BaseInfo, cerpAction, PaymentPending } from '../../../../../resources';
+  import { erpOrder, PaymentPending } from '../../../../../resources';
   import utils from '@/tools/utils';
   import methodsMixin from '@/mixins/methodsMixin';
 
@@ -186,13 +230,45 @@
           ]
         },
         orgList: [],
-        doing: false
+        doing: false,
+        index: 0,
+        orderDetailList: [],
+        detailLoading: false,
+        createTimes: []
       };
+    },
+    computed: {
+      PaymentMethod: function () {
+        return this.$getDict('PaymentMethod');
+      },
+      tabList () {
+        let {type, title} = this;
+        let billWay = type === 1 ? '付款' : '收款';
+        return [
+          {name: `${billWay}明细`, key: 0},
+          {name: `${title}金额`, key: 1}
+        ];
+      },
+      totalMoney () {
+        return this.orderDetailList.reduce(
+          (pre, next) => {
+            return {
+              unitPrice: pre.unitPrice * pre.amount + next.unitPrice * next.amount,
+              amount: 1
+            };
+          },
+          {amount: 0, unitPrice: 0});
+      }
     },
     watch: {
       defaultIndex (val) {
         this.resetForm();
         this.filterOrg();
+        this.index = 0;
+        this.orderDetailList = [];
+      },
+      totalMoney (val) {
+        this.form.amount = val.unitPrice || 0.00;
       }
     },
     mounted: function () {
@@ -207,6 +283,44 @@
       },
       doClose: function () {
         this.$emit('close');
+      },
+      orgIdChange (val) {
+        this.orderDetailList = [];
+        if (!val) return;
+        let params = {
+          pageNo: 1,
+          pageSize: 100,
+          goodsType: '1',
+          state: '1',
+          isShowDetail: true
+        };
+        let orgId = this.$store.state.user.userCompanyAddress;
+        params.orgId = this.type === 1 ? val : orgId;
+        params.transactOrgId = this.type === 1 ? orgId : val;
+        params.createStartTime = this.formatTime(this.createTimes && this.createTimes[0] || '');
+        params.createEndTime = this.formatTime(this.createTimes && this.createTimes[1] || '');
+        this.detailLoading = true;
+        erpOrder.query(params).then(res => {
+          let ary = [];
+          res.data.list.forEach(i => {
+            i.detailDtoList.forEach(c => {
+              c.orderNo = i.orderNo;
+              c.createTime = i.createTime;
+            });
+            ary = ary.concat(i.detailDtoList);
+          });
+          this.orderDetailList = ary;
+          this.detailLoading = false;
+        });
+      },
+      formatTime: function (date) {
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      },
+      createTimeChange () {
+        if (!this.form.orgId) {
+          return this.$notify.info({message: `请选择${this.title}单位`});
+        }
+        this.orgIdChange(this.form.orgId);
       },
       onSubmit: function () {// 提交表单
         this.$refs['addForm'].validate((valid) => {

@@ -164,9 +164,9 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="4">{{titleAry[type][2]}}单据编号</el-col>
+          <el-col :span="3">{{titleAry[type][2]}}单据编号</el-col>
           <el-col :span="6">{{titleAry[type][3]}}</el-col>
-          <el-col :span="2">{{titleAry[type][2]}}方式</el-col>
+          <el-col :span="3">{{titleAry[type][2]}}方式</el-col>
           <el-col :span="4">{{titleAry[type][2]}}金额</el-col>
           <el-col :span="5">{{titleAry[type][2]}}说明</el-col>
           <el-col :span="3">操作</el-col>
@@ -188,7 +188,7 @@
                :class="['status-'+filterListColor(item.status),{'active':currentId===item.id}]"
                @click.stop="audit(item)">
             <el-row>
-              <el-col :span="4">
+              <el-col :span="3">
                 <div>
                   {{item.no }}
                 </div>
@@ -199,8 +199,12 @@
                 </div>
                 <div>{{item[type ===1 ? 'ownerName' : 'orgName'] }}</div>
               </el-col>
-              <el-col :span="2">
-                <div>
+              <el-col :span="3">
+                <div v-show="item.advancePaymentFlag">
+                  <span>预{{titleAry[type][2]}}</span><span v-show="item.payType">、<dict :dict-group="'PaymentMethod'"
+                                                                                          :dict-key="item.payType"></dict></span>
+                </div>
+                <div v-show="!item.advancePaymentFlag">
                   <dict :dict-group="'PaymentMethod'" :dict-key="item.payType"></dict>
                 </div>
               </el-col>
@@ -304,12 +308,12 @@
       orgType () {
         let ary = this.type === 1 ? {
           0: {'title': '待审核', status: '0', num: ''},
-          1: {'title': 'CDC待复核', status: '1', num: ''},
+          1: {'title': 'CDC待确认', status: '1', num: ''},
           2: {'title': '已完成', status: '2', num: ''},
           3: {'title': '已取消', status: '3', num: ''}
         } : {
           0: {'title': '待审核', status: '-1', num: ''},
-          1: {'title': '待复核', status: '1', num: ''},
+          1: {'title': '收款确认', status: '1', num: ''},
           2: {'title': '已完成', status: '2', num: ''},
           3: {'title': '已取消', status: '3', num: ''}
         };

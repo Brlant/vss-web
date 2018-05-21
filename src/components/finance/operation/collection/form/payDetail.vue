@@ -21,7 +21,7 @@
         <el-form-item :label="`${titleAry[type][3]}`" prop="orgId" :rules="{required: true, message: '请选择接种点', blur: 'change'}">
           <el-select filterable remote :placeholder="`请输入名称搜索${titleAry[type][3]}`" :remote-method="filterOrg" :clearable="true"
                      v-model="searchCondition.orgId" popper-class="good-selects" @change="orgChange"
-                     @click.native.once="filterOrg('')">
+                     @click.native.once="filterOrg('')" @blur="">
             <div v-if="type === 2">
               <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                 <div style="overflow: hidden">
@@ -41,7 +41,7 @@
         </el-form-item>
         <el-form-item label="货品名称">
           <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索货品" :clearable="true"
-                     @click.native="searchProduct('')" popper-class="good-selects">
+                     @click.native="searchProduct('')" popper-class="good-selects" @change="orgGoodsIdChange">
             <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
                        :label="item.orgGoodsDto.name"
                        :value="item.orgGoodsDto.id">
@@ -64,7 +64,7 @@
         <el-form-item label="发生时间">
           <el-date-picker
             v-model="createTimes"
-            type="daterange"
+            type="daterange" @change="createTimeChange"
             placeholder="请选择">
           </el-date-picker>
           <el-button type="primary" class="ml-15" @click.stop="searchInOrder">查询</el-button>
@@ -231,7 +231,7 @@
         this.searchCondition.orgId = '';
         this.orgList = [];
         this.resetSearchForm();
-        this.orgChange();
+        this.orgChange(false);
       },
       defaultIndex () {
         this.payments = [];
@@ -239,7 +239,7 @@
         this.searchCondition.orgId = '';
         this.orgList = [];
         this.resetSearchForm();
-        this.orgChange();
+        this.orgChange(false);
       },
       filterRights: {
         handler: function () {
@@ -283,6 +283,14 @@
       orgChange (val) {
         this.payments = [];
         this.$parent.selectPayments = [];
+        val && this.searchInOrder();
+        this.$emit('orgChange');
+      },
+      orgGoodsIdChange (val) {
+        this.searchInOrder();
+      },
+      createTimeChange (val) {
+        this.searchInOrder();
       },
       searchProduct (keyWord) {
         if (!this.searchCondition.orgId) return;
@@ -298,9 +306,9 @@
           this.goodesList = res.data.list;
         });
       },
-      searchInOrder: function () {// 搜索
+      searchInOrder: function (isShowTip = true) {// 搜索
         let {titleAry, type} = this;
-        if (!this.searchCondition.orgId) {
+        if (!this.searchCondition.orgId && isShowTip) {
           return this.$notify.info({message: `请选择${titleAry[type][3]}`});
         }
         this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);

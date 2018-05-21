@@ -72,69 +72,71 @@
            </perm>
          </span>
           <!--<h2 class="org-name-h2" v-show="orgName">货主名称:{{orgName}}</h2>-->
-          <table class="table " :class="{'table-hover':dataRows.length !== 0}">
-            <thead>
-            <tr>
-              <th>姓名</th>
-              <th>角色</th>
-              <th>手机号码</th>
-              <th>邮箱</th>
-              <th>状态</th>
-              <th>操作</th>
-            </tr>
-            </thead>
-            <tbody v-show="dataRows.length === 0">
-            <tr>
-              <td colspan="10" class="text-center">
-                <div class="empty-info">暂无信息</div>
-              </td>
-            </tr>
-            </tbody>
-            <tbody>
-            <tr v-for="row in dataRows">
-              <td>
-                {{row.name}}
-                <el-tag type="success" v-show="row.adminFlag">主账号</el-tag>
-              </td>
-              <td>
-                {{ row.list | formatRole }}
-              </td>
-              <td>
-                {{row.phone}}
-              </td>
-              <td>
-                {{row.email}}
-              </td>
-              <td style="width: 50px">
-                <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
-              </td>
-              <td class="list-op" style="width: 120px">
-                <perm label="erp-account-edit">
-                  <a href="#" @click.stop.prevent="edit(row)"><i class="el-icon-t-edit"></i>编辑</a>
-                </perm>
-                <perm label="erp-account-start">
-                  <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用货主用户 \""+row.name+"\" ?"'
-                              v-show="row.status === '2'"><i
-                    class="el-icon-t-start"></i>启用
-                  </oms-forbid>
-                </perm>
-                <perm label="erp-account-stop">
-                  <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"'
-                              v-show="row.status !== '2'">
-                    <i class="el-icon-t-forbidden"></i>停用
-                  </oms-forbid>
-                </perm>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-          <div class="text-center" v-show="pager.count>pager.pageSize">
-            <el-pagination layout="prev, pager, next"
-                           :total="pager.count"
-                           :pageSize="pager.pageSize"
-                           @current-change="getPageList"
-                           :current-page="pager.currentPage">
-            </el-pagination>
+          <div v-loading="loading1">
+            <table class="table " :class="{'table-hover':dataRows.length !== 0}">
+              <thead>
+              <tr>
+                <th>姓名</th>
+                <th>角色</th>
+                <th>手机号码</th>
+                <th>邮箱</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+              </thead>
+              <tbody v-show="dataRows.length === 0">
+              <tr>
+                <td colspan="10" class="text-center">
+                  <div class="empty-info">暂无信息</div>
+                </td>
+              </tr>
+              </tbody>
+              <tbody>
+              <tr v-for="row in dataRows">
+                <td>
+                  {{row.name}}
+                  <el-tag type="success" v-show="row.adminFlag">主账号</el-tag>
+                </td>
+                <td>
+                  {{ row.list | formatRole }}
+                </td>
+                <td>
+                  {{row.phone}}
+                </td>
+                <td>
+                  {{row.email}}
+                </td>
+                <td style="width: 50px">
+                  <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
+                </td>
+                <td class="list-op" style="width: 120px">
+                  <perm label="erp-account-edit">
+                    <a href="#" @click.stop.prevent="edit(row)"><i class="el-icon-t-edit"></i>编辑</a>
+                  </perm>
+                  <perm label="erp-account-start">
+                    <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用货主用户 \""+row.name+"\" ?"'
+                                v-show="row.status === '2'"><i
+                      class="el-icon-t-start"></i>启用
+                    </oms-forbid>
+                  </perm>
+                  <perm label="erp-account-stop">
+                    <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"'
+                                v-show="row.status !== '2'">
+                      <i class="el-icon-t-forbidden"></i>停用
+                    </oms-forbid>
+                  </perm>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="text-center" v-show="pager.count>pager.pageSize">
+              <el-pagination layout="prev, pager, next"
+                             :total="pager.count"
+                             :pageSize="pager.pageSize"
+                             @current-change="getPageList"
+                             :current-page="pager.currentPage">
+              </el-pagination>
+            </div>
           </div>
         </div>
       </div>
@@ -183,6 +185,8 @@
           pageSize: 20,
           totalPage: 1
         },
+        requestTime: 0,
+        loading1: false,
         orgName: '', // 货主名称
         currentItem: {} //  左边列表点击时，添加样式class
       };
@@ -238,9 +242,11 @@
           pageSize: this.pager.pageSize,
           keyWord: this.typeTxt
         });
+        let rTime = Date.now();
+        this.requestTime = rTime;
         cerpAction.querySubordinate(params).then(res => {
+          if (this.requestTime > rTime) return;
           this.$store.commit('initBottomLoading', false);
-
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
@@ -270,7 +276,9 @@
           pageSize: this.pager.pageSize,
           keyWord: this.keyTxt
         });
+        this.loading1 = true;
         OrgUser.queryUsers(this.filters.orgId, data).then(res => {
+          this.loading1 = false;
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
         });

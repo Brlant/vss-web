@@ -133,6 +133,7 @@
         rules: {
           remitteeId: {required: true, message: '请选择收款方', trigger: 'change'}
         },
+        doing: false,
         orgs: [] // 订单列表
       };
     },
@@ -149,16 +150,19 @@
       },
       onSubmit() {
         this.$refs['d-form'].validate((valid) => {
-          if (!valid) {
+          if (!valid || this.doing) {
             return false;
           }
+          this.doing = true;
           pay.save(this.form).then(() => {
+            this.doing = false;
             this.$notify.success({
               message: '收款方添加成功'
             });
             this.$refs['d-form'].resetFields();
             this.$emit('refresh');
           }).catch(error => {
+            this.doing = false;
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '收款方添加失败'
             });
