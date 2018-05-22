@@ -92,7 +92,7 @@
             <el-form-item :label="`${titleAry[type][2]}总金额:`" v-show="form.amount">
               ￥{{form.amount}}
             </el-form-item>
-            <el-form-item :label="`使用预${titleAry[type][2]}`" >
+            <el-form-item :label="`使用预${titleAry[type][2]}`" v-if="payPendingMoney">
               <el-switch v-model="form.advancePaymentFlag"
                          active-text="是" inactive-text="否" @change="advancePaymentFlagChange"></el-switch>
             </el-form-item>
@@ -110,7 +110,9 @@
                 <el-tag type="primary">预{{titleAry[type][2]}}</el-tag>￥{{payPendingMoney | formatMoney}}
               </div>
               <div style="line-height: 24px" v-if="payPendingMoney - form.amount < 0">
-                <el-tag type="primary">其他</el-tag>￥{{(form.amount-payPendingMoney) | formatMoney}}
+                <el-tag type="primary">
+                  <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
+                </el-tag>￥{{(form.amount-payPendingMoney) | formatMoney}}
               </div>
             </el-form-item>
 
@@ -157,7 +159,7 @@
         form: {
           type: '1',
           payType: '',
-          advancePaymentFlag: true,
+          advancePaymentFlag: false,
           orgId: '',
           explain: '',
           amount: '',
@@ -209,7 +211,7 @@
         this.form = {
           type: '1',
           payType: '',
-          advancePaymentFlag: true,
+          advancePaymentFlag: false,
           orgId: '',
           explain: '',
           amount: '',
@@ -219,6 +221,9 @@
         this.index = 1;
         this.selectPayments = [];
         this.$refs['addForm'].resetFields();
+      },
+      payPendingMoney (val) {
+        this.form.advancePaymentFlag = !!val;
       }
     },
     mounted: function () {
@@ -241,7 +246,6 @@
         this.$emit('close');
       },
       payTypeChange (val) {
-        this.payPendingMoney = 0;
         if (val) {
           let o1 = this.$store.state.user.userCompanyAddress;
           let o2 = this.$refs.payDetail.searchCondition.orgId;
@@ -256,7 +260,8 @@
         }
       },
       orgChange () {
-        this.payTypeChange(this.form.advancePaymentFlag);
+        this.payPendingMoney = 0;
+        this.payTypeChange(true);
       },
       advancePaymentFlagChange (val) {
         this.form.payType = '';

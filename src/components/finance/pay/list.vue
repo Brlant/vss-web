@@ -505,6 +505,7 @@
         this.currentItem = item;
         this.goodesList = [];
         this.getDetail(1);
+        this.resetSearchForm();
       },
       showDetail (item) {
         this.orderId = item.orderId;
