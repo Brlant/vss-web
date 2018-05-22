@@ -146,13 +146,13 @@
         <div>
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item :label="`${titleAry[type][2]}单据编号`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}单据编号:`" class="mb0">
               {{form.no }}
             </el-form-item>
-            <el-form-item :label="titleAry[type][3]" class="mb0">
+            <el-form-item :label="titleAry[type][3]+ ':'" class="mb0">
               {{form.orgName }}
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}方式`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}方式:`" class="mb0">
               <div v-show="form.advancePaymentFlag">
                 <span>预{{titleAry[type][2]}}</span>
                 <span v-show="form.payType">、<dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict></span>
@@ -161,22 +161,22 @@
                 <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
               </div>
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}金额`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}金额:`" class="mb0">
               ¥ {{form.amount | formatMoney}}
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}说明`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}说明:`" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="创建人" class="mb0">
+            <el-form-item label="创建人:" class="mb0">
               {{form.createName}}
             </el-form-item>
-            <el-form-item label="创建时间" class="mb0">
+            <el-form-item label="创建时间:" class="mb0">
               {{form.createTime | minute}}
             </el-form-item>
-            <el-form-item label="状态" class="mb0">
+            <el-form-item label="状态:" class="mb0">
               {{getOrderStatus(form)}}
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}明细`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}明细:`" class="mb0">
               <span v-show="!form.detailList.length">无</span>
               <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
             </el-form-item>
@@ -209,7 +209,7 @@
                 </el-row>
               </li>
             </ul>
-            <el-form-item label="审核意见">
+            <el-form-item label="审核意见:">
               <oms-input v-show="form.status ==='0' || form.status ==='-1'" type="textarea"
                          v-model="form.auditOpinion" placeholder="请输入审核意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>

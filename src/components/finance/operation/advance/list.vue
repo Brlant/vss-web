@@ -112,6 +112,11 @@
                  onsubmit="return false">
           <el-row>
             <el-col :span="8">
+              <oms-form-row label="单据编号" :span="7">
+                <oms-input type="text" v-model.trim="searchCondition.id" placeholder="请输入单据编号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row :label="`${title}单位`" :span="6">
                 <el-select filterable remote :placeholder="`请输入名称搜索${title}单位`" :remote-method="filterOrg"
                            :clearable="true"
@@ -159,10 +164,11 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
+          <el-col :span="3">单据编号</el-col>
           <el-col :span="6">{{`${title}单位`}}</el-col>
-          <el-col :span="4">{{`${title}金额`}}</el-col>
-          <el-col :span="6">创建人</el-col>
-          <el-col :span="5">创建时间</el-col>
+          <el-col :span="3">{{`${title}金额`}}</el-col>
+          <el-col :span="5">创建人</el-col>
+          <el-col :span="4">创建时间</el-col>
           <el-col :span="3">状态</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -182,14 +188,15 @@
                :class="['status-'+filterListColor(item.status),{'active':currentId===item.id}]"
                @click.stop="showItem(item)">
             <el-row>
+              <el-col :span="3" class="R">{{item.id}}</el-col>
               <el-col :span="6" class="pt10">
                 <div>{{item[type === 1 ? 'cdcName' : 'povName'] }}</div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="3">
                 <span v-if="item.rechargeAmount">¥</span> {{item.rechargeAmount | formatMoney}}
               </el-col>
-              <el-col :span="6">{{item.creatorName}}</el-col>
-              <el-col :span="5">{{item.createTime | minute}}</el-col>
+              <el-col :span="5">{{item.creatorName}}</el-col>
+              <el-col :span="4">{{item.createTime | minute}}</el-col>
               <el-col :span="3">{{getOrderStatus(item)}}</el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -237,7 +244,8 @@
           status: '0'
         },
         searchCondition: {
-          orgId: ''
+          orgId: '',
+          id: ''
         },
         activeStatus: 0,
         currentId: '',
@@ -316,8 +324,8 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          keyWord: '',
-          orgId: ''
+          orgId: '',
+          id: ''
         };
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);

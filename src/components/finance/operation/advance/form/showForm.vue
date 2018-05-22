@@ -143,19 +143,22 @@
         <h3>{{`${title}作业详情`}}</h3>
         <div>
           <el-form ref="auditForm" onsubmit="return false" label-width="100px" style="padding-right: 20px">
+            <el-form-item label="单据编号:" class="mb0">
+              {{billInfo.id}}
+            </el-form-item>
             <el-form-item :label="`${title}单位`" class="mb0">
               {{billInfo[type === 1 ? 'cdcName' : 'povName'] }}
             </el-form-item>
-            <el-form-item :label="`${title}金额`" class="mb0">
+            <el-form-item :label="`${title}金额:`" class="mb0">
               ¥ {{billInfo.rechargeAmount | formatMoney}}
             </el-form-item>
-            <el-form-item label="创建人" class="mb0">
+            <el-form-item label="创建人:" class="mb0">
               {{billInfo.creatorName}}
             </el-form-item>
-            <el-form-item label="创建时间" class="mb0">
+            <el-form-item label="创建时间:" class="mb0">
               {{billInfo.createTime | minute}}
             </el-form-item>
-            <el-form-item label="状态" class="mb0">
+            <el-form-item label="状态:" class="mb0">
               {{getOrderStatus(billInfo)}}
             </el-form-item>
             <el-form-item style="margin-top: 10px">
