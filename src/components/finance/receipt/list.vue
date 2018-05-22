@@ -158,8 +158,8 @@
               </el-row>
             </div>
             <div>
-              <el-form class="payForm" ref="payForm" :inline="true" onsubmit="return false">
-                <el-form-item label="货品名称">
+              <el-form class="payForm" ref="payForm" onsubmit="return false" label-width="100px">
+                <el-form-item label="货品">
                   <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
                              @click.native="searchProduct('')" popper-class="good-selects">
                     <el-option v-for="item in goodesList" :key="item.id"
@@ -181,28 +181,36 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="发生时间">
-                  <el-date-picker
-                    v-model="createTimes"
-                    type="daterange"
-                    placeholder="请选择">
-                  </el-date-picker>
-                </el-form-item>
-                <el-form-item label="是否收清">
-                  <el-switch
-                    v-model="searchCondition.status"
-                    active-text="是"
-                    inactive-text="否"
-                    active-value="1"
-                    inactive-value="0"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949">
-                  </el-switch>
-                </el-form-item>
-                <el-form-item style="margin-left: 10px">
-                  <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
-                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                </el-form-item>
+                <el-row>
+                  <el-col :span="13">
+                    <el-form-item label="发生时间">
+                      <el-date-picker
+                        v-model="createTimes"
+                        type="daterange"
+                        placeholder="请选择">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="是否收清">
+                      <el-switch
+                        v-model="searchCondition.status"
+                        active-text="是"
+                        inactive-text="否"
+                        active-value="1"
+                        inactive-value="0"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949">
+                      </el-switch>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-form-item label-width="10px">
+                      <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                      <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
               </el-form>
               <!--<span class="pull-right" style="margin-top: 8px">-->
               <!--<span class="btn-search-toggle open" v-show="showSearch">-->
