@@ -214,7 +214,8 @@
         titleAry: {
           1: ['预付款', '预收款'],
           2: ['预收款', '预付款']
-        }
+        },
+        requestTime: 0
       };
     },
     computed: {
@@ -291,7 +292,10 @@
           povId: this.type === 1 ? this.$store.state.user.userCompanyAddress : null,
           cdcId: this.type === 2 ? this.$store.state.user.userCompanyAddress : null
         });
+        let rTime = Date.now();
+        this.requestTime = rTime;
         PaymentPending.queryPaymentTotalList(params).then(res => {
+          if (this.requestTime > rTime) return;
           this.$store.commit('initBottomLoading', false);
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);

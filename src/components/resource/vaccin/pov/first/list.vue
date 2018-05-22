@@ -495,6 +495,7 @@
           type: '1'
         });
         VaccineRights.queryPovVaccineByType(params).then(res => {
+          if (params.keyWord !== this.typeTxt) return;
           this.$store.commit('initBottomLoading', false);
 
           if (isContinue) {

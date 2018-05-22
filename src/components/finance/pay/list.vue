@@ -402,6 +402,7 @@
           pageSize: this.pager.pageSize
         }, this.filters);
         pay.query(params).then(res => {
+          if (params.keyWord !== this.filters.keyWord) return;
           this.$store.commit('initBottomLoading', false);
 
           if (isContinue) {

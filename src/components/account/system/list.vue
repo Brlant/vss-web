@@ -298,11 +298,11 @@
         let param = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          keyword: this.typeTxt,
           deleteFlag: false,
           objectId: 'cerp-system'
         }, this.filters);
         Access.querySystemAccess(param).then(res => {
+          if (param.keyWord !== this.filters.keyWord) return;
           this.$store.commit('initBottomLoading', false);
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);

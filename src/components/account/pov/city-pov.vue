@@ -226,6 +226,7 @@
         }, this.filterPOVs);
         this.loadingData = true;
         cerpAction.queryPov(this.cdcItem.subordinateId, params).then(res => {
+          if (params.keyWord !== this.filterPOVs.keyWord) return;
           this.povs = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;

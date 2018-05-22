@@ -391,8 +391,8 @@
           pageSize: this.typePager.pageSize
         }, this.filters);
         BriceGroup.query(params).then(res => {
+          if (params.keyWord !== this.filters.keyWord) return;
           this.$store.commit('initBottomLoading', false);
-
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
