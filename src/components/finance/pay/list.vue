@@ -151,8 +151,8 @@
               </el-row>
             </div>
             <div>
-              <el-form class="payForm" ref="payForm" :inline="true" onsubmit="return false">
-                <el-form-item label="货品名称">
+              <el-form class="payForm" ref="payForm" onsubmit="return false" label-width="80px">
+                <el-form-item label="货品">
                   <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                              :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
@@ -173,28 +173,31 @@
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="发生时间">
-                  <el-date-picker
-                    v-model="createTimes"
-                    type="daterange"
-                    placeholder="请选择">
-                  </el-date-picker>
-                </el-form-item>
-                <el-form-item label="是否付清">
-                  <el-switch
-                    v-model="searchCondition.status"
-                    active-text="是"
-                    inactive-text="否"
-                    active-value="1"
-                    inactive-value="0"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949">
-                  </el-switch>
-                </el-form-item>
-                <el-form-item style="margin-left: 10px">
-                  <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
-                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                </el-form-item>
+                <el-row>
+                  <el-col :span="13">
+                    <el-form-item label="发生时间">
+                      <el-date-picker
+                        v-model="createTimes"
+                        type="daterange"
+                        placeholder="请选择">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="是否付清" label-width="80px">
+                      <el-radio-group v-model="searchCondition.status">
+                        <el-radio label="1">是</el-radio>
+                        <el-radio label="0">否</el-radio>
+                      </el-radio-group>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-form-item label-width="10px">
+                      <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                      <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
               </el-form>
               <!--<span class="pull-right" style="margin-top: 8px">-->
               <!--<span class="btn-search-toggle open" v-show="showSearch">-->
@@ -300,7 +303,7 @@
           orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
-          status: '0'
+          status: ''
         },
         createTimes: '',
         action: 'add',
@@ -402,6 +405,7 @@
           pageSize: this.pager.pageSize
         }, this.filters);
         pay.query(params).then(res => {
+          if (params.keyWord !== this.filters.keyWord) return;
           this.$store.commit('initBottomLoading', false);
 
           if (isContinue) {
@@ -434,15 +438,29 @@
         this.resetRightBox();
       },
       searchProduct (keyWord) {
-        let params = Object.assign({}, {
-          keyWord: keyWord,
-          salesFirm: this.currentItem.remitteeId
-        });
         let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
-          this.goodesList = res.data.list;
-        });
+        if (level !== 3) {
+          let params = Object.assign({}, {
+            keyWord: keyWord,
+            salesFirm: this.currentItem.remitteeId
+          });
+          let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
+          Vaccine[api](params).then(res => {
+            this.goodesList = res.data.list;
+          });
+        } else {
+          let o1 = this.$store.state.user.userCompanyAddress;
+          let o2 = this.currentItem.remitteeId;
+          if (!o1 || !o2) return;
+          let params = {
+            povId: o1,
+            cdcId: o2,
+            keyWord: keyWord
+          };
+          this.$http.get('/erp-stock/bill/goods-list', {params}).then(res => {
+            this.goodesList = res.data.list;
+          });
+        }
       },
       getDetail: function (pageNo) {
         this.payDetails = [];
@@ -469,7 +487,7 @@
           orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
-          status: '0'
+          status: ''
         };
         this.createTimes = '';
         Object.assign(this.searchCondition, temp);
@@ -482,6 +500,7 @@
         this.currentItem = item;
         this.goodesList = [];
         this.getDetail(1);
+        this.resetSearchForm();
       },
       showDetail (item) {
         this.orderId = item.orderId;

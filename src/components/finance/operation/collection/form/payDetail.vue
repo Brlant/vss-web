@@ -41,7 +41,8 @@
         </el-form-item>
         <el-form-item label="货品名称">
           <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索货品" :clearable="true"
-                     @click.native="searchProduct('')" popper-class="good-selects" @change="orgGoodsIdChange">
+                     @click.native="searchProduct('')" remote :remote-method="searchProduct"
+                     popper-class="good-selects" @change="orgGoodsIdChange">
             <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
                        :label="item.orgGoodsDto.name"
                        :value="item.orgGoodsDto.id">
@@ -300,7 +301,8 @@
         if (!o1 || !o2) return;
         let params = {
           povId: this.type === 1 ? o1 : o2,
-          cdcId: this.type === 1 ? o2 : o1
+          cdcId: this.type === 1 ? o2 : o1,
+          keyWord: keyWord
         };
         this.$http.get('/erp-stock/bill/goods-list', {params}).then(res => {
           this.goodesList = res.data.list;
@@ -311,8 +313,8 @@
         if (!this.searchCondition.orgId && isShowTip) {
           return this.$notify.info({message: `请选择${titleAry[type][3]}`});
         }
-        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
+        this.searchCondition.createStartTime = this.formatTime(this.createTimes && this.createTimes[0] || '');
+        this.searchCondition.createEndTime = this.formatTime(this.createTimes && this.createTimes[1] || '');
         Object.assign(this.filterRights, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单

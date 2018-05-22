@@ -145,28 +145,28 @@
         <div>
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="发票付款" class="mb0">
+            <el-form-item label="发票付款:" class="mb0">
               {{form.billPayType === '0' ? '无' : '有' }}
             </el-form-item>
-            <el-form-item label="付款单位" class="mb0">
+            <el-form-item label="付款单位:" class="mb0">
               {{form.orgName }}
             </el-form-item>
-            <el-form-item label="付款方式" class="mb0">
+            <el-form-item label="付款方式:" class="mb0">
               <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
             </el-form-item>
-            <el-form-item label="付款金额" class="mb0">
+            <el-form-item label="付款金额:" class="mb0">
               ¥ {{form.amount | formatMoney}}
             </el-form-item>
-            <el-form-item label="付款说明" class="mb0">
+            <el-form-item label="付款说明:" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="创建人" class="mb0">
+            <el-form-item label="创建人:" class="mb0">
               {{form.createName}}
             </el-form-item>
-            <el-form-item label="创建时间" class="mb0">
+            <el-form-item label="创建时间:" class="mb0">
               {{form.createTime | minute}}
             </el-form-item>
-            <el-form-item label="付款明细" class="mb0">
+            <el-form-item label="付款明细:" class="mb0">
               <span v-if="!form.detailList.length">无</span>
               <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
             </el-form-item>
@@ -203,7 +203,7 @@
                 </el-row>
               </li>
             </ul>
-            <el-form-item label="审批意见" style="margin-top: 10px">
+            <el-form-item label="审批意见:" style="margin-top: 10px">
               <oms-input v-show="form.status ==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
               <span v-show="form.status!=='0'">

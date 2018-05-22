@@ -146,13 +146,13 @@
         <div>
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item :label="`${titleAry[type][2]}单据编号`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}单据编号:`" class="mb0">
               {{form.no }}
             </el-form-item>
-            <el-form-item :label="titleAry[type][3]" class="mb0">
+            <el-form-item :label="titleAry[type][3]+ ':'" class="mb0">
               {{form.orgName }}
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}方式`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}方式:`" class="mb0">
               <div v-show="form.advancePaymentFlag">
                 <span>预{{titleAry[type][2]}}</span>
                 <span v-show="form.payType">、<dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict></span>
@@ -161,22 +161,22 @@
                 <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
               </div>
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}金额`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}金额:`" class="mb0">
               ¥ {{form.amount | formatMoney}}
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}说明`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}说明:`" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="创建人" class="mb0">
+            <el-form-item label="创建人:" class="mb0">
               {{form.createName}}
             </el-form-item>
-            <el-form-item label="创建时间" class="mb0">
+            <el-form-item label="创建时间:" class="mb0">
               {{form.createTime | minute}}
             </el-form-item>
-            <el-form-item label="状态" class="mb0">
+            <el-form-item label="状态:" class="mb0">
               {{getOrderStatus(form)}}
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}明细`" class="mb0">
+            <el-form-item :label="`${titleAry[type][2]}明细:`" class="mb0">
               <span v-show="!form.detailList.length">无</span>
               <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
             </el-form-item>
@@ -209,7 +209,7 @@
                 </el-row>
               </li>
             </ul>
-            <el-form-item label="审核意见">
+            <el-form-item label="审核意见:">
               <oms-input v-show="form.status ==='0' || form.status ==='-1'" type="textarea"
                          v-model="form.auditOpinion" placeholder="请输入审核意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
@@ -222,7 +222,7 @@
             <el-form-item style="margin-top: 10px">
               <div v-if="type===1">
                 <perm :label="perms[1]" v-show="form.status === '0'">
-                  <el-button  plain :disabled="doing" type="success" @click="audited('审核')">审核通过</el-button>
+                  <el-button  plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
                 </perm>
                 <perm :label="perms[2]">
                   <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
@@ -230,10 +230,10 @@
               </div>
               <div v-else>
                 <perm :label="perms[1]" v-show="form.status === '-1'">
-                  <el-button  plain :disabled="doing" type="success" @click="audited('审核')">审核通过</el-button>
+                  <el-button  plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
                 </perm>
                 <perm :label="perms[2]" v-show="form.status === '1'">
-                  <el-button  plain :disabled="doing" type="success" @click="audited('确认')">确认通过</el-button>
+                  <el-button  plain :disabled="doing" type="success" @click="audited('确认收款')">收款确认</el-button>
                 </perm>
                 <perm :label="perms[3]">
                   <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
@@ -314,9 +314,9 @@
       doClose: function () {
         this.$emit('close');
       },
-      audited: function (title = '审核') {
+      audited: function (title = '审核通过') {
         if (this.doing) return;
-        this.$confirmOpera(`是否${title}通过?`, () => {
+        this.$confirmOpera(`是否${title}?`, () => {
           this.doing = true;
           let {formItem} = this;
           let url = {
@@ -327,7 +327,7 @@
           const auditOpinion = this.form.auditOpinion;
           let httpRequest = url[formItem.status](formItem.id, {auditOpinion});
           this.$httpRequestOpera(httpRequest, {
-            successTitle: `${title}通过`,
+            successTitle: `${title}审核`,
             errorTitle: `${title}失败`,
             success: res => {
               this.doing = false;

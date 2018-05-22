@@ -244,6 +244,7 @@
         }, this.filterCDCs);
         this.loadingData = true;
         cerpAction.queryCount(params).then(res => {
+          if (params.keyWord !== this.filterCDCs.keyWord) return;
           this.cdcs = res.data.list;
           this.cdcItem = this.cdcs.length && this.cdcs[0];
           this.loadingData = false;

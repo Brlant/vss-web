@@ -297,6 +297,8 @@
         let nowTime = new Date();
         this.nowTime = nowTime;
         this.$http.get('/vaccine-info/first-vaccine/valid/org-goods', {params}).then(res => {
+          if (params.keyWord !== this.typeTxt) return;
+
           this.$store.commit('initBottomLoading', false);
 
           if (this.nowTime > nowTime) return;

@@ -540,6 +540,7 @@
           deleteFlag: false
         }, this.filters);
         Vaccine.query(params).then(res => {
+          if (params.keyWord !== this.typeTxt) return;
           this.$store.commit('initBottomLoading', false);
 
           if (isContinue) {
