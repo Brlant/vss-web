@@ -92,7 +92,7 @@
             <el-form-item :label="`${titleAry[type][2]}总金额:`" v-show="form.amount">
               ￥{{form.amount}}
             </el-form-item>
-            <el-form-item :label="`使用预${titleAry[type][2]}`" v-if="payPendingMoney">
+            <el-form-item :label="`使用预${titleAry[type][2]}`" v-show="payPendingMoney">
               <el-switch v-model="form.advancePaymentFlag"
                          active-text="是" inactive-text="否" @change="advancePaymentFlagChange"></el-switch>
             </el-form-item>
@@ -105,13 +105,13 @@
                 </el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}来源:`" v-if="form.advancePaymentFlag">
+            <el-form-item :label="`${titleAry[type][2]}来源:`" v-show="form.advancePaymentFlag">
               <div :style="{'line-height': payPendingMoney - form.amount < 0 ? '24px' : 'inherit' }">
                 <el-tag type="primary">预{{titleAry[type][2]}}</el-tag>￥{{payPendingMoney | formatMoney}}
               </div>
               <div style="line-height: 24px" v-if="payPendingMoney - form.amount < 0">
                 <el-tag type="primary">
-                  <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
+                 <span v-show="!form.payType">其他</span> <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
                 </el-tag>￥{{(form.amount-payPendingMoney) | formatMoney}}
               </div>
             </el-form-item>
