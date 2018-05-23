@@ -126,6 +126,12 @@
                   <el-date-picker v-model="createTimes" type="daterange" placeholder="请选择">
                   </el-date-picker>
                 </el-form-item>
+                <el-form-item label="类型">
+                  <el-radio-group v-model="searchCondition.type">
+                    <el-radio label="0">充值</el-radio>
+                    <el-radio label="1">抵扣</el-radio>
+                  </el-radio-group>
+                </el-form-item>
                 <el-form-item style="margin-left: 10px">
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -135,9 +141,14 @@
             <el-table :data="payDetails" class="header-list" border
                       :header-row-class-name="'headerClass'" v-loading="loadingData">
               <el-table-column prop="billNo" label="单据号" min-width="85"></el-table-column>
-              <el-table-column prop="rechargeAmount" label="抵扣金额">
+              <el-table-column prop="type" label="类型">
                 <template slot-scope="scope">
-                  ￥{{ Math.abs(scope.row.rechargeAmount)}}
+                  {{ scope.row.type === '0' ? '充值' : '抵扣'}}
+                </template>
+              </el-table-column>
+              <el-table-column prop="rechargeAmount" label="金额">
+                <template slot-scope="scope">
+                  {{ scope.row.rechargeAmount}}
                 </template>
               </el-table-column>
               <el-table-column prop="salePrice" label="创建时间">
@@ -179,11 +190,13 @@
         },
         filterRights: {
           startTime: '',
-          endTime: ''
+          endTime: '',
+          type: ''
         },
         searchCondition: {
           startTime: '',
-          endTime: ''
+          endTime: '',
+          type: ''
         },
         createTimes: '',
         action: 'add',
@@ -354,7 +367,8 @@
       resetSearchForm: function () {// 重置表单
         let temp = {
           startTime: '',
-          endTime: ''
+          endTime: '',
+          type: ''
         };
         this.createTimes = '';
         Object.assign(this.searchCondition, temp);

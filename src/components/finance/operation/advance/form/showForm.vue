@@ -143,25 +143,28 @@
         <h3>{{`${title}作业详情`}}</h3>
         <div>
           <el-form ref="auditForm" onsubmit="return false" label-width="100px" style="padding-right: 20px">
+            <el-form-item label="单据编号:" class="mb0">
+              {{billInfo.id}}
+            </el-form-item>
             <el-form-item :label="`${title}单位`" class="mb0">
               {{billInfo[type === 1 ? 'cdcName' : 'povName'] }}
             </el-form-item>
-            <el-form-item :label="`${title}金额`" class="mb0">
+            <el-form-item :label="`${title}金额:`" class="mb0">
               ¥ {{billInfo.rechargeAmount | formatMoney}}
             </el-form-item>
-            <el-form-item label="创建人" class="mb0">
+            <el-form-item label="创建人:" class="mb0">
               {{billInfo.creatorName}}
             </el-form-item>
-            <el-form-item label="创建时间" class="mb0">
+            <el-form-item label="创建时间:" class="mb0">
               {{billInfo.createTime | minute}}
             </el-form-item>
-            <el-form-item label="状态" class="mb0">
+            <el-form-item label="状态:" class="mb0">
               {{getOrderStatus(billInfo)}}
             </el-form-item>
             <el-form-item style="margin-top: 10px">
               <div v-if="type===1">
                 <perm :label="perms[1]" v-show="billInfo.status === '0'">
-                  <el-button plain :disabled="doing" type="success" @click="audited('审核')">审核通过</el-button>
+                  <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
                 </perm>
                 <perm :label="perms[2]">
                   <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
@@ -169,10 +172,10 @@
               </div>
               <div v-else>
                 <perm :label="perms[1]" v-show="billInfo.status === '3'">
-                  <el-button plain :disabled="doing" type="success" @click="audited('审核')">审核通过</el-button>
+                  <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
                 </perm>
                 <perm :label="perms[2]" v-show="billInfo.status === '1'">
-                  <el-button plain :disabled="doing" type="success" @click="audited('确认')">确认通过</el-button>
+                  <el-button plain :disabled="doing" type="success" @click="audited('确认收款')">收款确认</el-button>
                 </perm>
                 <perm :label="perms[3]">
                   <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
@@ -226,7 +229,7 @@
       },
       audited: function (title = '审核') {
         if (this.doing) return;
-        this.$confirmOpera(`是否${title}通过?`, () => {
+        this.$confirmOpera(`是否${title}?`, () => {
           this.doing = true;
           let {type, $http, billInfo} = this;
           let url = {
@@ -236,7 +239,7 @@
           };
           let httpRequest = $http.put(url[billInfo.status]);
           this.$httpRequestOpera(httpRequest, {
-            successTitle: `${title}通过`,
+            successTitle: `${title}成功`,
             errorTitle: `${title}失败`,
             success: res => {
               this.doing = false;

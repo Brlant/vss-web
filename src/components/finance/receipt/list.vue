@@ -160,23 +160,22 @@
             <div>
               <el-form class="payForm" ref="payForm" onsubmit="return false" label-width="100px">
                 <el-form-item label="货品">
-                  <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索产品" :clearable="true"
-                             @click.native="searchProduct('')" popper-class="good-selects">
-                    <el-option v-for="item in goodesList" :key="item.id"
-                               :label="item.goodsName"
-                               :value="item.orgGoodsId">
-                      <div>
-                        <div>
-                          <span class="pull-left">{{item.goodsName}}</span>
-                        </div>
-                        <div class="clearfix">
-                            <span class="select-other-info pull-left">
-                              <span v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}
-                            </span>
-                          <span class="select-other-info pull-left"><span
-                            v-show="item.factoryName">供货厂商:</span>{{ item.factoryName }}
-                            </span>
-                        </div>
+                  <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
+                             :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
+                             popper-class="good-selects">
+                    <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
+                               :label="item.orgGoodsDto.name"
+                               :value="item.orgGoodsDto.id">
+                      <div style="overflow: hidden">
+                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      </div>
+                      <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                        </span>
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                        </span>
                       </div>
                     </el-option>
                   </el-select>
@@ -192,16 +191,11 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="6">
-                    <el-form-item label="是否收清">
-                      <el-switch
-                        v-model="searchCondition.status"
-                        active-text="是"
-                        inactive-text="否"
-                        active-value="1"
-                        inactive-value="0"
-                        active-color="#13ce66"
-                        inactive-color="#ff4949">
-                      </el-switch>
+                    <el-form-item label="是否收清" label-width="80px">
+                      <el-radio-group v-model="searchCondition.status">
+                        <el-radio label="1">是</el-radio>
+                        <el-radio label="0">否</el-radio>
+                      </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :span="5">
@@ -317,7 +311,7 @@
           orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
-          status: '0'
+          status: ''
         },
         createTimes: '',
         action: 'add',
@@ -437,9 +431,16 @@
         });
       },
       searchProduct (keyWord) {
-        if (!keyWord && this.goodesList.length) return;
-        VaccineRights.queryVaccineByPov(this.currentItem.payerId, {cdcId: this.$store.state.user.userCompanyAddress}).then(res => {
-          this.goodesList = res.data;
+        let o1 = this.$store.state.user.userCompanyAddress;
+        let o2 = this.currentItem.remitteeId;
+        if (!o1 || !o2) return;
+        let params = {
+          povId: o2,
+          cdcId: o1,
+          keyWord: keyWord
+        };
+        this.$http.get('/erp-stock/bill/goods-list', {params}).then(res => {
+          this.goodesList = res.data.list;
         });
       },
       queryTotalMoney () {
@@ -481,7 +482,7 @@
           orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
-          status: '0'
+          status: ''
         };
         this.createTimes = '';
         Object.assign(this.searchCondition, temp);
@@ -493,6 +494,7 @@
       showType: function (item) {
         this.currentItem = item;
         this.getDetail(1);
+        this.resetSearchForm();
         this.goodesList = [];
       },
       showDetail (item) {

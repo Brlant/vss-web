@@ -184,16 +184,11 @@
                     </el-form-item>
                   </el-col>
                   <el-col :span="6">
-                    <el-form-item label="是否付清" label-width="100px">
-                      <el-switch
-                        v-model="searchCondition.status"
-                        active-text="是"
-                        inactive-text="否"
-                        active-value="1"
-                        inactive-value="0"
-                        active-color="#13ce66"
-                        inactive-color="#ff4949">
-                      </el-switch>
+                    <el-form-item label="是否付清" label-width="80px">
+                      <el-radio-group v-model="searchCondition.status">
+                        <el-radio label="1">是</el-radio>
+                        <el-radio label="0">否</el-radio>
+                      </el-radio-group>
                     </el-form-item>
                   </el-col>
                   <el-col :span="5">
@@ -308,7 +303,7 @@
           orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
-          status: '0'
+          status: ''
         },
         createTimes: '',
         action: 'add',
@@ -492,7 +487,7 @@
           orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
-          status: '0'
+          status: ''
         };
         this.createTimes = '';
         Object.assign(this.searchCondition, temp);
@@ -505,6 +500,7 @@
         this.currentItem = item;
         this.goodesList = [];
         this.getDetail(1);
+        this.resetSearchForm();
       },
       showDetail (item) {
         this.orderId = item.orderId;
