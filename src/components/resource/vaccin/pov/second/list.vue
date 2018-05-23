@@ -462,9 +462,6 @@
       handlePreview: function (id) {
         this.$store.commit('changeAttachment', id);
       },
-      isLocked: function (item) {
-        return item.auditedStatus === '3' && item.auditedBy !== this.$store.state.user.userId;
-      },
       resetRightBox: function () {
         this.showRight = false;
       },
