@@ -210,7 +210,7 @@
             <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
               <el-form-item label="产品" prop="orgGoodsId">
                 <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                           :remote-method="searchProduct" :clearable="true" :loading="loading"
+                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true" :loading="loading"
                            popper-class="order-good-selects"
                            @change="getGoodDetail">
                   <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
