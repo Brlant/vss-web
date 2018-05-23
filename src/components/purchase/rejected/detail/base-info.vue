@@ -109,7 +109,7 @@
             </div>
             <div>
               <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
-                <span style="font-size: 12px;color:#999">{{ item.orgGoodsDto.goodsDto.name }}</span>
+                <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
               </el-tooltip>
             </div>
             <div>
@@ -119,7 +119,7 @@
             </div>
           </td>
           <td class="text-center" width="140px">
-            {{item.orgGoodsDto.salesFirmName}}
+            {{item.salesFirmName}}
           </td>
           <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
           <td>{{ item.productionDate | date }}</td>
