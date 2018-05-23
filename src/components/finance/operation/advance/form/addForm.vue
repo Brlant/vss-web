@@ -331,6 +331,14 @@
           const form = {};
           form[this.type === 1 ? 'cdcId' : 'povId'] = this.form.orgId;
           form.money = this.form.amount;
+          form.list = this.orderDetailList.map(m => {
+            return {
+              orderNo: m.orderNo,
+              orderId: m.orderId,
+              orderDetailId: m.id,
+              money: m.unitPrice * m.amount
+            };
+          });
           this.doing = true;
           PaymentPending.save(this.type, form).then(res => {
             this.resetForm();

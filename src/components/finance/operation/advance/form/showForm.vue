@@ -161,6 +161,19 @@
             <el-form-item label="状态:" class="mb0">
               {{getOrderStatus(billInfo)}}
             </el-form-item>
+            <div v-show="list.length">
+              <el-form-item :label="`${title}明细`" class="mb0">(共{{list.length}}条)</el-form-item>
+              <el-table :data="list" style="width: 100%" class="header-list">
+                <el-table-column prop="orgGoodsName" label="货品名称" min-width="220"></el-table-column>
+                <el-table-column prop="orderNo" label="订单号"  min-width="140"></el-table-column>
+                <el-table-column prop="money" label="金额" min-width="80">
+                  <template slot-scope="scope"> ¥{{ scope.row.money}}</template>
+                </el-table-column>
+                <el-table-column prop="createTime" label="发生时间" min-width="150">
+                  <template slot-scope="scope"> {{ scope.row.createTime | time }}</template>
+                </el-table-column>
+              </el-table>
+            </div>
             <el-form-item style="margin-top: 10px">
               <div v-if="type===1">
                 <perm :label="perms[1]" v-show="billInfo.status === '0'">
@@ -208,7 +221,8 @@
     },
     data: function () {
       return {
-        doing: false
+        doing: false,
+        list: []
       };
     },
     computed: {
@@ -218,10 +232,17 @@
         return type === 1 && status === '0' || type === 2 && (status === '1' || status === '3');
       }
     },
+    watch: {
+      billInfo (val) {
+        this.list = [];
+        if (!val.id) return;
+        this.queryDetail(val.id);
+      }
+    },
     methods: {
       queryDetail (key) {
-        http.get(`/bill-payable/${key}`).then(res => {
-          this.form = res.data;
+        http.get(`/advance-payment/${key}`).then(res => {
+          this.list = res.data.detailList;
         });
       },
       doClose: function () {
