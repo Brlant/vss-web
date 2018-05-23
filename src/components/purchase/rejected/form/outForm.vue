@@ -1092,7 +1092,7 @@
             return false;
           }
           saveData.detailDtoList.forEach(item => {
-            item.combinationFlag = item.isCombination;
+            !item.combinationFlag && (item.combinationFlag = item.isCombination);
             delete item.fixInfo;
             delete item.mainOrgId;
             delete item.isCombination;
