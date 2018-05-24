@@ -254,7 +254,7 @@
           type: this.type
         }, this.filters);
         this.loadingData = true;
-        http.get(`/code/${this.currentOrder.id}/trace-code`, {params}).then(res => {
+        http.get(`/code/${this.currentOrder.orderNo}/trace-code`, {params}).then(res => {
           this.traceCodes = res.data.list;
 //          this.pager.count = res.data.count;
           if (this.traceCodes.length === this.pager.pageSize) {
