@@ -138,12 +138,12 @@
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    <span class="pull-right" style="color: #999">
+                    <span class="pull-right" style="color: #999" v-if="org.relationList">
                      <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
                     </span>
                   </div>
                   <div style="overflow: hidden">
-                  <span class="select-other-info pull-left">
+                  <span class="select-other-info pull-left" v-show="org.manufacturerCode">
                     <span>系统代码:</span>{{org.manufacturerCode}}
                   </span>
                   </div>
@@ -578,7 +578,6 @@
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
         this.searchProduct();
-        this.filterOrg();
         this.checkLicence(this.form.orgId);
         if (val === 2) {
           this.editOrderInfo();
@@ -588,6 +587,7 @@
           this.form.id = null;
           // 设默认值
           this.setDefaultValue();
+          this.filterOrg();
         }
         this.filterAddress();
       }
@@ -663,6 +663,13 @@
             f.orgGoodsName = f.name;
             f.no = f.batchNumber;
           });
+          this.orgList = [
+            {
+              id: res.data.customerId,
+              name: res.data.customerName
+            }
+          ];
+          this.filterOrg(res.data.customerName);
           this.form = JSON.parse(JSON.stringify(res.data));
           this.formCopy = JSON.parse(JSON.stringify(res.data));
           // ****** 2.0变化
