@@ -30,6 +30,7 @@
   .content-body {
     margin: 20px 0;
   }
+
   $leftWidth: 180px;
   .content-part {
     .content-left {
@@ -52,6 +53,7 @@
     text-align: center;
     padding: 15px;
   }
+
   .error {
     color: red;
   }
@@ -159,6 +161,7 @@
 <script>
   import { pullSignal } from '@/resources';
   import axios from 'axios';
+
   export default {
     props: {
       currentItem: Object,
@@ -194,7 +197,7 @@
           })
         );
       },
-      getRepertoryCount(i, next) {
+      getRepertoryCount (i, next) {
         let count = 0;
         next.data.forEach(n => {
           if (n.orgGoodsId === i.orgGoodsId) {
@@ -207,12 +210,24 @@
         row.isNoValid = row.actualCount > row.repertoryCount;
       },
       validPackage (row) {
+        row.actualCount = row.actualCount || 0;
         if (row.actualCount % row.smallPackCount !== 0) {
           this.$notify.info({
             message: '货品' + row.goodsName + '，输入的分配数量不是散件倍数, 请调整'
           });
+          return;
         }
-        row.actualCount = row.actualCount || 0;
+        this.$http.get('/org/goods/' + row.orgGoodsId).then(res => {
+          let combinationGoodsList = res.data.list;
+          if (!combinationGoodsList.length) return;
+          combinationGoodsList.forEach(i => {
+            let sameGoods = this.currentOrder.detailDtoList.filter(f => f.orgGoodsId === i.accessory);
+            // 不存在或者大于一条，不做处理
+            if (!sameGoods.length || sameGoods.length > 1) return;
+            sameGoods[0].actualCount = row.actualCount * i.proportion;
+            this.$notify.info({message: `组合货品:${sameGoods[0].goodsName}数量调整为${row.actualCount * i.proportion}`});
+          });
+        });
       },
       submit () {
         // let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);
