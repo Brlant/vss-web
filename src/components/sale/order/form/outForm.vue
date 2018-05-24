@@ -132,7 +132,7 @@
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
                   </div>
-                  <div style="overflow: hidden">
+                  <div style="overflow: hidden" v-show="org.manufacturerCode">
                       <span class="select-other-info pull-left">
                         <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
@@ -574,7 +574,6 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
-        this.filterPOV();
         this.checkLicence(this.form.orgId);
         if (val === 2) {
           this.editOrderInfo();
@@ -584,6 +583,7 @@
           this.form.id = null;
           // 设置一些默认值
           this.setDefaultValue();
+          this.filterPOV();
         }
         this.filterAddress();
       }
@@ -647,6 +647,20 @@
             f.orgGoodsName = f.name;
             f.no = f.batchNumber;
           });
+          this.orgList = [
+            {
+              id: res.data.customerId,
+              name: res.data.customerName
+            }
+          ];
+          this.warehouses = [
+            {
+              id: res.data.transportationAddress,
+              name: res.data.warehouseName,
+              detail: res.data.warehouseAddress
+            }
+          ];
+          this.filterPOV(res.data.customerName);
           this.form = JSON.parse(JSON.stringify(res.data));
           this.formCopy = JSON.parse(JSON.stringify(res.data));
           // ****** 2.0变化
