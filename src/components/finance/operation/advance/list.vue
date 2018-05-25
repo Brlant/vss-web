@@ -167,9 +167,10 @@
           <el-col :span="3">单据编号</el-col>
           <el-col :span="6">{{`${title}单位`}}</el-col>
           <el-col :span="3">{{`${title}金额`}}</el-col>
-          <el-col :span="5">创建人</el-col>
+          <el-col :span="3">创建人</el-col>
           <el-col :span="4">创建时间</el-col>
-          <el-col :span="3">状态</el-col>
+          <el-col :span="2">状态</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -195,9 +196,14 @@
               <el-col :span="3">
                 <span v-if="item.rechargeAmount">¥</span> {{item.rechargeAmount | formatMoney}}
               </el-col>
-              <el-col :span="5">{{item.creatorName}}</el-col>
+              <el-col :span="3">{{item.creatorName}}</el-col>
               <el-col :span="4">{{item.createTime | minute}}</el-col>
-              <el-col :span="3">{{getOrderStatus(item)}}</el-col>
+              <el-col :span="2">{{getOrderStatus(item)}}</el-col>
+              <el-col :span="3">
+                <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)">
+                  生成{{title}}单
+                </el-button>
+              </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
           </div>
@@ -227,6 +233,7 @@
   import addForm from './form/addForm.vue';
   import { PaymentPending } from '../../../../resources';
   import methodsMixin from '@/mixins/methodsMixin';
+  import utils from '@/tools/utils';
 
   export default {
     components: {
@@ -309,6 +316,31 @@
       }
     },
     methods: {
+      exportFile: function (id) {
+        if (!id) {
+          return;
+        }
+        let params = Object.assign({}, this.filterRights);
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: '/collection/pending'
+        });
+        this.$http.get('/advance-payment/' + id + '/export', {params}).then(res => {
+          utils.download(res.data.path);
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/collection/pending'
+          });
+        }).catch(error => {
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/collection/pending'
+          });
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
       getOrderStatus: function (order) {
         let state = '';
         for (let key in this.statusType) {
