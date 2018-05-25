@@ -1,4 +1,4 @@
-import { Notification } from 'element-ui/lib/notification';
+import Notification from 'element-ui/lib/notification';
 import axios from 'axios';
 import Vue from 'vue';
 import qs from 'qs';
@@ -116,7 +116,7 @@ export const POVPayment = resource('/pov-bill', http, {
     return http.put(`/pov-bill/audit/${id}`, obj);
   },
   queryStateNum (params) {
-   return http.get('/pov-bill/count', {params});
+    return http.get('/pov-bill/count', {params});
   }
 });
 
