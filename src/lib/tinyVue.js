@@ -96,6 +96,7 @@ import ElForm from '../components/common/form/src/form.vue';
 import goodsInfoPart from '@/components/common/order/goods-info-part';
 import cancelOrder from '@/components/common/order/cancel-order';
 import orderGoodsInfo from '@/components/common/order/order-goods-info';
+import relevanceCodeReview from '@/components/common/order/relevance.code-review.vue';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
   Pagination,
@@ -184,7 +185,8 @@ const tinyVue = [
   orgSelect,
   orgGoodsSelect,
   goodsSelect,
-  statusList
+  statusList,
+  relevanceCodeReview
 ];
 
 const install = function (Vue, opts = {}) {
