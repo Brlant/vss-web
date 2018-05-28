@@ -132,11 +132,11 @@
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    <span class="pull-right select-other-info">
+                    <span class="pull-right select-other-info" v-if="org.relationList">
                      <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
                     </span>
                   </div>
-                  <div style="overflow: hidden">
+                  <div style="overflow: hidden" v-show="org.manufacturerCode">
                   <span class="select-other-info pull-left">
                     <span>系统代码:</span>{{org.manufacturerCode}}
                   </span>
@@ -545,16 +545,17 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
-        this.filterOrg();
         this.filterLogistics();
         this.filterAddress();
         this.checkLicence(this.form.orgId);
         if (this.purchase.id) {
+          this.filterOrg();
           this.createOrderInfo();
         }
         if (val === 2) {
           this.editOrderInfo();
         } else {
+          this.filterOrg();
           this.resetForm();
           this.form.state = '';
           this.form.id = null;
@@ -598,8 +599,7 @@
           if (!res.data.orgGoodsDto.salesFirm) return;
           this.orgList.push({
             id: res.data.orgGoodsDto.salesFirm,
-            name: res.data.orgGoodsDto.salesFirmName,
-            relationList: []
+            name: res.data.orgGoodsDto.salesFirmName
           });
 
           this.form.supplierId = res.data.orgGoodsDto.salesFirm;
@@ -636,6 +636,13 @@
           res.data.detailDtoList.forEach(f => {
             f.orgGoodsName = f.name;
           });
+          this.orgList = [
+            {
+              id: res.data.supplierId,
+              name: res.data.supplierName
+            }
+          ];
+          this.filterOrg(res.data.supplierName);
           this.form = JSON.parse(JSON.stringify(res.data));
           // ******2.0变化
           this.changeSupplier(this.form.supplierId, true);
