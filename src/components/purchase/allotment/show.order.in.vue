@@ -46,6 +46,7 @@
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 5"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="0" v-show="index === 8"></relevance-code>
+        <relevance-code-review :currentOrder="currentOrder" :index="index" type="0" v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
       </div>
@@ -99,6 +100,7 @@
         let state = this.state;
         if (state !== '6' && state !== '7') {
           menu.push({name: '关联追溯码', key: 8});
+          menu.push({name: '复核追溯码', key: 9});
         }
         menu.push({name: '操作日志', key: 2});
         return menu;

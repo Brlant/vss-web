@@ -44,7 +44,7 @@
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="1" v-show="index === 8"></relevance-code>
-
+        <relevance-code-review :currentOrder="currentOrder" :index="index" type="1" v-show="index === 9"></relevance-code-review>
       </div>
     </div>
   </div>
@@ -91,6 +91,7 @@
           menu.push({name: '附件管理', key: 3});
         }
         menu.push({name: '关联追溯码', key: 8});
+        menu.push({name: '复核追溯码', key: 9});
         menu.push({name: '操作日志', key: 2});
         return menu;
       }
