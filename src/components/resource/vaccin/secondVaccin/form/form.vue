@@ -124,7 +124,7 @@
       </el-form-item>
       <el-form-item label="供货厂商" prop="salesFirm">
         <el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg" @click.native="filterOrg('')"
-                   :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)"
+                   :clearable="true" v-model="form.salesFirmId" @change="setSalesFirm(form.salesFirmId)"
                    popperClass="good-selects">
           <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
             <div style="overflow: hidden">
@@ -137,6 +137,12 @@
             </div>
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="供货厂商ID">
+        {{form.salesFirm}}
+      </el-form-item>
+      <el-form-item label="供货厂商名称">
+        {{form.salesFirmName}}
       </el-form-item>
       <el-form-item label="疫苗编号" prop="goodsNo">
         <oms-input type="text" v-model="form.goodsNo" placeholder="请输入疫苗编号"></oms-input>
@@ -331,6 +337,7 @@
     watch: {
       formItem: function (val) {
         this.goodsType = '';
+        this.filterOrg();
         if (typeof val.id === 'string') {
           this.form = this.formItem;
           if (this.form.unitPrice) {
