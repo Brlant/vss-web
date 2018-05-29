@@ -170,6 +170,17 @@
               <oms-form-row label="下单时间" :span="6">
                 <el-col :span="24">
                   <el-date-picker
+                    v-model="createdTime"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="预计送货时间" :span="6">
+                <el-col :span="24">
+                  <el-date-picker
                     v-model="expectedTime"
                     type="daterange"
                     placeholder="请选择" format="yyyy-MM-dd">
@@ -314,7 +325,9 @@
           thirdPartyNumber: '',
           orgGoodsId: '',
           orgAreaCode: '',
-          deleteFlag: false
+          deleteFlag: false,
+          expectedStartTime: '',
+          expectedEndTime: ''
         },
         searchCondition: {
           searchType: 1,
@@ -326,8 +339,11 @@
           transactOrgId: '',
           orgGoodsId: '',
           orgAreaCode: '',
-          thirdPartyNumber: ''
+          thirdPartyNumber: '',
+          expectedStartTime: '',
+          expectedEndTime: ''
         },
+        createdTime: '',
         expectedTime: '',
         orgType: utils.outOrderType,
         activeStatus: 0,
@@ -398,8 +414,10 @@
         return state;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.createStartTime = this.formatTime(this.expectedTime[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchCondition.createStartTime = this.formatTime(this.createdTime[0]);
+        this.searchCondition.createEndTime = this.formatTime(this.createdTime[1]);
+        this.searchCondition.expectedStartTime = this.formatTime(this.expectedTime[0]);
+        this.searchCondition.expectedEndTime = this.formatTime(this.expectedTime[1]);
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
@@ -413,8 +431,11 @@
           transactOrgId: '',
           thirdPartyNumber: '',
           orgGoodsId: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          expectedStartTime: '',
+          expectedEndTime: ''
         };
+        this.createdTime = '';
         this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
