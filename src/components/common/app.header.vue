@@ -395,9 +395,10 @@
       logout: function () {
         window.localStorage.setItem('lastUrl', window.location.href);
         Auth.logout().then(() => {
-          window.localStorage.setItem('userId', this.$store.state.user.userId);
-          //          window.localStorage.removeItem('user');
-          return this.$router.replace('/login');
+          location.reload();
+          // window.localStorage.setItem('userId', this.$store.state.user.userId);
+          // //          window.localStorage.removeItem('user');
+          // return this.$router.replace('/login');
         });
       },
       checkSubMenu: function (item) {
