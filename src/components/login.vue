@@ -98,19 +98,20 @@
               let userId = window.localStorage.getItem('userId');
               this.$store.commit('initUser', response.data);
               this.$store.commit('initCode', this.user.orgCode);
-              this.$nextTick(function () {
-                if (userId === response.data.userId) {
-                  let lastUrl = window.localStorage.getItem('lastUrl');
-                  if (lastUrl && lastUrl.indexOf('/login') === -1 && lastUrl.indexOf('/logout') === -1) {
-                    window.localStorage.removeItem('lastUrl');
-                    window.location.href = lastUrl;
-                    return lastUrl;
-                  }
-                } else {
-                  this.$router.replace('/');
-                }
-                this.$router.replace('/');
-              });
+              // this.$nextTick(function () {
+              //   if (userId === response.data.userId) {
+              //     let lastUrl = window.localStorage.getItem('lastUrl');
+              //     if (lastUrl && lastUrl.indexOf('/login') === -1 && lastUrl.indexOf('/logout') === -1) {
+              //       window.localStorage.removeItem('lastUrl');
+              //       window.location.href = lastUrl;
+              //       return lastUrl;
+              //     }
+              //   } else {
+              //     this.$router.replace('/');
+              //   }
+              //   this.$router.replace('/');
+              // });
+              this.$emit('login');
               this.queryWeChat();
             }, error => {
               let data = error.response.data;

@@ -14,6 +14,7 @@ import Vuex from 'vuex';
 import store from './store';
 
 import omsCostTime from './components/common/timeCost.vue';
+import App from './components/App.vue';
 
 Vue.use(require('vue-moment'), {moment});
 Vue.use(tinyVue);
@@ -170,7 +171,7 @@ Vue.prototype.$httpRequestOpera = function (httpPromise, option = {
 };
 
 new Vue({
-  template: '<router-view id="app"></router-view>',
   router,
-  store
+  store,
+  render: h => h(App)
 }).$mount('#app');

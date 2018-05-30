@@ -1,4 +1,4 @@
-import {Address} from '@dtop/dtop-web-common';
+import { Address } from '@dtop/dtop-web-common';
 
 export default {
   address: Address.value,
@@ -239,7 +239,7 @@ export default {
     if (cls.replace(/\s/g, '').length === 0) return false;
     return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
   },
-  getPos(e) { // 这是一个 获取鼠标位置的函数
+  getPos (e) { // 这是一个 获取鼠标位置的函数
     let oEvent = e || event;
     return {
       x: oEvent.clientX + document.documentElement.scrollLeft || document.body.scrollLeft,
@@ -333,7 +333,7 @@ export default {
    * 得到附件类型 1 图片 0 非图片
    * @returns {string}
    */
-  getType(attachmentStoragePath) {
+  getType (attachmentStoragePath) {
     let type = '';
     let url = attachmentStoragePath;
     let images = ['jpg', 'png', 'gif', 'jpeg'];
@@ -353,11 +353,25 @@ export default {
   }
 };
 
-export function getMousePos(event) {
+export function getMousePos (event) {
   let e = event || window.event;
   let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
   let scrollY = document.documentElement.scrollTop || document.body.scrollTop;
   let x = e.pageX || e.clientX + scrollX;
   let y = e.pageY || e.clientY + scrollY;
-  return { 'x': x, 'y': y };
+  return {'x': x, 'y': y};
 }
+
+// 深拷贝
+export const deepCopy = function (source) {
+  if (!source) {
+    return source;
+  }
+  let sourceCopy = source instanceof Array ? [] : {};
+  for (let item in source) {
+    if (source.hasOwnProperty(item)) {
+      sourceCopy[item] = typeof source[item] === 'object' ? deepCopy(source[item]) : source[item];
+    }
+  }
+  return sourceCopy;
+};
