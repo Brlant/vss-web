@@ -1,40 +1,5 @@
 <style lang="scss">
 
-  .layer-loading {
-    text-align: center;
-    background: #f9f9f9;
-    padding-top: 15rem;
-    position: fixed;
-    top: 50px;
-    left: 0;
-    right: 0;
-    z-index: 1200;
-    bottom: 0
-  }
-
-  .layer-loading > i {
-    -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
-    animation: bouncedelay 1.4s infinite ease-in-out;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    background-color: #A6A6A6;
-    display: inline-block;
-    border-radius: 100%;
-    margin: 0 2px;
-    height: 18px;
-    width: 18px
-  }
-
-  .layer-loading > i:nth-child(2) {
-    -webkit-animation-delay: .2s;
-    animation-delay: .2s
-  }
-
-  .layer-loading > i:nth-child(3) {
-    -webkit-animation-delay: .4s;
-    animation-delay: .4s
-  }
-
   .btn-left-list-more {
     position: absolute;
     bottom: 0;
@@ -88,7 +53,6 @@
   <div class="app-body full-width" :style="'padding-left:'+bodyLeft">
     <app-header :to-route="toRoute" v-if="userType" :level="level"></app-header>
     <div class="main-body">
-      <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
       <transition name="scale" mode="out-in" appear>
         <router-view class="app-content-view"></router-view>
       </transition>
@@ -150,32 +114,10 @@
       }
     },
     mounted: function () {
-      window.localStorage.removeItem('noticeError');
-      if (!this.$store.state.user || !this.$store.state.user.userId) {
-        Auth.checkLogin().then(() => {
-          let data = window.localStorage.getItem('user');
-          if (!data) {
-            Auth.logout().then(() => {
-              this.$router.replace('/login');
-            });
-          }
-          data = JSON.parse(data);
-          this.$store.commit('initUser', data);
-          this.queryWeChat();
-          this.queryBaseInfo(data);
-          // this.getRoleMenus(data);
-        }).catch(() => {
-          Auth.logout().then(() => {
-            this.$router.replace('/login');
-          });
-        });
-      } else {
-        let data = window.localStorage.getItem('user');
-        data = JSON.parse(data);
-        // this.getRoleMenus(data);
-        this.queryBaseInfo(data);
-      }
-      this.queryPerms();
+      utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
+      let user = this.$store.state.user;
+      this.queryWeChat();
+      this.queryBaseInfo(user);
       this.queryLevel();
       window.addEventListener('resize', (e) => {
         this.setBodyHeight();
@@ -186,8 +128,8 @@
       queryRoles() {
         cerpAccess.bindMunicipal().then(() => {
           this.loading = false;
-          this.queryPerms();
           this.queryLevel();
+          this.$emit('login');
         }).catch((error) => {
           this.loading = true;
           this.$notify.error({
@@ -203,30 +145,6 @@
           this.isPermission = res.data === 0;
         });
       },
-      queryPerms() {
-        Auth.permission().then(res => {
-          this.$store.commit('initPermissions', res.data);
-        }).then(() => {
-
-          utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
-          this.loading = false;
-
-          // DictGroup.getAll().then(data => {
-          //   this.$store.commit('initDict', data);
-          // });
-        });
-      },
-      // getRoleMenus(data) {
-      //   Access.getRoleMenus(data.userCompanyAddress).then(res => {
-      //     let menuData = res.data;
-      //     let menuList = {};
-      //     res.data.menuList.forEach(item => {
-      //       menuList[item.id] = item.name;
-      //     });
-      //     menuData.menuList = menuList;
-      //     this.$store.commit('initPermList', menuData);
-      //   });
-      // },
       queryWeChat() {
         cerpAction.queryWeChatInfo().then(res => {
           this.$store.commit('initWeChatInfo', res.data);

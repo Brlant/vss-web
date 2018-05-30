@@ -1,30 +1,4 @@
-// import axios from 'axios';
-//  专门用来展示静态HTML文件的组件
-// const Html = {
-//   template: '<div v-html="html"></div>',
-//   data: () => ({
-//     html: ''
-//   }),
-//   beforeRouteEnter(to, from, next) {
-//     axios.get('/static/html/' + to.params.file).then(response => {
-//       next(vm => {
-//         vm.html = response.data;
-//         vm.$nextTick(() => vm.$emit('loaded'));
-//       });
-//     });
-//   },
-//   beforeRouteUpdate(to, from, next) {
-//     this.$emit('loaded', 1);
-//     axios.get('/static/html/' + to.params.file).then(response => {
-//       this.html = response.data;
-//       this.$nextTick(() => {
-//         this.$emit('loaded', 0);
-//         next();
-//       });
-//     });
-//   }
-// };
-const route = [
+export const route = [
   {
     path: '/',
     component: require('./components/index.vue'),
@@ -41,33 +15,6 @@ const route = [
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
         meta: {moduleId: 'purchase', title: '疫苗采购', icon: 'purchase', perm: 'purchasing-business'},
         children: [
-          // {
-          //   path: '/purchase/pov',
-          //   component: resolve => require(['./components/common/parent-route.vue'], resolve),
-          //   meta: {moduleId: 'purchase', title: '接种点要货需求分配', perm: 'demand-assignment'},
-          //   children: [
-          //     {
-          //       path: '',
-          //       component: resolve => require(['./components/purchase/pov/list.vue'], resolve),
-          //       meta: {moduleId: 'purchase', title: '接种点要货需求分配', perm: 'demand-assignment-query'}
-          //     },
-          //     {
-          //       path: '/purchase/pov/allocation',
-          //       component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-          //       meta: {moduleId: 'purchase', title: '接种点要货需求分配', perm: 'demand-assignment-update'}
-          //     }
-          //   ]
-          // },
-          // {
-          //   path: '/purchase/wave',
-          //   component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-          //   meta: {moduleId: 'purchase', title: '分配中订单', perm: 'cerp-create-wave'}
-          // },
-          // {
-          //   path: '/purchase/agreement',
-          //   component: resolve => require(['./components/resource/vaccin/purchaseAgreement/list.vue'], resolve),
-          //   meta: {moduleId: 'resource', title: '区二类疫苗采购目录', perm: 'purchase-agreement'}
-          // },
           {
             path: '/purchase/contract',
             component: resolve => require(['./components/purchase/contract/list.vue'], resolve),
@@ -95,26 +42,6 @@ const route = [
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
         meta: {moduleId: 'sale', title: '疫苗销售', icon: 'sale', perm: 'sales-business'},
         children: [
-          // {
-          //   path: '/sale/vaccin/price',
-          //   component: resolve => require(['./components/resource/price/list.vue'], resolve),
-          //   meta: {moduleId: 'resource', title: '二类疫苗销售价格', perm: 'sale-price-group'}
-          // },
-          // {
-          //   path: '/sale/one/vaccin/pov',
-          //   component: resolve => require(['./components/resource/vaccin/rights/one/pov.vue'], resolve),
-          //   meta: {moduleId: 'resource', title: '一类疫苗接种点授权', perm: 'first-vaccine-authorization'}
-          // },
-          // {
-          //   path: '/sale/two/vaccin/pov',
-          //   component: resolve => require(['./components/resource/vaccin/rights/two/pov.vue'], resolve),
-          //   meta: {moduleId: 'resource', title: '二类疫苗接种点授权', perm: 'second-vaccine-authorization'}
-          // },
-          // {
-          //   path: '/sale/request/pov',
-          //   component: resolve => require(['./components/purchase/request/list.vue'], resolve),
-          //   meta: {moduleId: 'resource', title: '分货申请', perm: 'cargo-signal'}
-          // },
           {
             path: '/sale/order/one/class/:id',
             component: resolve => require(['./components/sale/order/list.vue'], resolve),
@@ -523,11 +450,6 @@ const route = [
             component: resolve => require(['./components/report/allotation.vue'], resolve),
             meta: {moduleId: 'report', title: '出货货品统计表', perm: 'first-vaccine-distribution-manager'}
           },
-          // {
-          //   path: '/report/pov/one/repertory',
-          //   component: resolve => require(['./components/report/pov-repertory.vue'], resolve),
-          //   meta: {moduleId: 'report', title: '接种单位一类疫苗盘点表', perm: 'pov-stock-form-manager', type: 1}
-          // },
           {
             path: '/report/pov/two/repertory',
             component: resolve => require(['./components/report/pov-repertory.vue'], resolve),
@@ -541,7 +463,10 @@ const route = [
         ]
       }
     ]
-  },
+  }
+];
+
+export const basicRoutes = [
   {
     path: '/resetpsw',
     component: () => import('./components/resetpsw.vue'),
@@ -553,4 +478,3 @@ const route = [
   {path: '/forget', component: () => import('./components/forget.vue')},
   {path: '/code/:id', component: () => import('./components/resetpwd.vue')}
 ];
-export default route;

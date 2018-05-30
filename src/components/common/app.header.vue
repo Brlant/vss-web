@@ -285,12 +285,12 @@
         <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="false"
                  :default-openeds="defaultOpenMenus" style="margin-bottom: 27px">
           <template v-for="item in menu">
-            <el-submenu :index="item.path" v-if="item.subMenu.length>0">
+            <el-submenu :index="item.path" v-if="item.children.length>0">
               <template slot="title">
                 <i :class="'el-icon-t-'+item.meta.icon"></i>
                 <span slot="title">{{item.meta.title}}</span>
               </template>
-              <el-menu-item :index="child.path" v-for="child in item.subMenu" :key="child.path">
+              <el-menu-item :index="child.path" v-for="child in item.children" :key="child.path">
                 {{child.meta.title}}
               </el-menu-item>
             </el-submenu>
@@ -321,14 +321,13 @@
   import { Auth, cerpAction } from '../../resources';
   import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
-  import route from '../../route.js';
 
   export default {
     components: {
       omsUploadPicture
     },
     props: ['toRoute', 'level'],
-    data() {
+    data () {
       return {
         activeId: this.getGroupId(),
         logo_pic: logo_pic,
@@ -349,27 +348,24 @@
         return this.$store.state.bodySize.left;
       },
       user: function () {
-
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
-        let menuArr = route[0].children.filter(item => item.meta.moduleId && (item.meta.perm === 'show' ||
-          this.$store.state.permissions.includes(item.meta.perm)));
-        menuArr.forEach(item => {
-          item.children.forEach(i => {
+        let menu = this.$parent.$parent.menuData;
+        menu.forEach(i => {
+          i.children.forEach(i => {
             i.path = i.path.replace(/:id/, 'list');
-          });item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
-          }
-        );
-        return menuArr;
+          });
+        });
+        return menu;
       },
       activePath: function () {
         return this.$route.path;
       },
-      orgName() {
+      orgName () {
         return this.$store.state.orgName;
       },
-      weChatInfo() {
+      weChatInfo () {
         return this.$store.state.weChatInfo;
       }
     },
@@ -416,10 +412,10 @@
         this.skin = skin;
         window.localStorage.setItem('skin', JSON.stringify(skin));
       },
-      filterLevel(level) {
+      filterLevel (level) {
         return level === 1 ? '市疾控' : level === 2 ? '区疾控' : level === 3 ? '接种点' : '';
       },
-      unbind() {
+      unbind () {
         this.$confirm('是否解除绑定的微信？', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
