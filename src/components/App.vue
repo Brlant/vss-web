@@ -62,10 +62,10 @@
   </div>
 </template>
 <script>
-  import utils from '@/tools/utils';
+  import utils, { deepCopy } from '@/tools/utils';
   import { Auth } from '@/resources';
-  import {route} from '@/route';
-  import {deepCopy} from '@/tools/utils';
+  import { ErrorPage, route } from '@/route';
+
   export default {
     data: () => ({
       loading: false,
@@ -90,6 +90,7 @@
           this.routesCopy[0].children = this.menuData;
           // 动态添加路由
           this.$router.addRoutes(this.routesCopy);
+          this.$router.addRoutes(ErrorPage);
           this.$store.commit('initPermissions', res.data);
           // 添加路由后，跳转相应地址
           this.$nextTick(this.$router.push(url ? url : '/'));

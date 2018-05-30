@@ -478,3 +478,7 @@ export const basicRoutes = [
   {path: '/forget', component: () => import('./components/forget.vue')},
   {path: '/code/:id', component: () => import('./components/resetpwd.vue')}
 ];
+
+export const ErrorPage = [
+  {path: '*', component: () => import('./components/error_404.vue')}
+];
