@@ -150,7 +150,7 @@ $leftWidth: 260px;
       height: 55px;
       left: $leftWidth;
       background: #fff;
-      z-index: 2;
+      z-index: 4;
     }
     position: absolute;
     top: 0;
@@ -940,7 +940,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
 
 .el-table.border-black.el-table--border.el-table--group {
   border: 1px solid $borderColor;
-  th, th.is-leaf{
+  th, th.is-leaf {
     border-bottom: 1px solid $borderColor;
     border-right: 1px solid $borderColor;
   }
@@ -960,7 +960,6 @@ $borderColor: rgba(82, 82, 82, 0.23);
 
   }
 }
-
 
 .header-list {
   &.el-table th {
@@ -1071,6 +1070,11 @@ $borderColor: rgba(82, 82, 82, 0.23);
   }
   .el-form-item {
     margin-bottom: 20px;
+    .el-select .el-input .el-select__caret {
+      line-height: 36px;
+      height: 36px;
+      vertical-align: middle;
+    }
   }
   .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
     max-width: 350px;
