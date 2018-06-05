@@ -81,7 +81,6 @@
     color: #777
   }
 
-
   .productItem-info {
     float: left;
   }
@@ -137,12 +136,12 @@
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    <span class="pull-right" style="color: #999">
+                    <span class="pull-right" style="color: #999" v-if="org.relationList">
                      <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
                     </span>
                   </div>
                   <div style="overflow: hidden">
-                  <span class="select-other-info pull-left">
+                  <span class="select-other-info pull-left" v-show="org.manufacturerCode">
                     <span>系统代码:</span>{{org.manufacturerCode}}
                   </span>
                   </div>
@@ -193,7 +192,7 @@
             <!--<el-form-item label="是否生效">-->
             <!--<el-switch v-model="form.availabilityStatus" active-text="是" inactive-text="否" active-color="#13ce66"-->
             <!--inactive-color="#ff4949">-->
-              <!--</el-switch>-->
+            <!--</el-switch>-->
             <!--</el-form-item>-->
             <el-form-item label="其他约定事项">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入其他约定事项"
@@ -347,7 +346,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, http, LogisticsCenter, PurchaseContract} from './../../../../resources';
+  import { Address, BaseInfo, http, LogisticsCenter, PurchaseContract } from './../../../../resources';
   import utils from '@/tools/utils';
   import OrderMixin from '@/mixins/orderMixin';
 
@@ -395,7 +394,8 @@
           'detailDtoList': [],
           'supplierId': '',
           'remark': '',
-          'pickUpAddress': ''
+          'pickUpAddress': '',
+          'supplierName': ''
         },
         rules: {
           purchaseContractName: [
@@ -498,10 +498,10 @@
       orgLevel () {
         return this.$store.state.orgLevel;
       },
-      user() {
+      user () {
         return this.$store.state.user.userCompanyAddress;
       },
-      showTitle() {
+      showTitle () {
         let title = '新增';
         if (this.action === 'edit') {
           title = '编辑';
@@ -524,7 +524,7 @@
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       },
-      action(val) {
+      action (val) {
         this.index = 0;
         if (this.$store.state.user.userCompanyAddress && val === 'add') {
           BaseInfo.queryBaseInfo(this.$store.state.user.userCompanyAddress).then(res => {
@@ -549,11 +549,20 @@
             'expectedTime': '',
             'detailDtoList': [],
             'supplierId': '',
+            'supplierName': '',
             'remark': '',
             'pickUpAddress': ''
           };
           this.initForm();
-          this.filterOrg();
+          if (this.form.supplierName && this.form.supplierId) {
+            this.orgList = [
+              {
+                name: this.form.supplierName,
+                id: this.form.supplierId
+              }
+            ];
+          }
+          this.filterOrg(this.form.supplierName);
           this.filterLogisticsCenter();
           this.filterAddress();
         } else if (this.orderId && val === 'edit') {
@@ -563,7 +572,7 @@
           this.filterAddress(this.form.warehouseAddress);
         }
       },
-      orderId(val) {
+      orderId (val) {
         if (val) {
           this.orderId = val;
         }
@@ -724,6 +733,7 @@
         return item.detail;
       },
       changeSupplier: function (val, isEdit) {// 业务单位改变
+        this.form.supplierName = this.orgList.filter(f => f.id === val)[0] && this.orgList.filter(f => f.id === val)[0].name;
         this.form.detailDtoList = [];
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.supplierWarehouses = [];
