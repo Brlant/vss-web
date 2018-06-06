@@ -429,7 +429,7 @@
         // 表单操作
         form: {},
         action: '',
-        orgList: [{id: '', nameJc: ''}],
+        orgList: [],
         doing: false,
         photoForm: {
           name: '',
