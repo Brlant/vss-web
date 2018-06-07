@@ -189,6 +189,7 @@
                 this.$emit('change', res.data);
                 this.$emit('right-close');
               }).catch(error => {
+                this.doing = false;
                 this.$notify.error({
                   message: error.response.data && error.response.data.msg || '新增区二类疫苗失败'
                 });
