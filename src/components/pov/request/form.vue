@@ -173,7 +173,7 @@
                         }}</span>
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.factoryName">供货厂商:</span>{{ item.supplyCompanyName }}</span>
+                        v-show="item.supplyCompanyName">供货厂商:</span>{{ item.supplyCompanyName }}</span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}</span>
                     </div>
