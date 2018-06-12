@@ -261,6 +261,8 @@
                 <div>
                   {{item.orgName }}
                 </div>
+                <div v-show="item.thirdPartyNumber&& item.transportationMeansId === '4'" class="f-grey" style="font-size: 12px">
+                  来自销售订单{{item.thirdPartyNumber}}</div>
               </el-col>
               <el-col :span="3">
                 <div class="vertical-center">
