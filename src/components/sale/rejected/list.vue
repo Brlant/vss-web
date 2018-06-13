@@ -231,12 +231,12 @@
       </el-row>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
+          <el-col :span="5">货主/订单号</el-col>
           <el-col :span="3">业务类型</el-col>
-          <el-col :span="filters.state === '6' ? 5: 6">接种点</el-col>
+          <el-col :span="5">接种点</el-col>
           <el-col :span="5">时间</el-col>
           <el-col :span="3">状态</el-col>
-          <el-col :span="3" v-if="filters.state === '6'">操作</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -254,7 +254,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.state === '6' ? 5: 7">
+              <el-col :span="5">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -269,7 +269,7 @@
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
+              <el-col :span="5" class="pt10">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="5">
@@ -287,12 +287,19 @@
                   {{getOrderStatus(item)}}
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state === '6' ">
-                <perm label="sales-return-edit">
+              <el-col :span="3" class="opera-btn">
+                <perm label="sales-return-edit"  v-if="filters.state === '6' ">
                    <span @click.stop.prevent="editOrder(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-edit"></i></a>
                     编辑
+                  </span>
+                </perm>
+                <perm label="sales-return-conversion"  v-if="filters.state === '7' || filters.state === '8' || filters.state === '10'">
+                   <span @click.stop.prevent="transformSaleOrder(item)" v-show="item.transportationMeansId === '4'">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="el-icon-t-reset"></i></a>
+                    转换成销售订单
                   </span>
                 </perm>
               </el-col>
@@ -604,6 +611,24 @@
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      },
+      transformSaleOrder (item) {
+        this.$confirm('是否转换成销售订单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.put(`/erp-order/${item.id}/conversion/sale`).then(() => {
+            this.$notify.success({
+              message: '转换成功'
+            });
+            this.getOrderList(this.pager.currentPage);
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '转换失败'
+            });
+          });
+        });
       }
     }
   };
