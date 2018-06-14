@@ -20,8 +20,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="疾控货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索疾控货品" :remote-method="getGoodsList" :clearable="true"
+              <oms-form-row label="疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="getGoodsList" :clearable="true"
                            v-model="filters.orgGoodsId" popper-class="good-selects">
                   <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                              v-for="item in goodses">
@@ -35,6 +35,9 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                       </span>
+                      <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                </span>
                     </div>
                   </el-option>
                 </el-select>

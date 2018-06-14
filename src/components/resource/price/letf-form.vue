@@ -109,10 +109,10 @@
             <el-form-item label="二类疫苗销售价格组名称" prop="name">
               <oms-input type="text" placeholder="请输入二类疫苗销售价格组名称" v-model="form.name"></oms-input>
             </el-form-item>
-            <el-form-item label="选择疾控货品" prop="orgGoodsId">
-              <el-select filterable remote placeholder="请输入名称搜索疾控货品" :remote-method="getGoodsList" :clearable="true"
+            <el-form-item label="选择疫苗" prop="orgGoodsId">
+              <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="getGoodsList" :clearable="true"
                          popper-class="order-good-selects"
-                         v-model="form.orgGoodsId" @click.native.once="getGoodsList('')" @change="orgGoodsChange">
+                         v-model="form.orgGoodsId" @change="orgGoodsChange">
                 <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                            v-for="item in goodses">
                   <div>
@@ -122,13 +122,13 @@
                     <!--<span class="select-other-info pull-left"><span-->
                     <!--v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}-->
                     <!--</span>-->
-                    <span class="select-other-info pull-left"><span
-                      v-show="item.orgGoodsDto.sellPrice">销售价格:￥{{ item.orgGoodsDto.sellPrice}}</span>
-                    </span>
+                    <!--<span class="select-other-info pull-left"><span-->
+                      <!--v-show="item.orgGoodsDto.goodsDto.specifications">规格:{{ item.orgGoodsDto.goodsDto.specifications}}</span>-->
+                    <!--</span>-->
                     <span class="select-other-info pull-left"><span
                       v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName  }}</span>
                     <span class="select-other-info pull-left"><span
-                      v-show="item.orgGoodsDto.salesFirmName">销售厂商:</span>{{ item.orgGoodsDto.salesFirmName }}</span>
+                      v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}</span>
                   </div>
                 </el-option>
               </el-select>
@@ -168,7 +168,7 @@
         rules: {
           name: {required: true, message: '请输入二类疫苗销售价格组名称', trigger: 'blur'},
           unitPrice: {required: true, message: '请输入单价', trigger: 'blur'},
-          orgGoodsId: {required: true, message: '请选择疾控货品', trigger: 'change'}
+          orgGoodsId: {required: true, message: '请选择疫苗', trigger: 'change'}
         },
         goodses: [], // 货品列表
         title: '新增二类疫苗销售价格组',
@@ -189,6 +189,7 @@
             unitPrice: '',
             availabilityStatus: true
           };
+          this.getGoodsList();
           this.title = '新增二类疫苗销售价格组';
         }
       }
