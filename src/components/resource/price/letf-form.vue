@@ -112,7 +112,7 @@
             <el-form-item label="选择疫苗" prop="orgGoodsId">
               <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="getGoodsList" :clearable="true"
                          popper-class="order-good-selects"
-                         v-model="form.orgGoodsId" @click.native.once="getGoodsList('')" @change="orgGoodsChange">
+                         v-model="form.orgGoodsId" @change="orgGoodsChange">
                 <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                            v-for="item in goodses">
                   <div>
@@ -122,9 +122,9 @@
                     <!--<span class="select-other-info pull-left"><span-->
                     <!--v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}-->
                     <!--</span>-->
-                    <span class="select-other-info pull-left"><span
-                      v-show="item.orgGoodsDto.goodsDto.specifications">规格:￥{{ item.orgGoodsDto.goodsDto.specifications}}</span>
-                    </span>
+                    <!--<span class="select-other-info pull-left"><span-->
+                      <!--v-show="item.orgGoodsDto.goodsDto.specifications">规格:{{ item.orgGoodsDto.goodsDto.specifications}}</span>-->
+                    <!--</span>-->
                     <span class="select-other-info pull-left"><span
                       v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName  }}</span>
                     <span class="select-other-info pull-left"><span
@@ -189,6 +189,7 @@
             unitPrice: '',
             availabilityStatus: true
           };
+          this.getGoodsList();
           this.title = '新增二类疫苗销售价格组';
         }
       }
