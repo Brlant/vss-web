@@ -37,6 +37,9 @@
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
           </oms-row>
+          <oms-row label="来自销售订单" :span="span" v-show="currentOrder.thirdPartyNumber && currentOrder.transportationMeansId === '4'">
+            {{ currentOrder.thirdPartyNumber }}
+          </oms-row>
         </el-col>
         <el-col :span="12">
           <oms-row label="业务类型">
@@ -95,7 +98,7 @@
               <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
             </el-tooltip>
           </td>
-          <td>
+          <td width="150">
             <div>
               <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
                 <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>

@@ -12,11 +12,11 @@
     "lint": "eslint --ext .js,.vue src"
   },
   "dependencies": {
-    "@dtop/dtop-web-common": "git+https://gitee.com/tinygroup/dtop-web-common.git",
+    "@dtop/dtop-web-common": "git+https://git.sinopharm-bio.com/sinopharm-bio/dtop-web-common.git",
     "axios": "^0.16.2",
     "babel-polyfill": "^6.26.0",
-    "element-ui": "^2.3.9",
-    "moment": "^2.22.1",
+    "element-ui": "^2.4.1",
+    "moment": "^2.22.2",
     "qs": "^6.5.2",
     "vue": "^2.5.16",
     "vue-echarts": "^2.6.0",
@@ -69,7 +69,7 @@
     "semver": "^5.5.0",
     "shelljs": "^0.7.6",
     "url-loader": "^0.5.8",
-    "vue-loader": "^13.7.1",
+    "vue-loader": "^13.7.2",
     "vue-style-loader": "^3.1.2",
     "vue-template-compiler": "^2.5.16",
     "webpack": "^3.12.0",

@@ -111,22 +111,24 @@
             </el-form-item>
             <el-form-item label="选择疾控货品" prop="orgGoodsId">
               <el-select filterable remote placeholder="请输入名称搜索疾控货品" :remote-method="getGoodsList" :clearable="true"
+                         popper-class="order-good-selects"
                          v-model="form.orgGoodsId" @click.native.once="getGoodsList('')" @change="orgGoodsChange">
                 <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                            v-for="item in goodses">
-                  <div style="overflow: hidden">
+                  <div>
                     <span class="pull-left">{{item.orgGoodsDto.name}}</span>
                   </div>
-                  <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
-                      </span>
-                    <span class="select-other-info pull-left">
-                      <span>销售价格:</span>{{item.orgGoodsDto.sellPrice | formatMoney}}
-                      </span>
+                  <div class="clearfix">
+                    <!--<span class="select-other-info pull-left"><span-->
+                    <!--v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}-->
+                    <!--</span>-->
                     <span class="select-other-info pull-left"><span
-                      v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
-                      </span>
+                      v-show="item.orgGoodsDto.sellPrice">销售价格:￥{{ item.orgGoodsDto.sellPrice}}</span>
+                    </span>
+                    <span class="select-other-info pull-left"><span
+                      v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName  }}</span>
+                    <span class="select-other-info pull-left"><span
+                      v-show="item.orgGoodsDto.salesFirmName">销售厂商:</span>{{ item.orgGoodsDto.salesFirmName }}</span>
                   </div>
                 </el-option>
               </el-select>
@@ -148,7 +150,7 @@
   </div>
 </template>
 <script>
-  import { BriceGroup } from '@/resources';
+  import {BriceGroup} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {

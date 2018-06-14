@@ -64,6 +64,7 @@
                   :class="{'active':item.id==currentItem.id}">
                 <div class="id-part">
                   疫苗编号 {{item.orgGoodsNo }}
+                  <el-tag type="danger" v-show="!item.availabilityStatus">停用</el-tag>
                 </div>
                 <div>
                   {{item.orgGoodsName }}
@@ -282,7 +283,7 @@
         });
         let nowTime = new Date();
         this.nowTime = nowTime;
-        this.$http.get('/purchase-agreement/valid/second-vaccine/pager', {params}).then(res => {
+        this.$http.get('/purchase-agreement/second-vaccine/pager', {params}).then(res => {
           this.$store.commit('initBottomLoading', false);
           if (this.nowTime > nowTime) return;
           if (isContinue) {
