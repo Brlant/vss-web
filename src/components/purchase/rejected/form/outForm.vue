@@ -129,7 +129,7 @@
                          @change="changeTransportationMeans">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
                            v-for="item in transportationMeansList"
-                           v-show="item.key !== '2' || item.key==='2' && form.bizType!=='2-2' "></el-option>
+                           v-show="(item.key !== '2' || item.key==='2' && form.bizType!=='2-2') && item.key !== '4'"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="供货厂商" prop="customerId">

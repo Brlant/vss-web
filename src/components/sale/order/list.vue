@@ -211,12 +211,12 @@
   </div>
   <div class="order-list clearfix">
     <el-row class="order-list-header">
-      <el-col :span="filters.state === '0' ? 5: 6">货主/订单号</el-col>
+      <el-col :span="5">货主/订单号</el-col>
       <el-col :span="4">业务类型</el-col>
-      <el-col :span="filters.state === '0' ? 5: 6">接种点</el-col>
+      <el-col :span="5">接种点</el-col>
       <el-col :span="5">时间</el-col>
-      <el-col :span="3">状态</el-col>
-      <el-col :span="2" class="opera-btn" v-if="filters.state === '0' ">操作</el-col>
+      <el-col :span="2">状态</el-col>
+      <el-col :span="3" class="opera-btn" v-if="filters.state < 4 ">操作</el-col>
     </el-row>
     <el-row v-if="loadingData">
       <el-col :span="24">
@@ -234,7 +234,7 @@
       <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
            :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
         <el-row>
-          <el-col :span="filters.state === '0' ? 5: 6">
+          <el-col :span="5">
             <div class="f-grey">
               {{item.orderNo }}
             </div>
@@ -247,25 +247,34 @@
               <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
             </div>
           </el-col>
-          <el-col :span="filters.state === '0' ? 5: 6">
+          <el-col :span="5">
             <div>{{item.transactOrgName }}</div>
           </el-col>
           <el-col :span="5">
             <div>下单：{{item.createTime | minute }}</div>
             <div>预计送货：{{ item.expectedTime | date }}</div>
           </el-col>
-          <el-col :span="3">
+          <el-col :span="2">
             <div class="vertical-center">
               {{getOrderStatus(item)}}
             </div>
           </el-col>
-          <el-col :span="2" class="opera-btn" v-if="filters.state === '0' || filters.state === '1'">
-            <perm :label="vaccineType === '1'?'sales-order-edit': 'second-vaccine-sales-order-edit' ">
+          <el-col :span="3" class="opera-btn" v-if="filters.state < 4">
+            <perm :label="vaccineType === '1'?'sales-order-edit': 'second-vaccine-sales-order-edit' "
+                  v-show="filters.state === '0' || filters.state === '1'">
               <span @click.stop.prevent="editOrder(item)">
                 <a href="#" class="btn-circle" @click.prevent=""><i
                   class="el-icon-t-edit"></i></a>
-              编辑
-            </span>
+                编辑
+              </span>
+            </perm>
+            <perm :label="vaccineType === '1'?'sales-order-conversion': 'second-vaccine-sales-order-conversion' "
+                  v-show="filters.state === '2' || filters.state === '3'">
+              <span @click.stop.prevent="transformReturnOrder(item)">
+                <a href="#" class="btn-circle" @click.prevent=""><i
+                  class="el-icon-t-reset"></i></a>
+                <span style="font-size: 12px">转成销售退货订单</span>
+              </span>
             </perm>
           </el-col>
         </el-row>
@@ -601,6 +610,24 @@
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      },
+      transformReturnOrder (item) {
+        this.$confirm('是否转换成销售退货订单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.put(`/erp-order/${item.id}/conversion`).then(() => {
+            this.$notify.success({
+              message: '转换成功'
+            });
+            this.getOrderList(this.pager.currentPage);
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '转换失败'
+            });
+          });
+        });
       }
     }
   };
