@@ -119,17 +119,11 @@
         </td>
       </tr>
       <tr>
-        <th style="width: 300px"></th>
-        <th></th>
-        <th></th>
-        <th>
-          <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
-        </th>
-        <th>
+        <th colspan="6" class="text-right">
+          <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>;
           <total-count property="applyMoney" :showIcon="true" title="合计金额"
                        :list="currentOrder.detailDtoList"></total-count>
         </th>
-        <th></th>
       </tr>
       </tbody>
     </table>
