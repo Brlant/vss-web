@@ -384,7 +384,7 @@
         </el-form-item>
         <el-form-item label="有效期" prop="expirationDate">
           <el-date-picker v-model="form.expirationDate" format="yyyy-MM-dd" placeholder="选择日期"
-                          style="width: 100%;" @change="changeExpirationDate">
+                          style="width: 100%;" value-format="timestamp">
           </el-date-picker>
         </el-form-item>
         <el-form-item label-width="120px">
@@ -659,7 +659,7 @@
             return;
           }
           this.doing = true;
-          this.changeExpirationDate(this.form.expirationDate);
+          // this.changeExpirationDate(this.form.expirationDate);
           if (this.action === 'add') {
             Vendor.save(this.form).then(() => {
               this.doing = false;

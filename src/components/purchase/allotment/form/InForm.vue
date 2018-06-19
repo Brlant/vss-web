@@ -170,7 +170,7 @@
                           :prop=" showContent.isShowOtherContent?'expectedTime':'' "
                           v-show="showContent.isShowOtherContent">
               <el-date-picker v-model="form.expectedTime" placeholder="请选择预计入库时间" format="yyyy-MM-dd"
-                              @change="changeExpectedTime">
+                              value-format="timestamp">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="备注">
@@ -988,7 +988,7 @@
       onSubmit: function () {// 提交表单
         if (!this.checkHasOrderNotAdded(this.product)) return;
         let self = this;
-        this.changeExpectedTime(this.form.expectedTime);
+        // this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;
