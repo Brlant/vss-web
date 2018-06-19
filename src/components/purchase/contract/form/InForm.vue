@@ -969,7 +969,7 @@
       onSubmit: function () {// 提交表单
         if (!this.checkHasOrderNotAdded(this.product, '合同')) return;
         let self = this;
-        this.changeExpectedTime(this.form.expectedTime);
+        // this.changeExpectedTime(this.form.expectedTime);
         this.$refs['contractForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;

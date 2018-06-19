@@ -138,8 +138,7 @@
               <el-date-picker
                 v-model="form.demandTime"
                 placeholder="请选择到货需求日期" format="yyyy-MM-dd"
-                :picker-options="pickerOptions0"
-                @change="changeTime">
+                :picker-options="pickerOptions0" value-format="timestamp">
               </el-date-picker>
             </el-form-item>
             <material-part @changeRemark="changeRemark" v-if="form.type === 0"></material-part>
@@ -712,7 +711,7 @@
       },
       onSubmit: function () {// 提交表单
         let self = this;
-        this.changeTime(this.form.demandTime);
+        // this.changeTime(this.form.demandTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             return false;

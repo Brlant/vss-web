@@ -53,7 +53,7 @@
       </el-form-item>
       <el-form-item label="有效时间" prop="expireTime">
         <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择日期"
-                        style="width: 100%;" @change="formatExpireTimeDate">
+                        style="width: 100%;" value-format="timestamp">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="是否生效">
@@ -124,7 +124,7 @@
         if (this.formItem.id) {
           this.filterVaccine(this.formItem.goodsName);
           this.form = this.formItem;// this.formItem;
-          this.formatExpireTimeDate(this.form.expireTime);
+          // this.formatExpireTimeDate(this.form.expireTime);
         } else {
           this.form = {
             goodsId: '',

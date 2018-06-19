@@ -78,7 +78,7 @@
             <el-date-picker
               v-model="currentOrder.expectedTime"
               placeholder="请选择日期" format="yyyy-MM-dd"
-              @change="changeExpectedTime">
+              value-format="timestamp">
             </el-date-picker>
           </el-form-item>
           <el-form-item label="疾控发货地址" prop="orgAddress">
