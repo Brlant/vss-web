@@ -105,17 +105,20 @@
         <el-row  class="list-item"  type="flex"
                  :gutter="15"
         >
+          <el-col :span="8">
+            货主货品名称
+          </el-col>
           <el-col :span="4">
-            有效期
+            生产厂商
           </el-col>
           <el-col :span="4">
             批号
           </el-col>
           <el-col :span="4">
-            生产厂商
+            有效期
           </el-col>
-          <el-col :span="8">
-            货主货品名称
+          <el-col :span="4">
+            数量
           </el-col>
         </el-row>
         <div v-if="!overdueStockList.length" class="no-info">
@@ -124,17 +127,20 @@
         <el-row v-else="" class="list-item danger-row" v-for="(item, index) in overdueStockList" :key="item.id" type="flex"
                 :gutter="15"
         >
+          <el-col :span="8">
+            {{ item.goodsName}}
+          </el-col>
           <el-col :span="4">
-            {{ item.expiryDate | date}}
+            {{ item.factoryName}}
           </el-col>
           <el-col :span="4">
             {{ item.batchNumber}}
           </el-col>
           <el-col :span="4">
-            {{ item.factoryName}}
+            {{ item.expiryDate | date}}
           </el-col>
-          <el-col :span="8">
-            {{ item.goodsName}}
+          <el-col :span="4">
+            {{ item.availableCount}}
           </el-col>
         </el-row>
       </div>
@@ -146,17 +152,20 @@
         <el-row  class="list-item"  type="flex"
                  :gutter="15"
         >
+          <el-col :span="8">
+            货主货品名称
+          </el-col>
           <el-col :span="4">
-            有效期
+            生产厂商
           </el-col>
           <el-col :span="4">
             批号
           </el-col>
           <el-col :span="4">
-            生产厂商
+            有效期
           </el-col>
-          <el-col :span="8">
-            货主货品名称
+          <el-col :span="4">
+            数量
           </el-col>
         </el-row>
         <div v-if="!betweenStockList.length" class="no-info">
@@ -165,17 +174,20 @@
         <el-row v-else="" class="list-item effective-row" v-for="(item, index) in betweenStockList" :key="item.id" type="flex"
                 :gutter="15"
         >
+          <el-col :span="8">
+            {{ item.goodsName}}
+          </el-col>
           <el-col :span="4">
-            {{ item.expiryDate | date}}
+            {{ item.factoryName}}
           </el-col>
           <el-col :span="4">
             {{ item.batchNumber}}
           </el-col>
           <el-col :span="4">
-            {{ item.factoryName}}
+            {{ item.expiryDate | date}}
           </el-col>
-          <el-col :span="8">
-            {{ item.goodsName}}
+          <el-col :span="4">
+            {{ item.availableCount}}
           </el-col>
         </el-row>
       </div>
