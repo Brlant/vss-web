@@ -192,28 +192,29 @@
         </el-row>
       </div>
     </div>
-
-    <!--<el-row type="flex" :gutter="25" class="home-btn-banner">-->
-    <!--<el-col :span="8">-->
-    <!--<el-button class="home-btn-wrap" type="info">-->
-    <!--<i class="el-icon-t-picking"></i>-->
-    <!--快速拣货-->
-    <!--</el-button>-->
-    <!--</el-col>-->
-    <!--<el-col :span="8">-->
-    <!--<el-button class="home-btn-wrap" type="warning">-->
-    <!--<i class="el-icon-t-picking"></i>-->
-    <!--快速拣货-->
-    <!--</el-button>-->
-    <!--</el-col>-->
-    <!--<el-col :span="8">-->
-    <!--<el-button class="home-btn-wrap" type="success">-->
-    <!--<i class="el-icon-t-picking"></i>-->
-    <!--快速拣货-->
-    <!--</el-button>-->
-    <!--</el-col>-->
-    <!--</el-row>-->
+    <div class="card-box">
+      <div class="card-box-header">证照过期</div>
+      <div class="card-box-body">
+        <div v-if="!licenceList.length" class="no-info">
+          暂无证照过期厂商
+        </div>
+        <el-row v-else="" v-for="(item, index) in licenceList" :key="item.id" type="flex" :gutter="15"
+                class="list-item exception-list"
+                :class="formatRowClass(item)">
+          <el-col :span="8">
+            {{ item.orgName}}
+          </el-col>
+          <el-col :span="4">
+            {{ item.name}}
+          </el-col>
+          <el-col :span="4">
+            {{ item.validEndTime | date}}
+          </el-col>
+        </el-row>
+      </div>
+    </div>
   </div>
+
 
 </template>
 <script>
@@ -225,7 +226,8 @@
         orderList: [],
         requirementList: [],
         overdueStockList: [],
-        betweenStockList: []
+        betweenStockList: [],
+        licenceList: []
       };
     },
     mounted() {
@@ -234,6 +236,7 @@
       }
       this.getRequirementList();
       this.getErpStockList();
+      this.getLicenceList();
     },
     computed: {
       user() {
@@ -254,6 +257,14 @@
       }
     },
     methods: {
+      formatRowClass(item) {
+        if (item.expireStatus === '1') {
+          return 'effective-row';
+        }
+        if (item.expireStatus === '2') {
+          return 'danger-row';
+        }
+      },
       getOrderList: function () {
         let param = Object.assign({}, this.filters, {
           pageNo: 1,
@@ -263,6 +274,11 @@
         });
         erpOrder.queryOrderExcepiton(param).then(res => {
           this.orderList = res.data.list;
+        });
+      },
+      getLicenceList() {
+        this.$http.get('order-licence/overdue/licence').then(res => {
+          this.licenceList = res.data.filter(f => f.expireStatus === '2');
         });
       },
       getRequirementList: function () {
@@ -310,6 +326,15 @@
         } else {
           this.$router.push(`purchase/order/two/class/${item.id}`);
         }
+      },
+      goToFactory(item) {
+        let params = {
+          followOrgId: item.orgId
+        };
+        this.$http('/vendor-info', {params}).then(res => {
+          this.relationId = res.data.list[0].id;
+          this.$router.push(`resource/firm/${this.relationId}`);
+        });
       }
     }
   };
