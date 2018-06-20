@@ -100,7 +100,7 @@
       </div>
     </div>
     <div class="card-box">
-      <div class="card-box-header">货品过期提醒</div>
+      <div class="card-box-header">货品效期提醒</div>
       <div class="card-box-body">
         <el-row class="list-item" type="flex"
                 :gutter="15"
@@ -120,14 +120,16 @@
           <el-col :span="4">
             数量
           </el-col>
+          <el-col :span="2">
+            状态
+          </el-col>
         </el-row>
-        <div v-if="!overdueStockList.length" class="no-info">
-          暂无过期货品
+        <div v-if="!stockList.length" class="no-info">
+          暂无效期货品
         </div>
-        <el-row v-else="" class="list-item danger-row" v-for="(item, index) in overdueStockList" :key="item.id"
-                type="flex"
-                :gutter="15"
-        >
+        <el-row v-else=""  v-for="(item, index) in stockList" :key="item.id" type="flex" :gutter="15"
+                class="list-item exception-list"
+                :class="formatStockRowClass(item)">
           <el-col :span="8">
             {{ item.goodsName}}
           </el-col>
@@ -142,57 +144,13 @@
           </el-col>
           <el-col :span="4">
             {{ item.availableCount}}
+          </el-col>
+          <el-col :span="2">
+            {{ item.status}}
           </el-col>
         </el-row>
       </div>
 
-    </div>
-    <div class="card-box">
-      <div class="card-box-header">货品近效期提醒</div>
-      <div class="card-box-body">
-        <el-row class="list-item" type="flex"
-                :gutter="15"
-        >
-          <el-col :span="8">
-            货主货品名称
-          </el-col>
-          <el-col :span="4">
-            生产厂商
-          </el-col>
-          <el-col :span="4">
-            批号
-          </el-col>
-          <el-col :span="4">
-            有效期
-          </el-col>
-          <el-col :span="4">
-            数量
-          </el-col>
-        </el-row>
-        <div v-if="!betweenStockList.length" class="no-info">
-          暂无近效期货品
-        </div>
-        <el-row v-else="" class="list-item effective-row" v-for="(item, index) in betweenStockList" :key="item.id"
-                type="flex"
-                :gutter="15"
-        >
-          <el-col :span="8">
-            {{ item.goodsName}}
-          </el-col>
-          <el-col :span="4">
-            {{ item.factoryName}}
-          </el-col>
-          <el-col :span="4">
-            {{ item.batchNumber}}
-          </el-col>
-          <el-col :span="4">
-            {{ item.expiryDate | date}}
-          </el-col>
-          <el-col :span="4">
-            {{ item.availableCount}}
-          </el-col>
-        </el-row>
-      </div>
     </div>
     <div class="card-box">
       <div class="card-box-header">证照过期</div>
@@ -250,8 +208,7 @@
       return {
         orderList: [],
         requirementList: [],
-        overdueStockList: [],
-        betweenStockList: [],
+        stockList: [],
         licenceList: []
       };
     },
@@ -287,6 +244,14 @@
           return 'effective-row';
         }
         if (item.expireStatus === '2') {
+          return 'danger-row';
+        }
+      },
+      formatStockRowClass(item) {
+        if (item.status === '近效期') {
+          return 'effective-row';
+        }
+        if (item.status === '已过期') {
           return 'danger-row';
         }
       },
@@ -326,10 +291,16 @@
       getErpStockList: function () {
         this.queryErpStockOverdue().then(res => {
           if (res.data[0]) {
-            this.overdueStockList = res.data[0];
+            this.stockList = res.data[0].map((item) => {
+              item.status = '已过期';
+              return item ;
+            });
           }
           if (res.data[1]) {
-            this.betweenStockList = res.data[1];
+            this.stockList = this.stockList.concat(res.data[1].map((item) => {
+              item.status = '近效期';
+              return item ;
+            }));
           }
         });
       },
