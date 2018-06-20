@@ -102,8 +102,8 @@
     <div class="card-box">
       <div class="card-box-header">货品过期提醒</div>
       <div class="card-box-body">
-        <el-row  class="list-item"  type="flex"
-                 :gutter="15"
+        <el-row class="list-item" type="flex"
+                :gutter="15"
         >
           <el-col :span="8">
             货主货品名称
@@ -124,7 +124,8 @@
         <div v-if="!overdueStockList.length" class="no-info">
           暂无过期货品
         </div>
-        <el-row v-else="" class="list-item danger-row" v-for="(item, index) in overdueStockList" :key="item.id" type="flex"
+        <el-row v-else="" class="list-item danger-row" v-for="(item, index) in overdueStockList" :key="item.id"
+                type="flex"
                 :gutter="15"
         >
           <el-col :span="8">
@@ -149,8 +150,8 @@
     <div class="card-box">
       <div class="card-box-header">货品近效期提醒</div>
       <div class="card-box-body">
-        <el-row  class="list-item"  type="flex"
-                 :gutter="15"
+        <el-row class="list-item" type="flex"
+                :gutter="15"
         >
           <el-col :span="8">
             货主货品名称
@@ -171,7 +172,8 @@
         <div v-if="!betweenStockList.length" class="no-info">
           暂无近效期货品
         </div>
-        <el-row v-else="" class="list-item effective-row" v-for="(item, index) in betweenStockList" :key="item.id" type="flex"
+        <el-row v-else="" class="list-item effective-row" v-for="(item, index) in betweenStockList" :key="item.id"
+                type="flex"
                 :gutter="15"
         >
           <el-col :span="8">
@@ -195,6 +197,18 @@
     <div class="card-box">
       <div class="card-box-header">证照过期</div>
       <div class="card-box-body">
+        <el-row class="list-item" type="flex"
+                :gutter="15">
+          <el-col :span="8">
+            供货厂商
+          </el-col>
+          <el-col :span="4">
+            证照类型
+          </el-col>
+          <el-col :span="4">
+            有效期
+          </el-col>
+        </el-row>
         <div v-if="!licenceList.length" class="no-info">
           暂无证照过期厂商
         </div>
@@ -219,8 +233,10 @@
 </template>
 <script>
   import {erpOrder, pullSignal} from '@/resources';
+  import ElRow from 'element-ui/packages/row/src/row';
 
   export default {
+    components: {ElRow},
     data: function () {
       return {
         orderList: [],
