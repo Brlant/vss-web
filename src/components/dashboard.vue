@@ -208,6 +208,9 @@
           <el-col :span="4">
             有效期
           </el-col>
+          <el-col :span="4">
+            状态
+          </el-col>
         </el-row>
         <div v-if="!licenceList.length" class="no-info">
           暂无证照过期厂商
@@ -222,7 +225,13 @@
             {{ item.name}}
           </el-col>
           <el-col :span="4">
-            {{ item.validEndTime | date}}
+          {{ item.validEndTime | date}}
+        </el-col>
+          <el-col :span="4" v-if="item.expireStatus=='2'">
+            已过期
+          </el-col>
+          <el-col :span="4" v-else>
+            近效期
           </el-col>
         </el-row>
       </div>
@@ -294,7 +303,7 @@
       },
       getLicenceList() {
         this.$http.get('order-licence/overdue/licence').then(res => {
-          this.licenceList = res.data.filter(f => f.expireStatus === '2');
+          this.licenceList = res.data;
         });
       },
       getRequirementList: function () {
