@@ -99,6 +99,87 @@
         </el-row>
       </div>
     </div>
+    <div class="card-box">
+      <div class="card-box-header">货品过期提醒</div>
+      <div class="card-box-body">
+        <el-row  class="list-item"  type="flex"
+                 :gutter="15"
+        >
+          <el-col :span="4">
+            有效期
+          </el-col>
+          <el-col :span="4">
+            批号
+          </el-col>
+          <el-col :span="4">
+            生产厂商
+          </el-col>
+          <el-col :span="8">
+            货主货品名称
+          </el-col>
+        </el-row>
+        <div v-if="!overdueStockList.length" class="no-info">
+          暂无过期货品
+        </div>
+        <el-row v-else="" class="list-item danger-row" v-for="(item, index) in overdueStockList" :key="item.id" type="flex"
+                :gutter="15"
+        >
+          <el-col :span="4">
+            {{ item.expiryDate | date}}
+          </el-col>
+          <el-col :span="4">
+            {{ item.batchNumber}}
+          </el-col>
+          <el-col :span="4">
+            {{ item.factoryName}}
+          </el-col>
+          <el-col :span="8">
+            {{ item.goodsName}}
+          </el-col>
+        </el-row>
+      </div>
+
+    </div>
+    <div class="card-box">
+      <div class="card-box-header">货品近效期提醒</div>
+      <div class="card-box-body">
+        <el-row  class="list-item"  type="flex"
+                 :gutter="15"
+        >
+          <el-col :span="4">
+            有效期
+          </el-col>
+          <el-col :span="4">
+            批号
+          </el-col>
+          <el-col :span="4">
+            生产厂商
+          </el-col>
+          <el-col :span="8">
+            货主货品名称
+          </el-col>
+        </el-row>
+        <div v-if="!betweenStockList.length" class="no-info">
+          暂无近效期货品
+        </div>
+        <el-row v-else="" class="list-item effective-row" v-for="(item, index) in betweenStockList" :key="item.id" type="flex"
+                :gutter="15"
+        >
+          <el-col :span="4">
+            {{ item.expiryDate | date}}
+          </el-col>
+          <el-col :span="4">
+            {{ item.batchNumber}}
+          </el-col>
+          <el-col :span="4">
+            {{ item.factoryName}}
+          </el-col>
+          <el-col :span="8">
+            {{ item.goodsName}}
+          </el-col>
+        </el-row>
+      </div>
+    </div>
 
     <!--<el-row type="flex" :gutter="25" class="home-btn-banner">-->
     <!--<el-col :span="8">-->
@@ -124,36 +205,39 @@
 
 </template>
 <script>
-  import { erpOrder, pullSignal } from '@/resources';
+  import {erpOrder, pullSignal} from '@/resources';
 
   export default {
     data: function () {
       return {
         orderList: [],
-        requirementList: []
+        requirementList: [],
+        overdueStockList: [],
+        betweenStockList: []
       };
     },
-    mounted () {
+    mounted() {
       if (this.level !== 3) {
         this.getOrderList();
       }
       this.getRequirementList();
+      this.getErpStockList();
     },
     computed: {
-      user () {
+      user() {
         return this.$store.state.user;
       },
-      level () {
+      level() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      user () {
+      user() {
         if (this.level !== 3) {
           this.getOrderList();
         }
       },
-      level () {
+      level() {
         this.getRequirementList();
       }
     },
@@ -186,6 +270,19 @@
           this.requirementList = res.data.list;
         });
       },
+      getErpStockList: function () {
+        this.queryErpStockOverdue().then(res => {
+          if (res.data[0]) {
+            this.overdueStockList = res.data[0];
+          }
+          if (res.data[1]) {
+            this.betweenStockList = res.data[1];
+          }
+        });
+      },
+      queryErpStockOverdue: function () {
+        return this.$http.get('/erp-stock/overdue');
+      },
       goUrl: function (item) {
         if (!item.id) return;
         if (this.level === 3) {
@@ -194,7 +291,7 @@
           this.$router.push({path: `/sale/pov/${item.id}`});
         }
       },
-      goToOrderUrl (item) {
+      goToOrderUrl(item) {
         if (!item.id) return;
         if (this.level === 1) {
           this.$router.push(`purchase/order/one/class/${item.id}`);
