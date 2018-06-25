@@ -95,6 +95,7 @@
             this.user.orgCode = this.trim(this.user.orgCode);
             this.user.username = this.trim(this.user.username);
             Auth.login(this.user).then(response => {
+              if (!response.data) return;
               let userId = window.localStorage.getItem('userId');
               this.$store.commit('initUser', response.data);
               this.$store.commit('initCode', this.user.orgCode);
