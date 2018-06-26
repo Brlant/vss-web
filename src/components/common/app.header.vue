@@ -236,7 +236,7 @@
               </el-dropdown-menu>
             </el-dropdown>-->
             <span v-show="level !== 1">
-              <el-tag v-show="level" type="info" class="tag-title">{{ filterLevel(level) }}</el-tag>
+              <el-tag v-show="level" type="success" class="tag-title">{{ filterLevel(level) }}</el-tag>
               <span class="org-title">{{orgName}}</span>
             </span>
             <el-dropdown trigger="click">
