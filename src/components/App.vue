@@ -94,8 +94,8 @@
           this.$store.commit('initPermissions', res.data);
           // 添加路由后，跳转相应地址
           this.$nextTick(this.$router.push(url ? url : '/'));
-          this.loading = false;
-        }).then(() => {
+          // this.loading = false;
+        }).catch(() => {
           utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
           this.loading = false;
         });

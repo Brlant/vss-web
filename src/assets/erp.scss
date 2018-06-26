@@ -1282,3 +1282,28 @@ $borderColor: rgba(82, 82, 82, 0.23);
     width: 240px;
   }
 }
+
+
+.table-product-list {
+  font-size: 12px;
+  > tbody > tr > td, > thead > tr > th {
+    padding: 5px;
+  }
+}
+
+
+.table-product {
+  margin: 0 -20px 0 -20px;
+  .table-product-list {
+    font-size: 14px;
+    thead {
+      background: $tableHeaderColor;
+    }
+    > tbody > tr:not(:last-child) {
+      border-bottom: 1px solid #eee;
+      &:hover {
+        background: $dialog-left-bg;
+      }
+    }
+  }
+}
