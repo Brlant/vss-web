@@ -30,12 +30,7 @@
     display: block;
   }
 
-  .table-product-list {
-    font-size: 12px;
-    > tbody > tr > td, > thead > tr > th {
-      padding: 5px;
-    }
-  }
+
 
   .ml15 {
     margin-left: 40px;

@@ -68,89 +68,100 @@
       </div>
 
 
-      <hr class="hr"/>
-
-      <table class="table no-border table-product-list" v-show="currentOrder.detailDtoList">
-        <thead>
-        <tr>
-          <td></td>
-          <td></td>
-          <td>名称</td>
-          <td class="text-center">供货厂商</td>
-          <td>批号</td>
-          <td>生产日期</td>
-          <td>有效期</td>
-          <td class="text-center">数量</td>
-          <!--<td class="text-center">单价</td>-->
-          <!--<td class="text-center">金额</td>-->
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="(item,index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
-          <td width="10">{{index + 1}}</td>
-          <td width="80">
-            <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
-                        effect="light" placement="right">
-              <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
-                   class="product-img">
-              <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
-                   class="product-img">
-            </el-tooltip>
-            <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
-              <img :src="'../../../../static/img/userpic.png'" class="product-img">
-              <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
-            </el-tooltip>
-          </td>
-          <td>
-            <div>
-              <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
-                <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
+      <!--<hr class="hr"/>-->
+      <div class="table-product">
+        <table class="table no-border table-product-list" v-show="currentOrder.detailDtoList">
+          <thead>
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="text-center">货品</td>
+            <td class="text-center">规格</td>
+            <!--<td>批号</td>-->
+            <td class="text-center">生产/有效日期</td>
+            <!--<td>有效期</td>-->
+            <td class="text-center">数量</td>
+            <!--<td class="text-center">单价</td>-->
+            <!--<td class="text-center">金额</td>-->
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item,index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
+            <td width="10">{{index + 1}}</td>
+            <td width="80">
+              <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
+                          effect="light" placement="right">
+                <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
+                     class="product-img">
+                <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
+                     class="product-img">
               </el-tooltip>
-            </div>
-            <div>
-              <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
-                <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
+              <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
+                <img :src="'../../../../static/img/userpic.png'" class="product-img">
+                <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
               </el-tooltip>
-            </div>
-            <div>
-              <el-tooltip class="item" effect="dark" content="货品规格" placement="right">
-                <span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>
-              </el-tooltip>
-            </div>
-          </td>
-          <td class="text-center" width="140px">
-            {{item.salesFirmName}}
-          </td>
-          <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
-          <td>{{ item.productionDate | date }}</td>
-          <td>{{ item.expiryDate | date }}</td>
-          <td width="100px" class="text-center">
-            {{item.amount}}
-            <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
-          </td>
-          <!--<td width="80px" class="text-center">-->
-          <!--<span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>-->
-          <!--<span v-if="!item.unitPrice">-</span>-->
-          <!--</td>-->
-          <!--<td class="text-center">-->
-          <!--<span v-if="item.unitPrice">-->
-          <!--<span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}-->
-          <!--</span>-->
-          <!--<span v-if="!item.unitPrice">-</span>-->
-          <!--</td>-->
-        </tr>
-        <tr class="text-center">
-          <td colspan="8" align="right">
-            <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
-          </td>
-          <!--<td colspan="2" align="right">-->
-          <!--&lt;!&ndash;<span style="font-weight:600;"&ndash;&gt;-->
-          <!--&lt;!&ndash;v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney&ndash;&gt;-->
-          <!--&lt;!&ndash;}}</span>&ndash;&gt;-->
-          <!--</td>-->
-        </tr>
-        </tbody>
-      </table>
+            </td>
+            <td>
+              <div>
+                <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+                  <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
+                </el-tooltip>
+              </div>
+              <div>
+                <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+                  <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
+                </el-tooltip>
+              </div>
+              <!--<div>-->
+                <!--<el-tooltip class="item" effect="dark" content="货品规格" placement="right">-->
+                  <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
+                <!--</el-tooltip>-->
+              <!--</div>-->
+              <div>
+                <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
+                  <span>{{ item.salesFirmName }}</span>
+                </el-tooltip>
+              </div>
+              <div>
+                批号：{{item.batchNumber || '无' }}
+              </div>
+            </td>
+            <td class="text-center" width="70px">
+              <span>{{ item.orgGoodsDto.goodsDto.specifications }}</span>
+            </td>
+            <!--<td width="80px" class="R">{{ item.batchNumber || '无' }}</td>-->
+            <td class="text-center">
+              <div>{{ item.productionDate | date }}</div>
+              <div>{{ item.expiryDate | date }}</div>
+            </td>
+            <td width="100px" class="text-center">
+              {{item.amount}}
+              <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
+            </td>
+            <!--<td width="80px" class="text-center">-->
+            <!--<span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>-->
+            <!--<span v-if="!item.unitPrice">-</span>-->
+            <!--</td>-->
+            <!--<td class="text-center">-->
+            <!--<span v-if="item.unitPrice">-->
+            <!--<span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}-->
+            <!--</span>-->
+            <!--<span v-if="!item.unitPrice">-</span>-->
+            <!--</td>-->
+          </tr>
+          <tr class="text-center">
+            <td colspan="6" align="right">
+              <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
+            </td>
+            <!--<td colspan="2" align="right">-->
+            <!--&lt;!&ndash;<span style="font-weight:600;"&ndash;&gt;-->
+            <!--&lt;!&ndash;v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney&ndash;&gt;-->
+            <!--&lt;!&ndash;}}</span>&ndash;&gt;-->
+            <!--</td>-->
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
