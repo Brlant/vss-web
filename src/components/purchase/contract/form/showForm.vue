@@ -132,7 +132,7 @@
           </div>
         </ul>
       </div>
-      <div class="content-right min-gutter">
+      <div class="content-right min-gutter" v-loading="isLoading">
         <h3>{{currentPartName}}</h3>
 
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
@@ -303,7 +303,8 @@
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         isPrinting: false,
-        purchaseContractId: ''
+        purchaseContractId: '',
+        isLoading: false
       };
     },
     computed: {
@@ -328,8 +329,15 @@
     },
     methods: {
       queryInfo(val) {
-        if (!val) return;
+        // 重置表单
+        this.resetForm();
+        this.isLoading = true;
+        if (!val) {
+          this.isLoading = false;
+          return;
+        }
         PurchaseContract.queryContractDetail(val).then(res => {
+          this.isLoading = false;
           this.form = {
             'purchaseContractNo': res.data.purchaseContractNo,
             'purchaseContractName': res.data.purchaseContractName,
@@ -349,6 +357,29 @@
             f.orgGoodsName = f.name;
           });
         });
+      },
+      resetForm () {
+        this.form = {
+          'purchaseContractNo': '',
+          'purchaseContractName': '',
+          'availabilityStatus': true,
+          'orgId': '',
+          'customerId': '',
+          'bizType': '1-0',
+          'type': this.type,
+          'logisticsProviderId': '',
+          'transportationCondition': '0',
+          'transportationMeansId': '1',
+          'transportationAddress': '',
+          'importedFlag': '',
+          'orgRelation': '',
+          'logisticsCentreId': this.$store.state.logisticsCentreId,
+          'expectedTime': '',
+          'detailDtoList': [],
+          'supplierId': '',
+          'remark': '',
+          'pickUpAddress': ''
+        };
       },
       setIndexValue: function (value) {// 左侧显示页切换
         this.index = value;
