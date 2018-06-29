@@ -241,11 +241,11 @@
                     {{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                   </template>
                 </el-table-column>
-                <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100">
+<!--                <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100">
                   <template slot-scope="scope">
                     {{ scope.row.invoiceId ? '是' : '否' }}
                   </template>
-                </el-table-column>
+                </el-table-column>-->
                 <el-table-column prop="saleMoney" label="状态" width="80" :sortable="true" :filters="filterStatus"
                                  :filter-method="filterStatusMethod">
                   <template slot-scope="scope">
