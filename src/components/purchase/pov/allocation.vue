@@ -16,6 +16,9 @@
   .mb5 {
     margin-bottom: 5px;
   }
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -52,7 +55,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
-               :class="[{'active':currentItemId==item.orgGoodsId}]">
+               :class="[{'active':currentItemId==item.orgGoodsId}]" @click.prevent="showPart(item)">
             <el-row>
               <el-col :span="status === 0 ? 4 : 6" class="R pt">
                 <div>

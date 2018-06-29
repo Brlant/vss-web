@@ -51,11 +51,21 @@
         <h3>分配详情</h3>
         <div class="order-page">
           <div class="container">
+            <el-row class="mb-10">
+              <el-col :span="12">
+                <oms-row label="货品" :span="4">{{currentItem.goodsName}}</oms-row>
+                <oms-row label="生产厂商" :span="4">{{currentItem.productFactory}}</oms-row>
+              </el-col>
+              <el-col :span="12">
+                <oms-row label="规格" :span="4">{{currentItem.specification}}</oms-row>
+                <oms-row label="供货厂商" :span="4">{{currentItem.saleFactory}}</oms-row>
+              </el-col>
+            </el-row>
             <div class="order-list clearfix ">
               <el-row class="order-list-header">
-                <el-col :span="6">接种点</el-col>
-                <el-col :span="6">需求数</el-col>
-                <el-col :span="6">要货时间</el-col>
+                <el-col :span="10">接种点</el-col>
+                <el-col :span="4">需求数</el-col>
+                <el-col :span="4">要货时间</el-col>
                 <el-col :span="6">分配数量</el-col>
               </el-row>
               <el-row v-if="loadingData">
@@ -74,16 +84,16 @@
                 <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
                      :class="[{'active':currentItemId==item.id}]" style="max-height: 500px;overflow-y: auto">
                   <el-row>
-                    <el-col :span="6" class="R">
+                    <el-col :span="10" class="R">
                       <span>{{ item.povName }}</span>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="4">
                       <span>
                         {{ item.applyCount }}
                         <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                     </el-col>
-                    <el-col :span="6">{{ item.applyTime | minute }}</el-col>
+                    <el-col :span="4">{{ item.applyTime | minute }}</el-col>
                     <el-col :span="6">
                       <span v-show="status === 1 ">{{item.actualCount}}</span>
                       <perm label="demand-assignment-update">
@@ -99,7 +109,7 @@
                 </div>
                 <div v-show="status === 0">
                   <el-row
-                    style="height: 64px;background: #f1f1f1;margin-left: -5px;margin-right: -5px;">
+                    style="height: 45px;background: #f1f1f1;margin-left: -5px;margin-right: -5px;margin-top: 10px">
                     <el-col :span="8"></el-col>
                     <el-col :span="4">
                        <span style="font-size: 16px">最小包装数量
@@ -131,6 +141,9 @@
                 </div>
               </div>
             </div>
+            <el-row class="mt-10 text-right">
+                <el-button plain @click="$emit('close')">关闭</el-button>
+            </el-row>
           </div>
         </div>
       </div>
