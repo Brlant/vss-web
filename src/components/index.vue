@@ -114,8 +114,6 @@
       }
     },
     mounted: function () {
-      let parent = this.$parent;
-      if (parent) parent.loading = false;
       utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
       let user = this.$store.state.user;
       this.queryWeChat();
