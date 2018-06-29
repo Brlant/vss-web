@@ -233,7 +233,7 @@
                   {{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100">
+              <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100" v-if="level !== 3">
                 <template slot-scope="scope">
                   {{ scope.row.invoiceId ? '是' : '否' }}
                 </template>
@@ -348,6 +348,9 @@
       },
       user () {
         return this.$store.state.user;
+      },
+      level () {
+        return this.$store.state.orgLevel;
       }
     },
     mounted () {
