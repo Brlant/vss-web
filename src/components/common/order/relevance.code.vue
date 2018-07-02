@@ -91,7 +91,8 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body">
-          <div class="order-list-item order-list-item-bg" v-for="item in totalInfoList" style="margin-left: 0;margin-right: 0">
+          <div class="order-list-item order-list-item-bg" v-for="item in totalInfoList"
+               style="margin-left: 0;margin-right: 0">
             <el-row>
               <el-col :span="8" class="R pt10">
                 <span>{{ item.goodsName }}</span>
@@ -134,13 +135,13 @@
           <el-col :span="5">批号</el-col>
           <el-col :span="3">包装类型</el-col>
         </el-row>
-        <el-row v-if="!currentTraceCodes.length">
+        <el-row v-if="!traceCodes.length">
           <el-col :span="24">
             <div class="empty-type-info mini">暂无信息</div>
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body">
-          <div class="order-list-item order-list-item-bg" v-for="item in currentTraceCodes"
+          <div class="order-list-item order-list-item-bg" v-for="item in traceCodes"
                style="margin-left: 0;margin-right: 0">
             <el-row>
               <el-col :span="8" class="R pt10">
@@ -160,18 +161,18 @@
         </div>
 
       </div>
-      <!--<div class="text-center" v-show="(traceCodes.length || pager.currentPage !== 1) && !loadingData">-->
-      <!--<el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"-->
-      <!--:current-page="pager.currentPage"-->
-      <!--:page-sizes="[10,50,100]" :page-size="10" layout="sizes, prev, pager, next, jumper"-->
-      <!--:total="pager.count">-->
-      <!--</el-pagination>-->
-      <!--</div>-->
+      <div class="text-center" v-show="(traceCodes.length || pager.currentPage !== 1) && !loadingData">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :current-page="pager.currentPage"
+                       :page-sizes="[10,50,100]" :page-size="10" layout="total ,sizes, prev, pager, next, jumper"
+                       :total="pager.count">
+        </el-pagination>
+      </div>
     </div>
   </div>
 </template>
 <script>
-  import {http, OmsAttachment} from '@/resources';
+  import { http } from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -194,6 +195,7 @@
         loadingData: false,
         showSearch: true,
         traceCodes: [],
+        totalTraceCodes: [],
         filters: {
           code: ''
         },
@@ -207,26 +209,42 @@
         totalInfoList: []
       };
     },
-    computed: {
-      currentTraceCodes () {
-        let code = this.filters.code;
-        return this.traceCodes.filter(f => !code || code && f.code.includes(code));
-      }
-    },
     watch: {
       index (val) {
         this.filters.code = '';
         if (val !== 8) return;
         this.getTraceCodes(1);
+      },
+      'filters.code' () {
+        this.filterTraceCodes(1);
       }
     },
     methods: {
-      handleSizeChange(val) {
+      handleSizeChange (val) {
         this.pager.pageSize = val;
-        this.getTraceCodes(1);
+        this.filterTraceCodes(1);
       },
-      handleCurrentChange(val) {
-        this.getTraceCodes(val);
+      handleCurrentChange (val) {
+        this.filterTraceCodes(val);
+      },
+      getCurrentList (pageNo) {
+        this.loadingData = true;
+        this.pager.currentPage = pageNo;
+        const {pager} = this;
+        let start = (pageNo - 1) * pager.pageSize;
+        let end = pageNo * pager.pageSize;
+        let code = this.filters.code;
+        this.traceCodes = this.totalTraceCodes.filter(f => !code || code && f.code.includes(code))
+          .slice(start, end > pager.count ? pager.count : end);
+        setTimeout(() => {
+          this.loadingData = false;
+        }, 100);
+      },
+      filterTraceCodes (pageNo) {
+        let code = this.filters.code;
+        const curTraceCodes = this.totalTraceCodes.filter(f => !code || code && f.code.includes(code));
+        this.pager.count = curTraceCodes.length;
+        this.getCurrentList(pageNo);
       },
       getTraceCodes (pageNo) {
         if (pageNo === 1) {
@@ -241,8 +259,8 @@
         this.loadingData = true;
         // this.currentOrder.orderNo = '201805250001'; // 201805250001
         http.get(`/code/${this.currentOrder.orderNo}/trace-code/list`, {params}).then(res => {
-          this.traceCodes = res.data.list;
-          // this.pager.count = res.data.list.length;
+          this.totalTraceCodes = res.data.list;
+          this.filterTraceCodes(1);
           this.totalInfoList = res.data.statisticsList;
           this.loadingData = false;
         });
