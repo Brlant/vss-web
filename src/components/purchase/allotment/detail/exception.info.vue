@@ -19,6 +19,9 @@
       margin-bottom: 5px;
       padding-left: 5px;
     }
+    .header {
+      overflow: hidden;
+    }
     .date {
       color: #999;
     }
@@ -87,7 +90,8 @@
                   <div class="comment-item" v-for="item in exception.commentList">
                     <div class="header">
                       <span> {{ item.creatorName }}</span>
-                      <span class="date"> {{ item.createDate | time}}</span>
+                      <span v-show="item.creatorOrgName">({{item.creatorOrgName}})</span>
+                      <span class="date pull-right mr-10"> {{ item.createDate | time}}</span>
                     </div>
                     <el-row class="content">
                       {{item.content}}

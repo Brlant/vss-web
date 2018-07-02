@@ -26,7 +26,7 @@
     background: #f9f9f9;
     padding-top: 15rem;
     position: absolute;
-    top: 65px;
+    top: 50px;
     width: 100%;
     z-index: 2000;
     bottom: 0
@@ -93,12 +93,22 @@
           this.$router.addRoutes(ErrorPage);
           this.$store.commit('initPermissions', res.data);
           // 添加路由后，跳转相应地址
-          this.$nextTick(this.$router.push(url ? url : '/'));
-          // this.loading = false;
+          this.$nextTick(() => {
+            this.$router.push(this.getCurrentUrl(url), () => {
+              this.loading = false;
+            }, () => {
+              this.loading = false;
+            });
+          });
         }).catch(() => {
           utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
           this.loading = false;
         });
+      },
+      getCurrentUrl (url) {
+        if (!url) return '/';
+        if (typeof url === 'string') return url;
+        return {path: url.path, query: url.query};
       }
     },
     mounted: function () {
@@ -106,7 +116,7 @@
       window.localStorage.removeItem('noticeError');
       if (!this.$store.state.user || !this.$store.state.user.userId) {
         Auth.checkLogin().then(() => {
-          this.queryPermissions(this.$route.path);
+          this.queryPermissions(this.$route);
           let data = window.localStorage.getItem('user');
           if (!data) {
             Auth.logout().then(() => {

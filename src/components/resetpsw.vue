@@ -4,11 +4,12 @@
 <template>
   <div class="main-box-rap">
     <div class="main-card-box">
-      <img class="bg-logo" src="../assets/img/bg.png">
+      <div class="bg-logo"></div>
       <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part clearfix">
         <div class="m-logo">重置密码</div>
       </div>
+
       <el-card class="box-card ">
         <div style="padding:0 20px">
           <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
