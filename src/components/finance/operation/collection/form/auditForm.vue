@@ -30,12 +30,7 @@
     display: block;
   }
 
-  .table-product-list {
-    font-size: 12px;
-    > tbody > tr > td, > thead > tr > th {
-      padding: 5px;
-    }
-  }
+
 
   .order-product-box {
     position: relative;
@@ -139,10 +134,10 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">收款申请详情</h2>
+        <h2 class="clearfix right-title">{{titleAry[type][0]}}详情</h2>
       </div>
       <div class="content-right min-gutter">
-        <h3>收款申请详情</h3>
+        <h3>{{titleAry[type][0]}}详情</h3>
         <div>
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
@@ -150,7 +145,7 @@
               {{form.no }}
             </el-form-item>
             <el-form-item :label="titleAry[type][3]+ ':'" class="mb0">
-              {{form.orgName }}
+              {{form[type ===1 ? 'ownerName' : 'orgName'] }}
             </el-form-item>
             <el-form-item :label="`${titleAry[type][2]}方式:`" class="mb0">
               <div v-show="form.advancePaymentFlag">
