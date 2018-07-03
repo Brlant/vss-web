@@ -99,7 +99,7 @@
         }
         let state = this.state;
         if (state !== '6' && state !== '7') {
-          menu.push({name: '关联追溯码', key: 8});
+          // menu.push({name: '关联追溯码', key: 8});
           menu.push({name: '复核追溯码', key: 9});
         }
         menu.push({name: '操作日志', key: 2});

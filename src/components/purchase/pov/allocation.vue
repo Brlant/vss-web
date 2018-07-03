@@ -16,6 +16,9 @@
   .mb5 {
     margin-bottom: 5px;
   }
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -52,7 +55,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
-               :class="[{'active':currentItemId==item.orgGoodsId}]">
+               :class="[{'active':currentItemId==item.orgGoodsId}]" @click.prevent="showPart(item)">
             <el-row>
               <el-col :span="status === 0 ? 4 : 6" class="R pt">
                 <div>
@@ -147,7 +150,7 @@
     </div>
 
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <allot-form :currentItem="currentItem" @change="change" :status="status" @close="resetRightBox"></allot-form>
+      <allot-form :currentItem="currentItem" :TotalAllocationList="allocationList" @updateItem="showPart" @change="change" :status="status" @close="resetRightBox"></allot-form>
     </page-right>
     <page-right :show="showOrderForm" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
