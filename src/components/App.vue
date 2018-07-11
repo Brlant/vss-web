@@ -26,7 +26,7 @@
     background: #f9f9f9;
     padding-top: 15rem;
     position: absolute;
-    top: 50px;
+    top: 0;
     width: 100%;
     z-index: 2000;
     bottom: 0

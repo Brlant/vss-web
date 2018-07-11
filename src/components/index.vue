@@ -48,14 +48,19 @@
     align-items: center;
 
   }
+  .app-content-view {
+    padding-right: 15px;
+  }
 </style>
 <template>
   <div class="app-body full-width" :style="'padding-left:'+bodyLeft">
     <app-header :to-route="toRoute" v-if="userType" :level="level"></app-header>
     <div class="main-body">
-      <transition name="scale" mode="out-in" appear>
-        <router-view class="app-content-view"></router-view>
-      </transition>
+      <el-scrollbar :style="{height: '100%'}">
+        <transition name="scale" mode="out-in" appear>
+          <router-view class="app-content-view"></router-view>
+        </transition>
+      </el-scrollbar>
     </div>
     <!--<app-footer></app-footer>-->
     <attachmentDialog></attachmentDialog>
