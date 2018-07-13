@@ -261,8 +261,8 @@
           availabilityStatus: true
         },
         orgType: {
-          0: {'title': '可用', 'num': 0, 'availabilityStatus': true},
-          1: {'title': '停用', 'num': 0, 'availabilityStatus': false}
+          0: {'title': '可用', 'num': '', 'availabilityStatus': true},
+          1: {'title': '停用', 'num': '', 'availabilityStatus': false}
         },
         searchCondition: {
           keyWord: '',
