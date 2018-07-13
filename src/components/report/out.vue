@@ -91,7 +91,7 @@
         if (length > 7) return 150;
       },
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
+        return parseInt(this.$store.state.bodyHeight, 10) - 80 + this.fixedHeight;
       }
     },
     methods: {

@@ -219,7 +219,7 @@
         return [].concat(inType, outType);
       },
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 145 + this.fixedHeight;
+        return parseInt(this.$store.state.bodyHeight, 10) - 155 + this.fixedHeight;
       }
     },
     methods: {
