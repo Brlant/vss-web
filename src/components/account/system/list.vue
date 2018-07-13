@@ -214,9 +214,9 @@
         roleText: '',
         currentItem: {},
         orgType: {
-          0: {'title': '所有', 'num': 0, 'usableStatus': null},
-          1: {'title': '正常', 'num': 0, 'usableStatus': 1},
-          2: {'title': '停用', 'num': 0, 'usableStatus': 0}
+          0: {'title': '所有', 'num': '', 'usableStatus': null},
+          1: {'title': '正常', 'num': '', 'usableStatus': 1},
+          2: {'title': '停用', 'num': '', 'usableStatus': 0}
         },
         filters: {
           usableStatus: 1,
