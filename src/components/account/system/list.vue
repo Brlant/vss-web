@@ -1,4 +1,4 @@
-<style less="scss" scoped="">
+<style lang="scss" scoped="">
 
 
   .margin-left {
