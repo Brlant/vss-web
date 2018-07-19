@@ -881,7 +881,7 @@
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        let url = this.orgLevel === 1 ? '/purchase-agreement/valid/first-vaccine/org-goods' : 'purchase-agreement/valid/org-goods';
+        let url = this.orgLevel === 1 ? '/erp-stock/org-goods' : '/erp-stock/org-goods';
         http.get(url, {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;

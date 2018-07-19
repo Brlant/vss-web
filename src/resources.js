@@ -80,7 +80,7 @@ http.interceptors.response.use(response => {
   }
   if (response.status === 403) {
     Notification.error({
-      message: '非法请求',
+      message: '您没有权限请求信息，请联系管理员。',
       onClose: function () {
         window.localStorage.removeItem(noticeTipKey);
       }
