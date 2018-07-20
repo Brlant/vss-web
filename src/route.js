@@ -458,7 +458,7 @@ export const route = [
           {
             path: '/report/pov/detail',
             component: resolve => require(['./components/report/factoryOrder.vue'], resolve),
-            meta: {moduleId: 'report', title: '出入库明细', perm: 'stock-in-out-form-manager'}
+            meta: {moduleId: 'report', title: '全市出入库明细', perm: 'stock-in-out-form-manager'}
           }
         ]
       }
