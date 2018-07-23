@@ -108,7 +108,7 @@
           <el-col :span="8">
             货主货品名称
           </el-col>
-          <el-col :span="4">
+          <el-col :span="8">
             生产厂商
           </el-col>
           <el-col :span="4">
@@ -117,7 +117,7 @@
           <el-col :span="4">
             有效期
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             数量
           </el-col>
           <el-col :span="2">
@@ -133,7 +133,7 @@
           <el-col :span="8">
             {{ item.goodsName}}
           </el-col>
-          <el-col :span="4">
+          <el-col :span="8">
             {{ item.factoryName}}
           </el-col>
           <el-col :span="4">
@@ -142,7 +142,7 @@
           <el-col :span="4">
             {{ item.expiryDate | date}}
           </el-col>
-          <el-col :span="4">
+          <el-col :span="2">
             {{ item.availableCount}}
           </el-col>
           <el-col :span="2">
