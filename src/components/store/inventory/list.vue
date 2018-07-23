@@ -156,6 +156,7 @@
           endTime: '',
           createdBy: ''
         };
+        this.createTimes = '';
         this.getOrders(1);
       },
       getOrders (pageNo) { // 查询盘点作业列表
