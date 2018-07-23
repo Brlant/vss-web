@@ -100,6 +100,19 @@ http.interceptors.response.use(response => {
 
 Vue.prototype.$http = http;
 
+// pov盘点对象
+export const Inventory = resource('/erp-inventory', http, {
+  queryDetail (id, params) {
+    return http.get(`/erp-inventory/${id}/detail`, {params});
+  },
+  queryStatusNum (id) {
+    return http.get(`/erp-inventory/${id}/detail/count`);
+  },
+  editDetailCount (id, obj) {
+    return http.put(`/erp-inventory/detail/${id}`, obj);
+  }
+});
+
 // CDC收款
 export const CDCReceipt = resource('/cdc-bill', http, {
   audit: (id, obj) => {

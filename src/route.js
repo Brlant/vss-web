@@ -163,6 +163,23 @@ export const route = [
             meta: {moduleId: 'store', title: '库存状态调整', perm: 'cerp-stock-status-adjust'}
           },
           {
+            path: '/store/inventory',
+            component: resolve => require(['./components/common/parent-route.vue'], resolve),
+            meta: {moduleId: 'store', title: '库存盘点', perm: 'erp-stock-inventory-query', subMenuId: 'inventory'},
+            children: [
+              {
+                path: '',
+                component: resolve => require(['./components/store/inventory/list.vue'], resolve),
+                meta: {moduleId: 'store'}
+              },
+              {
+                path: '/store/inventory/detail',
+                component: resolve => require(['./components/store/inventory/details.vue'], resolve),
+                meta: {moduleId: 'store'}
+              }
+            ]
+          },
+          {
             path: '/store/allotment/:id',
             component: resolve => require(['./components/purchase/allotment/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '调拨入库', perm: 'allocating-order-manager'}
@@ -458,7 +475,7 @@ export const route = [
           {
             path: '/report/pov/detail',
             component: resolve => require(['./components/report/factoryOrder.vue'], resolve),
-            meta: {moduleId: 'report', title: '出入库明细', perm: 'stock-in-out-form-manager'}
+            meta: {moduleId: 'report', title: '全市出入库明细', perm: 'stock-in-out-form-manager'}
           }
         ]
       }
