@@ -22,19 +22,19 @@ $card-box-border-color: #eee;
       }
     }
     .list-item {
-      cursor: pointer;
+      cursor: auto;
+      line-height: 20px;
       &:hover {
         background: #f5f5f5
       }
+    }
+    .list-item--pointer {
+      cursor: pointer
     }
   }
 
   .no-info {
     font-size: 12px;
     padding: 10px 20px;
-  }
-  .list-item {
-    cursor: auto;
-    line-height: 20px;
   }
 }
