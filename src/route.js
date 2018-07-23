@@ -5,7 +5,7 @@ export const route = [
     children: [
       {
         path: '',
-        component: resolve => require(['./components/dashboard.vue'], resolve),
+        component: resolve => require(['./components/dashboard/dashboard.vue'], resolve),
         meta: {moduleId: 'home', title: '首页', icon: 'home', perm: 'show'},
         children: []
       },
