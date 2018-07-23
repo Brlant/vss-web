@@ -170,12 +170,12 @@ export const route = [
               {
                 path: '',
                 component: resolve => require(['./components/store/inventory/list.vue'], resolve),
-                meta: {moduleId: 'store'}
+                meta: {moduleId: 'store', title: '库存盘点'}
               },
               {
                 path: '/store/inventory/detail',
                 component: resolve => require(['./components/store/inventory/details.vue'], resolve),
-                meta: {moduleId: 'store'}
+                meta: {moduleId: 'store', title: '库存盘点'}
               }
             ]
           },
