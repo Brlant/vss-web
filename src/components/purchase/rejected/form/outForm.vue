@@ -197,6 +197,10 @@
                 value-format="timestamp">
               </el-date-picker>
             </el-form-item>
+            <el-form-item label="退货原因">
+              <oms-input type="textarea" v-model="form.returnReason" placeholder="请输入退货原因"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
             <el-form-item label="备注">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>

@@ -40,6 +40,9 @@
           <oms-row label="来自销售订单" :span="span" v-show="currentOrder.thirdPartyNumber && currentOrder.transportationMeansId === '4'">
             {{ currentOrder.thirdPartyNumber }}
           </oms-row>
+          <oms-row label="退货原因" :span="span" v-show="currentOrder.returnReason">
+            {{ currentOrder.returnReason }}
+          </oms-row>
         </el-col>
         <el-col :span="12">
           <oms-row label="业务类型">

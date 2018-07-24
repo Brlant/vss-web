@@ -60,6 +60,9 @@
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
+            <oms-row label="退货原因" v-show="currentOrder.returnReason">
+              {{ currentOrder.returnReason }}
+            </oms-row>
           </el-col>
         </el-row>
         <el-row v-show="currentOrder.remark">
