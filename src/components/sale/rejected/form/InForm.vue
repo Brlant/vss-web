@@ -439,6 +439,7 @@
           'detailDtoList': [],
           'supplierId': '',
           'remark': '',
+          returnReason: '',
           transportationAddress: ''
         },
         rules: {
@@ -655,6 +656,7 @@
         this.form.logisticsProviderId = '';
         this.form.logisticsCentreId = '';
         this.form.remark = '';
+        this.form.returnReason = '';
         this.form.detailDtoList = [];
         this.form.pickUpAddress = '';
         this.searchProductList = [];

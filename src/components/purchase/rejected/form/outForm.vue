@@ -445,7 +445,8 @@
           'thirdPartyNumber': '',
           'expectedTime': '',
           'detailDtoList': [],
-          'remark': ''
+          'remark': '',
+          returnReason: ''
         },
         rules: {
           orderNo: [
@@ -629,6 +630,7 @@
         this.form.actualConsignee = '';
         this.form.logisticsProviderId = '';
         this.form.remark = '';
+        this.form.returnReason = '';
         this.form.detailDtoList = [];
         this.form.customerId = '';
         this.form.transportationAddress = '';
