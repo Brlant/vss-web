@@ -1,5 +1,5 @@
 <template>
-  <card-box>
+  <card-box title="证照效期提醒">
     <el-row class="list-item" type="flex"
             :gutter="15">
       <el-col :span="8">
