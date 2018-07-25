@@ -30,8 +30,6 @@
     display: block;
   }
 
-
-
   .order-product-box {
     position: relative;
 
@@ -69,7 +67,6 @@
       }
     }
   }
-
 
   .ml15 {
     margin-left: 40px;
@@ -278,7 +275,7 @@
                   <batch-number-part ref="batchNumberPart" :form="form" :product="product"
                                      :productList="filterProductList"
                                      :editItemProduct="editItemProduct"
-                                     :formCopy="formCopy"
+                                     :formCopy="formCopy" order-type="2-1"
                                      @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"
                   ></batch-number-part>
                   <oms-form-row label-width="160px" :span="4" :label="''">
@@ -306,9 +303,9 @@
                   <th style="width: 300px">货品名称</th>
                   <th>规格</th>
                   <th>批号</th>
-                  <!--<th>货品单价</th>-->
-                  <th>货品数量</th>
-                  <!--<th>金额</th>-->
+                  <th v-show="orgLevel === 2">单价</th>
+                  <th>数量</th>
+                  <th v-show="orgLevel === 2">金额</th>
                   <th>操作</th>
                 </tr>
                 </thead>
@@ -326,18 +323,18 @@
                     <span v-else="">{{ product.specifications }}</span>
                   </td>
                   <td>{{ product.no ? product.no : '无' }}</td>
-                  <!--<td class="ar">-->
-                  <!--<span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>-->
-                  <!--<span v-if="!Number(product.unitPrice)">-</span>-->
-                  <!--</td>-->
+                  <td class="ar" v-show="orgLevel === 2">
+                    <span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>
+                    <span v-if="!Number(product.unitPrice)">-</span>
+                  </td>
                   <td>{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
-                  <!--<td class="ar"><span-->
-                  <!--v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>-->
-                  <!--<span v-if="!Number(product.unitPrice)">-</span>-->
-                  <!--</td>-->
+                  <td class="ar" v-show="orgLevel === 2"><span
+                    v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                    <span v-if="!Number(product.unitPrice)">-</span>
+                  </td>
                   <td class="goods-btn">
                     <div v-show="defaultIndex === 2">
                       <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
@@ -349,14 +346,14 @@
                     </div>
                   </td>
                 </tr>
-                <!--<tr>-->
-                <!--<td colspan="4" align="right">-->
-                <!--<total-count property="amount" :list="form.detailDtoList"></total-count>-->
-                <!--</td>-->
-                <!--<td colspan="2" style="font-weight: 600"><span-->
-                <!--v-show="form.detailDtoList.length && totalMoney">合计:</span><span-->
-                <!--v-show="form.detailDtoList.length  && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>-->
-                <!--</tr>-->
+                <tr v-show="orgLevel === 2">
+                  <td colspan="5" align="right">
+                    <total-count property="amount" :list="form.detailDtoList"></total-count>
+                  </td>
+                  <td colspan="2" style="font-weight: 600"><span
+                    v-show="form.detailDtoList.length && totalMoney">合计:</span><span
+                    v-show="form.detailDtoList.length  && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
+                </tr>
                 </tbody>
               </table>
             </div>
@@ -368,7 +365,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from '@/components/sale/order/form/batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
@@ -770,7 +767,12 @@
               isShowCustomerId: false, // 是否显示POV
               expectedTimeLabel: '预计出库时间'
             };
-            Address.queryAddress(this.form.orgId, {deleteFlag: false, orgId: this.form.orgId, auditedStatus: '1', status: 0}).then(res => {
+            Address.queryAddress(this.form.orgId, {
+              deleteFlag: false,
+              orgId: this.form.orgId,
+              auditedStatus: '1',
+              status: 0
+            }).then(res => {
               this.warehouses = res.data;
             });
             break;
