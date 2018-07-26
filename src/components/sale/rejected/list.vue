@@ -140,15 +140,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="物流商" :span="6">-->
-            <!--<el-select filterable remote placeholder="请输入名称搜索物流商" :remote-method="filterLogistics"-->
-            <!--:clearable="true"-->
-            <!--v-model="searchCondition.logisticsProviderId">-->
-            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>-->
-            <!--</el-select>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <oms-form-row label="货主货品" :span="6">
                 <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货主货品"
@@ -197,8 +190,10 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="2">
+          </el-row>
+          <el-row>
+            <el-col :span="8">
+              <oms-form-row label="" :span="5">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
