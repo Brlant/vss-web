@@ -9,6 +9,13 @@
           </div>
         </div>
         <div class="btn-group-right opera-btn">
+          <perm label="erp-stock-inventory-export">
+             <span @click.stop.prevent="exportExcel">
+              <a href="#" class="btn-circle ml-15">
+                <i class="el-icon-download"></i>
+              </a>导出Excel
+            </span>
+          </perm>
           <span @click.stop.prevent="$router.back()">
             <a href="#" class="btn-circle ml-15">
               <i class="el-icon-back"></i>
@@ -111,6 +118,18 @@
       checkStatus (item, key) {
         this.activeStatus = key;
         this.filters.status = item.status;
+      },
+      exportExcel () {
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
+        this.$http.get(`/erp-inventory/${this.$route.query.id}/detail/export`).then(res => {
+          utils.download(res.data.path, '库存盘点详情');
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
       },
       getOrders (pageNo) { // 查询盘点作业列表
         let id = this.$route.query.id;
