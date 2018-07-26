@@ -12,7 +12,7 @@
           <perm label="erp-stock-inventory-export">
              <span @click.stop.prevent="exportExcel">
               <a href="#" class="btn-circle ml-15">
-                <i class="el-icon-download"></i>
+                <i class="el-icon-t-export"></i>
               </a>导出Excel
             </span>
           </perm>

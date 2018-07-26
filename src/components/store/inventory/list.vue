@@ -71,7 +71,12 @@
                 </perm>
                 <span @click.stop="showDetail(item)">
                        <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-detail"></i></a>查看详情
-                    </span>
+                </span>
+                <perm label="erp-stock-inventory-export">
+                   <span @click.stop.prevent="exportExcel(item)">
+                    <a href="#" class="btn-circle"><i class="el-icon-t-export"></i></a>导出Excel
+                  </span>
+                </perm>
               </el-col>
             </el-row>
           </div>
@@ -89,6 +94,7 @@
 </template>
 <script>
   import { Inventory, OrgUser } from '@/resources';
+  import utils from '@/tools/utils';
 
   export default {
     data () {
@@ -192,6 +198,18 @@
             this.$notify.error({
               message: e.response.data && e.response.data.msg && '盘点作业删除失败'
             });
+          });
+        });
+      },
+      exportExcel (item) {
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
+        this.$http.get(`/erp-inventory/${item.id}/detail/export`).then(res => {
+          utils.download(res.data.path, '库存盘点详情');
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },
