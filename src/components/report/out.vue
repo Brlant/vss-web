@@ -114,7 +114,11 @@
         });
       },
       search: function () {// 搜索
-        if (!this.bizDateAry) return;
+        if (!this.bizDateAry) {
+          return this.$notify.info({
+            message: '请选择业务日期'
+          });
+        }
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);

@@ -30,8 +30,6 @@
     display: block;
   }
 
-
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -75,7 +73,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -190,6 +187,10 @@
                 value-format="timestamp">
               </el-date-picker>
             </el-form-item>
+            <el-form-item label="退货原因">
+              <oms-input type="textarea" v-model="form.returnReason" placeholder="请输入退货原因"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
             <el-form-item label="备注">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
@@ -290,12 +291,12 @@
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 300px">货品名称</th>
+                <th style="width: 260px">货品名称</th>
                 <th>规格</th>
                 <th>批号</th>
-                <!--<th>货品单价</th>-->
-                <th>货品数量</th>
-                <!--<th>金额</th>-->
+                <th v-show="orgLevel === 2">货品单价</th>
+                <th>数量</th>
+                <th v-show="orgLevel === 2">金额</th>
                 <th style="width: 70px">操作</th>
               </tr>
               </thead>
@@ -307,10 +308,7 @@
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
                 </td>
-                <!--<td class="ar">-->
-                <!--<span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>-->
-                <!--<span v-if="!Number(product.unitPrice)">-</span>-->
-                <!--</td>-->
+
                 <td>
                   <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
                   <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
@@ -320,15 +318,19 @@
                   {{ product.no ? product.no : '无' }}
                   <el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>
                 </td>
+                <td class="ar" v-show="orgLevel === 2">
+                  <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
+                  <span v-if="!Number(product.unitPrice)">-</span>
+                </td>
                 <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-
-                <!--<td class="ar"><span-->
-                <!--v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>-->
-                <!--<span v-if="!Number(product.unitPrice)">-</span>-->
-                <!--</td>-->
+                <td class="ar" v-show="orgLevel === 2">
+                  <span
+                    v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
+                  <span v-if="!Number(product.unitPrice)">-</span>
+                </td>
                 <td class="goods-btn">
                   <div v-show="defaultIndex === 2">
                     <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
@@ -340,14 +342,14 @@
                   </div>
                 </td>
               </tr>
-              <!--<tr>-->
-              <!--<td colspan="3" align="right">-->
-              <!--<total-count property="amount" :list="form.detailDtoList"></total-count>-->
-              <!--</td>-->
-              <!--<td colspan="2" style="font-weight: 600"><span-->
-              <!--v-show="form.detailDtoList.length && totalMoney">合计:</span><span-->
-              <!--v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>-->
-              <!--</tr>-->
+              <tr v-show="orgLevel === 2">
+                <td colspan="5" align="right">
+                  <total-count property="amount" :list="form.detailDtoList"></total-count>
+                </td>
+                <td colspan="2" style="font-weight: 600"><span
+                  v-show="form.detailDtoList.length && totalMoney">合计:</span><span
+                  v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
+              </tr>
               </tbody>
             </table>
           </div>
@@ -359,7 +361,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
@@ -435,6 +437,7 @@
           'detailDtoList': [],
           'supplierId': '',
           'remark': '',
+          returnReason: '',
           transportationAddress: ''
         },
         rules: {
@@ -540,6 +543,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     watch: {
@@ -651,6 +657,7 @@
         this.form.logisticsProviderId = '';
         this.form.logisticsCentreId = '';
         this.form.remark = '';
+        this.form.returnReason = '';
         this.form.detailDtoList = [];
         this.form.pickUpAddress = '';
         this.searchProductList = [];

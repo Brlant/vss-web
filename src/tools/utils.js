@@ -282,6 +282,12 @@ export default {
   },
   changeTotalNumber (amount, smallPacking) {
     if (!smallPacking) return;
+    if (amount < 0) {
+      this.$notify.info({
+        message: '货品数量不能小于0, 已帮您调整为0'
+      });
+      return 0;
+    }
     let number = Number(amount);
     let remainder = number % smallPacking;
     let isMultiple = remainder === 0;

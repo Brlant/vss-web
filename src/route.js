@@ -5,7 +5,7 @@ export const route = [
     children: [
       {
         path: '',
-        component: resolve => require(['./components/dashboard.vue'], resolve),
+        component: resolve => require(['./components/dashboard/dashboard.vue'], resolve),
         meta: {moduleId: 'home', title: '首页', icon: 'home', perm: 'show'},
         children: []
       },
@@ -170,12 +170,12 @@ export const route = [
               {
                 path: '',
                 component: resolve => require(['./components/store/inventory/list.vue'], resolve),
-                meta: {moduleId: 'store'}
+                meta: {moduleId: 'store', title: '库存盘点'}
               },
               {
                 path: '/store/inventory/detail',
                 component: resolve => require(['./components/store/inventory/details.vue'], resolve),
-                meta: {moduleId: 'store'}
+                meta: {moduleId: 'store', title: '库存盘点'}
               }
             ]
           },
