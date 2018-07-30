@@ -211,6 +211,12 @@
       },
       validPackage (row) {
         row.actualCount = row.actualCount || 0;
+        if (row.actualCount < 0) {
+          this.$notify.info({
+            message: '分配数量不能小于0，请进行调整'
+          });
+          return;
+        }
         if (row.actualCount % row.smallPackCount !== 0) {
           this.$notify.info({
             message: '货品' + row.goodsName + '，输入的分配数量不是散件倍数, 请调整'
