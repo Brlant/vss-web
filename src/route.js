@@ -1,7 +1,7 @@
 export const route = [
   {
     path: '/',
-    component: () => import('./components/index.vue'),
+    component: require('./components/index.vue'),
     children: [
       {
         path: '',
