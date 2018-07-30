@@ -279,7 +279,7 @@
         params.pageSize = this.pager.pageSize;
         params.goodsList = [this.searchWord.goodsId];
         this.$http({
-          url: '/order-statement/factory',
+          url: '/erp-statement/city/warehouse-detail',
           params,
           paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
@@ -338,7 +338,7 @@
           moduleId: this.$route.path
         });
         this.$http({
-          url: '/order-statement/factory/export',
+          url: '/erp-statement/city/warehouse-detail/export',
           params,
           paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
