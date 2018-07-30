@@ -192,8 +192,13 @@
             </el-col>
           </el-row>
           <el-row>
+            <el-col :span="8" v-show="orgLevel === 1 ">
+              <oms-form-row label="单位区域代码" :span="7">
+                <oms-input type="text" v-model="searchCondition.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
+              </oms-form-row>
+            </el-col>
             <el-col :span="8">
-              <oms-form-row label="" :span="5">
+              <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
@@ -357,6 +362,7 @@
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: '',
+          orgAreaCode: '',
           orgGoodsId: '',
           deleteFlag: false
         },
@@ -371,7 +377,8 @@
           transportationMeansId: '',
           transactOrgId: '',
           orgGoodsId: '',
-          thirdPartyNumber: ''
+          thirdPartyNumber: '',
+          orgAreaCode: ''
         },
         expectedTime: '',
         createTimes: '',
@@ -407,6 +414,9 @@
       },
       bizInTypes: function () {
         return this.$getDict('bizInType');
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     watch: {
@@ -452,7 +462,8 @@
           transportationMeansId: '',
           transactOrgId: '',
           orgGoodsId: '',
-          thirdPartyNumber: ''
+          thirdPartyNumber: '',
+          orgAreaCode: ''
         };
         this.expectedTime = '';
         this.createTimes = '';
