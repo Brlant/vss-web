@@ -2,7 +2,7 @@
   .print-dialog {
     position: fixed;
     top: 90px;
-    left: 180px;
+    left: 200px;
     right: 0;
     bottom: 0;
     z-index: 10000;
@@ -10,7 +10,7 @@
 </style>
 <template>
   <div class="print-dialog" v-if="print.isPrinting"
-       :style="{top: typeof print.top === 'string' ? print.top : '90px',left: typeof print.left === 'string' ? print.left :'180px'}"
+       :style="{top: typeof print.top === 'string' ? print.top : '90px',left: typeof print.left === 'string' ? print.left :'200px'}"
        v-loading="print.isPrinting"
        :element-loading-text="print.text"></div>
 </template>

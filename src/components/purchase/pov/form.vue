@@ -203,6 +203,12 @@
       },
       submit (item) {
         if (typeof item.actualCount !== 'number') return;
+        if (item.actualCount < 0) {
+          this.$notify.info({
+            message: '分配数量不能小于0，请进行调整'
+          });
+          return;
+        }
         if (item.actualCount % this.currentItem.smallPackCount !== 0) {
           this.$notify.info({
             message: '分配数量不是散件倍数，请进行调整'

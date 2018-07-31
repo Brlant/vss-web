@@ -143,7 +143,9 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+          </el-row>
+          <el-row>
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>

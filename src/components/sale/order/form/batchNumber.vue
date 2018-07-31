@@ -3,14 +3,18 @@
   .no-batch-number-info {
     padding: 5px;
   }
+
+  .goods-title {
+    overflow: hidden;
+  }
 </style>
 <template>
   <div v-loading="doing">
     <div v-show="!isHasBatchNumberInfo">
       <div class="product-list-detail" v-for="item in batchNumbers">
-        <h3>批号信息({{item.orgGoodsName}}
-          <el-tag v-show="!item.isMainly">组合</el-tag>
-          )
+        <h3 class="goods-title">
+          <span class="pull-left">批号信息({{item.orgGoodsName}}<el-tag v-show="!item.isMainly">组合</el-tag>)</span>
+          <span class="pull-right" v-if="orgLevel === 2 && orderType">单价: ¥{{product.unitPrice}}</span>
         </h3>
         <table class="table">
           <thead>
@@ -72,7 +76,8 @@
         }
       },
       editItemProduct: {},
-      formCopy: {}
+      formCopy: {},
+      orderType: String
     },
     data () {
       return {
@@ -82,6 +87,11 @@
         isCheckPackage: utils.isCheckPackage,
         doing: false
       };
+    },
+    computed: {
+      orgLevel () {
+        return this.$store.state.orgLevel;
+      }
     },
     watch: {
       'product.orgGoodsId' () {
