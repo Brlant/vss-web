@@ -48,7 +48,7 @@
       <div class="qp-box" v-for="(item,index) in batchNumbers" @click="currentItem = item">
         <h3>
           批号 {{index + 1}} -
-          {{ item.no }}
+          {{ item.batchNumber }}
         </h3>
         <div v-show="isShow(item)">
           <el-row>
@@ -59,12 +59,12 @@
                     药检报告
                   </h2>
                   <div>
-                    <div class="base-pic-list" v-if="item.attachmentMap.drugControlReports.length>0">
+                    <div class="base-pic-list" v-if="item.drugControlReportList.length>0">
                       <div class="base-pic-item"
-                           v-if="Util.getType(item.attachmentMap.drugControlReports[0].attachmentStoragePath)">
-                        <div @click="watchPhoto(item.attachmentMap.drugControlReports[0])">
+                           v-if="Util.getType(item.drugControlReportList[0].attachmentStoragePath)">
+                        <div @click="watchPhoto(item.drugControlReportList[0])">
                           <img
-                            :src="item.attachmentMap.drugControlReports[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                            :src="item.drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -82,11 +82,11 @@
                     批签发
                   </h2>
                   <div>
-                    <div class="base-pic-list" v-if="item.attachmentMap.batchReleases.length>0">
-                      <div class="base-pic-item" v-if="Util.getType(item.attachmentMap.batchReleases[0].attachmentStoragePath)">
-                        <div @click="watchPhoto(item.attachmentMap.batchReleases[0])">
+                    <div class="base-pic-list" v-if="item.batchReleaseList.length>0">
+                      <div class="base-pic-item" v-if="Util.getType(item.batchReleaseList[0].attachmentStoragePath)">
+                        <div @click="watchPhoto(item.batchReleaseList[0])">
                           <img
-                            :src="item.attachmentMap.batchReleases[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                            :src="item.batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -106,11 +106,12 @@
                     进口注册证
                   </h2>
                   <div>
-                    <div class="base-pic-list" v-if="item.attachmentMap.importCertificates.length>0">
-                      <div class="base-pic-item" v-if="Util.getType(item.attachmentMap.importCertificates[0].attachmentStoragePath)">
-                        <div @click="watchPhoto(item.attachmentMap.importCertificates[0])">
+                    <div class="base-pic-list" v-if="item.importCertificateList.length>0">
+                      <div class="base-pic-item"
+                           v-if="Util.getType(item.importCertificateList[0].attachmentStoragePath)">
+                        <div @click="watchPhoto(item.importCertificateList[0])">
                           <img
-                            :src="item.attachmentMap.importCertificates[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                            :src="item.importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -128,11 +129,11 @@
                     通关单
                   </h2>
                   <div>
-                    <div class="base-pic-list" v-if="item.attachmentMap.customsPass.length>0">
-                      <div class="base-pic-item" v-if="Util.getType(item.attachmentMap.customsPass[0].attachmentStoragePath)">
-                        <div @click="watchPhoto(item.attachmentMap.customsPass[0])">
+                    <div class="base-pic-list" v-if="item.customsPassList.length>0">
+                      <div class="base-pic-item" v-if="Util.getType(item.customsPassList[0].attachmentStoragePath)">
+                        <div @click="watchPhoto(item.customsPassList[0])">
                           <img
-                            :src="item.attachmentMap.customsPass[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                            :src="item.customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -144,24 +145,24 @@
               </div>
             </el-col>
           </el-row>
-          <!--<attachment-show label="药检报告" :orderAttachment="item.attachmentMap.drugControlReports"-->
+          <!--<attachment-show label="药检报告" :orderAttachment="item.drugControlReportList"-->
           <!--:currentOrder="currentOrder"-->
           <!--objectType="" :objectId="item.batchNumberId"-->
           <!--:attachmentRight="attachmentRight"-->
           <!--:isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>-->
 
-          <!--<attachment-show label="批签发" :orderAttachment="item.attachmentMap.batchReleases" :currentOrder="currentOrder"-->
+          <!--<attachment-show label="批签发" :orderAttachment="item.batchReleaseList" :currentOrder="currentOrder"-->
           <!--objectType="" :objectId="item.batchNumberId"-->
           <!--:attachmentRight="attachmentRight"-->
           <!--:isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>-->
 
-          <!--<attachment-show label="进口注册证" :orderAttachment="item.attachmentMap.importCertificates"-->
+          <!--<attachment-show label="进口注册证" :orderAttachment="item.importCertificateList"-->
           <!--:currentOrder="currentOrder"-->
           <!--objectType="" :objectId="item.batchNumberId"-->
           <!--:attachmentRight="attachmentRight"-->
           <!--:isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>-->
 
-          <!--<attachment-show label="通关单" :orderAttachment="item.attachmentMap.customsPass" :currentOrder="currentOrder"-->
+          <!--<attachment-show label="通关单" :orderAttachment="item.customsPassList" :currentOrder="currentOrder"-->
           <!--objectType="" :objectId="item.batchNumberId"-->
           <!--:attachmentRight="attachmentRight"-->
           <!--:isShowUpload="false" @refreshAttachment="queryBatchNumbers"></attachment-show>-->
@@ -177,7 +178,7 @@
   import {http} from '@/resources';
   import attachmentShow from './attachmentShow.vue';
   import attachmentLists from './../../../common/attachmentList.vue';
-
+  import Util from '@/tools/utils';
   export default {
     components: {
       attachmentShow, attachmentLists
@@ -226,7 +227,8 @@
           customsPassIds: []
         },
         currentItem: {},
-        isShowFileList: true
+        isShowFileList: true,
+        Util
       };
     },
     watch: {
@@ -245,8 +247,8 @@
         }
       },
       isShow (item) {
-        return item.attachmentMap.drugControlReports.length || item.attachmentMap.batchReleases.length ||
-          item.attachmentMap.importCertificates.length || item.attachmentMap.customsPass.length;
+        return item.drugControlReportList.length || item.batchReleaseList.length ||
+          item.importCertificateList.length || item.customsPassList.length;
       },
       changeDrugControlReportFiles: function (fileList) {// 上传附件时，获取附加id
         let ids = [];
@@ -294,7 +296,7 @@
       },
       queryBatchNumbers () {// 查询
         if (!this.currentOrder.id) return;
-        http.get('/receipt/order/' + this.currentOrder.id).then(res => {
+        http.get('/erp-batch/order/' + this.currentOrder.id).then(res => {
           this.batchNumbers = res.data;
           this.loadingData = false;
         });
