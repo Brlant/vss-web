@@ -73,7 +73,7 @@
           <div class="title">{{item.title}}<span class="status-num">￥{{item.num | formatMoney }}</span></div>
         </div>
       </div>
-      <div class="d-table" style="margin-top: 20px">
+      <div class="d-table-flex" style="margin-top: 20px">
         <div class="d-table-left">
           <h2 class="header">
             <span class="pull-right">
