@@ -253,6 +253,10 @@
     },
     mounted() {
       this.getBatches(1);
+      let showSearch = JSON.parse(window.localStorage.getItem(this.$route.path));
+      if (typeof showSearch === 'boolean') {
+        this.showSearch = showSearch;
+      }
     },
     computed: {
       orgLevel() {
@@ -260,8 +264,8 @@
       },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = height - 160;
-        return height + this.fixedHeight;
+        height = height - 140;
+        return height + this.fixedHeight + (this.showSearch ? 0 : 140);
       }
     },
     watch: {
@@ -270,6 +274,9 @@
           this.getBatches(1);
         },
         deep: true
+      },
+      showSearch (val) {
+        window.localStorage.setItem(this.$route.path, val);
       }
     },
     methods: {
