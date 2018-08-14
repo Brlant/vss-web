@@ -91,7 +91,7 @@
         if (length > 7) return 150;
       },
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
+        return parseInt(this.$store.state.bodyHeight, 10) - 80 + this.fixedHeight;
       }
     },
     methods: {
@@ -114,7 +114,11 @@
         });
       },
       search: function () {// 搜索
-        if (!this.bizDateAry) return;
+        if (!this.bizDateAry) {
+          return this.$notify.info({
+            message: '请选择业务日期'
+          });
+        }
         this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);

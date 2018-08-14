@@ -16,6 +16,10 @@ import store from './store';
 import omsCostTime from './components/common/timeCost.vue';
 import App from './components/App.vue';
 
+import { initViewPort } from '@dtop/dtop-web-common';
+// 初始化视口宽度
+initViewPort(router);
+
 Vue.use(require('vue-moment'), {moment});
 Vue.use(tinyVue);
 Vue.use(Vuex);

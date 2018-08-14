@@ -142,6 +142,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <oms-form-row label="货主货品" :span="6">
                 <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货主货品"
@@ -184,8 +186,16 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="5">
-              <oms-form-row label="" :span="3">
+            <el-col :span="8" v-if="vaccineType !== '1'">
+              <oms-form-row label="" :span="5">
+                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+          <el-row v-if="vaccineType === '1'">
+            <el-col :span="8">
+              <oms-form-row label="" :span="5">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>

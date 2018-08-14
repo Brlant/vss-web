@@ -60,6 +60,9 @@
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
+            <oms-row label="退货原因" v-show="currentOrder.returnReason">
+              {{ currentOrder.returnReason }}
+            </oms-row>
           </el-col>
         </el-row>
         <el-row v-show="currentOrder.remark">
@@ -81,8 +84,8 @@
             <td class="text-center">生产/有效日期</td>
             <!--<td>有效期</td>-->
             <td class="text-center">数量</td>
-            <!--<td class="text-center">单价</td>-->
-            <!--<td class="text-center">金额</td>-->
+            <td class="text-center" v-show="orgLevel === 2">单价</td>
+            <td class="text-center" v-show="orgLevel === 2">金额</td>
           </tr>
           </thead>
           <tbody>
@@ -113,9 +116,9 @@
                 </el-tooltip>
               </div>
               <!--<div>-->
-                <!--<el-tooltip class="item" effect="dark" content="货品规格" placement="right">-->
-                  <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
-                <!--</el-tooltip>-->
+              <!--<el-tooltip class="item" effect="dark" content="货品规格" placement="right">-->
+              <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
+              <!--</el-tooltip>-->
               <!--</div>-->
               <div>
                 <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
@@ -138,26 +141,26 @@
               {{item.amount}}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
-            <!--<td width="80px" class="text-center">-->
-            <!--<span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>-->
-            <!--<span v-if="!item.unitPrice">-</span>-->
-            <!--</td>-->
-            <!--<td class="text-center">-->
-            <!--<span v-if="item.unitPrice">-->
-            <!--<span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}-->
-            <!--</span>-->
-            <!--<span v-if="!item.unitPrice">-</span>-->
-            <!--</td>-->
+            <td width="80px" class="text-center" v-show="orgLevel === 2">
+              <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+              <span v-if="!item.unitPrice">-</span>
+            </td>
+            <td class="text-center" v-show="orgLevel === 2">
+            <span v-if="item.unitPrice">
+            <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+            </span>
+              <span v-if="!item.unitPrice">-</span>
+            </td>
           </tr>
           <tr class="text-center">
             <td colspan="6" align="right">
               <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
             </td>
-            <!--<td colspan="2" align="right">-->
-            <!--&lt;!&ndash;<span style="font-weight:600;"&ndash;&gt;-->
-            <!--&lt;!&ndash;v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney&ndash;&gt;-->
-            <!--&lt;!&ndash;}}</span>&ndash;&gt;-->
-            <!--</td>-->
+            <td colspan="2" align="right" v-show="orgLevel === 2">
+              <span style="font-weight:600;"
+                    v-show="currentOrder.totalAmount">合计金额: ¥  {{ currentOrder.totalAmount | formatMoney
+              }}</span>
+            </td>
           </tr>
           </tbody>
         </table>
@@ -211,6 +214,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     watch: {

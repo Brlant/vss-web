@@ -207,7 +207,7 @@
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 210 + this.fixedHeight;
+        return parseInt(this.$store.state.bodyHeight, 10) - 210 + this.fixedHeight + (this.showSearch ? 0 : 210);
       }
     },
     methods: {

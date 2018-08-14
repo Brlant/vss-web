@@ -5,7 +5,7 @@ export const route = [
     children: [
       {
         path: '',
-        component: resolve => require(['./components/dashboard.vue'], resolve),
+        component: resolve => require(['./components/dashboard/dashboard.vue'], resolve),
         meta: {moduleId: 'home', title: '首页', icon: 'home', perm: 'show'},
         children: []
       },
@@ -161,6 +161,23 @@ export const route = [
             path: '/store/adjust/status',
             component: resolve => require(['./components/store/record/list'], resolve),
             meta: {moduleId: 'store', title: '库存状态调整', perm: 'cerp-stock-status-adjust'}
+          },
+          {
+            path: '/store/inventory',
+            component: resolve => require(['./components/common/parent-route.vue'], resolve),
+            meta: {moduleId: 'store', title: '库存盘点', perm: 'erp-stock-inventory-query', subMenuId: 'inventory'},
+            children: [
+              {
+                path: '',
+                component: resolve => require(['./components/store/inventory/list.vue'], resolve),
+                meta: {moduleId: 'store', title: '库存盘点'}
+              },
+              {
+                path: '/store/inventory/detail',
+                component: resolve => require(['./components/store/inventory/details.vue'], resolve),
+                meta: {moduleId: 'store', title: '库存盘点'}
+              }
+            ]
           },
           {
             path: '/store/allotment/:id',
@@ -335,11 +352,11 @@ export const route = [
             component: resolve => require(['./components/resource/bidder/list.vue'], resolve),
             meta: {moduleId: 'resource', title: '中标疫苗', perm: 'successful-bidder-vaccine'}
           },
-          // {
-          //   path: '/resource/first-vaccin/list',
-          //   component: resolve => require(['./components/resource/vaccin/firstVaccin/list.vue'], resolve),
-          //   meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
-          // },
+          {
+            path: '/resource/first-vaccin/list',
+            component: resolve => require(['./components/resource/vaccin/firstVaccin/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
+          },
           {
             path: '/resource/second-vaccin/list',
             component: resolve => require(['./components/resource/vaccin/secondVaccin/list.vue'], resolve),
@@ -458,7 +475,7 @@ export const route = [
           {
             path: '/report/pov/detail',
             component: resolve => require(['./components/report/factoryOrder.vue'], resolve),
-            meta: {moduleId: 'report', title: '出入库明细', perm: 'stock-in-out-form-manager'}
+            meta: {moduleId: 'report', title: '全市出入库明细', perm: 'stock-in-out-form-manager'}
           }
         ]
       }

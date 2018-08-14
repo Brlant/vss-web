@@ -1,4 +1,4 @@
-<style less="scss" scoped="">
+<style lang="scss" scoped="">
 
 
   .margin-left {
@@ -11,6 +11,7 @@
   }
 
   .role-perm-list {
+
     h2 {
       font-size: 14px;
       margin: 0;
@@ -18,6 +19,7 @@
       line-height: 24px;
       font-weight: normal;
     }
+
     ul {
       margin: 10px 0;
 
@@ -29,6 +31,7 @@
         margin-bottom: 10px;
         font-size: 12px;
       }
+
     }
     .group-list {
 
@@ -40,6 +43,7 @@
     .d-table-col-wrap {
       overflow: auto;
     }
+
   }
 
 </style>
@@ -58,7 +62,7 @@
       </div>
       <div class="container d-table">
         <div class="d-table-left">
-            <h2 class="header">
+          <h2 class="header">
                 <span class="pull-right">
                   <perm label="access-role-add">
                     <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="el-icon-t-plus"></i> </a>
@@ -66,10 +70,10 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="el-icon-t-search"></i> </a>
                 </span>
-              角色管理
-            </h2>
+            角色管理
+          </h2>
           <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
-          <div class="search-left-box" v-show="showTypeSearch">
+            <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!currentItem.title" class="empty-info">
@@ -189,7 +193,7 @@
   </div>
 </template>
 <script>
-  import {Access} from '@/resources';
+  import { Access } from '@/resources';
   import roleForm from './form/form.vue';
   import roleMixin from '@/mixins/roleMixin';
 
@@ -215,9 +219,9 @@
         roleText: '',
         currentItem: {},
         orgType: {
-          0: {'title': '所有', 'num': 0, 'usableStatus': null},
-          1: {'title': '正常', 'num': 0, 'usableStatus': 1},
-          2: {'title': '停用', 'num': 0, 'usableStatus': 0}
+          0: {'title': '所有', 'num': '', 'usableStatus': null},
+          1: {'title': '正常', 'num': '', 'usableStatus': 1},
+          2: {'title': '停用', 'num': '', 'usableStatus': 0}
         },
         filters: {
           usableStatus: 1,
@@ -239,7 +243,7 @@
         height = (height - 20);
         return height;
       },
-      user() {
+      user () {
         return this.$store.state.user;
       },
       checkedMenuList () {
@@ -250,7 +254,7 @@
         return checkedMenuList;
       }
     },
-    mounted() {
+    mounted () {
       this.getPageList(1);
       this.getMenuList();
     },
@@ -261,7 +265,7 @@
         },
         deep: true
       },
-      user() {
+      user () {
         this.getMenuList(false);
       }
     },
@@ -269,7 +273,7 @@
       getMore: function () {
         this.getPageList(this.pager.currentPage + 1, true);
       },
-      scrollLoadingData(event) {
+      scrollLoadingData (event) {
         this.$scrollLoadingData(event);
       },
       getMenuList: function (cache = true) {

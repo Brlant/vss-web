@@ -27,6 +27,7 @@
           <div class="status-bg" :class="['b_color_'+key]"></div>
           <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
+        <goods-switch class="pull-right"></goods-switch>
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header">
@@ -88,6 +89,7 @@
                 </perm>
               </el-col>
             </el-row>
+            <order-goods-info :order-item="item"></order-goods-info>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
@@ -139,8 +141,10 @@
         currentItem: {}
       };
     },
-    mounted () {
-      this.queryOrderList();
+    computed: {
+      isShowGoodsList () {
+        return this.$store.state.isShowGoodsList;
+      }
     },
     watch: {
       filters: {
@@ -148,7 +152,13 @@
           this.queryOrderList(1);
         },
         deep: true
+      },
+      isShowGoodsList () {
+        this.queryOrderList(this.pager.currentPage);
       }
+    },
+    mounted () {
+      this.queryOrderList();
     },
     methods: {
       queryOrderList (pageNo) { // 得到需求分配列表
@@ -156,6 +166,8 @@
         this.pager.currentPage = pageNo;
         this.loadingData = false;
         let params = Object.assign({}, this.filters);
+        // 明细查询
+        params.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         povReceipt.queryWasks(params).then(res => {
           this.orderList = res.data.list;
           this.pager.count = res.data.count;

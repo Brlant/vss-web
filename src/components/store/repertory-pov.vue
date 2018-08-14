@@ -27,8 +27,9 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="货主" :span="5">
-                <el-select multiple filterable remote placeholder="请输入名称搜索货主信息" :remote-method="queryOrg" :clearable="true"
+              <oms-form-row label="接种点" :span="5">
+                <el-select multiple filterable remote placeholder="请输入名称搜索接种点信息" :remote-method="queryOrg"
+                           :clearable="true"
                            @click.native.once="queryOrg('')"
                            v-model="searchWord.orgIdList" popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -118,8 +119,8 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="orgName" label="货主" min-width="160"  :sortable="true"></el-table-column>
-        <el-table-column prop="goodsName" label="货主货品名称"  min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="orgName" label="接种点" min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="接种点货品名称" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="platformGoodsName" label="平台货品名称"  min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
@@ -252,6 +253,10 @@
     },
     mounted() {
       this.getBatches(1);
+      let showSearch = JSON.parse(window.localStorage.getItem(this.$route.path));
+      if (typeof showSearch === 'boolean') {
+        this.showSearch = showSearch;
+      }
     },
     computed: {
       orgLevel() {
@@ -259,8 +264,8 @@
       },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = height - 160;
-        return height + this.fixedHeight;
+        height = height - 140;
+        return height + this.fixedHeight + (this.showSearch ? 0 : 140);
       }
     },
     watch: {
@@ -269,12 +274,21 @@
           this.getBatches(1);
         },
         deep: true
+      },
+      showSearch (val) {
+        window.localStorage.setItem(this.$route.path, val);
       }
     },
     methods: {
       queryOrg: function (query) {// 查询货主
-        BaseInfo.query({keyWord: query}).then(res => {
-          this.orgList = res.data.list;
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '2'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       isValid(item) {

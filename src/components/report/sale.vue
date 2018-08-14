@@ -121,11 +121,11 @@
         </el-form>
       </div>
       <el-table :data="reportChildList" class="header-list" ref="reportTable"
-                :maxHeight="getHeight"  border :summary-method="getSummaries" show-summary
+                :maxHeight="getHeight" border :summary-method="getSummaries" show-summary
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="orderNo" label="货主订单号" :sortable="true" min-width="120"></el-table-column>
         <el-table-column prop="createTime" label="业务日期" :sortable="true" min-width="100"></el-table-column>
-        <el-table-column prop="customerName" label="客户" :sortable="true" ></el-table-column>
+        <el-table-column prop="customerName" label="客户" :sortable="true"></el-table-column>
         <el-table-column prop="orgName" label="保管帐" :sortable="true"></el-table-column>
         <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true" width="90"></el-table-column>
@@ -139,14 +139,15 @@
             <span>￥{{scope.row.totalMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="batchNumber" label="批号" :sortable="true" ></el-table-column>
+        <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
         <el-table-column prop="expirationDate" label="有效期至" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="arriveDate" label="送达日期" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="address" label="送货地址" :sortable="true" min-width="100"></el-table-column>
       </el-table>
       <div class="text-center" v-show="reportChildList.length">
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
           :total="pager.count" :page-sizes="[20,50,100]" :pageSize="pager.pageSize"
           :current-page="pager.currentPage">
         </el-pagination>
@@ -155,7 +156,7 @@
   </div>
 </template>
 <script>
-  import {BaseInfo, Vaccine} from '@/resources';
+  import { BaseInfo, Vaccine } from '@/resources';
   import utils from '@/tools/utils';
   import ReportMixin from '@/mixins/reportMixin';
 
@@ -191,7 +192,7 @@
     },
     computed: {
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 190 + this.fixedHeight;
+        return parseInt(this.$store.state.bodyHeight, 10) - 190 + this.fixedHeight + (this.showSearch ? 0 : 190);
       }
     },
     methods: {
@@ -232,11 +233,11 @@
           this.setFixedHeight();
         });
       },
-      handleSizeChange(val) {
+      handleSizeChange (val) {
         this.pager.pageSize = val;
         this.getCurrentList(1);
       },
-      handleCurrentChange(val) {
+      handleCurrentChange (val) {
         this.getCurrentList(val);
       },
       getCurrentList (pageNo) {

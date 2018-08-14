@@ -26,7 +26,7 @@
     background: #f9f9f9;
     padding-top: 15rem;
     position: absolute;
-    top: 50px;
+    top: 0;
     width: 100%;
     z-index: 2000;
     bottom: 0
@@ -64,7 +64,7 @@
 <script>
   import utils, { deepCopy } from '@/tools/utils';
   import { Auth } from '@/resources';
-  import { ErrorPage, route } from '@/route';
+  import { ErrorPage, route, basicRoutes } from '@/route';
 
   export default {
     data: () => ({
@@ -112,6 +112,7 @@
       }
     },
     mounted: function () {
+      let path = window.location.hash.slice(1);
       this.routesCopy = deepCopy(route);
       window.localStorage.removeItem('noticeError');
       if (!this.$store.state.user || !this.$store.state.user.userId) {
@@ -126,8 +127,14 @@
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
         }).catch(() => {
+          let valid = false;
           Auth.logout().then(() => {
-            this.$router.replace('/login');
+            path && basicRoutes.forEach(i => {
+              if (path === i.path || /code\/(\w+)?$/.test(path)) {
+                valid = true;
+              }
+            });
+            this.$router.replace(valid ? path : '/login');
           });
         });
       }

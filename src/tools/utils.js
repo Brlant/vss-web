@@ -99,6 +99,12 @@ export default {
     0: {'title': '待生成', status: 0, num: ''},
     1: {'title': '已生成', status: 1, num: ''}
   },
+  inventoryType: {
+    0: {'title': '所有', status: null, num: ''},
+    1: {'title': '待操作', status: 0, num: ''},
+    2: {'title': '正常', status: 1, num: ''},
+    3: {'title': '异常', status: 2, num: ''}
+  },
   packageType: ['第一级包装', '第二级包装', '第三级包装', '第四级包装',
     '第五级包装', '第六级包装', '第七级包装', '第八级包装', '第九级包装', '第十级包装'],
   /**
@@ -276,6 +282,12 @@ export default {
   },
   changeTotalNumber (amount, smallPacking) {
     if (!smallPacking) return;
+    if (amount < 0) {
+      this.$notify.info({
+        message: '货品数量不能小于0, 已帮您调整为0'
+      });
+      return 0;
+    }
     let number = Number(amount);
     let remainder = number % smallPacking;
     let isMultiple = remainder === 0;

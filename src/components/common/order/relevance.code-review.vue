@@ -260,7 +260,9 @@
         let params = Object.assign({
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          type: this.type
+          type: this.type,
+          sourceOrgId: this.currentOrder.type === '0' ? this.currentOrder.supplierId : this.currentOrder.orgId,
+          directOrgId: this.currentOrder.type === '0' ? this.currentOrder.orgId : this.currentOrder.customerId
         }, this.filters);
         this.loadingData = true;
         // this.currentOrder.orderNo = '201805250001'; // 201805250001

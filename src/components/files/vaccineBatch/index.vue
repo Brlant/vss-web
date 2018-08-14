@@ -109,7 +109,7 @@
                 <span>{{ item.goodsName }}</span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span>{{ item.goodsSpecifications }}</span>
+                <span>{{ item.specification }}</span>
               </el-col>
               <el-col :span="5" class="pt">
                 <span>{{ item.orgName }}</span>

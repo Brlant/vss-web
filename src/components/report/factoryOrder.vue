@@ -40,7 +40,7 @@
                 <oms-input type="text" v-model="searchWord.orderNo" placeholder="请输入货主订单号"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8" >
+            <el-col :span="8">
               <oms-form-row label="平台货品" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索货品" :remote-method="filterVaccine"
                            :clearable="true"
@@ -54,14 +54,14 @@
                     </div>
                     <div style="overflow: hidden">
                       <!--<span class="select-other-info pull-left"><span-->
-                        <!--v-show="vaccine.code">货品编号</span>  {{vaccine.code}}-->
-                        <!--</span>-->
+                      <!--v-show="vaccine.code">货品编号</span>  {{vaccine.code}}-->
+                      <!--</span>-->
                       <span class="select-other-info pull-left"><span
                         v-show="vaccine.specifications">货品规格:</span>{{vaccine.specifications}}
                         </span>
                       <!--<span class="select-other-info pull-left"><span-->
-                        <!--v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}-->
-                        <!--</span>-->
+                      <!--v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}-->
+                      <!--</span>-->
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
@@ -152,17 +152,17 @@
         </el-table-column>
       </el-table>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-      <el-pagination
-      layout="sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
-      :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
-      :current-page="pager.currentPage">
-      </el-pagination>
+        <el-pagination
+          layout="sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
+          :current-page="pager.currentPage">
+        </el-pagination>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {Goods} from '@/resources';
+  import { Goods } from '@/resources';
   //  import detail from './detail.vue';
   import utils from '@/tools/utils';
   import qs from 'qs';
@@ -219,7 +219,7 @@
         return [].concat(inType, outType);
       },
       getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 145 + this.fixedHeight;
+        return parseInt(this.$store.state.bodyHeight, 10) - 155 + this.fixedHeight + (this.showSearch ? 0 : 155);
       }
     },
     methods: {
@@ -260,7 +260,7 @@
           this.vaccineList = res.data.list;
         });
       },
-      handleSizeChange(val) {
+      handleSizeChange (val) {
         this.pager.pageSize = val;
         this.getBatches(1);
       },
@@ -279,9 +279,9 @@
         params.pageSize = this.pager.pageSize;
         params.goodsList = [this.searchWord.goodsId];
         this.$http({
-          url: '/order-statement/factory',
+          url: '/erp-statement/city/warehouse-detail',
           params,
-          paramsSerializer(params) {
+          paramsSerializer (params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -338,9 +338,9 @@
           moduleId: this.$route.path
         });
         this.$http({
-          url: '/order-statement/factory/export',
+          url: '/erp-statement/city/warehouse-detail/export',
           params,
-          paramsSerializer(params) {
+          paramsSerializer (params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
