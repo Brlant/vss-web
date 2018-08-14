@@ -352,11 +352,11 @@ export const route = [
             component: resolve => require(['./components/resource/bidder/list.vue'], resolve),
             meta: {moduleId: 'resource', title: '中标疫苗', perm: 'successful-bidder-vaccine'}
           },
-          // {
-          //   path: '/resource/first-vaccin/list',
-          //   component: resolve => require(['./components/resource/vaccin/firstVaccin/list.vue'], resolve),
-          //   meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
-          // },
+          {
+            path: '/resource/first-vaccin/list',
+            component: resolve => require(['./components/resource/vaccin/firstVaccin/list.vue'], resolve),
+            meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
+          },
           {
             path: '/resource/second-vaccin/list',
             component: resolve => require(['./components/resource/vaccin/secondVaccin/list.vue'], resolve),

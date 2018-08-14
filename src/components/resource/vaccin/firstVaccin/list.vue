@@ -539,7 +539,7 @@
           deleteFlag: false
 
         }, this.filters);
-        Vaccine.query(params).then(res => {
+        this.$http.get('/vaccine-info/municipal/pager', {params}).then(res => {
           if (params.keyWord !== this.typeTxt) return;
           this.$store.commit('initBottomLoading', false);
 
@@ -553,6 +553,14 @@
           this.data.id = '';
           this.typePager.totalPage = res.data.totalPage;
           this.queryOrgGoods();
+          this.queryStatusNum();
+        });
+      },
+      queryStatusNum: function (params) {
+        this.$http.get('/vaccine-info/municipal/count', {params}).then(res => {
+          let data = res.data;
+          this.vaccineType[0].num = data['normal'];
+          this.vaccineType[1].num = data['disable'];
         });
       },
       queryOrgGoods() {
