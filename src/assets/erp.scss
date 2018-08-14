@@ -180,6 +180,25 @@ $leftWidth: 260px;
   }
 }
 
+.d-table-flex {
+  overflow-x: hidden;
+  width: 100%;
+  display: flex;
+  td a:hover {
+    color: $activeColor;
+  }
+  .d-table-right {
+    flex: 1;
+  }
+  .d-table-warp {
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+  .d-table-right {
+    overflow: hidden;
+  }
+}
+
 .d-table {
   margin: 20px auto 0;
   background: #eeeeee;
@@ -191,56 +210,56 @@ $leftWidth: 260px;
   > div {
     display: table-cell;
     vertical-align: top;
-
-    &.d-table-left {
-      position: relative;
-      width: 280px;
-      min-width: 280px;
-      background: #fff;
-      border: 1px solid #eee;
-      h2 {
-        margin: 0;
-        padding: 10px 20px;
-        border-bottom: 1px solid #eee;
-        font-weight: bold;
-        font-size: 16px;
-        line-height: 40px;
-      }
-    }
-    &.d-table-right {
-      .d-table-col-wrap {
-        padding: 10px 20px;
-      }
-      position: relative;
-      font-size: 12px;
-      border: 6px solid #eee;
-      background: #fff;
-      padding: 0;
-      .table td {
-        padding: 13px;
-
-      }
-      > h2 {
-        font-size: 13px;
-        font-weight: normal;
-
-      }
-      div > h2 {
-        font-size: 13px;
-        font-weight: normal;
-        a {
-          &:hover {
-            color: $activeColor
-          }
-        }
-      }
-
-    }
   }
   td a:hover {
     color: $activeColor;
+  }
+}
+
+.d-table-left {
+  position: relative;
+  width: 280px;
+  min-width: 280px;
+  background: #fff;
+  border: 1px solid #eee;
+  h2 {
+    margin: 0;
+    padding: 10px 20px;
+    border-bottom: 1px solid #eee;
+    font-weight: bold;
+    font-size: 16px;
+    line-height: 40px;
+  }
+}
+
+.d-table-right {
+  .d-table-col-wrap {
+    padding: 10px 20px;
+  }
+  position: relative;
+  font-size: 12px;
+  border: 6px solid #eee;
+  background: #fff;
+  padding: 0;
+  .table td {
+    padding: 13px;
 
   }
+  > h2 {
+    font-size: 13px;
+    font-weight: normal;
+
+  }
+  div > h2 {
+    font-size: 13px;
+    font-weight: normal;
+    a {
+      &:hover {
+        color: $activeColor
+      }
+    }
+  }
+
 }
 
 .list-op {
@@ -588,7 +607,7 @@ $leftWidth: 260px;
   // background: #f1f1f1;
   .advanced-query-form {
     background: #fff;
-    padding: 20px;
+    padding: 20px 20px 10px;
     .el-select {
       display: block;
       position: relative;
@@ -1212,8 +1231,8 @@ $borderColor: rgba(82, 82, 82, 0.23);
   margin: 10px -5px;
   background: #f1f1f1;
   .opera-icon {
-    line-height: 50px;
-    height: 50px;
+    line-height: 30px;
+    height: 30px;
     padding: 0 10px;
     border-bottom: 2px solid #eeeeee;
   }

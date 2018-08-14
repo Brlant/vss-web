@@ -219,7 +219,7 @@
       <div>
         <div class="top-logo">
           <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
-            <span class="logo-span" :style="'color:'+skin.color">疾病预防控制中心疫苗管理系统</span>
+            <span class="logo-span" :style="'color:'+skin.color">疫苗供应链管理系统</span>
           </router-link>
         </div>
         <div class="top-right">

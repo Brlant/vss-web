@@ -81,3 +81,60 @@
     pointer-events: none;
   }
 }
+
+@media screen and (max-width: 800px) {
+  .app-mobile {
+    .main-box-rap {
+      .main-card-box {
+        width: 100%;
+        max-width: 500px;
+        box-shadow: none;
+        .img-logo {
+          display: none;
+        }
+        .bg-logo {
+          background: #f9f9f9;
+          box-shadow: none;
+          height: 60px;
+        }
+
+        .logo-part, .logo-part-s {
+          text-align: center;
+          line-height: 30px;
+          font-size: 20px;
+          top: 0;
+          color: $activeColor;
+          .e-logo {
+            font-size: 16px;
+          }
+        }
+
+        .el-card {
+          box-shadow: none;
+          border: 0;
+          background: #f9f9f9;
+          top: 30%;
+          transform: translateY(-30%, -50%);
+        }
+
+        footer.main-footer {
+          padding: 0;
+          background: #f9f9f9;
+          .container {
+            width: auto;
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+          }
+          .police-part {
+            display: flex;
+            flex-direction: column;
+          }
+          img {
+            vertical-align: middle;
+          }
+        }
+      }
+    }
+  }
+}

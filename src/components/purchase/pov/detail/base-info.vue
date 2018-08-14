@@ -60,9 +60,6 @@
           <oms-row label="接种点仓库">
             {{currentOrder.warehouseAddress}}
           </oms-row>
-          <el-row>
-            <oms-row label="备注">{{ currentOrder.remark }}</oms-row>
-          </el-row>
         </el-col>
         <el-col :span="16">
           <oms-row label="申请人">
@@ -81,6 +78,7 @@
           </oms-row>
         </el-col>
       </el-row>
+      <oms-row label="备注" :span="3" v-show="currentOrder.remark">{{ currentOrder.remark }}</oms-row>
     </div>
     <span style="font-size: 14px">【要货明细】</span>
     <table class="table table-hover" style="margin-top: 10px">
