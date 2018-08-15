@@ -8,13 +8,13 @@
     <div class="container">
       <div class="d-table">
         <div class="d-table-left" v-show="isShowLeft">
-            <h2 class="header">
+          <h2 class="header">
           <span class="pull-right">
               <a href="#" class="btn-circle" @click.prevent="showTypeSearch=!showTypeSearch"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-              疾控列表
-            </h2>
+            疾控列表
+          </h2>
           <div class="d-table-col-wrap" :style="'height:'+(bodyHeight - 60) + 'px'">
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="filterCDCs.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
@@ -38,30 +38,30 @@
           </div>
         </div>
         <div class="d-table-right">
-            <div>
-              <el-row>
-                <el-col :span="10" class="search-input">
-                  <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrgs"
-                             :clearable="true"
-                             v-model="orgId" popper-class="good-selects">
-                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList">
-                      <div style="overflow: hidden">
-                        <span class="pull-left" style="clear: right">{{org.name}}</span>
-                      </div>
-                      <div style="overflow: hidden">
+          <div>
+            <el-row>
+              <el-col :span="10" class="search-input">
+                <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrgs"
+                           :clearable="true"
+                           v-model="orgId" popper-class="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in showOrgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
                         <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
-                      </div>
-                    </el-option>
-                  </el-select>
-                </el-col>
-                <el-col :span="3" style="padding-left: 10px">
-                  <perm label="erp-bind-pov-add">
-                    <el-button type="primary" @click="bindDistrict" :disabled="doing">绑定接种点</el-button>
-                  </perm>
-                </el-col>
-                <el-col :span="11" class="text-right">
+                    </div>
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="3" style="padding-left: 10px">
+                <perm label="erp-bind-pov-add">
+                  <el-button type="primary" @click="bindDistrict" :disabled="doing">绑定接种点</el-button>
+                </perm>
+              </el-col>
+              <el-col :span="11" class="text-right">
                 <span>
                   <span class="btn-search-toggle open" v-show="showSearch">
                     <single-input v-model="filterPOVs.keyWord" placeholder="请输入名称搜索"
@@ -72,59 +72,62 @@
                     <i class="el-icon-t-search"></i>
                   </a>
                 </span>
-                </el-col>
-              </el-row>
-            </div>
-            <div class="order-list clearfix" style="margin-top: 10px">
-              <el-row class="order-list-header">
-                <el-col :span="20">接种点名称</el-col>
-                <el-col :span="4">操作</el-col>
-              </el-row>
-              <el-row v-if="loadingData">
-                <el-col :span="24">
-                  <oms-loading :loading="loadingData"></oms-loading>
-                </el-col>
-              </el-row>
-              <el-row v-else-if="povs.length == 0">
-                <el-col :span="24">
-                  <div class="empty-info">
-                    暂无信息
-                  </div>
-                </el-col>
-              </el-row>
-              <div v-else="" class="order-list-body flex-list-dom">
-                <div class="order-col-wrap" :style="'height:'+ (bodyHeight - 100) + 'px'">
-                  <div class="order-list-item order-list-item-bg" v-for="item in povs" :key="">
-                    <el-row>
-                      <el-col :span="20" class="R pt10">
-                        <div class="minor-part">系统代码{{ item.subordinateCode }}</div>
-                        <div>{{ item.subordinateName }}</div>
-                      </el-col>
-                      <el-col :span="4" class="R pt10">
-                        <perm label="erp-bind-pov-delete">
-                          <a href="#" @click.prevent="deleteItem(item)"><i
-                            class="el-icon-t-delete"></i> 删除</a>
-                        </perm>
-                      </el-col>
-                    </el-row>
-                  </div>
+              </el-col>
+            </el-row>
+          </div>
+          <div class="order-list clearfix" style="margin-top: 10px">
+            <el-row class="order-list-header">
+              <el-col :span="4">接种点系统代码</el-col>
+              <el-col :span="16">接种点名称</el-col>
+              <el-col :span="4">操作</el-col>
+            </el-row>
+            <el-row v-if="loadingData">
+              <el-col :span="24">
+                <oms-loading :loading="loadingData"></oms-loading>
+              </el-col>
+            </el-row>
+            <el-row v-else-if="povs.length == 0">
+              <el-col :span="24">
+                <div class="empty-info">
+                  暂无信息
+                </div>
+              </el-col>
+            </el-row>
+            <div v-else="" class="order-list-body flex-list-dom">
+              <div class="order-col-wrap" :style="'height:'+ (bodyHeight - 100) + 'px'">
+                <div class="order-list-item order-list-item-bg" v-for="item in povs" :key="">
+                  <el-row>
+                    <el-col :span="4" class="R pt10">
+                      <div>{{ item.subordinateCode }}</div>
+                    </el-col>
+                    <el-col :span="16" class="R pt10">
+                      <div>{{ item.subordinateName }}</div>
+                    </el-col>
+                    <el-col :span="4" class="R pt10">
+                      <perm label="erp-bind-pov-delete">
+                        <a href="#" @click.prevent="deleteItem(item)"><i
+                          class="el-icon-t-delete"></i> 删除</a>
+                      </perm>
+                    </el-col>
+                  </el-row>
                 </div>
               </div>
             </div>
-            <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-              <el-pagination
-                layout="prev, pager, next"
-                :total="pager.count" :pageSize="pager.pageSize" @current-change="getPovPage"
-                :current-page="pager.currentPage">
-              </el-pagination>
-            </div>
+          </div>
+          <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+            <el-pagination
+              layout="prev, pager, next"
+              :total="pager.count" :pageSize="pager.pageSize" @current-change="getPovPage"
+              :current-page="pager.currentPage">
+            </el-pagination>
+          </div>
         </div>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import { BaseInfo, cerpAccess, cerpAction } from '@/resources';
+  import {BaseInfo, cerpAccess, cerpAction} from '@/resources';
 
   export default {
     data () {
@@ -237,7 +240,7 @@
           this.filterAvaliableCDCs();
         });
       },
-      getCDCPage() { // 得到疾控列表
+      getCDCPage () { // 得到疾控列表
         let params = Object.assign({
           pageNo: 1,
           pageSize: 20
