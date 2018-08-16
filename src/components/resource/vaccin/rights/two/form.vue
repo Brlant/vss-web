@@ -182,6 +182,9 @@
         loading: false
       };
     },
+    mounted () {
+      this.getOrgsList(1);
+    },
     watch: {
       formItem (val) {
         this.$refs['d-form'].resetFields();
