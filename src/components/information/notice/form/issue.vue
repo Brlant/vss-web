@@ -3,6 +3,7 @@
 
   $leftWidth: 220px;
 
+
   .el-form .el-checkbox__label {
     font-size: 12px;
     padding-left: 5px;
@@ -29,7 +30,6 @@
   .el-form .el-select {
     display: block;
   }
-
 
   .order-product-box {
     position: relative;
@@ -75,11 +75,9 @@
     color: #777
   }
 
-
   .productItem-info {
     float: left;
   }
-
 
   .ar {
     text-align: right;
@@ -104,7 +102,7 @@
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="100px" style="padding-right: 20px">
 
-            <el-form-item label="单位" >
+            <el-form-item label="单位">
               <el-transfer v-loading="loading"
                            v-model="form.povList"
                            :props="{
@@ -121,9 +119,6 @@
               >
               </el-transfer>
             </el-form-item>
-            <el-form-item label="单位" prop="povId" v-if="form.id">
-              <span>{{ formItem.povName }}</span>
-            </el-form-item>
           </el-form>
         </div>
       </div>
@@ -131,17 +126,18 @@
   </div>
 </template>
 <script type="text/jsx">
-  import { http, VaccineRights } from '@/resources';
+  import {http, VaccineRights} from '@/resources';
+
   export default {
     props: {
       formItem: Object,
       currentItem: Object
     },
-    data () {
+    data() {
       return {
         form: {
           povList: [],
-          noticeId:''
+          noticeId: ''
         },
         rules: {
           povList: {required: true, type: 'array', message: '请选择单位', trigger: 'change'},
@@ -150,28 +146,33 @@
         orgList: [],
         unitPrice: '',
         doing: false,
-        loading: false
+        loading: false,
+        selectIdList: [],
+        finalList: [],
       };
     },
     mounted() {
-      this.getOrg();
+      this.getAll();
+
     },
     watch: {
-      formItem (val) {
-          let form = JSON.parse(JSON.stringify(val));
-          this.form = Object.assign(form, {povList: []});
-          this.title = '疫苗授权';
-
-        }
+      formItem(val) {
+        // let form = JSON.parse(JSON.stringify(val));
+        // this.form = Object.assign(form, {povList: []});
+        this.title = '疫苗授权';
       },
+      // povList(val) {
+      //   this.povList = JSON.parse(JSON.stringify(val));
+      // }
+    },
     methods: {
       renderFunc(h, option) {
         return (
-          <span title={option.subordinateName}>{ option.subordinateName }</span>
+          <span title={option.subordinateName}>{option.subordinateName}</span>
         );
       },
 
-      getOrg: function (query) {// 过滤POV
+      getAll: function (query) {
         let params = Object.assign({}, {
           keyWord: query
         });
@@ -179,56 +180,56 @@
         this.$http.get('/erp-org/relationList', params).then(res => {
           this.orgList = res.data;
           this.loading = false;
+          this.selectedList(this.orgList);
+        });
+
+      },
+      selectedList: function (query) {
+        let id = this.formItem.noticeId;
+        console.log(id);
+        this.$http.get('/notice/' + id + '/orgs').then(res => {
+          this.form.povList = res.data;
+          this.loading = false;
+          this.handleData(this.form.povList);
         });
       },
-      filterMethod (query, item) {
+      handleData: function (query) {
+
+        let dataList = [];
+        dataList = Object.assign(this.orgList);
+        query.forEach(function (item) {
+          let number = query.indexOf(item);
+          if (number) {
+            dataList.splice(0, number);
+          }
+        });
+        this.orgList = Object.assign([], dataList);
+      },
+
+      filterMethod(query, item) {
         if (!query) return true;
         return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
           item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
           item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
           item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;
           }
-          console.log(this.form);
-          // if (this.form.noticeId) {
-          //   let obj = {
-          //     'noticeId': this.form.noticeId,
-          //   };
-          //   this.doing = true;
-          //   http.put('/vaccine-authorization', obj).then(() => {
-          //     this.$notify.success({
-          //       message: '修改公告授权成功'
-          //     });
-          //     this.form = {
-          //       noticeId: '',
-          //       povList: [],
-          //     };
-          //     this.doing = false;
-          //     this.$emit('refresh');
-          //   }).catch(error => {
-          //     this.doing = false;
-          //     this.$notify.error({
-          //       message: error.response.data && error.response.data.msg || '修改公告授权失败'
-          //     });
-          //   });
-          // } else {
-            if (!this.form.povList.length) {
-              this.$notify.info({
-                duration: 2000,
-                message: '请先选择单位'
-              });
-              return false;
-            }
-            console.log(this.form);
-            let id = this.form.noticeId;
-            let obj = this.form.povList;
-            this.doing = true;
-           this.$http.put('/notice/issue/'+id,obj).then(() => {
 
+          if (!this.form.povList.length) {
+            this.$notify.info({
+              duration: 2000,
+              message: '请先选择单位'
+            });
+            return false;
+          }
+          let id = this.formItem.noticeId;
+          let obj = this.form.povList;
+            this.doing = true;
+            this.$http.put('/notice/issue/' + id, obj).then(() => {
               this.$notify.success({
                 message: '添加公告授权成功'
               });
@@ -241,7 +242,6 @@
                 message: error.response.data && error.response.data.msg || '添加公告授权失败'
               });
             });
-
         });
       }
     }

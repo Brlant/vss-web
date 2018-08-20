@@ -1,5 +1,12 @@
 <style lang="scss" scoped=''>
 
+
+  .d-table-right {
+    text-algin:center;
+    .content {
+      width: 50%;
+    }
+  }
   .margin-left {
     margin-left: 15px;
   }
@@ -72,7 +79,7 @@
                 <perm label="notice-stop">
                   <a href="#" @click.stop.prevent="forbid()" class="hover-show pull-right"
                      v-show="data.availabilityStatus">
-                    <i class="el-icon-t-forbidden"></i>
+                  <i class="el-icon-t-forbidden"></i>
                   </a>
                 </perm>
                 {{item.noticeTitle}}
@@ -88,19 +95,24 @@
         </div>
       </div>
       <div class="d-table-right">
-        <el-scrollbar tag="div" class="d-table-left_scroll" :style="'height:'+bodyHeight">
-          <div class="scrollbar-content">
-            <div v-if="!data" class="empty-info">
-              暂无信息
-            </div>
-            <div v-else>
-              <h2 class="clearfix">
+        <div v-if="!data" class="empty-info">
+          暂无信息
+        </div>
+        <div v-else>
+          <h2 class="clearfix">
                     <span class="pull-right">
                     <el-button-group>
+
                       <perm label="notice-edit">
                         <el-button @click="edit()">
                           <i class="el-icon-t-edit"></i>
                           编辑
+                        </el-button>
+                      </perm>
+                      <perm label="notice-edit">
+                        <el-button @click="authorize()" v-show="data.availabilityStatus">
+                          <i class="el-icon-t-edit"></i>
+                          授权
                         </el-button>
                       </perm>
                       <perm label="notice-issue">
@@ -111,37 +123,35 @@
                       </perm>
                       </el-button-group>
                     </span>
-              </h2>
-              <div class="page-main-body">
-                <el-row>
-                  <el-col :span="3" class="text-right">
-                    公告标题：
-                  </el-col>
-                  <el-col :span="21">
-                    {{ data.noticeTitle }}
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="3" class="text-right">
-                    公告内容：
-                  </el-col>
-                  <el-col :span="21">
-                    <pre>{{ data.noticeContent }}</pre>
-                  </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="3" class="text-right">
-                    附件：
-                  </el-col>
-                  <el-col :span="21">
-                    <attachment-lists :attachmentIdList="attachmentIdList" :objectId="data.noticeId"
-                                      :objectType="'notice'"></attachment-lists>
-                  </el-col>
-                </el-row>
-              </div>
-            </div>
+          </h2>
+          <div class="content">
+            <el-row>
+              <el-col :span="3" class="text-right">
+                公告标题：
+              </el-col>
+              <el-col :span="21">
+                {{ data.noticeTitle }}
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="3" class="text-right">
+                公告内容：
+              </el-col>
+              <el-col :span="12">
+                <pre width="300">{{data.noticeContent}}</pre>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="3" class="text-right">
+                附件：
+              </el-col>
+              <el-col :span="21">
+                <attachment-lists :attachmentIdList="attachmentIdList" :objectId="data.noticeId"
+                                  :objectType="'notice'"></attachment-lists>
+              </el-col>
+            </el-row>
           </div>
-        </el-scrollbar>
+        </div>
       </div>
       <page-right :show="showRight" @right-close="resetRightBox">
         <notice-form :formItem="form" @change="onSubmit" :action="action" :actionType="showRight"
@@ -265,33 +275,25 @@
       getMore: function () {
         this.getPageList(this.pager.currentPage + 1, true);
       },
-      start: function (query) {
+      start: function() {
+        this.$confirm('确认启用公告"' + this.data.noticeTitle + '"', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+        Notice.start(this.data.noticeId).then(() => {
+          this.getPageList(1);
+          this.$notify.success({
+            duration: 2000,
+            title: '成功',
+            message: '已成功发布公告"' + this.data.noticeTitle + '"'
+          });
+          this.data.availabilityStatus = true;
+        });
+      });
+      },
+      authorize: function (query) {
         this.showAuthorization = true;
-        // let params = Object.assign({}, {
-        //   keyWord: query,
-        //   pageSize: -1
-        // });
-        // this.loading = true;
-        // this.$http.get('/erp-org/relation-list', {params}).then(res => {
-        //   this.orgList = res.data;
-        //   this.loading = false;
-        // });
-        // this.$confirm('确认启用公告"' + this.data.noticeTitle + '"', '', {
-        //   confirmButtonText: '确定',
-        //   cancelButtonText: '取消',
-        //   type: 'warning'
-        // }).then(() => {
-        //
-        // Notice.start(this.data.noticeId).then(() => {
-        //
-        //   // this.getPageList(1);
-        //   // this.$notify.success({
-        //   //   duration: 2000,
-        //   //   title: '成功',
-        //   //   message: '已成功发布公告"' + this.data.noticeTitle + '"'
-        //   // });
-        //   // this.data.availabilityStatus = true;
-        // });
       },
       forbid: function () {
         this.$confirm('确认停用公告"' + this.data.noticeTitle + '"', '', {

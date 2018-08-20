@@ -1,4 +1,5 @@
 <style lang="scss" scoped>
+
   $leftWidth: 180px;
   .content-part {
     .content-left {
@@ -14,6 +15,9 @@
     .page-main-body {
       font-size: 16px;
     }
+    .oms-row {
+      margin-bottom: 10px;
+    }
   }
 
 </style>
@@ -21,51 +25,39 @@
 <template>
   <div>
     <div class="content-part">
-      <div class="content-part">
-        <div class="content-left">
-          <h2 class="clearfix right-title">公告详情</h2>
-        </div>
-        <div class="content-right content-padding">
-          <div class="page-main-body">
-          <el-row>
-            <el-col :span="3" class="text-right">
-              公告标题：
-            </el-col>
-            <el-col :span="21">
-              {{ currentItem.noticeTitle }}
-            </el-col>
-          </el-row>
-            <el-col>
-              <el-col>发布人:{{currentItem.createdBy}}</el-col>
-            </el-col>
-            <el-col>发布时间:{{currentItem.issuedTime|date}}</el-col>
-          <el-row>
-            <el-col :span="3" class="text-right">
-              公告内容：
-            </el-col>
-            <el-col :span="21">
-              <pre>{{ currentItem.noticeContent }}</pre>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="3" class="text-right">
-              附件：
-            </el-col>
-            <el-col :span="21">
-              <attachment-lists :attachmentIdList="currentItem.attachmentIdList" :objectId="currentItem.noticeId"
-                                :objectType="'notice'"></attachment-lists>
-            </el-col>
-          </el-row>
-          </div>
-        </div>
+      <div class="content-left">
+        <h2 class="clearfix right-title">公告详情</h2>
       </div>
-
-
+      <div class="content-right content-padding">
+        <el-row style="margin-bottom: 0">
+          <oms-row label="公告标题" :span="4">{{ currentItem.noticeTitle }}</oms-row>
+        </el-row>
+        <el-row style="margin-bottom:0">
+          <el-col :span="12">
+            <oms-row label="发布人">
+              {{currentItem.createdBy}}
+            </oms-row>
+          </el-col>
+          <el-col :span="12">
+            <oms-row label="发布时间">
+              {{currentItem.issuedTime|date}}
+            </oms-row>
+          </el-col>
+        </el-row>
+        <el-row style="margin-bottom:0">
+          <el-col :span="12">
+           <oms-row>
+             <pre>{{ currentItem.noticeContent }}</pre>
+           </oms-row>
+          </el-col>
+        </el-row>
+      </div>
     </div>
   </div>
 </template>
 <script>
   import attachmentLists from '../../../common/attachmentList.vue';
+
   export default {
     components: {
       attachmentLists
@@ -75,18 +67,12 @@
         type: Object
       }
     },
-    data () {
-      return {
-      };
+    data() {
+      return {};
     },
-    computed: {
-    },
-    watch: {
-
-    },
-    methods: {
-
-      }
+    computed: {},
+    watch: {},
+    methods: {}
   };
 </script>
 
