@@ -166,10 +166,10 @@
         <el-row class="order-list-header">
           <el-col :span="3">{{titleAry[type][2]}}单据编号</el-col>
           <el-col :span="6">{{titleAry[type][3]}}</el-col>
-          <el-col :span="3">{{titleAry[type][2]}}方式</el-col>
-          <el-col :span="4">{{titleAry[type][2]}}金额</el-col>
-          <el-col :span="5">{{titleAry[type][2]}}说明</el-col>
-          <el-col :span="3">操作</el-col>
+          <el-col :span="2">{{titleAry[type][2]}}方式</el-col>
+          <el-col :span="2">{{titleAry[type][2]}}金额</el-col>
+          <el-col :span="6">{{titleAry[type][2]}}说明</el-col>
+          <el-col :span="5">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -199,29 +199,34 @@
                 </div>
                 <div>{{item[type ===1 ? 'ownerName' : 'orgName'] }}</div>
               </el-col>
-              <el-col :span="3">
+              <el-col :span="2">
                 <div v-show="item.advancePaymentFlag">
                   <span>预{{titleAry[type][2]}}</span><span v-show="item.payType">、<dict :dict-group="'PaymentMethod'"
-                                                                                          :dict-key="item.payType"></dict></span>
+                                                                                        :dict-key="item.payType"></dict></span>
                 </div>
                 <div v-show="!item.advancePaymentFlag">
                   <dict :dict-group="'PaymentMethod'" :dict-key="item.payType"></dict>
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="2">
                 <div>
                   <span v-if="item.amount">¥</span> {{item.amount | formatMoney}}
                 </div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="6">
                 <div>
                   {{item.explain}}
                 </div>
               </el-col>
-              <el-col :span="3">
-                <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)">
-                  生成{{titleAry[type][2]}}单
-                </el-button>
+              <el-col :span="5">
+                <el-row>
+                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)">
+                    生成{{titleAry[type][2]}}Word
+                  </el-button>
+                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportExcelFile(item.id)">
+                    生成{{titleAry[type][2]}}Excel
+                  </el-button>
+                </el-row>
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -252,7 +257,7 @@
   import utils from '@/tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import { CDCReceipt, POVPayment } from '@/resources';
+  import {CDCReceipt, POVPayment} from '@/resources';
   import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
@@ -340,6 +345,31 @@
       }
     },
     methods: {
+      exportExcelFile: function (id) {
+        if (!id) {
+          return;
+        }
+        let params = Object.assign({}, this.filterRights);
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: '/collection/operation'
+        });
+        this.$http.get('/bill-receivable/' + id + '/export/excel', {params}).then(res => {
+          utils.download(res.data.path);
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/collection/operation'
+          });
+        }).catch(error => {
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/collection/operation'
+          });
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
       exportFile: function (id) {
         if (!id) {
           return;
