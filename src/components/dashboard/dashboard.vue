@@ -17,6 +17,7 @@
 
 <template>
   <div class="container">
+    <notice/>
     <!--异常的采购订单信息-->
     <purchase-order-exception/>
 
@@ -35,9 +36,10 @@
   import DevDemand from './dev-demand';
   import StockOverdueTip from './stock-overdue-tip';
   import licence from './licence';
+  import notice from './notice/notice';
 
   export default {
-    components: {PurchaseOrderException, DevDemand, StockOverdueTip, licence}
+    components: {PurchaseOrderException, DevDemand, StockOverdueTip, licence, notice}
   };
 
 </script>

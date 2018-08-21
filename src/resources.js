@@ -1018,6 +1018,23 @@ export const BaseInfo = resource('/orgs', http, {
     return http.delete('/bizLegislation/' + id);
   }
 });
+export const Notice = resource('notice', http, {
+  queryPager(params) {
+    return http.get('/notice', {params});
+  },
+  edit(id, obj) {
+    return http.put('/notice/' + id, obj);
+  },
+  start(id) {
+    return http.put('/notice/issue/' + id);
+  },
+  queryStateNum(params) {
+    return http.get('/notice/count', {params});
+  },
+  forbid(id) {
+    return http.put('notice/disable/' + id);
+  }
+});
 
 /**
  * create vue-resource's resource like object

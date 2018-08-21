@@ -229,27 +229,35 @@ export const route = [
           {
             path: '/collection/operation',
             component: resolve => require(['./components/finance/operation/collection/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: 'CDC收款作业', perm: 'cdc-payment-receivable', type: 2,
+            meta: {
+              moduleId: 'finance', title: 'CDC收款作业', perm: 'cdc-payment-receivable', type: 2,
               perms: ['cdc-payment-receivable-add', 'cdc-payment-receivable-audit',
-                'cdc-payment-receivable-review', 'cdc-payment-receivable-cancel']}
+                'cdc-payment-receivable-review', 'cdc-payment-receivable-cancel']
+            }
           },
           {
             path: '/collection/pov',
             component: resolve => require(['./components/finance/operation/collection/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: 'POV付款作业', perm: 'pov-payment-payable', type: 1,
-              perms: ['pov-payment-payable-add', 'pov-payment-payable-audit', 'pov-payment-payable-cancel']}
+            meta: {
+              moduleId: 'finance', title: 'POV付款作业', perm: 'pov-payment-payable', type: 1,
+              perms: ['pov-payment-payable-add', 'pov-payment-payable-audit', 'pov-payment-payable-cancel']
+            }
           },
           {
             path: '/payment/pending',
             component: resolve => require(['./components/finance/operation/advance/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '预付款作业', perm: 'advance-payable', type: 1,
-              perms: ['advance-payable-add', 'advance-payable-audit', 'advance-payable-cancel']}
+            meta: {
+              moduleId: 'finance', title: '预付款作业', perm: 'advance-payable', type: 1,
+              perms: ['advance-payable-add', 'advance-payable-audit', 'advance-payable-cancel']
+            }
           },
           {
             path: '/collection/pending',
             component: resolve => require(['./components/finance/operation/advance/list.vue'], resolve),
-            meta: {moduleId: 'finance', title: '预收款作业', perm: 'advance-receivable', type: 2,
-              perms: ['advance-receivable-add', 'advance-receivable-audit', 'advance-receivable-review', 'advance-receivable-cancel']}
+            meta: {
+              moduleId: 'finance', title: '预收款作业', perm: 'advance-receivable', type: 2,
+              perms: ['advance-receivable-add', 'advance-receivable-audit', 'advance-receivable-review', 'advance-receivable-cancel']
+            }
           },
           {
             path: '/finance/org',
@@ -476,6 +484,18 @@ export const route = [
             path: '/report/pov/detail',
             component: resolve => require(['./components/report/factoryOrder.vue'], resolve),
             meta: {moduleId: 'report', title: '全市出入库明细', perm: 'stock-in-out-form-manager'}
+          }
+        ]
+      },
+      {
+        path: '/information',
+        component: resolve => require(['./components/common/parent-route.vue'], resolve),
+        meta: {moduleId: 'information', title: '信息发布', icon: 'report', perm: 'show'},
+        children: [
+          {
+            path: '/notice',
+            component: () => import('./components/information/notice/list.vue'),
+            meta: {moduleId: 'information', title: '信息发布', perm: 'show'}
           }
         ]
       }
