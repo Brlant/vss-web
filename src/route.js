@@ -453,12 +453,12 @@ export const route = [
           {
             path: '/drug-administration/report/in',
             component: resolve => require(['./components/report/drug-administration-out.vue'], resolve),
-            meta: {moduleId: 'report', title: '市药监购进数据导出', perm: 'shipment-form-manager', type: '0'}
+            meta: {moduleId: 'report', title: '市药监购进数据导出', perm: 'drug-administration-in-data-export', type: '0'}
           },
           {
             path: '/drug-administration/report/out',
             component: resolve => require(['./components/report/drug-administration-out.vue'], resolve),
-            meta: {moduleId: 'report', title: '市药监销售数据导出', perm: 'shipment-form-manager', type: '1'}
+            meta: {moduleId: 'report', title: '市药监销售数据导出', perm: 'drug-administration-out-data-export', type: '1'}
           },
           {
             path: '/report/repertory',
