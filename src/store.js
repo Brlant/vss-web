@@ -30,7 +30,7 @@ if (bodyLeft) {
   state.bodySize.left = bodyLeft;
 }
 const mutations = {
-  initUser(state, data) {
+  initUser (state, data) {
     try {
       if (data && data.userId) {
         window.localStorage.setItem('user', JSON.stringify(data));
@@ -40,7 +40,7 @@ const mutations = {
 
     }
   },
-  initWeChatInfo(state, data) {
+  initWeChatInfo (state, data) {
     try {
       if (typeof data === 'object') {
         window.localStorage.setItem('weChatInfo', JSON.stringify(data));
@@ -51,7 +51,7 @@ const mutations = {
     }
 
   },
-  initCode(state, orgCode) {
+  initCode (state, orgCode) {
     try {
       if (orgCode) {
         window.localStorage.setItem('orgCode', JSON.stringify(orgCode));
@@ -61,17 +61,18 @@ const mutations = {
 
     }
   },
-  initDict(state, data) {
+  initDict (state, data) {
     state.dict = data;
   },
-  initPermissions(state, data) {
+  initPermissions (state, data) {
     state.permissions = data;
   },
-  initPermList(state, data) {
+  initPermList (state, data) {
     state.allMenuList = data;
   },
-  changeAttachment(state, data) {
+  changeAttachment (state, data) {
     let currentId;
+    console.log(data);
     if (typeof data === 'object') {
       currentId = data.currentId;
       state.attachmentDialog.attachmentList = data.attachmentList;
@@ -85,30 +86,30 @@ const mutations = {
       state.attachmentDialog.attachmentId = currentId;
     }
   },
-  openAttachmentDialog(state) {
+  openAttachmentDialog (state) {
     state.attachmentDialog.open = true;
   },
-  closeAttachmentDialog(state) {
+  closeAttachmentDialog (state) {
     state.attachmentDialog.open = false;
   },
-  setBodySize(state, data) {
+  setBodySize (state, data) {
     Object.assign(state.bodySize, data);
   },
-  changeBodyLeft(state, isSmall) {
+  changeBodyLeft (state, isSmall) {
     state.bodySize.left = isSmall ? '64px' : '200px';
     window.localStorage.setItem('bodyLeft', state.bodySize.left);
   },
-  initOrgName(state, data) {
+  initOrgName (state, data) {
     state.orgName = data;
   },
-  setBodyHeight(state, data) {
+  setBodyHeight (state, data) {
     state.bodyHeight = data.height;
     state.windowSize = data.window;
   },
-  initOrgLevel(state, data) {
+  initOrgLevel (state, data) {
     state.orgLevel = data;
   },
-  initPrint(state, data) {
+  initPrint (state, data) {
     data.text = data.text ? data.text : '拼命导出中';
     let isHas = false;
     let index = -1;
@@ -124,13 +125,13 @@ const mutations = {
       state.prints.push(data);
     }
   },
-  initBottomLoading(state, data) {
+  initBottomLoading (state, data) {
     state.bottomLoading = data;
   },
-  initIsShowGoodsList(state, data) {
+  initIsShowGoodsList (state, data) {
     state.isShowGoodsList = data;
   },
-  initMenuParentIds(state, data) {
+  initMenuParentIds (state, data) {
     state.menuParentIds = data;
   },
   initRequestingDictAry (state, data) {
