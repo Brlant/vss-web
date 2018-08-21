@@ -215,18 +215,18 @@
         let itemTemp = JSON.parse(JSON.stringify(item));
         itemTemp.status = '2';
         User.stopUser(itemTemp.id).then(() => {
-          item.status = '2';
           this.$notify.success({
             title: '成功',
             message: '已经停用用户"' + itemTemp.name + '"'
           });
+          this.getPageList(1);
         });
       },
       useNormal: function (item) {
         let itemTemp = JSON.parse(JSON.stringify(item));
         itemTemp.status = '0';
         User.enableUser(itemTemp.id).then(() => {
-          item.status = '0';
+          this.getPageList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功启用用户"' + item.name + '"'

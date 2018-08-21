@@ -19,7 +19,7 @@
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-          <h2 class="header" style="overflow: hidden">
+        <h2 class="header" style="overflow: hidden">
           <span class="pull-right">
             <perm label="erp-system-account-export">
             <a href="#" class="btn-circle" @click.prevent="exportFile"
@@ -29,10 +29,10 @@
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-            {{ type === 1 ? '系统账号管理' : '账号分配' }}
-          </h2>
+          {{ type === 1 ? '系统账号管理' : '账号分配' }}
+        </h2>
         <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60) + 'px'" @scroll="scrollLoadingData">
-        <div class="search-left-box" v-show="showTypeSearch">
+          <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
           <div v-if="!currentItem.id" class="empty-info">
@@ -61,7 +61,12 @@
       </div>
       <div class="d-table-right">
         <div class="d-table-col-wrap" :style="'height:'+bodyHeight  + 'px'">
-         <span class="pull-right" style="margin-top: 8px">
+          <span class="f-12">用户状态:</span>
+          <el-radio-group v-model="filters.status" size="small">
+            <el-radio-button label="1">正常</el-radio-button>
+            <el-radio-button label="2">停用</el-radio-button>
+          </el-radio-group>
+          <span class="pull-right" style="margin-top: 8px">
            <span class="btn-search-toggle open" v-show="showSearch">
               <single-input v-model="keyTxt" placeholder="请输入名称搜索" :showFocus="showSearch"></single-input>
               <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
@@ -172,7 +177,8 @@
         typeTxt: '',
         keyTxt: '',
         filters: {
-          orgId: ''
+          orgId: '',
+          status: '1'
         },
         form: {list: [{roleId: ''}]},
         formTitle: '新增',
@@ -211,7 +217,7 @@
         return this.$route.meta.type;
       }
     },
-    mounted() {
+    mounted () {
       this.getOrgsList(1);
     },
     watch: {
@@ -313,7 +319,8 @@
         let data = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          keyWord: this.keyTxt
+          keyWord: this.keyTxt,
+          status: this.filters.status
         });
         this.loading1 = true;
         OrgUser.queryUsers(this.filters.orgId, data).then(res => {
@@ -345,7 +352,7 @@
         let itemTemp = JSON.parse(JSON.stringify(item));
         itemTemp.status = '2';
         User.stopUser(itemTemp.id).then(() => {
-          item.status = '2';
+          this.getPageList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功停用货主用户"' + itemTemp.name + '"'
@@ -356,7 +363,7 @@
         let itemTemp = JSON.parse(JSON.stringify(item));
         itemTemp.status = '0';
         User.enableUser(itemTemp.id).then(() => {
-          item.status = '0';
+          this.getPageList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功启用货主用户"' + item.name + '"'
