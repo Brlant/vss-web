@@ -16,6 +16,7 @@
     <div class="container d-table">
       <div class="d-table-right">
         <div class="d-table-col-wrap">
+          <span class="f-12">用户状态:</span>
           <el-radio-group v-model="filters.status" size="small">
             <el-radio-button label="1">正常</el-radio-button>
             <el-radio-button label="2">停用</el-radio-button>
