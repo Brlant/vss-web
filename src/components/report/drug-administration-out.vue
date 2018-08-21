@@ -105,7 +105,7 @@
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: moduleId});
         this.$http.get(url, {params}).then(res => {
-          utils.download.call(this, res.data.path, fileName);
+          utils.downloadXml.call(this, res.data.path, fileName);
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: moduleId});
         }).catch(error => {

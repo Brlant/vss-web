@@ -335,6 +335,18 @@ export default {
     return count > 0;
   },
   download (src, fileName) {
+    let $a = document.createElement('a');
+    $a.setAttribute('href', src);
+    $a.setAttribute('download', fileName);
+    let fileLink = document.createElement('span');
+    fileLink.setAttribute('style', 'cursor: pointer; -webkit-tap-highlight-color: transparent');
+    $a.appendChild(fileLink);
+    let body = document.getElementsByTagName('body')[0];
+    body.appendChild($a);
+    fileLink.click();
+    body.removeChild($a);
+  },
+  downloadXml (src, fileName) {
     this.$http({
       url: src,
       timeout: 1000000,
