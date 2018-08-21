@@ -1,5 +1,5 @@
 <template>
-  <card-box title="公告">
+  <card-box title="公告" v-if="isShow">
     <div v-if="!noticeList.length" class="no-info">
       暂无公告
     </div>
@@ -30,11 +30,21 @@
         showDetailPart: false
       };
     },
-    mounted() {
+    computed: {
+      isShow () {
+        return this.$store.state.permissions.indexOf('notice-watch') !== -1;
+      }
+    },
+    watch: {
+      isShow (val) {
+        if (val) this.getNoticeList();
+      }
+    },
+    mounted () {
       this.getNoticeList();
     },
     methods: {
-      formatRowClass(item) {
+      formatRowClass (item) {
         if (item.expireStatus === '1') {
           return 'effective-row';
         }
@@ -42,18 +52,19 @@
           return 'danger-row';
         }
       },
-      getNoticeList() {
+      getNoticeList () {
+        if (!this.isShow) return;
         this.$http.get('/notice/list').then(res => {
           this.noticeList = res.data;
         });
       },
-      openDetail(key) {
+      openDetail (key) {
         this.$http.get('/notice/' + key).then(res => {
           this.noticeItem = res.data;
           this.showDetailPart = true;
         });
       },
-      resetRightBox() {
+      resetRightBox () {
         this.showDetailPart = false;
       }
     }
