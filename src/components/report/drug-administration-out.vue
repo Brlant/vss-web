@@ -92,17 +92,19 @@
       exportFile: function () {
         let moduleId = this.$route.meta.type === '0' ? '/drug-administration/report/in' : '/drug-administration/report/out';
         let url = this.$route.meta.type === '0' ? '/erp-statement/drug-administration/in-warehouse/export' : '/erp-statement/drug-administration/out-warehouse/export';
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry ? this.bizDateAry[0] : '') + ' ' + '00:00:00';
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry ? this.bizDateAry[1] : '') + ' ' + '23:59:59';
+        let fileName = this.$route.meta.type === '0' ? '购进数据.xml' : '销售数据.xml';
+        let startTime = this.formatTime(this.bizDateAry ? this.bizDateAry[0] : '');
+        let endTime = this.formatTime(this.bizDateAry ? this.bizDateAry[1] : '');
+        if (startTime && endTime) {
+          fileName = startTime + '至' + endTime + fileName;
+        }
+        this.searchWord.createStartTime = startTime + ' ' + '00:00:00';
+        this.searchWord.createEndTime = endTime + ' ' + '23:59:59';
         this.searchWord.type = this.$route.meta.type;
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: moduleId});
         this.$http.get(url, {params}).then(res => {
-          let fileName = this.$route.meta.type === '0' ? '购进数据.xml' : '销售数据.xml';
-          if (this.searchWord.createStartTime && this.searchWord.createEndTime) {
-            fileName = this.searchWord.createStartTime + '至' + this.searchWord.createEndTime + fileName;
-          }
           utils.download.call(this, res.data.path, fileName);
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: moduleId});
