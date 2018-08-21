@@ -30,8 +30,8 @@
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
+                    type="datetimerange"
+                    placeholder="请选择业务日期" :default-time="['00:00:00', '23:59:59']">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
@@ -123,7 +123,7 @@
         this.bizDateAry = '';
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
       }
     }
   };
