@@ -99,7 +99,7 @@
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: moduleId});
         this.$http.get(url, {params}).then(res => {
-          let fileName = this.$route.meta.type === '0' ? '市药监购进数据报表' : '市药监销售数据报表';
+          let fileName = this.$route.meta.type === '0' ? '购进数据' : '销售数据';
           if (this.searchWord.createStartTime && this.searchWord.createEndTime) {
             fileName = this.searchWord.createStartTime + '至' + this.searchWord.createEndTime + fileName;
           }
