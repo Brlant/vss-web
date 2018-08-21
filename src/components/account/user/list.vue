@@ -16,8 +16,11 @@
     <div class="container d-table">
       <div class="d-table-right">
         <div class="d-table-col-wrap">
-
-        <span class="pull-right">
+          <el-radio-group v-model="filters.status" size="small">
+            <el-radio-button label="1">正常</el-radio-button>
+            <el-radio-button label="2">停用</el-radio-button>
+          </el-radio-group>
+          <span class="pull-right">
           <span class="btn-search-toggle open" v-show="showSearch">
             <single-input v-model="filters.keyWord" placeholder="请输入名称搜索"
                           :showFocus="showSearch"></single-input>
@@ -109,7 +112,7 @@
 
 </template>
 <script>
-  import { OrgUser, User } from '../../../resources';
+  import {OrgUser, User} from '../../../resources';
   import editForm from './form/form.vue';
 
   export default {
@@ -128,7 +131,8 @@
         typeTxt: '',
         filters: {
           keyWord: '',
-          orgId: 0
+          orgId: 0,
+          status: '1'
         },
         form: {list: [{roleId: ''}]},
         formTitle: '新增',
@@ -145,7 +149,7 @@
       };
     },
     computed: {
-      user() {
+      user () {
         return this.$store.state.user;
       }
     },
@@ -154,7 +158,7 @@
         return list.map(m => m.title).join('，');
       }
     },
-    mounted() {
+    mounted () {
       this.getPageList(1);
     },
     watch: {
@@ -164,7 +168,7 @@
         },
         deep: true
       },
-      user(val) {
+      user (val) {
         if (val.userCompanyAddress) {
           this.getPageList(1);
         }
@@ -181,7 +185,8 @@
         let data = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          keyWord: this.filters.keyWord
+          keyWord: this.filters.keyWord,
+          status: this.filters.status
         });
         this.loadingData = true;
         OrgUser.queryUsers(orgId, data).then(res => {
