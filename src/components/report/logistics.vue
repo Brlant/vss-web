@@ -156,7 +156,7 @@
       <div class="text-center" v-show="reportChildList.length">
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
-          :total="pager.count" :page-sizes="[20,50,100]" :pageSize="pager.pageSize"
+          :total="pager.count" :page-sizes="[10,20,50,100]" :pageSize="pager.pageSize"
           :current-page="pager.currentPage">
         </el-pagination>
       </div>
@@ -180,7 +180,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20
+          pageSize: parseInt(window.localStorage.getItem('currentPageSize'), 10) || 10
         },
         showSearch: true,
         searchWord: {
@@ -266,6 +266,7 @@
       },
       handleSizeChange(val) {
         this.pager.pageSize = val;
+        window.localStorage.setItem('currentPageSize', val);
         this.getCurrentList(1);
       },
       handleCurrentChange(val) {

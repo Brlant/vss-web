@@ -10,7 +10,6 @@
       height: 24px;
       border: 1px solid #dfe6ec;
     }
-
   }
 
   .t-head {
@@ -126,7 +125,8 @@
       <div class="text-center" v-show="(traceCodes.length || pager.currentPage !== 1) && !loadingData">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                        :current-page="pager.currentPage"
-                       :page-sizes="[10,20,100]" :page-size="10" layout="sizes, prev, pager, next, jumper"
+                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize"
+                       layout="sizes, prev, pager, next, jumper"
                        :total="pager.count">
         </el-pagination>
       </div>
@@ -134,7 +134,7 @@
   </div>
 </template>
 <script>
-  import { http, OmsAttachment } from '@/resources';
+  import {http, OmsAttachment} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -170,7 +170,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 10
+          pageSize: parseInt(window.localStorage.getItem('currentPageSize'), 10) || 10
         },
         packageType: utils.packageType,
         doing: false
@@ -192,11 +192,12 @@
       }
     },
     methods: {
-      handleSizeChange(val) {
+      handleSizeChange (val) {
         this.pager.pageSize = val;
+        window.localStorage.setItem('currentPageSize', val);
         this.getTraceCodes(1);
       },
-      handleCurrentChange(val) {
+      handleCurrentChange (val) {
         this.getTraceCodes(val);
       },
       changeFiles (files) {
