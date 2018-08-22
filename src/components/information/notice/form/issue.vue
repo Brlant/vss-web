@@ -3,7 +3,6 @@
 
   $leftWidth: 220px;
 
-
   .el-form .el-checkbox__label {
     font-size: 12px;
     padding-left: 5px;
@@ -131,7 +130,7 @@
   export default {
     props: {
       formItem: Object,
-      currentItem: Object
+
     },
     data() {
       return {
@@ -149,6 +148,7 @@
         loading: false,
         selectIdList: [],
         finalList: [],
+        currentItem: ''
       };
     },
     mounted() {
@@ -156,14 +156,14 @@
 
     },
     watch: {
-      formItem(val) {
-        // let form = JSON.parse(JSON.stringify(val));
-        // this.form = Object.assign(form, {povList: []});
-        this.title = '疫苗授权';
-      },
-      // povList(val) {
-      //   this.povList = JSON.parse(JSON.stringify(val));
-      // }
+      formItem: {
+        handler(val) {
+          console.log(val);
+          if (val)
+            this.currentItem = Object.assign({}, val);
+          this.title = '疫苗授权';
+        },
+      }
     },
     methods: {
       renderFunc(h, option) {
@@ -180,70 +180,69 @@
         this.$http.get('/erp-org/relationList', params).then(res => {
           this.orgList = res.data;
           this.loading = false;
-          this.selectedList(this.orgList);
+          this.selectedList();
         });
 
       },
-      selectedList: function (query) {
+      selectedList: function () {
         let id = this.formItem.noticeId;
-        console.log(id);
         this.$http.get('/notice/' + id + '/orgs').then(res => {
           this.form.povList = res.data;
           this.loading = false;
           this.handleData(this.form.povList);
         });
-      },
-      handleData: function (query) {
+    },
 
-        let dataList = [];
-        dataList = Object.assign(this.orgList);
-        query.forEach(function (item) {
-          let number = query.indexOf(item);
-          if (number) {
-            dataList.splice(0, number);
-          }
+    handleData: function (query) {
+      let dataList = Object.assign(this.orgList);
+      query.forEach(function (item) {
+        let number = dataList.indexOf(item);
+        if (number>=0) {
+          dataList.splice(number, 1);
+        }
+      });
+      this.orgList = Object.assign([], dataList);
+    },
+
+    filterMethod(query, item) {
+      if (!query) return true;
+      return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
+        item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
+        item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
+        item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
+    },
+    onSubmit() {
+      this.$refs['d-form'].validate((valid) => {
+        if (!valid) {
+          return false;
+        }
+
+        if (!this.form.povList.length) {
+          this.$notify.info({
+            duration: 2000,
+            message: '请先选择单位'
+          });
+          return false;
+        }
+        let id = this.formItem.noticeId;
+        let obj = this.form.povList;
+        this.doing = true;
+        this.$http.put('/notice/issue/' + id, obj).then(() => {
+          this.$notify.success({
+            message: '添加公告授权成功'
+          });
+          this.$refs['d-form'].resetFields();
+          this.$emit('refresh');
+          this.doing = false;
+        }).catch(error => {
+          this.doing = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '添加公告授权失败'
+          });
         });
-        this.orgList = Object.assign([], dataList);
-      },
-
-      filterMethod(query, item) {
-        if (!query) return true;
-        return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
-          item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
-          item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
-          item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
-      },
-      onSubmit() {
-        this.$refs['d-form'].validate((valid) => {
-          if (!valid) {
-            return false;
-          }
-
-          if (!this.form.povList.length) {
-            this.$notify.info({
-              duration: 2000,
-              message: '请先选择单位'
-            });
-            return false;
-          }
-          let id = this.formItem.noticeId;
-          let obj = this.form.povList;
-            this.doing = true;
-            this.$http.put('/notice/issue/' + id, obj).then(() => {
-              this.$notify.success({
-                message: '添加公告授权成功'
-              });
-              this.$refs['d-form'].resetFields();
-              this.$emit('refresh');
-              this.doing = false;
-            }).catch(error => {
-              this.doing = false;
-              this.$notify.error({
-                message: error.response.data && error.response.data.msg || '添加公告授权失败'
-              });
-            });
-        });
-      }
+      });
     }
-  };
+  }
+  }
+  ;
 </script>

@@ -18,6 +18,10 @@
     .oms-row {
       margin-bottom: 10px;
     }
+    p{
+      white-space: pre-wrap;
+      text-indent: 2em;
+    }
   }
 
 </style>
@@ -45,10 +49,19 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <el-col :span="12">
-           <oms-row>
-             <pre>{{ currentItem.noticeContent }}</pre>
-           </oms-row>
+          <el-col :span="24">
+           <el-row>
+             <p>{{ currentItem.noticeContent }}</p>
+           </el-row>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="3" class="text-right">
+            附件：
+          </el-col>
+          <el-col :span="21">
+            <attachment-lists :attachmentIdList="attachmentIdList" :objectId="currentItem.noticeId"
+                              :objectType="'notice'"></attachment-lists>
           </el-col>
         </el-row>
       </div>
@@ -68,10 +81,13 @@
       }
     },
     data() {
-      return {};
+      return {
+        attachmentIdList: []
+      };
     },
     computed: {},
-    watch: {},
+    watch: {
+    },
     methods: {}
   };
 </script>

@@ -1,15 +1,13 @@
 <style lang="scss" scoped=''>
 
-
-  .d-table-right {
-    text-algin:center;
-    .content {
-      width: 50%;
-    }
-  }
   .margin-left {
     margin-left: 15px;
   }
+
+    .order-list-item {
+      line-height: 20px;
+    }
+
 
   .margin-left-right {
     margin-left: 38px;
@@ -38,128 +36,128 @@
 </style>
 <template>
   <div>
-    <div class="order-list-status container">
-      <div class="status-item" :class="{'active':key==activeStatus} "
-           v-for="(item,key) in noticeType"
-           @click="changeType(key,item)">
-        <div class="status-bg" :class="['b_color_'+key]"></div>
-        <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span
-          class="status-num">{{item.num}}</span></div>
-      </div>
-    </div>
-    <div class="container d-table">
-      <div class="d-table-left">
-        <h2 class="header">
-            <span class="pull-right">
-              <perm label="notice-add">
-                <a href="#" class="btn-circle" @click.stop.prevent="addType">
-                  <i class="el-icon-t-plus"></i>
-                </a>
-              </perm>
-              <perm label="notice-watch">
-                <a href="#" class="btn-circle" @click.prevent="searchType">
-                  <i class="el-icon-t-search"></i>
-                </a>
-              </perm>
-            </span>
-          公告
-        </h2>
-        <div class="search-left-box" v-show="showTypeSearch">
-          <oms-input v-model='typeTxt' placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
-        </div>
-        <div v-if="!data.noticeId" class="empty-type-info">
-          暂无信息
-        </div>
-        <div v-else>
-          <el-scrollbar tag="div" class="d-table-left_scroll" :style="'height:'+bodyHeight"
-                        @scroll="scrollLoadingData">
-            <ul class="show-list">
-              <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
-                  :class="{'active':item.noticeId==currentItem.noticeId}">
-                <perm label="notice-stop">
-                  <a href="#" @click.stop.prevent="forbid()" class="hover-show pull-right"
-                     v-show="data.availabilityStatus">
-                  <i class="el-icon-t-forbidden"></i>
-                  </a>
-                </perm>
-                {{item.noticeTitle}}
-              </li>
-            </ul>
-          </el-scrollbar>
-          <div class="btn-left-list-more">
-            <bottom-loading></bottom-loading>
-            <div @click.stop="getMore" v-show="!$store.state.bottomLoading">
-              <el-button v-show="pager.currentPage<pager.totalPage">加载更多</el-button>
-            </div>
+    <div class="container">
+      <el-row>
+        <div class="order-list-status container">
+          <div class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
+               v-for="(item,key) in noticeType" @click="changeType(item, key)">
+            <div class="status-bg" :class="['b_color_'+key]"></div>
+            <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">
+            {{item.num}}</span></div>
           </div>
-        </div>
-      </div>
-      <div class="d-table-right">
-        <div v-if="!data" class="empty-info">
-          暂无信息
-        </div>
-        <div v-else>
-          <h2 class="clearfix">
-                    <span class="pull-right">
-                    <el-button-group>
 
-                      <perm label="notice-edit">
-                        <el-button @click="edit()">
-                          <i class="el-icon-t-edit"></i>
-                          编辑
-                        </el-button>
-                      </perm>
-                      <perm label="notice-edit">
-                        <el-button @click="authorize()" v-show="data.availabilityStatus">
-                          <i class="el-icon-t-edit"></i>
-                          授权
-                        </el-button>
-                      </perm>
-                      <perm label="notice-issue">
-                        <el-button @click="start()" v-show="!data.availabilityStatus">
-                          <i class="el-icon-t-start"></i>
+          <!--<span class="pull-right">-->
+          <!--<a href="#" class="btn-circle" @click.prevent="searchType"><i-->
+          <!--class="el-icon-t-search"></i> </a>-->
+          <!--</span>-->
+          <span class="pull-right opera-btn" style="margin-top: 8px">
+            <span>
+               <perm label="notice-add">
+                 <a href="#" class="btn-circle" @click.stop.prevent="addType">
+                  <i class="el-icon-t-plus"></i>
+                 </a>添加
+               </perm>
+            </span>
+          </span>
+        </div>
+      </el-row>
+      <div class="order-list clearfix " style="margin-top: 20px">
+        <el-row class="order-list-header">
+          <el-col :span="10">
+            标题
+          </el-col>
+          <el-col :span="4">创建人</el-col>
+          <el-col :span="4">创建时间</el-col>
+          <el-col :span="6">操作</el-col>
+        </el-row>
+        <el-row v-if="loadingData">
+          <el-col :span="24">
+            <oms-loading :loading="loadingData"></oms-loading>
+          </el-col>
+        </el-row>
+        <el-row v-else-if="showTypeList.length == 0">
+          <el-col :span="24">
+            <div class="empty-info">
+              暂无信息
+            </div>
+          </el-col>
+        </el-row>
+        <div v-else="" class="order-list-body flex-list-dom">
+          <div class="order-list-item" v-for="item in showTypeList"
+               :class="['status-'+activeStatus,{'active':currentItem.noticeId==item.noticeId}]">
+            <el-row>
+              <el-col :span="10" class="R pt10">
+                {{ item.noticeTitle }}
+              </el-col>
+              <el-col :span="4" class="pt">
+                <span>{{ item.createdBy }}</span>
+              </el-col>
+              <el-col :span="4" class="pt pl7">
+                <span>{{ item.createTime | date }}</span>
+              </el-col>
+              <el-col :span="6" class="opera-btn pl7">
+                <div>
+                  <perm label="notice-watch">
+                     <span @click.prevent="showDetail(item)">
+                    <a href="#" class="btn-circle" @click.prevent="showDetail(item)"><i
+                      class="el-icon-t-detail"></i></a>
+                  查看详情
+                     </span>
+                  </perm>
+                </div>
+                <div>
+                  <perm label="notice-edit">
+                    <span @click.prevent="edit(item)">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="el-icon-t-edit"></i></a>
+                        编辑
+                  </span>
+                  </perm>
+                  <perm label="notice-stop" v-show="filters.status === 1 || filters.status === 11">
+                     <span @click.prevent="forbid">
+                      <a href="#" class="btn-circle" @click.prevent="forbid()"><i
+                        class="el-icon-t-verify"></i></a>
+                        撤回
+                      </span>
+                  </perm>
+                  <perm label="notice-issue">
+                    <span @click.prevent="start()" v-show="!item.availabilityStatus">
+                        <a href="#" class="btn-circle" @click.prevent=""><i
+                          class="el-icon-t-start"></i></a>
                           发布
-                        </el-button>
-                      </perm>
-                      </el-button-group>
                     </span>
-          </h2>
-          <div class="content">
-            <el-row>
-              <el-col :span="3" class="text-right">
-                公告标题：
-              </el-col>
-              <el-col :span="21">
-                {{ data.noticeTitle }}
-              </el-col>
-            </el-row>
-            <el-row>
-              <el-col :span="3" class="text-right">
-                公告内容：
-              </el-col>
-              <el-col :span="12">
-                <pre width="300">{{data.noticeContent}}</pre>
+                  </perm>
+                  <perm label="notice-assign">
+                    <span @click.prevent="authorize" v-show="item.availabilityStatus">
+                        <a href="#" class="btn-circle" @click.prevent=""><i
+                          class="el-icon-t-appoint"></i></a>
+                          授权单位
+                    </span>
+                  </perm>
+                </div>
               </el-col>
             </el-row>
-            <el-row>
-              <el-col :span="3" class="text-right">
-                附件：
-              </el-col>
-              <el-col :span="21">
-                <attachment-lists :attachmentIdList="attachmentIdList" :objectId="data.noticeId"
-                                  :objectType="'notice'"></attachment-lists>
-              </el-col>
-            </el-row>
+            <div class="order-list-item-bg"></div>
           </div>
         </div>
+      </div>
+      <div class="text-center" v-show="true">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
+          :current-page="pager.currentPage">
+        </el-pagination>
       </div>
       <page-right :show="showRight" @right-close="resetRightBox">
         <notice-form :formItem="form" @change="onSubmit" :action="action" :actionType="showRight"
                      @right-close="resetRightBox"></notice-form>
       </page-right>
       <page-right :show="showAuthorization" :css="{'width':'1200px','padding':0}" @right-close="resetRightBox">
-        <issue  :formItem="currentItem">
+        <issue v-bind:formItem="currentItem">
         </issue>
+      </page-right>
+      <page-right :show="detailShow" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}" >
+        <issue-detail   :currentItem="detailItem" ></issue-detail>
       </page-right>
     </div>
 
@@ -173,33 +171,34 @@
   import attachmentLists from '../../common/attachmentList.vue';
   import {Notice} from '../../../resources';
   import ElButton from '../../../../node_modules/element-ui/packages/button/src/button.vue';
+  import issueDetail from '../../dashboard/notice/detail/notice-detail';
 
   export default {
     components: {
       ElButton,
-      attachmentLists, noticeForm, issue
+      attachmentLists, noticeForm, issue, issueDetail
     },
     data: function () {
       return {
+        loadingData: true,
         attachmentIdList: [],
         attachmentList: [],
         showRight: false,
         showTypeRight: false,
         showTypeSearch: false,
+        detailShow: false,
         currentItem: {},
+        detailItem: {},
         showSearch: false,
         showAuthorization: false,
         data: {},
         typeList: [],
         showTypeList: [],
-        typeTxt: '',
-        keyTxt: '',
         form: {
           noticeId: '',
           noticeTitle: '',
           noticeContent: '',
-          attachmentIdList: [],
-          availabilityStatus: false
+          attachmentIdList: []
         },
         noticeId: '',
         action: '',
@@ -215,7 +214,8 @@
         },
         activeStatus: 0,
         filters: {
-          availabilityStatus: 1
+          availabilityStatus: true,
+          typeTxt: ''
         },
         doing: false
       };
@@ -231,11 +231,8 @@
       this.getPageList(1);
     },
     watch: {
-      'typeTxt': function () {
-        this.getPageList(1);
-      },
       filters: {
-        handler: function () {
+        handler() {
           this.getPageList(1);
         },
         deep: true
@@ -245,25 +242,22 @@
       scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
-      getPageList: function (pageNo, isContinue = false) {
+      getPageList: function (pageNo) {
         this.pager.currentPage = pageNo;
         let param = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          noticeTitle: this.typeTxt
+          noticeTitle: this.filters.typeTxt
         }, this.filters);
         Notice.queryPager(param).then(res => {
-          this.$store.commit('initBottomLoading', false);
-          if (isContinue) {
-            this.showTypeList = this.showTypeList.concat(res.data.list);
-          } else {
             this.showTypeList = res.data.list;
             this.data = Object.assign({}, {'id': ''}, res.data.list[0]);
-            this.currentItem = this.data;
-          }
+            this.currentItem = Object.assign({}, this.data);
           this.pager.totalPage = res.data.totalPage;
+          this.pager.count = res.data.count;
         });
         this.queryStatusNum(param);
+        this.loadingData = false;
       },
       queryStatusNum: function (params) {
         Notice.queryStateNum(params).then(res => {
@@ -272,25 +266,22 @@
           this.noticeType[1].num = data['notAvailable'];
         });
       },
-      getMore: function () {
-        this.getPageList(this.pager.currentPage + 1, true);
-      },
-      start: function() {
+      start: function () {
         this.$confirm('确认启用公告"' + this.data.noticeTitle + '"', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-        Notice.start(this.data.noticeId).then(() => {
-          this.getPageList(1);
-          this.$notify.success({
-            duration: 2000,
-            title: '成功',
-            message: '已成功发布公告"' + this.data.noticeTitle + '"'
+          Notice.start(this.data.noticeId).then(() => {
+            this.getPageList(1);
+            this.$notify.success({
+              duration: 2000,
+              title: '成功',
+              message: '已成功发布公告"' + this.data.noticeTitle + '"'
+            });
+            this.data.availabilityStatus = true;
           });
-          this.data.availabilityStatus = true;
         });
-      });
       },
       authorize: function (query) {
         this.showAuthorization = true;
@@ -314,6 +305,7 @@
       resetRightBox: function () {
         this.showRight = false;
         this.showAuthorization = false;
+        this.detailShow = false;
       },
       addType: function () {
         this.action = 'add';
@@ -329,10 +321,11 @@
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
       },
-      edit: function () {
+      edit: function (item) {
         this.action = 'edit';
         this.form = JSON.parse(JSON.stringify(this.data));
         this.showRight = true;
+        this.showType(item);
       },
       remove: function () {
         this.$confirm('确认删除公告"' + this.data.noticeTitle + '"?', '', {
@@ -342,10 +335,9 @@
         });
       },
       showType: function (type) {
-        this.data = type;
-        this.currentItem = this.data;
+        this.currentItem = Object.assign({}, type);
       },
-      changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
+      changeType: function (item, key) {// 根据当前选中的标签，重置状态等相关参数。
         this.activeStatus = key;
         this.filters.availabilityStatus = item.status;
       },
@@ -361,8 +353,12 @@
         }
         this.showType(item);
         this.attachmentIdList = item.attachmentIdList;
+      },
+      showDetail: function(item) {
+        this.detailShow = true;
+        this.detailItem = item;
+        this.showType(item);
       }
     }
-  }
-  ;
+  };
 </script>

@@ -11,8 +11,7 @@
         {{ item.noticeTitle}}
       </el-col>
     </el-row>
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
-                class="order-detail-info" partClass="pr-no-animation">
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <detail :currentItem="noticeItem" @close="resetRightBox"></detail>
     </page-right>
   </card-box>
