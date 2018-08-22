@@ -30,8 +30,6 @@
     display: block;
   }
 
-
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -138,7 +136,10 @@
       </div>
       <div class="content-right min-gutter">
         <h3>{{titleAry[type][0]}}详情</h3>
-        <div>
+        <div v-if="loadingData">
+          <oms-loading :loading="loadingData"></oms-loading>
+        </div>
+        <div v-if="!loadingData">
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
             <el-form-item :label="`${titleAry[type][2]}单据编号:`" class="mb0">
@@ -217,7 +218,7 @@
             <el-form-item style="margin-top: 10px">
               <div v-if="type===1">
                 <perm :label="perms[1]" v-show="form.status === '0'">
-                  <el-button  plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
+                  <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
                 </perm>
                 <perm :label="perms[2]">
                   <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
@@ -225,10 +226,10 @@
               </div>
               <div v-else>
                 <perm :label="perms[1]" v-show="form.status === '-1'">
-                  <el-button  plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
+                  <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
                 </perm>
                 <perm :label="perms[2]" v-show="form.status === '1'">
-                  <el-button  plain :disabled="doing" type="success" @click="audited('确认收款')">收款确认</el-button>
+                  <el-button plain :disabled="doing" type="success" @click="audited('确认收款')">收款确认</el-button>
                 </perm>
                 <perm :label="perms[3]">
                   <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
@@ -244,7 +245,7 @@
 </template>
 
 <script>
-  import { CDCReceipt, http, POVPayment } from '@/resources';
+  import {CDCReceipt, http, POVPayment} from '@/resources';
 
   export default {
     name: 'auditForm',
@@ -262,6 +263,7 @@
     },
     data: function () {
       return {
+        loadingData: true,
         loading: false,
         form: {
           detailList: []
@@ -294,8 +296,10 @@
 
     methods: {
       queryDetail (key) {
+        this.loadingData = true;
         http.get(`/bill-receivable/${key}`).then(res => {
           this.form = res.data;
+          this.loadingData = false;
         });
       },
       resetForm: function () {// 重置表单

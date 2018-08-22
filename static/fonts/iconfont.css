@@ -38,6 +38,8 @@
 
 .el-icon-t-validity:before { content: "\e69e"; }
 
+.el-icon-t-fold:before { content: "\e69e"; }
+
 .el-icon-t-humidity-limit:before { content: "\e631"; }
 
 .el-icon-t-edit:before { content: "\e611"; }
