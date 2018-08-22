@@ -121,8 +121,8 @@
                 show-summary :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="orgName" label="接种点" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="goodsName" label="接种点货品名称" min-width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="platformGoodsName" label="平台货品名称"  min-width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
+        <el-table-column prop="platformGoodsName" label="平台货品名称" min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column label="业务库存" align="center">
           <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
@@ -165,7 +165,7 @@
               <span>{{scope.row.transitCount}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader"  :sortable="true"
+          <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader" :sortable="true"
                            width="100">
             <template slot-scope="scope">
               <span>{{scope.row.totalCount}}</span>
@@ -182,11 +182,12 @@
       </el-table>
 
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-      <el-pagination
-      layout="total, sizes, prev, pager, next, jumper"  @size-change="handleSizeChange"
-      :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
-      :current-page="pager.currentPage">
-      </el-pagination>
+        <el-pagination
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+          :page-sizes="[10,20,50,100]"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
+          :current-page="pager.currentPage">
+        </el-pagination>
       </div>
     </div>
 
@@ -197,15 +198,16 @@
 </template>
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import {BaseInfo, erpStock, http, Goods} from '@/resources';
+  import {BaseInfo} from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
   import validMixin from '@/mixins/vaildMixin';
   import qs from 'qs';
+
   export default {
     components: {detail},
     mixins: [validMixin],
-    data() {
+    data () {
       return {
         loadingData: true,
         showSearch: true,
@@ -231,7 +233,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20
+          pageSize: parseInt(window.localStorage.getItem('currentPageSize'), 10) || 10
         },
         currentItemId: '',
         currentItem: {},
@@ -251,7 +253,7 @@
         vaccineList: []
       };
     },
-    mounted() {
+    mounted () {
       this.getBatches(1);
       let showSearch = JSON.parse(window.localStorage.getItem(this.$route.path));
       if (typeof showSearch === 'boolean') {
@@ -259,7 +261,7 @@
       }
     },
     computed: {
-      orgLevel() {
+      orgLevel () {
         return this.$store.state.orgLevel;
       },
       bodyHeight: function () {
@@ -291,7 +293,7 @@
           this.orgList = res.data;
         });
       },
-      isValid(item) {
+      isValid (item) {
         let a = this.$moment();
         let b = this.$moment(item.expiryDate);
         let days = b.diff(a, 'days');
@@ -299,9 +301,10 @@
       },
       handleSizeChange (val) {
         this.pager.pageSize = val;
+        window.localStorage.setItem('currentPageSize', val);
         this.getBatches(1);
       },
-      getBatches(pageNo) { // 得到波次列表
+      getBatches (pageNo) { // 得到波次列表
         this.totalInfo = {};
         this.batches = [];
         this.pager.currentPage = pageNo;
@@ -311,22 +314,24 @@
         }, this.filters);
         this.loadingData = true;
         this.$http({
-            url: '/erp-stock/pov/total',
-            params,
-            paramsSerializer(params) {
-              return qs.stringify(params, {indices: false});
-            }
-          }).then(res => {
+          url: '/erp-stock/pov/total',
+          params,
+          paramsSerializer (params) {
+            return qs.stringify(params, {indices: false});
+          }
+        }).then(res => {
           res.data.list.forEach(i => {
             i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
           });
           this.batches = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
-          setTimeout(() => {this.fixedHeight = Math.abs(this.fixedHeight - 1);}, 100);
+          setTimeout(() => {
+            this.fixedHeight = Math.abs(this.fixedHeight - 1);
+          }, 100);
         });
       },
-      formatHeader(h, col) {
+      formatHeader (h, col) {
         let property = col.column.property;
         let content = '';
         let title = '';
@@ -373,7 +378,7 @@
           </el-tooltip>
         );
       },
-      formatRowClass(data) {
+      formatRowClass (data) {
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
         }
@@ -387,7 +392,7 @@
         this.$http({
           url: '/erp-stock/regulatory/pov/export',
           params,
-          paramsSerializer(params) {
+          paramsSerializer (params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -400,18 +405,18 @@
           });
         });
       },
-      showDetail(item) {
+      showDetail (item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
       },
-      resetRightBox() {
+      resetRightBox () {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchWord);
       },
-      getSummaries(param) {
+      getSummaries (param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -453,7 +458,7 @@
         Object.assign(this.filters, temp);
         this.batchNumberList = [];
       },
-      filterFactory(query) { // 生产厂商
+      filterFactory (query) { // 生产厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
@@ -467,17 +472,17 @@
           this.factories = res.data.list;
         });
       },
-      goodsChange(val) {
+      goodsChange (val) {
         this.searchWord.batchNumberId = '';
         this.batchNumberList = [];
         this.filterBatchNumber();
       },
-      filterBatchNumber(query) {
+      filterBatchNumber (query) {
         if (!this.searchWord.goodsId) return;
         this.$http.get('/batch-number/pager', {
           params: {
             keyWord: query,
-            goodsId:this.searchWord.goodsId
+            goodsId: this.searchWord.goodsId
           }
         }).then(res => {
           this.batchNumberList = res.data.list;
@@ -492,7 +497,7 @@
           this.vaccineList = res.data.list;
         });
       },
-      formatTime(date) {
+      formatTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

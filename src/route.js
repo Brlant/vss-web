@@ -500,7 +500,7 @@ export const route = [
       {
         path: '/information',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'information', title: '信息发布', icon: 'report', perm: 'erp-information-manager'},
+        meta: {moduleId: 'information', title: '信息发布', icon: 'publish-info', perm: 'erp-information-manager'},
         children: [
           {
             path: '/notice',

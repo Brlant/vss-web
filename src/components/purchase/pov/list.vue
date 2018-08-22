@@ -214,7 +214,7 @@
         <el-pagination
           layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
-          :total="pager.count" :page-sizes="[15, 30, 50, 100, 200, 500]" :pageSize="pager.pageSize"
+          :total="pager.count" :page-sizes="[10,20,50,100]" :pageSize="pager.pageSize"
           :current-page="pager.currentPage">
         </el-pagination>
       </div>
@@ -233,7 +233,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, demandAssignment, procurementCollect, pullSignal } from '@/resources';
+  import {BaseInfo, demandAssignment, procurementCollect, pullSignal} from '@/resources';
   import utils from '../../../tools/utils';
   import showForm from './detail/index.vue';
   import addForm from '../request/form';
@@ -274,7 +274,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 15
+          pageSize: parseInt(window.localStorage.getItem('currentPageSize'), 10) || 10
         },
         currentItemId: '',
         currentItem: {},
@@ -315,6 +315,7 @@
     methods: {
       handleSizeChange (val) {
         this.pager.pageSize = val;
+        window.localStorage.setItem('currentPageSize', val);
         this.getDemandList(1);
       },
       handleCurrentChange (val) {

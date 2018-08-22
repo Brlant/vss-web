@@ -72,14 +72,14 @@
     <div class="text-center" v-show="inventories.length && !loadingData">
       <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                      :current-page="pager.currentPage"
-                     :page-sizes="[20,50,100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper"
+                     :page-sizes="[10,20,50,100]" :page-size="20" layout="total, sizes, prev, pager, next, jumper"
                      :total="pager.count">
       </el-pagination>
     </div>
   </div>
 </template>
 <script>
-  import { Inventory } from '@/resources';
+  import {Inventory} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -96,7 +96,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20
+          pageSize: parseInt(window.localStorage.getItem('currentPageSize'), 10) || 10
         },
         filters: {
           status: 0
@@ -193,6 +193,7 @@
       },
       handleSizeChange (val) {
         this.pager.pageSize = val;
+        window.localStorage.setItem('currentPageSize', val);
         this.getOrders(1);
       },
       handleCurrentChange (val) {
