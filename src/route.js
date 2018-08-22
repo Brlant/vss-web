@@ -284,7 +284,7 @@ export const route = [
       {
         path: '/file',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'file', title: '批号文件管理', icon: 'fold', perm: 'vaccine-batch-process'},
+        meta: {moduleId: 'file', title: '批号文件管理', icon: 'validity', perm: 'vaccine-batch-process'},
         children: [
           {
             path: '/file/vaccine',

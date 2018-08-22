@@ -38,11 +38,9 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row label="" :span="2">
-                <perm label="shipment-form-export">
-                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
-                    导出
-                  </el-button>
-                </perm>
+                <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                  导出
+                </el-button>
               </oms-form-row>
             </el-col>
           </el-row>
