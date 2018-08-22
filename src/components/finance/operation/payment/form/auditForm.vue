@@ -30,8 +30,6 @@
     display: block;
   }
 
-
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -67,7 +65,6 @@
     }
 
   }
-
 
   .ml15 {
     margin-left: 40px;
@@ -137,7 +134,10 @@
       </div>
       <div class="content-right min-gutter">
         <h3>付款申请详情</h3>
-        <div>
+        <div v-if="loadingData">
+          <oms-loading :loading="loadingData"></oms-loading>
+        </div>
+        <div v-if="!loadingData">
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
             <el-form-item label="发票付款:" class="mb0">
@@ -182,12 +182,12 @@
                 <el-row type="flex">
                   <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.goodsName }}</el-col>
                   <el-col :span="2">{{ item.count }}</el-col>
-                  <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.orderNo }} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.orderNo }}</el-col>
                   <el-col :span="4" v-show="form.billPayType === '1'" class="break-word">
                     {{ item.invoiceNo ? item.invoiceNo : '无' }}
                   </el-col>
                   <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.createTime | date }}</el-col>
-                  <el-col :span="form.billPayType === '1' ? 3 : 4"> ￥{{item.paidMoney | formatMoney}} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 3 : 4"> ￥{{item.paidMoney | formatMoney}}</el-col>
                   <el-col :span="2" v-show="form.status ==='0'">
                     <perm label="payment-payable-audit">
                       <span class="delete-icon" @click.stop.prevent="deleteDetailItem(item)">
@@ -209,7 +209,8 @@
             </el-form-item>
             <el-form-item style="margin-top: 10px">
               <perm label="payment-payable-audit">
-                <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"
+                <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success"
+                           @click="audited"
                            native-type="submit">审核通过
                 </el-button>
                 <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="danger"
@@ -231,7 +232,7 @@
 </template>
 
 <script>
-  import { BillPayable, http } from '../../../../../resources';
+  import {BillPayable, http} from '../../../../../resources';
 
   export default {
     name: 'auditForm',
@@ -255,7 +256,8 @@
         rules: {},
         orgList: [],
         logisticsList: [],
-        doing: false
+        doing: false,
+        loadingData: true
       };
     },
     computed: {},
@@ -288,8 +290,10 @@
         });
       },
       queryDetail (key) {
+        this.loadingData = true;
         http.get(`/bill-payable/${key}`).then(res => {
           this.form = res.data;
+          this.loadingData = false;
         });
       },
       resetForm: function () {// 重置表单
