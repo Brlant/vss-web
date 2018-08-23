@@ -32,6 +32,10 @@
   .page-main-body {
     font-size: 16px;
   }
+
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div>
@@ -83,7 +87,8 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in showTypeList"
-               :class="['status-'+activeStatus,{'active':currentItem.noticeId==item.noticeId}]">
+               :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentItem.noticeId==item.noticeId}]"
+               @click.prevent="showDetail(item)">
             <el-row>
               <el-col :span="10" class="R pt10">
                 {{ item.noticeTitle }}
@@ -239,6 +244,13 @@
       }
     },
     methods: {
+      filterListColor: function (index) {
+        if (index) {
+          return 0;
+        } else {
+          return 1;
+        }
+      },
       scrollLoadingData (event) {
         this.$scrollLoadingData(event);
       },

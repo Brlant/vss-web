@@ -7,12 +7,12 @@
             class="list-item"
             :class="formatRowClass(item)"
             @click.native="openDetail(item.noticeId)">
-      <el-col :span="8">
+      <el-col :span="24">
         {{ item.noticeTitle}}
       </el-col>
     </el-row>
     <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <detail :currentItem="noticeItem" @close="resetRightBox"></detail>
+      <detail :formItem="noticeItem" @close="resetRightBox"></detail>
     </page-right>
   </card-box>
 
