@@ -33,6 +33,12 @@
     margin-right: 40px;
     margin-bottom: 20px;
   }
+
+  .card-box .card-box-body .el-row {
+    border-bottom: 0 solid #eee;
+    padding-top: 8px;
+    padding-bottom: 8px;
+  }
 </style>
 
 <template>
@@ -40,6 +46,12 @@
     <div class="content-part">
       <div class="content-left">
         <h2 class="clearfix right-title">公告详情</h2>
+        <ul>
+          <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
+            <el-button type="primary" plain  @click.prevent.stop="doClose">关闭
+            </el-button>
+          </li>
+        </ul>
       </div>
       <div class="content-right">
         <el-row>
@@ -100,7 +112,11 @@
         }
       }
     },
-    methods: {}
+    methods: {
+      doClose: function () {
+        this.$emit('right-close');
+      }
+    }
   };
 </script>
 

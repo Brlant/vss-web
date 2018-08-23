@@ -88,7 +88,7 @@
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item" v-for="item in showTypeList"
                :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentItem.noticeId==item.noticeId}]"
-               @click.prevent="showDetail(item)">
+               @click="showDetail(item)">
             <el-row>
               <el-col :span="10" class="R pt10">
                 {{ item.noticeTitle }}
@@ -102,7 +102,7 @@
               <el-col :span="6" class="opera-btn pl7">
                 <div>
                   <perm label="notice-watch">
-                     <span @click.prevent="showDetail(item)">
+                     <span @click.stop="showDetail(item)">
                        <a href="#" class="btn-circle" @click.prevent="">
                          <i class="el-icon-t-detail"></i>
                        </a>
@@ -112,28 +112,28 @@
                 </div>
                 <div>
                   <perm label="notice-edit">
-                    <span @click.prevent="edit(item)">
+                    <span @click.stop="edit(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-edit"></i></a>
                         编辑
                   </span>
                   </perm>
                   <perm label="notice-stop" v-show="filters.status === 1 || filters.status === 11">
-                     <span @click.prevent="forbid">
-                      <a href="#" class="btn-circle" @click.prevent="forbid()"><i
+                     <span @click.stop="forbid">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-verify"></i></a>
                         撤回
                       </span>
                   </perm>
                   <perm label="notice-issue">
-                    <span @click.prevent="start()" v-show="!item.availabilityStatus">
+                    <span @click.stop="start()" v-show="!item.availabilityStatus">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-start"></i></a>
                           发布
                     </span>
                   </perm>
                   <perm label="notice-assign">
-                    <span @click.prevent="authorize(item)" v-show="item.availabilityStatus">
+                    <span @click.stop="authorize(item)" v-show="item.availabilityStatus">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-appoint"></i></a>
                           授权单位
@@ -154,15 +154,13 @@
         </el-pagination>
       </div>
       <page-right :show="showRight" @right-close="resetRightBox">
-        <notice-form :formItem="form" @change="onSubmit" :action="action" :actionType="showRight"
-                     @right-close="resetRightBox"></notice-form>
+        <notice-form :formItem="form" @change="onSubmit" :action="action" @right-close="resetRightBox"></notice-form>
       </page-right>
       <page-right :show="showAuthorization" :css="{'width':'1200px','padding':0}" @right-close="resetRightBox">
-        <issue v-bind:formItem="currentItem" @right-close="resetRightBox">
-        </issue>
+        <issue :formItem="form" @right-close="resetRightBox"></issue>
       </page-right>
       <page-right :show="detailShow" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-        <issue-detail :formItem="currentItem" @right-close="resetRightBox"></issue-detail>
+        <issue-detail :formItem="form" @right-close="resetRightBox"></issue-detail>
       </page-right>
     </div>
 
@@ -297,7 +295,8 @@
       },
       authorize: function (item) {
         this.showAuthorization = true;
-        this.currentItem = item;
+        this.form = item;
+        this.showType(item);
       },
       forbid: function () {
         this.$confirm('确认停用公告"' + this.data.noticeTitle + '"', '', {
@@ -336,7 +335,7 @@
       },
       edit: function (item) {
         this.action = 'edit';
-        this.form = JSON.parse(JSON.stringify(item));
+        this.form = item;
         this.showRight = true;
         this.showType(item);
       },
@@ -369,7 +368,7 @@
       },
       showDetail: function (item) {
         this.detailShow = true;
-        this.currentItem = item;
+        this.form = item;
         this.showType(item);
       }
     }

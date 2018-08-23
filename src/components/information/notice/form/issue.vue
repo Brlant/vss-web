@@ -100,7 +100,6 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="100px" style="padding-right: 20px">
-
             <el-form-item label="单位">
               <el-transfer v-loading="loading"
                            v-model="form.povList"
