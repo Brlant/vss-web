@@ -64,7 +64,7 @@
           </el-col>
           <el-col :span="6">
             发布人：{{form.createdBy}}
-          </el-col>z
+          </el-col>
           <el-col :span="6">
             发布时间：{{form.issuedTime|date}}
           </el-col>
