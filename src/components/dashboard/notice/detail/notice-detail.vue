@@ -48,7 +48,7 @@
         <h2 class="clearfix right-title">公告详情</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="primary" plain  @click.prevent.stop="doClose">关闭
+            <el-button type="primary" plain @click.prevent.stop="doClose">关闭
             </el-button>
           </li>
         </ul>
@@ -56,17 +56,15 @@
       <div class="content-right">
         <el-row>
           <el-col :span="24" style=" padding: 0 30px 0 0">
-            <h3>{{ form.noticeTitle }}</h3>
+            <h2>{{ form.noticeTitle }}</h2>
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="12">
-          </el-col>
-          <el-col :span="6">
-            发布人：{{form.createdBy}}
-          </el-col>
-          <el-col :span="6">
-            发布时间：{{form.issuedTime|date}}
+          <el-col :span="24">
+            <div class="text-center">
+              发布人：{{form.createdBy}}
+              <span style="padding-left: 20px">发布时间：{{form.issuedTime|date}}</span>
+            </div>
           </el-col>
         </el-row>
         <div class="border-show"></div>
@@ -81,6 +79,9 @@
             <attachment-lists :attachmentIdList="attachmentIdList" :objectId="form.noticeId"
                               :objectType="'notice'"></attachment-lists>
           </el-col>
+        </el-row>
+        <el-row>
+          <el-col></el-col>
         </el-row>
       </div>
     </div>
