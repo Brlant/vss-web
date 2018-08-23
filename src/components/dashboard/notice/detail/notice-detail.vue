@@ -60,16 +60,14 @@
         <div class="border-show"></div>
         <el-row>
           <el-col :span="24">
-              <nl2br :content="form.noticeContent"></nl2br>
+            <nl2br :content="form.noticeContent"></nl2br>
           </el-col>
         </el-row>
-        <div class="border-show"></div>
         <el-row>
-          <el-col :span="3" class="text-right">
-            附件：
-          </el-col>
-          <el-col :span="21">
-            <attachment-lists :attachmentIdList="attachmentIdList" :objectId="form.noticeId" :objectType="'notice'"></attachment-lists>
+          <el-col :span="2" class="empty-position">附件：</el-col>
+          <el-col :span="22">
+            <attachment-lists :attachmentIdList="attachmentIdList" :objectId="form.noticeId"
+                              :objectType="'notice'"></attachment-lists>
           </el-col>
         </el-row>
       </div>
