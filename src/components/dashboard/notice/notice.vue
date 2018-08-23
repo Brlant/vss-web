@@ -1,5 +1,4 @@
 <template>
-  <perm label="notice-watch">
     <card-box title="公告" v-if="isShow">
       <div v-if="!noticeList.length" class="no-info">
         暂无公告
@@ -19,7 +18,6 @@
         <detail :formItem="noticeItem" @close="resetRightBox"></detail>
       </page-right>
     </card-box>
-  </perm>
 </template>
 <script>
   import detail from './detail/notice-detail';
