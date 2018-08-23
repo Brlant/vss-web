@@ -7,8 +7,11 @@
             class="list-item"
             :class="formatRowClass(item)"
             @click.native="openDetail(item.noticeId)">
-      <el-col :span="24">
+      <el-col :span="20">
         {{ item.noticeTitle}}
+      </el-col>
+      <el-col :span="4">
+        发布时间：{{ item.issuedTime | date }}
       </el-col>
     </el-row>
     <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">

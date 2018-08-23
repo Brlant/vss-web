@@ -1347,6 +1347,16 @@ $borderColor: rgba(82, 82, 82, 0.23);
   top: 30px
 }
 
-.attachment-location {
-  padding: 3px 0 0 0;
+.attachment-list-item {
+  position: relative;
+  line-height: 25px;
+  padding-top: 0;
+  padding-bottom: 0;
+  border: 0;
+  .download-link {
+    display: none;
+  }
+  &:hover .download-link {
+    display: block;
+  }
 }

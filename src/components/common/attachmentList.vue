@@ -1,17 +1,5 @@
 <style lang="scss" scoped>
-  .list-item {
-    position: relative;
-    line-height: 25px;
-    padding-top: 0;
-    padding-bottom: 0;
-    border: 0;
-    .download-link {
-      display: none;
-    }
-    &:hover .download-link {
-      display: block;
-    }
-  }
+
 
   .list_flex {
     display: flex;
@@ -29,7 +17,7 @@
 </style>
 <template>
   <ul class="show-list">
-    <li class="list-item list_flex" v-for="attachment in attachmentList" @click="handlePreview(attachment)">
+    <li class="attachment-list-item list_flex" v-for="attachment in attachmentList" @click="handlePreview(attachment)">
       <div class="attachment-name">
         {{attachment.attachmentFileName}}
       </div>
