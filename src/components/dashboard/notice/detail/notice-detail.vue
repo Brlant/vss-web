@@ -81,7 +81,9 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col></el-col>
+          <el-col>
+            <div style="height: 50px"></div>
+          </el-col>
         </el-row>
       </div>
     </div>
