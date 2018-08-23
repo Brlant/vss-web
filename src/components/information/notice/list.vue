@@ -4,10 +4,9 @@
     margin-left: 15px;
   }
 
-    .order-list-item {
-      line-height: 20px;
-    }
-
+  .order-list-item {
+    line-height: 20px;
+  }
 
   .margin-left-right {
     margin-left: 38px;
@@ -99,9 +98,10 @@
                 <div>
                   <perm label="notice-watch">
                      <span @click.prevent="showDetail(item)">
-                    <a href="#" class="btn-circle" @click.prevent="showDetail(item)"><i
-                      class="el-icon-t-detail"></i></a>
-                  查看详情
+                       <a href="#" class="btn-circle" @click.prevent="">
+                         <i class="el-icon-t-detail"></i>
+                       </a>
+                      查看详情
                      </span>
                   </perm>
                 </div>
@@ -128,7 +128,7 @@
                     </span>
                   </perm>
                   <perm label="notice-assign">
-                    <span @click.prevent="authorize" v-show="item.availabilityStatus">
+                    <span @click.prevent="authorize(item)" v-show="item.availabilityStatus">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-appoint"></i></a>
                           授权单位
@@ -153,11 +153,11 @@
                      @right-close="resetRightBox"></notice-form>
       </page-right>
       <page-right :show="showAuthorization" :css="{'width':'1200px','padding':0}" @right-close="resetRightBox">
-        <issue v-bind:formItem="currentItem">
+        <issue v-bind:formItem="currentItem" @right-close="resetRightBox">
         </issue>
       </page-right>
-      <page-right :show="detailShow" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}" >
-        <issue-detail   :currentItem="detailItem" ></issue-detail>
+      <page-right :show="detailShow" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+        <issue-detail :formItem="currentItem" @right-close="resetRightBox"></issue-detail>
       </page-right>
     </div>
 
@@ -226,20 +226,20 @@
         return (height - 70) + 'px';
       }
     },
-    mounted() {
+    mounted () {
       this.$emit('loaded');
       this.getPageList(1);
     },
     watch: {
       filters: {
-        handler() {
+        handler () {
           this.getPageList(1);
         },
         deep: true
       }
     },
     methods: {
-      scrollLoadingData(event) {
+      scrollLoadingData (event) {
         this.$scrollLoadingData(event);
       },
       getPageList: function (pageNo) {
@@ -250,9 +250,9 @@
           noticeTitle: this.filters.typeTxt
         }, this.filters);
         Notice.queryPager(param).then(res => {
-            this.showTypeList = res.data.list;
-            this.data = Object.assign({}, {'id': ''}, res.data.list[0]);
-            this.currentItem = Object.assign({}, this.data);
+          this.showTypeList = res.data.list;
+          this.data = Object.assign({}, {'id': ''}, res.data.list[0]);
+          this.currentItem = Object.assign({}, this.data);
           this.pager.totalPage = res.data.totalPage;
           this.pager.count = res.data.count;
         });
@@ -283,8 +283,9 @@
           });
         });
       },
-      authorize: function (query) {
+      authorize: function (item) {
         this.showAuthorization = true;
+        this.currentItem = item;
       },
       forbid: function () {
         this.$confirm('确认停用公告"' + this.data.noticeTitle + '"', '', {
@@ -323,7 +324,7 @@
       },
       edit: function (item) {
         this.action = 'edit';
-        this.form = JSON.parse(JSON.stringify(this.data));
+        this.form = JSON.parse(JSON.stringify(item));
         this.showRight = true;
         this.showType(item);
       },
@@ -354,9 +355,9 @@
         this.showType(item);
         this.attachmentIdList = item.attachmentIdList;
       },
-      showDetail: function(item) {
+      showDetail: function (item) {
         this.detailShow = true;
-        this.detailItem = item;
+        this.currentItem = item;
         this.showType(item);
       }
     }

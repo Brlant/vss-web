@@ -18,7 +18,7 @@
     .oms-row {
       margin-bottom: 10px;
     }
-    p{
+    p {
       white-space: pre-wrap;
       text-indent: 2em;
     }
@@ -34,25 +34,25 @@
       </div>
       <div class="content-right content-padding">
         <el-row style="margin-bottom: 0">
-          <oms-row label="公告标题" :span="4">{{ currentItem.noticeTitle }}</oms-row>
+          <oms-row label="公告标题" :span="4">{{ form.noticeTitle }}</oms-row>
         </el-row>
         <el-row style="margin-bottom:0">
           <el-col :span="12">
             <oms-row label="发布人">
-              {{currentItem.createdBy}}
+              {{form.createdBy}}
             </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="发布时间">
-              {{currentItem.issuedTime|date}}
+              {{form.issuedTime|date}}
             </oms-row>
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
           <el-col :span="24">
-           <el-row>
-             <p>{{ currentItem.noticeContent }}</p>
-           </el-row>
+            <el-row>
+              <p>{{ form.noticeContent }}</p>
+            </el-row>
           </el-col>
         </el-row>
         <el-row>
@@ -60,7 +60,7 @@
             附件：
           </el-col>
           <el-col :span="21">
-            <attachment-lists :attachmentIdList="attachmentIdList" :objectId="currentItem.noticeId"
+            <attachment-lists :attachmentIdList="attachmentIdList" :objectId="form.noticeId"
                               :objectType="'notice'"></attachment-lists>
           </el-col>
         </el-row>
@@ -76,17 +76,23 @@
       attachmentLists
     },
     props: {
-      currentItem: {
+      formItem: {
         type: Object
       }
     },
-    data() {
+    data () {
       return {
-        attachmentIdList: []
+        attachmentIdList: [],
+        form: {}
       };
     },
     computed: {},
     watch: {
+      formItem: {
+        handler (val) {
+          this.form = val;
+        }
+      }
     },
     methods: {}
   };

@@ -125,14 +125,12 @@
   </div>
 </template>
 <script type="text/jsx">
-  import {http, VaccineRights} from '@/resources';
 
   export default {
     props: {
       formItem: Object,
-
     },
-    data() {
+    data () {
       return {
         form: {
           povList: [],
@@ -151,27 +149,23 @@
         currentItem: ''
       };
     },
-    mounted() {
-      this.getAll();
-
-    },
     watch: {
       formItem: {
-        handler(val) {
-          console.log(val);
-          if (val)
+        handler (val) {
+          if (val) {
             this.currentItem = Object.assign({}, val);
-          this.title = '疫苗授权';
-        },
+            this.title = '公告授权';
+            this.getAll();
+          }
+        }
       }
     },
     methods: {
-      renderFunc(h, option) {
+      renderFunc (h, option) {
         return (
           <span title={option.subordinateName}>{option.subordinateName}</span>
         );
       },
-
       getAll: function (query) {
         let params = Object.assign({}, {
           keyWord: query
@@ -182,7 +176,6 @@
           this.loading = false;
           this.selectedList();
         });
-
       },
       selectedList: function () {
         let id = this.formItem.noticeId;
@@ -191,58 +184,56 @@
           this.loading = false;
           this.handleData(this.form.povList);
         });
-    },
+      },
+      handleData: function (query) {
+        let dataList = Object.assign(this.orgList);
+        query.forEach(function (item) {
+          let number = dataList.indexOf(item);
+          if (number >= 0) {
+            dataList.splice(number, 1);
+          }
+        });
+        this.orgList = Object.assign([], dataList);
+      },
+      filterMethod (query, item) {
+        if (!query) return true;
+        return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
+          item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
+          item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
+          item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
+      },
+      onSubmit () {
+        this.$refs['d-form'].validate((valid) => {
+          if (!valid) {
+            return false;
+          }
 
-    handleData: function (query) {
-      let dataList = Object.assign(this.orgList);
-      query.forEach(function (item) {
-        let number = dataList.indexOf(item);
-        if (number>=0) {
-          dataList.splice(number, 1);
-        }
-      });
-      this.orgList = Object.assign([], dataList);
-    },
-
-    filterMethod(query, item) {
-      if (!query) return true;
-      return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
-        item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
-        item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
-        item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
-    },
-    onSubmit() {
-      this.$refs['d-form'].validate((valid) => {
-        if (!valid) {
-          return false;
-        }
-
-        if (!this.form.povList.length) {
-          this.$notify.info({
-            duration: 2000,
-            message: '请先选择单位'
-          });
-          return false;
-        }
-        let id = this.formItem.noticeId;
-        let obj = this.form.povList;
-        this.doing = true;
-        this.$http.put('/notice/issue/' + id, obj).then(() => {
-          this.$notify.success({
-            message: '添加公告授权成功'
-          });
-          this.$refs['d-form'].resetFields();
-          this.$emit('refresh');
-          this.doing = false;
-        }).catch(error => {
-          this.doing = false;
-          this.$notify.error({
-            message: error.response.data && error.response.data.msg || '添加公告授权失败'
+          if (!this.form.povList.length) {
+            this.$notify.info({
+              duration: 2000,
+              message: '请先选择单位'
+            });
+            return false;
+          }
+          let id = this.formItem.noticeId;
+          let obj = this.form.povList;
+          this.doing = true;
+          this.$http.put('/notice/issue/' + id, obj).then(() => {
+            this.$notify.success({
+              message: '添加公告授权成功'
+            });
+            this.$refs['d-form'].resetFields();
+            this.$emit('right-close');
+            this.doing = false;
+          }).catch(error => {
+            this.doing = false;
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '添加公告授权失败'
+            });
           });
         });
-      });
+      }
     }
-  }
   }
   ;
 </script>
