@@ -26,12 +26,12 @@
   }
 
   .border-show {
-    height: 20px;
-    border-bottom: 1px solid #777777;
-    opacity: 0.2;
-    margin-left: 40px;
-    margin-right: 40px;
-    margin-bottom: 20px;
+    height: 10px;
+    border-bottom: 1px solid #777;
+    opacity: .2;
+    /* margin-left: 40px; */
+    /* margin-right: 40px; */
+    margin-bottom: 10px;
   }
 
   .card-box .card-box-body .el-row {
@@ -64,7 +64,7 @@
           </el-col>
           <el-col :span="6">
             发布人：{{form.createdBy}}
-          </el-col>
+          </el-col>z
           <el-col :span="6">
             发布时间：{{form.issuedTime|date}}
           </el-col>
