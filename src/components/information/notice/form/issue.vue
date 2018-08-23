@@ -218,7 +218,7 @@
           let id = this.formItem.noticeId;
           let obj = this.form.povList;
           this.doing = true;
-          this.$http.put('/notice/issue/' + id, obj).then(() => {
+          this.$http.put('/notice/org/' + id, obj).then(() => {
             this.$notify.success({
               message: '添加公告授权成功'
             });
