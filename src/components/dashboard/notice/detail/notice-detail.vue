@@ -26,7 +26,7 @@
   }
 
   .border-show {
-    height: 10px;
+    /*height: 10px;*/
     border-bottom: 1px solid #777;
     opacity: .2;
     /* margin-left: 40px; */
