@@ -64,7 +64,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="2" class="empty-position">附件：</el-col>
+          <el-col :span="2" class="attachment-location">附件：</el-col>
           <el-col :span="22">
             <attachment-lists :attachmentIdList="attachmentIdList" :objectId="form.noticeId"
                               :objectType="'notice'"></attachment-lists>
