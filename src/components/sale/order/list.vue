@@ -58,6 +58,7 @@
     .order-list-item {
       color: #999;
       line-height: 20px;
+      cursor: pointer;
     }
     border-collapse: separate;
     border-spacing: 0;

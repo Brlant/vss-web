@@ -15,7 +15,6 @@ function funDownload (content, filename) {
   document.body.removeChild(eleLink);
 }
 
-
 export default {
   address: Address.value,
   requestType: {

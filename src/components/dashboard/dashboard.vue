@@ -17,6 +17,7 @@
 
 <template>
   <div class="container">
+    <!--公告-->
     <notice/>
     <!--异常的采购订单信息-->
     <purchase-order-exception/>

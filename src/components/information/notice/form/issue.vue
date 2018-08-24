@@ -3,7 +3,6 @@
 
   $leftWidth: 220px;
 
-
   .el-form .el-checkbox__label {
     font-size: 12px;
     padding-left: 5px;
@@ -101,7 +100,6 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="100px" style="padding-right: 20px">
-
             <el-form-item label="单位">
               <el-transfer v-loading="loading"
                            v-model="form.povList"
@@ -126,14 +124,12 @@
   </div>
 </template>
 <script type="text/jsx">
-  import {http, VaccineRights} from '@/resources';
 
   export default {
     props: {
       formItem: Object,
-      currentItem: Object
     },
-    data() {
+    data () {
       return {
         form: {
           povList: [],
@@ -149,29 +145,26 @@
         loading: false,
         selectIdList: [],
         finalList: [],
+        currentItem: ''
       };
     },
-    mounted() {
-      this.getAll();
-
-    },
     watch: {
-      formItem(val) {
-        // let form = JSON.parse(JSON.stringify(val));
-        // this.form = Object.assign(form, {povList: []});
-        this.title = '疫苗授权';
-      },
-      // povList(val) {
-      //   this.povList = JSON.parse(JSON.stringify(val));
-      // }
+      formItem: {
+        handler (val) {
+          if (val) {
+            this.currentItem = Object.assign({}, val);
+            this.title = '公告授权';
+            this.getAll();
+          }
+        }
+      }
     },
     methods: {
-      renderFunc(h, option) {
+      renderFunc (h, option) {
         return (
           <span title={option.subordinateName}>{option.subordinateName}</span>
         );
       },
-
       getAll: function (query) {
         let params = Object.assign({}, {
           keyWord: query
@@ -180,13 +173,11 @@
         this.$http.get('/erp-org/relationList', params).then(res => {
           this.orgList = res.data;
           this.loading = false;
-          this.selectedList(this.orgList);
+          this.selectedList();
         });
-
       },
-      selectedList: function (query) {
+      selectedList: function () {
         let id = this.formItem.noticeId;
-        console.log(id);
         this.$http.get('/notice/' + id + '/orgs').then(res => {
           this.form.povList = res.data;
           this.loading = false;
@@ -194,26 +185,23 @@
         });
       },
       handleData: function (query) {
-
-        let dataList = [];
-        dataList = Object.assign(this.orgList);
+        let dataList = Object.assign(this.orgList);
         query.forEach(function (item) {
-          let number = query.indexOf(item);
-          if (number) {
-            dataList.splice(0, number);
+          let number = dataList.indexOf(item);
+          if (number >= 0) {
+            dataList.splice(number, 1);
           }
         });
         this.orgList = Object.assign([], dataList);
       },
-
-      filterMethod(query, item) {
+      filterMethod (query, item) {
         if (!query) return true;
         return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
           item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
           item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
           item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
       },
-      onSubmit() {
+      onSubmit () {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;
@@ -228,22 +216,23 @@
           }
           let id = this.formItem.noticeId;
           let obj = this.form.povList;
-            this.doing = true;
-            this.$http.put('/notice/issue/' + id, obj).then(() => {
-              this.$notify.success({
-                message: '添加公告授权成功'
-              });
-              this.$refs['d-form'].resetFields();
-              this.$emit('refresh');
-              this.doing = false;
-            }).catch(error => {
-              this.doing = false;
-              this.$notify.error({
-                message: error.response.data && error.response.data.msg || '添加公告授权失败'
-              });
+          this.doing = true;
+          this.$http.put('/notice/org/' + id, obj).then(() => {
+            this.$notify.success({
+              message: '添加公告授权成功'
             });
+            this.$refs['d-form'].resetFields();
+            this.$emit('right-close');
+            this.doing = false;
+          }).catch(error => {
+            this.doing = false;
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '添加公告授权失败'
+            });
+          });
         });
       }
     }
-  };
+  }
+  ;
 </script>

@@ -1,28 +1,30 @@
 <template>
-  <card-box title="公告" v-if="isShow">
-    <div v-if="!noticeList.length" class="no-info">
-      暂无公告
-    </div>
-    <el-row v-else="" v-for="(item, index) in noticeList" :key="item.noticeId" type="flex" :gutter="15"
-            class="list-item"
-            :class="formatRowClass(item)"
-            @click.native="openDetail(item.noticeId)">
-      <el-col :span="8">
-        {{ item.noticeTitle}}
-      </el-col>
-    </el-row>
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
-                class="order-detail-info" partClass="pr-no-animation">
-      <detail :currentItem="noticeItem" @close="resetRightBox"></detail>
-    </page-right>
-  </card-box>
-
+    <card-box title="公告" v-if="isShow">
+      <div v-if="!noticeList.length" class="no-info">
+        暂无公告
+      </div>
+      <el-row v-else="" v-for="(item, index) in noticeList" :key="item.noticeId" type="flex" :gutter="15"
+              class="list-item"
+              :class="formatRowClass(item)"
+              @click.native="openDetail(item.noticeId)">
+        <el-col :span="20">
+          {{ item.noticeTitle}}
+        </el-col>
+        <el-col :span="4">
+          发布时间：{{ item.issuedTime | date }}
+        </el-col>
+      </el-row>
+      <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+        <detail :formItem="noticeItem" @close="resetRightBox"></detail>
+      </page-right>
+    </card-box>
 </template>
 <script>
   import detail from './detail/notice-detail';
+  import Perm from '@/components/common/perm';
 
   export default {
-    components: {detail},
+    components: {Perm, detail},
     data: function () {
       return {
         noticeList: [],
