@@ -1,5 +1,5 @@
 <template>
-    <card-box title="公告" v-if="isShow">
+    <card-box title="公告">
       <div v-if="!noticeList.length" class="no-info">
         暂无公告
       </div>
@@ -32,16 +32,6 @@
         showDetailPart: false
       };
     },
-    computed: {
-      isShow () {
-        return this.$store.state.permissions.indexOf('notice-watch') !== -1;
-      }
-    },
-    watch: {
-      isShow (val) {
-        if (val) this.getNoticeList();
-      }
-    },
     mounted () {
       this.getNoticeList();
     },
@@ -55,7 +45,6 @@
         }
       },
       getNoticeList () {
-        if (!this.isShow) return;
         this.$http.get('/notice/list').then(res => {
           this.noticeList = res.data;
         });
