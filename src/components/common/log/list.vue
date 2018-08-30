@@ -104,7 +104,8 @@
       <div class="text-center" v-show="(logList.length || pager.currentPage !== 1) && !loadingData">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                        :current-page="pager.currentPage"
-                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize" layout="sizes, prev, pager, next, jumper"
+                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize"
+                       layout="sizes, prev, pager, next, jumper"
                        :total="pager.count">
         </el-pagination>
       </div>
@@ -121,7 +122,7 @@
 
   export default {
 //    components: {detail},
-    data() {
+    data () {
       return {
         loadingData: true,
         showSearch: true,
@@ -145,7 +146,7 @@
         userList: []
       };
     },
-    mounted() {
+    mounted () {
       this.getLogPager(1);
     },
     computed: {},
@@ -176,12 +177,12 @@
           this.userList = res.data.list;
         });
       },
-      handleSizeChange(val) {
+      handleSizeChange (val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getLogPager(1);
       },
-      handleCurrentChange(val) {
+      handleCurrentChange (val) {
         this.getLogPager(val);
       },
       filterCustomer: function (query) {// 过滤客户
@@ -202,19 +203,18 @@
           this.loadingData = false;
         });
       },
-      showDetail(item) {
+      showDetail (item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
       },
-      resetRightBox() {
+      resetRightBox () {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
-        this.searchWord.startTime = this.formatTime(this.expectedTime[0]);
-        this.searchWord.endTime = this.formatTime(this.expectedTime[1]);
+        this.searchWord.startTime = this.formatTime(this.expectedTime[0]) + ' ' + '00:00:00';
+        this.searchWord.endTime = this.formatTime(this.expectedTime[1]) + ' ' + '23:59:59';
         Object.assign(this.filters, this.searchWord);
-        this.getLogPager(1);
       },
       resetSearchForm: function () {// 重置表单
         this.searchWord = {
@@ -224,9 +224,8 @@
         };
         this.expectedTime = '';
         Object.assign(this.filters, this.searchWord);
-        this.getLogPager(1);
       },
-      formatTime(date) {
+      formatTime (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }
