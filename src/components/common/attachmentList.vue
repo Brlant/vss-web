@@ -20,7 +20,7 @@
   }
 
   .attachment-name {
-    max-width: 200px;
+    max-width: 160px;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
@@ -28,26 +28,45 @@
   }
 </style>
 <template>
-  <ul class="show-list">
-    <li class="list-item list_flex" v-for="attachment in attachmentList" @click="handlePreview(attachment)">
-      <div class="attachment-name">
-        {{attachment.attachmentFileName}}
+  <div>
+    <ul class="show-list">
+      <li class="list-item list_flex" v-for="attachment in attachmentList" @click="handlePreview(attachment)">
+        <div class="attachment-name">
+          {{attachment.attachmentFileName}}
+        </div>
+        <div>
+          <perm :label="perm">
+            <a :href="attachment.attachmentStoragePath "
+               class="download-link pull-right" :download="attachment.attachmentFileName" @click.stop="">
+              <i class="el-icon-t-download"></i>
+            </a>
+          </perm>
+          <perm label="erp-attachment-name-update">
+            <a href="#" class="download-link pull-right" @click.stop.prevent="editName(attachment)">
+              <i class="el-icon-t-edit"></i>
+            </a>
+          </perm>
+          <perm :label="deletePermission">
+            <a href="#" class="download-link pull-right" @click.stop.prevent="handleRemove(attachment)">
+              <i class="el-icon-t-delete"></i>
+            </a>
+          </perm>
+        </div>
+      </li>
+    </ul>
+
+    <el-dialog title="编辑附件名称" :visible.sync="dialogFormVisible" :modal="false">
+      <el-form ref="form" :model="form" :rules="rules">
+        <el-form-item label="附件名称" :label-width="formLabelWidth" prop="attachmentFileName">
+          <el-input v-model="form.attachmentFileName" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click.prevent.stop="onSubmit('form')" :disabled="doing">确 定</el-button>
       </div>
-      <div>
-        <perm :label="perm">
-          <a :href="attachment.attachmentStoragePath "
-             class="download-link pull-right" :download="attachment.attachmentFileName" @click.stop="">
-            <i class="el-icon-t-download"></i>
-          </a>
-        </perm>
-        <perm :label="deletePermission">
-          <a href="#" class="download-link pull-right" @click.stop.prevent="handleRemove(attachment)">
-            <i class="el-icon-t-delete"></i>
-          </a>
-        </perm>
-      </div>
-    </li>
-  </ul>
+    </el-dialog>
+  </div>
 </template>
 <script>
   import {OmsAttachment} from '../../resources';
@@ -60,7 +79,16 @@
           objectType: this.objectType
         },
         attachmentList: [],
-        perm: this.permission
+        perm: this.permission,
+        dialogFormVisible: false,
+        form: {},
+        formLabelWidth: '120px',
+        rules: {
+          attachmentFileName: [
+            {required: true, message: '请输入附件名称', trigger: 'blur'}
+          ]
+        },
+        doing: false
       };
     },
     watch: {
@@ -80,6 +108,43 @@
     },
     props: ['objectId', 'objectType', 'attachmentIdList', 'permission', 'deletePermission'],
     methods: {
+      onSubmit: function (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (!valid || this.doing) return;
+          // 修改附件名称
+          let param = {'attachmentFileName': this.form.attachmentFileName};
+          let index = '';
+          this.attachmentList.forEach(val => {
+            if (val.attachmentId === this.form.attachmentId) {
+              index = this.attachmentList.indexOf(val);
+            }
+          });
+          this.doing = true;
+          this.$http.put(`/omsAttachment/${this.form.attachmentId}/name`, param).then(res => {
+            this.$notify.success({
+              message: '修改附件文件名成功'
+            });
+            this.attachmentList.splice(index, 1, res.data);
+            this.dialogFormVisible = false;
+            this.doing = false;
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '修改附件文件名失败'
+            });
+            this.doing = false;
+          });
+        });
+      },
+      editName: function (val) {
+        this.form = {
+          attachmentId: val.attachmentId,
+          attachmentFileName: val.attachmentFileName
+        };
+        this.dialogFormVisible = true;
+        if (this.$refs['form']) {
+          this.$refs['form'].clearValidate();
+        }
+      },
       handleRemove (attachment) {
         if (!attachment) {
           return;

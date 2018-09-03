@@ -688,6 +688,9 @@ export const procurementCollect = resource('/procurement-demand', http, {
   },
   queryStateNum (params) {
     return http.get('/procurement-demand/count', {params});
+  },
+  allotVaccine (ary) {
+    return http.put('/procurement-demand/assign/vaccine', ary);
   }
 });
 

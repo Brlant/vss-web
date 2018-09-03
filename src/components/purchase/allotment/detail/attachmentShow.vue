@@ -19,7 +19,7 @@
         .list-item {
           .attachment-delete, .download-link {
             float: right;
-            padding: 0 10px;
+            padding: 0 3px;
             color: #fff;
             font-size: 16px;
           }
@@ -27,11 +27,21 @@
             color: red;
           }
           &:hover .download-link {
+            display: block;
             color: #1c8de0;
+          }
+          .download-link {
+            display: none;
           }
         }
       }
     }
+  }
+
+  .list_flex {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
   }
 
   .exception-attachment {
@@ -44,7 +54,7 @@
         border: 0;
         .attachment-span, .download-link {
           float: right;
-          padding: 0 10px;
+          padding: 0 3px;
           color: #fff;
         }
         &:hover .attachment-span {
@@ -68,22 +78,32 @@
         <div class="accessory-list">
           <div v-if="orderAttachment.length">
             <ul class="show-list">
-              <li class="list-item" v-for="item in orderAttachment" :key="item.attachmentId"
-                  @click="showAttachment(item)">{{ item.attachmentFileName }}
-                <perm :label="currentAttachmentRight.remove">
-                   <span class="attachment-delete" @click.stop="deleteAttachMentManageItem(item)"
+              <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
+                  @click="showAttachment(item)">
+                <div class="attachment-name">
+                  {{item.attachmentFileName}}
+                </div>
+                <div>
+                  <perm :label="currentAttachmentRight.remove">
+                   <span class="download-link attachment-delete" @click.stop.prevent="deleteAttachMentManageItem(item)"
                          v-show="isShowDeleteButton">
                      <i class="el-icon-t-delete"></i>
                     </span>
-                </perm>
-                <perm :label="currentAttachmentRight.download">
-              <span class="attachment-delete">
-                <a class="download-link" :href="item.attachmentStoragePath" @click.stop=""
-                   :download="item.attachmentFileName">
-                  <i class="el-icon-t-download"></i>
-                </a>
-              </span>
-                </perm>
+                  </perm>
+                  <perm label="erp-attachment-name-update">
+                    <span class="download-link attachment-delete" @click.stop.prevent="editName(item)">
+                      <i class="el-icon-t-edit"></i>
+                    </span>
+                  </perm>
+                  <perm :label="currentAttachmentRight.download">
+                    <span class="attachment-delete">
+                      <a class="download-link" :href="item.attachmentStoragePath" @click.stop=""
+                         :download="item.attachmentFileName">
+                        <i class="el-icon-t-download"></i>
+                      </a>
+                    </span>
+                  </perm>
+                </div>
               </li>
             </ul>
           </div>
@@ -101,28 +121,52 @@
     </div>
     <div class="exception-attachment" v-else-if="attachmentClass === 'exception-attachment' ">
       <ul class="show-list">
-        <li class="list-item" v-for="item in orderAttachment" :key="item.attachmentId"
+        <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
             @click="showAttachment(item)">
-          {{ item.attachmentFileName }}
-          <perm :label="currentAttachmentRight.remove">
-              <span class="attachment-span" @click.stop="deleteAttachMentManageItem(item)">
-                 <i class="el-icon-t-delete"></i>
-              </span>
-          </perm>
-          <span class="attachment-span">
-              <a class="download-link" :href="item.attachmentStoragePath "
-                 :download="item.attachmentFileName" @click.stop="">
-                <i class="el-icon-t-download"></i>
-              </a>
-         </span>
+          <div class="attachment-name">
+            {{item.attachmentFileName}}
+          </div>
+          <div>
+            <perm :label="currentAttachmentRight.remove">
+                   <span class="download-link attachment-delete" @click.stop.prevent="deleteAttachMentManageItem(item)"
+                         v-show="isShowDeleteButton">
+                     <i class="el-icon-t-delete"></i>
+                    </span>
+            </perm>
+            <perm label="erp-attachment-name-update">
+                    <span class="download-link attachment-delete" @click.stop.prevent="editName(item)">
+                      <i class="el-icon-t-edit"></i>
+                    </span>
+            </perm>
+            <perm :label="currentAttachmentRight.download">
+                    <span class="attachment-delete">
+                      <a class="download-link" :href="item.attachmentStoragePath" @click.stop=""
+                         :download="item.attachmentFileName">
+                        <i class="el-icon-t-download"></i>
+                      </a>
+                    </span>
+            </perm>
+          </div>
         </li>
       </ul>
     </div>
+
+    <el-dialog title="编辑附件名称" :visible.sync="dialogFormVisible" :modal="false">
+      <el-form ref="form" :model="form" :rules="rules">
+        <el-form-item label="附件名称" :label-width="formLabelWidth" prop="attachmentFileName">
+          <el-input v-model="form.attachmentFileName" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click.prevent.stop="onSubmit('form')" :disabled="doing">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
-  import { OmsAttachment } from '@/resources';
+  import {OmsAttachment} from '@/resources';
 
   export default {
     props: {
@@ -166,19 +210,32 @@
         default: 'accessory'
       }
     },
+    data () {
+      return {
+        dialogFormVisible: false,
+        form: {},
+        formLabelWidth: '120px',
+        rules: {
+          attachmentFileName: [
+            {required: true, message: '请输入附件名称', trigger: 'blur'}
+          ]
+        },
+        doing: false
+      };
+    },
     computed: {
       isShowDeleteButton: function () {
-        let isShow = false;
-        let state = this.currentOrder.state;
-        if (state === '6' || state === '7') isShow = true;
+        let isShow = true;
+//        let state = this.currentOrder.state;
+//        if (state === '0' || state === '3') isShow = true;
         return isShow;
       },
       isShowAttachmentUpload: function () {// 是否显示附件上传
         let isShow = true;
-        let state = this.currentOrder.state;
-        if (state === '4' || state === '7' || state === '8' || state === '6') {
-          isShow = false;
-        }
+//        let state = this.currentOrder.state;
+//        if (state === '4' || state === '7' || state === '8' || state === '6') {
+//          isShow = false;
+//        }
         return isShow && this.isShowUpload;
       },
       objId () {
@@ -192,6 +249,43 @@
       }
     },
     methods: {
+      onSubmit: function (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (!valid || this.doing) return;
+          // 修改附件名称
+          let param = {'attachmentFileName': this.form.attachmentFileName};
+          let index = '';
+          this.orderAttachment.forEach(val => {
+            if (val.attachmentId === this.form.attachmentId) {
+              index = this.orderAttachment.indexOf(val);
+            }
+          });
+          this.doing = true;
+          this.$http.put(`/omsAttachment/${this.form.attachmentId}/name`, param).then(res => {
+            this.$notify.success({
+              message: '修改附件文件名成功'
+            });
+            this.orderAttachment.splice(index, 1, res.data);
+            this.dialogFormVisible = false;
+            this.doing = false;
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '修改附件文件名失败'
+            });
+            this.doing = false;
+          });
+        });
+      },
+      editName: function (val) {
+        this.form = {
+          attachmentId: val.attachmentId,
+          attachmentFileName: val.attachmentFileName
+        };
+        this.dialogFormVisible = true;
+        if (this.$refs['form']) {
+          this.$refs['form'].clearValidate();
+        }
+      },
       showAttachment: function (item) {// 显示预览
         this.$store.commit('changeAttachment', item.attachmentId);
       },
