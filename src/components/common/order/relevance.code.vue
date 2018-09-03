@@ -164,7 +164,7 @@
       <div class="text-center" v-show="(traceCodes.length || pager.currentPage !== 1) && !loadingData">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                        :current-page="pager.currentPage"
-                       :page-sizes="[10,50,100]" :page-size="10" layout="total ,sizes, prev, pager, next, jumper"
+                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize" layout="total ,sizes, prev, pager, next, jumper"
                        :total="pager.count">
         </el-pagination>
       </div>
@@ -202,7 +202,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 10
+          pageSize: parseInt(window.localStorage.getItem('currentPageSize'), 10) || 10
         },
         packageType: utils.packageType,
         doing: false,
@@ -222,6 +222,7 @@
     methods: {
       handleSizeChange (val) {
         this.pager.pageSize = val;
+        window.localStorage.setItem('currentPageSize', val);
         this.filterTraceCodes(1);
       },
       handleCurrentChange (val) {

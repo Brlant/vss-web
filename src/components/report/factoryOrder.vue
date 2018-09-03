@@ -155,6 +155,7 @@
         <el-pagination
           layout="sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
           :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
+          :page-sizes="[10,20,50,100]"
           :current-page="pager.currentPage">
         </el-pagination>
       </div>
@@ -162,7 +163,7 @@
   </div>
 </template>
 <script>
-  import { Goods } from '@/resources';
+  import {Goods} from '@/resources';
   //  import detail from './detail.vue';
   import utils from '@/tools/utils';
   import qs from 'qs';
@@ -192,7 +193,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20
+          pageSize: parseInt(window.localStorage.getItem('currentPageSize'), 10) || 10
         },
         expectedTime: '',
         showTable: false,
@@ -262,6 +263,7 @@
       },
       handleSizeChange (val) {
         this.pager.pageSize = val;
+        window.localStorage.setItem('currentPageSize', val);
         this.getBatches(1);
       },
       getBatches (pageNo) { // 得到订单列表

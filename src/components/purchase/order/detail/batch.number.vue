@@ -62,7 +62,7 @@
                     <div class="base-pic-list" v-if="item.drugControlReportList.length>0">
                       <div class="base-pic-item"
                            v-if="Util.getType(item.drugControlReportList[0].attachmentStoragePath)">
-                        <div @click="watchPhoto(item.drugControlReportList[0])">
+                        <div @click="watchDrugControlReport(item.drugControlReportList)">
                           <img
                             :src="item.drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
@@ -84,7 +84,7 @@
                   <div>
                     <div class="base-pic-list" v-if="item.batchReleaseList.length>0">
                       <div class="base-pic-item" v-if="Util.getType(item.batchReleaseList[0].attachmentStoragePath)">
-                        <div @click="watchPhoto(item.batchReleaseList[0])">
+                        <div @click="watchBatchRelease(item.batchReleaseList)">
                           <img
                             :src="item.batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
@@ -109,7 +109,7 @@
                     <div class="base-pic-list" v-if="item.importCertificateList.length>0">
                       <div class="base-pic-item"
                            v-if="Util.getType(item.importCertificateList[0].attachmentStoragePath)">
-                        <div @click="watchPhoto(item.importCertificateList[0])">
+                        <div @click="watchImportCertificate(item.importCertificateList)">
                           <img
                             :src="item.importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
@@ -131,7 +131,7 @@
                   <div>
                     <div class="base-pic-list" v-if="item.customsPassList.length>0">
                       <div class="base-pic-item" v-if="Util.getType(item.customsPassList[0].attachmentStoragePath)">
-                        <div @click="watchPhoto(item.customsPassList[0])">
+                        <div @click="watchCustomsPass(item.customsPassList)">
                           <img
                             :src="item.customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
@@ -238,11 +238,43 @@
       }
     },
     methods: {
-      watchPhoto(item) {
+      watchDrugControlReport (item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
-            attachmentList: item
+            attachmentList: item,
+            objectId: this.currentOrderId,
+            objectType: 'drugControlReport'
+          });
+        }
+      },
+      watchBatchRelease (item) {
+        if (item.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item[0].attachmentId,
+            attachmentList: item,
+            objectId: this.currentOrderId,
+            objectType: 'batchRelease'
+          });
+        }
+      },
+      watchImportCertificate (item) {
+        if (item.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item[0].attachmentId,
+            attachmentList: item,
+            objectId: this.currentOrderId,
+            objectType: 'importCertificate'
+          });
+        }
+      },
+      watchCustomsPass (item) {
+        if (item.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item[0].attachmentId,
+            attachmentList: item,
+            objectId: this.currentOrderId,
+            objectType: 'customsPass'
           });
         }
       },

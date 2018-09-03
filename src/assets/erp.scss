@@ -11,15 +11,19 @@
 .mb-15 {
   margin-bottom: 15px;
 }
+
 .mb-10 {
   margin-bottom: 10px;
 }
+
 .mt-10 {
   margin-top: 10px;
 }
+
 .mr-10 {
   margin-right: 10px;
 }
+
 .f20 {
   font-size: 20px;
 }
@@ -1314,14 +1318,12 @@ $borderColor: rgba(82, 82, 82, 0.23);
   }
 }
 
-
 .table-product-list {
   font-size: 12px;
   > tbody > tr > td, > thead > tr > th {
     padding: 5px;
   }
 }
-
 
 .table-product {
   margin: 0 -20px 0 -20px;
@@ -1343,4 +1345,9 @@ $borderColor: rgba(82, 82, 82, 0.23);
   position: absolute;
   right: 0;
   top: 30px
+}
+
+.attachment-title {
+  position: relative;
+  line-height: 20px;
 }

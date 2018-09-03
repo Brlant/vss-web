@@ -284,7 +284,7 @@ export const route = [
       {
         path: '/file',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'file', title: '批号文件管理', icon: 'fold', perm: 'vaccine-batch-process'},
+        meta: {moduleId: 'file', title: '批号文件管理', icon: 'validity', perm: 'vaccine-batch-process'},
         children: [
           {
             path: '/file/vaccine',
@@ -451,6 +451,16 @@ export const route = [
             meta: {moduleId: 'report', title: '出货一览表', perm: 'shipment-form-manager'}
           },
           {
+            path: '/drug-administration/report/in',
+            component: resolve => require(['./components/report/drug-administration-out.vue'], resolve),
+            meta: {moduleId: 'report', title: '市药监购进数据导出', perm: 'drug-administration-in-data-export', type: '0'}
+          },
+          {
+            path: '/drug-administration/report/out',
+            component: resolve => require(['./components/report/drug-administration-out.vue'], resolve),
+            meta: {moduleId: 'report', title: '市药监销售数据导出', perm: 'drug-administration-out-data-export', type: '1'}
+          },
+          {
             path: '/report/repertory',
             component: resolve => require(['./components/report/repertory.vue'], resolve),
             meta: {moduleId: 'report', title: '进销存盘点表', perm: 'inventory-form-manager'}
@@ -490,7 +500,7 @@ export const route = [
       {
         path: '/information',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
-        meta: {moduleId: 'information', title: '信息发布', icon: 'report', perm: 'erp-information-manager'},
+        meta: {moduleId: 'information', title: '信息发布', icon: 'publish-info', perm: 'erp-information-manager'},
         children: [
           {
             path: '/notice',

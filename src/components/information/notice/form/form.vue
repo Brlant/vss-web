@@ -47,17 +47,12 @@
         return title;
       }
     },
-    props: ['formItem', 'action', 'actionType'],
+    props: ['formItem', 'action'],
     watch: {
       formItem: function (val) {
         this.form = Object.assign({}, val);
         this.attachmentList = [];
         this.getFileList();
-      },
-      actionType: function (val) {
-        if (!val) {
-          this.$refs['form'].resetFields();
-        }
       }
     },
     methods: {

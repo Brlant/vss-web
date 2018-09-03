@@ -1,4 +1,19 @@
-import { Address } from '@dtop/dtop-web-common';
+import {Address} from '@dtop/dtop-web-common';
+
+function funDownload (content, filename) {
+  // 创建隐藏的可下载链接
+  let eleLink = document.createElement('a');
+  eleLink.download = filename;
+  eleLink.style.display = 'none';
+  // 字符内容转变成blob地址
+  let blob = new Blob([content]);
+  eleLink.href = URL.createObjectURL(blob);
+  // 触发点击
+  document.body.appendChild(eleLink);
+  eleLink.click();
+  // 然后移除
+  document.body.removeChild(eleLink);
+}
 
 export default {
   address: Address.value,
@@ -318,7 +333,6 @@ export default {
     }
     return count > 0;
   },
-
   download (src, fileName) {
     let $a = document.createElement('a');
     $a.setAttribute('href', src);
@@ -330,6 +344,15 @@ export default {
     body.appendChild($a);
     fileLink.click();
     body.removeChild($a);
+  },
+  downloadXml (src, fileName) {
+    this.$http({
+      url: src,
+      timeout: 1000000,
+      withCredentials: false
+    }).then(res => {
+      funDownload(res.data, fileName);
+    });
   },
   getCurrentHeight (vm, defaultHeight = 400) {
     if (vm) {
