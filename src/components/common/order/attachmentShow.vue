@@ -78,13 +78,10 @@
         <div class="accessory-list">
           <div v-if="orderAttachment.length">
             <ul class="show-list">
-              <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId">
-                <div class="attachment-name" v-show="!item.showEdit" @click="showAttachment(item)">
+              <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
+                  @click="showAttachment(item)">
+                <div class="attachment-name">
                   {{item.attachmentFileName}}
-                </div>
-                <div v-show="item.showEdit">
-                  <el-input v-model="item.attachmentFileName" placeholder="请输入附件名称" style="width: 400px"
-                            @blur="editAttachmentName(item)"></el-input>
                 </div>
                 <div>
                   <perm :label="currentAttachmentRight.remove">
@@ -93,7 +90,7 @@
                      <i class="el-icon-t-delete"></i>
                     </span>
                   </perm>
-                  <perm label="erp-attachment-name-update">
+                  <perm label="oms-attachment-name-update">
                     <span class="download-link attachment-delete" @click.stop.prevent="editName(item)">
                       <i class="el-icon-t-edit"></i>
                     </span>
@@ -126,12 +123,8 @@
       <ul class="show-list">
         <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
             @click="showAttachment(item)">
-          <div class="attachment-name" v-show="!item.showEdit" @click="showAttachment(item)">
+          <div class="attachment-name">
             {{item.attachmentFileName}}
-          </div>
-          <div v-show="item.showEdit">
-            <el-input v-model="item.attachmentFileName" placeholder="请输入附件名称" style="width: 400px"
-                      @blur="editAttachmentName(item)"></el-input>
           </div>
           <div>
             <perm :label="currentAttachmentRight.remove">
@@ -140,7 +133,7 @@
                      <i class="el-icon-t-delete"></i>
                     </span>
             </perm>
-            <perm label="erp-attachment-name-update">
+            <perm label="oms-attachment-name-update">
                     <span class="download-link attachment-delete" @click.stop.prevent="editName(item)">
                       <i class="el-icon-t-edit"></i>
                     </span>
@@ -157,6 +150,18 @@
         </li>
       </ul>
     </div>
+
+    <el-dialog title="编辑附件名称" :visible.sync="dialogFormVisible" :modal="false">
+      <el-form ref="form" :model="form" :rules="rules">
+        <el-form-item label="附件名称" :label-width="formLabelWidth" prop="attachmentFileName">
+          <el-input v-model="form.attachmentFileName" auto-complete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogFormVisible = false">取 消</el-button>
+        <el-button type="primary" @click.prevent.stop="onSubmit('form')" :disabled="doing">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -205,6 +210,19 @@
         default: 'accessory'
       }
     },
+    data () {
+      return {
+        dialogFormVisible: false,
+        form: {},
+        formLabelWidth: '120px',
+        rules: {
+          attachmentFileName: [
+            {required: true, message: '请输入附件名称', trigger: 'blur'}
+          ]
+        },
+        doing: false
+      };
+    },
     computed: {
       isShowDeleteButton: function () {
         let isShow = true;
@@ -226,51 +244,47 @@
         if (this.objectId) id = this.objectId;
         return id;
       },
-      attachmentList () {
-        if (this.orderAttachment) {
-          this.orderAttachment.forEach(item => {
-            item.showEdit = false;
-          });
-        }
-      },
       currentAttachmentRight () {
         return Object.assign({upload: '', watch: '', download: '', remove: ''}, this.attachmentRight);
       }
     },
     methods: {
-      editAttachmentName: function (item) {
-        if (item && !item.attachmentFileName) {
-          this.$notify.warning({
-            duration: 2000,
-            message: '附件文件名不能为空！'
+      onSubmit: function (formName) {
+        this.$refs[formName].validate((valid) => {
+          if (!valid || this.doing) return;
+          // 修改附件名称
+          let param = {'attachmentFileName': this.form.attachmentFileName};
+          let index = '';
+          this.orderAttachment.forEach(val => {
+            if (val.attachmentId === this.form.attachmentId) {
+              index = this.orderAttachment.indexOf(val);
+            }
           });
-          return;
-        }
-        // 修改附件名称
-        let param = {'attachmentFileName': item.attachmentFileName};
-        let index = this.orderAttachment.indexOf(item);
-        this.$http.put(`/omsAttachment/${item.attachmentId}/name`, param).then(res => {
-          this.$notify.success({
-            message: '修改附件文件名成功'
-          });
-          this.orderAttachment.splice(index, 1, res.data);
-        }).catch(error => {
-          this.$notify.error({
-            message: error.response.data && error.response.data.msg || '修改附件文件名失败'
+          this.doing = true;
+          this.$http.put(`/omsAttachment/${this.form.attachmentId}/name`, param).then(res => {
+            this.$notify.success({
+              message: '修改附件文件名成功'
+            });
+            this.orderAttachment.splice(index, 1, res.data);
+            this.dialogFormVisible = false;
+            this.doing = false;
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '修改附件文件名失败'
+            });
+            this.doing = false;
           });
         });
       },
       editName: function (val) {
-        if (val && !val.attachmentFileName) {
-          this.$notify.warning({
-            duration: 2000,
-            message: '附件文件名不能为空！'
-          });
-          return;
+        this.form = {
+          attachmentId: val.attachmentId,
+          attachmentFileName: val.attachmentFileName
+        };
+        this.dialogFormVisible = true;
+        if (this.$refs['form']) {
+          this.$refs['form'].clearValidate();
         }
-        let index = this.orderAttachment.indexOf(val);
-        val.showEdit = !val.showEdit;
-        this.orderAttachment.splice(index, 1, val);
       },
       showAttachment: function (item) {// 显示预览
         this.$store.commit('changeAttachment', item.attachmentId);
