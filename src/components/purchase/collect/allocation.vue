@@ -24,7 +24,8 @@
         <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/purchase/allocation')">返回采购汇总
         </el-button>
         <perm label="submit-purchansing-plan" v-show="!$route.query.type">
-          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 " :disabled="doing">生成采购合同</el-button>
+          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 " :disabled="doing">生成采购合同
+          </el-button>
         </perm>
       </div>
       <div class="order-list clearfix ">
@@ -120,7 +121,7 @@
   </div>
 </template>
 <script>
-  import { demandAssignment, OrgGoods, procurementCollect } from '@/resources';
+  import { OrgGoods, procurementCollect } from '@/resources';
 
   export default {
     data () {
@@ -203,16 +204,19 @@
         };
         let list = [];
         list.push(obj);
-        demandAssignment.allotVaccine(list);
+        procurementCollect.allotVaccine(list);
       },
       save (item) {
+        if (!item.purchaseQuantity) {
+          item.purchaseQuantity = 0;
+        }
         let obj = {
           id: item.list[0].detailId,
           procurementCount: item.purchaseQuantity
         };
         let list = [];
         list.push(obj);
-        demandAssignment.allotVaccine(list).then(() => {
+        procurementCollect.allotVaccine(list).then(() => {
           this.$notify.success({
             message: '分配采购数量成功'
           });
