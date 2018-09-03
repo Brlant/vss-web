@@ -90,7 +90,7 @@
                      <i class="el-icon-t-delete"></i>
                     </span>
                   </perm>
-                  <perm label="oms-attachment-name-update">
+                  <perm label="erp-attachment-name-update">
                     <span class="download-link attachment-delete" @click.stop.prevent="editName(item)">
                       <i class="el-icon-t-edit"></i>
                     </span>
@@ -133,7 +133,7 @@
                      <i class="el-icon-t-delete"></i>
                     </span>
             </perm>
-            <perm label="oms-attachment-name-update">
+            <perm label="erp-attachment-name-update">
                     <span class="download-link attachment-delete" @click.stop.prevent="editName(item)">
                       <i class="el-icon-t-edit"></i>
                     </span>
