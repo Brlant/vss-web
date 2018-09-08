@@ -81,7 +81,11 @@
               <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
                   @click="showAttachment(item)">
                 <div class="attachment-name">
-                  {{item.attachmentFileName}}
+                  <el-tooltip effect="dark" :content="item.attachmentFileName" placement="top">
+                    <span>
+                        {{item.attachmentFileName}}
+                    </span>
+                  </el-tooltip>
                 </div>
                 <div>
                   <perm :label="currentAttachmentRight.remove">
@@ -124,7 +128,11 @@
         <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
             @click="showAttachment(item)">
           <div class="attachment-name">
-            {{item.attachmentFileName}}
+            <el-tooltip effect="dark" :content="item.attachmentFileName" placement="top">
+                    <span>
+                        {{item.attachmentFileName}}
+                    </span>
+            </el-tooltip>
           </div>
           <div>
             <perm :label="currentAttachmentRight.remove">
