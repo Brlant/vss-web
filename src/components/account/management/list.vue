@@ -65,6 +65,7 @@
           <el-radio-group v-model="filters.status" size="small">
             <el-radio-button label="1">正常</el-radio-button>
             <el-radio-button label="2">停用</el-radio-button>
+            <el-radio-button label="0">未激活</el-radio-button>
           </el-radio-group>
           <span class="pull-right" style="margin-top: 8px">
            <span class="btn-search-toggle open" v-show="showSearch">
