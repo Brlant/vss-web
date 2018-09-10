@@ -11,7 +11,7 @@
       <el-form-item label="姓名" prop="name">
         <oms-input type="text" v-model="form.name" placeholder="请输入"></oms-input>
       </el-form-item>
-      <el-form-item label="手机号码" prop="phone"  class="contact-check">
+      <el-form-item label="手机号码" prop="phone" class="contact-check">
         <oms-input type="text" v-model="form.phone" placeholder="请输入"></oms-input>
       </el-form-item>
       <el-form-item label="Email">
@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import { User, OrgUser, http } from '../../../../resources';
+  import { http, OrgUser, User } from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -120,6 +120,7 @@
     },
     watch: {
       formItem: function (val) {
+        this.getRoleSelect();
         this.$refs['accountform'].clearValidate();
         if (val.id) {
           this.form = this.formItem;
@@ -133,8 +134,9 @@
           };
         }
       },
-      'orgId': function () {
-        this.getRoleSelect();
+      orgId () {
+        // 单位变化时, 清空角色列表
+        this.roleSelect = [];
       },
       showRight: function (val) {
         if (!val) {
@@ -149,6 +151,8 @@
           this.roleSelect = [];
           return;
         }
+        // 列表已经存在, 不在查询
+        if (this.roleSelect.length) return;
         let params = {objectId: 'cerp-system'};
         http.get(`/erp-access/orgs/${orgId}/self`, {params}).then(res => {
           this.roleSelect = res.data;
