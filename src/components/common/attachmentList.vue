@@ -32,8 +32,7 @@
         </div>
         <div>
           <perm :label="perm">
-            <a :href="attachment.attachmentStoragePath "
-               class="download-link pull-right" :download="attachment.attachmentFileName" @click.stop="">
+            <a class="download-link pull-right" @click.stop="$downloadFile(attachment)">
               <i class="el-icon-t-download"></i>
             </a>
           </perm>
