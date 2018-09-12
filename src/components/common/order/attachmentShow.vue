@@ -101,8 +101,7 @@
                   </perm>
                   <perm :label="currentAttachmentRight.download">
                     <span class="attachment-delete">
-                      <a class="download-link" :href="item.attachmentStoragePath" @click.stop=""
-                         :download="item.attachmentFileName">
+                      <a class="download-link" @click.stop="$downloadFile(item)">
                         <i class="el-icon-t-download"></i>
                       </a>
                     </span>
@@ -148,8 +147,7 @@
             </perm>
             <perm :label="currentAttachmentRight.download">
                     <span class="attachment-delete">
-                      <a class="download-link" :href="item.attachmentStoragePath" @click.stop=""
-                         :download="item.attachmentFileName">
+                      <a class="download-link" @click.stop="$downloadFile(item)">
                         <i class="el-icon-t-download"></i>
                       </a>
                     </span>
