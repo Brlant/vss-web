@@ -119,12 +119,13 @@
              v-for="(item,key) in vaccineType"
              @click="changeType(key,item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span
+            class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="d-table">
         <div class="d-table-left">
-            <h2 class="header">
+          <h2 class="header">
                 <span class="pull-right">
                   <perm label="second-vaccine-info-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
@@ -134,9 +135,9 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="el-icon-t-search"></i> </a>
                 </span>
-              货主疫苗产品资料
-            </h2>
-            <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
+            货主疫苗产品资料
+          </h2>
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
 
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
@@ -181,7 +182,8 @@
                     <el-button @click="edit"><i class="el-icon-t-edit"></i> 编辑</el-button>
                     </perm>
                    <perm label="second-vaccine-info-start">
-                    <el-button @click="enableRelation" v-show="data.status == '0'"><i class="el-icon-t-start"></i> 启用</el-button>
+                    <el-button @click="enableRelation" v-show="data.status == '0'"><i
+                      class="el-icon-t-start"></i> 启用</el-button>
                    </perm>
                    <perm label="second-vaccine-info-stop">
                     <el-button @click="forbid" v-show="data.status == '1' "><i
@@ -217,7 +219,7 @@
                   <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
                   <!--</goods-row>-->
                   <!--<goods-row label="疫苗标志" :span="8">-->
-                    <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                  <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
                   <!--</goods-row>-->
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
@@ -294,12 +296,18 @@
                       v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ - {{ data.goodsDto.storageEndTemperature}} ℃
                     </span>
                   </goods-row>
-                  <span v-for="packageDto in data.goodsDto.packageDtoList">
-                    <goods-row :label="'包装层级第' + packageDto.sort + '级'" :span="8"
-                               v-show="packageDto.conversionCount">
+                  <span v-for="(packageDto,index) in data.goodsDto.packageDtoList">
+                    <goods-row label="整件" :span="8"
+                               v-show="packageDto.conversionCount" v-if="data.goodsDto.wholePackageScheme===index+1">
                       {{ packageDto.conversionCount }}
                       <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                            v-show="packageDto.conversionCount"></dict>
+                            v-show="packageDto.conversionCount"></dict> /  <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict>
+                    </goods-row>
+                    <goods-row label="散件" :span="8"
+                               v-show="packageDto.conversionCount" v-if="index===0">
+                      {{ packageDto.conversionCount }}
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
+                            v-show="packageDto.conversionCount"></dict> / <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict>
                     </goods-row>
                   </span>
                 </el-col>
@@ -313,7 +321,8 @@
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
                   [ 疾控专用 ]
                 </el-col>
-                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
+                <el-col :span="4" class="text-right" style="font-size: 12px"
+                        v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                   [ 器械专用 ]
                 </el-col>
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
@@ -332,7 +341,8 @@
                   <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                     {{ data.goodsDto.propertyMap.productionLicenseValidity | date }}
                   </goods-row>
-                  <goods-row label="厂家备案凭证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
+                  <goods-row label="厂家备案凭证号" :span="12"
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.recordNumber
                     }}
                   </goods-row>
@@ -340,7 +350,8 @@
                              v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.registrationRecordNumber }}
                   </goods-row>
-                  <goods-row label="备案凭证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
+                  <goods-row label="备案凭证号有效期" :span="12"
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.goodsRecordNOValidity | date }}
                   </goods-row>
                   <goods-row label="OTC标志" :span="12" v-if="data.goodsDto.typeId==='0'">
@@ -379,7 +390,7 @@
                     }}
                   </goods-row>
                   <!--<goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">-->
-                    <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                  <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
                   <!--</goods-row>-->
                   <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
@@ -468,7 +479,7 @@
         }
       };
     },
-    mounted() {
+    mounted () {
       this.$emit('loaded');
       this.getGoodsList(1);
     },
@@ -477,7 +488,7 @@
         this.getGoodsList(1);
       },
       filters: {
-        handler() {
+        handler () {
           this.getGoodsList(1);
         },
         deep: true
@@ -558,7 +569,7 @@
           this.vaccineType[1].num = data['disable'];
         });
       },
-      queryOrgGoods() {
+      queryOrgGoods () {
         let id = this.currentItem.orgGoodsDto.id;
         if (!id) return;
         Vaccine.queryVaccineDetail(id).then(res => {
