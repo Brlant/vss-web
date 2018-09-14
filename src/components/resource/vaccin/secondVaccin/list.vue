@@ -299,17 +299,15 @@
                   <span v-for="(packageDto,index) in data.goodsDto.packageDtoList">
                     <goods-row label="整件" :span="8"
                                v-show="packageDto.conversionCount" v-if="data.goodsDto.wholePackageScheme===index+1">
-                       <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict> =
                       {{ packageDto.conversionCount }}
                       <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                            v-show="packageDto.conversionCount"></dict>
+                            v-show="packageDto.conversionCount"></dict> /  <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict>
                     </goods-row>
                     <goods-row label="散件" :span="8"
                                v-show="packageDto.conversionCount" v-if="index===0">
-                       <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict> =
                       {{ packageDto.conversionCount }}
                       <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                            v-show="packageDto.conversionCount"></dict>
+                            v-show="packageDto.conversionCount"></dict> / <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict>
                     </goods-row>
                   </span>
                 </el-col>
