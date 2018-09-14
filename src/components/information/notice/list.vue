@@ -363,6 +363,7 @@
           });
           this.showTypeList.splice(idList.indexOf(this.currentItem.noticeId), 1, item);
         }
+        this.form = {};
         this.showType(item);
         this.attachmentIdList = item.attachmentIdList;
       },

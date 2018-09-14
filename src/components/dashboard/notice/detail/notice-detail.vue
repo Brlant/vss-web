@@ -73,7 +73,7 @@
             <nl2br :content="form.noticeContent"></nl2br>
           </el-col>
         </el-row>
-        <el-row>
+        <el-row v-show="attachmentIdList.length>0">
           <el-col :span="2" class="attachment-title">附件:</el-col>
           <el-col :span="22">
             <attachment-lists :attachmentIdList="attachmentIdList" :objectId="form.noticeId"
@@ -91,6 +91,7 @@
 </template>
 <script>
   import attachmentLists from '../../../common/attachmentList.vue';
+  import {OmsAttachment} from '@/resources';
 
   export default {
     components: {
@@ -112,12 +113,19 @@
       formItem: {
         handler (val) {
           this.form = val;
+          this.getFileList();
         }
       }
     },
     methods: {
       doClose: function () {
         this.$emit('right-close');
+      },
+      getFileList: function () {
+        if (!this.form.noticeId) return;
+        OmsAttachment.queryOneAttachmentList(this.form.noticeId, 'notice').then(res => {
+          this.attachmentIdList = res.data;
+        });
       }
     }
   };
