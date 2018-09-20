@@ -121,6 +121,7 @@
           let data = window.localStorage.getItem('user');
           if (!data) {
             Auth.logout().then(() => {
+              this.$router.addRoutes(ErrorPage);
               this.$router.replace('/login');
             });
           }
@@ -129,6 +130,7 @@
         }).catch(() => {
           let valid = false;
           Auth.logout().then(() => {
+            this.$router.addRoutes(ErrorPage);
             path && basicRoutes.forEach(i => {
               if (path === i.path || /code\/(\w+)?$/.test(path)) {
                 valid = true;
