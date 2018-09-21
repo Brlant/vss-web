@@ -126,7 +126,7 @@
                       </span>
                   </perm>
                   <perm label="notice-issue">
-                    <span @click.stop="start()" v-show="!item.availabilityStatus">
+                    <span @click.stop="start(item)" v-show="!item.availabilityStatus">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-start"></i></a>
                           发布
@@ -239,6 +239,12 @@
           this.getPageList(1);
         },
         deep: true
+      },
+      showTypeList: {
+        handler () {
+          this.getPageList(1);
+        },
+        deep: true
       }
     },
     methods: {
@@ -276,20 +282,21 @@
           this.noticeType[1].num = data['notAvailable'];
         });
       },
-      start: function () {
-        this.$confirm('确认启用公告"' + this.data.noticeTitle + '"', '', {
+      start: function (item) {
+        this.$confirm('确认启用公告"' + item.noticeTitle + '"', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          Notice.start(this.data.noticeId).then(() => {
+          Notice.start(item.noticeId).then(() => {
             this.getPageList(1);
             this.$notify.success({
               duration: 2000,
               title: '成功',
-              message: '已成功发布公告"' + this.data.noticeTitle + '"'
+              message: '已成功发布公告"' + item.noticeTitle + '"'
             });
-            this.data.availabilityStatus = true;
+            // this.data.availabilityStatus = true;
+            item.availabilityStatus = true;
           });
         });
       },
@@ -366,6 +373,7 @@
         this.form = {};
         this.showType(item);
         this.attachmentIdList = item.attachmentIdList;
+        // this.queryStatusNum();
       },
       showDetail: function (item) {
         this.detailShow = true;
