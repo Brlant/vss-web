@@ -170,7 +170,7 @@
           keyWord: query
         });
         this.loading = true;
-        this.$http.get('/erp-org/relationList', params).then(res => {
+        this.$http.get('/erp-org/subordinate', params).then(res => {
           this.orgList = res.data;
           this.loading = false;
           this.selectedList();
