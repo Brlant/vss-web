@@ -147,7 +147,7 @@
                     </span>
                   </perm>
                   <perm label="notice-assign">
-                    <span @click.stop="top(item,0)" v-show="item.noticeFlag===100">
+                    <span @click.stop="top(item,0)" v-show="item.availabilityStatus&&item.noticeFlag===100">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-quxiaozhiding"></i></a>
                           取消置顶
