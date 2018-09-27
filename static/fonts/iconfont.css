@@ -7,14 +7,13 @@
   url('iconfont.svg?t=1538015908007#wmsfont') format('svg'); /* iOS 4.1- */
 }
 
-.wmsfont {
-  font-family:"wmsfont" !important;
-  font-size:16px;
-  font-style:normal;
+[class^='el-icon-t-'], [class*='el-icon-t-'] {
+  font-family: "wmsfont" !important;
+  font-size: 16px;
+  font-style: normal;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
-
 .el-icon-t-supplier:before { content: "\e603"; }
 
 .el-icon-t-delete:before { content: "\e601"; }
