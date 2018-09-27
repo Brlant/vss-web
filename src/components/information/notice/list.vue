@@ -239,13 +239,12 @@
           this.getPageList(1);
         },
         deep: true
-      },
-      showTypeList: {
+      }
+    /*  showTypeList: {
         handler () {
           this.getPageList(1);
-        },
-        deep: true
-      }
+        }
+      }*/
     },
     methods: {
       filterListColor: function (index) {
@@ -266,9 +265,11 @@
           noticeTitle: this.filters.typeTxt
         }, this.filters);
         Notice.queryPager(param).then(res => {
-          this.showTypeList = res.data.list;
+            this.showTypeList = res.data.list;
           this.data = Object.assign({}, {'id': ''}, res.data.list[0]);
-          this.currentItem = Object.assign({}, this.data);
+          if (Object.keys(this.currentItem).length === 0) {
+            this.currentItem = Object.assign({}, this.data);
+          }
           this.pager.totalPage = res.data.totalPage;
           this.pager.count = res.data.count;
         });
@@ -373,7 +374,7 @@
         this.form = {};
         this.showType(item);
         this.attachmentIdList = item.attachmentIdList;
-        // this.queryStatusNum();
+        this.getPageList(1);
       },
       showDetail: function (item) {
         this.detailShow = true;
