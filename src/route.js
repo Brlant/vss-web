@@ -9,7 +9,6 @@ export const route = [
         meta: {moduleId: 'home', title: '首页', icon: 'home', perm: 'show'},
         children: []
       },
-
       {
         path: '/purchase',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),

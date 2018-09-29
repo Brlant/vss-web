@@ -28,6 +28,10 @@
           <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
             {{currentOrder.pickUpWarehouseAddress}}
           </oms-row>
+          <oms-row label="申请人" :span="span"
+                   v-show="currentOrder.transportationMeansId === '2' && currentOrder.actualConsignee">
+            {{currentOrder.actualConsignee}}
+          </oms-row>
           <oms-row label="运输条件" :span="span">
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
           </oms-row>

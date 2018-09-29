@@ -118,15 +118,15 @@
                         编辑
                   </span>
                   </perm>
-                  <perm label="notice-stop" v-show="filters.status === 1 || filters.status === 11">
-                     <span @click.stop="forbid">
+                  <perm label="notice-stop" v-show="item.availabilityStatus">
+                     <span @click.stop="forbid(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-verify"></i></a>
                         撤回
                       </span>
                   </perm>
                   <perm label="notice-issue">
-                    <span @click.stop="start()" v-show="!item.availabilityStatus">
+                    <span @click.stop="start(item)" v-show="!item.availabilityStatus">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-start"></i></a>
                           发布
@@ -137,6 +137,20 @@
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-appoint"></i></a>
                           授权单位
+                    </span>
+                  </perm>
+                  <perm label="notice-assign">
+                    <span @click.stop="top(item,100)" v-show="item.availabilityStatus&&item.noticeFlag===0">
+                        <a href="#" class="btn-circle" @click.prevent=""><i
+                          class="el-icon-t-zhiding"></i></a>
+                          置顶
+                    </span>
+                  </perm>
+                  <perm label="notice-assign">
+                    <span @click.stop="top(item,0)" v-show="item.availabilityStatus&&item.noticeFlag===100">
+                        <a href="#" class="btn-circle" @click.prevent=""><i
+                          class="el-icon-t-quxiaozhiding"></i></a>
+                          取消置顶
                     </span>
                   </perm>
                 </div>
@@ -172,7 +186,7 @@
   import noticeForm from './form/form.vue';
   import issue from './form/issue';
   import attachmentLists from '../../common/attachmentList.vue';
-  import {Notice} from '../../../resources';
+  import { Notice } from '../../../resources';
   import ElButton from '../../../../node_modules/element-ui/packages/button/src/button.vue';
   import issueDetail from '../../dashboard/notice/detail/notice-detail';
 
@@ -240,6 +254,11 @@
         },
         deep: true
       }
+      /*  showTypeList: {
+          handler () {
+            this.getPageList(1);
+          }
+        }*/
     },
     methods: {
       filterListColor: function (index) {
@@ -262,7 +281,9 @@
         Notice.queryPager(param).then(res => {
           this.showTypeList = res.data.list;
           this.data = Object.assign({}, {'id': ''}, res.data.list[0]);
-          this.currentItem = Object.assign({}, this.data);
+          if (Object.keys(this.currentItem).length === 0) {
+            this.currentItem = Object.assign({}, this.data);
+          }
           this.pager.totalPage = res.data.totalPage;
           this.pager.count = res.data.count;
         });
@@ -276,20 +297,21 @@
           this.noticeType[1].num = data['notAvailable'];
         });
       },
-      start: function () {
-        this.$confirm('确认启用公告"' + this.data.noticeTitle + '"', '', {
+      start: function (item) {
+        this.$confirm('确认启用公告"' + item.noticeTitle + '"', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          Notice.start(this.data.noticeId).then(() => {
+          Notice.start(item.noticeId).then(() => {
             this.getPageList(1);
             this.$notify.success({
               duration: 2000,
               title: '成功',
-              message: '已成功发布公告"' + this.data.noticeTitle + '"'
+              message: '已成功发布公告"' + item.noticeTitle + '"'
             });
-            this.data.availabilityStatus = true;
+            // this.data.availabilityStatus = true;
+            item.availabilityStatus = true;
           });
         });
       },
@@ -298,18 +320,40 @@
         this.form = item;
         this.showType(item);
       },
-      forbid: function () {
-        this.$confirm('确认停用公告"' + this.data.noticeTitle + '"', '', {
+      top: function (item, flag) {
+        let topText;
+        if (flag === 100) {
+          topText = '置顶';
+        } else {
+          topText = '取消置顶';
+        }
+        this.$confirm('确认' + topText + '公告"' + item.noticeTitle + '"', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          Notice.forbid(this.data.noticeId).then(() => {
+          Notice.top(item.noticeId, flag).then(() => {
             this.getPageList(1);
             this.$notify.success({
               duration: 2000,
               title: '成功',
-              message: '已成功停用公告"' + this.data.noticeTitle + '"'
+              message: '已成功' + topText + '公告"' + item.noticeTitle + '"'
+            });
+          });
+        });
+      },
+      forbid: function (item) {
+        this.$confirm('确认停用公告"' + item.noticeTitle + '"', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          Notice.forbid(item.noticeId).then(() => {
+            this.getPageList(1);
+            this.$notify.success({
+              duration: 2000,
+              title: '成功',
+              message: '已成功停用公告"' + item.noticeTitle + '"'
             });
           });
         });
@@ -363,8 +407,10 @@
           });
           this.showTypeList.splice(idList.indexOf(this.currentItem.noticeId), 1, item);
         }
+        this.form = {};
         this.showType(item);
         this.attachmentIdList = item.attachmentIdList;
+        this.getPageList(1);
       },
       showDetail: function (item) {
         this.detailShow = true;

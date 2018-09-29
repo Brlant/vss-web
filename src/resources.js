@@ -1022,20 +1022,23 @@ export const BaseInfo = resource('/orgs', http, {
   }
 });
 export const Notice = resource('notice', http, {
-  queryPager(params) {
+  queryPager (params) {
     return http.get('/notice', {params});
   },
-  edit(id, obj) {
+  edit (id, obj) {
     return http.put('/notice/' + id, obj);
   },
-  start(id) {
+  start (id) {
     return http.put('/notice/issue/' + id);
   },
-  queryStateNum(params) {
+  queryStateNum (params) {
     return http.get('/notice/count', {params});
   },
-  forbid(id) {
+  forbid (id) {
     return http.put('notice/disable/' + id);
+  },
+  top (id, flag) {
+    return http.put('notice/top/' + id + '?flag=' + flag);
   }
 });
 

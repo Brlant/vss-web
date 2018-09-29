@@ -144,9 +144,8 @@
               <oms-input v-model="form.logisticsProviderId" placeholder="请输入物流商"></oms-input>
             </el-form-item>
             <el-form-item label="提货地址"
-                          :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
-              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
+              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable @change="changeWarehouseAdress">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in supplierWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -154,7 +153,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-
+            <el-form-item label="申请人" v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
+              <oms-input type="text" placeholder="请输入申请人" v-model="form.actualConsignee"></oms-input>
+            </el-form-item>
             <el-form-item label="运输条件" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationCondition" placeholder="请选择运输条件">
@@ -806,6 +807,7 @@
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.supplierWarehouses = [];
           this.form.pickUpAddress = '';
+          this.form.actualConsignee = '';
           this.product.orgGoodsId = '';
           this.form.detailDtoList = [];
           this.$refs['orderGoodsAddForm'].resetFields();
@@ -828,7 +830,10 @@
             if (isEdit) return;
             this.orgList.forEach(i => {
               if (i.id === val) {
-                this.form.pickUpAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
+                if (i.orgRelationList.length) {
+                  this.form.pickUpAddress = i.orgRelationList[0].addressId; // contactPerson
+                  this.form.actualConsignee = i.orgRelationList[0].contactPerson;
+                }
               }
             });
             // *************************//
@@ -837,9 +842,20 @@
         this.searchProduct();
         this.checkLicence(val);
       },
+      changeWarehouseAdress: function (val) {
+        if (!this.isStorageData) {// 当有缓存时，不做清空操作
+          this.form.actualConsignee = ''; // 仓库改变时, 设置实际收货人
+        }
+        this.supplierWarehouses.forEach(item => {
+          if (val === item.id) {
+            this.form.actualConsignee = item.contact;
+          }
+        });
+      },
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.pickUpAddress = '';
+          this.form.actualConsignee = '';
           this.form.logisticsProviderId = '';
           this.form.supplierId = '';
         }

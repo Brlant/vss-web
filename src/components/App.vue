@@ -112,7 +112,13 @@
       }
     },
     mounted: function () {
+      // 不鉴权的路径, 直接显示返回路径对应的页面
       let path = window.location.hash.slice(1);
+      let valid = basicRoutes.some(i => path === i.path || /code\/(\w+)?$/.test(path));
+      if (valid) {
+        this.$router.addRoutes(ErrorPage);
+        return;
+      }
       this.routesCopy = deepCopy(route);
       window.localStorage.removeItem('noticeError');
       if (!this.$store.state.user || !this.$store.state.user.userId) {
@@ -121,6 +127,7 @@
           let data = window.localStorage.getItem('user');
           if (!data) {
             Auth.logout().then(() => {
+              this.$router.addRoutes(ErrorPage);
               this.$router.replace('/login');
             });
           }
@@ -129,12 +136,8 @@
         }).catch(() => {
           let valid = false;
           Auth.logout().then(() => {
-            path && basicRoutes.forEach(i => {
-              if (path === i.path || /code\/(\w+)?$/.test(path)) {
-                valid = true;
-              }
-            });
-            this.$router.replace(valid ? path : '/login');
+            this.$router.addRoutes(ErrorPage);
+            this.$router.replace('/login');
           });
         });
       }
