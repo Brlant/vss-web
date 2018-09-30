@@ -89,7 +89,7 @@
                 </perm>
               </el-col>
             </el-row>
-            <order-goods-info :order-item="item"></order-goods-info>
+            <order-goods-info :order-item="item" :showBatch="true"></order-goods-info>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
@@ -105,7 +105,7 @@
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <receipt-info :orderId="currentOrderId" :showRight="showRight" @close="resetRightBox" @refreshOrder="refreshOrder"></receipt-info>
     </page-right>
-    <page-right :show="showDetailRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+    <page-right :show="showDetailRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
       <show-detail :orderId="currentOrderId" :showRight="showDetailRight" @close="resetRightBox"></show-detail>
     </page-right>
   </div>

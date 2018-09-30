@@ -51,7 +51,7 @@
   </div>
 </template>
 <script>
-  import basicInfo from '../../sale/order/detail/base-info.vue';
+  import basicInfo from './base-info.vue';
   import log from '@/components/common/order.log.vue';
   import receipt from './receipt-detail.vue';
   import { InWork, http } from '@/resources';
