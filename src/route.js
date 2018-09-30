@@ -122,7 +122,7 @@ export const route = [
           {
             path: '/pov/receipt',
             component: resolve => require(['./components/pov/receipt/list.vue'], resolve),
-            meta: {moduleId: 'pov', title: '收货订单', perm: 'pov-receipt-manager'}
+            meta: {moduleId: 'pov', title: '采购订单', perm: 'pov-receipt-manager'}
           },
           {
             path: '/pov/record',

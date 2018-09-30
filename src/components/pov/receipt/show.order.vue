@@ -27,7 +27,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">收货订单详情</h2>
+        <h2 class="clearfix right-title">订单详情</h2>
         <ul>
           <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
