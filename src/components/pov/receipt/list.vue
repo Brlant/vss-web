@@ -31,12 +31,12 @@
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header">
-          <el-col :span=" filters.status === '3' ? 5 : 6">货主/订单号</el-col>
+          <el-col :span=" filters.status === '10' ? 5 : 6">货主/订单号</el-col>
           <el-col :span="3">业务类型</el-col>
-          <el-col :span="filters.status === '3' ? 5 : 6">接种点</el-col>
-          <el-col :span="filters.status === '3' ? 5 : 6">时间</el-col>
+          <el-col :span="filters.status === '10' ? 5 : 6">接种点</el-col>
+          <el-col :span="filters.status === '10' ? 5 : 6">时间</el-col>
           <el-col :span="3">状态</el-col>
-          <el-col :span="3" v-if="filters.status === '3'">操作</el-col>
+          <el-col :span="3" v-if="filters.status === '10'">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -54,7 +54,7 @@
           <div class="order-list-item" v-for="item in orderList" @click="showDetailPart(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.status === '3' ? 5 : 6">
+              <el-col :span="filters.status === '10' ? 5 : 6">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -67,10 +67,10 @@
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="filters.status === '3' ? 5 : 6">
+              <el-col :span="filters.status === '10' ? 5 : 6">
                 <div>{{item.transactOrgName }}</div>
               </el-col>
-              <el-col :span="filters.status === '3' ? 5 : 6">
+              <el-col :span="filters.status === '10' ? 5 : 6">
                 <div>下单：{{item.createTime | minute }}</div>
                 <div>预计送货：{{ item.expectedTime | date }}</div>
               </el-col>
@@ -79,7 +79,7 @@
                   {{getOrderStatus(item)}}
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn pt10" v-if="filters.status === '3' ">
+              <el-col :span="3" class="opera-btn pt10" v-if="filters.status === '10' ">
                 <perm label="pov-receipt-manager">
                   <span @click.stop="showPart(item)">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
@@ -134,7 +134,7 @@
           pageSize: 15
         },
         filters: {
-          status: '3'
+          status: '10'
         },
         activeStatus: 0,
         currentOrderId: '',
