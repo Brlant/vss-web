@@ -64,7 +64,7 @@
               </el-col>
               <el-col :span="3">
                 <div class="vertical-center">
-                  <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
+                  <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
               <el-col :span="filters.status === '10' ? 5 : 6">
