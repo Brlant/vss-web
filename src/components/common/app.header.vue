@@ -3,7 +3,7 @@
 
   .main-header {
     background: #607D8B;
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;
@@ -105,7 +105,7 @@
   }
 
   .main-nav {
-    position: fixed;
+    position: absolute;
     top: $topMenuHeight;
     background: rgb(238, 243, 246);
     border-right: 1px solid #f1f1f1;
