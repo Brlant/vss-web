@@ -139,18 +139,25 @@
                           授权单位
                     </span>
                   </perm>
-                  <perm label="notice-assign">
+                  <perm label="notice-watch">
                     <span @click.stop="top(item,100)" v-show="item.availabilityStatus&&item.noticeFlag===0">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-zhiding"></i></a>
                           置顶
                     </span>
                   </perm>
-                  <perm label="notice-assign">
+                  <perm label="notice-watch">
                     <span @click.stop="top(item,0)" v-show="item.availabilityStatus&&item.noticeFlag===100">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-quxiaozhiding"></i></a>
                           取消置顶
+                    </span>
+                  </perm>
+                  <perm label="notice-delete">
+                    <span @click.stop="remove(item,0)" v-show="!item.availabilityStatus">
+                        <a href="#" class="btn-circle" @click.prevent=""><i
+                          class="el-icon-t-delete"></i></a>
+                          删除
                     </span>
                   </perm>
                 </div>
@@ -383,11 +390,20 @@
         this.showRight = true;
         this.showType(item);
       },
-      remove: function () {
-        this.$confirm('确认删除公告"' + this.data.noticeTitle + '"?', '', {
+      remove: function (item) {
+        this.$confirm('确认删除公告"' + item.noticeTitle + '"', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
+        }).then(() => {
+          Notice.remove(item.noticeId).then(() => {
+            this.getPageList(1);
+            this.$notify.success({
+              duration: 2000,
+              title: '成功',
+              message: '已成功删除公告"' + item.noticeTitle + '"'
+            });
+          });
         });
       },
       showType: function (type) {
