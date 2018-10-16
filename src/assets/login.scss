@@ -5,7 +5,7 @@
   display: flex;
   position: relative;
   align-items: center;
-
+  justify-content: center;
   .main-card-box {
     position: relative;
     margin: 50px auto;
@@ -82,7 +82,7 @@
   }
 }
 
-@media screen and (max-width: 800px) {
+@media (max-device-width: 700px) {
   .app-erp-mobile {
     .main-box-rap {
       .main-card-box {
@@ -117,24 +117,23 @@
           top: 30%;
           transform: translateY(-30%, -50%);
         }
-
-        footer.main-footer {
-          padding: 0;
-          background: #f9f9f9;
-          .container {
-            width: auto;
-            display: flex;
-            flex-direction: column;
-            text-align: center;
-          }
-          .police-part {
-            display: flex;
-            flex-direction: column;
-          }
-          img {
-            vertical-align: middle;
-          }
-        }
+      }
+    }
+    footer.main-footer {
+      padding: 0;
+      background: #f9f9f9;
+      .container {
+        width: auto;
+        display: flex;
+        flex-direction: column;
+        text-align: center;
+      }
+      .police-part {
+        display: flex;
+        flex-direction: column;
+      }
+      img {
+        vertical-align: middle;
       }
     }
   }
