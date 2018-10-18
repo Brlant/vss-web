@@ -1039,6 +1039,9 @@ export const Notice = resource('notice', http, {
   },
   top (id, flag) {
     return http.put('notice/top/' + id + '?flag=' + flag);
+  },
+  remove (id) {
+    return http.delete('notice/' + id);
   }
 });
 
