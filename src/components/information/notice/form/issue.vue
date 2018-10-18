@@ -91,7 +91,7 @@
         <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit" :disabled="doing" :loading="doing">{{ doing ? '正在授权' : '保存' }}
+            <el-button type="success" @click="onSubmit" :disabled="doing" :loading="doing">{{ doing ? '正在授权' : '保存并发布' }}
             </el-button>
           </li>
         </ul>
@@ -218,11 +218,12 @@
           let obj = this.form.povList;
           this.doing = true;
           this.$http.put('/notice/org/' + id, obj).then(() => {
-            this.$notify.success({
-              message: '添加公告授权成功'
-            });
+            // this.$notify.success({
+            //   message: '添加公告授权成功'
+            // });
             this.$refs['d-form'].resetFields();
-            this.$emit('right-close');
+            this.$emit('start-notice', this.formItem);
+            // this.$emit('right-close');
             this.doing = false;
           }).catch(error => {
             this.doing = false;
