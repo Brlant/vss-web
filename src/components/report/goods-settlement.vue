@@ -116,16 +116,30 @@
     },
     methods: {
       exportFile: function () {
+        if (!this.searchWord.orgGoodsId) {
+          this.$notify.warning({
+            duration: 2000,
+            message: '请选择货主货品！'
+          });
+          return;
+        }
+        if (!this.searchWord.year) {
+          this.$notify.warning({
+            duration: 2000,
+            message: '请输入年份！'
+          });
+          return;
+        }
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/purchase'});
-        this.$http.get('/erp-statement/purchase-detail/export', {params}).then(res => {
-          utils.download(res.data.path, '采购明细表');
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/goods-settlement'});
+        this.$http.get('/erp-statement/year/goods-settlement/export', {params}).then(res => {
+          utils.download(res.data.path, '疫苗当月结算表');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/purchase'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/goods-settlement'});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/purchase'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/goods-settlement'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });
