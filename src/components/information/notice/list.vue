@@ -126,10 +126,10 @@
                       </span>
                   </perm>
                   <perm label="notice-issue">
-                    <span @click.stop="start(item)" v-show="!item.availabilityStatus">
+                    <span @click.stop="authorize(item)" v-show="!item.availabilityStatus">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-start"></i></a>
-                          发布
+                          授权发布
                     </span>
                   </perm>
                   <perm label="notice-assign">
@@ -171,7 +171,7 @@
         <notice-form :formItem="form" @change="onSubmit" :action="action" @right-close="resetRightBox"></notice-form>
       </page-right>
       <page-right :show="showAuthorization" :css="{'width':'1200px','padding':0}" @right-close="resetRightBox">
-        <issue :formItem="form" @right-close="resetRightBox"></issue>
+        <issue :formItem="form" @start-notice="start" @right-close="resetRightBox"></issue>
       </page-right>
       <page-right :show="detailShow" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
         <issue-detail :formItem="form" @right-close="resetRightBox"></issue-detail>
@@ -186,7 +186,7 @@
   import noticeForm from './form/form.vue';
   import issue from './form/issue';
   import attachmentLists from '../../common/attachmentList.vue';
-  import { Notice } from '../../../resources';
+  import {Notice} from '../../../resources';
   import ElButton from '../../../../node_modules/element-ui/packages/button/src/button.vue';
   import issueDetail from '../../dashboard/notice/detail/notice-detail';
 
@@ -305,6 +305,7 @@
         }).then(() => {
           Notice.start(item.noticeId).then(() => {
             this.getPageList(1);
+            this.resetRightBox();
             this.$notify.success({
               duration: 2000,
               title: '成功',
@@ -313,7 +314,9 @@
             // this.data.availabilityStatus = true;
             item.availabilityStatus = true;
           });
+        }).catch(() => {
         });
+
       },
       authorize: function (item) {
         this.showAuthorization = true;
