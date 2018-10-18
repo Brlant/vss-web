@@ -493,6 +493,11 @@ export const route = [
             path: '/report/pov/detail',
             component: resolve => require(['./components/report/factoryOrder.vue'], resolve),
             meta: {moduleId: 'report', title: '全市出入库明细', perm: 'stock-in-out-form-manager'}
+          },
+          {
+            path: '/report/goods-settlement',
+            component: resolve => require(['./components/report/goods-settlement.vue'], resolve),
+            meta: {moduleId: 'report', title: '疫苗当月结算表', perm: 'purchasing-detail-form-manager'}
           }
         ]
       },
