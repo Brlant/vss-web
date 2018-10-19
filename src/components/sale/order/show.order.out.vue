@@ -105,7 +105,7 @@
         if (this.state === '4') {
           menu.push({name: '收货详情', key: 1});
         }
-        if (perms.includes('order-document-watch')) {
+        if (perms.includes('erp-order-document-watch')) {
           menu.push({name: '附件管理', key: 3});
         }
         let state = this.state;
