@@ -74,7 +74,7 @@
           cancelDocuments: []// 取消订单
         },
         attachmentRight: {// 附件管理权限
-          watch: 'order-document-watch',
+          watch: 'erp-order-document-watch',
           download: '',
           upload: '',
           remove: ''
