@@ -338,8 +338,9 @@
 
 </template>
 <script>
-  import {BaseInfo, receipt} from '@/resources';
+  import {BaseInfo, demandAssignment, procurementCollect, pullSignal} from '@/resources';
   import utils from '@/tools/utils';
+  import { receipt, VaccineRights } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.out.vue';
