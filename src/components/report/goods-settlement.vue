@@ -80,7 +80,6 @@
         <el-table-column prop="saleReturnCount" label="退入总数" :sortable="true"></el-table-column>
         <el-table-column prop="scrapCount" label="报废数" :sortable="true"></el-table-column>
         <el-table-column prop="monthCount" label="当月结存" :sortable="true"></el-table-column>
-        <el-table-column prop="remark" label="备注" :sortable="true"></el-table-column>
       </el-table>
     </div>
 
