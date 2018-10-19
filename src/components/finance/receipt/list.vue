@@ -73,6 +73,59 @@
 <template>
   <div class="pay-part">
     <div class="container">
+      <div class="container">
+        <div class="opera-btn-group" :class="{up:showSearch}">
+          <div class="opera-icon">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
+            <i class="el-icon-arrow-up"></i>
+            <span v-show="!showSearch">收起筛选</span>
+            <span v-show="showSearch">展开筛选</span>
+          </span>
+          </div>
+          <el-form class="advanced-query-form">
+            <el-row>
+              <el-col :span="8">
+                <oms-form-row label="日期" :span="6">
+                  <el-col :span="30">
+                    <el-date-picker
+                      v-model="bizDateAry"
+                      type="daterange"
+                      placeholder="请选择" format="yyyy-MM-dd">
+                    </el-date-picker>
+                  </el-col>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="8">
+                <oms-form-row label="接种点" :span="4">
+                  <el-select placeholder="请输入名称搜索接种点" v-model="searchCondition.keyword" filterable remote
+                             :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
+                             popperClass="good-selects">
+                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                      <div style="overflow: hidden">
+                        <span class="pull-left" style="clear: right">{{org.name}}</span>
+                      </div>
+                      <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码:</span>{{org.manufacturerCode}}
+                      </span>
+                      </div>
+                    </el-option>
+                  </el-select>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="6">
+                <oms-form-row label="" :span="2">
+                  <perm label="shipment-form-export">
+                    <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                      导出Excel
+                    </el-button>
+                  </perm>
+                </oms-form-row>
+              </el-col>
+            </el-row>
+          </el-form>
+        </div>
+      </div>
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item active"
              v-for="(item,key) in orgType">
@@ -285,6 +338,8 @@
 
 </template>
 <script>
+  import {BaseInfo, demandAssignment, procurementCollect, pullSignal} from '@/resources';
+  import utils from '@/tools/utils';
   import { receipt, VaccineRights } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
@@ -310,12 +365,23 @@
           createEndTime: '',
           status: ''
         },
+        orgList: [],
+        isLoading: false,
+        searchWord: {
+          povId: '',
+          demandStartTime: '',
+          demandEndTime: '',
+          orgAreaCode: '',
+          id: ''
+        },
         searchCondition: {
+          keyword: '',
           orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
           status: ''
         },
+        bizDateAry: '',
         createTimes: '',
         action: 'add',
         pager: {
@@ -526,6 +592,35 @@
       },
       onSubmit () {
         this.getOrgsList();
+      },
+      filterOrg: function (query) {// 过滤供货商
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
+        });
+      },
+      exportFile: function () {
+        this.searchCondition.createStartTime = this.formatTime(this.bizDateAry[0]);
+        this.searchCondition.createEndTime = this.formatTime(this.bizDateAry[1]);
+        let params = Object.assign(this.filterRights, this.searchCondition);
+        this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/out'});
+        this.$http.get('/accounts-receivable/export', {params}).then(res => {
+          utils.download(res.data, '应收账款一览表');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+        }).catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
       }
     }
   };
