@@ -497,7 +497,12 @@ export const route = [
           {
             path: '/report/goods-settlement',
             component: resolve => require(['./components/report/goods-settlement.vue'], resolve),
-            meta: {moduleId: 'report', title: '疫苗当月结算表', perm: 'vaccine-month-settlement-manager'}
+            meta: {moduleId: 'report', title: '疫苗当月结算表', perm: 'purchasing-detail-form-manager'}
+          },
+          {
+            path: '/report/cdc/first-vaccine',
+            component: resolve => require(['./components/report/cdc-first-vaccine.vue'], resolve),
+            meta: {moduleId: 'report', title: '一类苗领用记录', perm: 'cdc-free-vaccine-sale-manager'}
           }
         ]
       },
