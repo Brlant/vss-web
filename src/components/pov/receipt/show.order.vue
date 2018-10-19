@@ -89,7 +89,7 @@
         if (this.currentOrder.state === '8') {
           menu.push({name: '收货详情', key: 1});
         }
-        if (perms.includes('order-document-watch')) {
+        if (perms.includes('erp-order-document-watch')) {
           menu.push({name: '附件管理', key: 3});
         }
         menu.push({name: '批号相关', key: 4});
