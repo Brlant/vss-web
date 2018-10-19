@@ -15,11 +15,12 @@
         <div style="padding:0 20px">
           <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                    @submit.prevent="done" onsubmit="return false">
-            <el-form-item label="系统代码" prop="orgCode">
+            <el-form-item label="系统代码" prop="orgCode" v-if="needCode">
               <oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>
             </el-form-item>
             <el-form-item label="用户名" prop="username">
-              <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"></oms-input>
+              <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"
+                         @blur="check()"></oms-input>
             </el-form-item>
             <el-form-item label="密码" style="position:relative" prop="password">
               <oms-input v-model="user.password" :showFocus="isFocus === 3" type="password"
@@ -51,7 +52,7 @@
 </template>
 
 <script>
-  import { Auth, cerpAction } from '../resources';
+  import {Auth, cerpAction} from '../resources';
   import AppFooter from './common/app.footer.vue';
 
   export default {
@@ -83,18 +84,20 @@
           password: [
             {required: true, message: '请输入密码', trigger: 'blur'}
           ]
-        }
+        },
+        needCode: false
       });
     },
     methods: {
-      done () {
+      done() {
         this.$refs['loginForm'].validate((valid) => {
           if (valid) {
             this.btnString = '登陆中..';
             this.loading = true;
-            this.user.orgCode = this.trim(this.user.orgCode);
-            this.user.username = this.trim(this.user.username);
-            Auth.login(this.user).then(response => {
+            let userCopy = JSON.parse(JSON.stringify(this.user));
+            userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
+            userCopy.username = this.trim(this.user.username);
+            Auth.login(userCopy).then(response => {
               if (!response.data) return;
               let userId = window.localStorage.getItem('userId');
               this.$store.commit('initUser', response.data);
@@ -122,24 +125,34 @@
               if (data.code === 101 || data.code === 100) {
                 this.getCode();
               }
+              if (data.code === 405) {
+                this.needCode = true;
+              }
               this.btnString = '登陆';
               this.loading = false;
             });
           }
         });
-
+      },
+      check() {
+        this.$http.post('/login/check', {username: this.trim(this.user.username)}).catch(error => {
+          let data = error.response.data;
+          if (data.code === 405) {
+            this.needCode = true;
+          }
+        });
       },
       getCode: function () {
         this.showCode = true;
         this.codeUrl = process.env.NODE_API + '/foundation/CAPTCHA?' + Math.random();
       },
-      isFocusIndex () {
+      isFocusIndex() {
         this.isFocus = !this.user.orgCode ? 1 : !this.user.username ? 2 : !this.user.password ? 3 : '';
       },
       trim: function (str) {
         return str.replace(/(^\s*)|(\s*$)/g, '');
       },
-      queryWeChat () {
+      queryWeChat() {
         cerpAction.queryWeChatInfo().then(res => {
           this.$store.commit('initWeChatInfo', res.data);
         }).catch(() => {
