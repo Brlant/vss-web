@@ -497,7 +497,7 @@ export const route = [
           {
             path: '/report/goods-settlement',
             component: resolve => require(['./components/report/goods-settlement.vue'], resolve),
-            meta: {moduleId: 'report', title: '疫苗当月结算表', perm: 'purchasing-detail-form-manager'}
+            meta: {moduleId: 'report', title: '疫苗当月结算表', perm: 'vaccine-month-settlement-manager'}
           }
         ]
       },
