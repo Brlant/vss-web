@@ -172,7 +172,7 @@
           year: '',
           orgGoodsId: ''
         };
-        this.search();
+        this.reportChildList = [];
       },
       filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
