@@ -503,6 +503,11 @@ export const route = [
             path: '/report/cdc/first-vaccine',
             component: resolve => require(['./components/report/cdc-first-vaccine.vue'], resolve),
             meta: {moduleId: 'report', title: '一类苗领用记录', perm: 'cdc-free-vaccine-sale-manager'}
+          },
+          {
+            path: '/report/receive',
+            component: resolve => require(['./components/report/receive.vue'], resolve),
+            meta: {moduleId: 'report', title: '各单位领苗汇总表', perm: 'shipment-form-manager'}
           }
         ]
       },
