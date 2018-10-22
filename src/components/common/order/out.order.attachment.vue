@@ -7,11 +7,16 @@
                      objectType="followDocument" :attachmentRight="attachmentRight"
                      @refreshAttachment="queryAttachmentList"></attachment-show>
 
-    <!--<attachment-show label="在途温度" :orderAttachment="accessory.transitTemperatureFroms"-->
-    <!--:currentOrder="currentOrder"-->
-    <!--objectType="transitTemperatureFrom"-->
-    <!--:attachmentRight="attachmentRight"-->
-    <!--@refreshAttachment="queryAttachmentList"></attachment-show>-->
+    <attachment-show label="在途温度" :orderAttachment="accessory.transitTemperatureFroms"
+                     :currentOrder="currentOrder"
+                     objectType="transitTemperatureFrom"
+                     :attachmentRight="{
+        watch: 'erp-warehouse-temperature-watch',
+        download: '',
+        upload: '',
+        remove: ''
+      }"
+                     @refreshAttachment="queryAttachmentList"></attachment-show>
 
     <div v-show="currentOrder.state === '7' ">
       <attachment-show label="取消订单" :orderAttachment="accessory.cancelDocuments"
