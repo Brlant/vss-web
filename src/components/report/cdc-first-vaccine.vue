@@ -174,8 +174,6 @@
         },
         showSearch: true,
         searchWord: {
-          typeList: [],
-          bizTypeList: [],
           orgGoodsIdList: [],
           areaCode: '',
           factoryId: '',
@@ -342,8 +340,6 @@
       },
       resetSearchForm: function () {
         this.searchWord = {
-          typeList: [],
-          bizTypeList: [],
           orgGoodsIdList: [],
           areaCode: '',
           factoryId: '',
@@ -353,7 +349,7 @@
           batchNumberId: ''
         };
         this.bizDateAry = '';
-        this.reportList = [];
+        this.reportChildList = [];
       },
       filterRelation: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
