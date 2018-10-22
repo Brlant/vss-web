@@ -93,11 +93,12 @@
   }
 
   .invoice-list {
-    margin-left: 30px;
+    /*margin-top: 10px;*/
     margin-bottom: 10px;
     .show-item {
+      padding: 8px 0;
       border-bottom: 1px solid #f1f1f1;
-      line-height: 20px;
+      /*line-height: 20px;*/
       .el-row {
         align-items: center;
         .el-col {
@@ -126,6 +127,14 @@
     }
   }
 
+  .oms-row {
+    font-size: 14px;
+  }
+
+  .detail-title {
+    font-size: 14px;
+    margin-top: 10px;
+  }
 </style>
 
 <template>
@@ -140,103 +149,197 @@
           <oms-loading :loading="loadingData"></oms-loading>
         </div>
         <div v-if="!loadingData">
-          <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
-                   label-width="100px" style="padding-right: 20px">
-            <el-form-item :label="`${titleAry[type][2]}单据编号:`" class="mb0">
-              {{form.no }}
-            </el-form-item>
-            <el-form-item :label="titleAry[type][3]+ ':'" class="mb0">
-              {{form[type ===1 ? 'ownerName' : 'orgName'] }}
-            </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}方式:`" class="mb0">
-              <div v-show="form.advancePaymentFlag">
-                <span>预{{titleAry[type][2]}}</span>
-                <span v-show="form.payType">、<dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict></span>
-              </div>
-              <div v-show="!form.advancePaymentFlag">
-                <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
-              </div>
-            </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}金额:`" class="mb0">
-              ¥ {{form.amount | formatMoney}}
-            </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}说明:`" class="mb0">
-              {{form.explain}}
-            </el-form-item>
-            <el-form-item label="创建人:" class="mb0">
-              {{form.createName}}
-            </el-form-item>
-            <el-form-item label="创建时间:" class="mb0">
-              {{form.createTime | minute}}
-            </el-form-item>
-            <el-form-item label="状态:" class="mb0">
-              {{getOrderStatus(form)}}
-            </el-form-item>
-            <el-form-item :label="`${titleAry[type][2]}明细:`" class="mb0">
-              <span v-show="!form.detailList.length">无</span>
-              <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
-            </el-form-item>
-            <ul class="show-list invoice-list"
-                v-show="form.detailList.length">
-              <li class="show-item" style="background: #f1f1f1">
-                <el-row type="flex">
-                  <el-col :span="form.status==='0'?6:8">货品名称</el-col>
-                  <el-col :span="2">数量</el-col>
-                  <el-col :span="form.status==='0'?5:6">订单号</el-col>
-                  <el-col :span="4">发生时间</el-col>
-                  <el-col :span="4">本次收款金额</el-col>
-                  <el-col :span="3" v-show="form.status ==='0'">操作</el-col>
-                </el-row>
-              </li>
-              <li class="show-item" v-for="item in form.detailList">
-                <el-row type="flex">
-                  <el-col :span="form.status==='0'?6:8">{{ item.goodsName }}</el-col>
-                  <el-col :span="2">{{ item.count }}</el-col>
-                  <el-col :span="form.status==='0'?5:6">{{ item.orderNo }}</el-col>
-                  <el-col :span="4">{{ item.createTime | date }}</el-col>
-                  <el-col :span="4"> ￥{{item.paidMoney | formatMoney}}</el-col>
-                  <el-col :span="3" v-show="form.status ==='0'">
-                    <perm label="payment-receivable-audit">
+          <el-row>
+            <el-col :span="12">
+              <oms-row :span="8" :label="`${titleAry[type][2]}单据编号`">{{form.no }}</oms-row>
+              <oms-row :span="8" :label="titleAry[type][3]">{{form[type ===1 ? 'ownerName' : 'orgName'] }}</oms-row>
+              <oms-row :span="8" :label="`${titleAry[type][2]}方式`">
+                <div v-show="form.advancePaymentFlag">
+                  <span>预{{titleAry[type][2]}}</span>
+                  <span v-show="form.payType">、<dict :dict-group="'PaymentMethod'"
+                                                     :dict-key="form.payType"></dict></span>
+                </div>
+                <div v-show="!form.advancePaymentFlag">
+                  <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
+                </div>
+              </oms-row>
+              <oms-row :span="8" :label="`${titleAry[type][2]}金额`">
+                ¥ {{form.amount | formatMoney}}
+              </oms-row>
+            </el-col>
+            <el-col :span="12">
+              <oms-row :span="8" label="创建人"> {{form.createName}}</oms-row>
+              <oms-row :span="8" label="创建时间">{{form.createTime | minute}}</oms-row>
+              <oms-row :span="8" label="状态">{{getOrderStatus(form)}}</oms-row>
+              <oms-row :span="8" :label="`${titleAry[type][2]}说明`">
+                {{form.explain}}
+              </oms-row>
+            </el-col>
+          </el-row>
+          <oms-row :span="4" label="审核意见" v-show="form.status!=='0' && form.status !=='-1'">
+                <span v-show="form.status!=='0' && form.status !=='-1'">
+                  <span v-show="!form.auditOpinion">无</span>
+                  <span v-show="form.auditOpinion">{{ form.auditedName }}   {{ form.auditTime | minute}}  {{ form.auditOpinion }}</span>
+                </span>
+          </oms-row>
+          <div class="detail-title">
+            <span>{{`${titleAry[type][2]}明细`}}:</span>
+            <span v-show="!form.detailList.length">无</span>
+            <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
+          </div>
+          <ul class="show-list invoice-list"
+              v-show="form.detailList.length">
+            <li class="show-item" style="background: #f1f1f1">
+              <el-row type="flex">
+                <el-col :span="form.status==='0'?6:8">货品名称</el-col>
+                <el-col :span="2">数量</el-col>
+                <el-col :span="form.status==='0'?5:6">订单号</el-col>
+                <el-col :span="4">发生时间</el-col>
+                <el-col :span="4">本次收款金额</el-col>
+                <el-col :span="3" v-show="form.status ==='0'">操作</el-col>
+              </el-row>
+            </li>
+            <li class="show-item" v-for="item in form.detailList">
+              <el-row type="flex">
+                <el-col :span="form.status==='0'?6:8">{{ item.goodsName }}</el-col>
+                <el-col :span="2">{{ item.count }}</el-col>
+                <el-col :span="form.status==='0'?5:6">{{ item.orderNo }}</el-col>
+                <el-col :span="4">{{ item.createTime | date }}</el-col>
+                <el-col :span="4"> ￥{{item.paidMoney | formatMoney}}</el-col>
+                <el-col :span="3" v-show="form.status ==='0'">
+                  <perm label="payment-receivable-audit">
                       <span class="delete-icon" @click.stop.prevent="deleteDetailItem(item)">
                           <i class="el-icon-t-remove"></i><span>删除</span>
                       </span>
-                    </perm>
-                  </el-col>
-                </el-row>
-              </li>
-            </ul>
-            <el-form-item label="审核意见:">
-              <oms-input v-show="form.status ==='0' || form.status ==='-1'" type="textarea"
-                         v-model="form.auditOpinion" placeholder="请输入审核意见"
-                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
-              <span v-show="form.status!=='0' && form.status !=='-1'">
-                 <span v-show="!form.auditOpinion">无</span>
-                <span v-show="form.auditOpinion">{{ form.auditedName }}   {{ form.auditTime | minute
-                  }}  {{ form.auditOpinion }}</span>
-              </span>
-            </el-form-item>
-            <el-form-item style="margin-top: 10px">
-              <div v-if="type===1">
-                <perm :label="perms[1]" v-show="form.status === '0'">
-                  <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
-                </perm>
-                <perm :label="perms[2]">
-                  <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
-                </perm>
-              </div>
-              <div v-else>
-                <perm :label="perms[1]" v-show="form.status === '-1'">
-                  <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
-                </perm>
-                <perm :label="perms[2]" v-show="form.status === '1'">
-                  <el-button plain :disabled="doing" type="success" @click="audited('确认收款')">收款确认</el-button>
-                </perm>
-                <perm :label="perms[3]">
-                  <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
-                </perm>
-              </div>
-            </el-form-item>
-          </el-form>
+                  </perm>
+                </el-col>
+              </el-row>
+            </li>
+          </ul>
+          <oms-row :span="4" label="审核意见" v-show="form.status ==='0' || form.status ==='-1'">
+            <oms-input type="textarea"
+                       v-model="form.auditOpinion" placeholder="请输入审核意见"
+                       :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+          </oms-row>
+          <oms-row :span="4" class="mt-10">
+            <div v-if="type===1">
+              <perm :label="perms[1]" v-show="form.status === '0'">
+                <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
+              </perm>
+              <perm :label="perms[2]">
+                <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
+              </perm>
+            </div>
+            <div v-else>
+              <perm :label="perms[1]" v-show="form.status === '-1'">
+                <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
+              </perm>
+              <perm :label="perms[2]" v-show="form.status === '1'">
+                <el-button plain :disabled="doing" type="success" @click="audited('确认收款')">收款确认</el-button>
+              </perm>
+              <perm :label="perms[3]">
+                <el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>
+              </perm>
+            </div>
+          </oms-row>
+
+          <!--<el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"-->
+          <!--label-width="100px" style="padding-right: 20px">-->
+          <!--<el-form-item :label="`${titleAry[type][2]}单据编号:`" class="mb0">-->
+          <!--{{form.no }}-->
+          <!--</el-form-item>-->
+          <!--<el-form-item :label="titleAry[type][3]+ ':'" class="mb0">-->
+          <!--{{form[type ===1 ? 'ownerName' : 'orgName'] }}-->
+          <!--</el-form-item>-->
+          <!--<el-form-item :label="`${titleAry[type][2]}方式:`" class="mb0">-->
+          <!--<div v-show="form.advancePaymentFlag">-->
+          <!--<span>预{{titleAry[type][2]}}</span>-->
+          <!--<span v-show="form.payType">、<dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict></span>-->
+          <!--</div>-->
+          <!--<div v-show="!form.advancePaymentFlag">-->
+          <!--<dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>-->
+          <!--</div>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item :label="`${titleAry[type][2]}金额:`" class="mb0">-->
+          <!--¥ {{form.amount | formatMoney}}-->
+          <!--</el-form-item>-->
+          <!--<el-form-item :label="`${titleAry[type][2]}说明:`" class="mb0">-->
+          <!--{{form.explain}}-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="创建人:" class="mb0">-->
+          <!--{{form.createName}}-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="创建时间:" class="mb0">-->
+          <!--{{form.createTime | minute}}-->
+          <!--</el-form-item>-->
+          <!--<el-form-item label="状态:" class="mb0">-->
+          <!--{{getOrderStatus(form)}}-->
+          <!--</el-form-item>-->
+          <!--<el-form-item :label="`${titleAry[type][2]}明细:`" class="mb0">-->
+          <!--<span v-show="!form.detailList.length">无</span>-->
+          <!--<span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>-->
+          <!--</el-form-item>-->
+          <!--<ul class="show-list invoice-list"-->
+          <!--v-show="form.detailList.length">-->
+          <!--<li class="show-item" style="background: #f1f1f1">-->
+          <!--<el-row type="flex">-->
+          <!--<el-col :span="form.status==='0'?6:8">货品名称</el-col>-->
+          <!--<el-col :span="2">数量</el-col>-->
+          <!--<el-col :span="form.status==='0'?5:6">订单号</el-col>-->
+          <!--<el-col :span="4">发生时间</el-col>-->
+          <!--<el-col :span="4">本次收款金额</el-col>-->
+          <!--<el-col :span="3" v-show="form.status ==='0'">操作</el-col>-->
+          <!--</el-row>-->
+          <!--</li>-->
+          <!--<li class="show-item" v-for="item in form.detailList">-->
+          <!--<el-row type="flex">-->
+          <!--<el-col :span="form.status==='0'?6:8">{{ item.goodsName }}</el-col>-->
+          <!--<el-col :span="2">{{ item.count }}</el-col>-->
+          <!--<el-col :span="form.status==='0'?5:6">{{ item.orderNo }}</el-col>-->
+          <!--<el-col :span="4">{{ item.createTime | date }}</el-col>-->
+          <!--<el-col :span="4"> ￥{{item.paidMoney | formatMoney}}</el-col>-->
+          <!--<el-col :span="3" v-show="form.status ==='0'">-->
+          <!--<perm label="payment-receivable-audit">-->
+          <!--<span class="delete-icon" @click.stop.prevent="deleteDetailItem(item)">-->
+          <!--<i class="el-icon-t-remove"></i><span>删除</span>-->
+          <!--</span>-->
+          <!--</perm>-->
+          <!--</el-col>-->
+          <!--</el-row>-->
+          <!--</li>-->
+          <!--</ul>-->
+          <!--<el-form-item label="审核意见:">-->
+          <!--<oms-input v-show="form.status ==='0' || form.status ==='-1'" type="textarea"-->
+          <!--v-model="form.auditOpinion" placeholder="请输入审核意见"-->
+          <!--:autosize="{ minRows: 2, maxRows: 5}"></oms-input>-->
+          <!--<span v-show="form.status!=='0' && form.status !=='-1'">-->
+          <!--<span v-show="!form.auditOpinion">无</span>-->
+          <!--<span v-show="form.auditOpinion">{{ form.auditedName }}   {{ form.auditTime | minute-->
+          <!--}}  {{ form.auditOpinion }}</span>-->
+          <!--</span>-->
+          <!--</el-form-item>-->
+          <!--<el-form-item style="margin-top: 10px">-->
+          <!--<div v-if="type===1">-->
+          <!--<perm :label="perms[1]" v-show="form.status === '0'">-->
+          <!--<el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>-->
+          <!--</perm>-->
+          <!--<perm :label="perms[2]">-->
+          <!--<el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>-->
+          <!--</perm>-->
+          <!--</div>-->
+          <!--<div v-else>-->
+          <!--<perm :label="perms[1]" v-show="form.status === '-1'">-->
+          <!--<el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>-->
+          <!--</perm>-->
+          <!--<perm :label="perms[2]" v-show="form.status === '1'">-->
+          <!--<el-button plain :disabled="doing" type="success" @click="audited('确认收款')">收款确认</el-button>-->
+          <!--</perm>-->
+          <!--<perm :label="perms[3]">-->
+          <!--<el-button v-show="isShowButton" plain :disabled="doing" @click="cancelItem">取消</el-button>-->
+          <!--</perm>-->
+          <!--</div>-->
+          <!--</el-form-item>-->
+          <!--</el-form>-->
 
         </div>
       </div>
@@ -278,7 +381,7 @@
       };
     },
     computed: {
-      isShowButton () {
+      isShowButton() {
         let {type, formItem} = this;
         let {status} = formItem;
         return type === 1 && status === '0' || type === 2 && (status === '-1' || status === '1');
@@ -295,7 +398,7 @@
     },
 
     methods: {
-      queryDetail (key) {
+      queryDetail(key) {
         this.loadingData = true;
         http.get(`/bill-receivable/${key}`).then(res => {
           this.form = res.data;
@@ -340,7 +443,7 @@
           });
         });
       },
-      cancelItem () {
+      cancelItem() {
         this.$confirmOpera('确认取消' + this.titleAry[this.type][0] + '？', () => {
           this.doing = true;
           let httpRequest = this.$http.put(`/pov-bill/cancel/${this.formItem.id}`);
