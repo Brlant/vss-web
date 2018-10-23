@@ -1,7 +1,7 @@
 <style lang="scss" scoped>
   @import "../../../../../assets/mixins.scss";
 
-  $leftWidth: 200px;
+  $leftWidth: 0;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -140,9 +140,9 @@
 <template>
   <div>
     <div class="content-part">
-      <div class="content-left">
-        <h2 class="clearfix right-title">{{titleAry[type][0]}}详情</h2>
-      </div>
+      <!--<div class="content-left">-->
+      <!--<h2 class="clearfix right-title">{{titleAry[type][0]}}详情</h2>-->
+      <!--</div>-->
       <div class="content-right min-gutter">
         <h3>{{titleAry[type][0]}}详情</h3>
         <div v-if="loadingData">
@@ -221,7 +221,7 @@
                        v-model="form.auditOpinion" placeholder="请输入审核意见"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </oms-row>
-          <oms-row :span="4" class="mt-10">
+          <oms-row :span="form.status ==='0' || form.status ==='-1' ? 4 : 2" class="mt-10">
             <div v-if="type===1">
               <perm :label="perms[1]" v-show="form.status === '0'">
                 <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>

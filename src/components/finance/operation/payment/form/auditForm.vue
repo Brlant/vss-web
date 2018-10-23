@@ -1,7 +1,7 @@
 <style lang="scss" scoped>
   @import "../../../../../assets/mixins.scss";
 
-  $leftWidth: 200px;
+  $leftWidth: 0;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -139,9 +139,9 @@
 <template>
   <div>
     <div class="content-part">
-      <div class="content-left">
-        <h2 class="clearfix right-title">付款申请详情</h2>
-      </div>
+      <!--<div class="content-left">-->
+      <!--<h2 class="clearfix right-title">付款申请详情</h2>-->
+      <!--</div>-->
       <div class="content-right min-gutter">
         <h3>付款申请详情</h3>
         <div v-if="loadingData">
@@ -182,24 +182,24 @@
               v-if="form.detailList.length">
             <li class="show-item" style="background: #f1f1f1">
               <el-row type="flex">
-                <el-col :span="form.billPayType === '1' ? 5 : 6">货品名称</el-col>
+                <el-col :span="form.billPayType === '1' ? 6 : 7">货品名称</el-col>
                 <el-col :span="2">数量</el-col>
                 <el-col :span="form.billPayType === '1' ? 4 : 5">订单号</el-col>
                 <el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>
-                <el-col :span="form.billPayType === '1' ? 4 : 5">发生时间</el-col>
+                <el-col :span="form.billPayType === '1' ? 3 : 4">发生时间</el-col>
                 <el-col :span="form.billPayType === '1' ? 3 : 4">本次付款金额</el-col>
                 <el-col :span="2" v-show="form.status ==='0'">操作</el-col>
               </el-row>
             </li>
             <li class="show-item" v-for="item in form.detailList">
               <el-row type="flex">
-                <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.goodsName }}</el-col>
+                <el-col :span="form.billPayType === '1' ? 6 : 7">{{ item.goodsName }}</el-col>
                 <el-col :span="2">{{ item.count }}</el-col>
                 <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.orderNo }}</el-col>
                 <el-col :span="4" v-show="form.billPayType === '1'" class="break-word">
                   {{ item.invoiceNo ? item.invoiceNo : '无' }}
                 </el-col>
-                <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.createTime | date }}</el-col>
+                <el-col :span="form.billPayType === '1' ? 3 : 4">{{ item.createTime | date }}</el-col>
                 <el-col :span="form.billPayType === '1' ? 3 : 4"> ￥{{item.paidMoney | formatMoney}}</el-col>
                 <el-col :span="2" v-show="form.status ==='0'">
                   <perm label="payment-payable-audit">
@@ -215,7 +215,7 @@
             <oms-input type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </oms-row>
-          <oms-row :span="4" class="mt-10">
+          <oms-row :span="form.status ==='0' ? 4 : 2" class="mt-10">
             <perm label="payment-payable-audit">
               <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success"
                          @click="audited"
