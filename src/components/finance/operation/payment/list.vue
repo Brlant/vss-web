@@ -238,7 +238,7 @@
         :current-page="pager.currentPage">
       </el-pagination>
     </div>
-    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
+    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'800px','padding':0}"
                 class="order-detail-info" partClass="pr-no-animation">
       <audit-form :detailId="billInfo.id" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
