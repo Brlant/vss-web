@@ -507,7 +507,7 @@ export const route = [
           {
             path: '/report/receive',
             component: resolve => require(['./components/report/receive.vue'], resolve),
-            meta: {moduleId: 'report', title: '各单位领苗汇总表', perm: 'shipment-form-manager'}
+            meta: {moduleId: 'report', title: '各单位领苗汇总表', perm: 'each-year-vaccine-manager'}
           }
         ]
       },
