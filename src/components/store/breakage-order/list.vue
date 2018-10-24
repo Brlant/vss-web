@@ -153,17 +153,17 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8">
-              <oms-form-row label="预计出库时间" :span="6">
-                <el-col :span="24">
-                  <el-date-picker
-                    v-model="expectedTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
-                  </el-date-picker>
-                </el-col>
-              </oms-form-row>
-            </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="预计出库时间" :span="6">-->
+            <!--<el-col :span="24">-->
+            <!--<el-date-picker-->
+            <!--v-model="expectedTime"-->
+            <!--type="daterange"-->
+            <!--placeholder="请选择" format="yyyy-MM-dd">-->
+            <!--</el-date-picker>-->
+            <!--</el-col>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
             <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
@@ -229,7 +229,7 @@
               <!--</el-col>-->
               <el-col :span="7">
                 <div>下单：{{item.createTime | minute }}</div>
-                <div>预计出库：{{ item.expectedTime | date }}</div>
+                <!--<div>预计出库：{{ item.expectedTime | date }}</div>-->
               </el-col>
               <el-col :span="2">
                 <div class="vertical-center">

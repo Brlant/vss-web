@@ -49,13 +49,13 @@
                          v-for="item in transportationConditionList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="预计出库时间" prop="transportationMeansId">
-            <el-date-picker
-              v-model="currentOrder.expectedTime"
-              placeholder="请选择日期" format="yyyy-MM-dd"
-              value-format="timestamp">
-            </el-date-picker>
-          </el-form-item>
+          <!--<el-form-item label="预计出库时间" prop="transportationMeansId">-->
+          <!--<el-date-picker-->
+          <!--v-model="currentOrder.expectedTime"-->
+          <!--placeholder="请选择日期" format="yyyy-MM-dd"-->
+          <!--value-format="timestamp">-->
+          <!--</el-date-picker>-->
+          <!--</el-form-item>-->
           <el-form-item label="疾控仓库地址" prop="orgAddress">
             <el-select placeholder="请选择疾控仓库地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
               <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
@@ -84,9 +84,6 @@
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
-            <oms-row label="订单状态" :span="span">
-              {{ getOrderStatus(currentOrder) }}
-            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -95,10 +92,12 @@
             <oms-row label="下单时间">
               <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
-            <oms-row :label="getTimeTitle(currentOrder)" v-show="currentOrder.expectedTime">
-              <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
+            <oms-row label="订单状态" :span="span">
+              {{ getOrderStatus(currentOrder) }}
             </oms-row>
-
+            <!--<oms-row :label="getTimeTitle(currentOrder)" v-show="currentOrder.expectedTime">-->
+            <!--<span class="goods-span">{{currentOrder.expectedTime | date}}</span>-->
+            <!--</oms-row>-->
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">

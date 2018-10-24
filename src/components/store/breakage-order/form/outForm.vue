@@ -174,15 +174,15 @@
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.importedFlag"></el-switch>-->
             <!--</el-form-item>-->
-            <el-form-item :label="'预计出库时间'"
-                          :prop=" showContent.isShowOtherContent?'expectedTime':'' "
-                          v-show="showContent.isShowOtherContent">
-              <el-date-picker
-                v-model="form.expectedTime"
-                placeholder="请选择日期" format="yyyy-MM-dd"
-                value-format="timestamp">
-              </el-date-picker>
-            </el-form-item>
+            <!--<el-form-item :label="'预计出库时间'"-->
+            <!--:prop=" showContent.isShowOtherContent?'expectedTime':'' "-->
+            <!--v-show="showContent.isShowOtherContent">-->
+            <!--<el-date-picker-->
+            <!--v-model="form.expectedTime"-->
+            <!--placeholder="请选择日期" format="yyyy-MM-dd"-->
+            <!--value-format="timestamp">-->
+            <!--</el-date-picker>-->
+            <!--</el-form-item>-->
             <!--<material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>-->
             <el-form-item label="备注" class="clearfix">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
