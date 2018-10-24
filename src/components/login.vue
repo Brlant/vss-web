@@ -147,7 +147,7 @@
         this.codeUrl = process.env.NODE_API + '/foundation/CAPTCHA?' + Math.random();
       },
       isFocusIndex() {
-        this.isFocus = !this.user.orgCode ? 1 : !this.user.username ? 2 : !this.user.password ? 3 : '';
+        this.isFocus = 2;
       },
       trim: function (str) {
         return str.replace(/(^\s*)|(\s*$)/g, '');
