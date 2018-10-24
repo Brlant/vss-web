@@ -182,12 +182,12 @@ export const route = [
             path: '/store/allotment/:id',
             component: resolve => require(['./components/purchase/allotment/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '调拨入库', perm: 'allocating-order-manager'}
+          },
+          {
+            path: '/store/bad/:id',
+            component: resolve => require(['./components/store/breakage-order/list.vue'], resolve),
+            meta: {moduleId: 'store', title: '库存报损', perm: 'breakage-order'}
           }
-          // {
-          //   path: '/store/bad',
-          //   component: resolve => require(['./components/store/bad/list.vue'], resolve),
-          //   meta: {moduleId: 'store', title: '库存报损', perm: 'cerp-stock-reported-loss'}
-          // }
         ]
       },
       {
