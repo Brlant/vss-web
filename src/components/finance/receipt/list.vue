@@ -115,7 +115,7 @@
               </el-col>
               <el-col :span="6">
                 <oms-form-row label="" :span="2">
-                  <perm label="shipment-form-export">
+                  <perm label="accounts-receivable-export">
                     <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                       导出Excel
                     </el-button>
@@ -338,9 +338,8 @@
 
 </template>
 <script>
-  import {BaseInfo, demandAssignment, procurementCollect, pullSignal} from '@/resources';
+  import { BaseInfo, demandAssignment, procurementCollect, pullSignal, receipt, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
-  import { receipt, VaccineRights } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.out.vue';
