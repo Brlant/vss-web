@@ -211,6 +211,12 @@
       bizTypeList () {
         let inType = JSON.parse(JSON.stringify(this.$getDict('bizInType') || []));
         let outType = JSON.parse(JSON.stringify(this.$getDict('bizOutType') || []));
+        inType.forEach(i => {
+          i.key = '0|' + i.key;
+        });
+        outType.forEach(i => {
+          i.key = '1|' + i.key;
+        });
         return [].concat(inType, outType);
       },
       getHeight: function () {
