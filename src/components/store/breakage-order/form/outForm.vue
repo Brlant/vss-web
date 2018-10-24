@@ -1166,6 +1166,8 @@
             delete item.orgGoodsDto;
           });
           saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
+          // 去向单位去货主
+          saveData.customerId = saveData.orgId;
           this.doing = true;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
