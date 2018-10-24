@@ -18,7 +18,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">销售订单详情</h2>
+        <h2 class="clearfix right-title">库存报损详情</h2>
         <ul>
           <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -94,7 +94,7 @@
     watch: {
       orderId() {
         this.index = 0;
-        this.title = '订单详情';
+        this.title = '库存报损详情';
         this.queryOrderDetail();
       }
     },
@@ -102,7 +102,7 @@
       pageSets() {
         let menu = [];
         let perms = this.$store.state.permissions || [];
-        menu.push({name: '订单详情', key: 0});
+        menu.push({name: '报损详情', key: 0});
         if (this.state === '4') {
           menu.push({name: '收货详情', key: 1});
         }

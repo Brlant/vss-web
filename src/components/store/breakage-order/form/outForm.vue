@@ -613,7 +613,7 @@
         this.form.transportationCondition = '0';
       },
       getTitle() {
-        return `${this.defaultIndex === 2 ? '编辑' : '增加'}报损订单`;
+        return `${this.defaultIndex === 2 ? '编辑' : '增加'}库存报损`;
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -1171,7 +1171,7 @@
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '编辑报损订单成功',
+                message: '编辑库存报损成功',
                 type: 'success'
               });
               self.$emit('change');
@@ -1182,7 +1182,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '编辑报损订单失败',
+                title: '编辑库存报损失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
@@ -1191,7 +1191,7 @@
             erpOrder.save(saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '新增报损订单成功',
+                message: '新增库存报损成功',
                 type: 'success'
               });
               window.localStorage.removeItem(this.saveKey);
@@ -1203,7 +1203,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '新增报损订单失败',
+                title: '新增库存报损失败',
                 message: error.response.data.msg,
                 type: 'error'
               });

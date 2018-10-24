@@ -92,7 +92,7 @@
             <oms-row label="下单时间">
               <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
-            <oms-row label="订单状态" :span="span">
+            <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
             <!--<oms-row :label="getTimeTitle(currentOrder)" v-show="currentOrder.expectedTime">-->
@@ -106,7 +106,7 @@
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
-          <oms-row label="备注" :span="3">{{ currentOrder.remark }}</oms-row>
+          <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 
