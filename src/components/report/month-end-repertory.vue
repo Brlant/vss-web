@@ -46,20 +46,20 @@
       <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="goodsName" label="疫苗名称" width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="beforeStock" label="期前库存" :sortable="true"></el-table-column>
-        <el-table-column prop="procurementCount" label="进苗数量" :sortable="true"></el-table-column>
-        <el-table-column prop="saleCount" label="发苗数量" :sortable="true"></el-table-column>
-        <el-table-column prop="salePrice" label="发苗单价" :sortable="true"></el-table-column>
-        <el-table-column prop="saleMoney" label="发苗金额" :sortable="true"></el-table-column>
-        <el-table-column prop="saleReturnCount" label="退区数量" :sortable="true"></el-table-column>
-        <el-table-column prop="saleReturnPrice" label="退区单价" :sortable="true"></el-table-column>
-        <el-table-column prop="saleReturnMoney" label="退区金额" :sortable="true"></el-table-column>
-        <el-table-column prop="procurementReturnCount" label="退市数量" :sortable="true"></el-table-column>
-        <el-table-column prop="scarpCount" label="报损数量" :sortable="true"></el-table-column>
-        <el-table-column prop="endStock" label="期末库存" :sortable="true"></el-table-column>
-        <el-table-column prop="goodsPrice" label="疫苗单价" :sortable="true"></el-table-column>
-        <el-table-column prop="procurementMoney" label="采购金额" :sortable="true"></el-table-column>
-        <el-table-column prop="stockMoney" label="库存金额" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsPrice" label="采购单价" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="salePrice" label="销售单价" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="beforeStock" label="期前库存" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="restStockMoney" label="期前金额" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="procurementCount" label="采购数量" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="saleCount" label="采购金额" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="saleCount" label="销售数量" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="saleMoney" label="销售金额" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="saleReturnMoney" label="退区数量" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="procurementReturnCount" label="退厂家数量" width="120" :sortable="true"></el-table-column>
+        <el-table-column prop="procurementReturnMoney" label="退厂家金额" width="120" :sortable="true"></el-table-column>
+        <el-table-column prop="scarpCount" label="报损数量" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="endStock" label="期末库存" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="stockMoney" label="库存金额" width="100" :sortable="true"></el-table-column>
       </el-table>
     </div>
 
