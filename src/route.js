@@ -186,7 +186,7 @@ export const route = [
           {
             path: '/store/bad/:id',
             component: resolve => require(['./components/store/breakage-order/list.vue'], resolve),
-            meta: {moduleId: 'store', title: '库存报损', perm: 'breakage-order'}
+            meta: {moduleId: 'store', title: '报损出库', perm: 'breakage-order'}
           }
         ]
       },
