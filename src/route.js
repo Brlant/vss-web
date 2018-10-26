@@ -182,12 +182,12 @@ export const route = [
             path: '/store/allotment/:id',
             component: resolve => require(['./components/purchase/allotment/list.vue'], resolve),
             meta: {moduleId: 'purchase', title: '调拨入库', perm: 'allocating-order-manager'}
+          },
+          {
+            path: '/store/bad/:id',
+            component: resolve => require(['./components/store/breakage-order/list.vue'], resolve),
+            meta: {moduleId: 'store', title: '报损出库', perm: 'breakage-order'}
           }
-          // {
-          //   path: '/store/bad',
-          //   component: resolve => require(['./components/store/bad/list.vue'], resolve),
-          //   meta: {moduleId: 'store', title: '库存报损', perm: 'cerp-stock-reported-loss'}
-          // }
         ]
       },
       {
@@ -497,7 +497,17 @@ export const route = [
           {
             path: '/report/goods-settlement',
             component: resolve => require(['./components/report/goods-settlement.vue'], resolve),
-            meta: {moduleId: 'report', title: '疫苗当月结算表', perm: 'vaccine-month-settlement-manager'}
+            meta: {moduleId: 'report', title: '疫苗当月结算表', perm: 'purchasing-detail-form-manager'}
+          },
+          {
+            path: '/report/cdc/first-vaccine',
+            component: resolve => require(['./components/report/cdc-first-vaccine.vue'], resolve),
+            meta: {moduleId: 'report', title: '一类苗领用记录', perm: 'cdc-free-vaccine-sale-manager'}
+          },
+          {
+            path: '/report/receive',
+            component: resolve => require(['./components/report/receive.vue'], resolve),
+            meta: {moduleId: 'report', title: '各单位领苗汇总表', perm: 'each-year-vaccine-manager'}
           }
         ]
       },

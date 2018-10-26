@@ -77,8 +77,14 @@
         <div class="d-table-left">
           <h2 class="header">
             <span class="pull-right">
-                <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                  class="el-icon-t-search"></i> </a>
+                <a href="#" class="btn-circle" @click.prevent="searchType">
+                  <i class="el-icon-t-search"></i>
+                </a>
+                <perm label="accounts-payable-export">
+                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                    导出Excel
+                  </el-button>
+                </perm>
             </span>
             <!--<span class="pull-right" style="margin-right: 8px">-->
             <!--<perm label="accounts-payable-add">-->
@@ -177,7 +183,7 @@
                   </el-select>
                 </el-form-item>
                 <el-row>
-                  <el-col :span="13">
+                  <el-col :span="10">
                     <el-form-item label="发生时间">
                       <el-date-picker
                         v-model="createTimes"
@@ -194,7 +200,7 @@
                       </el-radio-group>
                     </el-form-item>
                   </el-col>
-                  <el-col :span="5">
+                  <el-col :span="6">
                     <el-form-item label-width="10px">
                       <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                       <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -279,6 +285,7 @@
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.in.vue';
+  import utils from '@/tools/utils';
 
   export default {
     components: {
@@ -309,6 +316,7 @@
           status: ''
         },
         createTimes: '',
+        isLoading: false,
         action: 'add',
         pager: {
           currentPage: 1,
@@ -525,6 +533,21 @@
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      },
+      exportFile: function () {
+        this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/out'});
+        this.$http.get('/accounts-payable/export').then(res => {
+          utils.download(res.data, '应付账款一览表');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+        }).catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
       }
     }
   };

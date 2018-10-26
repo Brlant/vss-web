@@ -10,7 +10,12 @@
     <attachment-show label="在途温度" :orderAttachment="accessory.transitTemperatureFroms"
                      :currentOrder="currentOrder"
                      objectType="transitTemperatureFrom"
-                     :attachmentRight="attachmentRight"
+                     :attachmentRight="{
+        watch: 'erp-warehouse-temperature-watch',
+        download: '',
+        upload: '',
+        remove: ''
+      }"
                      @refreshAttachment="queryAttachmentList"></attachment-show>
 
     <div v-show="currentOrder.state === '7' ">

@@ -16,33 +16,6 @@
         </div>
         <el-form class="advanced-query-form">
           <el-row>
-            <el-col :span="7">
-              <oms-form-row label="出入库类型" :span="6">
-                <el-select v-model="searchWord.typeList" multiple filterable clearable placeholder="请选择">
-                  <el-option v-for="(item, index) in typeList" :value="index" :key="index"
-                             :label="item"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="出入库详细" :span="6">
-                <el-select v-model="searchWord.bizTypeList" multiple filterable clearable placeholder="请选择">
-                  <el-option v-for="(item, index) in bizTypeList" :value="item.key" :key="index"
-                             :label="item.label"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="9">
-              <oms-form-row label="业务日期" :span="4">
-                <el-col :span="24">
-                  <el-date-picker
-                    v-model="bizDateAry"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
-                  </el-date-picker>
-                </el-col>
-              </oms-form-row>
-            </el-col>
             <el-col :span="7" class="clearfix">
               <oms-form-row label="区县" :span="6">
                 <oms-input type="text" v-model="searchWord.areaCode" placeholder="请输入区县"></oms-input>
@@ -68,22 +41,14 @@
               </oms-form-row>
             </el-col>
             <el-col :span="9">
-              <oms-form-row label="供/收货单位名称" :span="7">
-                <el-select filterable remote placeholder="请输入供/收货单位名称查询"
-                           :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
-                           v-model="searchWord.factoryId" @click.native.once="filterProvide('')"
-                           popperClass="good-selects">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in provideList">
-                    <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{org.manufacturerCode}}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
+              <oms-form-row label="业务日期" :span="4">
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="bizDateAry"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
               </oms-form-row>
             </el-col>
             <el-col :span="10">
@@ -113,6 +78,26 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="2"></el-col>
+            <el-col :span="12">
+              <oms-form-row label="供/收货单位名称" :span="5">
+                <el-select filterable remote placeholder="请输入供/收货单位名称查询"
+                           :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
+                           v-model="searchWord.factoryId" @click.native.once="filterProvide('')"
+                           popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in provideList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码:</span>{{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
             <el-col :span="8">
               <oms-form-row label="批号" :span="5">
                 <el-select v-model="searchWord.batchNumberId" filterable clearable remote
@@ -123,9 +108,11 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="8">
+            </el-col>
             <el-col :span="6">
               <oms-form-row label="" :span="1">
-                <perm label="first-vaccine-logistics-export">
+                <perm label="cdc-free-vaccine-sale-manager-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
                   </el-button>
@@ -210,11 +197,6 @@
     computed: {
       getHeight: function () {
         return parseInt(this.$store.state.bodyHeight, 10) - 210 + this.fixedHeight + (this.showSearch ? 0 : 210);
-      },
-      bizTypeList() {
-        let inType = this.$getDict('bizInType') || [];
-        let outType = this.$getDict('bizOutType') || [];
-        return [].concat(inType, outType);
       }
     },
     methods: {
@@ -223,20 +205,20 @@
         this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/logistics'});
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/cdc/first-vaccine'});
         this.$http({
-          url: '/erp-statement/first-vaccine/export',
+          url: '/erp-statement/cdc/first-vaccine/export',
           params,
           paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
-          utils.download(res.data.path, '免费疫苗物流数据库');
+          utils.download(res.data.path, '一类苗领用记录');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/logistics'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/cdc/first-vaccine'});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/logistics'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/cdc/first-vaccine'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });
@@ -251,7 +233,7 @@
         let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
         this.$http({
-          url: 'erp-statement/first-vaccine',
+          url: 'erp-statement/cdc/first-vaccine',
           params,
           paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
@@ -376,7 +358,8 @@
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) return;
         let params = {
-          keyWord: query
+          keyWord: query,
+          relation: '2'
         };
         this.selectLoading = true;
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
