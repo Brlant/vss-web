@@ -155,11 +155,12 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="8">疫苗名称</el-col>
-          <el-col :span="4">供货厂商</el-col>
-          <el-col :span="4">采购单价</el-col>
-          <el-col :span="4">协议采购数量</el-col>
-          <el-col :span="4">协议有效时间
+          <el-col :span="7">疫苗名称</el-col>
+          <el-col :span="5">供货厂商</el-col>
+          <el-col :span="5">生产企业</el-col>
+          <el-col :span="2">采购单价</el-col>
+          <el-col :span="2">协议采购数量</el-col>
+          <el-col :span="3">协议有效时间
             <i class="el-icon-caret-top" v-if="filters.asc" @click="filters.asc=false" style="cursor:pointer;"></i>
             <i class="el-icon-caret-bottom" v-if="!filters.asc" @click="filters.asc=true" style="cursor:pointer;"></i>
           </el-col>
@@ -180,7 +181,7 @@
           <div class="order-list-item" v-for="item in showTypeList" @click="edit(item)"
                :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentItem.id==item.id}]">
             <el-row>
-              <el-col :span="8">
+              <el-col :span="7">
                 <div class="f-grey">
                   {{item.orgGoodsNo }}
                 </div>
@@ -188,22 +189,27 @@
                   {{item.orgGoodsName }}
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="5">
                 <div>
                   {{item.supplyCompanyName}}
                 </div>
               </el-col>
-              <el-col :span="4" class="pt10">
+              <el-col :span="5">
+                <div>
+                  {{item.factoryName}}
+                </div>
+              </el-col>
+              <el-col :span="2" class="pt10">
                 <div>
                   <span v-if="item.unitPrice">￥</span>{{item.unitPrice | formatMoney}}
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="2">
                 <div>
                   {{ item.amount}} <dict :dict-group="'measurementUnit'" :dict-key="item.unit"></dict>
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="3">
                 <div>
                   {{ item.expireTime | date}}
                   <el-tag type="warning" v-show="item.isOverdue==='1'">即将到期</el-tag>
@@ -230,7 +236,7 @@
 </template>
 <script>
   import goodsPart from './form/form.vue';
-  import {Vaccine, PurchaseAgreement, BaseInfo} from '../../../../resources';
+  import { BaseInfo, PurchaseAgreement } from '../../../../resources';
   import utils from '../../../../tools/utils';
 
   export default {
