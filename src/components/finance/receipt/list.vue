@@ -604,18 +604,20 @@
         });
       },
       exportFile: function () {
-        this.searchCondition.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.bizDateAry[1]);
+        if (this.bizDateAry) {
+          this.searchCondition.createStartTime = this.formatTime(this.bizDateAry[0]);
+          this.searchCondition.createEndTime = this.formatTime(this.bizDateAry[1]);
+        }
         let params = Object.assign(this.filterRights, this.searchCondition);
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/out'});
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: 'finance/pay'});
         this.$http.get('/accounts-receivable/export', {params}).then(res => {
           utils.download(res.data, '应收账款一览表');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: 'finance/pay'});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: 'finance/pay'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });
