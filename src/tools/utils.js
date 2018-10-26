@@ -67,6 +67,14 @@ export default {
     4: {'title': '已完成', state: '4', num: ''},
     5: {'title': '已取消', state: '5', num: ''}
   },
+  outBreakageOrderType: {
+    0: {'title': '待确认', state: '0', num: ''},
+    1: {'title': '待审单', state: '1', num: ''},
+    2: {'title': '执行中', state: '2', num: ''},
+    // 3: {'title': '待收货', state: '3', num: ''},
+    4: {'title': '已完成', state: '4', num: ''},
+    5: {'title': '已取消', state: '5', num: ''}
+  },
   outReturnOrderType: {
     0: {'title': '待确认', state: '0', num: ''},
     1: {'title': '待审单', state: '1', num: ''},
