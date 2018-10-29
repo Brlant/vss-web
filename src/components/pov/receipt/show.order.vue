@@ -27,7 +27,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">收货订单详情</h2>
+        <h2 class="clearfix right-title">订单详情</h2>
         <ul>
           <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -51,7 +51,7 @@
   </div>
 </template>
 <script>
-  import basicInfo from '../../sale/order/detail/base-info.vue';
+  import basicInfo from './base-info.vue';
   import log from '@/components/common/order.log.vue';
   import receipt from './receipt-detail.vue';
   import { InWork, http } from '@/resources';
@@ -86,7 +86,7 @@
         let menu = [];
         let perms = this.$store.state.permissions || [];
         menu.push({name: '订单详情', key: 0});
-        if (this.currentOrder.state === '4') {
+        if (this.currentOrder.state === '8') {
           menu.push({name: '收货详情', key: 1});
         }
         if (perms.includes('erp-order-document-watch')) {
