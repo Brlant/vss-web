@@ -1,79 +1,6 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 300px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
-
-  .align-word {
-    letter-spacing: 1em;
-    margin-right: -1em;
-  }
-
-  .opera-btn-group {
-
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
+<style lang="scss" scoped="">
   .order-list-item {
     cursor: pointer;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
   }
 </style>
 <template>
@@ -81,10 +8,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -103,7 +27,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -123,10 +47,10 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号</span>  {{org.goodsNo}}
+                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.saleFirmName">供货厂商</span>  {{ org.saleFirmName }}
+                        v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
                       </span>
                     </div>
                   </el-option>
@@ -150,7 +74,7 @@
 
 
       <div class="order-list clearfix " v-if="showFlag">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="5">疫苗名称</el-col>
           <el-col :span="3">疫苗规格</el-col>
           <el-col :span="5">生产厂商</el-col>
@@ -185,7 +109,7 @@
                 <span>{{ item.goodsName }}</span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span>{{ item.goodsSpecifications }}</span>
+                <span>{{ item.specification }}</span>
               </el-col>
               <el-col :span="5" class="pt">
                 <span>{{ item.orgName }}</span>
@@ -208,7 +132,7 @@
 
       </div>
 
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <div class="text-center" v-show="batches.length && !loadingData">
         <el-pagination
           layout="prev, pager, next"
           :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatcheNumbers"
@@ -224,7 +148,7 @@
 </template>
 <script>
   //  import order from '../../../tools/orderList';
-  import { BatchNumber, BaseInfo, Vaccine } from '../../../resources';
+  import {BaseInfo} from '../../../resources';
   import detail from './detail.vue';
 
   export default {
@@ -323,7 +247,7 @@
         // 过滤来源单位
         let params = {
           keyWord: query,
-          orgRelationTypeList: ['Manufacture', 'Supplier']
+          orgRelationTypeList: ['Supplier']
         };
         BaseInfo.queryByOrgRelationTypeList(params).then(res => {
           this.factories = res.data.list;
@@ -336,10 +260,9 @@
           pageNo: 1,
           pageSize: 20,
           orgId: orgId,
-          keyWord: query,
-          deleteFlag: false
+          keyWord: query
         });
-        this.$http.get('/erp-stock/goods', {params}).then(res => {
+        this.$http.get('/erp-stock/goods-list', {params}).then(res => {
           this.orgGoods = res.data.list;
         });
       }

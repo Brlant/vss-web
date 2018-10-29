@@ -18,7 +18,7 @@
               <div>{{log.time}}</div>
             </el-col>
             <el-col :span="18"><strong>{{log.actionTitle}}</strong> <span
-              class="font-gray"> [{{log.operatorName}}]</span>
+              class="font-gray" v-show="log.operatorName"> [{{log.operatorName}}]</span>
             </el-col>
           </el-row>
         </TimelineItem>
@@ -29,10 +29,7 @@
 </template>
 <script>
   import { http } from '@/resources';
-  import { TimelineItem, Timeline } from '../../../../components/common/timeline/index.js';
-
   export default {
-    components: {TimelineItem, Timeline},
     props: {
       currentOrder: {
         type: Object,

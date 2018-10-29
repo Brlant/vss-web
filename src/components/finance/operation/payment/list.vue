@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
 
   .page-right-part {
     box-sizing: content-box;
@@ -46,16 +46,6 @@
 
   }
 
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .exceptionPosition {
     /*margin-left: 40px;*/
     position: absolute;
@@ -95,51 +85,23 @@
   .cursor-span {
     cursor: pointer;
   }
-
-  .select-other-info {
-    color: #999;
-    margin-left: 10px
-  }
-
-  .selected {
-    .select-other-info {
-      color: #ddd
+  .order-list-status {
+    .status-item {
+      width: 90px;
     }
   }
-
-  .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #48576a;
-    height: auto;
-    line-height: normal;
-    box-sizing: border-box;
-    cursor: pointer;
-    .select-other-info {
-      padding-left: 10px;
-      color: #8E8E8E
-    }
-  }
-
 </style>
 <template>
   <div class="order-page">
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="payment-payable-add">
                   <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -164,7 +126,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left">
-                          <span>系统代码</span> {{org.manufacturerCode}}
+                          <span>系统代码:</span>{{org.manufacturerCode}}
                         </span>
                     </div>
                   </el-option>
@@ -188,11 +150,11 @@
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="5">付款单据编号</el-col>
           <el-col :span="7">付款单位</el-col>
           <el-col :span="2">付款方式</el-col>
@@ -280,7 +242,7 @@
                 class="order-detail-info" partClass="pr-no-animation">
       <audit-form :detailId="billInfo.id" @change="onSubmit" @right-close="resetRightBox"></audit-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
+    <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <add-form @change="onSubmit" @right-close="resetRightBox" :defaultIndex="defaultIndex"></add-form>
     </page-right>
   </div>
@@ -289,7 +251,7 @@
   import utils from '../../../../tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import {BillPayable, pay, BaseInfo} from '../../../../resources';
+  import { BaseInfo, BillPayable } from '../../../../resources';
 
   export default {
     components: {
@@ -329,10 +291,10 @@
     },
     computed: {
       transportationMeansList: function () {
-        return this.$store.state.dict['transportationMeans'];
+        return this.$getDict('transportationMeans');
       },
       bizInTypes: function () {
-        return this.$store.state.dict['bizInType'];
+        return this.$getDict('bizInType');
       }
     },
     watch: {
@@ -409,7 +371,7 @@
         this.billInfo = item;
       },
       onSubmit: function () {
-        this.getBillList(1);
+        this.getBillList(this.pager.currentPage);
       },
       getBillList: function (pageNo) {
         this.pager.currentPage = pageNo;
@@ -444,7 +406,6 @@
           this.orgType[3].num = this.obtionStatusNum(data['notAudit']);
         });
       },
-
       obtionStatusNum: function (num) {
         if (typeof num !== 'number') {
           return 0;

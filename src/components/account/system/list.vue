@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
 
 
   .margin-left {
@@ -50,12 +50,14 @@
              v-for="(item,key) in orgType"
              @click="filters.usableStatus=item.usableStatus">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title">{{item.title}}<!--<span class="status-num">{{item.num}}</span>--></div>
+          <div class="status-title"><i class="el-icon-caret-right"
+                                       v-if="item.usableStatus==filters.usableStatus"></i>{{item.title}}
+            <span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="container d-table">
         <div class="d-table-left">
-          <h2 class="header">
+            <h2 class="header">
                 <span class="pull-right">
                   <perm label="access-role-add">
                     <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="el-icon-t-plus"></i> </a>
@@ -63,66 +65,74 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="el-icon-t-search"></i> </a>
                 </span>
-            系统角色管理
-          </h2>
-          <perm label="access-role-watch">
+              角色管理
+            </h2>
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
           <div class="search-left-box" v-show="showTypeSearch">
-            <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
-          </div>
-          </perm>
-          <div v-if="!currentItem.title" class="empty-info">
-            暂无信息
-          </div>
-          <div v-else>
-            <ul class="show-list">
-              <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
-                  :class="{'active':item.id===currentItem.id}">
-                <!--<perm label="access-role-delete">-->
-                  <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'-->
-                              <!--class="hover-show"><i-->
-                    <!--class="el-icon-t-delete"></i></oms-remove>-->
-                <!--</perm>-->
-                <div class="id-part">
-                  {{item.name }}
-                </div>
-                <div>
-                  {{item.title }}
-                </div>
-              </li>
-            </ul>
+              <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
+            </div>
+            <div v-if="!currentItem.title" class="empty-info">
+              暂无信息
+            </div>
+            <div v-else>
+              <ul class="show-list">
+                <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
+                    :class="{'active':item.id===currentItem.id}">
+                  <perm label="access-role-delete">
+                    <oms-remove :item="item" @removed="removeType" :tips='"确认删除角色\""+item.title +"\"?"'
+                                class="hover-show"><i
+                      class="el-icon-t-delete"></i></oms-remove>
+                  </perm>
+                  <div class="id-part">
+                    {{item.name }}
+                  </div>
+                  <div>
+                    {{item.title }}
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div class="btn-left-list-more">
+              <bottom-loading></bottom-loading>
+              <div @click.stop="getMore" v-show="!$store.state.bottomLoading">
+                <el-button v-show="pager.currentPage<pager.totalPage">加载更多</el-button>
+              </div>
+            </div>
           </div>
         </div>
         <div class="d-table-right">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight  + 'px'">
             <div v-if="!currentItem.title" class="empty-info">
               暂无信息
             </div>
             <div v-else>
               <h2 class="clearfix">
-              <span class="pull-right">
-               <el-button-group>
-                 <perm label="access-role-edit">
-                   <el-button @click="edit()">
-                     <i class="el-icon-t-edit"></i>
-                     编辑
-                   </el-button>
-                 </perm>
-                <perm label="access-role-stop">
-                  <el-button @click="forbid()" v-show="resData.usableStatus == 1">
-                    <i class="el-icon-t-forbidden"></i>
-                    停用
-                  </el-button>
-                </perm>
-                 <perm label="access-role-start">
-                   <el-button @click="useNormal()" v-show="resData.usableStatus == 0">
-                     <i class="el-icon-t-start"></i>启用
-                   </el-button>
-                 </perm>
-                 <!--<perm label="access-role-delete">-->
-                 <!--<el-button @click="remove()"><i class="el-icon-t-delete"></i>删除</el-button>-->
-                 <!--</perm>-->
-                </el-button-group>
-              </span>
+                <span class="pull-right">
+                 <el-button-group>
+                     <perm label="access-role-edit">
+                       <el-button @click="edit()">
+                         <i class="el-icon-t-edit"></i>
+                         编辑
+                       </el-button>
+                     </perm>
+                      <perm label="access-role-stop">
+                        <el-button @click="forbid()" v-show="resData.usableStatus == 1">
+                          <i class="el-icon-t-forbidden"></i>
+                          停用
+                        </el-button>
+                      </perm>
+                       <perm label="access-role-start">
+                         <el-button @click="useNormal()" v-show="resData.usableStatus == 0">
+                           <i class="el-icon-t-start"></i>启用
+                         </el-button>
+                       </perm>
+                      <perm label="access-role-delete">
+                         <el-button @click="remove()">
+                           <i class="el-icon-t-delete"></i>删除
+                         </el-button>
+                      </perm>
+                  </el-button-group>
+                </span>
               </h2>
               <div class="page-main-body">
                 <el-row>
@@ -161,19 +171,8 @@
                   <el-col :span="4" class="text-right">
                     角色权限：
                   </el-col>
-                </el-row>
-                <el-row>
-                  <el-col :span="24">
-                    <div class="role-perm-list">
-                      <div class="group-list" v-for="groupItem in permList.tree"
-                           v-show="checkGroupItem(groupItem)">
-                        <h2>{{permList.menuList[groupItem.parentId]}}</h2>
-                        <ul>
-                          <li v-for="item in groupItem.children" v-show="checkItem(item)">{{permList.menuList[item]}}
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
+                  <el-col :span="20">
+                    <el-tree :data="checkedMenuList" :props="defaultProps" default-expand-all></el-tree>
                   </el-col>
                 </el-row>
               </div>
@@ -183,19 +182,26 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px'}">
-      <role-form :formItem="form" :action="action" @close="showRight=false" :roleMenu="permList" :actionType="showRight"
+      <role-form :formItem="form" :action="action" @close="showRight=false" :actionType="showRight"
                  @changed="change"></role-form>
     </page-right>
   </div>
 </template>
 <script>
-  import { System } from '../../../resources';
+  import {Access} from '@/resources';
   import roleForm from './form/form.vue';
+  import roleMixin from '@/mixins/roleMixin';
 
   export default {
     components: {roleForm},
+    mixins: [roleMixin],
     data: function () {
       return {
+        defaultProps: {
+          children: 'children',
+          label: 'label',
+          isLeaf: 'leaf'
+        },
         showRight: false,
         showTypeRight: false,
         showTypeSearch: false,
@@ -208,69 +214,125 @@
         roleText: '',
         currentItem: {},
         orgType: {
-          0: {'title': '所有', 'num': 8, 'usableStatus': null},
-          1: {'title': '正常', 'num': 6, 'usableStatus': 1},
-          2: {'title': '停用', 'num': 2, 'usableStatus': 0}
+          0: {'title': '所有', 'num': '', 'usableStatus': null},
+          1: {'title': '正常', 'num': '', 'usableStatus': 1},
+          2: {'title': '停用', 'num': '', 'usableStatus': 0}
         },
         filters: {
           usableStatus: 1,
           keyWord: ''
         },
         activeStatus: 1,
-        permList: {}
+        menuList: [],
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20,
+          totalPage: 1
+        }
       };
     },
     computed: {
-      // permList: function () {
-      //   return this.$store.state.permList;
-      // },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 20) + 'px';
+        height = (height - 20);
         return height;
+      },
+      user() {
+        return this.$store.state.user;
+      },
+      checkedMenuList () {
+        let checkedMenuList = JSON.parse(JSON.stringify(this.menuList));
+        let perms = this.resData.permissionList;
+        if (!checkedMenuList || !perms) return [];
+        this.getMenus(checkedMenuList, perms);
+        return checkedMenuList;
       }
     },
-    mounted () {
-      this.getPageList();
-      this.getRoleMenus();
+    mounted() {
+      this.getPageList(1);
+      this.getMenuList();
     },
     watch: {
       filters: {
         handler: function () {
-          this.getPageList();
+          this.getPageList(1);
         },
         deep: true
+      },
+      user() {
+        this.getMenuList(false);
       }
     },
     methods: {
-      getPageList: function () {
+      getMore: function () {
+        this.getPageList(this.pager.currentPage + 1, true);
+      },
+      scrollLoadingData(event) {
+        this.$scrollLoadingData(event);
+      },
+      getMenuList: function (cache = true) {
+        this.getRoleMenus(cache).then(res => {
+          this.menuList = res.data;
+        });
+      },
+      getCheckedMenu: function (data, permissionList) {
+        for (let i = 0; i < data.length; i++) {
+          if (permissionList.indexOf(data[i].id) === -1) {
+            data.splice(i, 1);
+            i--;
+          } else if (data[i].children) {
+            this.getCheckedMenu(data[i].children, permissionList);
+          }
+        }
+      },
+      getMenus: function (checkedMenuList, permissionList) {
+        let permissionIdList = [];
+        permissionList.forEach(val => {
+          permissionIdList.push(val.name);
+        });
+        this.getCheckedMenu(checkedMenuList, permissionIdList);
+      },
+      getPageList: function (pageNo, isContinue = false) {
+        this.pager.currentPage = pageNo;
         let param = Object.assign({}, {
-          keyword: this.typeTxt,
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize,
           deleteFlag: false,
           objectId: 'cerp-system'
         }, this.filters);
-        System.querySystemAccess(param).then(res => {
-          this.showTypeList = res.data.list;
-          this.typeList = res.data.list;
-          this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);
-          this.queryRoleDetail(this.currentItem.id);
+        Access.querySystemAccess(param).then(res => {
+          if (param.keyWord !== this.filters.keyWord) return;
+          this.$store.commit('initBottomLoading', false);
+          if (isContinue) {
+            this.showTypeList = this.showTypeList.concat(res.data.list);
+          } else {
+            this.showTypeList = res.data.list;
+            this.typeList = res.data.list;
+            this.currentItem = Object.assign({id: ''}, this.showTypeList[0]);
+            if (res.data.list.length !== 0) {
+              this.queryRoleDetail(this.currentItem.id);
+            } else {
+              this.resData = {};
+            }
+          }
+          this.pager.totalPage = res.data.totalPage;
+          this.queryStatusNum(param);
         });
       },
-      getRoleMenus () {
-        this.$http.get('/oms/access/menus', {params: {objectId: 'cerp-system'}}).then(res => {
-          let menuData = res.data;
-          let menuList = {};
-          res.data.menuList.forEach(item => {
-            menuList[item.id] = item.name;
-          });
-          menuData.menuList = menuList;
-          this.permList = menuData;
+      queryStatusNum: function (params) {
+        Access.queryStateNum(params).then(res => {
+          let data = res.data;
+          this.orgType[0].num = data['all'];
+          this.orgType[1].num = data['valid'];
+          this.orgType[2].num = data['stop'];
         });
       },
       queryRoleDetail: function (id) {
         if (!id) return;
-        System.getRoleDetail(id).then(res => {
+        Access.getRoleDetail(id).then(res => {
           this.resData = res.data;
+          // this.getMenus(this.resData.permissionList);
         });
       },
       resetRightBox: function () {
@@ -284,19 +346,15 @@
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
       },
-      pickTypeList: function () {
-        let arr = [];
-        let self = this;
-        this.typeList.forEach(function (value) {
-          if (value.title.indexOf(self.typeTxt) !== -1) {
-            arr.push(value);
-          }
-        });
-        this.showTypeList = arr;
-      },
       edit: function () {
         this.action = 'edit';
         this.form = JSON.parse(JSON.stringify(this.resData));
+        let checkedIdList = [];
+        // 勾选已经有的权限
+        this.form.permissionList.forEach(val => {
+          checkedIdList.push(val.name);
+        });
+        this.form.checkedIdList = checkedIdList;
         this.showRight = true;
       },
       forbid: function () {
@@ -307,9 +365,9 @@
         }).then(() => {
           let itemTemp = JSON.parse(JSON.stringify(this.resData));
           itemTemp.usableStatus = 0;
-          System.update(itemTemp.id, itemTemp).then(() => {
+          Access.update(itemTemp.id, itemTemp).then(() => {
             this.resData.usableStatus = 0;
-            this.getPageList();
+            this.getPageList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功停用角色"' + this.resData.title + '"'
@@ -325,9 +383,9 @@
         }).then(() => {
           let itemTemp = JSON.parse(JSON.stringify(this.resData));
           itemTemp.usableStatus = 1;
-          System.update(itemTemp.id, itemTemp).then(() => {
+          Access.update(itemTemp.id, itemTemp).then(() => {
             this.resData.usableStatus = 1;
-            this.getPageList();
+            this.getPageList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功启用角色"' + this.resData.title + '"'
@@ -341,8 +399,8 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          System.delete(this.resData.id).then(() => {
-            this.getPageList();
+          Access.delete(this.resData.id).then(() => {
+            this.getPageList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功删除角色"' + this.resData.title + '"'
@@ -351,8 +409,8 @@
         });
       },
       removeType: function (item) {
-        System.delete(item.id).then(() => {
-          this.getPageList();
+        Access.delete(item.id).then(() => {
+          this.getPageList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功删除角色"' + item.title + '"'
@@ -365,7 +423,7 @@
       },
       change: function (item) {
         if (this.action === 'add') {
-          this.getPageList();
+          this.getPageList(1);
           this.showRight = false;
         } else {
           this.resData = item;
@@ -375,31 +433,10 @@
               roleItem.title = item.title;
             }
           });
+          // 重新过滤树
+          // this.getMenus(this.resData.permissionList);
           this.showRight = false;
         }
-      },
-      checkItem: function (item) {
-        let visible = false;
-        this.resData.permissionList.forEach(function (val) {
-          if (val.name === item) {
-            visible = true;
-            return false;
-          }
-        });
-        return visible;
-      },
-      checkGroupItem: function (item) {
-        let visible = false;
-        item.children.forEach(key => {
-          if (this.checkItem(key)) {
-            visible = true;
-            return false;
-          }
-        });
-        if (this.checkItem(item.parentId)) {
-          visible = true;
-        }
-        return visible;
       }
     }
   };

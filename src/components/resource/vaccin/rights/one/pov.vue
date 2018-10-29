@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -22,16 +22,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .table > tbody > tr:first-child > td {
     border-top: 0;
   }
@@ -48,14 +38,22 @@
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-          <h2 class="header">
+        <h2 class="header">
           <span class="pull-right">
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
               class="el-icon-t-search"></i> </a>
           </span>
-            货主疫苗列表
-          </h2>
+          <perm label="first-vaccine-authorization-add">
+              <span class="pull-right" style="margin-right: 10px">
+            <a href="#" class="btn-circle" @click.prevent="showMultiplePart"><i
+              class="el-icon-t-plus"></i></a>
+          </span>
+          </perm>
+
+          货主疫苗列表
+        </h2>
+        <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
+
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
@@ -77,22 +75,54 @@
                 </div>
               </li>
             </ul>
-            <div class="btn-left-list-more" @click.stop="getOrgMore">
-              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            <div class="btn-left-list-more">
+              <bottom-loading></bottom-loading>
+              <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-          <h2 class="clearfix">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight + 'px'">
+          <el-row>
+            <el-col :span="22">
+              <el-form class="rightForm" ref="rightForm" inline onsubmit="return false">
+                <el-form-item label="接种点">
+                  <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV"
+                             :clearable="true" @click.native.once="filterPOV('')"
+                             v-model="searchCondition.povId" popper-class="good-selects ">
+                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                      <div style="overflow: hidden">
+                        <span class="pull-left" style="clear: right">{{org.name}}</span>
+                      </div>
+                      <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码:</span>{{org.manufacturerCode}}
+                      </span>
+                      </div>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item style="margin-left: 10px">
+                  <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                  <perm label="first-vaccine-authorization-delete">
+                    <el-button plain type="warning" @click="onceCancelRights">一键取消所有授权</el-button>
+                  </perm>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <el-col :span="2">
               <span class="pull-right" v-show="showTypeList.length">
                   <perm label="first-vaccine-authorization-add">
                     <el-button @click="add(currentItem)"><i
                       class="el-icon-t-plus"></i>添加</el-button>
                   </perm>
               </span>
-          </h2>
+            </el-col>
+          </el-row>
           <div class="pov-info">
             <el-row class="clearfix font-bold" style="font-weight: 500;font-size: 14px">
               <oms-row label="疫苗名称" :span="3">
@@ -104,7 +134,7 @@
             <thead>
             <tr class="tr-header">
               <th>接种点</th>
-              <th>销售价格</th>
+              <!--<th>销售价格</th>-->
               <th>操作</th>
             </tr>
             </thead>
@@ -127,9 +157,9 @@
               <td>
                 {{ row.povName }}
               </td>
-              <td>
-                ￥{{row.price ? row.price : 0 }}
-              </td>
+              <!--<td>-->
+              <!--￥{{row.price ? row.price : 0 }}-->
+              <!--</td>-->
               <td>
                 <!--<perm label="vaccine-authorization-update">-->
                 <!--<a href="#" @click.stop.prevent="edit(row)"><i class="el-icon-t-edit"></i>编辑</a>-->
@@ -141,13 +171,13 @@
             </tr>
             </tbody>
           </table>
-        </div>
-        <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
-          <el-pagination
-            layout="prev, pager, next"
-            :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
-            :current-page="pager.currentPage">
-          </el-pagination>
+          <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
+            <el-pagination
+              layout="total,prev, pager, next"
+              :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
+              :current-page="pager.currentPage">
+            </el-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -156,21 +186,27 @@
       <add-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refresh="refreshDetails"
                 @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showMultiple" @right-close="resetRightBox" :css="{'width':'1200px','padding':0}">
+      <multiple-form @change="changeItem" :formItem="formPara" :currentItem="currentItem" @refreshLeft="refreshLeft"
+                     @close="resetRightBox"></multiple-form>
+    </page-right>
   </div>
 
 </template>
 <script>
   import addForm from './form.vue';
-  import { cerpAction, Vaccine, VaccineRights, PurchaseAgreement } from '@/resources';
+  import { BaseInfo, Vaccine, VaccineRights } from '@/resources';
+  import multipleForm from './multiple-from';
 
   export default {
     components: {
-      addForm
+      addForm, multipleForm
     },
     data: function () {
       return {
         loadingData: false,
         showRight: false,
+        showMultiple: false,
         showTypeSearch: false,
         showSearch: false,
         dataRows: [],
@@ -178,6 +214,9 @@
         typeTxt: '',
         keyTxt: '',
         filters: {
+          povId: ''
+        },
+        searchCondition: {
           povId: ''
         },
         keyWord: '',
@@ -212,7 +251,7 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height + 10) + 'px';
+        height = (height + 10);
         return height;
       }
     },
@@ -227,11 +266,21 @@
       },
       keyWord () {
         this.pickTypeList();
+      },
+      filters: {
+        handler: function () {
+          this.getPageList(1);
+        },
+        deep: true
       }
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       resetRightBox: function () {
         this.showRight = false;
+        this.showMultiple = false;
       },
       searchType: function () {
         this.showTypeSearch = !this.showTypeSearch;
@@ -240,14 +289,18 @@
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize,
+          pageSize: this.typePager.pageSize,
           keyWord: this.typeTxt,
-          deleteFlag: false,
+          // deleteFlag: false,
           status: '1'
         });
         let nowTime = new Date();
         this.nowTime = nowTime;
         this.$http.get('/vaccine-info/first-vaccine/valid/org-goods', {params}).then(res => {
+          if (params.keyWord !== this.typeTxt) return;
+
+          this.$store.commit('initBottomLoading', false);
+
           if (this.nowTime > nowTime) return;
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
@@ -261,6 +314,7 @@
               this.currentItem = Object.assign({'id': ''});
             }
           }
+          this.typePager.count = res.data.count;
           this.typePager.totalPage = res.data.totalPage;
         });
       },
@@ -273,19 +327,17 @@
         });
         Vaccine.queryLevelVaccine(params).then(res => {
           this.vaccines = res.data.list;
-          this.filterPOVs();
         });
-      },
-      filterPOVs () {
-        this.showOrgList = this.orgList.filter(f => !this.dataRows.some(s => f.subordinateId === s.povId));
       },
       filterPOV: function (query) {// 过滤POV
-        let params = Object.assign({}, {
-          keyWord: query
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
-          this.filterPOVs();
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       getPageList: function (pageNo) {
@@ -297,16 +349,30 @@
         let params = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize
-        });
+        }, this.filters);
         VaccineRights.queryPovByVaccine(orgId, params).then(res => {
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
         });
       },
+      searchInOrder: function () {// 搜索
+        Object.assign(this.filters, this.searchCondition);
+      },
+      resetSearchForm: function () {// 重置表单
+        let temp = {
+          povId: ''
+        };
+        Object.assign(this.searchCondition, temp);
+        Object.assign(this.filters, temp);
+      },
       refreshDetails () {
         this.getPageList(1);
         this.showRight = false;
+      },
+      refreshLeft () {
+        this.getOrgsList(1);
+        this.resetRightBox();
       },
       removeVaccine: function (item) {
         this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
@@ -317,11 +383,11 @@
           VaccineRights.deleteVaccine(item.id).then(() => {
             this.getPageList(1);
             this.$notify.success({
-              message: '已成功删除疫苗'
+              message: '已成功删除接种点'
             });
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '删除疫苗失败'
+              message: error.response.data && error.response.data.msg || '删除接种点失败'
             });
           });
         });
@@ -360,6 +426,10 @@
         this.currentItem = item;
         this.getPageList(1);
       },
+      showMultiplePart () {
+        this.formPara = {};
+        this.showMultiple = true;
+      },
       add () {
         this.formPara = {};
         this.showRight = true;
@@ -375,6 +445,26 @@
           Object.assign(this.formPara, item);
         }
         this.showRight = false;
+      },
+      onceCancelRights () {
+        this.$confirm('是否取消疫苗"' + this.currentItem.orgGoodsDto.name + '"的所有接种点授权', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.delete(`vaccine-authorization/${this.currentItem.orgGoodsDto.id}/all`).then(() => {
+            this.getPageList(1);
+            this.$notify.success({
+              type: '成功',
+              message: '已经取消疫苗"' + this.currentItem.orgGoodsDto.name + '"的所有接种点授权'
+            });
+          }).catch(error => {
+            this.$notify.error({
+              type: '失败',
+              message: error.response.data && error.response.data.msg || '取消所有接种点授权失败'
+            });
+          });
+        });
       }
     }
   };

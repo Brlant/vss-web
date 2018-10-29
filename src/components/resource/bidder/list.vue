@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import '../../../assets/mixins';
 
   .page-right-part {
@@ -47,16 +47,6 @@
 
   }
 
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .exceptionPosition {
     /*margin-left: 40px;*/
     position: absolute;
@@ -103,7 +93,7 @@
 
   .opera-btn-bidder {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 </style>
@@ -112,16 +102,13 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="sales-order-add">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -141,18 +128,18 @@
                     </div>
                     <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="vaccine.code">货品编号</span>  {{vaccine.code}}
+                  v-show="vaccine.code">货品编号:</span>{{vaccine.code}}
                 </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
+                        v-show="vaccine.specifications">货品规格:</span>{{vaccine.specifications}}
                 </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}
+                        v-show="vaccine.approvalNumber">批准文号:</span>{{vaccine.approvalNumber}}
                 </span>
                     </div>
                     <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="vaccine.factoryName">生产厂商</span>  {{ vaccine.factoryName }}
+                v-show="vaccine.factoryName">生产厂商:</span>{{ vaccine.factoryName }}
               </span>
                     </div>
                   </el-option>
@@ -184,13 +171,13 @@
         <div class="status-item"
              :class="{'active':key===activeStatus}"
              v-for="(item,key) in successBidderType"
-             @click="changeStatus(item)">
+             @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix ">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="5">疫苗名称</el-col>
           <el-col :span="3">规格型号</el-col>
           <el-col :span="5">生产厂商</el-col>
@@ -277,12 +264,9 @@
   import utils from '@/tools/utils';
   import editForm from './form/form.vue';
   import {BaseInfo, http, Vaccine} from '@/resources';
-  import ElCol from 'element-ui/packages/col/src/col';
-  import OmsForbid from '../../common/forbid.vue';
 
   export default {
     components: {
-      ElCol,
       editForm
     },
     data: function () {
@@ -377,7 +361,7 @@
         else return '未生效';
       },
       itemChange: function (item) {
-        this.getPageList(1);
+        this.getPageList(this.pager.currentPage);
         this.showRight = false;
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色
@@ -413,8 +397,8 @@
         this.showFlag = true;
         this.getPageList();
       },
-      changeStatus: function (item) {// 订单分类改变
-        this.activeStatus = item.availabilityStatus;
+      changeStatus: function (item, key) {// 订单分类改变
+        this.activeStatus = key;
         this.searchCondition.availabilityStatus = item.availabilityStatus;
         this.getPageList(1);
       },

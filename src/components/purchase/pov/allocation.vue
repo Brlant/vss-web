@@ -1,36 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 300px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
+<style lang="scss" scoped="">
 
   .align-word {
     letter-spacing: 1em;
@@ -48,19 +16,22 @@
   .mb5 {
     margin-bottom: 5px;
   }
+  .order-list-item {
+    cursor: pointer;
+  }
 </style>
 <template>
   <div class="order-page">
     <div class="container">
       <div class="mb-15" style="overflow: hidden">
-        <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/sale/allocation')">返回需求汇总单
+        <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/sale/allocation')">返回销售分配
         </el-button>
         <perm label="submit-allocation-plan" v-show="!$route.query.type">
-          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 ">提交分配方案</el-button>
+          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0" :disabled="doing">提交分配方案</el-button>
         </perm>
       </div>
       <div class="order-list clearfix ">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="status === 0 ? 4 : 6">疫苗</el-col>
           <el-col :span="status === 0 ? 4 : 6">供货厂商</el-col>
           <el-col :span="status === 0 ? 2 : 4">需求数</el-col>
@@ -84,7 +55,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
-               :class="[{'active':currentItemId==item.id}]">
+               :class="[{'active':currentItemId==item.orgGoodsId}]" @click.prevent="showPart(item)">
             <el-row>
               <el-col :span="status === 0 ? 4 : 6" class="R pt">
                 <div>
@@ -157,29 +128,29 @@
                   查看详情
                 </span>
                 </div>
-                <div>
-                  <span @click.prevent="showOrderFormPart(item)" v-show="$route.query.type">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="el-icon-t-link"></i></a>
-                  生成采购合同
-                  </span>
-                </div>
+                <!--<div>-->
+                <!--<span @click.prevent="showOrderFormPart(item)" v-show="$route.query.type">-->
+                <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
+                <!--class="el-icon-t-link"></i></a>-->
+                <!--生成采购合同-->
+                <!--</span>-->
+                <!--</div>-->
               </el-col>
             </el-row>
           </div>
         </div>
       </div>
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="queryAllocationList"
-          :current-page="pager.currentPage">
-        </el-pagination>
-      </div>
+      <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
+      <!--<el-pagination-->
+      <!--layout="prev, pager, next"-->
+      <!--:total="pager.count" :pageSize="pager.pageSize" @current-change="queryAllocationList"-->
+      <!--:current-page="pager.currentPage">-->
+      <!--</el-pagination>-->
+      <!--</div>-->
     </div>
 
-    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
-      <allot-form :currentItem="currentItem" @change="change" :status="status" @close="resetRightBox"></allot-form>
+    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <allot-form :currentItem="currentItem" :TotalAllocationList="allocationList" @updateItem="showPart" @change="change" :status="status" @close="resetRightBox"></allot-form>
     </page-right>
     <page-right :show="showOrderForm" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
@@ -193,6 +164,7 @@
   import { demandAssignment, OrgGoods } from '@/resources';
   import allotForm from './form.vue';
   import orderForm from '../contract/form/InForm.vue';
+
   export default {
     components: {
       allotForm,
@@ -214,7 +186,8 @@
         currentItem: {},
         defaultIndex: -1,
         purchase: {},
-        vaccineType: ''
+        vaccineType: '',
+        doing: false
       };
     },
     mounted () {
@@ -225,11 +198,9 @@
         this.allocationList = [];
         this.status = -1;
         if (!this.$route.query.id) return;
-        this.pager.currentPage = pageNo;
         this.loadingData = true;
         demandAssignment.queryDetailList(this.$route.query.id).then(res => {
           this.allocationList = res.data.list;
-          this.pager.count = res.data.count;
           this.status = res.data.status;
           this.loadingData = false;
         });
@@ -243,14 +214,14 @@
       },
       showPart (item) {
         this.currentItem = item;
-        this.currentItemId = item.id;
+        this.currentItemId = item.orgGoodsId;
         this.showRight = true;
       },
       showOrderFormPart (item) {
         OrgGoods.queryOneGoods(item.orgGoodsId).then(res => {
           this.vaccineType = res.data.orgGoodsDto.goodsDto.vaccineSign;
           this.currentItem = item;
-          this.currentItemId = item.id;
+          this.currentItemId = item.orgGoodsId;
           this.purchase = {
             id: item.orgGoodsId,
             count: item.balanceAmount
@@ -297,12 +268,15 @@
           });
           return;
         }
+        this.doing = true;
         demandAssignment.createOrder(this.$route.query.id).then(() => {
           this.$notify.success({
             message: '提交分配方案成功'
           });
+          this.doing = false;
           this.$router.push('/sale/allocation');
         }).catch(error => {
+          this.doing = false;
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '提交分配方案失败'
           });

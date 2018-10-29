@@ -49,7 +49,7 @@ module.exports = {
       {
         test: /\.js$/,
         loader: 'babel-loader',
-        include: [resolve('src')]
+        include: [resolve('src'), resolve('node_modules/@dtop'), resolve('node_modules/element-ui/src')]
       },
       {
         test: /\.(png|jpe?g|gif|svg)(\?.*)?$/,
@@ -86,12 +86,6 @@ module.exports = {
       loaders: ['babel-loader?cacheDirectory=true'],
       threadPool: happyThreadPool,
       verbose: true
-    }),
-    new webpack.optimize.CommonsChunkPlugin({
-      async: 'shared-module',
-      minChunks: (module, count) => (
-        count >= 2    // 当一个模块被重复引用2次或以上的时候单独打包起来。
-      )
     })
   ]
 };

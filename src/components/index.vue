@@ -1,44 +1,4 @@
-<style lang="less">
-  @import "../../static/css/oms.css";
-  @import "../assets/mixins.less";
-  @import "../assets/oms.less";
-
-
-
-  .layer-loading {
-    text-align: center;
-    background: #f9f9f9;
-    padding-top: 15rem;
-    position: fixed;
-    top: 50px;
-    left: 0;
-    right: 0;
-    z-index: 1200;
-    bottom: 0
-  }
-
-  .layer-loading > i {
-    -webkit-animation: bouncedelay 1.4s infinite ease-in-out;
-    animation: bouncedelay 1.4s infinite ease-in-out;
-    -webkit-animation-fill-mode: both;
-    animation-fill-mode: both;
-    background-color: #A6A6A6;
-    display: inline-block;
-    border-radius: 100%;
-    margin: 0 2px;
-    height: 18px;
-    width: 18px
-  }
-
-  .layer-loading > i:nth-child(2) {
-    -webkit-animation-delay: .2s;
-    animation-delay: .2s
-  }
-
-  .layer-loading > i:nth-child(3) {
-    -webkit-animation-delay: .4s;
-    animation-delay: .4s
-  }
+<style lang="scss">
 
   .btn-left-list-more {
     position: absolute;
@@ -88,22 +48,32 @@
     align-items: center;
 
   }
+  .app-content-view {
+    padding-right: 15px;
+  }
+
+  .main-body__el-scrollbar {
+    .el-scrollbar__wrap {
+      overflow-x: hidden;
+    }
+  }
 </style>
 <template>
-  <div class="app-body" :style="'padding-left:'+bodyLeft">
+  <div class="app-body full-width" :style="'padding-left:'+bodyLeft">
     <app-header :to-route="toRoute" v-if="userType" :level="level"></app-header>
-    <div class="main-body" style="padding:0 8px;">
-      <div class="layer-loading" v-show="loading"><i></i><i></i><i></i></div>
-      <transition name="scale" mode="out-in" appear>
-        <router-view class="app-content-view"></router-view>
-      </transition>
+    <div class="main-body">
+      <el-scrollbar :style="{height: '100%'}" class="main-body__el-scrollbar">
+        <transition name="scale" mode="out-in" appear>
+          <router-view class="app-content-view"></router-view>
+        </transition>
+      </el-scrollbar>
     </div>
     <!--<app-footer></app-footer>-->
     <attachmentDialog></attachmentDialog>
     <print-dialog></print-dialog>
 
     <div class="cdc-shade" v-if="isPermission">
-      <el-button class="btn" type="primary" @click="queryRoles">我是市疾控</el-button>
+      <!--<el-button class="btn" type="primary" @click="queryRoles">我是市疾控</el-button>-->
     </div>
   </div>
 
@@ -112,7 +82,7 @@
 <script>
   import AppHeader from './common/app.header.vue';
   import AppFooter from './common/app.footer.vue';
-  import {Auth, DictGroup, cerpAccess, cerpAction, Access, BaseInfo} from '../resources';
+  import { BaseInfo, cerpAccess, cerpAction } from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
   import printDialog from './common/print.loading.vue';
@@ -139,43 +109,26 @@
         return this.$store.state.bodySize['left'];
       }
     },
-    beforeRouteEnter(to, form, next) {
+    beforeRouteEnter (to, form, next) {
       next(vm => {
         vm.toRoute = to;
       });
     },
-    beforeRouteUpdate(to, from, next) {
+    beforeRouteUpdate (to, from, next) {
       utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
       this.toRoute = to;
       next();
     },
-    mounted: function () {
-      window.localStorage.removeItem('noticeError');
-      if (!this.$store.state.user || !this.$store.state.user.userId) {
-        Auth.checkLogin().then(() => {
-          let data = window.localStorage.getItem('user');
-          if (!data) {
-            Auth.logout().then(() => {
-              this.$router.replace('/login');
-            });
-          }
-          data = JSON.parse(data);
-          this.$store.commit('initUser', data);
-          this.queryWeChat();
-          this.queryBaseInfo(data);
-          this.getRoleMenus(data);
-        }).catch(() => {
-          Auth.logout().then(() => {
-            this.$router.replace('/login');
-          });
-        });
-      } else {
-        let data = window.localStorage.getItem('user');
-        data = JSON.parse(data);
-        this.getRoleMenus(data);
-        this.queryBaseInfo(data);
+    watch: {
+      $route () {
+        this.$store.commit('initBottomLoading', false);
       }
-      this.queryPerms();
+    },
+    mounted: function () {
+      utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
+      let user = this.$store.state.user;
+      this.queryWeChat();
+      this.queryBaseInfo(user);
       this.queryLevel();
       window.addEventListener('resize', (e) => {
         this.setBodyHeight();
@@ -183,11 +136,11 @@
       this.setBodyHeight();
     },
     methods: {
-      queryRoles() {
+      queryRoles () {
         cerpAccess.bindMunicipal().then(() => {
           this.loading = false;
-          this.queryPerms();
           this.queryLevel();
+          this.$emit('login');
         }).catch((error) => {
           this.loading = true;
           this.$notify.error({
@@ -195,7 +148,7 @@
           });
         });
       },
-      queryLevel() {
+      queryLevel () {
         cerpAction.queryLevel().then(res => {
           this.level = res.data;
           window.localStorage.setItem('logLevel', res.data);
@@ -203,45 +156,24 @@
           this.isPermission = res.data === 0;
         });
       },
-      queryPerms() {
-        Auth.permission().then(res => {
-          this.$store.commit('initPermissions', res.data);
-        }).then(() => {
-
-          utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
-          this.loading = false;
-
-          DictGroup.getAll().then(data => {
-            this.$store.commit('initDict', data);
-          });
-        });
-      },
-      getRoleMenus(data) {
-        Access.getRoleMenus(data.userCompanyAddress).then(res => {
-          let menuData = res.data;
-          let menuList = {};
-          res.data.menuList.forEach(item => {
-            menuList[item.id] = item.name;
-          });
-          menuData.menuList = menuList;
-          this.$store.commit('initPermList', menuData);
-        });
-      },
-      queryWeChat() {
+      queryWeChat () {
         cerpAction.queryWeChatInfo().then(res => {
           this.$store.commit('initWeChatInfo', res.data);
         }).catch(() => {
           this.$store.commit('initWeChatInfo', {});
         });
       },
-      queryBaseInfo(data) {
+      queryBaseInfo (data) {
         BaseInfo.queryBaseInfo(data.userCompanyAddress).then(res => {
           this.$store.commit('initOrgName', res.data.orgDto.name);
           window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');
         });
       },
       setBodyHeight: function () {
-        this.$store.commit('setBodyHeight', window.innerHeight - 200 + 'px');
+        this.$store.commit('setBodyHeight', {
+          height: window.innerHeight - 200 + 'px',
+          window: {width: window.innerWidth, height: window.innerHeight}
+        });
       }
     }
   };

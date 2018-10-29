@@ -1,29 +1,19 @@
-<style lang="less" scoped>
-  @import "../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../assets/mixins.scss";
 
-  @leftWidth: 0;
+  $leftWidth: 0;
   .content-part {
     .content-left {
-      width: @leftWidth;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
 </style>
 
 <template>
@@ -59,11 +49,13 @@
           <div class="product-list-detail" v-if="info.list">
             <h3 style="background: #f1f1f1;overflow: hidden">
               <span style="float: left">付款明细</span>
+              <span>(共{{info.list.length}}条)</span>
             </h3>
             <table class="table">
               <thead>
               <tr>
                 <th style="width: 250px">货品名称</th>
+                <th>数量</th>
                 <th>订单号</th>
                 <th>应付金额</th>
                 <th>待付金额</th>
@@ -76,6 +68,9 @@
                   <span>{{product.goodsName}}</span>
                 </td>
                 <td>
+                  <span>{{product.goodsCount}}</span>
+                </td>
+                <td>
                   <span>{{product.orderNo}}</span>
                 </td>
                 <td>
@@ -86,7 +81,7 @@
                   <span>¥{{ (product.billAmount - product.prepaidAccounts) | formatMoney}}</span>
                 </td>
                 <td>
-                  {{product.createTime | minute }}
+                  {{product.createTime | date }}
                 </td>
               </tr>
               </tbody>
@@ -99,6 +94,7 @@
 </template>
 <script>
   import { invoiceManage } from '@/resources';
+
   export default {
     props: {
       currentId: String,

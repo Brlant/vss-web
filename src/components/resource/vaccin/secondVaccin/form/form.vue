@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -89,27 +89,10 @@
       }
     }
   }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 430px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
 </style>
 <template>
   <div>
-    <h2 class="clearfix">{{showTitle}}货主二类疫苗资料</h2>
+    <h2 class="clearfix">{{showTitle}}货主疫苗产品资料</h2>
     <el-form ref="goodSForm" :model="form" :rules="rules" label-width="120px" @submit.prevent="onSubmit('goodSForm')"
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
@@ -122,18 +105,18 @@
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="item.code">货品编号</span>  {{item.code}}
+                  v-show="item.code">货品编号:</span>{{item.code}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.specifications">货品规格</span>  {{item.specifications}}
+                v-show="item.specifications">货品规格:</span>{{item.specifications}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.approvalNumber">批准文号</span>  {{item.approvalNumber}}
+                v-show="item.approvalNumber">批准文号:</span>{{item.approvalNumber}}
                 </span>
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.factoryName">生产厂商</span>  {{ item.factoryName }}
+                v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
               </span>
             </div>
           </el-option>
@@ -141,7 +124,7 @@
       </el-form-item>
       <el-form-item label="供货厂商" prop="salesFirm">
         <el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg" @click.native="filterOrg('')"
-                   :clearable="true" v-model="form.salesFirm" @change="setSalesFirm(form.salesFirm)"
+                   :clearable="true" v-model="form.salesFirmId" @change="setSalesFirm(form.salesFirmId)"
                    popperClass="good-selects">
           <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
             <div style="overflow: hidden">
@@ -149,11 +132,17 @@
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left">
-                <span>系统代码</span> {{org.manufacturerCode}}
+                <span>系统代码:</span>{{org.manufacturerCode}}
               </span>
             </div>
           </el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="供货厂商ID">
+        {{form.salesFirm}}
+      </el-form-item>
+      <el-form-item label="供货厂商名称">
+        {{form.salesFirmName}}
       </el-form-item>
       <el-form-item label="疫苗编号" prop="goodsNo">
         <oms-input type="text" v-model="form.goodsNo" placeholder="请输入疫苗编号"></oms-input>
@@ -165,6 +154,11 @@
         <el-select placeholder="请选择储存条件" v-model="form.storageConditionId">
           <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in storageCondition"></el-option>
         </el-select>
+      </el-form-item>
+      <el-form-item label="标准单价" prop="unitPrice">
+        <oms-input type="text" v-model="form.unitPrice" placeholder="请输入标准单价" @blur="formatPrice">
+          <template slot="prepend">¥</template>
+        </oms-input>
       </el-form-item>
       <el-form-item label="中标价格" prop="bidPrice">
         <oms-input type="text" v-model="form.bidPrice" placeholder="请输入中标价格" @blur="formatPrice" @change="setPrice">
@@ -188,18 +182,18 @@
         <oms-input type="number" :min="0" v-model.number="form.inventoryLowerLimit" placeholder="请输入库存下限"></oms-input>
       </el-form-item>
       <el-form-item label="是否计价">
-        <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
+        <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                    v-model="form.valuationFlag"></el-switch>
       </el-form-item>
       <el-form-item label="是否组合">
-        <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
+        <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                    v-model="form.goodsIsCombination"></el-switch>
       </el-form-item>
       <div v-show="form.goodsIsCombination">
         <!--<el-form ref="otherGoodsForm" :model="form" :rules="otherGoodsRules" label-width="120px">-->
-        <el-form-item label="其他组织疫苗">
-          <el-select placeholder="请选择组织疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects" remote
-                     :remote-method="queryCombinationGoods" :clearable="true">
+        <el-form-item label="其他单位疫苗">
+          <el-select placeholder="请选择单位疫苗" v-model="otherForm.accessory" filterable popper-class="good-selects" remote
+                     :remote-method="queryCombinationGoods" @click.native="queryCombinationGoods('')" :clearable="true">
             <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                        v-for="item in otherGoodsList">
               <div style="overflow: hidden">
@@ -207,14 +201,17 @@
               </div>
               <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.goodsDto.code">平台货品编号</span>  {{item.orgGoodsDto.goodsDto.code}}
+                v-show="item.orgGoodsDto.goodsDto.code">平台货品编号:</span>{{item.orgGoodsDto.goodsDto.code}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                  v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                  v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
               </span>
+                <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                 </span>
               </div>
             </el-option>
           </el-select>
@@ -225,8 +222,8 @@
           <el-button type="primary" @click="addGoods">添加</el-button>
         </el-form-item>
         <!--</el-form>-->
-        <ul class="show-list">
-          <li class="list-item"><span>其他组织疫苗</span> <span style="position: absolute;right: 200px">比例</span></li>
+        <ul class="show-list" v-show="selectGoodsList.length">
+          <li class="list-item"><span>其他单位疫苗</span> <span style="position: absolute;right: 200px">数量</span></li>
           <li v-for="item in selectGoodsList" class="list-item">
             <span style="display: inline-block;width: 260px">{{ item.name }}</span>
             <span style="position: absolute;right: 200px;display: inline-block;">{{ item.proportion }}</span>
@@ -243,7 +240,7 @@
   </div>
 </template>
 <script>
-  import { Vaccine, BaseInfo, SuccessfulBidder, Goods, http } from '@/resources';
+  import {BaseInfo, SuccessfulBidder, Vaccine} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -278,6 +275,9 @@
           name: [
             {required: true, message: '请输入疫苗名称', trigger: 'blur'}
           ],
+          unitPrice: [
+            {required: true, message: '请输入标准单价', trigger: 'blur'}
+          ],
           bidPrice: [
             {required: true, message: '请输入中标价格', trigger: 'blur'}
           ],
@@ -288,7 +288,7 @@
             {required: true, message: '请输入销售价格', trigger: 'blur'}
           ],
           accessory: [
-            {required: true, message: '请输入其他组织疫苗', trigger: 'change'}
+            {required: true, message: '请输入其他单位疫苗', trigger: 'change'}
           ],
           proportion: [
             {type: 'number', message: '比例必须为数字值'}
@@ -304,7 +304,7 @@
           accessory: '',
           proportion: null
         },
-        goodsList: [], // 组织疫苗列表
+        goodsList: [], // 单位疫苗列表
         otherGoodsList: [], // 其他oms组合疫苗列表
         invariantOtherGoodslist: [], // 所有的oms组合疫苗列表
         selectGoodsList: [], // 已经选择的疫苗列表
@@ -318,10 +318,10 @@
     },
     computed: {
       typeId () {
-        return this.$store.state.dict['typeId'];
+        return this.$getDict('typeId');
       },
       storageCondition () {
-        return this.$store.state.dict['storageCondition'];
+        return this.$getDict('storageCondition');
       },
       showTitle() {
         let tilet = '新增';
@@ -340,8 +340,12 @@
     watch: {
       formItem: function (val) {
         this.goodsType = '';
+        this.filterOrg();
         if (typeof val.id === 'string') {
           this.form = this.formItem;
+          if (this.form.unitPrice) {
+            this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice ? this.form.unitPrice.toString() : '');
+          }
           if (this.form.bidPrice) {
             this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
           }
@@ -351,8 +355,11 @@
           if (this.form.sellPrice) {
             this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
           }
-          this.otherGoodsList = [];
-          this.getCombinationGoods();
+          this.selectGoodsList = this.form.combinationList;
+//          this.otherGoodsList = [];
+//          this.getCombinationGoods();
+//          this.getOmsGoods(val.goodsDto.name);
+//          this.filterOrg(val.salesFirmName);
         } else {
 //          this.queryCombinationGoods();
           this.getOmsGoods();
@@ -365,6 +372,7 @@
             salesFirmName: '',
             goodsIsCombination: false,
             goodsNo: '',
+            unitPrice: '',
             bidPrice: '',
             sellPrice: '',
             procurementPrice: '',
@@ -415,15 +423,6 @@
         };
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
-          if (this.action === 'edit') {
-            let isExist = this.orgList.some(item => this.form.orgList.id === item.id);
-            if (!isExist) {
-              this.orgList.push({
-                id: this.form.salesFirm,
-                name: this.form.salesFirmName
-              });
-            }
-          }
         });
       },
       setPrice: function () {
@@ -432,40 +431,13 @@
           this.form.sellPrice = this.form.bidPrice;
         }
       },
-      getOmsGoods: function (keyWord) {// 得到组织疫苗列表
-//        if (this.orgLevel === 1) {
-//          let params = {
-//            keyWord: keyWord
-//          };
-//          http.get('vaccine-info/first-vaccine/valid', {params}).then(res => {
-//            this.goodsList = res.data.list;
-//            if (this.action === 'edit') {
-//              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
-//              if (!isExist) {
-//                this.goodsList.push({
-//                  id: this.form.goodsDto.id,
-//                  name: this.form.goodsDto.name
-//                });
-//              }
-//            }
-//            this.getGoodsType(this.form.goodsId);
-//          });
-//        } else {
+      getOmsGoods: function (keyWord) {// 得到单位疫苗列表
           let params = {
             keyWord: keyWord,
             availabilityStatus: true
           };
           SuccessfulBidder.queryInfo(params).then(res => {
             this.goodsList = res.data;
-            if (this.action === 'edit') {
-              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
-              if (!isExist) {
-                this.goodsList.push({
-                  id: this.form.goodsDto.id,
-                  name: this.form.goodsDto.name
-                });
-              }
-            }
             this.getGoodsType(this.form.goodsId);
           });
 //        }
@@ -515,7 +487,7 @@
           });
         }
       },
-      filtersCombinationGoods () {// 过滤已有的组织疫苗和本身
+      filtersCombinationGoods () {// 过滤已有的单位疫苗和本身
         let array = [];
         let isNotSame = false;
         this.invariantOtherGoodslist.forEach(tItem => {
@@ -535,7 +507,7 @@
         this.otherGoodsList = [];
         this.otherGoodsList = array;
       },
-      filterSelectGoodsList: function (data) {// 过滤选择的组合组织疫苗
+      filterSelectGoodsList: function (data) {// 过滤选择的组合单位疫苗
         this.selectGoodsList = [];
         if (data.length === 0) return;
         data.forEach(item => {
@@ -548,6 +520,7 @@
         this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice);
         this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice);
         this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice);
+        this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
       remove () {
         this.$confirm('确认删除该信息?', '', {
@@ -582,9 +555,9 @@
         // 如果选择组合疫苗，则验证组或疫苗的表单
         if (this.form.goodsIsCombination) {
           if (this.selectGoodsList && this.selectGoodsList.length === 0) {
-            this.$notify.error({
+            this.$notify.info({
               duration: 1500,
-              message: '请选择要组合的组织疫苗'
+              message: '请先添加其他单位疫苗'
             });
             return;
           }
@@ -611,13 +584,13 @@
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '新增组织疫苗"' + data.orgGoodsDto.name + '"成功'
+                message: '新增单位疫苗"' + data.orgGoodsDto.name + '"成功'
               });
               this.$emit('change', data);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '新增组织疫苗"' + data.orgGoodsDto.name + '"失败'
+                message: '新增单位疫苗"' + data.orgGoodsDto.name + '"失败'
               });
               this.doing = false;
             });
@@ -627,13 +600,13 @@
               this.$notify.success({
                 duration: 2000,
                 name: '成功',
-                message: '修改组织疫苗"' + data.orgGoodsDto.name + '"成功'
+                message: '修改单位疫苗"' + data.orgGoodsDto.name + '"成功'
               });
               this.$emit('change', data);
             }).catch(() => {
               this.$notify.error({
                 duration: 2000,
-                message: '修改组织疫苗"' + data.orgGoodsDto.name + '"失败'
+                message: '修改单位疫苗"' + data.orgGoodsDto.name + '"失败'
               });
               this.doing = false;
             });

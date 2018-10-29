@@ -1,84 +1,17 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
 
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .pt {
-    padding-top: 15px;
-  }
-
-  .opera-btn-group {
-
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
-</style>
 <template>
   <div class="order-page">
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <!--<el-col :span="8">-->
             <!--<oms-form-row label="订单号" :span="6">-->
@@ -118,22 +51,22 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="入库时间" :span="6">-->
-            <!--<el-date-picker-->
-            <!--v-model="aryTime"-->
-            <!--type="daterange"-->
-            <!--placeholder="请选择" format="yyyy-MM-dd">-->
-            <!--</el-date-picker>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
+            <el-col :span="8">
+              <oms-form-row label="出入库时间" :span="6">
+                <el-date-picker
+                  v-model="aryTime"
+                  type="daterange"
+                  placeholder="请选择" format="yyyy-MM-dd">
+                </el-date-picker>
+              </oms-form-row>
+            </el-col>
             <el-col :span="8">
               <el-row style="text-align: left;padding-left: 20px">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
@@ -144,14 +77,14 @@
         </el-form>
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <!--<el-col :span="4">货品</el-col>-->
           <!--<el-col :span="2">疫苗类型</el-col>-->
-          <el-col :span="6">采购订单号</el-col>
+          <el-col :span="6">采购（退）订单</el-col>
           <el-col :span="6">物流厂商</el-col>
-          <el-col :span="4">实际到货数量</el-col>
+          <el-col :span="4">数量</el-col>
           <el-col :span="4">物流费用</el-col>
-          <el-col :span="4">入库时间</el-col>
+          <el-col :span="4">出入库时间</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -212,10 +145,8 @@
 </template>
 <script>
   import { BaseInfo, http, Vaccine } from '@/resources';
-  import ElRow from 'element-ui/packages/row/src/row';
 
   export default {
-    components: {ElRow},
     data () {
       return {
         loadingData: true,

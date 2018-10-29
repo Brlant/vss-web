@@ -1,16 +1,5 @@
-<style lang="less">
-  @import "../../../assets/mixins.less";
-
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
+<style lang="scss">
+  @import "../../../assets/mixins.scss";
 
   .ar {
     text-align: right;
@@ -18,16 +7,10 @@
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-      height: 70px;
-    }
-  }
 
   .el-form--inline .el-form-item {
     margin-right: 0;
@@ -43,12 +26,34 @@
   <div>
     <el-form ref="payForm" :inline="true" onsubmit="return false">
       <el-form-item label="货品名称">
-        <oms-input v-model="searchCondition.goodsName"></oms-input>
+        <!--<oms-input v-model="searchCondition.goodsName"></oms-input>-->
+        <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货品"
+                   :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
+                   popper-class="good-selects">
+          <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
+                     :label="item.orgGoodsDto.name"
+                     :value="item.orgGoodsDto.id">
+            <div style="overflow: hidden">
+              <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+            </div>
+            <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                        </span>
+              <span class="select-other-info pull-left"><span
+                v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                        </span>
+              <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                </span>
+            </div>
+          </el-option>
+        </el-select>
       </el-form-item>
-      <el-form-item label="发生时间" style="width: 380px" class="create-date">
+      <el-form-item label="发生时间" class="create-date">
         <el-date-picker
           v-model="createTimes"
-          type="datetimerange"
+          type="daterange"
           placeholder="请选择">
         </el-date-picker>
       </el-form-item>
@@ -63,6 +68,7 @@
         <tr>
           <th width="30px">操作</th>
           <th style="width: 240px">货品名称</th>
+          <th>数量</th>
           <th>订单号</th>
           <th>应付金额</th>
           <th>发生时间</th>
@@ -84,6 +90,9 @@
             <span>{{product.goodsName}}</span>
           </td>
           <td>
+            <span>{{product.goodsCount}}</span>
+          </td>
+          <td>
             <span>{{product.orderNo}}</span>
           </td>
           <td class="ar">
@@ -91,7 +100,7 @@
             <span v-if="!Number(product.billAmount)">-</span>
           </td>
           <td>
-            {{product.createTime | minute }}
+            {{product.createTime | date }}
           </td>
         </tr>
         </tbody>
@@ -108,12 +117,13 @@
     <div class="product-list-detail" v-show="selectPayments.length">
       <h3 style="background: #f1f1f1;overflow: hidden">
         <span style="float: left">已选明细</span>
-        <span style="float: right">发票金额：￥{{ amount | formatMoney }}</span>
+        <span style="float: right">已选发票明细总额：￥{{ amount | formatMoney }}</span>
       </h3>
       <table class="table">
         <thead>
         <tr>
-          <th style="width: 300px">货品名称</th>
+          <th style="width: 240px">货品名称</th>
+          <th>数量</th>
           <th>订单号</th>
           <th>应付金额</th>
           <th>发生时间</th>
@@ -126,6 +136,9 @@
             <span>{{product.goodsName}}</span>
           </td>
           <td>
+            <span>{{product.goodsCount}}</span>
+          </td>
+          <td>
             <span>{{product.orderNo}}</span>
           </td>
           <td class="ar">
@@ -133,7 +146,7 @@
             <span v-if="!Number(product.billAmount)">-</span>
           </td>
           <td>
-            {{product.createTime | minute }}
+            {{product.createTime | date }}
           </td>
           <td class="goods-btn" style="width: 60px">
             <a href="#" @click.prevent="remove(product)">
@@ -148,7 +161,7 @@
 
 </template>
 <script>
-  import { pay } from '@/resources';
+  import { Vaccine } from '@/resources';
 
   export default {
     props: {
@@ -165,19 +178,20 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 5
+          pageSize: 50
         },
         filterRights: {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: ''
         },
         searchCondition: {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: ''
         },
-        createTimes: ''
+        createTimes: '',
+        goodesList: []
       };
     },
     computed: {
@@ -188,6 +202,8 @@
     watch: {
       factoryId (val) {
         this.payments = [];
+        this.goodesList = [];
+        this.resetSearchForm();
         if (!val) return;
         this.queryPayments(1);
       },
@@ -206,10 +222,22 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filterRights);
-        this.$http.get(`/accounts-payable/remittee/${this.factoryId}/detail/no-invoice`, params).then(res => {
+        this.$http.get(`/accounts-payable/remittee/${this.factoryId}/detail/no-invoice`, {params}).then(res => {
           this.loadingData = false;
           this.payments = res.data.list;
           this.pager.count = res.data.count;
+        });
+      },
+      searchProduct (keyWord) {
+        if (!this.factoryId) return;
+        let params = Object.assign({}, {
+          keyWord: keyWord,
+          salesFirm: this.factoryId
+        });
+        let level = this.$store.state.orgLevel;
+        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
+        Vaccine[api](params).then(res => {
+          this.goodesList = res.data.list;
         });
       },
       searchInOrder: function () {// 搜索
@@ -219,7 +247,7 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: ''
         };
@@ -228,7 +256,7 @@
         Object.assign(this.filterRights, temp);
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       add (item) {
         let index = this.selectPayments.indexOf(item);
@@ -238,7 +266,7 @@
       },
       remove (item) {
         let index = this.selectPayments.indexOf(item);
-        this.selectPayments.splice(item, 1);
+        this.selectPayments.splice(index, 1);
       }
     }
   };

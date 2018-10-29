@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .bg-box-all {
     &.RejectionInfo-item {
       padding: 0;
@@ -18,6 +18,9 @@
       border-radius: 5px;
       margin-bottom: 5px;
       padding-left: 5px;
+    }
+    .header {
+      overflow: hidden;
     }
     .date {
       color: #999;
@@ -87,7 +90,8 @@
                   <div class="comment-item" v-for="item in exception.commentList">
                     <div class="header">
                       <span> {{ item.creatorName }}</span>
-                      <span class="date"> {{ item.createDate | time}}</span>
+                      <span v-show="item.creatorOrgName">({{item.creatorOrgName}})</span>
+                      <span class="date pull-right mr-10"> {{ item.createDate | time}}</span>
                     </div>
                     <el-row class="content">
                       {{item.content}}
@@ -112,7 +116,7 @@
               <span v-show="!exception.closed && exception.exceptionStatus === '0' ">待确认</span>
                   </span>
             <perm label="quality-exception-edit"
-                  v-show="exception.closed===false &&(exception.item.auditFlag&&exception.exceptionStatus!=='0')">
+                  v-show="exception.closed===false &&(exception.exceptionStatus!=='0')">
               <div style="margin-top: 10px;margin-bottom: 10px">
                 <span style="font-size: 14px">客户意见</span>
                 <div class="comment-box" style="margin-top: 4px">
@@ -129,16 +133,16 @@
             <span>
                     <perm label="quality-exception-confirm">
                         <el-button type="primary"
-                                   v-show="exception.item.auditFlag&&exception.exceptionStatus==='0'"
+                                   v-show="exception.exceptionStatus==='0'"
                                    @click="checkException(exception)">确认</el-button>
                     </perm>
                       <perm label="quality-exception-edit"
-                            v-show="exception.closed===false &&(exception.item.auditFlag&&exception.exceptionStatus!=='0')">
+                            v-show="exception.closed===false &&(exception.exceptionStatus!=='0')">
                         <el-button type="primary" @click="saveException(exception)" :disabled="doing">提交</el-button>
                       </perm>
                      <perm label="quality-exception-close">
                           <el-button type="primary"
-                                     v-show="exception.closed===false &&(exception.item.auditFlag&&exception.exceptionStatus!=='0')"
+                                     v-show="exception.closed===false &&(exception.exceptionStatus!=='0')"
                                      @click="closeException(exception)">关闭异常</el-button>
                       </perm>
                   </span>

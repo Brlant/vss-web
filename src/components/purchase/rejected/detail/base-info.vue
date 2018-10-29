@@ -1,8 +1,4 @@
-<style lang="less" scoped="">
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
+<style lang="scss" scoped="">
 
   .oms-row {
     margin-bottom: 8px;
@@ -23,7 +19,7 @@
     </div>
     <div v-else="" class="page-main-body padding">
       <div>
-        <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2' ">
+        <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2-2' ">
           <el-col :span="12">
             <oms-row label="货主订单号" :span="span">
               {{currentOrder.orderNo}}
@@ -40,6 +36,9 @@
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
+            <oms-row label="疾控仓库地址" :span="span">
+              <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -54,15 +53,17 @@
             <oms-row label="预计出库时间" v-show="currentOrder.expectedTime">
               <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
             </oms-row>
+            <oms-row label="是否合格">
+              <span class="goods-span" v-show="currentOrder.qualifiedFlag">合格</span>
+              <span class="goods-span" v-show="!currentOrder.qualifiedFlag">不合格</span>
+            </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
+            <oms-row label="退货原因" v-show="currentOrder.returnReason">
+              {{ currentOrder.returnReason }}
+            </oms-row>
           </el-col>
-        </el-row>
-        <el-row style="margin-bottom:0">
-          <oms-row label="疾控仓库地址" :span="3">
-            <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
-          </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
           <oms-row label="备注" :span="3">{{ currentOrder.remark }}</oms-row>
@@ -70,87 +71,100 @@
       </div>
 
 
-      <hr class="hr"/>
-
-      <table class="table no-border table-product-list" v-show="currentOrder.detailDtoList">
-        <thead>
-        <tr>
-          <td></td>
-          <td>名称</td>
-          <td class="text-center">供货厂商</td>
-          <td>批号</td>
-          <td>生产日期</td>
-          <td>有效期</td>
-          <td class="text-center">数量</td>
-          <td class="text-center">单价</td>
-          <td class="text-center">金额</td>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="item in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
-          <td width="70px">
-            <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
-                        effect="light" placement="right">
-              <img :src="item.orgGoodsDto.goodsDto.photo "
-                   class="product-img">
-              <img slot="content" :src="item.orgGoodsDto.goodsDto.photo "
-                   class="product-img">
-            </el-tooltip>
-            <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
-              <img :src="'../../../../static/img/userpic.png'" class="product-img">
-              <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
-            </el-tooltip>
-          </td>
-          <td width="160px">
-            <div>
-              <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
-                <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
+      <!--<hr class="hr"/>-->
+      <div class="table-product">
+        <table class="table no-border table-product-list" v-show="currentOrder.detailDtoList">
+          <thead>
+          <tr>
+            <td></td>
+            <td></td>
+            <td class="text-center">货品</td>
+            <td class="text-center">规格</td>
+            <!--<td>批号</td>-->
+            <td class="text-center">生产/有效日期</td>
+            <!--<td>有效期</td>-->
+            <td class="text-center">数量</td>
+            <td class="text-center" v-show="orgLevel === 2">单价</td>
+            <td class="text-center" v-show="orgLevel === 2">金额</td>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="(item,index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
+            <td width="10">{{index + 1}}</td>
+            <td width="80">
+              <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
+                          effect="light" placement="right">
+                <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
+                     class="product-img">
+                <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
+                     class="product-img">
               </el-tooltip>
-            </div>
-            <div>
-              <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
-                <span style="font-size: 12px;color:#999">{{ item.orgGoodsDto.goodsDto.name }}</span>
+              <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
+                <img :src="'../../../../static/img/userpic.png'" class="product-img">
+                <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
               </el-tooltip>
-            </div>
-            <div>
-              <el-tooltip class="item" effect="dark" content="货品规格" placement="right">
-                <span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>
-              </el-tooltip>
-            </div>
-          </td>
-          <td class="text-center" width="140px">
-            {{item.orgGoodsDto.salesFirmName}}
-          </td>
-          <td width="80px" class="R">{{ item.batchNumber || '无' }}</td>
-          <td>{{ item.productionDate | date }}</td>
-          <td>{{ item.expiryDate | date }}</td>
-          <td width="100px" class="text-center">
-            {{item.amount}}
-            <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
-          </td>
-          <td width="80px" class="text-center">
-            <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
-            <span v-if="!item.unitPrice">-</span>
-          </td>
-          <td class="text-center">
-           <span v-if="item.unitPrice">
-              <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
+            </td>
+            <td>
+              <div>
+                <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+                  <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
+                </el-tooltip>
+              </div>
+              <div>
+                <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+                  <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
+                </el-tooltip>
+              </div>
+              <!--<div>-->
+              <!--<el-tooltip class="item" effect="dark" content="货品规格" placement="right">-->
+              <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
+              <!--</el-tooltip>-->
+              <!--</div>-->
+              <div>
+                <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
+                  <span>{{ item.salesFirmName }}</span>
+                </el-tooltip>
+              </div>
+              <div>
+                批号：{{item.batchNumber || '无' }}
+              </div>
+            </td>
+            <td class="text-center" width="70px">
+              <span>{{ item.orgGoodsDto.goodsDto.specifications }}</span>
+            </td>
+            <!--<td width="80px" class="R">{{ item.batchNumber || '无' }}</td>-->
+            <td class="text-center">
+              <div>{{ item.productionDate | date }}</div>
+              <div>{{ item.expiryDate | date }}</div>
+            </td>
+            <td width="100px" class="text-center">
+              {{item.amount}}
+              <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
+            </td>
+            <td width="80px" class="text-center" v-show="orgLevel === 2">
+              <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+              <span v-if="!item.unitPrice">-</span>
+            </td>
+            <td class="text-center" v-show="orgLevel === 2">
+            <span v-if="item.unitPrice">
+            <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
             </span>
-            <span v-if="!item.unitPrice">-</span>
-          </td>
-        </tr>
-        <tr class="text-center">
-          <td colspan="7" align="right">
-            <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
-          </td>
-          <td colspan="2" align="right">
-            <span style="font-weight:600;"
-                  v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney
+              <span v-if="!item.unitPrice">-</span>
+            </td>
+          </tr>
+          <tr class="text-center">
+            <td colspan="6" align="right">
+              <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
+            </td>
+            <td colspan="2" align="right" v-show="orgLevel === 2">
+              <span style="font-weight:600;"
+                    v-show="currentOrder.totalAmount">合计金额: ¥  {{ currentOrder.totalAmount | formatMoney
               }}</span>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
     </div>
   </div>
 </template>
@@ -176,22 +190,22 @@
     },
     computed: {
       bizTypeList () {
-        return this.$store.state.dict['bizOutType'];
+        return this.$getDict('bizOutType');
       },
       transportationMeansList () {
-        return this.$store.state.dict['outTransportMeans'];
+        return this.$getDict('outTransportMeans');
       },
       transportationConditionList () {
-        return this.$store.state.dict['transportationCondition'];
+        return this.$getDict('transportationCondition');
       },
       shipmentPackingUnit () {
-        return this.$store.state.dict['shipmentPackingUnit'];
+        return this.$getDict('shipmentPackingUnit');
       },
       measurementUnitList () {
-        return this.$store.state.dict['measurementUnit'];
+        return this.$getDict('measurementUnit');
       },
       orgRelationList () {
-        return this.$store.state.dict['orgRelation'];
+        return this.$getDict('orgRelation');
       },
       totalMoney: function () {
         let totalMoney = 0.00;
@@ -200,6 +214,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      orgLevel () {
+        return this.$store.state.orgLevel;
       }
     },
     watch: {
@@ -211,7 +228,7 @@
     },
     methods: {
       getTimeTitle: function (item) {
-        return item.transportationMeansId === '0' ? item.bizType === '1' ? '预计出库' : '预计送货'
+        return item.transportationMeansId === '0' ? item.bizType === '2-1' ? '预计出库' : '预计送货'
           : item.transportationMeansId === '1' ? '预计提货'
             : item.transportationMeansId === '2' ? '预计发货' : '';
       },
@@ -225,7 +242,8 @@
         }
         Address.queryAddress(this.currentOrder.customerId, {
           deleteFlag: false,
-          orgId: this.currentOrder.customerId
+          auditedStatus: '1',
+          orgId: this.currentOrder.customerId, status: 0
         }).then(res => {
           this.warehouses = res.data || [];
         });
@@ -258,7 +276,7 @@
         if (!item.warehouseAddress) {
           return '';
         }
-        return utils.formatAddress(item.warehouseProvince, item.warehouseCity, item.warehouseRegion) + '/' + item.warehouseAddress;
+        return item.warehouseAddress;
       }
     }
   };

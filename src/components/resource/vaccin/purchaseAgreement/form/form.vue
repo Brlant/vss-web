@@ -1,34 +1,25 @@
-<style lang="less" scoped>
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
 
-</style>
 <template>
   <el-form ref="form" :rules="rules" :model="form" label-width="120px" class="demo-ruleForm">
     <h2 class="clearfix">{{showTitle}}区二类疫苗</h2>
     <el-form-item label="疫苗" prop="orgGoodsId" class="search-input">
-      <el-select placeholder="请选择疫苗" v-model="form.orgGoodsId" filterable remote :remote-method="getOmsGoods"
-                 @click.native="getOmsGoods('')"
-                 :clearable="true" popper-class="good-selects" @change="setSalesFirmName(form.orgGoodsId)">
+      <el-select filterable remote placeholder="请选择疫苗" :remote-method="getOmsGoods" @click.native="getOmsGoods('')"
+                 :clearable="true" v-model="form.orgGoodsId" popperClass="good-selects" @clear="clearOmsGoods">
         <el-option :label="item.orgGoodsDto.name" :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id"
                    v-for="item in goodsList">
           <div style="overflow: hidden">
             <span class="pull-left">{{item.orgGoodsDto.name}}</span>
           </div>
           <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-                      </span>
-            <span class="select-other-info pull-left"><span
-              v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
-                      </span>
+              <span class="select-other-info pull-left"><span
+                v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+              </span>
+              <span class="select-other-info pull-left"><span
+                v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+              </span>
+            <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                </span>
           </div>
         </el-option>
       </el-select>
@@ -42,17 +33,17 @@
         <template slot="prepend">¥</template>
       </oms-input>
     </el-form-item>
-    <el-form-item label="协议采购数量" prop="amount">
+    <el-form-item label="协议采购数量">
       <oms-input type="number" v-model.number="form.amount" min="0" placeholder="请输入协议采购数量"></oms-input>
     </el-form-item>
     <el-form-item label="协议到期时间" prop="expireTime" ref="expireTime">
-      <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" @change="changeEndTime">
+      <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" value-format="timestamp">
       </el-date-picker>
     </el-form-item>
     <el-form-item label="是否生效">
-      <el-switch v-model="form.availabilityStatus" on-text="是" off-text="否"
-                 on-color="#13ce66"
-                 off-color="#ff4949">
+      <el-switch v-model="form.availabilityStatus" active-text="是" inactive-text="否"
+                 active-color="#13ce66"
+                 inactive-color="#ff4949">
       </el-switch>
     </el-form-item>
     <el-form-item label-width="120px">
@@ -67,7 +58,7 @@
   </el-form>
 </template>
 <script>
-  import {Vaccine, PurchaseAgreement} from '../../../../../resources';
+  import {PurchaseAgreement, Vaccine} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
 
   export default {
@@ -79,9 +70,6 @@
           ],
           unitPrice: [
             {required: true, message: '请输入采购单价', trigger: 'blur'}
-          ],
-          amount: [
-            {type: 'number', required: true, message: '请输入采购数量', trigger: 'blur'}
           ],
           expireTime: [
             {required: true, message: '请选择协议到期日期', trigger: 'change'}
@@ -105,10 +93,10 @@
         return title;
       },
       exceptionType: function () {
-        return this.$store.state.dict['exceptionType'];
+        return this.$getDict('exceptionType');
       },
       executionBody: function () {
-        return this.$store.state.dict['executionBody'];
+        return this.$getDict('executionBody');
       }
     },
     props: ['formItem', 'action', 'actionType'],
@@ -126,30 +114,37 @@
         }
         if (this.action === 'edit') {
           this.form = Object.assign({}, val);
+          this.salesFirmName = this.form.supplyCompanyName;
+          this.getOmsGoods(this.form.orgGoodsName);
         }
-        this.getOmsGoods();
       },
       actionType: function (val) {
         if (!val) {
           this.$refs['form'].resetFields();
         }
+      },
+      'form.orgGoodsId': function (item) {
+        if (item) {
+          this.goodsList.forEach(val => {
+            if (val.orgGoodsDto.id === item) {
+              this.salesFirmName = val.orgGoodsDto.salesFirmName;
+              this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
+              this.form.unitPrice = utils.autoformatDecimalPoint(val.orgGoodsDto.procurementPrice.toString());
+            }
+          });
+        }
       }
     },
+    mounted() {
+    },
     methods: {
-      setSalesFirmName: function (item) {
-        if (this.action !== 'edit') {
-          if (item) {
-            this.goodsList.forEach(val => {
-              if (val.orgGoodsDto.id === item) {
-                this.salesFirmName = val.orgGoodsDto.salesFirmName;
-                this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
-                this.form.unitPrice = utils.autoformatDecimalPoint(val.orgGoodsDto.procurementPrice.toString());
-              }
-            });
-          }
-        }
+      clearOmsGoods: function () {
+        this.salesFirmName = '';
+        this.form.supplyCompanyId = '';
+        this.form.unitPrice = '';
       },
-      getOmsGoods: function (keyWord) {// 得到组织疫苗列表
+      getOmsGoods: function (keyWord) {// 得到单位疫苗列表
+        this.goodsList = [];
         let params = {
           keyWord: keyWord,
           deleteFlag: false,
@@ -157,19 +152,6 @@
         };
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
-          if (this.action === 'edit') {
-            let isExist = this.goodsList.some(item => this.form.orgGoodsId === item.orgGoodsDto.id);
-            if (!isExist) {
-              this.goodsList.push({
-                orgGoodsDto: {
-                  id: this.form.orgGoodsId,
-                  name: this.form.orgGoodsName,
-                  goodsNo: this.form.orgGoodsNo,
-                  salesFirmName: this.form.supplyCompanyName
-                }
-              });
-            }
-          }
         });
       },
       formatUnitPrice() {// 格式化单价，保留两位小数
@@ -195,7 +177,7 @@
 //        });
 //      },
       onSubmit: function (formName) {
-        this.changeEndTime(this.form.expireTime);
+        // this.changeEndTime(this.form.expireTime);
         this.$refs[formName].validate((valid) => {
           if (valid && this.doing === false) {
             this.doing = true;
@@ -210,6 +192,7 @@
                 this.$emit('change', res.data);
                 this.$emit('right-close');
               }).catch(error => {
+                this.doing = false;
                 this.$notify.error({
                   message: error.response.data && error.response.data.msg || '新增区二类疫苗失败'
                 });

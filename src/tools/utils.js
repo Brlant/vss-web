@@ -1,9 +1,23 @@
-import address from './address';
+import {Address} from '@dtop/dtop-web-common';
+
+function funDownload (content, filename) {
+  // 创建隐藏的可下载链接
+  let eleLink = document.createElement('a');
+  eleLink.download = filename;
+  eleLink.style.display = 'none';
+  // 字符内容转变成blob地址
+  let blob = new Blob([content]);
+  eleLink.href = URL.createObjectURL(blob);
+  // 触发点击
+  document.body.appendChild(eleLink);
+  eleLink.click();
+  // 然后移除
+  document.body.removeChild(eleLink);
+}
 
 export default {
-  address: address.value,
+  address: Address.value,
   requestType: {
-    0: {'title': '所有', status: null, num: ''},
     1: {'title': '待审批', status: 0, num: ''},
     2: {'title': '待疾控处理', status: 1, num: ''},
     3: {'title': '待生成订单', status: 2, num: ''},
@@ -24,10 +38,13 @@ export default {
     11: {'title': '异常', state: '6', num: ''}
   },
   assignType: {
-    0: {'title': '待分配', status: 1, num: ''},
-    1: {'title': '待生成订单', status: 2, num: ''},
-    2: {'title': '已完成分配', status: 4, num: ''},
-    3: {'title': '已取消', status: 3, num: ''}
+    0: {'title': '待生成销售汇总', status: 1, num: ''},
+    1: {'title': '待分配销售', status: 2, num: ''},
+    2: {'title': '已分配销售', status: 4, num: ''},
+    3: {'title': '已取消销售', status: 3, num: ''},
+    4: {'title': '待生成采购汇总', status: 11, num: ''},
+    5: {'title': '已生成采购汇总', status: 12, num: ''},
+    6: {'title': '已取消采购', status: 13, num: ''}
   },
   waveType: {
     0: {'title': '未分配', status: 0, num: ''},
@@ -35,11 +52,12 @@ export default {
   },
   inOrderType: {
     0: {'title': '待审单', state: '6', num: ''},
-    1: {'title': '执行中', state: '7', num: ''},
-    2: {'title': '已完成', state: '8', num: ''},
-    3: {'title': '已取消', state: '9', num: ''},
-    4: {'title': '已拒收', state: '5', num: ''},
-    5: {'title': '异常', state: '10', num: ''}
+    1: {'title': '待到货', state: '10', num: ''},
+    2: {'title': '执行中', state: '7', num: ''},
+    3: {'title': '已完成', state: '8', num: ''},
+    4: {'title': '已取消', state: '9', num: ''},
+    5: {'title': '已拒收', state: '5', num: ''},
+    6: {'title': '异常', state: '20', num: ''}
   },
   outOrderType: {
     0: {'title': '待确认', state: '0', num: ''},
@@ -47,7 +65,7 @@ export default {
     2: {'title': '执行中', state: '2', num: ''},
     3: {'title': '待收货', state: '3', num: ''},
     4: {'title': '已完成', state: '4', num: ''},
-    5: {'title': '取消订单', state: '5', num: ''}
+    5: {'title': '已取消', state: '5', num: ''}
   },
   outReturnOrderType: {
     0: {'title': '待确认', state: '0', num: ''},
@@ -55,7 +73,7 @@ export default {
     2: {'title': '执行中', state: '2', num: ''},
     3: {'title': '待发货', state: '3', num: ''},
     4: {'title': '已完成', state: '4', num: ''},
-    5: {'title': '取消订单', state: '5', num: ''}
+    5: {'title': '已取消', state: '5', num: ''}
   },
   paymentOperation: {
     0: {'title': '待审核', status: '0', num: ''},
@@ -65,7 +83,7 @@ export default {
   },
   receiptOperation: {
     0: {'title': '待审核', status: '0', num: ''},
-    1: {'title': '已完成', status: '1', num: ''},
+    1: {'title': '已审核', status: '1', num: ''},
     2: {'title': '审核未通过', status: '3', num: ''}
   },
   priceGroupType: {
@@ -92,6 +110,18 @@ export default {
     0: {'title': '未付清', status: 0, num: ''},
     1: {'title': '已付清', status: 1, num: ''}
   },
+  purchaseAllotmentType: {
+    0: {'title': '待生成', status: 0, num: ''},
+    1: {'title': '已生成', status: 1, num: ''}
+  },
+  inventoryType: {
+    0: {'title': '所有', status: null, num: ''},
+    1: {'title': '待操作', status: 0, num: ''},
+    2: {'title': '正常', status: 1, num: ''},
+    3: {'title': '异常', status: 2, num: ''}
+  },
+  packageType: ['第一级包装', '第二级包装', '第三级包装', '第四级包装',
+    '第五级包装', '第六级包装', '第七级包装', '第八级包装', '第九级包装', '第十级包装'],
   /**
    * 格式化地址，已省/市/区显示
    * @param province
@@ -126,7 +156,7 @@ export default {
    * 实时动态强制更改用户录入
    * @param th
    */
-  format2DecimalPoint(val) {
+  format2DecimalPoint (val) {
     let th = val.toString();
     const regStrs = [
       ['^0(\\d+)$', '$1'], // 禁止录入整数部分两位以上，但首位为0
@@ -230,6 +260,13 @@ export default {
     if (cls.replace(/\s/g, '').length === 0) return false;
     return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
   },
+  getPos (e) { // 这是一个 获取鼠标位置的函数
+    let oEvent = e || event;
+    return {
+      x: oEvent.clientX + document.documentElement.scrollLeft || document.body.scrollLeft,
+      y: oEvent.clientY + document.documentElement.scrollTop || document.body.scrollTop
+    };
+  },
   addClass: function (elem, cls) {
     if (!this.hasClass(elem, cls)) {
       elem.className = elem.className === '' ? cls : elem.className + ' ' + cls;
@@ -258,8 +295,14 @@ export default {
     }
     return label;
   },
-  changeTotalNumber(amount, smallPacking) {
+  changeTotalNumber (amount, smallPacking) {
     if (!smallPacking) return;
+    if (amount < 0) {
+      this.$notify.info({
+        message: '货品数量不能小于0, 已帮您调整为0'
+      });
+      return 0;
+    }
     let number = Number(amount);
     let remainder = number % smallPacking;
     let isMultiple = remainder === 0;
@@ -279,7 +322,7 @@ export default {
     });
     return re;
   },
-  isCheckPackage(count) {
+  isCheckPackage (count) {
     if (!count || count < 0) {
       this.$notify({
         duration: 2000,
@@ -290,8 +333,7 @@ export default {
     }
     return count > 0;
   },
-
-  download(src, fileName) {
+  download (src, fileName) {
     let $a = document.createElement('a');
     $a.setAttribute('href', src);
     $a.setAttribute('download', fileName);
@@ -302,5 +344,69 @@ export default {
     body.appendChild($a);
     fileLink.click();
     body.removeChild($a);
+  },
+  downloadXml (src, fileName) {
+    this.$http({
+      url: src,
+      timeout: 1000000,
+      withCredentials: false
+    }).then(res => {
+      funDownload(res.data, fileName);
+    });
+  },
+  getCurrentHeight (vm, defaultHeight = 400) {
+    if (vm) {
+      let obj = vm.$el.getBoundingClientRect();
+      let height = document.documentElement.clientHeight - obj.y;
+      if (typeof height === 'number') {
+        return height;
+      }
+    }
+    return defaultHeight;
+  },
+  /**
+   * 得到附件类型 1 图片 0 非图片
+   * @returns {string}
+   */
+  getType (attachmentStoragePath) {
+    let type = '';
+    let url = attachmentStoragePath;
+    let images = ['jpg', 'png', 'gif', 'jpeg'];
+    let docs = ['txt', 'doc', 'docx', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx'];
+    if (url) {
+      type = url.substring(url.lastIndexOf('.'));
+    }
+    if (type) {
+      type = type.substring(1).toLowerCase();
+    }
+    if (docs.indexOf(type) !== -1) {
+      type = 0;
+    } else if (images.indexOf(type) !== -1) {
+      type = 1;
+    }
+    return type;
   }
+};
+
+export function getMousePos (event) {
+  let e = event || window.event;
+  let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
+  let scrollY = document.documentElement.scrollTop || document.body.scrollTop;
+  let x = e.pageX || e.clientX + scrollX;
+  let y = e.pageY || e.clientY + scrollY;
+  return {'x': x, 'y': y};
+}
+
+// 深拷贝
+export const deepCopy = function (source) {
+  if (!source) {
+    return source;
+  }
+  let sourceCopy = source instanceof Array ? [] : {};
+  for (let item in source) {
+    if (source.hasOwnProperty(item)) {
+      sourceCopy[item] = typeof source[item] === 'object' ? deepCopy(source[item]) : source[item];
+    }
+  }
+  return sourceCopy;
 };

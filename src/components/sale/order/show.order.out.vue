@@ -1,14 +1,14 @@
-<style lang="less" scoped>
-  @leftWidth: 180px;
+<style lang="scss" scoped>
+  $leftWidth: 180px;
   .content-part {
     .content-left {
-      width: @leftWidth;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 
@@ -37,9 +37,15 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm :label="vaccineType === '1'?'sales-order-confirm': 'second-vaccine-sales-order-confirm' "
-                  v-show="currentOrder.state === '0' || currentOrder.state === '1'">
-              <el-button type="primary" @click="cancel">取消订单</el-button>
+            <perm :label="vaccineType === '1'?'sales-order-cancel': 'second-vaccine-sales-order-cancel' "
+                  v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'">
+              <el-button type="warning" plain @click="cancel">取消订单</el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm :label="vaccineType === '1'?'sales-order-cancel': 'second-vaccine-sales-order-cancel' "
+                  v-show="currentOrder.state === '0'">
+              <el-button type="danger" plain @click="deleteOrder">删除订单</el-button>
             </perm>
           </li>
         </ul>
@@ -52,7 +58,9 @@
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="1" v-show="index === 8"></relevance-code>
-
+        <relevance-code-review :currentOrder="currentOrder" :index="index" type="1" v-show="index === 9"></relevance-code-review>
+        <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
+                      v-show="index === 0"></cancel-order>
       </div>
     </div>
   </div>
@@ -61,7 +69,7 @@
   import basicInfo from './detail/base-info.vue';
   import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
-  import { InWork, http, erpOrder } from '@/resources';
+  import { erpOrder, http, InWork } from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
 
@@ -100,7 +108,11 @@
         if (perms.includes('order-document-watch')) {
           menu.push({name: '附件管理', key: 3});
         }
-        menu.push({name: '关联追溯码', key: 8});
+        let state = this.state;
+        if (state > 2) {
+          // menu.push({name: '关联追溯码', key: 8});
+          menu.push({name: '复核追溯码', key: 9});
+        }
         menu.push({name: '操作日志', key: 2});
         return menu;
       }
@@ -159,23 +171,32 @@
         this.currentOrder.state = state;
         this.$emit('refreshOrder');
       },
-      cancel () {
-        this.$confirm('是否取消订单', '', {
+      deleteOrder () {
+        this.$confirm('是否删除订单', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          erpOrder.cancel(this.orderId).then(() => {
+          erpOrder.delete(this.orderId).then(() => {
             this.$notify.success({
-              message: '取消订单成功'
+              message: '删除订单成功'
             });
-            this.$emit('close');
             this.$emit('refreshOrder');
+            this.$emit('close');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '取消订单失败'
+              message: error.response.data && error.response.data.msg || '删除订单失败'
             });
           });
+        });
+      },
+      cancel () {
+        this.index = 0;
+        this.$refs['cancelPart'].isShow = true;
+        this.$notify({
+          duration: 2000,
+          message: '请选择取消订单原因',
+          type: 'warning'
         });
       }
     }

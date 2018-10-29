@@ -1,169 +1,200 @@
-<style lang="less">
-  @import "../../../../../assets/mixins.less";
-
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-  /*.ar {*/
-  /*text-align: right;*/
-  /*}*/
+<style lang="scss" scoped>
+  @import "../../../../../assets/mixins.scss";
 
   .goods-btn {
     a:hover {
-      color: @activeColor;
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-      height: 70px;
+      color: $activeColor;
     }
   }
 
   .el-form--inline .el-form-item {
     margin-right: 0;
   }
-
-  .create-date {
-    .el-date-editor--datetimerange.el-input {
-      width: 310px;
-    }
-  }
-
-  .minor-part {
-    color: #999;
+  .el-select {
+    width: 100%;
   }
 </style>
 <template>
   <div>
-    <el-form ref="payForm" :inline="true">
-      <el-form-item label="货品名称">
-        <oms-input v-model="searchCondition.goodsName"></oms-input>
-      </el-form-item>
-      <el-form-item label="发生时间" style="width: 380px" class="create-date">
-        <el-date-picker
-          v-model="createTimes"
-          type="datetimerange"
-          placeholder="请选择">
-        </el-date-picker>
-      </el-form-item>
-      <el-form-item>
-        <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
-      </el-form-item>
-    </el-form>
-    <div class="product-list-detail">
-      <h3 style="background: #f1f1f1">未选明细</h3>
-      <table class="table">
-        <thead>
-        <tr>
-          <th width="30px">操作</th>
-          <th style="width: 240px">货品名称</th>
-          <th>订单号</th>
-          <th>待收金额</th>
-          <th>发生时间</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-if="!showPayments.length">
-          <td colspan="4">
-            暂无数据
-          </td>
-        </tr>
-        <tr v-for="product in showPayments">
-          <td class="goods-btn" width="30px">
-            <a href="#" @click.prevent="add(product)">
-              <f-a name="plus"></f-a>
-            </a>
-          </td>
-          <td>
-            <span>{{product.goodsName}}</span>
-          </td>
-          <td>
-            <span>{{product.orderNo}}</span>
-          </td>
-          <td>
-            <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
-          </td>
-          <td>
-            {{product.createTime | minute }}
-          </td>
-        </tr>
-        </tbody>
-      </table>
-      <div class="text-center" v-show="pager.count>pager.pageSize && factoryId">
-        <el-pagination layout="prev, pager, next"
-                       :total="pager.count"
-                       :pageSize="pager.pageSize"
-                       @current-change="queryPayments"
-                       :current-page="pager.currentPage">
-        </el-pagination>
+    <div v-show="index===1">
+      <el-form ref="payForm" :model="searchCondition" label-width="100px">
+        <el-form-item :label="`${titleAry[type][3]}`" prop="orgId" :rules="{required: true, message: '请选择接种点', blur: 'change'}">
+          <el-select filterable remote :placeholder="`请输入名称搜索${titleAry[type][3]}`" :remote-method="filterOrg" :clearable="true"
+                     v-model="searchCondition.orgId" popper-class="good-selects" @change="orgChange"
+                     @click.native.once="filterOrg('')" @blur="">
+            <div v-if="type === 2">
+              <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                <div style="overflow: hidden">
+                  <span class="pull-left" style="clear: right">{{org.name}}</span>
+                </div>
+                <div style="overflow: hidden">
+                    <span class="select-other-info pull-left">
+                      <span>系统代码:</span>{{org.manufacturerCode}}
+                    </span>
+                </div>
+              </el-option>
+            </div>
+            <div v-else>
+              <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in orgList"/>
+            </div>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="货品名称">
+          <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索货品" :clearable="true"
+                     @click.native="searchProduct('')" remote :remote-method="searchProduct"
+                     popper-class="good-selects" @change="orgGoodsIdChange">
+            <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
+                       :label="item.orgGoodsDto.name"
+                       :value="item.orgGoodsDto.id">
+              <div>
+                <div>
+                  <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                </div>
+                <div class="clearfix">
+                  <span class="select-other-info pull-left">
+                    <span v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                  </span>
+                  <span class="select-other-info pull-left"><span
+                    v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                  </span>
+                  <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                </span>
+                </div>
+              </div>
+            </el-option>
+          </el-select>
+        </el-form-item>
+        <el-form-item label="发生时间">
+          <el-date-picker
+            v-model="createTimes"
+            type="daterange" @change="createTimeChange"
+            placeholder="请选择">
+          </el-date-picker>
+          <el-button type="primary" class="ml-15" @click.stop="searchInOrder">查询</el-button>
+        </el-form-item>
+
+      </el-form>
+      <div class="product-list-detail">
+        <h3 style="background: #f1f1f1">可选{{titleAry[type][2]}}明细</h3>
+        <table class="table">
+          <thead>
+          <tr>
+            <th width="30px">操作</th>
+            <th style="width: 240px">货品名称</th>
+            <th>数量</th>
+            <th>订单号</th>
+            <th>待{{titleAry[type][2]}}金额</th>
+            <th>发生时间</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-if="!showPayments.length">
+            <td colspan="6">
+             <div class="empty-info mini">暂无数据</div>
+            </td>
+          </tr>
+          <tr v-for="product in showPayments">
+            <td class="goods-btn" width="30px">
+              <a href="#" @click.prevent="add(product)">
+                <f-a name="plus"></f-a>
+              </a>
+            </td>
+            <td>
+              <span>{{product.goodsName}}</span>
+            </td>
+            <td>
+              <span>{{product.goodsCount}}</span>
+            </td>
+            <td>
+              <span>{{product.orderNo}}</span>
+            </td>
+            <td>
+              <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
+            </td>
+            <td>
+              {{product.createTime | date }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+        <div class="text-center" v-show="pager.count>pager.pageSize && searchCondition.orgId">
+          <el-pagination layout="prev, pager, next"
+                         :total="pager.count"
+                         :pageSize="pager.pageSize"
+                         @current-change="queryPayments"
+                         :current-page="pager.currentPage">
+          </el-pagination>
+        </div>
       </div>
     </div>
-    <div class="product-list-detail" v-show="selectPayments.length">
-      <h3 style="background: #f1f1f1;overflow: hidden">
-        <span style="float: left">已选明细</span>
-        <span style="float: right">总收款金额：￥{{ amount | formatMoney }}</span>
-      </h3>
-      <table class="table">
-        <thead>
-        <tr>
-          <th style="width: 260px">订单号/货品名称</th>
-          <th>发生时间</th>
-          <th>待收金额</th>
-          <th>本次收款金额</th>
-          <th>操作</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr v-for="product in selectPayments">
-          <td>
-            <span class="minor-part">{{product.orderNo}}</span>
-            <div>{{product.goodsName}}</div>
-          </td>
-          <td>
-            {{product.createTime | minute }}
-          </td>
-          <td>
-            <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
-          </td>
-          <td>
-            <el-input v-model="product.payment" style="width: 150px" @blur="paymentChange(product)">
-              <template slot="prepend">
-                <span>¥</span>
-              </template>
-            </el-input>
-          </td>
-          <td class="goods-btn" style="width: 60px">
-            <a href="#" @click.prevent="remove(product)">
-              <f-a name="delete"></f-a>
-              删除</a>
-          </td>
-        </tr>
-        </tbody>
-      </table>
+    <div v-show="index===2">
+      <div v-show="selectPayments.length" class="product-list-detail">
+        <h3 style="background: #f1f1f1;overflow: hidden">
+          <span style="float: left">已选{{titleAry[type][2]}}明细</span>
+          <span style="float: right">总{{titleAry[type][2]}}金额：￥{{ amount | formatMoney }}</span>
+        </h3>
+        <table class="table">
+          <thead>
+          <tr>
+            <th style="width: 260px">订单号/货品名称</th>
+            <th>数量</th>
+            <th>发生时间</th>
+            <th>待{{titleAry[type][2]}}金额</th>
+            <th>本次{{titleAry[type][2]}}金额</th>
+            <th>操作</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr v-for="product in selectPayments">
+            <td>
+              <span class="minor-part">{{product.orderNo}}</span>
+              <div>{{product.goodsName}}</div>
+            </td>
+            <td>
+              <span>{{product.goodsCount}}</span>
+            </td>
+            <td>
+              {{product.createTime | date }}
+            </td>
+            <td>
+              <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
+            </td>
+            <td>
+              <el-input v-model="product.payment" style="width: 150px" @blur="paymentChange(product)">
+                <template slot="prepend">
+                  <span>¥</span>
+                </template>
+              </el-input>
+            </td>
+            <td class="goods-btn" style="width: 60px">
+              <a href="#" @click.prevent="remove(product)">
+                <f-a name="delete"></f-a>
+                删除</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-show="!selectPayments.length" class="empty-info mini">暂无数据</div>
     </div>
   </div>
 
 </template>
 <script>
-  import { pay } from '@/resources';
-  import utils from '@/tools/utils';
+  import { VaccineRights, BaseInfo } from '@/resources';
+  import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
     props: {
       selectPayments: Array,
-      factoryId: '',
-      amount: ''
+      amount: '',
+      index: Number,
+      type: Number,
+      titleAry: Object,
+      defaultIndex: Number
     },
+    mixins: [methodsMixin],
     data () {
       return {
         payments: [],
@@ -173,19 +204,23 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 5
+          pageSize: 50
         },
         filterRights: {
-          goodsName: '',
+          orgId: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: ''
         },
         searchCondition: {
-          goodsName: '',
+          orgId: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: ''
         },
-        createTimes: ''
+        createTimes: '',
+        goodesList: [],
+        orgList: []
       };
     },
     computed: {
@@ -194,15 +229,21 @@
       }
     },
     watch: {
-      factoryId (val) {
+      type () {
         this.payments = [];
-        if (!val) return;
-        this.queryPayments(1);
+        this.goodesList = [];
+        this.searchCondition.orgId = '';
+        this.orgList = [];
+        this.resetSearchForm();
+        this.orgChange(false);
       },
-      billPayType () {
+      defaultIndex () {
         this.payments = [];
-        if (!this.factoryId) return;
-        this.queryPayments(1);
+        this.goodesList = [];
+        this.searchCondition.orgId = '';
+        this.orgList = [];
+        this.resetSearchForm();
+        this.orgChange(false);
       },
       filterRights: {
         handler: function () {
@@ -223,30 +264,65 @@
     },
     methods: {
       queryPayments (pageNo) {
+        if (!this.searchCondition.orgId) return;
         this.pager.currentPage = pageNo;
         this.loadingData = true;
+        this.filterRights.orgId = undefined;
         let params = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         }, this.filterRights);
-        this.$http.get(`/accounts-receivable/payer/${this.factoryId}/detail`, {params}).then(res => {
+        let url = this.type === 1 ? `accounts-payable/remittee/${this.searchCondition.orgId}/detail`
+          : `/accounts-receivable/${this.searchCondition.orgId}/valid-detail`;
+        this.$http.get(url, {params}).then(res => {
           this.loadingData = false;
           res.data.list.forEach(item => {
             let count = item.billAmount - item.prepaidAccounts;
-            item.payment = utils.autoformatDecimalPoint(count ? count.toString() : '0');
+            item.payment = count ? count.toFixed(2) : 0.00;
           });
           this.payments = res.data.list;
           this.pager.count = res.data.count;
         });
       },
-      searchInOrder: function () {// 搜索
-        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
+      orgChange (val) {
+        this.payments = [];
+        this.$parent.selectPayments = [];
+        val && this.searchInOrder();
+        this.$emit('orgChange');
+      },
+      orgGoodsIdChange (val) {
+        this.searchInOrder();
+      },
+      createTimeChange (val) {
+        this.searchInOrder();
+      },
+      searchProduct (keyWord) {
+        if (!this.searchCondition.orgId) return;
+        if (!keyWord && this.goodesList.length) return;
+        let o1 = this.$store.state.user.userCompanyAddress;
+        let o2 = this.searchCondition.orgId;
+        if (!o1 || !o2) return;
+        let params = {
+          povId: this.type === 1 ? o1 : o2,
+          cdcId: this.type === 1 ? o2 : o1,
+          keyWord: keyWord
+        };
+        this.$http.get('/erp-stock/bill/goods-list', {params}).then(res => {
+          this.goodesList = res.data.list;
+        });
+      },
+      searchInOrder: function (isShowTip = true) {// 搜索
+        let {titleAry, type} = this;
+        if (!this.searchCondition.orgId && isShowTip) {
+          return this.$notify.info({message: `请选择${titleAry[type][3]}`});
+        }
+        this.searchCondition.createStartTime = this.formatTime(this.createTimes && this.createTimes[0] || '');
+        this.searchCondition.createEndTime = this.formatTime(this.createTimes && this.createTimes[1] || '');
         Object.assign(this.filterRights, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          goodsName: '',
+          orgGoodsId: '',
           createStartTime: '',
           createEndTime: ''
         };
@@ -255,16 +331,25 @@
         Object.assign(this.filterRights, temp);
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       paymentChange (item) {
-        if (item.payment > (item.billAmount - item.prepaidAccounts)) {
-          this.$notify.info({
-            message: '输入的金额大于待收金额，请修改本次收款金额，否则无法添加收款申请'
-          });
-          return;
+        let value = item.billAmount - item.prepaidAccounts;
+        if (value < 0) {
+          if (item.payment < value) {
+            this.$notify.info({message: this.getTitle('小于')});
+          }
+        } else {
+          if (item.payment > value) {
+            this.$notify.info({message: this.getTitle('大于')});
+          }
         }
-        item.payment = utils.autoformatDecimalPoint(item.payment ? item.payment.toString() : '0');
+        item.payment = Number(item.payment);
+        item.payment = item.payment ? item.payment.toFixed(2) : 0.00;
+      },
+      getTitle (tlt) {
+        let {titleAry, type} = this;
+        return `输入的金额${tlt}待${titleAry[type][2]}金额，请修改本次${titleAry[type][2]}金额，否则无法添加${titleAry[type][0]}`;
       },
       add (item) {
         let index = this.selectPayments.indexOf(item);
@@ -274,7 +359,7 @@
       },
       remove (item) {
         let index = this.selectPayments.indexOf(item);
-        this.selectPayments.splice(item, 1);
+        this.selectPayments.splice(index, 1);
       }
     }
   };

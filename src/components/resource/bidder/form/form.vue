@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .el-form .el-select {
     display: block;
   }
@@ -16,23 +16,23 @@
                      :label="vaccine.name" v-for="vaccine in vaccineList">
             <div style="overflow: hidden">
               <span class="pull-left">{{vaccine.name}}</span>
-                <el-tag type="success" v-if="vaccine.vaccineSign==='1'">一类疫苗</el-tag>
-                <el-tag type="success" v-if="vaccine.vaccineSign==='2'">二类疫苗</el-tag>
+                <!--<el-tag type="success" v-if="vaccine.vaccineSign==='1'">一类疫苗</el-tag>-->
+                <!--<el-tag type="success" v-if="vaccine.vaccineSign==='2'">二类疫苗</el-tag>-->
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="vaccine.code">货品编号</span>  {{vaccine.code}}
+                  v-show="vaccine.code">货品编号:</span>{{vaccine.code}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="vaccine.specifications">货品规格</span>  {{vaccine.specifications}}
+                v-show="vaccine.specifications">货品规格:</span>{{vaccine.specifications}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}
+                v-show="vaccine.approvalNumber">批准文号:</span>{{vaccine.approvalNumber}}
                 </span>
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="vaccine.factoryName">生产厂商</span>  {{ vaccine.factoryName }}
+                v-show="vaccine.factoryName">生产厂商:</span>{{ vaccine.factoryName }}
               </span>
             </div>
           </el-option>
@@ -53,11 +53,11 @@
       </el-form-item>
       <el-form-item label="有效时间" prop="expireTime">
         <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择日期"
-                        style="width: 100%;" @change="formatExpireTimeDate">
+                        style="width: 100%;" value-format="timestamp">
         </el-date-picker>
       </el-form-item>
       <el-form-item label="是否生效">
-        <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
+        <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                    v-model="form.availabilityStatus"></el-switch>
       </el-form-item>
       <el-form-item label-width="100px">
@@ -69,7 +69,7 @@
 </template>
 
 <script>
-  import {User, Access, OrgUser, http} from '../../../../resources';
+  import { http } from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -122,12 +122,9 @@
     watch: {
       formItem: function () {
         if (this.formItem.id) {
-          this.vaccineList.push({
-            id: this.formItem.goodsId,
-            name: this.formItem.goodsName
-          });
+          this.filterVaccine(this.formItem.goodsName);
           this.form = this.formItem;// this.formItem;
-          this.formatExpireTimeDate(this.form.expireTime);
+          // this.formatExpireTimeDate(this.form.expireTime);
         } else {
           this.form = {
             goodsId: '',

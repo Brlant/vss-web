@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .batch-number-upload {
     margin-left: 10px;
     border-right: 2px solid #eee;
@@ -40,7 +40,6 @@
       font-size: 12px;
       img {
         width: 180px;
-        height: 180px;
         display: block;
         background: #ccc;
 
@@ -72,10 +71,11 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="item.attachmentMap.drugControlReports.length>0">
-                      <div class="base-pic-item">
-                        <div @click="watchPhoto(item.attachmentMap.drugControlReports[0])">
+                      <div class="base-pic-item"
+                           v-if="Util.getType(item.attachmentMap.drugControlReports[0].attachmentStoragePath)">
+                        <div @click="watchDrugControlReport(item.attachmentMap.drugControlReports)">
                           <img
-                            :src="item.attachmentMap.drugControlReports[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="item.attachmentMap.drugControlReports[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -94,10 +94,11 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="item.attachmentMap.batchReleases.length>0">
-                      <div class="base-pic-item">
-                        <div @click="watchPhoto(item.attachmentMap.batchReleases[0])">
+                      <div class="base-pic-item"
+                           v-if="Util.getType(item.attachmentMap.batchReleases[0].attachmentStoragePath)">
+                        <div @click="watchBatchRelease(item.attachmentMap.batchReleases)">
                           <img
-                            :src="item.attachmentMap.batchReleases[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="item.attachmentMap.batchReleases[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -118,10 +119,11 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="item.attachmentMap.importCertificates.length>0">
-                      <div class="base-pic-item">
-                        <div @click="watchPhoto(item.attachmentMap.importCertificates[0])">
+                      <div class="base-pic-item"
+                           v-if="Util.getType(item.attachmentMap.importCertificates[0].attachmentStoragePath)">
+                        <div @click="watchImportCertificate(item.attachmentMap.importCertificates)">
                           <img
-                            :src="item.attachmentMap.importCertificates[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="item.attachmentMap.importCertificates[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -140,10 +142,11 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="item.attachmentMap.customsPass.length>0">
-                      <div class="base-pic-item">
-                        <div @click="watchPhoto(item.attachmentMap.customsPass[0])">
+                      <div class="base-pic-item"
+                           v-if="Util.getType(item.attachmentMap.customsPass[0].attachmentStoragePath)">
+                        <div @click="watchCustomsPass(item.attachmentMap.customsPass)">
                           <img
-                            :src="item.attachmentMap.customsPass[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="item.attachmentMap.customsPass[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -185,7 +188,7 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
   import attachmentShow from './attachmentShow.vue';
   import attachmentLists from './../../../common/attachmentList.vue';
 
@@ -247,11 +250,43 @@
       }
     },
     methods: {
-      watchPhoto(item) {
+      watchDrugControlReport (item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
-            attachmentList: item
+            attachmentList: item,
+            objectId: this.currentOrderId,
+            objectType: 'drugControlReport'
+          });
+        }
+      },
+      watchBatchRelease (item) {
+        if (item.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item[0].attachmentId,
+            attachmentList: item,
+            objectId: this.currentOrderId,
+            objectType: 'batchRelease'
+          });
+        }
+      },
+      watchImportCertificate (item) {
+        if (item.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item[0].attachmentId,
+            attachmentList: item,
+            objectId: this.currentOrderId,
+            objectType: 'importCertificate'
+          });
+        }
+      },
+      watchCustomsPass (item) {
+        if (item.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item[0].attachmentId,
+            attachmentList: item,
+            objectId: this.currentOrderId,
+            objectType: 'customsPass'
           });
         }
       },

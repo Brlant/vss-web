@@ -1,71 +1,6 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .pt {
-    padding-top: 15px;
-  }
-
-  .opera-btn-group {
-
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
-
-  .minor-part {
-    color: #999;
+<style lang="scss" scoped="">
+  .d-table > div.d-table-right {
+    padding: 10px 20px;
   }
 </style>
 <template>
@@ -73,14 +8,14 @@
     <div class="container">
       <div class="d-table">
         <div class="d-table-left" v-show="isShowLeft">
-          <div class="d-table-col-wrap">
-            <h2 class="header">
+          <h2 class="header">
           <span class="pull-right">
               <a href="#" class="btn-circle" @click.prevent="showTypeSearch=!showTypeSearch"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-              疾控列表
-            </h2>
+            疾控列表
+          </h2>
+          <div class="d-table-col-wrap" :style="'height:'+(bodyHeight - 60) + 'px'">
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="filterCDCs.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
@@ -103,7 +38,7 @@
           </div>
         </div>
         <div class="d-table-right">
-          <div class="d-table-col-wrap">
+          <div>
             <el-row>
               <el-col :span="10" class="search-input">
                 <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrgs"
@@ -115,7 +50,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -123,7 +58,7 @@
               </el-col>
               <el-col :span="3" style="padding-left: 10px">
                 <perm label="erp-bind-pov-add">
-                  <el-button type="primary" @click="bindDistrict">绑定接种点</el-button>
+                  <el-button type="primary" @click="bindDistrict" :disabled="doing">绑定接种点</el-button>
                 </perm>
               </el-col>
               <el-col :span="11" class="text-right">
@@ -140,9 +75,10 @@
               </el-col>
             </el-row>
           </div>
-          <div class="order-list clearfix d-table-col-wrap" style="margin-top: 10px">
-            <el-row class="order-list-header" :gutter="10">
-              <el-col :span="20">接种点名称</el-col>
+          <div class="order-list clearfix" style="margin-top: 10px">
+            <el-row class="order-list-header">
+              <el-col :span="4">接种点系统代码</el-col>
+              <el-col :span="16">接种点名称</el-col>
               <el-col :span="4">操作</el-col>
             </el-row>
             <el-row v-if="loadingData">
@@ -158,19 +94,23 @@
               </el-col>
             </el-row>
             <div v-else="" class="order-list-body flex-list-dom">
-              <div class="order-list-item order-list-item-bg" v-for="item in povs" :key="">
-                <el-row>
-                  <el-col :span="20" class="R pt10">
-                    <div class="minor-part">系统代码{{ item.subordinateCode }}</div>
-                    <div>{{ item.subordinateName }}</div>
-                  </el-col>
-                  <el-col :span="4" class="R pt10">
-                    <perm label="erp-bind-pov-delete">
-                      <a href="#" @click.prevent="deleteItem(item)"><i
-                        class="el-icon-t-delete"></i> 删除</a>
-                    </perm>
-                  </el-col>
-                </el-row>
+              <div class="order-col-wrap" :style="'height:'+ (bodyHeight - 100) + 'px'">
+                <div class="order-list-item order-list-item-bg" v-for="item in povs" :key="">
+                  <el-row>
+                    <el-col :span="4" class="R pt10">
+                      <div>{{ item.subordinateCode }}</div>
+                    </el-col>
+                    <el-col :span="16" class="R pt10">
+                      <div>{{ item.subordinateName }}</div>
+                    </el-col>
+                    <el-col :span="4" class="R pt10">
+                      <perm label="erp-bind-pov-delete">
+                        <a href="#" @click.prevent="deleteItem(item)"><i
+                          class="el-icon-t-delete"></i> 删除</a>
+                      </perm>
+                    </el-col>
+                  </el-row>
+                </div>
               </div>
             </div>
           </div>
@@ -187,7 +127,7 @@
   </div>
 </template>
 <script>
-  import { cerpAction, cerpAccess, BaseInfo } from '@/resources';
+  import {BaseInfo, cerpAccess, cerpAction} from '@/resources';
 
   export default {
     data () {
@@ -213,12 +153,17 @@
           count: 0,
           pageSize: 15
         },
-        level: window.localStorage.getItem('logLevel')
+        level: window.localStorage.getItem('logLevel'),
+        doing: false
       };
     },
     computed: {
       user () {
         return this.$store.state.user;
+      },
+      bodyHeight: function () {
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        return height;
       }
     },
     mounted () {
@@ -264,7 +209,9 @@
         }
         let cdcId = this.cdcItem.subordinateId;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/pov', text: '正在绑定'});
+        this.doing = true;
         cerpAccess.bindPov(cdcId, this.orgId).then(() => {
+          this.doing = false;
           this.$notify.success({
             message: '绑定接种点成功'
           });
@@ -272,6 +219,7 @@
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/pov', text: '正在绑定'});
           this.getPovPage(1);
         }).catch(error => {
+          this.doing = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/account/pov', text: '正在绑定'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '绑定接种点失败'
@@ -292,13 +240,14 @@
           this.filterAvaliableCDCs();
         });
       },
-      getCDCPage() { // 得到疾控列表
+      getCDCPage () { // 得到疾控列表
         let params = Object.assign({
           pageNo: 1,
           pageSize: 20
         }, this.filterCDCs);
         this.loadingData = true;
         cerpAction.queryCount(params).then(res => {
+          if (params.keyWord !== this.filterCDCs.keyWord) return;
           this.cdcs = res.data.list;
           this.cdcItem = this.cdcs.length && this.cdcs[0];
           this.loadingData = false;

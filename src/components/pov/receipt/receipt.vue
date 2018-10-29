@@ -1,17 +1,17 @@
-<style lang="less" scoped>
-  @import '../../../assets/mixins';
+<style lang="scss" scoped>
+  @import '../../../assets/mixins.scss';
 
-  @leftWidth: 280px;
+  $leftWidth: 280px;
   .content-part {
     .content-left {
       text-align: center;
-      width: @leftWidth;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 
@@ -31,22 +31,31 @@
     top: 60px;
     left: 0;
     right: 0;
-    bottom: 100px;
+    bottom: 140px;
     overflow: auto;
-    .product-item {
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background: #eef2f3;
-      padding: 15px 0;
-      cursor: pointer;
-      position: relative;
-      &.active {
-        background: white;
+
+  }
+
+  .product-item {
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background: #eef2f3;
+    padding: 15px 0;
+    cursor: pointer;
+    position: relative;
+    &.active {
+      background: white;
+    }
+    &.is-total {
+      border: 0;
+      h2 {
+        background: #eef2f3;
+        padding: 0;
+        text-align: left;
       }
     }
   }
-
   .oms-row {
     color: #777;
     text-align: left;
@@ -61,11 +70,16 @@
         <div class="product-list">
           <div v-for="(product,key) in productList" :class="{'active': activeKey === key }"
                @click="changeProduct(product, key)" class="product-item">
-            <oms-row label="货品名称" :span="span">{{product.name}}111</oms-row>
+            <oms-row label="货品名称" :span="span">{{product.name}}</oms-row>
             <oms-row label="批号" :span="span">{{product.batchNumber}}</oms-row>
             <oms-row label="规格" :span="span">{{product.orgGoodsDto.goodsDto.specifications}}</oms-row>
             <oms-row label="生产厂商" :span="span">{{product.orgGoodsDto.goodsDto.factoryName}}</oms-row>
             <oms-row label="数量" :span="span">{{product.amount}}</oms-row>
+          </div>
+          <div class="product-item is-total" style="cursor: default">
+            <h2>合计:</h2>
+            <oms-row label="应收数量" :span="span">{{ totalCount }}</oms-row>
+            <oms-row label="实收数量" :span="span">{{ receiptCount }}</oms-row>
           </div>
         </div>
         <div class="btn-submit-save">
@@ -86,11 +100,9 @@
             <el-form-item label="批号" style="margin-bottom: 5px">
               <span>{{ item.batchNumber }}</span>
             </el-form-item>
-            <el-form-item label="大包装数量">
-              <oms-input type="text" placeholder="请输入大包装数量" v-model.number="item.largePackageCount"></oms-input>
-            </el-form-item>
-            <el-form-item label="小包装数量">
-              <oms-input type="text" placeholder="请输入小包装数量" v-model.number="item.smallPackageCount"></oms-input>
+            <el-form-item label="数量">
+              <input class="el-input__inner" type="number" placeholder="请输入数量" v-model.number="item.currentAmount"
+                     @input="changeAmount(item)"></input>
             </el-form-item>
           </el-form>
         </div>
@@ -103,7 +115,8 @@
 
   export default {
     props: {
-      orderId: String
+      orderId: String,
+      showRight: Boolean
     },
     data () {
       return {
@@ -119,15 +132,6 @@
         types: [],
         doing: false,
         rules: {
-          largePackageCount: [
-            {required: true, type: 'number', message: '请输入大包装数量', trigger: 'blur'}
-          ],
-          mediumPackageCount: [
-            {required: true, type: 'number', message: '请输入中包装数量', trigger: 'blur'}
-          ],
-          smallPackageCount: [
-            {required: true, type: 'number', message: '请输入小包装数量', trigger: 'blur'}
-          ],
           bulkCount: [
             {required: true, type: 'number', message: '请输入散件数量', trigger: 'blur'}
           ]
@@ -135,13 +139,30 @@
       };
     },
     watch: {
-      orderId () {
+      showRight (val) {
+        if (!val) return;
         this.queryOrderDetail();
+      }
+    },
+    computed: {
+      totalCount() {
+        let count = 0;
+        this.productList.forEach(i => {
+          count += Number(i.amount);
+        });
+        return count;
+      },
+      receiptCount() {
+        let count = 0;
+        this.productList.forEach(i => {
+          count += Number(i.currentAmount);
+        });
+        return count;
       }
     },
     methods: {
       onSubmit () {
-        let isFullReceive = this.productList.every(item => item.largePackageCount !== '' || item.smallPackageCount !== '');
+        let isFullReceive = this.productList.every(item => item.currentAmount !== '');
         if (!isFullReceive) {
           this.$confirm('没有完全收货，是否确认保存', '', {
             confirmButtonText: '确定',
@@ -177,6 +198,11 @@
           });
         });
       },
+      changeAmount (item) {
+        if (item.currentAmount > item.amount) {
+          item.currentAmount = item.amount;
+        }
+      },
       save () {
         let obj = {
           list: []
@@ -185,10 +211,7 @@
           obj.list.push({
             batchNumber: f.batchNumber,
             orgGoodsId: f.orgGoodsId,
-            largePackageCount: f.largePackageCount,
-            bulkCount: f.bulkCount,
-            mediumPackageCount: f.mediumPackageCount,
-            smallPackageCount: f.smallPackageCount
+            totalCount: f.currentAmount
           });
         });
         if (this.doing) return;
@@ -215,6 +238,7 @@
             f.bulkCount = '';
             f.mediumPackageCount = '';
             f.smallPackageCount = '';
+            f.currentAmount = f.amount;
           });
           this.productList = [].concat(res.data.detailDtoList);
           if (this.productList.length) {

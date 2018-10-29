@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -22,15 +22,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
 </style>
 <template>
   <div>
@@ -59,8 +50,11 @@
                 </div>
               </li>
             </ul>
-            <div class="btn-left-list-more" @click.stop="getOrgMore">
-              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            <div class="btn-left-list-more">
+              <bottom-loading></bottom-loading>
+              <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              </div>
             </div>
           </div>
         </div>
@@ -144,7 +138,8 @@
 
 </template>
 <script>
-  import {cerpAction, Vaccine, VaccineRights } from '@/resources';
+  import { Vaccine, VaccineRights } from '@/resources';
+
   export default {
     data: function () {
       return {
@@ -207,27 +202,29 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
-        this.typePager.currentPage = pageNo;
-        let params = Object.assign({}, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          keyWord: this.typeTxt
-        });
-        cerpAction.queryAllPov(params).then(res => {
-          if (isContinue) {
-            this.showTypeList = this.showTypeList.concat(res.data.list);
-          } else {
-            this.showTypeList = res.data.list;
-            if (this.showTypeList.length !== 0) {
-              this.currentItem = res.data.list[0];
-              this.orgName = this.showTypeList[0].subordinateName;
-              this.getPageList();
-            } else {
-              this.currentItem = Object.assign({'id': ''});
-            }
-          }
-          this.typePager.totalPage = res.data.totalPage;
-        });
+        // this.typePager.currentPage = pageNo;
+        // let params = Object.assign({}, {
+        //   pageNo: pageNo,
+        //   pageSize: this.pager.pageSize,
+        //   keyWord: this.typeTxt
+        // });
+        // cerpAction.queryAllPov(params).then(res => {
+        //   this.$store.commit('initBottomLoading', false);
+        //
+        //   if (isContinue) {
+        //     this.showTypeList = this.showTypeList.concat(res.data.list);
+        //   } else {
+        //     this.showTypeList = res.data.list;
+        //     if (this.showTypeList.length !== 0) {
+        //       this.currentItem = res.data.list[0];
+        //       this.orgName = this.showTypeList[0].subordinateName;
+        //       this.getPageList();
+        //     } else {
+        //       this.currentItem = Object.assign({'id': ''});
+        //     }
+        //   }
+        //   this.typePager.totalPage = res.data.totalPage;
+        // });
       },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);

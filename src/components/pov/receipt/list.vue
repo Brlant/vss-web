@@ -1,36 +1,5 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
+<style lang="scss" scoped="">
 
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 300px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
 
   .align-word {
     letter-spacing: 1em;
@@ -56,11 +25,12 @@
         <div class="status-item" :class="{'active':key==activeStatus}"
              v-for="(item,key) in receiptType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
+        <goods-switch class="pull-right"></goods-switch>
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span=" filters.status === '3' ? 5 : 6">货主/订单号</el-col>
           <el-col :span="3">业务类型</el-col>
           <el-col :span="filters.status === '3' ? 5 : 6">接种点</el-col>
@@ -119,6 +89,7 @@
                 </perm>
               </el-col>
             </el-row>
+            <order-goods-info :order-item="item"></order-goods-info>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
@@ -132,15 +103,15 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <receipt-info :orderId="currentOrderId" @close="resetRightBox" @refreshOrder="refreshOrder"></receipt-info>
+      <receipt-info :orderId="currentOrderId" :showRight="showRight" @close="resetRightBox" @refreshOrder="refreshOrder"></receipt-info>
     </page-right>
     <page-right :show="showDetailRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <show-detail :orderId="currentOrderId" @close="resetRightBox"></show-detail>
+      <show-detail :orderId="currentOrderId" :showRight="showDetailRight" @close="resetRightBox"></show-detail>
     </page-right>
   </div>
 </template>
 <script>
-  import { povReceipt, http } from '@/resources';
+  import { http, povReceipt } from '@/resources';
   import utils from '@/tools/utils';
   import showDetail from './show.order.vue';
   import receiptInfo from './receipt.vue';
@@ -170,8 +141,10 @@
         currentItem: {}
       };
     },
-    mounted () {
-      this.queryOrderList();
+    computed: {
+      isShowGoodsList () {
+        return this.$store.state.isShowGoodsList;
+      }
     },
     watch: {
       filters: {
@@ -179,7 +152,13 @@
           this.queryOrderList(1);
         },
         deep: true
+      },
+      isShowGoodsList () {
+        this.queryOrderList(this.pager.currentPage);
       }
+    },
+    mounted () {
+      this.queryOrderList();
     },
     methods: {
       queryOrderList (pageNo) { // 得到需求分配列表
@@ -187,6 +166,8 @@
         this.pager.currentPage = pageNo;
         this.loadingData = false;
         let params = Object.assign({}, this.filters);
+        // 明细查询
+        params.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         povReceipt.queryWasks(params).then(res => {
           this.orderList = res.data.list;
           this.pager.count = res.data.count;
@@ -202,7 +183,7 @@
       },
       refreshOrder () {
         this.currentOrderId = '';
-        this.queryOrderList(1);
+        this.queryOrderList(this.pager.currentPage);
       },
       obtionStatusNum: function (num) {
         if (typeof num !== 'number') {

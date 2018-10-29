@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .content-part {
     .content-right {
       > h3 {
@@ -35,7 +35,6 @@
       font-size: 12px;
       img {
         width: 180px;
-        height: 180px;
         display: block;
         background: #ccc;
 
@@ -61,10 +60,10 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="drugControlReportList.length>0">
-                      <div class="base-pic-item">
+                      <div class="base-pic-item" v-if="Util.getType(drugControlReportList[0].attachmentStoragePath)">
                         <div @click="watchDrugControlReport(drugControlReportList[0])">
                           <img
-                            :src="drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -83,9 +82,9 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="batchReleaseList.length>0">
-                      <div class="base-pic-item">
+                      <div class="base-pic-item" v-if="Util.getType(batchReleaseList[0].attachmentStoragePath)">
                         <div @click="watchBatchRelease(batchReleaseList[0])">
-                          <img :src="batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                          <img :src="batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -106,10 +105,10 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="importCertificateList.length>0">
-                      <div class="base-pic-item">
+                      <div class="base-pic-item" v-if="Util.getType(importCertificateList[0].attachmentStoragePath)">
                         <div @click="watchImportCertificate(importCertificateList[0])">
                           <img
-                            :src="importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                            :src="importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -128,9 +127,9 @@
                   </h2>
                   <div>
                     <div class="base-pic-list" v-if="customsPassList.length>0">
-                      <div class="base-pic-item">
+                      <div class="base-pic-item" v-if="Util.getType(customsPassList[0].attachmentStoragePath)">
                         <div @click="watchCustomsPass(customsPassList[0])">
-                          <img :src="customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,h_180,m_2'">
+                          <img :src="customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
                         </div>
                       </div>
                     </div>
@@ -150,6 +149,7 @@
 <script>
   import {http, OmsAttachment} from '../../../resources';
   import attachmentLists from '../../common/attachmentList.vue';
+  import Util from '@/tools/utils';
 
   export default {
     components: {
@@ -168,7 +168,8 @@
         drugControlReportList: {},
         batchReleaseList: {},
         importCertificateList: {},
-        customsPassList: {}
+        customsPassList: {},
+        Util
       };
     },
     watch: {

@@ -2,8 +2,11 @@ html, body {
   padding: 0;
   margin: 0;
   color: #333;
-  font: normal 14px "Helvetica Neue", Helvetica, "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "微软雅黑", Arial, sans-serif;
+  font-size: 14px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   background: #f9f9f9;
+  overflow: hidden;
+  height: 100%;
 }
 
 a {
@@ -14,13 +17,20 @@ a {
 .f-12 {
   font-size: 12px;
 }
+
 .clearfix {
   clear: both
+}
+
+/*2.0变化*/
+.main-card-box .el-form-item__label {
+  line-height: 1;
 }
 
 .red {
   color: #f00;
 }
+
 .clearfix:before, .clearfix:after {
   display: table;
   content: " ";
@@ -39,6 +49,22 @@ ul, ol, li {
   margin-right: auto;
 }
 
+.full-width .container {
+  width: auto;
+  max-width: none;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.full-width .container.d-table {
+  width: calc(100% - 20px);
+}
+
+.full-width .container .container {
+  margin-left: 0;
+  margin-right: 0;
+}
+
 .text-center {
   text-align: center;
 }
@@ -50,7 +76,6 @@ ul, ol, li {
 .padding {
   padding: 15px;
 }
-
 
 table {
   background-color: transparent;
@@ -82,7 +107,7 @@ th {
 .table > thead > tr > td,
 .table > tbody > tr > td,
 .table > tfoot > tr > td {
-  padding: 8px;
+  padding: 5px;
   line-height: 1.42857143;
   vertical-align: middle;
   border-top: 1px solid #ddd;
@@ -365,8 +390,8 @@ table th[class*="col-"] {
 
 .table-product-list .product-img {
   background: #eee;
-  height: 60px;
-  width: 60px;
+  height: 80px;
+  width: 80px;
 }
 
 .el-col {

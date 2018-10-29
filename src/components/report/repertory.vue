@@ -1,20 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
+<style lang="scss" scoped="">
 
   .opera-btn-group {
     margin: 10px 0;
@@ -25,10 +9,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -62,26 +43,26 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list"
-                :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="400">
-        <el-table-column prop="goodsName" label="疫苗名称" width="160" :sortable="true"></el-table-column>
+      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
+                :header-row-class-name="'headerClass'" v-loading="loadingData">
+        <el-table-column prop="goodsName" label="疫苗名称" min-width="100" :sortable="true"></el-table-column>
         <el-table-column prop="restStockCount" label="期前库存" :sortable="true"></el-table-column>
         <el-table-column prop="purchaseCount" label="进苗数量" :sortable="true"></el-table-column>
         <el-table-column prop="saleCount" label="发苗数量" :sortable="true"></el-table-column>
-        <el-table-column prop="saleReturnCount" label="退区数量" :sortable="true"></el-table-column>
-        <el-table-column prop="purchaseReturnCount" label="退厂家数量" :sortable="true"></el-table-column>
+        <el-table-column prop="saleReturnCount" label="销退数量" :sortable="true"></el-table-column>
+        <el-table-column prop="purchaseReturnCount" label="购退数量" :sortable="true"></el-table-column>
         <el-table-column prop="scarpCount" label="报损数量" :sortable="true"></el-table-column>
         <el-table-column prop="endStockCount" label="期末库存" :sortable="true"></el-table-column>
       </el-table>
     </div>
-
   </div>
 </template>
 <script>
   import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
-
+  import ReportMixin from '@/mixins/reportMixin';
   export default {
+    mixins: [ReportMixin],
     data () {
       return {
         loadingData: false,
@@ -94,6 +75,11 @@
         bizDateAry: '',
         isLoading: false
       };
+    },
+    computed: {
+      getHeight: function () {
+        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
+      }
     },
     methods: {
       exportFile: function () {
@@ -134,6 +120,7 @@
         this.$http.get('/erp-statement/stock-detail', {params}).then(res => {
           this.reportList = res.data;
           this.loadingData = false;
+          this.setFixedHeight();
         });
       },
       resetSearchForm: function () {

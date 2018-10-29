@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../../../assets/mixins.scss";
 
-  @leftWidth: 200px;
+  $leftWidth: 200px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -14,105 +14,20 @@
   }
 
   .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
     .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
       text-align: center;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        padding: 0 45px;
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
+        left: $leftWidth;
       }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-    }
-
-    .min-gutter {
-      .el-form-form {
-        margin-bottom: 20px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
+      left: $leftWidth;
     }
   }
 
   .el-form .el-select {
     display: block;
-  }
-
-  .table-product-list {
-    font-size: 12px;
-    > tbody > tr > td, > thead > tr > th {
-      padding: 5px;
-    }
   }
 
   .order-product-box {
@@ -151,28 +66,6 @@
 
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-  .select-other-info {
-    color: #999;
-    margin-left: 10px
-  }
-
-  .selected {
-    .select-other-info {
-      color: #ddd
-    }
-  }
-
   .ml15 {
     margin-left: 40px;
   }
@@ -181,39 +74,8 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #48576a;
-    height: auto;
-    line-height: normal;
-    box-sizing: border-box;
-    cursor: pointer;
-  }
-
   .productItem-info {
     float: left;
-  }
-
-  .order-good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 680px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
   }
 
   .ar {
@@ -232,8 +94,6 @@
 
   .invoice-list {
     margin-left: 30px;
-    max-height: 300px;
-    overflow: auto;
     .show-item {
       border-bottom: 1px solid #f1f1f1;
       line-height: 20px;
@@ -244,11 +104,25 @@
           padding-right: 5px;
         }
       }
+      &:hover {
+        background: $dialog-left-bg;
+      }
     }
   }
 
   .mb0 {
     margin-bottom: 0;
+  }
+
+  .delete-icon {
+    &:hover {
+      color: $activeColor
+    }
+    cursor: pointer;
+    .el-icon-t-remove {
+      vertical-align: middle;
+      font-size: 20px;
+    }
   }
 </style>
 
@@ -260,57 +134,71 @@
       </div>
       <div class="content-right min-gutter">
         <h3>付款申请详情</h3>
-        <div>
+        <div v-if="loadingData">
+          <oms-loading :loading="loadingData"></oms-loading>
+        </div>
+        <div v-if="!loadingData">
           <el-form ref="auditForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="100px" style="padding-right: 20px">
-            <el-form-item label="发票付款" class="mb0">
+            <el-form-item label="发票付款:" class="mb0">
               {{form.billPayType === '0' ? '无' : '有' }}
             </el-form-item>
-            <el-form-item label="付款单位" class="mb0">
+            <el-form-item label="付款单位:" class="mb0">
               {{form.orgName }}
             </el-form-item>
-            <el-form-item label="付款方式" class="mb0">
+            <el-form-item label="付款方式:" class="mb0">
               <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
             </el-form-item>
-            <el-form-item label="付款金额" class="mb0">
+            <el-form-item label="付款金额:" class="mb0">
               ¥ {{form.amount | formatMoney}}
             </el-form-item>
-            <el-form-item label="付款说明" class="mb0">
+            <el-form-item label="付款说明:" class="mb0">
               {{form.explain}}
             </el-form-item>
-            <el-form-item label="创建人" class="mb0">
+            <el-form-item label="创建人:" class="mb0">
               {{form.createName}}
             </el-form-item>
-            <el-form-item label="创建时间" class="mb0">
+            <el-form-item label="创建时间:" class="mb0">
               {{form.createTime | minute}}
             </el-form-item>
-            <el-form-item label="付款明细" class="mb0">
+            <el-form-item label="付款明细:" class="mb0">
               <span v-if="!form.detailList.length">无</span>
+              <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
             </el-form-item>
             <ul class="show-list invoice-list"
                 v-if="form.detailList.length">
               <li class="show-item" style="background: #f1f1f1">
                 <el-row type="flex">
-                  <el-col :span="form.billPayType === '1' ? 7 : 8">货品名称</el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">订单号</el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">货品名称</el-col>
+                  <el-col :span="2">数量</el-col>
+                  <el-col :span="form.billPayType === '1' ? 4 : 5">订单号</el-col>
                   <el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">发生时间</el-col>
-                  <el-col :span="form.billPayType === '1' ? 3 : 4">本次付款金额 </el-col>
+                  <el-col :span="form.billPayType === '1' ? 4 : 5">发生时间</el-col>
+                  <el-col :span="form.billPayType === '1' ? 3 : 4">本次付款金额</el-col>
+                  <el-col :span="2" v-show="form.status ==='0'">操作</el-col>
                 </el-row>
               </li>
               <li class="show-item" v-for="item in form.detailList">
                 <el-row type="flex">
-                  <el-col :span="form.billPayType === '1' ? 7 : 8">{{ item.goodsName }} </el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.orderNo }} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.goodsName }}</el-col>
+                  <el-col :span="2">{{ item.count }}</el-col>
+                  <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.orderNo }}</el-col>
                   <el-col :span="4" v-show="form.billPayType === '1'" class="break-word">
                     {{ item.invoiceNo ? item.invoiceNo : '无' }}
                   </el-col>
-                  <el-col :span="form.billPayType === '1' ? 5 : 6">{{ item.createTime | minute }} </el-col>
-                  <el-col :span="form.billPayType === '1' ? 3 : 4"> ￥{{item.paidMoney | formatMoney}} </el-col>
+                  <el-col :span="form.billPayType === '1' ? 4 : 5">{{ item.createTime | date }}</el-col>
+                  <el-col :span="form.billPayType === '1' ? 3 : 4"> ￥{{item.paidMoney | formatMoney}}</el-col>
+                  <el-col :span="2" v-show="form.status ==='0'">
+                    <perm label="payment-payable-audit">
+                      <span class="delete-icon" @click.stop.prevent="deleteDetailItem(item)">
+                          <i class="el-icon-t-remove"></i><span>删除</span>
+                      </span>
+                    </perm>
+                  </el-col>
                 </el-row>
               </li>
             </ul>
-            <el-form-item label="审批意见" style="margin-top: 10px">
+            <el-form-item label="审批意见:" style="margin-top: 10px">
               <oms-input v-show="form.status ==='0'" type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
               <span v-show="form.status!=='0'">
@@ -320,18 +208,21 @@
               </span>
             </el-form-item>
             <el-form-item style="margin-top: 10px">
-              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success" @click="audited"
-                         native-type="submit">审核通过
-              </el-button>
-              <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="danger"
-                         @click="notAudited"
-                         native-type="submit">
-                审核不通过
-              </el-button>
-              <el-button v-show="form.status ==='1'" style="width: 100px" :plain="true" type="danger" @click="review"
-                         native-type="submit">
-                通过复核
-              </el-button>
+              <perm label="payment-payable-audit">
+                <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success"
+                           @click="audited"
+                           native-type="submit">审核通过
+                </el-button>
+                <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="danger"
+                           @click="notAudited"
+                           native-type="submit">
+                  审核不通过
+                </el-button>
+                <el-button v-show="form.status ==='1'" style="width: 100px" :plain="true" type="danger" @click="review"
+                           native-type="submit">
+                  通过复核
+                </el-button>
+              </perm>
             </el-form-item>
           </el-form>
         </div>
@@ -341,8 +232,7 @@
 </template>
 
 <script>
-  import { http, Address, BaseInfo, pay, BillPayable } from '../../../../../resources';
-  import utils from '../../../../../tools/utils';
+  import {BillPayable, http} from '../../../../../resources';
 
   export default {
     name: 'auditForm',
@@ -366,7 +256,8 @@
         rules: {},
         orgList: [],
         logisticsList: [],
-        doing: false
+        doing: false,
+        loadingData: true
       };
     },
     computed: {},
@@ -382,9 +273,27 @@
     mounted: function () {
     },
     methods: {
+      deleteDetailItem (item) {
+        this.$confirm('是否删除本条明细', '', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.delete(`/bill-receivable/detail/${item.detailId}`).then(() => {
+            this.form.detailList = this.form.detailList.filter(f => f.detailId !== item.detailId);
+          }).catch(() => {
+            this.$notify.error({
+              duration: 2000,
+              message: '删除失败'
+            });
+          });
+        });
+      },
       queryDetail (key) {
+        this.loadingData = true;
         http.get(`/bill-payable/${key}`).then(res => {
           this.form = res.data;
+          this.loadingData = false;
         });
       },
       resetForm: function () {// 重置表单

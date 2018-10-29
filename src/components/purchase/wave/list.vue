@@ -1,36 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 300px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
+<style lang="scss" scoped="">
 
   .align-word {
     letter-spacing: 1em;
@@ -58,11 +26,11 @@
              v-for="(item,key) in waveType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix ">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="8">创建人</el-col>
           <el-col :span="4">创建时间</el-col>
           <el-col :span="4">状态</el-col>
@@ -96,11 +64,11 @@
               <el-col :span="6" class="opera-btn">
                 <div v-show="item.status === 0">
                   <div>
-                  <span @click.prevent="purchase(item)">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="el-icon-t-link"></i></a>
-                  规划采购
-                  </span>
+                    <!--<span @click.prevent="purchase(item)">-->
+                    <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
+                    <!--class="el-icon-t-link"></i></a>-->
+                    <!--规划采购-->
+                    <!--</span>-->
                    <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-wave"></i></a>

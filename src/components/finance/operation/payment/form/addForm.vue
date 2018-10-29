@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../../../assets/mixins.scss";
 
-  @leftWidth: 200px;
+  $leftWidth: 200px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -14,108 +14,22 @@
   }
 
   .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
     .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
       text-align: center;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        padding: 0 45px;
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
+        left: $leftWidth;
       }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-
+      left: $leftWidth;
     }
-
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 20px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
-    }
-
   }
 
   .el-form .el-select {
     display: block;
   }
 
-  .table-product-list {
-    font-size: 12px;
-    > tbody > tr > td, > thead > tr > th {
-      padding: 5px;
-    }
-  }
 
   .list-style {
     cursor: pointer;
@@ -127,9 +41,9 @@
     }
     &.active {
       span {
-        background-color: @activeColor;
+        background-color: $activeColor;
         border-radius: 20px;
-        color: @activeColorFont
+        color: $activeColorFont
       }
     }
     &:hover {
@@ -174,27 +88,6 @@
 
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-  .select-other-info {
-    color: #999;
-    margin-left: 10px
-  }
-
-  .selected {
-    .select-other-info {
-      color: #ddd
-    }
-  }
 
   .ml15 {
     margin-left: 40px;
@@ -204,39 +97,9 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #48576a;
-    height: auto;
-    line-height: normal;
-    box-sizing: border-box;
-    cursor: pointer;
-  }
 
   .productItem-info {
     float: left;
-  }
-
-  .order-good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 680px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
   }
 
   .ar {
@@ -267,10 +130,10 @@
             <el-form-item label="发票付款" prop="billPayType">
               <el-switch
                 v-model="form.billPayType"
-                on-text="有"
-                off-text="无"
-                on-value="1"
-                off-value="0"
+                active-text="有"
+                inactive-text="无"
+                active-value="1"
+                inactive-value="0"
                 @change="changeBillPayType"
               >
               </el-switch>
@@ -287,7 +150,7 @@
                   </div>
                   <div style="overflow: hidden">
                     <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{org.remitteeManufacturerCode}}
+                    <span>系统代码:</span>{{org.remitteeManufacturerCode}}
                     </span>
                   </div>
                 </el-option>
@@ -319,7 +182,7 @@
 </template>
 
 <script>
-  import { http, Address, BaseInfo, pay, BillPayable } from '../../../../../resources';
+  import { BillPayable, pay } from '../../../../../resources';
   import utils from '../../../../../tools/utils';
   import payDetail from './payDetail.vue';
 
@@ -348,11 +211,11 @@
         loading: false,
         form: {
           type: '0',
-          payType: '',
+          payType: '2',
           orgId: '',
           explain: '',
           amount: '',
-          billPayType: '1',
+          billPayType: '0',
           relationList: []
         },
         rules: {
@@ -382,7 +245,7 @@
     },
     computed: {
       PaymentMethod: function () {
-        return this.$store.state.dict['PaymentMethod'];
+        return this.$getDict('PaymentMethod');
       },
       orgLevel () {
         return this.$store.state.orgLevel;
@@ -408,11 +271,11 @@
       defaultIndex (val) {
         this.form = {
           type: '0',
-          payType: '',
+          payType: '2',
           orgId: '',
           explain: '',
           amount: '',
-          billPayType: '1',
+          billPayType: '0',
           relationList: []
         };
         this.index = 0;
@@ -448,15 +311,30 @@
         });
       },
       onSubmit: function () {// 提交表单
-        let isQualified = this.selectPayments.some(s => s.payment > (s.billAmount - s.prepaidAccounts));
+        let isQualified = this.selectPayments.some(s => !s.payment);
+        if (isQualified) {
+          this.$notify.info({
+            message: '付款明细中，存在本次付款金额为0的情况，请调整后，再进行保存'
+          });
+          return;
+        }
+        isQualified = this.selectPayments.some(s => s.payment && s.payment > (s.billAmount - s.prepaidAccounts));
         if (isQualified) {
           this.$notify.info({
             message: '付款明细中，存在本次付款金额大于待付金额的明细，请调整后，再进行保存'
           });
           return;
         }
+        isQualified = this.selectPayments.some(s => s.payment < 0 && s.payment < (s.billAmount - s.prepaidAccounts));
+        if (isQualified) {
+          this.$notify.info({
+            message: '付款明细中，存在本次付款金额小于待付金额的明细，请调整后，再进行保存'
+          });
+          return;
+        }
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {
+            this.index = 0;
             return;
           }
           this.doing = true;

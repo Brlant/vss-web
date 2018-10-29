@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -16,8 +16,13 @@
     <div class="container d-table">
       <div class="d-table-right">
         <div class="d-table-col-wrap">
-
-        <span class="pull-right">
+          <span class="f-12">用户状态:</span>
+          <el-radio-group v-model="filters.status" size="small">
+            <el-radio-button label="1">正常</el-radio-button>
+            <el-radio-button label="2">停用</el-radio-button>
+            <el-radio-button label="0">未激活</el-radio-button>
+          </el-radio-group>
+          <span class="pull-right">
           <span class="btn-search-toggle open" v-show="showSearch">
             <single-input v-model="filters.keyWord" placeholder="请输入名称搜索"
                           :showFocus="showSearch"></single-input>
@@ -109,15 +114,12 @@
 
 </template>
 <script>
-  import { OrgUser, User } from '../../../resources';
+  import {OrgUser, User} from '../../../resources';
   import editForm from './form/form.vue';
-  import OmsRemove from '../../common/remove.vue';
-  import OmsForbid from '../../common/forbid.vue';
 
   export default {
     components: {
-      OmsRemove,
-      editForm, OmsForbid
+      editForm
     },
     data: function () {
       return {
@@ -131,7 +133,8 @@
         typeTxt: '',
         filters: {
           keyWord: '',
-          orgId: 0
+          orgId: 0,
+          status: '1'
         },
         form: {list: [{roleId: ''}]},
         formTitle: '新增',
@@ -148,7 +151,7 @@
       };
     },
     computed: {
-      user() {
+      user () {
         return this.$store.state.user;
       }
     },
@@ -157,7 +160,7 @@
         return list.map(m => m.title).join('，');
       }
     },
-    mounted() {
+    mounted () {
       this.getPageList(1);
     },
     watch: {
@@ -167,7 +170,7 @@
         },
         deep: true
       },
-      user(val) {
+      user (val) {
         if (val.userCompanyAddress) {
           this.getPageList(1);
         }
@@ -184,7 +187,8 @@
         let data = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          keyWord: this.filters.keyWord
+          keyWord: this.filters.keyWord,
+          status: this.filters.status
         });
         this.loadingData = true;
         OrgUser.queryUsers(orgId, data).then(res => {
@@ -212,18 +216,18 @@
         let itemTemp = JSON.parse(JSON.stringify(item));
         itemTemp.status = '2';
         User.stopUser(itemTemp.id).then(() => {
-          item.status = '2';
           this.$notify.success({
             title: '成功',
             message: '已经停用用户"' + itemTemp.name + '"'
           });
+          this.getPageList(1);
         });
       },
       useNormal: function (item) {
         let itemTemp = JSON.parse(JSON.stringify(item));
         itemTemp.status = '0';
         User.enableUser(itemTemp.id).then(() => {
-          item.status = '0';
+          this.getPageList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功启用用户"' + item.name + '"'

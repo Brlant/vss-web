@@ -1,15 +1,15 @@
-<style lang="less" scoped>
-  @leftWidth: 180px;
+<style lang="scss" scoped>
+  $leftWidth: 180px;
   .content-part {
     .content-left {
-      width: @leftWidth;
+      width: $leftWidth;
       text-align: center;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 
@@ -30,8 +30,8 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="allocating-order-audit" v-show="currentOrder.state === '6' ">
-              <el-button type="primary" @click="cancel">取消订单</el-button>
+            <perm label="allocating-order-cancel" v-show="currentOrder.state === '6' || currentOrder.state === '7' || currentOrder.state === '10' ">
+              <el-button type="warning" plain @click="cancel">取消订单</el-button>
             </perm>
           </li>
         </ul>
@@ -46,7 +46,9 @@
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 5"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="0" v-show="index === 8"></relevance-code>
-
+        <relevance-code-review :currentOrder="currentOrder" :index="index" type="0" v-show="index === 9"></relevance-code-review>
+        <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
+                      v-show="index === 0"></cancel-order>
       </div>
     </div>
   </div>
@@ -58,7 +60,7 @@
   import exceptionInfo from './detail/exception.info.vue';
   import orderAttachment from '@/components/common/order/in.order.attachment.vue';
   import log from '@/components/common/order.log.vue';
-  import { InWork, http, erpOrder } from '@/resources';
+  import { http, InWork } from '@/resources';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
 
   export default {
@@ -95,7 +97,11 @@
         if (perms.includes('order-document-watch')) {
           menu.push({name: '附件管理', key: 5});
         }
-        menu.push({name: '关联追溯码', key: 8});
+        let state = this.state;
+        if (state !== '6' && state !== '7') {
+          // menu.push({name: '关联追溯码', key: 8});
+          menu.push({name: '复核追溯码', key: 9});
+        }
         menu.push({name: '操作日志', key: 2});
         return menu;
       }
@@ -143,22 +149,12 @@
         this.$emit('refreshOrder');
       },
       cancel () {
-        this.$confirm('是否取消订单', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
+        this.index = 0;
+        this.$refs['cancelPart'].isShow = true;
+        this.$notify({
+          duration: 2000,
+          message: '请选择取消订单原因',
           type: 'warning'
-        }).then(() => {
-          erpOrder.cancel(this.orderId).then(() => {
-            this.$notify.success({
-              message: '取消订单成功'
-            });
-            this.$emit('close');
-            this.$emit('refreshOrder');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '取消订单失败'
-            });
-          });
         });
       }
     }

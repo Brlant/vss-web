@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../assets/mixins.scss";
 
-  @leftWidth: 220px;
+  $leftWidth: 220px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -14,93 +14,15 @@
   }
 
   .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
     .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      text-align: left;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        padding: 0 0;
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
+      text-align: center;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
+        left: $leftWidth;
       }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-    }
-
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 20px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
+      left: $leftWidth;
     }
   }
 
@@ -108,12 +30,6 @@
     display: block;
   }
 
-  .table-product-list {
-    font-size: 12px;
-    > tbody > tr > td, > thead > tr > th {
-      padding: 5px;
-    }
-  }
 
   .order-product-box {
     position: relative;
@@ -151,28 +67,6 @@
 
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-  .select-other-info {
-    color: #999;
-    margin-left: 10px
-  }
-
-  .selected {
-    .select-other-info {
-      color: #ddd
-    }
-  }
-
   .ml15 {
     margin-left: 40px;
   }
@@ -181,40 +75,10 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #48576a;
-    height: auto;
-    line-height: normal;
-    box-sizing: border-box;
-    cursor: pointer;
-  }
-
   .productItem-info {
     float: left;
   }
 
-  .order-good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 680px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
 
   .ar {
     text-align: right;
@@ -239,21 +103,26 @@
             <el-form-item label="二类疫苗销售价格组名称" prop="name">
               <oms-input type="text" placeholder="请输入二类疫苗销售价格组名称" v-model="form.name"></oms-input>
             </el-form-item>
-            <el-form-item label="选择疾控货品" prop="orgGoodsId">
-              <el-select filterable remote placeholder="请输入名称搜索疾控货品" :remote-method="getGoodsList" :clearable="true"
-                         v-model="form.orgGoodsId" @click.native.once="getGoodsList('')" @change="orgGoodsChange">
+            <el-form-item label="选择疫苗" prop="orgGoodsId">
+              <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="getGoodsList" :clearable="true"
+                         popper-class="order-good-selects"
+                         v-model="form.orgGoodsId" @change="orgGoodsChange">
                 <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                            v-for="item in goodses">
-                  <div style="overflow: hidden">
+                  <div>
                     <span class="pull-left">{{item.orgGoodsDto.name}}</span>
                   </div>
-                  <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
-                      </span>
+                  <div class="clearfix">
+                    <!--<span class="select-other-info pull-left"><span-->
+                    <!--v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}-->
+                    <!--</span>-->
+                    <!--<span class="select-other-info pull-left"><span-->
+                      <!--v-show="item.orgGoodsDto.goodsDto.specifications">规格:{{ item.orgGoodsDto.goodsDto.specifications}}</span>-->
+                    <!--</span>-->
                     <span class="select-other-info pull-left"><span
-                      v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
-                      </span>
+                      v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName  }}</span>
+                    <span class="select-other-info pull-left"><span
+                      v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}</span>
                   </div>
                 </el-option>
               </el-select>
@@ -265,7 +134,7 @@
               </oms-input>
             </el-form-item>
             <el-form-item label="是否可用">
-              <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949"
+              <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                          v-model="form.availabilityStatus"></el-switch>
             </el-form-item>
           </el-form>
@@ -275,7 +144,7 @@
   </div>
 </template>
 <script>
-  import { Vaccine, BriceGroup } from '@/resources';
+  import {BriceGroup} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -293,7 +162,7 @@
         rules: {
           name: {required: true, message: '请输入二类疫苗销售价格组名称', trigger: 'blur'},
           unitPrice: {required: true, message: '请输入单价', trigger: 'blur'},
-          orgGoodsId: {required: true, message: '请选择疾控货品', trigger: 'change'}
+          orgGoodsId: {required: true, message: '请选择疫苗', trigger: 'change'}
         },
         goodses: [], // 货品列表
         title: '新增二类疫苗销售价格组',
@@ -303,12 +172,7 @@
     watch: {
       formItem (val) {
         if (val.id) {
-          this.goodses.push({
-            orgGoodsDto: {
-              id: val.orgGoodsId,
-              name: val.goodsName
-            }
-          });
+          this.getGoodsList(val.goodsName);
           this.form = val;
           this.form.unitPrice = this.form.unitPrice ? this.form.unitPrice.toString() : '';
           this.title = '编辑二类疫苗销售价格组';
@@ -319,6 +183,7 @@
             unitPrice: '',
             availabilityStatus: true
           };
+          this.getGoodsList();
           this.title = '新增二类疫苗销售价格组';
         }
       }

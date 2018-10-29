@@ -1,54 +1,16 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 300px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
-
-  .align-word {
-    letter-spacing: 1em;
-    margin-right: -1em;
-  }
+<style lang="scss" scoped="">
 
   .order-list-item {
     cursor: pointer;
   }
 
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
-
   .header-list {
     overflow: hidden;
+  }
+
+  .opera-btn-group {
+    margin-left: 0;
+    margin-right: 0;
   }
 </style>
 <template>
@@ -56,10 +18,7 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -72,7 +31,7 @@
                 <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
-                           @click.native.once="filterOrgGoods('')">
+                           @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
                   <el-option :value="org.id" :key="org.id" :label="org.goodsName"
                              v-for="org in orgGoods">
                     <div style="overflow: hidden">
@@ -80,10 +39,10 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号</span>  {{org.goodsNo}}
+                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.saleFirmName">供货厂商</span>  {{ org.saleFirmName }}
+                        v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
                       </span>
                     </div>
                   </el-option>
@@ -92,7 +51,14 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="批号" :span="5">
-                <el-input v-model="searchWord.keyWord" placeholder="请输入批号"></el-input>
+                <el-select v-model="searchWord.batchNumberId" filterable clearable remote
+                           :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号">
+                  <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
+                             :label="item.batchNumber">
+                    {{ item.batchNumber }}
+                    <!--<el-tag v-show="isNewBatch(item.createTime)" style="height: 20px">新</el-tag>-->
+                  </el-option>
+                </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
@@ -106,7 +72,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -132,25 +98,70 @@
           </el-row>
         </el-form>
       </div>
-
-      <el-table :data="batches" class="header-list store" border @row-click="showDetail"
+      <el-table :data="batches" class="header-list store border-black" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
-                show-summary :max-height="bodyHeight">
-        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
-        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="130"></el-table-column>
-        <el-table-column prop="availableCount" label="可用库存" :sortable="true" v-if="orgLevel !== 3"
-                         width="90"></el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际库存" :sortable="true" width="90"></el-table-column>
-        <el-table-column prop="transitCount" label="在途库存" :sortable="true" v-if="orgLevel !== 3"
-                         width="90"></el-table-column>
+                :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
+                show-summary :max-height="bodyHeight" style="width: 100%">
+        <el-table-column prop="goodsName" label="货主货品名称"  min-width="200" :sortable="true"></el-table-column>
+        <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
+        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
+
+        <el-table-column label="业务库存" align="center">
+          <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.availableCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="unqualifiedBizCount" label="不合格" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.unqualifiedBizCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="undeterminedCount" label="业务停销" :render-header="formatHeader" :sortable="true"
+                           width="110">
+            <template slot-scope="scope">
+              <span>{{scope.row.undeterminedCount}}</span>
+            </template>
+          </el-table-column>
+        </el-table-column>
+
+
+        <el-table-column label="实物库存" align="center">
+          <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="unqualifiedCount" label="不合格" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.unqualifiedCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.transitCount}}</span>
+            </template>
+          </el-table-column>
+          <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader"  :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.totalCount}}</span>
+            </template>
+          </el-table-column>
+        </el-table-column>
+
+
         <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
           <template slot-scope="scope">
-            {{ scope.row.expiryDate | date}}
+            <span>{{ scope.row.expiryDate | date}}</span>
           </template>
         </el-table-column>
       </el-table>
-
 
       <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
       <!--<el-pagination-->
@@ -161,19 +172,21 @@
       <!--</div>-->
     </div>
 
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <detail :currentItem="currentItem" @close="resetRightBox"></detail>
     </page-right>
   </div>
 </template>
-<script>
+<script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import {BaseInfo, OrgGoods, erpStock, http} from '@/resources';
+  import {BaseInfo, erpStock, http} from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
+  import validMixin from '@/mixins/vaildMixin';
 
   export default {
     components: {detail},
+    mixins: [validMixin],
     data() {
       return {
         loadingData: true,
@@ -182,13 +195,13 @@
         batches: [],
         filters: {
           factoryId: '',
-          keyWord: '',
+          batchNumberId: '',
           orgGoodsId: '',
           nearTermDays: ''
         },
         searchWord: {
           factoryId: '',
-          keyWord: '',
+          batchNumberId: '',
           orgGoodsId: '',
           nearTermDays: ''
         },
@@ -202,11 +215,27 @@
         },
         currentItemId: '',
         currentItem: {},
-        totalInfo: {}
+        totalInfo: {},
+        statusTitle: [
+          '已过期',
+          '即将到期',
+          '正常'
+        ],
+        statusType: [
+          'danger',
+          'warning',
+          'primary'
+        ],
+        batchNumberList: [],
+        fixedHeight: 0
       };
     },
     mounted() {
       this.getBatches(1);
+      let showSearch = JSON.parse(window.localStorage.getItem(this.$route.path));
+      if (typeof showSearch === 'boolean') {
+        this.showSearch = showSearch;
+      }
     },
     computed: {
       orgLevel() {
@@ -215,7 +244,7 @@
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = height - 110;
-        return height;
+        return height + this.fixedHeight + (this.showSearch ? 0 : 150);
       }
     },
     watch: {
@@ -224,21 +253,89 @@
           this.getBatches(1);
         },
         deep: true
+      },
+      showSearch (val) {
+        window.localStorage.setItem(this.$route.path, val);
       }
     },
     methods: {
+      isValid(item) {
+        let a = this.$moment();
+        let b = this.$moment(item.expiryDate);
+        let days = b.diff(a, 'days');
+        return a < b ? days > 90 ? 2 : 1 : 0;
+      },
       getBatches() { // 得到波次列表
         this.totalInfo = {};
         this.batches = [];
         let params = Object.assign({}, this.filters);
         this.loadingData = true;
         erpStock.query(params).then(res => {
+          res.data.forEach(i => {
+             i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
+          });
           this.batches = res.data;
           this.loadingData = false;
+          setTimeout(() => {this.fixedHeight = Math.abs(this.fixedHeight - 1);}, 100);
         });
       },
+      formatHeader(h, col) {
+        let property = col.column.property;
+        let content = '';
+        let title = '';
+        switch (property) {
+          case 'qualifiedCount': {
+            content = '仓库内真实合格货品数量';
+            title = '合格';
+            break;
+          }
+          case 'unqualifiedCount': {
+            content = '仓库内真实不合格货品数量';
+            title = '不合格';
+            break;
+          }
+          case 'transitCount': {
+            content = '在运输中的货品数量';
+            title = '在途库存';
+            break;
+          }
+          case 'totalCount': {
+            content = '用于计算资产';
+            title = '库存总数';
+            break;
+          }
+          case 'availableCount': {
+            content = '用于出库订单的控制，表明可销售的数量';
+            title = '合格';
+            break;
+          }
+          case 'unqualifiedBizCount': {
+            content = '用于不合格品退货订单控制';
+            title = '不合格';
+            break;
+          }
+          case 'undeterminedCount': {
+            content = '仓库内质量状态待确定而不允许销售的库存数';
+            title = '业务停销';
+            break;
+          }
+        }
+        return (
+          <el-tooltip effect="dark" content={content} placement="top">
+            <span>{title}</span>
+          </el-tooltip>
+        );
+      },
+      formatRowClass(data) {
+        if (this.isValid(data.row) === 1) {
+          return 'effective-row';
+        }
+        if (this.isValid(data.row) === 0) {
+          return 'danger-row';
+        }
+      },
       exportFile: function () {
-        let params = Object.assign({}, this.filters);
+        let params = Object.assign({}, this.filters, this.searchWord);
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/store/request'});
         this.$http.get('/erp-stock/export', {params}).then(res => {
           utils.download(res.data.path, '即时库存查询');
@@ -269,7 +366,9 @@
             sums[index] = '合计';
             return;
           }
-          if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' && column.property !== 'transitCount') {
+          if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' &&
+            column.property !== 'transitCount' && column.property !== 'unqualifiedCount'
+            && column.property !== 'undeterminedCount' && column.property !== 'totalCount' && column.property !== 'unqualifiedBizCount') {
             sums[index] = '';
             return;
           }
@@ -287,13 +386,12 @@
             sums[index] = '';
           }
         });
-
         return sums;
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
           factoryId: '',
-          keyWord: '',
+          batchNumberId: '',
           orgGoodsId: '',
           nearTermDays: ''
         };
@@ -323,6 +421,30 @@
         });
         http.get('/erp-stock/goods', {params}).then(res => {
           this.orgGoods = res.data.list;
+        });
+      },
+      orgGoodsChange(val) {
+        this.searchWord.batchNumberId = '';
+        this.batchNumberList = [];
+        this.filterBatchNumber();
+      },
+      filterBatchNumber(query) {
+        if (!this.searchWord.orgGoodsId) return;
+
+        let goodsId = '';
+        this.orgGoods.forEach(i => {
+          if (i.id === this.searchWord.orgGoodsId) {
+            goodsId = i.goodsId;
+          }
+        });
+        if (!goodsId) return;
+        this.$http.get('/batch-number/pager', {
+          params: {
+            keyWord: query,
+            goodsId
+          }
+        }).then(res => {
+          this.batchNumberList = res.data.list;
         });
       },
       formatTime(date) {

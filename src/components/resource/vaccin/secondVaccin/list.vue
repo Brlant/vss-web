@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -71,13 +71,14 @@
     border: 1px solid #eee;
     position: relative;
     cursor: pointer;
-    width: 180px;
     margin: 5px;
     padding: 10px;
     font-size: 12px;
     img {
-      width: 180px;
-      height: 180px;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
       display: block;
       background: #ccc;
     }
@@ -118,13 +119,13 @@
              v-for="(item,key) in vaccineType"
              @click="changeType(key,item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title">{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span
+            class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="d-table">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-            <h2 class="header">
+          <h2 class="header">
                 <span class="pull-right">
                   <perm label="second-vaccine-info-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType">
@@ -134,22 +135,20 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="el-icon-t-search"></i> </a>
                 </span>
-              货主二类疫苗资料
-            </h2>
+            货主疫苗产品资料
+          </h2>
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
+
             <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="typeTxt" placeholder="请输入关键字搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
-            <div v-if="showTypeList.length == 0" class="empty-info">
+            <div v-if="orgGoodsList.length == 0" class="empty-info">
               暂无信息
             </div>
             <div v-else>
               <ul class="show-list">
-                <li v-for="item in showTypeList" class="list-item" @click="showType(item)" style="padding-left: 10px"
+                <li v-for="item in orgGoodsList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                     :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
-                  <!--<perm label="second-vaccine-info-delete">-->
-                  <!--<oms-remove :item="item" @removed="removeType" :tips='"确认删除疫苗\""+item.orgGoodsDto.name +"\"?"'-->
-                  <!--class="hover-show"><i class="el-icon-t-delete"></i></oms-remove>-->
-                  <!--</perm>-->
                   <div class="id-part">
                     <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
                     <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
@@ -164,15 +163,18 @@
 
             </div>
           </div>
-          <div class="lot-load" @click.stop="getOrgMore">
-            <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+          <div class="btn-left-list-more">
+            <bottom-loading></bottom-loading>
+            <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            </div>
           </div>
         </div>
         <div class="d-table-right">
           <div v-if="!data.id" class="empty-info">
-            请选择
+            暂无疫苗产品资料
           </div>
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" v-else>
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight + 'px'" v-else>
             <h2 class="clearfix">
             <span class="pull-right">
                  <el-button-group>
@@ -180,15 +182,13 @@
                     <el-button @click="edit"><i class="el-icon-t-edit"></i> 编辑</el-button>
                     </perm>
                    <perm label="second-vaccine-info-start">
-                    <el-button @click="enableRelation" v-show="data.status == '0'"><i class="el-icon-t-start"></i> 启用</el-button>
+                    <el-button @click="enableRelation" v-show="data.status == '0'"><i
+                      class="el-icon-t-start"></i> 启用</el-button>
                    </perm>
                    <perm label="second-vaccine-info-stop">
                     <el-button @click="forbid" v-show="data.status == '1' "><i
                       class="el-icon-t-stop"></i> 停用</el-button>
                    </perm>
-                   <!--<perm label="second-vaccine-info-delete">-->
-                   <!--<el-button @click="remove"><i class="el-icon-t-remove"></i> 删除</el-button>-->
-                   <!--</perm>-->
                 </el-button-group>
             </span>
             </h2>
@@ -202,9 +202,10 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="12" style="padding-left:120px;">
+                <el-col :span="12" style="padding-left:50px;">
                   <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
-                    <img :src="data.goodsDto.photo?data.goodsDto.photo:'/static/img/userpic.png' "/>
+                    <img
+                      :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
                   </div>
                 </el-col>
                 <el-col :span="12">
@@ -217,11 +218,14 @@
                   <!--<goods-row label="疫苗分类" :span="8">-->
                   <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
                   <!--</goods-row>-->
-                  <goods-row label="疫苗标志" :span="8">
-                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
-                  </goods-row>
+                  <!--<goods-row label="疫苗标志" :span="8">-->
+                  <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                  <!--</goods-row>-->
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
+                  </goods-row>
+                  <goods-row label="标准单价" :span="8">
+                    <span v-if="data.unitPrice">¥</span> {{ data.unitPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="中标价格" :span="8">
                     <span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}
@@ -274,7 +278,10 @@
                 </el-col>
                 <el-col :span="12">
                   <goods-row label="存储类别" :span="8">
-                    <dict :dict-group="'storageType'" :dict-key="data.goodsDto.storageType"></dict>
+                     <span v-for="(item, index) in data.goodsDto.storageType">
+                       <dict :dict-group="'storageType'" :dict-key="item"></dict>
+                       <span v-if="(data.goodsDto.storageType.length-1) !== index ">/</span>
+                    </span>
                   </goods-row>
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.goodsDto.storageConditionId"></dict>
@@ -289,28 +296,20 @@
                       v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ - {{ data.goodsDto.storageEndTemperature}} ℃
                     </span>
                   </goods-row>
-                  <goods-row label="最小发货单位" :span="8">
-                    <dict :dict-group="'shipmentPackingUnit'" :dict-key="data.goodsDto.shipmentPackingUnit"
-                          v-show="data.goodsDto.packageSize"></dict>
-                    = {{ data.goodsDto.packageSize }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.largePacking"></dict>
-                  </goods-row>
-                  <goods-row label="大包装" :span="8" v-show="data.goodsDto.largePacking">
-                    {{ data.goodsDto.largePacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.largePacking"></dict>
-                  </goods-row>
-                  <goods-row label="中包装" :span="8" v-show="data.goodsDto.measurementUnit">
-                    {{ data.goodsDto.mediumPacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.mediumPacking"></dict>
-                  </goods-row>
-                  <goods-row label="小包装" :span="8" v-show="data.goodsDto.smallPacking">
-                    {{ data.goodsDto.smallPacking }}
-                    <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                          v-show="data.goodsDto.smallPacking"></dict>
-                  </goods-row>
+                  <span v-for="(packageDto,index) in data.goodsDto.packageDtoList">
+                    <goods-row label="整件" :span="8"
+                               v-show="packageDto.conversionCount" v-if="data.goodsDto.wholePackageScheme===index+1">
+                      {{ packageDto.conversionCount }}
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
+                            v-show="packageDto.conversionCount"></dict> /  <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict>
+                    </goods-row>
+                    <goods-row label="散件" :span="8"
+                               v-show="packageDto.conversionCount" v-if="index===0">
+                      {{ packageDto.conversionCount }}
+                      <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
+                            v-show="packageDto.conversionCount"></dict> / <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict>
+                    </goods-row>
+                  </span>
                 </el-col>
               </el-row>
 
@@ -322,7 +321,8 @@
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
                   [ 疾控专用 ]
                 </el-col>
-                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='2'">
+                <el-col :span="4" class="text-right" style="font-size: 12px"
+                        v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                   [ 器械专用 ]
                 </el-col>
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
@@ -335,21 +335,23 @@
                              v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.chemicalName }}
                   </goods-row>
-                  <goods-row label="器械生产许可证号" :span="12" v-if="data.goodsDto.typeId==='2'">
+                  <goods-row label="器械生产许可证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                     {{ data.goodsDto.propertyMap.productionLicense }}
                   </goods-row>
-                  <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId==='2'">
+                  <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                     {{ data.goodsDto.propertyMap.productionLicenseValidity | date }}
                   </goods-row>
-                  <goods-row label="厂家备案凭证号" :span="12" v-if="data.goodsDto.typeId==='2'||data.goodsDto.typeId==='3'">
+                  <goods-row label="厂家备案凭证号" :span="12"
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.recordNumber
                     }}
                   </goods-row>
                   <goods-row label="注册证书/备案凭证号" :span="12"
-                             v-if="data.goodsDto.typeId==='2'||data.goodsDto.typeId==='3'">
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.registrationRecordNumber }}
                   </goods-row>
-                  <goods-row label="备案凭证号有效期" :span="12" v-if="data.goodsDto.typeId==='2'||data.goodsDto.typeId==='3'">
+                  <goods-row label="备案凭证号有效期" :span="12"
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.goodsRecordNOValidity | date }}
                   </goods-row>
                   <goods-row label="OTC标志" :span="12" v-if="data.goodsDto.typeId==='0'">
@@ -387,9 +389,9 @@
                     {{ data.goodsDto.propertyMap.instructionsCount
                     }}
                   </goods-row>
-                  <goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">
-                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
-                  </goods-row>
+                  <!--<goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">-->
+                  <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                  <!--</goods-row>-->
                   <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
                   </goods-row>
@@ -400,7 +402,9 @@
                 <el-col :span="4" class="text-right" style="font-size: 12px">
                   [ 附件 ]
                 </el-col>
-                <el-col :span="12">
+              </el-row>
+              <el-row>
+                <el-col :span="12" style="padding-left:120px;" v-if="data.goodsDto">
                   <attachment-lists attachmentIdList="" :objectId="data.goodsDto.id"
                                     :objectType="'goodsDocument'"
                                     :permission="'goods-attachment-download'"></attachment-lists>
@@ -408,7 +412,7 @@
               </el-row>
               <div class="border-show" v-show="combinationList.length>0"></div>
               <el-row v-show="combinationList.length>0">
-                <el-col :span="3" class="text-right" style="font-size: 12px">
+                <el-col :span="4" class="text-right" style="font-size: 12px">
                   [ 组合明细 ]
                 </el-col>
               </el-row>
@@ -444,25 +448,28 @@
   import attachmentLists from './../../../common/attachmentList.vue';
 
   export default {
-    components: {goodsPart, goodsRow, attachmentLists},
+    components: {
+      goodsPart, goodsRow, attachmentLists
+    },
     data: function () {
       return {
         showRight: false,
-        showTypeRight: false,
         showTypeSearch: false,
-        showSearch: false,
-        vaccineType: utils.vaccineType,
+        vaccineType: {
+          0: {'title': '正常', 'num': '', 'status': true, 'auditedStatus': '1'},
+          1: {'title': '停用', 'num': '', 'status': false}
+        },
         activeStatus: 0,
         data: {},
         combinationList: [],
-        typeList: [],
-        showTypeList: [],
+        orgGoodsList: [],
         typeTxt: '',
         form: {},
         action: '',
         currentItem: {},
         filters: {
-          status: '1'
+          status: true,
+          auditedStatus: '1'
         },
         typePager: {
           currentPage: 1,
@@ -472,7 +479,7 @@
         }
       };
     },
-    mounted() {
+    mounted () {
       this.$emit('loaded');
       this.getGoodsList(1);
     },
@@ -481,7 +488,7 @@
         this.getGoodsList(1);
       },
       filters: {
-        handler() {
+        handler () {
           this.getGoodsList(1);
         },
         deep: true
@@ -490,16 +497,16 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 25) + 'px';
+        height = (height - 25);
         return height;
       }
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       handlePreview: function (id) {
         this.$store.commit('changeAttachment', id);
-      },
-      isLocked: function (item) {
-        return item.auditedStatus === '3' && item.auditedBy !== this.$store.state.user.userId;
       },
       resetRightBox: function () {
         this.showRight = false;
@@ -531,6 +538,8 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getGoodsList: function (pageNo, isContinue = false) {
+        this.data = {};
+        this.combinationList = [];
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -538,20 +547,29 @@
           keyWord: this.typeTxt,
           deleteFlag: false
         }, this.filters);
-        Vaccine.querySecondVaccine(params).then(res => {
+        Vaccine.query(params).then(res => {
+          if (params.keyWord !== this.typeTxt) return;
+          this.$store.commit('initBottomLoading', false);
+
           if (isContinue) {
-            this.showTypeList = this.showTypeList.concat(res.data.list);
+            this.orgGoodsList = this.orgGoodsList.concat(res.data.list);
           } else {
-            this.showTypeList = res.data.list;
-            this.typeList = res.data.list;
-            this.currentItem = Object.assign({orgGoodsDto: {}, list: []}, this.showTypeList[0]);// , this.showTypeList[0]
+            this.orgGoodsList = res.data.list;
+            this.currentItem = Object.assign({orgGoodsDto: {}, list: []}, this.orgGoodsList[0]);
           }
-          this.data.id = '';
           this.typePager.totalPage = res.data.totalPage;
+          this.queryStatusNum(params);
           this.queryOrgGoods();
         });
       },
-      queryOrgGoods() {
+      queryStatusNum: function (params) {
+        Vaccine.queryStateNum(params).then(res => {
+          let data = res.data;
+          this.vaccineType[0].num = data['normal'];
+          this.vaccineType[1].num = data['disable'];
+        });
+      },
+      queryOrgGoods () {
         let id = this.currentItem.orgGoodsDto.id;
         if (!id) return;
         Vaccine.queryVaccineDetail(id).then(res => {
@@ -568,6 +586,7 @@
         this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice.toString());
         this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice.toString());
         this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice.toString());
+        this.form.combinationList = this.combinationList;
         this.showRight = true;
       },
       forbid: function () {
@@ -578,7 +597,7 @@
         }).then(() => {
           let self = this;
           let item = {};
-          self.showTypeList.forEach(function (val) {
+          self.orgGoodsList.forEach(function (val) {
             if (self.data.id === val.orgGoodsDto.id) {
               item = val;
             }
@@ -601,7 +620,7 @@
         }).then(() => {
           let self = this;
           let item = {};
-          self.showTypeList.forEach(function (val) {
+          self.orgGoodsList.forEach(function (val) {
             if (self.data.id === val.orgGoodsDto.id) {
               item = val;
             }
@@ -616,33 +635,6 @@
           });
         });
       },
-      remove: function () {
-        this.$confirm('确认删除疫苗"' + this.data.name + '"?', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          let name = this.data.name;
-          Vaccine.delete(this.data.id).then(() => {
-            this.data = {};
-            this.getGoodsList(1);
-            this.$notify.success({
-              title: '成功',
-              message: '已成功删除"' + name + '"'
-            });
-          });
-        });
-      },
-      removeType: function (item) {
-        Vaccine.delete(item.orgGoodsDto.id).then(() => {
-          this.data = {};
-          this.getGoodsList(1);
-          this.$notify.success({
-            title: '成功',
-            message: '已成功删除疫苗"' + item.orgGoodsDto.name + '"'
-          });
-        });
-      },
       showType: function (item) {
         this.currentItem = item;
         this.queryOrgGoods();
@@ -650,6 +642,7 @@
       changeType: function (key, item) {// 根据当前选中的标签，重置状态等相关参数。
         this.activeStatus = key;
         this.filters.status = item.status;
+        this.filters.auditedStatus = item.auditedStatus;
       },
       onSubmit: function (item) {
         if (this.action === 'add') {
@@ -657,9 +650,9 @@
           this.showRight = false;
         } else {
           let self = this;
-          self.showTypeList.forEach(function (val, index) {
+          self.orgGoodsList.forEach(function (val, index) {
             if (item.orgGoodsDto.id === val.orgGoodsDto.id) {
-              self.showTypeList.splice(index, 1, item);
+              self.orgGoodsList.splice(index, 1, item);
               self.data = item.orgGoodsDto;
               self.currentItem = item;
               self.combinationList = item.list;

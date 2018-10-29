@@ -1,0 +1,7 @@
+/* 改变主题色变量 */
+$right-close: #409EFF;
+$primary-color: $right-close;
+
+@import "~@dtop/dtop-web-common/packages/theme-chalk/index";
+
+@import "card-box";

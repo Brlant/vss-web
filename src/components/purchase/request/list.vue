@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -22,16 +22,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .oms-row {
     font-size: 14px;
     margin-bottom: 10px;
@@ -48,7 +38,7 @@
         <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
              v-for="(item,key) in requestType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
         <span class="pull-right" style="margin-top: 8px">
            <perm label="cargo-signal-add">
@@ -60,7 +50,7 @@
       </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
             <h2 class="header">
           <span class="pull-right">
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -86,8 +76,11 @@
                   </div>
                 </li>
               </ul>
-              <div class="btn-left-list-more" @click.stop="getOrgMore">
-                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              <div class="btn-left-list-more">
+                <bottom-loading></bottom-loading>
+                <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                  <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+                </div>
               </div>
             </div>
           </div>
@@ -134,8 +127,11 @@
                       {{currentOrder.demandTime | date }}
                     </oms-row>
                     <oms-row label="接种点仓库">
-                      {{currentOrder.warehouseName}}
+                      {{currentOrder.warehouseAddress}}
                     </oms-row>
+                    <el-row>
+                      <oms-row label="备注">{{ currentOrder.remark }}</oms-row>
+                    </el-row>
                   </el-col>
                   <el-col :span="16">
                     <oms-row label="申请人">
@@ -161,7 +157,8 @@
                      style="margin-top: 10px">
                 <thead>
                 <tr>
-                  <th style="width: 300px">货品名称</th>
+                  <th style="width: 240px">货品名称</th>
+                  <th>规格</th>
                   <th>单价</th>
                   <th>申请数量</th>
                   <th>申请金额</th>
@@ -172,6 +169,9 @@
                 <tr v-for="row in currentOrder.detailDtoList">
                   <td>
                     {{row.goodsName}}
+                  </td>
+                  <td>
+                    <span>{{ row.specification }}</span>
                   </td>
                   <td>
                     <span v-if="row.price">￥{{row.price | formatMoney}}</span>
@@ -193,6 +193,7 @@
                 </tr>
                 <tr>
                   <th style="width: 300px"></th>
+                  <th></th>
                   <th></th>
                   <th>
                     <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
@@ -231,7 +232,7 @@
         dataRows: [],
         showTypeList: [],
         requestType: utils.requestType,
-        activeStatus: 0,
+        activeStatus: 1,
         filters: {
           status: '',
           keyWord: ''
@@ -275,6 +276,7 @@
     watch: {
       filters: {
         handler: function () {
+          this.currentItem = {};
           this.currentOrder = {};
           this.getOrgsList(1);
         },
@@ -287,6 +289,9 @@
       }
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       resetRightBox: function () {
         this.showRight = false;
         this.index = 0;
@@ -295,8 +300,6 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
-        this.currentItem = {};
-        this.currentOrder = {};
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
         this.typePager.currentPage = pageNo;
@@ -306,6 +309,8 @@
           cdcId: orgId
         }, this.filters);
         pullSignal.query(params).then(res => {
+          this.$store.commit('initBottomLoading', false);
+
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
@@ -332,7 +337,7 @@
           cdcId: this.user.userCompanyAddress
         }, this.filters);
         pullSignal.queryCount(params).then(res => {
-          this.requestType[0].num = res.data['all'];
+          // this.requestType[0].num = res.data['all'];
           this.requestType[1].num = res.data['pending-audit'];
           this.requestType[2].num = res.data['audited'];
           this.requestType[3].num = res.data['create-wave'];
@@ -377,6 +382,8 @@
             this.$notify.success({
               message: '已成功取消申请单'
             });
+            this.currentItem = {};
+            this.currentOrder = {};
             this.getOrgsList(1);
           }).catch(error => {
             this.$notify.error({
@@ -395,6 +402,8 @@
             this.$notify.success({
               message: '申请单审核通过'
             });
+            this.currentItem = {};
+            this.currentOrder = {};
             this.getOrgsList(1);
           }).catch(error => {
             this.$notify.error({

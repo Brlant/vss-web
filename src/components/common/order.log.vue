@@ -1,4 +1,4 @@
-<style lang="less">
+<style lang="scss">
   .order-cost-part {
     padding: 0 8px;
     margin-bottom: 20px;
@@ -38,7 +38,7 @@
             </el-col>
             <el-col :span="18"><strong>{{log.actionTitle}}</strong>
               <el-tooltip class="item" effect="dark" :content="log.operatorOrgName ? log.operatorOrgName : '平台用户' "
-                          placement="right">
+                          placement="right" v-show="log.operatorName">
                 <span class="font-gray">[{{log.operatorName}}]</span>
               </el-tooltip>
             </el-col>
@@ -54,12 +54,8 @@
 </template>
 <script>
   import { http } from '@/resources';
-  import { TimelineItem, Timeline } from './timeline/index.js';
 
   export default {
-    components: {
-      TimelineItem, Timeline
-    },
     props: {
       currentOrder: {
         type: Object,

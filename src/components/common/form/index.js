@@ -1,4 +1,4 @@
-import OmsElForm from './src/form.vue';
+import OmsElForm from './src/form';
 
 /* istanbul ignore next */
 OmsElForm.install = function (Vue) {

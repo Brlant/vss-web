@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import "../../assets/mixins";
   .content-part {
     .content-right {
@@ -24,7 +24,7 @@
       background: #ffffff;
     }
     &:nth-child(even) {
-      background: @dialog-left-bg;
+      background: $dialog-left-bg;
     }
   }
 
@@ -45,12 +45,16 @@
             <oms-row label="货主货品名称" :span="span">{{currentItem.goodsName }}</oms-row>
             <oms-row label="生产厂商" :span="span">{{ currentItem.factoryName }}</oms-row>
             <oms-row label="批号" :span="span">{{ currentItem.batchNumber }}</oms-row>
+            <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
           </el-col>
           <el-col :span="12">
-            <oms-row label="可用库存" :span="span" v-show="orgLevel !== 3">{{ currentItem.availableCount }}</oms-row>
-            <oms-row label="实际库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
-            <oms-row label="在途库存" :span="span" v-show="orgLevel !== 3">{{ currentItem.transitCount }}</oms-row>
-            <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
+            <oms-row label="合格业务库存" :span="span">{{ currentItem.availableCount }}</oms-row>
+            <oms-row label="不合格业务库存" :span="span">{{ currentItem.unqualifiedBizCount }}</oms-row>
+            <oms-row label="业务停销" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
+            <oms-row label="合格实物库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
+            <oms-row label="不合格实物库存" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
+            <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
+            <oms-row label="库存总数" :span="span">{{ currentItem.totalCount }}</oms-row>
           </el-col>
         </el-row>
         <table class="table clearfix">
@@ -96,17 +100,11 @@
   import { http } from '@/resources';
 
   export default {
-    props: ['currentItem'],
+    props: ['currentItem', 'isShowLock'],
     data () {
       return {
         loadingData: false,
         storeDetails: [],
-        packSizeTyps: [
-          '大包装',
-          '中包装',
-          '小包装',
-          '散件'
-        ],
         span: 9
       };
     },
@@ -129,12 +127,6 @@
           this.loadingData = false;
           this.storeDetails = res.data.list;
         });
-      },
-      formatSize (size) {
-        return size === 0 ? '大包装'
-          : size === 1 ? '中包装'
-            : size === 2 ? '小包装'
-              : size === 3 ? '散件' : '';
       }
     }
   };

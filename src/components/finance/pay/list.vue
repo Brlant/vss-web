@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
   @import "../../../assets/mixins";
 
   .el-form .el-select {
@@ -20,16 +20,6 @@
     margin-bottom: 20px;
     .font-bold {
       font-size: 14px;
-    }
-  }
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
     }
   }
 
@@ -60,6 +50,7 @@
 
   .order-list-status .status-item.active, .order-list-status .status-item:hover {
     height: 40px;
+    width: 160px;
   }
 
   .payForm {
@@ -67,9 +58,13 @@
       margin-bottom: 10px;
     }
   }
+
+  .d-table > div.d-table-left {
+    width: 220px;
+  }
 </style>
 <template>
-  <div>
+  <div class="pay-part">
     <div class="container">
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item active"
@@ -78,23 +73,24 @@
           <div class="title">{{item.title}}<span class="status-num">￥{{item.num | formatMoney }}</span></div>
         </div>
       </div>
-      <div class="d-table" style="margin-top: 20px">
+      <div class="d-table-flex" style="margin-top: 20px">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-            <h2 class="header">
+          <h2 class="header">
             <span class="pull-right">
                 <a href="#" class="btn-circle" @click.prevent="searchType"><i
                   class="el-icon-t-search"></i> </a>
             </span>
-              <!--<span class="pull-right" style="margin-right: 8px">-->
-              <!--<perm label="accounts-payable-add">-->
-              <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
-              <!--<i class="el-icon-t-plus"></i>-->
-              <!--</a>-->
-              <!--</perm>-->
-              <!--</span>-->
-              所有应付款
-            </h2>
+            <!--<span class="pull-right" style="margin-right: 8px">-->
+            <!--<perm label="accounts-payable-add">-->
+            <!--<a href="#" class="btn-circle" @click.stop.prevent="addDetail">-->
+            <!--<i class="el-icon-t-plus"></i>-->
+            <!--</a>-->
+            <!--</perm>-->
+            <!--</span>-->
+            所有应付款
+          </h2>
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
+
             <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
@@ -113,8 +109,11 @@
                   </div>
                 </li>
               </ul>
-              <div class="btn-left-list-more" @click.stop="getOrgMore">
-                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              <div class="btn-left-list-more">
+                <bottom-loading></bottom-loading>
+                <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                  <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+                </div>
               </div>
             </div>
           </div>
@@ -130,7 +129,7 @@
           <div v-if="!currentItem.id">
             <div class="empty-info">暂无信息</div>
           </div>
-          <div v-else="" class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div v-else="" class="d-table-col-wrap" :style="'height:'+bodyHeight   + 'px'">
             <div class="content-body clearfix">
               <el-row>
                 <el-col :span="15">
@@ -152,10 +151,10 @@
               </el-row>
             </div>
             <div>
-              <el-form class="payForm" ref="payForm" :inline="true" onsubmit="return false">
-                <el-form-item label="货品名称">
+              <el-form class="payForm" ref="payForm" onsubmit="return false" label-width="80px">
+                <el-form-item label="货品">
                   <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                             :remote-method="searchProduct" @click.native.once="searchProduct('')" :clearable="true"
+                             :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
                     <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
                                :label="item.orgGoodsDto.name"
@@ -165,37 +164,43 @@
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
+                        <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                </span>
                       </div>
                     </el-option>
                   </el-select>
                 </el-form-item>
-                <el-form-item label="发生时间">
-                  <el-date-picker
-                    v-model="createTimes"
-                    type="datetimerange"
-                    placeholder="请选择">
-                  </el-date-picker>
-                </el-form-item>
-                <el-form-item label="是否付清">
-                  <el-switch
-                    v-model="searchCondition.status"
-                    on-text="是"
-                    off-text="否"
-                    on-value="1"
-                    off-value="0"
-                    active-color="#13ce66"
-                    inactive-color="#ff4949">
-                  </el-switch>
-                </el-form-item>
-                <el-form-item style="margin-left: 10px">
-                  <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
-                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                </el-form-item>
+                <el-row>
+                  <el-col :span="13">
+                    <el-form-item label="发生时间">
+                      <el-date-picker
+                        v-model="createTimes"
+                        type="daterange"
+                        placeholder="请选择">
+                      </el-date-picker>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="6">
+                    <el-form-item label="是否付清" label-width="80px">
+                      <el-radio-group v-model="searchCondition.status">
+                        <el-radio label="1">是</el-radio>
+                        <el-radio label="0">否</el-radio>
+                      </el-radio-group>
+                    </el-form-item>
+                  </el-col>
+                  <el-col :span="5">
+                    <el-form-item label-width="10px">
+                      <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                      <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                    </el-form-item>
+                  </el-col>
+                </el-row>
               </el-form>
               <!--<span class="pull-right" style="margin-top: 8px">-->
               <!--<span class="btn-search-toggle open" v-show="showSearch">-->
@@ -209,25 +214,31 @@
               <!--</span>-->
             </div>
             <el-table :data="payDetails" class="header-list" border
-                      :header-row-class-name="'headerClass'" v-loading="loadingData" maxHeight="600">
-              <el-table-column prop="orderNo" label="订单号" :sortable="true"></el-table-column>
-              <el-table-column prop="goodsName" label="货品名称" :sortable="true" width="180"></el-table-column>
-              <el-table-column prop="createTime" label="发生时间" :sortable="true">
+                      :header-row-class-name="'headerClass'" v-loading="loadingData">
+              <el-table-column prop="orderNo" label="订单号" min-width="85" :sortable="true"></el-table-column>
+              <el-table-column prop="goodsName" label="货品名称" :sortable="true" min-width="120"></el-table-column>
+              <el-table-column prop="goodsCount" label="数量" width="80" :sortable="true"></el-table-column>
+              <el-table-column prop="createTime" label="发生时间" min-width="110" :sortable="true">
                 <template slot-scope="scope">
-                  {{ scope.row.createTime | minute }}
+                  {{ scope.row.createTime | date }}
                 </template>
               </el-table-column>
-              <el-table-column prop="billAmount" label="应付金额" :sortable="true">
+              <el-table-column prop="billAmount" label="应付金额" width="110" :sortable="true">
                 <template slot-scope="scope">
-                  ￥{{ scope.row.billAmount | formatMoney}}
+                  {{ scope.row.billAmount | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="salePrice" label="待付金额" :sortable="true">
+              <el-table-column prop="salePrice" label="待付金额" width="100" :sortable="true">
                 <template slot-scope="scope">
-                  ￥{{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
+                  {{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="saleMoney" label="状态" :sortable="true" :filters="filterStatus"
+              <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100" v-if="level !== 3">
+                <template slot-scope="scope">
+                  {{ scope.row.invoiceId ? '是' : '否' }}
+                </template>
+              </el-table-column>
+              <el-table-column prop="saleMoney" label="状态" width="80" :sortable="true" :filters="filterStatus"
                                :filter-method="filterStatusMethod">
                 <template slot-scope="scope">
                   {{statusTitle(scope.row.status)}}
@@ -264,7 +275,7 @@
 
 </template>
 <script>
-  import { pay, OrgGoods, Vaccine } from '@/resources';
+  import { pay, Vaccine } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.in.vue';
@@ -295,7 +306,7 @@
           orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
-          status: '0'
+          status: ''
         },
         createTimes: '',
         action: 'add',
@@ -331,10 +342,15 @@
     },
     computed: {
       bodyHeight: function () {
-        return this.$store.state.bodyHeight;
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = (height - 30);
+        return height;
       },
       user () {
         return this.$store.state.user;
+      },
+      level () {
+        return this.$store.state.orgLevel;
       }
     },
     mounted () {
@@ -361,6 +377,9 @@
       }
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       statusTitle: function (status) {
         if (status) {
           let title = '';
@@ -392,6 +411,9 @@
           pageSize: this.pager.pageSize
         }, this.filters);
         pay.query(params).then(res => {
+          if (params.keyWord !== this.filters.keyWord) return;
+          this.$store.commit('initBottomLoading', false);
+
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
@@ -422,14 +444,29 @@
         this.resetRightBox();
       },
       searchProduct (keyWord) {
-        let params = Object.assign({}, {
-          keyWord: keyWord
-        });
         let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
-          this.goodesList = res.data.list;
-        });
+        if (level !== 3) {
+          let params = Object.assign({}, {
+            keyWord: keyWord,
+            salesFirm: this.currentItem.remitteeId
+          });
+          let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
+          Vaccine[api](params).then(res => {
+            this.goodesList = res.data.list;
+          });
+        } else {
+          let o1 = this.$store.state.user.userCompanyAddress;
+          let o2 = this.currentItem.remitteeId;
+          if (!o1 || !o2) return;
+          let params = {
+            povId: o1,
+            cdcId: o2,
+            keyWord: keyWord
+          };
+          this.$http.get('/erp-stock/bill/goods-list', {params}).then(res => {
+            this.goodesList = res.data.list;
+          });
+        }
       },
       getDetail: function (pageNo) {
         this.payDetails = [];
@@ -456,7 +493,7 @@
           orgGoodsId: '',
           createStartTime: '',
           createEndTime: '',
-          status: '0'
+          status: ''
         };
         this.createTimes = '';
         Object.assign(this.searchCondition, temp);
@@ -467,11 +504,13 @@
       },
       showType: function (item) {
         this.currentItem = item;
+        this.goodesList = [];
         this.getDetail(1);
+        this.resetSearchForm();
       },
       showDetail (item) {
         this.orderId = item.orderId;
-        this.currentDetail = item;
+        this.currentDetail = item.remitteeId;
         this.showPart = true;
       },
       edit (row) {
@@ -485,7 +524,7 @@
         this.getOrgsList();
       },
       formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }
   };

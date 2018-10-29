@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .el-form .el-select {
     display: block;
   }
@@ -28,7 +28,7 @@
           </div>
           <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
           </div>
         </el-option>
@@ -52,7 +52,8 @@
       </el-select>
     </el-form-item>
     <el-form-item label="默认地址" prop="isuse">
-      <el-switch on-text="是" off-text="否" on-color="#13ce66" off-color="#ff4949" v-model="form.default"></el-switch>
+      <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
+                 v-model="form.default"></el-switch>
     </el-form-item>
     <el-form-item label-width="120px">
       <el-button type="primary" @click="onSubmit('storeform')" :disabled="doing">保存</el-button>
@@ -61,7 +62,7 @@
   </el-form>
 </template>
 <script>
-  import {Address, BaseInfo} from '../../../../resources';
+  import { Address, BaseInfo } from '../../../../resources';
   import utils from './../../../../tools/utils';
 
   export default {
@@ -139,7 +140,7 @@
 
     computed: {
       'dictAddress': function () {
-        return this.$store.state.dict['orgAddress'];
+        return this.$getDict('orgAddress');
       }
     },
     methods: {
@@ -155,25 +156,13 @@
         };
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
-          if (this.action === 'edit') {
-            let isExist = this.orgList.some(item => this.form.orgList.id === item.id);
-            if (!isExist) {
-              this.orgList.push({
-                id: this.form.salesFirm,
-                name: this.form.salesFirmName
-              });
-            }
-          }
         });
       },
       initFormValue: function () {
         this.selectOptions = [];
         this.orgList = [];
         if (this.formItem.id) {
-          this.orgList.push({
-            id: this.formItem.warehouseSourceFirm,
-            name: this.formItem.warehouseSourceFirmName
-          });
+          this.getOrgs(this.formItem.warehouseSourceFirmName);
           this.form = Object.assign({}, this.formItem);
           this.selectOptions.push(this.form.province);
           this.selectOptions.push(this.form.city);

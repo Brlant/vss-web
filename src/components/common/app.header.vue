@@ -1,5 +1,5 @@
-<style lang="less" scoped=''>
-  @import "../../assets/mixins.less";
+<style lang="scss" scoped=''>
+  @import "../../assets/mixins.scss";
 
   .main-header {
     background: #607D8B;
@@ -7,7 +7,7 @@
     top: 0;
     left: 0;
     right: 0;
-    height: @topMenuHeight;
+    height: $topMenuHeight;
     z-index: 800;
     box-shadow: 0 5px 5px rgba(221, 221, 221, 0.22);
     ul, li {
@@ -21,8 +21,8 @@
 
     .top-logo {
       vertical-align: middle;
-      line-height: @topMenuHeight;
-      height: @topMenuHeight;
+      line-height: $topMenuHeight;
+      height: $topMenuHeight;
       margin-left: 15px;
       img {
         vertical-align: middle;
@@ -86,7 +86,7 @@
       margin: 10px 0;
     }
     a {
-      color: @activeColor;
+      color: $activeColor;
       font-size: 12px;
     }
   }
@@ -106,7 +106,7 @@
 
   .main-nav {
     position: fixed;
-    top: @topMenuHeight;
+    top: $topMenuHeight;
     background: rgb(238, 243, 246);
     border-right: 1px solid #f1f1f1;
     bottom: 0;
@@ -124,6 +124,17 @@
         min-width: 40px;
       }
     }
+    .main-nav-scrollbar {
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 30px;
+      left: 0;
+    }
+    .main-nav-scrollbar /deep/ .el-scrollbar__wrap {
+      overflow: hidden;
+      overflow-y: auto;
+    }
     .change-collapse {
       position: absolute;
       right: 0;
@@ -132,7 +143,7 @@
       text-align: center;
       padding: 5px;
       cursor: pointer;
-      background: rgb(238, 243, 246, 0.5);
+      background: rgba(238, 243, 246, 0.5);
       &:hover {
         background: #cbdce6;
       }
@@ -194,13 +205,13 @@
     margin-bottom: 5px;
   }
 
+  a:focus {
+    outline: none;
+  }
 </style>
 
 <style>
-  .el-menu-item, .el-submenu__title {
-    height: 46px;
-    line-height: 46px;
-  }
+
 </style>
 <template>
   <div>
@@ -208,7 +219,7 @@
       <div>
         <div class="top-logo">
           <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
-            <span class="logo-span" :style="'color:'+skin.color">疾病预防控制中心疫苗管理系统</span>
+            <span class="logo-span" :style="'color:'+skin.color">疫苗供应链管理系统</span>
           </router-link>
         </div>
         <div class="top-right">
@@ -224,8 +235,8 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>-->
-            <span v-show="level !== 1">
-              <el-tag type="gray" v-show="level">{{ filterLevel(level) }}</el-tag>
+            <span v-show="level > 1 ">
+              <el-tag v-show="level" type="success" class="tag-title">{{ filterLevel(level) }}</el-tag>
               <span class="org-title">{{orgName}}</span>
             </span>
             <el-dropdown trigger="click">
@@ -248,14 +259,15 @@
                   <div class="last-login">上次登录时间:{{user.userLastLoginTime | time}}</div>
                   <div class="wechat-info" v-if="weChatInfo.nickname">
                     <img v-if="weChatInfo.avatarUrl" class="weChat-img" :src="weChatInfo.avatarUrl">
+                    <img v-else src="/static/img/logo_user_default.png" class="weChat-img"/>
                     <span class="wechat-nick"
                           v-if="weChatInfo.nickname">微信：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
                       }}<span v-if="weChatInfo.nickname && weChatInfo.nickname.length > 3">...</span></span>
-                    <a class="btn-wechat" href="#" @click.stop.pre="unbind" v-if="weChatInfo.nickname">(解绑)</a>
+                    <a class="btn-wechat" href="#" @click.stop.prevent="unbind" v-if="weChatInfo.nickname">(解绑)</a>
                   </div>
                   <div class="text-right clearfix">
                     <router-link to="/resetpsw">重置密码</router-link>
-                    <a href="#" @click.stop.pre="logout">退出</a>
+                    <a href="#" @click.stop.prevent="logout">退出</a>
                   </div>
                 </div>
               </el-dropdown-menu>
@@ -265,30 +277,34 @@
       </div>
     </header>
     <div class="main-nav" :style="'width:'+menuWidth">
-      <div class="menu-wrap" :style="isCollapse?'':'overflow-y:auto;'">
+      <el-scrollbar
+        tag="div"
+        ref="scrollbar"
+        class="main-nav-scrollbar"
+        v-show="menu.length > 0">
         <el-menu :default-active="$route.path" :collapse="isCollapse" :router="true" :unique-opened="false"
                  :default-openeds="defaultOpenMenus" style="margin-bottom: 27px">
           <template v-for="item in menu">
-            <el-submenu :index="item.path" :key="item.meta.moduleId" v-if="item.subMenu.length>0">
+            <el-submenu :index="item.path" v-if="item.children.length>0">
               <template slot="title">
                 <i :class="'el-icon-t-'+item.meta.icon"></i>
                 <span slot="title">{{item.meta.title}}</span>
               </template>
-              <el-menu-item :index="child.path" v-for="child in item.subMenu" :key="child.path">
+              <el-menu-item :index="child.path" v-for="child in item.children" :key="child.path">
                 {{child.meta.title}}
               </el-menu-item>
             </el-submenu>
-            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else-if="item.path">
+            <el-menu-item :index="item.path" v-else-if="item.path">
               <i :class="'el-icon-t-'+item.meta.icon"></i>
               <span slot="title">{{item.meta.title}}</span>
             </el-menu-item>
-            <el-menu-item :index="item.path" :key="item.meta.moduleId" v-else="!item.path" @click="$router.push('/')">
+            <el-menu-item :index="item.path" v-else="!item.path" @click="$router.push('/')">
               <i :class="'el-icon-t-'+item.meta.icon"></i>
               <span slot="title">{{item.meta.title}}</span>
             </el-menu-item>
           </template>
         </el-menu>
-      </div>
+      </el-scrollbar>
       <div class="change-collapse" @click="changeMenuCollapse">
         <f-a :name="isCollapse?'spread':'collapse'"></f-a>
       </div>
@@ -302,23 +318,22 @@
 </template>
 
 <script>
-  import {Auth, cerpAction} from '../../resources';
+  import { Auth, cerpAction } from '../../resources';
   import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
-  import route from '../../route.js';
 
   export default {
     components: {
       omsUploadPicture
     },
     props: ['toRoute', 'level'],
-    data() {
+    data () {
       return {
         activeId: this.getGroupId(),
         logo_pic: logo_pic,
         isCollapse: false,
         skinList: [
-          {color: '#fff', background: '#3399cc', name: '天空灰'},
+          {color: '#fff', background: '#409EFF', name: '天空灰'},
           {color: '#333', background: '#fff', name: '透明白'},
           {color: '#fff', background: '#9c27b0', name: '贵族紫'},
           {color: '#fff', background: '#3f51b5', name: '工业蓝'},
@@ -333,27 +348,24 @@
         return this.$store.state.bodySize.left;
       },
       user: function () {
-
         return Object.assign({}, {userName: '', userAccount: '', userLastLoginTime: 0}, this.$store.state.user);
       },
       menu: function () {
-        let menuArr = route[0].children.filter(item => item.meta.moduleId && (item.meta.perm === 'show' ||
-          this.$store.state.permissions.includes(item.meta.perm)));
-        menuArr.forEach(item => {
-          item.children.forEach(i => {
+        let menu = this.$parent.$parent.menuData;
+        menu.forEach(i => {
+          i.children.forEach(i => {
             i.path = i.path.replace(/:id/, 'list');
-          });item.subMenu = item.children.filter(child => child.meta.perm === 'show' || this.$store.state.permissions.includes(child.meta.perm));
-          }
-        );
-        return menuArr;
+          });
+        });
+        return menu;
       },
       activePath: function () {
         return this.$route.path;
       },
-      orgName() {
+      orgName () {
         return this.$store.state.orgName;
       },
-      weChatInfo() {
+      weChatInfo () {
         return this.$store.state.weChatInfo;
       }
     },
@@ -383,9 +395,10 @@
       logout: function () {
         window.localStorage.setItem('lastUrl', window.location.href);
         Auth.logout().then(() => {
-          window.localStorage.setItem('userId', this.$store.state.user.userId);
-          //          window.localStorage.removeItem('user');
-          return this.$router.replace('/login');
+          location.reload();
+          // window.localStorage.setItem('userId', this.$store.state.user.userId);
+          // //          window.localStorage.removeItem('user');
+          // return this.$router.replace('/login');
         });
       },
       checkSubMenu: function (item) {
@@ -400,10 +413,10 @@
         this.skin = skin;
         window.localStorage.setItem('skin', JSON.stringify(skin));
       },
-      filterLevel(level) {
+      filterLevel (level) {
         return level === 1 ? '市疾控' : level === 2 ? '区疾控' : level === 3 ? '接种点' : '';
       },
-      unbind() {
+      unbind () {
         this.$confirm('是否解除绑定的微信？', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

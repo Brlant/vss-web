@@ -1,7 +1,7 @@
-<style lang="less" scoped>
-  @import "../../../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../../../assets/mixins.scss";
 
-  @leftWidth: 220px;
+  $leftWidth: 220px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
@@ -14,93 +14,15 @@
   }
 
   .content-part {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    overflow: auto;
     .content-left {
-      width: @leftWidth;
-      position: absolute;
-      left: 0;
-      top: 0;
-      bottom: 0;
-      text-align: left;
-      background-color: #eef2f3;
-      > ul {
-        margin: 0;
-      }
-      > h2 {
-        padding: 0 45px;
-        margin: 0;
-        font-size: 18px;
-        font-weight: bold;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        background-color: #eef2f3;
-      }
-      .list-style {
-        cursor: pointer;
-        padding: 10px;
-        text-align: center;
-        span {
-          display: inline-block;
-          padding: 8px 35px;
-        }
-        &.active {
-          span {
-            background-color: @activeColor;
-            border-radius: 20px;
-            color: @activeColorFont
-          }
-        }
-        &:hover {
-          background: #dee9eb
-        }
-
-      }
-
+      text-align: center;
+      width: $leftWidth;
     }
     .content-right {
       > h3 {
-        padding: 0;
-        margin: 0 0 20px;
-        font-size: 18px;
-        font-weight: normal;
-        line-height: 55px;
-        border-bottom: 1px solid #ddd;
-        text-align: center;
-        position: fixed;
-        top: 0;
-        right: 0;
-        left: @leftWidth;
-        background: #fff;
-        z-index: 2;
+        left: $leftWidth;
       }
-      position: absolute;
-      top: 0;
-      left: @leftWidth;
-      right: 0;
-      bottom: 0;
-      overflow: auto;
-      padding-top: 75px;
-      .hide-content {
-        display: none;
-      }
-      .show-content {
-        padding: 0 20px;
-        display: block;
-      }
-    }
-
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 20px;
-      }
-      .el-form-item__label {
-        font-size: 12px
-      }
+      left: $leftWidth;
     }
   }
 
@@ -108,12 +30,6 @@
     display: block;
   }
 
-  .table-product-list {
-    font-size: 12px;
-    > tbody > tr > td, > thead > tr > th {
-      padding: 5px;
-    }
-  }
 
   .order-product-box {
     position: relative;
@@ -151,28 +67,6 @@
 
   }
 
-  .product-list-detail {
-    margin-top: 20px;
-    font-size: 12px;
-    h3 {
-      background: #eee;
-      padding: 10px 15px;
-      font-size: 14px;
-      font-weight: normal;
-    }
-  }
-
-  .select-other-info {
-    color: #999;
-    margin-left: 10px
-  }
-
-  .selected {
-    .select-other-info {
-      color: #ddd
-    }
-  }
-
   .ml15 {
     margin-left: 40px;
   }
@@ -181,50 +75,13 @@
     color: #777
   }
 
-  .el-select-dropdown__item {
-    font-size: 14px;
-    padding: 8px 10px;
-    position: relative;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    color: #48576a;
-    height: auto;
-    line-height: normal;
-    box-sizing: border-box;
-    cursor: pointer;
-  }
 
   .productItem-info {
     float: left;
   }
 
-  .order-good-selects {
-    .el-select-dropdown__item {
-      font-size: 14px;
-      padding: 8px 10px;
-      position: relative;
-      white-space: normal;
-      overflow: hidden;
-      text-overflow: ellipsis;
-      color: rgb(72, 94, 106);
-      height: auto;
-      width: 680px;
-      line-height: 1.5;
-      box-sizing: border-box;
-      cursor: pointer;
-    }
-  }
-
   .ar {
     text-align: right;
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: 520px;
-      height: 70px;
-    }
   }
 
 </style>
@@ -249,8 +106,8 @@
               <el-transfer v-loading="loading"
                            v-model="form.povList"
                            :props="{
-                  key: 'followOrgId',
-                  label: 'followOrgName'
+                  key: 'subordinateId',
+                  label: 'subordinateName'
                 }"
                            filter-placeholder="请输入名称搜索接种点"
                            :data="orgList"
@@ -258,6 +115,7 @@
                            :filter-method="filterMethod"
                            :titles="['未选接种点', '已选接种点']"
                            class="transfer-list"
+                           :render-content="renderFuncPOV"
               >
               </el-transfer>
             </el-form-item>
@@ -270,9 +128,8 @@
     </div>
   </div>
 </template>
-<script>
-  import { Vaccine, BriceGroup, cerpAction, VaccineRights, http } from '@/resources';
-  import utils from '@/tools/utils';
+<script type="text/jsx">
+  import { http, VaccineRights } from '@/resources';
 
   export default {
     props: {
@@ -303,11 +160,11 @@
     watch: {
       formItem (val) {
         this.$refs['d-form'].resetFields();
-        if (val.id) {
+        if (val && val.id) {
           this.title = '编辑疫苗授权';
           this.orgList.push({
-            followOrgId: val.povId,
-            followOrgName: val.povName
+            subordinateId: val.povId,
+            subordinateName: val.povName
           });
           this.prices.push({
             id: val.salePriceGroupId,
@@ -328,18 +185,28 @@
       }
     },
     methods: {
+      renderFuncPOV(h, option) {
+        return (
+          <span title={option.subordinateName}>{ option.subordinateName }</span>
+      );
+      },
       filterPOV: function (query) {// 过滤POV
         let params = Object.assign({}, {
-          keyWord: query
+          keyWord: query,
+          orgGoodsId: this.currentItem.orgGoodsDto.id
         });
         this.loading = true;
-        this.$http.get('erp-org/customer', {params}).then(res => {
+        this.$http.get('/vaccine-authorization/pov/filter', {params}).then(res => {
           this.orgList = res.data;
           this.loading = false;
         });
       },
       filterMethod (query, item) {
-        return item.followOrgName && item.followOrgName.indexOf(query) > -1;
+        if (!query) return true;
+        return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
+          item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
+          item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
+          item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
       },
       onSubmit () {
         this.$refs['d-form'].validate((valid) => {

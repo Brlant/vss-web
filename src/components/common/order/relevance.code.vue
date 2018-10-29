@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import '../../../assets/mixins';
 
   .product-code-list {
@@ -26,7 +26,7 @@
       margin-top: 10px;
       cursor: pointer;
       &:hover a {
-        color: @activeColor;
+        color: $activeColor;
       }
     }
   }
@@ -75,21 +75,61 @@
 </style>
 <template>
   <div>
-    <div>
+    <div v-loading="loadingData">
+      <div class="order-list clearfix">
+        <h2>合计信息</h2>
+        <el-row class="order-list-header t-head" style="margin:0">
+          <el-col :span="8">货品名称</el-col>
+          <el-col :span="4">批号</el-col>
+          <el-col :span="6">生产厂商</el-col>
+          <el-col :span="3">生产日期</el-col>
+          <el-col :span="3">数量</el-col>
+        </el-row>
+        <el-row v-if="!totalInfoList.length">
+          <el-col :span="24">
+            <div class="empty-type-info mini">暂无信息</div>
+          </el-col>
+        </el-row>
+        <div v-else="" class="order-list-body">
+          <div class="order-list-item order-list-item-bg" v-for="item in totalInfoList"
+               style="margin-left: 0;margin-right: 0">
+            <el-row>
+              <el-col :span="8" class="R pt10">
+                <span>{{ item.goodsName }}</span>
+              </el-col>
+              <el-col :span="4" class="pt">
+                <span>{{ item.batchNumber }}</span>
+              </el-col>
+              <el-col :span="6" class="pt">
+                <span>{{ item.factoryName }}</span>
+              </el-col>
+              <el-col :span="3" class="pt">
+                <span>{{ item.productionDate | date}}</span>
+              </el-col>
+              <el-col :span="3" class="pt">
+                <span>{{ item.count }}</span>
+              </el-col>
+            </el-row>
+          </div>
+        </div>
+
+      </div>
       <div style="margin-bottom: 10px; margin-top: 20px;overflow: hidden">
-       <span class="pull-right">
+        <h2 style="display: inline-block">追溯码信息</h2>
+        <span class="pull-right">
            <span class="btn-search-toggle open" v-show="showSearch">
-              <single-input v-model="filters.code" placeholder="请输入追溯码搜索" :showFocus="showSearch"></single-input>
+              <single-input v-model="filters.code" placeholder="请输入追溯码搜索" :showFocus="showSearch"
+                            style="width: 180px;"></single-input>
               <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
            </span>
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-              <f-a name="search"></f-a>
+              <i class="el-icon-t-search"></i>
            </a>
       </span>
       </div>
-      <div class="order-list clearfix" v-loading="loadingData">
+      <div class="order-list clearfix">
 
-        <el-row class="order-list-header t-head" style="margin:0" :gutter="10">
+        <el-row class="order-list-header t-head" style="margin:0">
           <el-col :span="8">追溯码</el-col>
           <el-col :span="8">货品名称</el-col>
           <el-col :span="5">批号</el-col>
@@ -97,9 +137,7 @@
         </el-row>
         <el-row v-if="!traceCodes.length">
           <el-col :span="24">
-            <div class="empty-info">
-              暂无信息
-            </div>
+            <div class="empty-type-info mini">暂无信息</div>
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body">
@@ -116,25 +154,26 @@
                 <span>{{ item.batchNumber }}</span>
               </el-col>
               <el-col :span="3" class="pt">
-                <span>{{ packageType[item.packageScheme] }}</span>
+                <span>{{ packageType[item.packageScheme-1] }}</span>
               </el-col>
             </el-row>
           </div>
         </div>
 
       </div>
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-        <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="getTraceCodes"
-          :current-page="pager.currentPage">
+      <div class="text-center" v-show="(traceCodes.length || pager.currentPage !== 1) && !loadingData">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :current-page="pager.currentPage"
+                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize" layout="total ,sizes, prev, pager, next, jumper"
+                       :total="pager.count">
         </el-pagination>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import { http, OmsAttachment } from '@/resources';
+  import { http } from '@/resources';
+  import utils from '@/tools/utils';
 
   export default {
     props: {
@@ -154,99 +193,59 @@
     data () {
       return {
         loadingData: false,
-        loadingDetailData: false,
-        showSearch: false,
-        codes: [],
-        isCheck: false,
-        downloadData: {},
-        orderAttachment: [],
-        files: [],
+        showSearch: true,
         traceCodes: [],
+        totalTraceCodes: [],
         filters: {
           code: ''
         },
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 10
+          pageSize: parseInt(window.localStorage.getItem('currentPageSize'), 10) || 10
         },
-        packageType: [
-          '大包装',
-          '中包装',
-          '小包装',
-          '小包装'
-        ],
-        doing: false
+        packageType: utils.packageType,
+        doing: false,
+        totalInfoList: []
       };
     },
     watch: {
       index (val) {
         this.filters.code = '';
         if (val !== 8) return;
-        this.files = [];
         this.getTraceCodes(1);
-//        this.queryAttachment();
       },
-      filters: {
-        handler: function () {
-          this.getTraceCodes(1);
-        },
-        deep: true
+      'filters.code' () {
+        this.filterTraceCodes(1);
       }
     },
     methods: {
-      changeFiles (files) {
-        this.files = files;
+      handleSizeChange (val) {
+        this.pager.pageSize = val;
+        window.localStorage.setItem('currentPageSize', val);
+        this.filterTraceCodes(1);
       },
-      showAttachment: function (item) {// 显示预览
-        this.$store.commit('changeAttachment', item.attachmentId);
+      handleCurrentChange (val) {
+        this.filterTraceCodes(val);
       },
-      deleteAttachMentManageItem: function (item) {// 删除附件管理附件
-        OmsAttachment.delete(item.attachmentId).then(() => {
-          this.$notify.success({
-            duration: 2000,
-            title: '成功',
-            message: '已成功删除附件'
-          });
-          this.queryAttachment();
-        });
+      getCurrentList (pageNo) {
+        this.loadingData = true;
+        this.pager.currentPage = pageNo;
+        const {pager} = this;
+        let start = (pageNo - 1) * pager.pageSize;
+        let end = pageNo * pager.pageSize;
+        let code = this.filters.code;
+        this.traceCodes = this.totalTraceCodes.filter(f => !code || code && f.code.includes(code))
+          .slice(start, end > pager.count ? pager.count : end);
+        setTimeout(() => {
+          this.loadingData = false;
+        }, 100);
       },
-      onSubmit () {
-        if (!this.orderAttachment.length) {
-          this.$notify.info({
-            message: '请选择文件'
-          });
-          return;
-        }
-        this.doing = true;
-        http.post(`/code/${this.currentOrder.id}/parse/trace-code`).then(() => {
-          this.$notify.info({
-            message: '解析成功'
-          });
-          this.doing = false;
-          this.queryCodes();
-          this.getTraceCodes(1);
-        }).catch(error => {
-          this.doing = false;
-          this.$notify.error({
-            message: error.response.data && error.response.data.msg || '解析失败'
-          });
-          this.queryCodes();
-          this.getTraceCodes(1);
-        });
-      },
-      queryCodes () {
-        this.loadingDetailData = true;
-        http.get(`/code/${this.currentOrder.id}/trace-code/result`).then(res => {
-          this.isCheck = res.data.result;
-          this.codes = res.data.list;
-          this.loadingDetailData = false;
-        });
-      },
-      queryAttachment () {
-        OmsAttachment.queryOneAttachmentList(this.currentOrder.id, 'traceCode').then(res => {
-          this.orderAttachment = res.data;
-        });
+      filterTraceCodes (pageNo) {
+        let code = this.filters.code;
+        const curTraceCodes = this.totalTraceCodes.filter(f => !code || code && f.code.includes(code));
+        this.pager.count = curTraceCodes.length;
+        this.getCurrentList(pageNo);
       },
       getTraceCodes (pageNo) {
         if (pageNo === 1) {
@@ -256,15 +255,16 @@
         let params = Object.assign({
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          type: this.type
+          type: this.type,
+          sourceOrgId: this.currentOrder.type === '0' ? this.currentOrder.supplierId : this.currentOrder.orgId,
+          directOrgId: this.currentOrder.type === '0' ? this.currentOrder.orgId : this.currentOrder.customerId
         }, this.filters);
         this.loadingData = true;
-        http.get(`/code/${this.currentOrder.id}/trace-code`, {params}).then(res => {
-          this.traceCodes = res.data.list;
-//          this.pager.count = res.data.count;
-          if (this.traceCodes.length === this.pager.pageSize) {
-            this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
-          }
+        // this.currentOrder.orderNo = '201805250001'; // 201805250001
+        http.get(`/code/${this.currentOrder.orderNo}/trace-code/list`, {params}).then(res => {
+          this.totalTraceCodes = res.data.list;
+          this.filterTraceCodes(1);
+          this.totalInfoList = res.data.statisticsList;
           this.loadingData = false;
         });
       }

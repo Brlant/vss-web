@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .margin-left {
     margin-left: 15px;
@@ -71,13 +71,12 @@
     border: 1px solid #eee;
     position: relative;
     cursor: pointer;
-    width: 180px;
+    width: 300px;
     margin: 5px;
     padding: 10px;
     font-size: 12px;
     img {
-      width: 180px;
-      height: 180px;
+      width: 300px;
       display: block;
       background: #ccc;
     }
@@ -101,15 +100,12 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-      <span class="">
-      <i class="el-icon-t-search"></i> 筛选查询
-      </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addType">
         <perm label="purchase-agreement-add">
           <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-plus"></i> </a>添加
         </perm>
       </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
       <i class="el-icon-arrow-up"></i>
       <span v-show="showSearch">收起筛选</span>
       <span v-show="!showSearch">展开筛选</span>
@@ -132,7 +128,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -153,18 +149,19 @@
         <div class="status-item" :class="{'active':key==activeStatus }" v-for="(item,key) in orgType"
              @click="changeType(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span
+            class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="8">疫苗名称</el-col>
           <el-col :span="4">供货厂商</el-col>
           <el-col :span="4">采购单价</el-col>
           <el-col :span="4">协议采购数量</el-col>
           <el-col :span="4">协议有效时间
-            <i class="el-icon-caret-top"  v-if="filters.asc" @click="filters.asc=false"></i>
-            <i class="el-icon-caret-bottom"  v-if="!filters.asc" @click="filters.asc=true"></i>
+            <i class="el-icon-caret-top" v-if="filters.asc" @click="filters.asc=false" style="cursor:pointer;"></i>
+            <i class="el-icon-caret-bottom" v-if="!filters.asc" @click="filters.asc=true" style="cursor:pointer;"></i>
           </el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -189,8 +186,6 @@
                 </div>
                 <div>
                   {{item.orgGoodsName }}
-                  <el-tag type="warning" v-show="item.isOverdue==='1'">即将到期</el-tag>
-                  <el-tag type="danger" v-show="item.isOverdue==='2'">已过期</el-tag>
                 </div>
               </el-col>
               <el-col :span="4">
@@ -211,6 +206,8 @@
               <el-col :span="4">
                 <div>
                   {{ item.expireTime | date}}
+                  <el-tag type="warning" v-show="item.isOverdue==='1'">即将到期</el-tag>
+                  <el-tag type="danger" v-show="item.isOverdue==='2'">已过期</el-tag>
                 </div>
               </el-col>
             </el-row>
@@ -264,8 +261,8 @@
           availabilityStatus: true
         },
         orgType: {
-          0: {'title': '可用', 'num': 0, 'availabilityStatus': true},
-          1: {'title': '停用', 'num': 0, 'availabilityStatus': false}
+          0: {'title': '可用', 'num': '', 'availabilityStatus': true},
+          1: {'title': '停用', 'num': '', 'availabilityStatus': false}
         },
         searchCondition: {
           keyWord: '',
@@ -390,7 +387,7 @@
         this.filters.availabilityStatus = item.availabilityStatus;
       },
       onSubmit: function () {
-        this.getGoodsList(1);
+        this.getGoodsList(this.pager.currentPage);
 //        } else {
 //          let self = this;
 //          self.showTypeList.forEach(function (val, index) {

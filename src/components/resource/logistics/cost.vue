@@ -1,63 +1,4 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .pt {
-    padding-top: 15px;
-  }
-
-  .opera-btn-group {
-
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
+<style lang="scss" scoped="">
   .costs {
     font-size: 16px;
     .oms-row {
@@ -72,6 +13,10 @@
     margin-left: 40px;
     margin-right: 40px;
     margin-bottom: 20px;
+  }
+
+  .d-table > div.d-table-right {
+    padding: 10px 20px;
   }
 </style>
 <template>
@@ -156,8 +101,9 @@
 <script>
   import addForm from './form.vue';
   import secondForm from './secondForm.vue';
-  import {http} from '../../../resources';
+  import { http } from '../../../resources';
   import utils from '../../../tools/utils';
+
   export default {
     components: {
       addForm,

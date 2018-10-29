@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -14,23 +14,24 @@
   .d-table-col-wrap {
     overflow: auto;
   }
-
-  .minor-part {
-    color: #999;
-  }
 </style>
 <template>
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-          <h2 class="header" style="overflow: hidden">
+        <h2 class="header" style="overflow: hidden">
           <span class="pull-right">
+            <perm label="erp-system-account-export">
+            <a href="#" class="btn-circle" @click.prevent="exportFile"
+               style="margin-right: 5px"><i
+              class="el-icon-t-wave"></i> </a>
+              </perm>
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-            账号分配
-          </h2>
+          {{ type === 1 ? '系统账号管理' : '账号分配' }}
+        </h2>
+        <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60) + 'px'" @scroll="scrollLoadingData">
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
@@ -49,15 +50,24 @@
                 </div>
               </li>
             </ul>
-            <div class="btn-left-list-more" @click.stop="getOrgMore">
-              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            <div class="btn-left-list-more">
+              <bottom-loading></bottom-loading>
+              <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-         <span class="pull-right" style="margin-top: 8px">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight  + 'px'">
+          <span class="f-12">用户状态:</span>
+          <el-radio-group v-model="filters.status" size="small">
+            <el-radio-button label="1">正常</el-radio-button>
+            <el-radio-button label="2">停用</el-radio-button>
+            <el-radio-button label="0">未激活</el-radio-button>
+          </el-radio-group>
+          <span class="pull-right" style="margin-top: 8px">
            <span class="btn-search-toggle open" v-show="showSearch">
               <single-input v-model="keyTxt" placeholder="请输入名称搜索" :showFocus="showSearch"></single-input>
               <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
@@ -65,76 +75,78 @@
            <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
               <i class="el-icon-t-search"></i>
            </a>
-           <perm label="erp-account-add">
+           <perm :label="type === 1 ? 'erp-system-account-add' : 'erp-account-add' ">
                 <a href="#" class="btn-circle" @click.stop.prevent="add">
                 <i class="el-icon-t-plus"></i>
                 </a>
            </perm>
          </span>
           <!--<h2 class="org-name-h2" v-show="orgName">货主名称:{{orgName}}</h2>-->
-          <table class="table " :class="{'table-hover':dataRows.length !== 0}">
-            <thead>
-            <tr>
-              <th>姓名</th>
-              <th>角色</th>
-              <th>手机号码</th>
-              <th>邮箱</th>
-              <th>状态</th>
-              <th>操作</th>
-            </tr>
-            </thead>
-            <tbody v-show="dataRows.length === 0">
-            <tr>
-              <td colspan="10" class="text-center">
-                <div class="empty-info">暂无信息</div>
-              </td>
-            </tr>
-            </tbody>
-            <tbody>
-            <tr v-for="row in dataRows">
-              <td>
-                {{row.name}}
-                <el-tag type="success" v-show="row.adminFlag">主账号</el-tag>
-              </td>
-              <td>
-                {{ row.list | formatRole }}
-              </td>
-              <td>
-                {{row.phone}}
-              </td>
-              <td>
-                {{row.email}}
-              </td>
-              <td style="width: 50px">
-                <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
-              </td>
-              <td class="list-op" style="width: 120px">
-                <perm label="erp-account-edit">
-                  <a href="#" @click.stop.prevent="edit(row)"><i class="el-icon-t-edit"></i>编辑</a>
-                </perm>
-                <perm label="erp-account-start">
-                  <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用货主用户 \""+row.name+"\" ?"'
-                              v-show="row.status === '2'"><i
-                    class="el-icon-t-start"></i>启用
-                  </oms-forbid>
-                </perm>
-                <perm label="erp-account-stop">
-                  <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"'
-                              v-show="row.status !== '2'">
-                    <i class="el-icon-t-forbidden"></i>停用
-                  </oms-forbid>
-                </perm>
-              </td>
-            </tr>
-            </tbody>
-          </table>
-          <div class="text-center" v-show="pager.count>pager.pageSize">
-            <el-pagination layout="prev, pager, next"
-                           :total="pager.count"
-                           :pageSize="pager.pageSize"
-                           @current-change="getPageList"
-                           :current-page="pager.currentPage">
-            </el-pagination>
+          <div v-loading="loading1">
+            <table class="table " :class="{'table-hover':dataRows.length !== 0}">
+              <thead>
+              <tr>
+                <th>姓名</th>
+                <th>角色</th>
+                <th>手机号码</th>
+                <th>邮箱</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+              </thead>
+              <tbody v-show="dataRows.length === 0">
+              <tr>
+                <td colspan="10" class="text-center">
+                  <div class="empty-info">暂无信息</div>
+                </td>
+              </tr>
+              </tbody>
+              <tbody>
+              <tr v-for="row in dataRows">
+                <td>
+                  {{row.name}}
+                  <el-tag type="success" v-show="row.adminFlag">主账号</el-tag>
+                </td>
+                <td>
+                  {{ row.list | formatRole }}
+                </td>
+                <td>
+                  {{row.phone}}
+                </td>
+                <td>
+                  {{row.email}}
+                </td>
+                <td style="width: 50px">
+                  <dict :dict-group="'orgUserStatus'" :dict-key="formatStatus(row.status)"></dict>
+                </td>
+                <td class="list-op" style="width: 120px">
+                  <perm :label="type === 1 ? 'erp-system-account-edit' : 'erp-account-edit' ">
+                    <a href="#" @click.stop.prevent="edit(row)"><i class="el-icon-t-edit"></i>编辑</a>
+                  </perm>
+                  <perm :label="type === 1 ? 'erp-system-account-start' : 'erp-account-start' ">
+                    <oms-forbid :item="row" @forbided="useNormal" :tips='"确认启用货主用户 \""+row.name+"\" ?"'
+                                v-show="row.status === '2'"><i
+                      class="el-icon-t-start"></i>启用
+                    </oms-forbid>
+                  </perm>
+                  <perm :label="type === 1 ? 'erp-system-account-stop' : 'erp-account-stop' ">
+                    <oms-forbid :item="row" @forbided="forbid" :tips='"确认停用货主用户\""+row.name+"\"？"'
+                                v-show="row.status !== '2'">
+                      <i class="el-icon-t-forbidden"></i>停用
+                    </oms-forbid>
+                  </perm>
+                </td>
+              </tr>
+              </tbody>
+            </table>
+            <div class="text-center" v-show="pager.count>pager.pageSize">
+              <el-pagination layout="prev, pager, next"
+                             :total="pager.count"
+                             :pageSize="pager.pageSize"
+                             @current-change="getPageList"
+                             :current-page="pager.currentPage">
+              </el-pagination>
+            </div>
           </div>
         </div>
       </div>
@@ -148,14 +160,13 @@
 
 </template>
 <script>
-  import { BaseInfo, OrgUser, cerpAction, User } from '../../../resources';
+  import {BaseInfo, OrgUser, User} from '../../../resources';
   import editForm from './form/form.vue';
-  import OmsRemove from '../../common/remove.vue';
-  import OmsForbid from '../../common/forbid.vue';
+  import utils from '@/tools/utils';
 
   export default {
     components: {
-      OmsRemove, editForm, OmsForbid
+      editForm
     },
     data: function () {
       return {
@@ -167,7 +178,8 @@
         typeTxt: '',
         keyTxt: '',
         filters: {
-          orgId: ''
+          orgId: '',
+          status: '1'
         },
         form: {list: [{roleId: ''}]},
         formTitle: '新增',
@@ -185,6 +197,8 @@
           pageSize: 20,
           totalPage: 1
         },
+        requestTime: 0,
+        loading1: false,
         orgName: '', // 货主名称
         currentItem: {} //  左边列表点击时，添加样式class
       };
@@ -197,11 +211,14 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height + 50) + 'px';
+        height = (height + 50);
         return height;
+      },
+      type () {
+        return this.$route.meta.type;
       }
     },
-    mounted() {
+    mounted () {
       this.getOrgsList(1);
     },
     watch: {
@@ -218,9 +235,40 @@
           this.getPageList(1);
         },
         deep: true
+      },
+      type () {
+        this.showTypeList = [];
+        this.currentItem = {};
+        this.dataRows = [];
+        this.getOrgsList(1);
       }
     },
     methods: {
+      exportFile: function () {
+        let params = Object.assign({}, this.filters);
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: '/account/system/management'
+        });
+        this.$http.get('erp-org/relation-list/export', {params}).then(res => {
+          utils.download(res.data.path, '系统用户角色表');
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/account/system/management'
+          });
+        }).catch(error => {
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/account/system/management'
+          });
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       resetRightBox: function () {
         this.showRight = false;
       },
@@ -237,7 +285,14 @@
           pageSize: this.pager.pageSize,
           keyWord: this.typeTxt
         });
-        cerpAction.querySubordinate(params).then(res => {
+        let url = this.type === 1 ? 'erp-org/relation-list' : '/erp-org/subordinate';
+        let rTime = Date.now();
+        this.requestTime = rTime;
+        this.$http.get(url, {params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
+          this.$store.commit('initBottomLoading', false);
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
@@ -265,9 +320,12 @@
         let data = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-          keyWord: this.keyTxt
+          keyWord: this.keyTxt,
+          status: this.filters.status
         });
+        this.loading1 = true;
         OrgUser.queryUsers(this.filters.orgId, data).then(res => {
+          this.loading1 = false;
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
         });
@@ -295,7 +353,7 @@
         let itemTemp = JSON.parse(JSON.stringify(item));
         itemTemp.status = '2';
         User.stopUser(itemTemp.id).then(() => {
-          item.status = '2';
+          this.getPageList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功停用货主用户"' + itemTemp.name + '"'
@@ -306,7 +364,7 @@
         let itemTemp = JSON.parse(JSON.stringify(item));
         itemTemp.status = '0';
         User.enableUser(itemTemp.id).then(() => {
-          item.status = '0';
+          this.getPageList(1);
           this.$notify.success({
             title: '成功',
             message: '已成功启用货主用户"' + item.name + '"'
@@ -328,7 +386,7 @@
         this.currentItem = item;
       },
       itemChange: function (item) {
-        this.getPageList(1);
+        this.getPageList(this.pager.currentPage);
         this.showRight = false;
       },
       formatStatus: function (value) {

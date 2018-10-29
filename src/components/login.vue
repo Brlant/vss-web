@@ -1,15 +1,15 @@
-<style lang="less" scoped="">
-  @import "../assets/login.less";
+<style lang="scss" scoped="">
+  @import "../assets/login.scss";
 
 </style>
 <template>
   <div class="main-box-rap">
     <div class="main-card-box">
-      <img class="bg-logo" src="../assets/img/bg.png">
+      <div class="bg-logo"></div>
       <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part-s clearfix">
-        <div class="m-logo">疾病预防控制中心疫苗管理系统</div>
-        <div class="e-logo">CDC Vaccine Management System</div>
+        <div class="m-logo">疫苗供应链管理系统</div>
+        <div class="e-logo">Vaccine Supply Chain Management System</div>
       </div>
       <el-card class="box-card ">
         <div style="padding:0 20px">
@@ -95,22 +95,24 @@
             this.user.orgCode = this.trim(this.user.orgCode);
             this.user.username = this.trim(this.user.username);
             Auth.login(this.user).then(response => {
+              if (!response.data) return;
               let userId = window.localStorage.getItem('userId');
               this.$store.commit('initUser', response.data);
               this.$store.commit('initCode', this.user.orgCode);
-              this.$nextTick(function () {
-                if (userId === response.data.userId) {
-                  let lastUrl = window.localStorage.getItem('lastUrl');
-                  if (lastUrl && lastUrl.indexOf('/login') === -1 && lastUrl.indexOf('/logout') === -1) {
-                    window.localStorage.removeItem('lastUrl');
-                    window.location.href = lastUrl;
-                    return lastUrl;
-                  }
-                } else {
-                  this.$router.replace('/');
-                }
-                this.$router.replace('/');
-              });
+              // this.$nextTick(function () {
+              //   if (userId === response.data.userId) {
+              //     let lastUrl = window.localStorage.getItem('lastUrl');
+              //     if (lastUrl && lastUrl.indexOf('/login') === -1 && lastUrl.indexOf('/logout') === -1) {
+              //       window.localStorage.removeItem('lastUrl');
+              //       window.location.href = lastUrl;
+              //       return lastUrl;
+              //     }
+              //   } else {
+              //     this.$router.replace('/');
+              //   }
+              //   this.$router.replace('/');
+              // });
+              this.$emit('login');
               this.queryWeChat();
             }, error => {
               let data = error.response.data;
@@ -146,6 +148,8 @@
       }
     },
     mounted: function () {
+      // 清空权限列表
+      this.$store.commit('initPermissions', []);
       this.isFocusIndex();
     }
   };

@@ -1,15 +1,15 @@
-<style lang="less" scoped>
-  @leftWidth: 180px;
+<style lang="scss" scoped>
+  $leftWidth: 180px;
   .content-part {
     .content-left {
-      width: @leftWidth;
+      width: $leftWidth;
       text-align: center;
     }
     .content-right {
       > h3 {
-        left: @leftWidth;
+        left: $leftWidth;
       }
-      left: @leftWidth;
+      left: $leftWidth;
     }
   }
 
@@ -31,16 +31,23 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm :label="vaccineType === '1'?'purchasing-order-audit': 'second-vaccine-purchasing-order-audit' "
-                  v-show="currentOrder.state === '6' ">
-              <el-button type="primary" @click="cancel">取消订单</el-button>
+            <perm :label="vaccineType === '1'?'purchasing-order-cancel': 'second-vaccine-purchasing-order-cancel' "
+                  v-show="currentOrder.state === '6' || currentOrder.state === '7' || currentOrder.state === '10' ">
+              <el-button type="warning" plain  @click="cancel">取消订单</el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm :label="vaccineType === '1'?'purchasing-order-cancel': 'second-vaccine-purchasing-order-cancel' "
+                  v-show="currentOrder.state === '6'">
+              <el-button type="danger" plain @click="deleteOrder">删除订单</el-button>
             </perm>
           </li>
         </ul>
       </div>
       <div class="content-right content-padding">
         <h3>{{ title }}</h3>
-        <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index"></basic-info>
+        <basic-info :currentOrder="currentOrder" :vaccineType="vaccineType" v-show="index === 0"
+                    :index="index"></basic-info>
         <receipt-detail :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt-detail>
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <exception-info :currentOrder="currentOrder" v-show="index === 3" :orderId="orderId"
@@ -48,6 +55,9 @@
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 5"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="0" v-show="index === 8"></relevance-code>
+        <relevance-code-review :currentOrder="currentOrder" :index="index" type="0" v-show="index === 9"></relevance-code-review>
+        <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
+                      v-show="index === 0"></cancel-order>
       </div>
     </div>
   </div>
@@ -61,10 +71,12 @@
   import relevanceCode from '@/components/common/order/relevance.code.vue';
 
   import log from '@/components/common/order.log.vue';
-  import { InWork, http, erpOrder } from '@/resources';
+  import { http, InWork, erpOrder } from '@/resources';
+  import CancelOrder from '@/components/common/order/cancel-order';
 
   export default {
     components: {
+      CancelOrder,
       basicInfo, receiptDetail, log, batchNumbers, exceptionInfo, orderAttachment, relevanceCode
     },
     props: {
@@ -92,10 +104,17 @@
         if (perms.includes('quality-exception-manager')) {
           menu.push({name: '异常信息', key: 3});
         }
+        if (perms.includes('batch-number-manager')) {
+          menu.push({name: '批号相关', key: 4});
+        }
         if (perms.includes('order-document-watch')) {
           menu.push({name: '附件管理', key: 5});
         }
-        menu.push({name: '关联追溯码', key: 8});
+        let state = this.state;
+        if (state !== '6' && state !== '7') {
+          // menu.push({name: '关联追溯码', key: 8});
+          menu.push({name: '复核追溯码', key: 9});
+        }
         menu.push({name: '操作日志', key: 2});
         return menu;
       }
@@ -142,23 +161,32 @@
         this.currentOrder.state = state;
         this.$emit('refreshOrder');
       },
-      cancel () {
-        this.$confirm('是否取消订单', '', {
+      deleteOrder () {
+        this.$confirm('是否删除订单', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          erpOrder.cancel(this.orderId).then(() => {
+          erpOrder.delete(this.orderId).then(() => {
             this.$notify.success({
-              message: '取消订单成功'
+              message: '删除订单成功'
             });
-            this.$emit('close');
             this.$emit('refreshOrder');
+            this.$emit('close');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '取消订单失败'
+              message: error.response.data && error.response.data.msg || '删除订单失败'
             });
           });
+        });
+      },
+      cancel () {
+        this.index = 0;
+        this.$refs['cancelPart'].isShow = true;
+        this.$notify({
+          duration: 2000,
+          message: '请选择取消订单原因',
+          type: 'warning'
         });
       }
     }

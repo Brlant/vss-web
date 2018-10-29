@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .el-form .el-select {
     display: block;
   }
@@ -11,7 +11,7 @@
       <el-form-item label="姓名" prop="name">
         <oms-input type="text" v-model="form.name" placeholder="请输入姓名"></oms-input>
       </el-form-item>
-      <el-form-item label="手机号码" prop="phone">
+      <el-form-item label="手机号码" prop="phone" class="contact-check">
         <oms-input type="text" v-model="form.phone" placeholder="请输入手机号码"></oms-input>
       </el-form-item>
       <el-form-item label="Email">
@@ -63,7 +63,8 @@
           if (!re.test(value)) {
             callback(new Error('请输入正确的邮箱'));
           }
-          User.checkEmail(value, this.form.id, this.form.orgId).then(function (res) {
+          let orgId = this.$store.state.user.userCompanyAddress;
+          User.checkEmail(value, this.form.id, orgId).then(function (res) {
             if (res.data.valid) {
               callback();
             } else {
@@ -80,7 +81,8 @@
           if (!re.test(value)) {
             callback(new Error('请输入正确的手机号码'));
           }
-          User.checkPhone(value, this.form.id, this.form.orgId).then(function (res) {
+          let orgId = this.$store.state.user.userCompanyAddress;
+          User.checkPhone(value, this.form.id, orgId).then(function (res) {
             if (res.data.valid) {
               callback();
             } else {
@@ -130,6 +132,7 @@
     },
     watch: {
       formItem: function (val) {
+        this.$refs['accountform'].clearValidate();
         if (val.id) {
           this.form = this.formItem;
           this.form.list = this.formItem.list.map(m => m.roleId);

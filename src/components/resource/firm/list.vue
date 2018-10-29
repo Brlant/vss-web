@@ -1,5 +1,5 @@
-<style lang="less" scoped>
-  @import "../../../assets/mixins.less";
+<style lang="scss" scoped>
+  @import "../../../assets/mixins.scss";
 
   .margin-left {
     margin-left: 15px;
@@ -106,7 +106,7 @@
           margin-left: 8px;;
           font-size: 14px;
           &:hover {
-            color: @activeColor;
+            color: $activeColor;
           }
         }
       }
@@ -132,16 +132,16 @@
              v-for="(item,key) in firmType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title">{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}
+            <span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="container d-table">
 
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-            <h2 class="header" style="overflow: hidden">
-              厂商资料
-              <span class="pull-right">
+          <h2 class="header" style="overflow: hidden">
+            厂商资料
+            <span class="pull-right">
                    <perm label="manufacturer-add">
                       <a href="#" class="btn-circle" @click.stop.prevent="addType"><i
                         class="el-icon-t-plus"></i> </a>
@@ -149,14 +149,15 @@
                       <a href="#" class="btn-circle" @click.prevent="searchType"><i
                         class="el-icon-t-search"></i> </a>
                 </span>
-            </h2>
+          </h2>
+          <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
             <div class="search-left-box clearfix" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
-            <div v-if="loadingListData">
-              <oms-loading :loading="loadingListData"></oms-loading>
-            </div>
-            <div v-else-if="businessRelationList.length == 0" class="empty-info">
+            <!--<div v-if="loadingListData">-->
+            <!--<oms-loading :loading="loadingListData"></oms-loading>-->
+            <!--</div>-->
+            <div v-if="businessRelationList.length == 0" class="empty-info">
               暂无信息
             </div>
             <div v-else>
@@ -172,8 +173,11 @@
                   </div>
                 </li>
               </ul>
-              <div class="btn-left-list-more" @click.stop="getOrgMore">
-                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              <div class="btn-left-list-more">
+                <bottom-loading></bottom-loading>
+                <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                  <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+                </div>
               </div>
             </div>
           </div>
@@ -185,7 +189,7 @@
           <div v-else-if="!businessRelationItem.followOrg" class="empty-info">
             暂无信息
           </div>
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" v-else>
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight  + 'px'" v-else>
             <h2 class="clearfix">
               <span class="pull-right">
                  <!--<perm label="org-relation-edit">-->
@@ -230,22 +234,22 @@
                 <el-col :span="7">
                   {{ businessRelationItem.followOrg.orgDto.creditCode }}
                 </el-col>
-                <el-col :span="4" class="text-right">
-                  建立日期：
-                </el-col>
-                <el-col :span="8">
-                  {{ businessRelationItem.followOrg.orgDto.createTime | minute}}
-                </el-col>
+                <!--<el-col :span="4" class="text-right">-->
+                <!--建立日期：-->
+                <!--</el-col>-->
+                <!--<el-col :span="8">-->
+                <!--{{ businessRelationItem.followOrg.orgDto.createTime | minute}}-->
+                <!--</el-col>-->
               </el-row>
               <el-row>
-                <el-col :span="5" class="text-right">
-                  法人代表：
-                </el-col>
-                <el-col :span="7">
-                  {{ businessRelationItem.followOrg.orgDto.legalRepresentative }}
-                </el-col>
+                <!--<el-col :span="5" class="text-right">-->
+                <!--法人代表：-->
+                <!--</el-col>-->
+                <!--<el-col :span="7">-->
+                <!--{{ businessRelationItem.followOrg.orgDto.legalRepresentative }}-->
+                <!--</el-col>-->
 
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   邮政编码：
                 </el-col>
                 <el-col :span="8">
@@ -283,14 +287,14 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="5" class="text-right">
-                  备注：
-                </el-col>
-                <el-col :span="7">
-                  {{ businessRelationItem.followOrg.orgDto.remarks }}
-                </el-col>
+                <!--<el-col :span="5" class="text-right">-->
+                <!--备注：-->
+                <!--</el-col>-->
+                <!--<el-col :span="7">-->
+                <!--{{ businessRelationItem.followOrg.orgDto.remarks }}-->
+                <!--</el-col>-->
 
-                <el-col :span="4" class="text-right">
+                <el-col :span="5" class="text-right">
                   有效期限：
                 </el-col>
                 <el-col :span="8">
@@ -360,7 +364,7 @@
     <page-right :show="showRight" @right-close="resetRightBox">
       <el-form ref="relationForm" :rules="rules" :model="form" label-width="100px" class="demo-ruleForm"
                @submit.prevent="onSubmit('relationForm')" onsubmit="return false">
-        <h2 class="clearfix">添加厂商</h2>
+        <h2 class="clearfix">{{!form.id ? '添加厂商' : '修改厂商'}}</h2>
         <el-form-item label="往来单位" prop="followOrgId">
           <el-select placeholder="请输入名称搜索厂商" remote :remote-method="queryOtherBusiness" :clearable="true"
                      v-model="form.followOrgId"
@@ -372,7 +376,7 @@
               </div>
               <div style="overflow: hidden">
                   <span class="select-other-info pull-left">
-                    <span>系统代码</span> {{item.manufacturerCode}}
+                    <span>系统代码:</span>{{item.manufacturerCode}}
                   </span>
               </div>
             </el-option>
@@ -380,7 +384,7 @@
         </el-form-item>
         <el-form-item label="有效期" prop="expirationDate">
           <el-date-picker v-model="form.expirationDate" format="yyyy-MM-dd" placeholder="选择日期"
-                          style="width: 100%;" @change="changeExpirationDate">
+                          style="width: 100%;" value-format="timestamp">
           </el-date-picker>
         </el-form-item>
         <el-form-item label-width="120px">
@@ -397,10 +401,9 @@
 
 </template>
 <script>
-  import {BaseInfo, Vendor} from '@/resources';
+  import { BaseInfo, Vendor } from '@/resources';
   import utils from '@/tools/utils';
   import photoShow from './photo/photo.show.vue';
-  import qs from 'qs';
 
   export default {
     components: {photoShow},
@@ -426,7 +429,7 @@
         // 表单操作
         form: {},
         action: '',
-        orgList: [{id: '', nameJc: ''}],
+        orgList: [],
         doing: false,
         photoForm: {
           name: '',
@@ -451,10 +454,10 @@
       };
     },
     computed: {
-      orgRelationList() {
-        return this.$store.state.dict['orgRelation'];
+      orgRelationList () {
+        return this.$getDict('orgRelation');
       },
-      companyAddress() {
+      companyAddress () {
         let province = this.businessRelationItem.followOrg.orgDto.province;
         let city = this.businessRelationItem.followOrg.orgDto.city;
         let region = this.businessRelationItem.followOrg.orgDto.region;
@@ -462,13 +465,13 @@
       },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 25) + 'px';
+        height = (height - 25);
         return height;
       }
     },
     watch: {
       filters: {
-        handler() {
+        handler () {
           this.getBusinessRelationList(1);
         },
         deep: true
@@ -479,10 +482,13 @@
         }
       }
     },
-    mounted() {
+    mounted () {
       this.getBusinessRelationList(1);
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       resetPhoto: function () {
         this.photoForm = {
           name: '',
@@ -492,9 +498,17 @@
         };
         this.resetRightBox();
       },
-      watchPhoto(item) {
-        this.photoForm = item;
-        this.showPhotoRightShow = true;
+      watchPhoto (item) {
+        if (item.photos.length > 0) {
+          this.$store.commit('changeAttachment', {
+            currentId: item.photos[0].attachmentId,
+            attachmentList: item.photos
+          });
+          /*
+          this.photoForm = item;
+          this.showPhotoRightShow = true;
+          */
+        }
       },
       isExpirationTime: function (item) {
         let state = '';
@@ -512,7 +526,7 @@
         }
         return state;
       },
-      getBusinessRelationList(pageNo, isContinue = false) {
+      getBusinessRelationList (pageNo, isContinue = false) {
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -520,6 +534,9 @@
         }, this.filters);
         this.loadingListData = true;
         Vendor.query(params).then(res => {
+          if (params.keyWord !== this.filters.keyWord) return;
+          this.$store.commit('initBottomLoading', false);
+
           if (isContinue) {
             this.businessRelationList = this.businessRelationList.concat(res.data.list);
           } else {
@@ -527,10 +544,18 @@
             this.currentItem = Object.assign({}, {'id': ''}, this.businessRelationList[0]);
             this.currentName = this.currentItem.followOrgName;
             this.relationData = this.currentItem;
+            this.getBusinessRelationItem(this.currentItem.id);
           }
           this.typePager.totalPage = res.data.totalPage;
+          this.queryStatusNum(params);
           this.loadingListData = false;
-          this.getBusinessRelationItem(this.currentItem.id);
+        });
+      },
+      queryStatusNum: function (params) {
+        Vendor.queryStateNum(params).then(res => {
+          let data = res.data;
+          this.firmType[0].num = data['normal'];
+          this.firmType[1].num = data['disable'];
         });
       },
       getBusinessRelationItem: function (id) {
@@ -545,7 +570,7 @@
       getOrgMore: function () {
         this.getBusinessRelationList(this.typePager.currentPage + 1, true);
       },
-      queryOtherBusiness: function (keyWord) {// 过滤组织类型为生产厂商和供货厂商的组织
+      queryOtherBusiness: function (keyWord) {// 过滤单位类型为生产厂商和供货厂商的单位
         let params = {
           pageNo: 1,
           deleteFlag: false,
@@ -591,14 +616,7 @@
           relation: this.currentItem.relation,
           expirationDate: this.currentItem.expirationDate
         };
-        let isExist = this.orgList.some(item => this.currentItem.followOrgId === item.id);
-        if (!isExist) {
-          this.orgList.push({
-            id: this.currentItem.followOrgId,
-            name: this.currentItem.followOrgName,
-            auditedStatus: 1
-          });
-        }
+        this.queryOtherBusiness(this.currentItem.followOrgName);
         this.showRight = true;
       },
       forbid: function () {
@@ -641,7 +659,7 @@
             return;
           }
           this.doing = true;
-          this.changeExpirationDate(this.form.expirationDate);
+          // this.changeExpirationDate(this.form.expirationDate);
           if (this.action === 'add') {
             Vendor.save(this.form).then(() => {
               this.doing = false;
@@ -679,7 +697,7 @@
           }
         });
       },
-      doClose() {
+      doClose () {
         this.showRight = false;
         this.$refs['relationForm'].resetFields();
       },

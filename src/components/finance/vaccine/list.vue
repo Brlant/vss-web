@@ -1,78 +1,12 @@
-<style lang="less" scoped="">
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
+<style lang="scss" scoped="">
 
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .pt {
-    padding-top: 15px;
-  }
-
-  .opera-btn-group {
-
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
 </style>
 <template>
   <div class="order-page">
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -86,8 +20,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="疾控货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索疾控货品" :remote-method="getGoodsList" :clearable="true"
+              <oms-form-row label="疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="getGoodsList" :clearable="true"
                            v-model="filters.orgGoodsId" popper-class="good-selects">
                   <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                              v-for="item in goodses">
@@ -96,11 +30,14 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}
+                        v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
                       </span>
+                      <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -118,7 +55,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -146,7 +83,7 @@
         </el-form>
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
-        <el-row class="order-list-header" :gutter="10">
+        <el-row class="order-list-header">
           <el-col :span="5">货品</el-col>
           <el-col :span="4">采购订单号</el-col>
           <el-col :span="5">疫苗厂商</el-col>

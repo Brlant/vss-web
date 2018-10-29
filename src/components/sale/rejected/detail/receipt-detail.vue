@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .product-detail-list {
     margin-top: 20px;
     text-align: center;
@@ -36,27 +36,16 @@
 <template>
   <div>
 
-    <el-row style="margin-bottom:0" class="page-main-body padding">
+    <el-row style="margin-bottom:0" class="page-main-body padding" v-loading="loading">
       <el-col :span="12">
         <oms-row label="车牌号">
           {{ plateNumber }}
         </oms-row>
-        <oms-row label="最高温度">
-          <span v-show="currentOrder.highestTemperature">{{ currentOrder.highestTemperature }}℃</span>
-        </oms-row>
-        <oms-row label="最低温度">
-          <span v-show="currentOrder.lowestTemperature">{{ currentOrder.lowestTemperature }}℃</span>
-        </oms-row>
       </el-col>
       <el-col :span="12">
-        <oms-row label="温度数据提供方式">
-          {{ currentOrder.temperatureDataModeName }}
-        </oms-row>
-        <oms-row label="保温包装类型">
-          {{ currentOrder.insulationTypeName }}
-        </oms-row>
-        <oms-row label="平均温度">
-          <span v-show="currentOrder.averageTemperature">{{ currentOrder.averageTemperature }}℃</span>
+        <oms-row label="在途温度">
+          <el-tag type="success" v-show="currentOrder.transportTemperatureFlag !== false">合格</el-tag>
+          <el-tag type="warning" v-show="currentOrder.transportTemperatureFlag === false">不合格</el-tag>
         </oms-row>
       </el-col>
     </el-row>
@@ -86,8 +75,8 @@
         <td colspan="2" class="t-head">批号</td>
         <td colspan="3" class="t-head">生产日期</td>
         <td colspan="3" class="t-head">有效期</td>
-        <td colspan="3" class="t-head">大包装数量</td>
-        <td colspan="3" class="t-head">小包装数量</td>
+        <td colspan="3" class="t-head">整件数量</td>
+        <td colspan="3" class="t-head">散件数量</td>
       </tr>
       <tr v-for="batchNumber in item.batchNumbers" :key="batchNumber.id"
           v-if="item.batchNumbers && item.batchNumbers.length > 0">
@@ -159,7 +148,8 @@
     data () {
       return {
         goodsDetails: [],
-        plateNumber: ''
+        plateNumber: '',
+        loading: false
       };
     },
     watch: {
@@ -173,11 +163,13 @@
     },
     methods: {
       getGoodsDetails () {
+        this.loading = true;
         http.get(`/receipt/order/${this.currentOrder.id}`).then(res => {
           this.goodsDetails = this.currentOrder.detailDtoList.slice();
           this.goodsDetails.forEach(i => {
             i.batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
           });
+          this.loading = false;
         });
       },
       getTotalNumber (item) {

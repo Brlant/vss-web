@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -22,16 +22,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .table > tbody > tr:first-child > td {
     border-top: 0;
   }
@@ -43,19 +33,25 @@
     }
   }
 
+  .d-table-left {
+    .list-item {
+      padding-right: 0;
+    }
+  }
 </style>
 <template>
   <div>
     <div class="container d-table">
       <div class="d-table-left">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-          <h2 class="header">
+        <h2 class="header">
           <span class="pull-right">
             <a href="#" class="btn-circle" @click.prevent="searchType"><i
               class="el-icon-t-search"></i> </a>
           </span>
-            区二类疫苗目录
-          </h2>
+          区二类疫苗采购目录
+        </h2>
+        <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
+
           <div class="search-left-box" v-show="showTypeSearch">
             <oms-input v-model="typeTxt" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
           </div>
@@ -68,28 +64,61 @@
                   :class="{'active':item.id==currentItem.id}">
                 <div class="id-part">
                   疫苗编号 {{item.orgGoodsNo }}
+                  <el-tag type="danger" v-show="!item.availabilityStatus">停用</el-tag>
                 </div>
                 <div>
                   {{item.orgGoodsName }}
                 </div>
               </li>
             </ul>
-            <div class="btn-left-list-more" @click.stop="getOrgMore">
-              <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+            <div class="btn-left-list-more">
+              <bottom-loading></bottom-loading>
+              <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              </div>
             </div>
           </div>
         </div>
       </div>
       <div class="d-table-right">
-        <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
-          <h2 class="clearfix">
+        <div class="d-table-col-wrap" :style="'height:'+bodyHeight + 'px'">
+          <el-row>
+            <el-col :span="22">
+              <el-form class="rightForm" ref="rightForm" inline onsubmit="return false">
+                <el-form-item label="接种点">
+                  <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV"
+                             :clearable="true" @click.native.once="filterPOV('')"
+                             v-model="searchCondition.povId" popper-class="good-selects ">
+                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                      <div style="overflow: hidden">
+                        <span class="pull-left" style="clear: right">{{org.name}}</span>
+                      </div>
+                      <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码:</span>{{org.manufacturerCode}}
+                      </span>
+                      </div>
+                    </el-option>
+                  </el-select>
+                </el-form-item>
+                <el-form-item>
+                  <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                  <perm label="second-vaccine-authorization-delete">
+                    <el-button plain type="warning" @click="onceCancelRights">一键取消所有授权</el-button>
+                  </perm>
+                </el-form-item>
+              </el-form>
+            </el-col>
+            <el-col :span="2">
               <span class="pull-right" v-show="showTypeList.length">
                   <perm label="second-vaccine-authorization-add">
                     <el-button @click="add(currentItem)"><i
                       class="el-icon-t-plus"></i>添加</el-button>
                   </perm>
               </span>
-          </h2>
+            </el-col>
+          </el-row>
           <div class="pov-info">
             <el-row class="clearfix font-bold" style="font-weight: 500;font-size: 14px">
               <oms-row label="疫苗名称" :span="3">
@@ -138,13 +167,13 @@
             </tr>
             </tbody>
           </table>
-        </div>
-        <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
-          <el-pagination
-            layout="prev, pager, next"
-            :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
-            :current-page="pager.currentPage">
-          </el-pagination>
+          <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && dataRows.length">
+            <el-pagination
+              layout="total, prev, pager, next"
+              :total="pager.count" :pageSize="pager.pageSize" @current-change="getPageList"
+              :current-page="pager.currentPage">
+            </el-pagination>
+          </div>
         </div>
       </div>
     </div>
@@ -158,7 +187,7 @@
 </template>
 <script>
   import addForm from './form.vue';
-  import {cerpAction, Vaccine, VaccineRights, PurchaseAgreement} from '@/resources';
+  import { BaseInfo, Vaccine, VaccineRights } from '@/resources';
 
   export default {
     components: {
@@ -175,6 +204,9 @@
         typeTxt: '',
         keyTxt: '',
         filters: {
+          povId: ''
+        },
+        searchCondition: {
           povId: ''
         },
         keyWord: '',
@@ -209,11 +241,11 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height + 10) + 'px';
+        height = (height + 10);
         return height;
       }
     },
-    mounted() {
+    mounted () {
       this.getOrgsList(1);
     },
     watch: {
@@ -222,11 +254,20 @@
         this.orgName = '';
         this.getOrgsList();
       },
-      keyWord() {
+      keyWord () {
         this.pickTypeList();
+      },
+      filters: {
+        handler: function () {
+          this.getPageList(1);
+        },
+        deep: true
       }
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       resetRightBox: function () {
         this.showRight = false;
       },
@@ -237,12 +278,13 @@
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize,
+          pageSize: this.typePager.pageSize,
           keyWord: this.typeTxt
         });
         let nowTime = new Date();
         this.nowTime = nowTime;
-        this.$http.get('/purchase-agreement/valid/second-vaccine/pager', {params}).then(res => {
+        this.$http.get('/purchase-agreement/second-vaccine/pager', {params}).then(res => {
+          this.$store.commit('initBottomLoading', false);
           if (this.nowTime > nowTime) return;
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
@@ -256,13 +298,14 @@
               this.currentItem = Object.assign({'id': ''});
             }
           }
+          this.typePager.count = res.data.count;
           this.typePager.totalPage = res.data.totalPage;
         });
       },
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
       },
-      queryVaccines(query) {
+      queryVaccines (query) {
         let params = Object.assign({}, {
           keyWord: query
         });
@@ -271,17 +314,29 @@
           this.filterPOVs();
         });
       },
-      filterPOVs() {
+      filterPOVs () {
         this.showOrgList = this.orgList.filter(f => !this.dataRows.some(s => f.subordinateId === s.povId));
       },
       filterPOV: function (query) {// 过滤POV
-        let params = Object.assign({}, {
-          keyWord: query
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          relation: '0'
+        };
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
-        cerpAction.queryAllPov(params).then(res => {
-          this.orgList = res.data.list;
-          this.filterPOVs();
-        });
+      },
+      searchInOrder: function () {// 搜索
+        Object.assign(this.filters, this.searchCondition);
+      },
+      resetSearchForm: function () {// 重置表单
+        let temp = {
+          povId: ''
+        };
+        Object.assign(this.searchCondition, temp);
+        Object.assign(this.filters, temp);
       },
       getPageList: function (pageNo) {
         this.dataRows = [];
@@ -292,15 +347,15 @@
         let params = Object.assign({}, {
           pageNo: pageNo,
           pageSize: this.pager.pageSize
-        });
+        }, this.filters);
         VaccineRights.queryPovByVaccine(orgId, params).then(res => {
           this.dataRows = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
         });
       },
-      refreshDetails() {
-        this.getPageList(1);
+      refreshDetails () {
+        this.getPageList(this.pager.currentPage);
         this.showRight = false;
       },
       removeVaccine: function (item) {
@@ -312,16 +367,16 @@
           VaccineRights.deleteVaccine(item.id).then(() => {
             this.getPageList(1);
             this.$notify.success({
-              message: '已成功删除疫苗'
+              message: '已成功删除接种点'
             });
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '删除疫苗失败'
+              message: error.response.data && error.response.data.msg || '删除接种点失败'
             });
           });
         });
       },
-      bindVaccinePOV() {
+      bindVaccinePOV () {
         let form = {
           'orgGoodsId': this.currentItem.orgGoodsId,
           'povId': this.povId
@@ -355,21 +410,41 @@
         this.currentItem = item;
         this.getPageList(1);
       },
-      add() {
+      add () {
         this.formPara = {};
         this.showRight = true;
       },
-      edit(item) {
+      edit (item) {
         this.formPara = item;
         this.showRight = true;
       },
-      changeItem(item) {
+      changeItem (item) {
         if (this.action === 'add') {
           this.getPageList(1);
         } else {
           Object.assign(this.formPara, item);
         }
         this.showRight = false;
+      },
+      onceCancelRights () {
+        this.$confirm('是否取消疫苗"' + this.currentItem.orgGoodsName + '"的所有接种点授权', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.delete(`vaccine-authorization/${this.currentItem.orgGoodsId}/all`).then(() => {
+            this.getPageList(1);
+            this.$notify.success({
+              type: '成功',
+              message: '已经取消疫苗"' + this.currentItem.orgGoodsName + '"的所有接种点授权'
+            });
+          }).catch(error => {
+            this.$notify.error({
+              type: '失败',
+              message: error.response.data && error.response.data.msg || '取消所有接种点授权失败'
+            });
+          });
+        });
       }
     }
   };

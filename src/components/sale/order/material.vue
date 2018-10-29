@@ -1,17 +1,28 @@
+<style lang="scss">
+  .material {
+    .el-input-group--append {
+     > .el-input__inner {
+        width: 120px;
+      }
+    }
+    .el-input-group__append, .el-input-group__prepend {
+      width: auto;
+      background: #ffffff;
+    }
+  }
+</style>
 <template>
-  <div>
-    <el-form-item label="物料">
-      <el-select placeholder="请选择物料" v-model="form.name" filterable clearable remote :remoteMethod="queryMaterials"
-                 style="width: 100%">
-        <el-option :label="item.name" :value="item.name" :key="item.id" v-for="item in materials">
-        </el-option>
-      </el-select>
-    </el-form-item>
-    <el-form-item label="物料数量" style="display: inline-block" v-if="form.name">
-      <oms-input type="number" v-model.number="form.count" :min="0">
+  <div class="material">
+    <el-form-item label="物料数量" class="pull-left">
+      <oms-input type="number" size="mini" v-model.number="form.count" :min="0">
+        <el-select placeholder="请输入名称搜索物料" v-model="form.name" slot="append" filterable clearable remote
+                   :remoteMethod="queryMaterials">
+          <el-option :label="item.name" :value="item.name" :key="item.id" v-for="item in materials">
+          </el-option>
+        </el-select>
       </oms-input>
     </el-form-item>
-    <el-form-item style="display: inline-block">
+    <el-form-item class="pull-left" label-width="20px">
       <el-button type="primary" @click="add">加入备注</el-button>
     </el-form-item>
   </div>
@@ -24,10 +35,16 @@
       return {
         form: {
           name: '',
-          count: ''
+          count: '',
+          materialUnit: ''
         },
         materials: []
       };
+    },
+    computed: {
+      materialUnits () {
+        return this.$getDict('materialUnit');
+      }
     },
     mounted () {
       this.queryMaterials();
@@ -36,29 +53,31 @@
       queryMaterials (query) {
         let params = {
           deleteFlag: false,
-          keyWord: query
+          keyword: query,
+          pageSize: 100
         };
         material.query(params).then(res => {
           this.materials = res.data.list;
         });
       },
       add () {
-        if (!this.form.name) {
-          this.$notify.info({
-            message: '请选择物料'
-          });
-          return;
-        }
         if (!this.form.count) {
           this.$notify.info({
             message: '请输入物料数量'
           });
           return;
         }
+        if (!this.form.name) {
+          this.$notify.info({
+            message: '请选择物料'
+          });
+          return;
+        }
         this.$emit('changeRemark', this.form);
         this.form = {
           name: '',
-          count: ''
+          count: '',
+          materialUnit: ''
         };
       }
     }

@@ -1,4 +1,4 @@
-<style lang="less" scoped>
+<style lang="scss" scoped>
 
   .el-form .el-select {
     display: block;
@@ -22,16 +22,6 @@
     }
   }
 
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
   .oms-row {
     font-size: 14px;
     margin-bottom: 10px;
@@ -48,19 +38,22 @@
         <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
              v-for="(item,key) in requestType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
-        <span class="pull-right" style="margin-top: 8px">
-           <perm label="pull-signal-add">
+        <span class="pull-right opera-btn" style="margin-top: 8px">
+          <span>
+             <perm label="pull-signal-add">
              <a href="#" class="btn-circle" @click.stop.prevent="add">
                 <i class="el-icon-t-plus"></i>
-            </a>
+            </a>添加
            </perm>
+          </span>
        </span>
       </div>
       <div class="d-table" style="margin-top: 20px">
         <div class="d-table-left">
-          <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
+          <div class="d-table-col-wrap" :style="'height:'+bodyHeight" @scroll="scrollLoadingData">
             <h2 class="header">
           <span class="pull-right">
               <a href="#" class="btn-circle" @click.prevent="searchType"><i
@@ -69,7 +62,7 @@
               要货申请单列表
             </h2>
             <div class="search-left-box" v-show="showTypeSearch">
-              <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
+              <oms-input v-model="filters.keyWord" placeholder="请输入编号搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!currentItem.id" class="empty-info">
               暂无信息
@@ -79,15 +72,18 @@
                 <li v-for="item in showTypeList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
                   <div class="id-part">
-                    要货申请编号 {{item.id }}
+                    申请时间: {{item.applyTime | time }}
                   </div>
                   <div>
-                    {{item.povName }}
+                    申请编号: {{item.id }}
                   </div>
                 </li>
               </ul>
-              <div class="btn-left-list-more" @click.stop="getOrgMore">
-                <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+              <div class="btn-left-list-more">
+                <bottom-loading></bottom-loading>
+                <div @click.stop="getOrgMore" v-show="!$store.state.bottomLoading">
+                  <el-button v-show="typePager.currentPage<typePager.totalPage">加载更多</el-button>
+                </div>
               </div>
             </div>
           </div>
@@ -114,7 +110,11 @@
                       <el-button @click="editOrder()"><i
                         class="el-icon-t-edit"></i>编辑</el-button>
                     </perm>
-
+                    <perm label="signal-export">
+                      <el-button @click="exportExcel" v-show="currentOrder.status === 4" :loading="printing">
+                        <i class="el-icon-t-print"></i>{{printing ? '正在导出' : '导出'}}
+                      </el-button>
+                    </perm>
                     <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
                       <el-button @click="cancel()"><i
                         class="el-icon-t-verify"></i>取消</el-button>
@@ -135,7 +135,7 @@
                       {{currentOrder.demandTime | date }}
                     </oms-row>
                     <oms-row label="接种点仓库">
-                      {{currentOrder.warehouseName}}
+                      {{currentOrder.warehouseAddress}}
                     </oms-row>
                   </el-col>
                   <el-col :span="16">
@@ -156,23 +156,28 @@
                     </oms-row>
                   </el-col>
                 </el-row>
+                <oms-row label="备注" :span="3" v-show="currentOrder.remark">{{ currentOrder.remark }}</oms-row>
               </div>
               <span style="font-size: 14px">【要货明细】</span>
               <table class="table " :class="{'table-hover':currentOrder.detailDtoList.length !== 0}"
                      style="margin-top: 10px">
                 <thead>
                 <tr>
-                  <th style="width: 300px">货品名称</th>
+                  <th style="width: 240px">货品名称</th>
+                  <th>规格</th>
                   <th>单价</th>
                   <th>申请数量</th>
                   <th>申请金额</th>
-                  <th v-show="filters.status === 4">分配数量</th>
+                  <th v-show="filters.status === 4" style="width: 60px">分配数量</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr v-for="row in currentOrder.detailDtoList">
                   <td>
                     {{row.goodsName}}
+                  </td>
+                  <td>
+                    <span>{{ row.specification }}</span>
                   </td>
                   <td>
                     <span v-if="row.price">￥{{row.price | formatMoney}}</span>
@@ -194,6 +199,7 @@
                 </tr>
                 <tr>
                   <th style="width: 300px"></th>
+                  <th></th>
                   <th></th>
                   <th>
                     <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
@@ -233,9 +239,9 @@
         dataRows: [],
         showTypeList: [],
         requestType: utils.requestType,
-        activeStatus: 0,
+        activeStatus: 1,
         filters: {
-          status: '',
+          status: '0',
           keyWord: ''
         },
         form: {list: [{roleId: ''}]},
@@ -258,7 +264,8 @@
         vaccines: [], // 疫苗列表
         vaccineId: '',
         currentOrder: {},
-        index: 0
+        index: 0,
+        printing: false
       };
     },
     computed: {
@@ -277,6 +284,7 @@
     watch: {
       filters: {
         handler: function () {
+          this.currentItem = {};
           this.currentOrder = {};
           this.getOrgsList(1);
         },
@@ -289,6 +297,9 @@
       }
     },
     methods: {
+      scrollLoadingData (event) {
+        this.$scrollLoadingData(event);
+      },
       resetRightBox: function () {
         this.showRight = false;
         this.index = 0;
@@ -297,10 +308,9 @@
         this.showTypeSearch = !this.showTypeSearch;
       },
       getOrgsList: function (pageNo, isContinue = false) {
-        this.currentItem = {};
-        this.currentOrder = {};
         let orgId = this.user.userCompanyAddress;
         if (!orgId) return;
+        // this.filters.id = this.filters.keyWord;
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -308,6 +318,9 @@
           povId: orgId
         }, this.filters);
         pullSignal.query(params).then(res => {
+          if (params.keyWord !== this.filters.keyWord) return;
+          this.$store.commit('initBottomLoading', false);
+
           if (isContinue) {
             this.showTypeList = this.showTypeList.concat(res.data.list);
           } else {
@@ -334,7 +347,7 @@
           povId: this.user.userCompanyAddress
         }, this.filters);
         pullSignal.queryCount(params).then(res => {
-          this.requestType[0].num = res.data['all'];
+          // this.requestType[0].num = res.data['all'];
           this.requestType[1].num = res.data['pending-audit'];
           this.requestType[2].num = res.data['audited'];
           this.requestType[3].num = res.data['create-wave'];
@@ -379,6 +392,8 @@
             this.$notify.success({
               message: '已成功取消申请单'
             });
+            this.currentItem = {};
+            this.currentOrder = {};
             this.getOrgsList(1);
           }).catch(error => {
             this.$notify.error({
@@ -397,11 +412,25 @@
             this.$notify.success({
               message: '申请单审核通过'
             });
+            this.currentItem = {};
+            this.currentOrder = {};
             this.getOrgsList(1);
           }).catch(error => {
             this.$notify.error({
               message: error.response.data && error.response.data.msg || '申请单审核失败'
             });
+          });
+        });
+      },
+      exportExcel () {
+        this.printing = true;
+        this.$http(`/pov-order-export/${this.currentOrder.orderId}`).then(res => {
+          utils.download(res.data);
+          this.printing = false;
+        }).catch(error => {
+          this.printing = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },

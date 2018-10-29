@@ -1,4 +1,4 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   .product-detail-list {
     margin-top: 20px;
     text-align: center;
@@ -30,18 +30,16 @@
 <template>
   <div>
 
-    <el-row style="margin-bottom:0" class="page-main-body padding">
+    <el-row style="margin-bottom:0" class="page-main-body padding" v-loading="loading">
       <el-col :span="12">
         <oms-row label="车牌号">
           {{ plateNumber }}
         </oms-row>
-        <oms-row label="保温包装类型">
-          {{ currentOrder.insulationTypeName }}
-        </oms-row>
       </el-col>
       <el-col :span="12">
-        <oms-row label="温度数据提供方式">
-          {{ currentOrder.temperatureDataModeName }}
+        <oms-row label="在途温度">
+          <el-tag type="success" v-show="currentOrder.transportTemperatureFlag !== false">合格</el-tag>
+          <el-tag type="warning" v-show="currentOrder.transportTemperatureFlag === false">不合格</el-tag>
         </oms-row>
       </el-col>
     </el-row>
@@ -145,7 +143,8 @@
     data () {
       return {
         goodsDetails: [],
-        plateNumber: ''
+        plateNumber: '',
+        loading: false
       };
     },
     watch: {
@@ -159,11 +158,13 @@
     },
     methods: {
       getGoodsDetails () {
+        this.loading = true;
         http.get(`/receipt/order/${this.currentOrder.id}`).then(res => {
           this.goodsDetails = this.currentOrder.detailDtoList.slice();
           this.goodsDetails.forEach(i => {
             i.batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
           });
+          this.loading = false;
         });
       },
       getTotalNumber (item) {

@@ -1,74 +1,9 @@
-<style lang="less" scoped="">
+<style lang="scss" scoped="">
   @import "../../../assets/mixins";
-
-  .advanced-query-form {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-    padding-top: 20px;
-  }
-
-  .R {
-    word-wrap: break-word;
-    word-break: break-all;
-  }
-
-  .pt {
-    padding-top: 15px;
-  }
-
-  .opera-btn-group {
-
-    border: 2px solid #eeeeee;
-    margin: 10px -5px;
-    .opera-icon {
-      line-height: 50px;
-      height: 50px;
-      padding: 0 10px;
-      border-bottom: 2px solid #eeeeee;
-    }
-    .switching-icon {
-      cursor: pointer;
-      .el-icon-arrow-up {
-        transition: all .5s ease-in-out;
-      }
-    }
-    &.up {
-      .advanced-query-form {
-        display: none;
-      }
-      .opera-icon {
-        border-bottom: 0;
-      }
-      .el-icon-arrow-up {
-        transform: rotate(180deg);
-      }
-    }
-  }
-
-  .search-input {
-    .el-select {
-      display: block;
-      position: relative;
-    }
-    .el-date-editor.el-input {
-      width: 100%;
-    }
-  }
-
-  .good-selects {
-    .el-select-dropdown__item {
-      width: auto;
-    }
-  }
 
   .btn-color {
     a:hover {
-      color: @activeColor;
+      color: $activeColor;
     }
   }
 
@@ -81,16 +16,13 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="">
-            <i class="el-icon-t-search"></i> 筛选查询
-          </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="invoice-add">
                   <a href="#" class="btn-circle" @click.prevent=""><i
                     class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
-          <span class="pull-right switching-icon" @click="showSearch = !showSearch">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
@@ -100,7 +32,7 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row label="发票号码" :span="5">
-                <oms-input type="text" v-model="searchCondition.invoiceNumber" placeholder="请输入货主订单号"></oms-input>
+                <oms-input type="text" v-model="searchCondition.invoiceNumber" placeholder="请输入发票号码"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
@@ -115,7 +47,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码</span> {{org.manufacturerCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -137,16 +69,17 @@
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="order-list clearfix" style="margin-top: 10px">
-        <el-row class="order-list-header" :gutter="10">
-          <el-col :span="5">疫苗厂商</el-col>
-          <el-col :span="5">发票号码</el-col>
-          <el-col :span="4">发票金额</el-col>
-          <el-col :span="5">待付金额</el-col>
-          <el-col :span="2">状态</el-col>
+        <el-row class="order-list-header">
+          <el-col :span="6">疫苗厂商</el-col>
+          <el-col :span="6">发票号码</el-col>
+          <el-col :span="3">发票金额</el-col>
+          <el-col :span="3">待付金额</el-col>
+          <!--<el-col :span="3">是否已到</el-col>-->
+          <el-col :span="3">状态</el-col>
           <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -165,27 +98,32 @@
           <div class="order-list-item order-list-item-bg" v-for="item in invoices"
                :class="[{'active':currentId==item.id}]" @click="showDetailPart(item)">
             <el-row>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="6" class="R pt10">
                     <span>
                       {{ item.factoryName }}
                     </span>
               </el-col>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="6" class="R pt10">
                     <span>
                       {{ item.invoiceNumber }}
                     </span>
               </el-col>
-              <el-col :span="4" class="R pt10">
+              <el-col :span="3" class="R pt10">
                     <span>
                        ￥{{ item.amount | formatMoney}}
                     </span>
               </el-col>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="3" class="R pt10">
                     <span>
                        ￥{{ (item.amount - item.paidAmount) | formatMoney}}
                     </span>
               </el-col>
-              <el-col :span="2" class="R pt10">
+              <!--<el-col :span="3" class="R pt10">-->
+                    <!--<span>-->
+                      <!--{{ item.haveTo ? '已到' : '未到'}}-->
+                    <!--</span>-->
+              <!--</el-col>-->
+              <el-col :span="3" class="R pt10">
                     <span>
                       {{ item.status === 0 ? '未付清' : '已付清'}}
                     </span>
