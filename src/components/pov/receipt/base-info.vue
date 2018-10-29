@@ -18,7 +18,7 @@
           <oms-row label="货主" :span="span">
             {{currentOrder.orgName}}
           </oms-row>
-          <oms-row label="供货厂商" :span="span">
+          <oms-row label="供货单位" :span="span">
             {{currentOrder.supplierName}}
           </oms-row>
           <oms-row label="物流商" :span="span"

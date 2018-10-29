@@ -323,7 +323,7 @@
         },
         createdTime: '',
         expectedTime: '',
-        orgType: utils.outOrderType,
+        orgType: utils.outBreakageOrderType,
         activeStatus: 0,
         currentOrderId: '',
         orgList: [], // 来源单位列表
@@ -510,7 +510,7 @@
           this.orgType[0].num = this.obtionStatusNum(data['out-pend-confirm']);
           this.orgType[1].num = this.obtionStatusNum(data['out-pend-check']);
           this.orgType[2].num = this.obtionStatusNum(data['out-pend-execute']);
-          this.orgType[3].num = this.obtionStatusNum(data['out-pov-receipt']);
+          // this.orgType[3].num = this.obtionStatusNum(data['out-pov-receipt']);
           this.orgType[4].num = this.obtionStatusNum(data['out-complete']);
           this.orgType[5].num = this.obtionStatusNum(data['out-cancel']);
         });
