@@ -191,7 +191,7 @@
               <el-date-picker
                 v-model="form.expectedTime"
                 placeholder="请选择日期" format="yyyy-MM-dd"
-                value-format="timestamp">
+                value-format="timestamp" :picker-options="pickerOptions">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="退货原因">
