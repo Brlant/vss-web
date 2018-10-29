@@ -82,11 +82,12 @@
   export default {
     name: 'OrderGoodsInfo',
     props: {
-      orderItem: {}
+      orderItem: {},
+      showBatch: Boolean
     },
     computed: {
       isShowbatch () {
-        return this.orderItem.type === '1' || (this.orderItem.type === '0' && this.orderItem.bizType === '1-1');
+        return this.orderItem.type === '1' || (this.orderItem.type === '0' && this.orderItem.bizType === '1-1') || this.showBatch;
       },
       level () {
         return this.$store.state.orgLevel;
