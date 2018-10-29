@@ -54,7 +54,8 @@
         <el-table-column prop="saleCount" label="采购金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleCount" label="销售数量" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleMoney" label="销售金额" width="100" :sortable="true"></el-table-column>
-        <el-table-column prop="saleReturnMoney" label="退区数量" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="saleReturnCount" label="退区数量" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="saleReturnMoney" label="退区金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="procurementReturnCount" label="退厂家数量" width="120" :sortable="true"></el-table-column>
         <el-table-column prop="procurementReturnMoney" label="退厂家金额" width="120" :sortable="true"></el-table-column>
         <el-table-column prop="scarpCount" label="报损数量" width="100" :sortable="true"></el-table-column>
