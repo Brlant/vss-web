@@ -56,11 +56,11 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="" :span="1">
-                <perm label="purchasing-detail-form-export">
-                  <el-button type="primary" @click="search" :disabled="loadingData">
-                    查询
-                  </el-button>
-                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <el-button type="primary" @click="search" :disabled="loadingData">
+                  查询
+                </el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <perm label="vaccine-month-settlement-manager-export">
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                     导出Excel
                   </el-button>
