@@ -470,9 +470,11 @@
           });
           return;
         }
+        this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
+        this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
         let params = Object.assign({}, {
           cdcId: this.user.userCompanyAddress
-        }, this.filters, {
+        }, this.searchWord, {
           procurementStatus: '',
           status: ''
         });
