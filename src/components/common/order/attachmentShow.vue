@@ -70,93 +70,94 @@
 </style>
 <template>
   <div>
-    <div class="qp-box accessory" v-if="attachmentClass === 'accessory' ">
-      <h2>
-        {{ label }}
-      </h2>
-      <perm :label="currentAttachmentRight.watch">
-        <div class="accessory-list">
-          <div v-if="orderAttachment.length">
-            <ul class="show-list">
-              <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
-                  @click="showAttachment(item)">
-                <div class="attachment-name">
-                  <el-tooltip effect="dark" :content="item.attachmentFileName" placement="top">
+    <perm :label="currentAttachmentRight.watch">
+      <div class="qp-box accessory" v-if="attachmentClass === 'accessory' ">
+        <h2>
+          {{ label }}
+        </h2>
+        <perm :label="currentAttachmentRight.watch">
+          <div class="accessory-list">
+            <div v-if="orderAttachment.length">
+              <ul class="show-list">
+                <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
+                    @click="showAttachment(item)">
+                  <div class="attachment-name">
+                    <el-tooltip effect="dark" :content="item.attachmentFileName" placement="top">
                     <span>
                         {{item.attachmentFileName}}
                     </span>
-                  </el-tooltip>
-                </div>
-                <div>
-                  <perm :label="currentAttachmentRight.remove">
+                    </el-tooltip>
+                  </div>
+                  <div>
+                    <perm :label="currentAttachmentRight.remove">
                    <span class="download-link attachment-delete" @click.stop.prevent="deleteAttachMentManageItem(item)"
                          v-show="isShowDeleteButton">
                      <i class="el-icon-t-delete"></i>
                     </span>
-                  </perm>
-                  <perm label="erp-attachment-name-update">
+                    </perm>
+                    <perm label="erp-attachment-name-update">
                     <span class="download-link attachment-delete" @click.stop.prevent="editName(item)">
                       <i class="el-icon-t-edit"></i>
                     </span>
-                  </perm>
-                  <perm :label="currentAttachmentRight.download">
+                    </perm>
+                    <perm :label="currentAttachmentRight.download">
                     <span class="attachment-delete">
                       <a class="download-link" @click.stop="$downloadFile(item)">
                         <i class="el-icon-t-download"></i>
                       </a>
                     </span>
-                  </perm>
-                </div>
-              </li>
-            </ul>
+                    </perm>
+                  </div>
+                </li>
+              </ul>
+            </div>
+            <div v-else>
+              <span>无附件</span>
+            </div>
           </div>
-          <div v-else>
-            <span>无附件</span>
-          </div>
-        </div>
-      </perm>
-      <div class="accessory-item" v-show="isShowAttachmentUpload">
-        <perm :label="currentAttachmentRight.upload">
-          <oms-upload-relation :formData="{objectId:objId,objectType:objectType}" :showFileList="false"
-                               @change="changeAttachmentFiles"></oms-upload-relation>
         </perm>
+        <div class="accessory-item" v-show="isShowAttachmentUpload">
+          <perm :label="currentAttachmentRight.upload">
+            <oms-upload-relation :formData="{objectId:objId,objectType:objectType}" :showFileList="false"
+                                 @change="changeAttachmentFiles"></oms-upload-relation>
+          </perm>
+        </div>
       </div>
-    </div>
-    <div class="exception-attachment" v-else-if="attachmentClass === 'exception-attachment' ">
-      <ul class="show-list">
-        <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
-            @click="showAttachment(item)">
-          <div class="attachment-name">
-            <el-tooltip effect="dark" :content="item.attachmentFileName" placement="top">
+      <div class="exception-attachment" v-else-if="attachmentClass === 'exception-attachment' ">
+        <ul class="show-list">
+          <li class="list-item list_flex" v-for="item in orderAttachment" :key="item.attachmentId"
+              @click="showAttachment(item)">
+            <div class="attachment-name">
+              <el-tooltip effect="dark" :content="item.attachmentFileName" placement="top">
                     <span>
                         {{item.attachmentFileName}}
                     </span>
-            </el-tooltip>
-          </div>
-          <div>
-            <perm :label="currentAttachmentRight.remove">
+              </el-tooltip>
+            </div>
+            <div>
+              <perm :label="currentAttachmentRight.remove">
                    <span class="download-link attachment-delete" @click.stop.prevent="deleteAttachMentManageItem(item)"
                          v-show="isShowDeleteButton">
                      <i class="el-icon-t-delete"></i>
                     </span>
-            </perm>
-            <perm label="erp-attachment-name-update">
+              </perm>
+              <perm label="erp-attachment-name-update">
                     <span class="download-link attachment-delete" @click.stop.prevent="editName(item)">
                       <i class="el-icon-t-edit"></i>
                     </span>
-            </perm>
-            <perm :label="currentAttachmentRight.download">
+              </perm>
+              <perm :label="currentAttachmentRight.download">
                     <span class="attachment-delete">
                       <a class="download-link" @click.stop="$downloadFile(item)">
                         <i class="el-icon-t-download"></i>
                       </a>
                     </span>
-            </perm>
-          </div>
-        </li>
-      </ul>
-    </div>
-
+              </perm>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </perm>
     <el-dialog title="编辑附件名称" :visible.sync="dialogFormVisible" :modal="false">
       <el-form ref="form" :model="form" :rules="rules">
         <el-form-item label="附件名称" :label-width="formLabelWidth" prop="attachmentFileName">

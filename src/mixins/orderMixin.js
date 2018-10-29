@@ -1,6 +1,14 @@
 export default {
+  data() {
+    return {
+      pickerOptions: {
+        disabledDate: time => {
+          return time.getTime() < this.$moment().subtract(1, 'days');
+        }
+      }
+    };
+  },
   computed: {
-
     isShowGoodsList () {
       return this.$store.state.isShowGoodsList;
     }

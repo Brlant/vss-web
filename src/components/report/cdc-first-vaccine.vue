@@ -174,8 +174,6 @@
         },
         showSearch: true,
         searchWord: {
-          typeList: [],
-          bizTypeList: [],
           orgGoodsIdList: [],
           areaCode: '',
           factoryId: '',
@@ -191,7 +189,6 @@
         bizDateAry: '',
         isLoading: false,
         typeList: ['入库', '出库'],
-        bizTypeList: ['采购订单', '销售退货', '盘盈入库', '调拨入库', '销售出库', '采购退货', '盘亏出库', '调拨出库'],
         goodsStatusList: ['不合格', '合格']
       };
     },
@@ -342,8 +339,6 @@
       },
       resetSearchForm: function () {
         this.searchWord = {
-          typeList: [],
-          bizTypeList: [],
           orgGoodsIdList: [],
           areaCode: '',
           factoryId: '',
@@ -353,7 +348,7 @@
           batchNumberId: ''
         };
         this.bizDateAry = '';
-        this.reportList = [];
+        this.reportChildList = [];
       },
       filterRelation: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;

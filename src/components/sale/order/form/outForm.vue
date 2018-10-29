@@ -183,6 +183,7 @@
               <el-date-picker
                 v-model="form.expectedTime"
                 placeholder="请选择日期" format="yyyy-MM-dd"
+                :picker-options="pickerOptions"
                 value-format="timestamp">
               </el-date-picker>
             </el-form-item>

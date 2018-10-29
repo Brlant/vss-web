@@ -95,7 +95,7 @@
         let perms = this.$store.state.permissions || [];
 
         menu.push({name: '订单详情', key: 0});
-        if (perms.includes('order-document-watch')) {
+        if (perms.includes('erp-order-document-watch')) {
           menu.push({name: '附件管理', key: 3});
         }
         let state = this.state;

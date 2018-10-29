@@ -94,7 +94,7 @@
         if (perms.includes('batch-number-manager')) {
           menu.push({name: '批号相关', key: 4});
         }
-        if (perms.includes('order-document-watch')) {
+        if (perms.includes('erp-order-document-watch')) {
           menu.push({name: '附件管理', key: 5});
         }
         let state = this.state;

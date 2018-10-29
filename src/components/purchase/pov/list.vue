@@ -245,7 +245,7 @@
       Perm,
       showForm, addForm, editForm
     },
-    data () {
+    data() {
       return {
         loadingData: false,
         showSearch: true,
@@ -286,11 +286,11 @@
       };
     },
     computed: {
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
-    mounted () {
+    mounted() {
       this.getDemandList(1);
       this.resetSearchForm();
       let orderId = this.$route.params.id;
@@ -306,22 +306,22 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (val.userCompanyAddress) {
           this.getDemandList(1);
         }
       }
     },
     methods: {
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getDemandList(1);
       },
-      handleCurrentChange (val) {
+      handleCurrentChange(val) {
         this.getDemandList(val);
       },
-      getDemandList (pageNo) { // 得到需求列表
+      getDemandList(pageNo) { // 得到需求列表
         this.isCheckAll = false;
         this.checkList = [];
         let orgId = this.user.userCompanyAddress;
@@ -354,7 +354,7 @@
           this.queryCount();
         });
       },
-      queryCount () {
+      queryCount() {
         let params = Object.assign({}, {
           cdcId: this.user.userCompanyAddress
         }, this.filters);
@@ -379,18 +379,18 @@
           this.orgList = res.data;
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.$router.push(`${item.id}`);
         this.showDetailPart = true;
       },
-      editOrder (item) {
+      editOrder(item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showEditPart = true;
       },
-      createSaleOrder (item) {
+      createSaleOrder(item) {
         this.$confirm('是否生成销售订单', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -408,15 +408,15 @@
           });
         });
       },
-      applyOrder () {
+      applyOrder() {
         this.showRight = true;
         this.index = 1;
       },
-      onSubmit () {
+      onSubmit() {
         this.getDemandList(1);
         this.showRight = false;
       },
-      resetRightBox (para) {
+      resetRightBox(para) {
         this.index = -1;
         this.showDetailPart = false;
         this.showRight = false;
@@ -426,7 +426,7 @@
           this.getDemandList(this.pager.currentPage);
         }
       },
-      checkStatus (item, key) {
+      checkStatus(item, key) {
         this.activeStatus = key;
         this.filters.status = item.status;
       },
@@ -463,19 +463,27 @@
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
       },
-      exportExcel () {
+      exportExcel() {
         if (!(this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0])) {
           this.$notify.info({
             message: '请选择需求到货日期'
           });
           return;
         }
+        this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
+        this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
+        let filters = {
+          status: this.filters.status,
+          povId: this.searchWord.povId,
+          demandStartTime: this.searchWord.demandStartTime,
+          demandEndTime: this.searchWord.demandEndTime,
+          orgAreaCode: this.searchWord.orgAreaCode,
+          id: this.searchWord.id
+        };
+        Object.assign(this.filters, this.searchWord);
         let params = Object.assign({}, {
           cdcId: this.user.userCompanyAddress
-        }, this.filters, {
-          procurementStatus: '',
-          status: ''
-        });
+        }, filters);
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/sale/pov/list'});
         this.$http.get('/pull-signal/export', {params}).then(res => {
           utils.download(res.data.path, '接种点要货需求');
@@ -488,7 +496,7 @@
           });
         });
       },
-      exportNoSaleExcel () {
+      exportNoSaleExcel() {
         if (!(this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0])) {
           this.$notify.info({
             message: '请选择需求到货日期'
@@ -513,7 +521,7 @@
           });
         });
       },
-      checkAll () { // 全选
+      checkAll() { // 全选
         if (this.isCheckAll) {
           this.demandList.forEach(item => {
             item.isChecked = true;
@@ -529,7 +537,7 @@
           this.checkList = [];
         }
       },
-      checkItem (item) { // 单选
+      checkItem(item) { // 单选
         item.isChecked = !item.isChecked;
         let index = this.checkList.indexOf(item);
         if (item.isChecked) {
@@ -540,7 +548,7 @@
           this.checkList.splice(index, 1);
         }
       },
-      createPurchaseDemand () {
+      createPurchaseDemand() {
         if (!this.checkList.length) {
           this.$notify.info({
             message: '请选择申请单'
@@ -560,7 +568,7 @@
           });
         });
       },
-      createDemand () {
+      createDemand() {
         if (!this.checkList.length) {
           this.$notify.info({
             message: '请选择申请单'
@@ -580,7 +588,7 @@
           });
         });
       },
-      cancel (item) {
+      cancel(item) {
         this.$confirm('是否取消"' + item.id + '" 申请单?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -611,7 +619,7 @@
           }
         });
       },
-      changeTime (date) {
+      changeTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }
