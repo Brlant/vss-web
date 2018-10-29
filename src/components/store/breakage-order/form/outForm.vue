@@ -585,6 +585,7 @@
           this.filterPOV();
         }
         this.filterAddress();
+        this.searchProduct();
       }
 //      form: {
 //        handler: 'autoSave',
