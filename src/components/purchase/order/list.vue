@@ -266,6 +266,7 @@
                 </div>
               </el-col>
               <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
+                <div class="f-grey" v-show="item.thirdPartyNumber">来源订单号：{{item.thirdPartyNumber }}</div>
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
