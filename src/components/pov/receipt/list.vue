@@ -164,8 +164,11 @@
       queryOrderList (pageNo) { // 得到需求分配列表
         this.orderList = [];
         this.pager.currentPage = pageNo;
-        this.loadingData = false;
-        let params = Object.assign({}, this.filters);
+        this.loadingData = true;
+        let params = Object.assign({}, this.filters, {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        });
         // 明细查询
         params.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         povReceipt.queryWasks(params).then(res => {

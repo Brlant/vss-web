@@ -62,9 +62,9 @@
   </div>
 </template>
 <script>
-  import utils, { deepCopy } from '@/tools/utils';
-  import { Auth } from '@/resources';
-  import { ErrorPage, route, basicRoutes } from '@/route';
+  import utils, {deepCopy} from '@/tools/utils';
+  import {Auth} from '@/resources';
+  import {basicRoutes, ErrorPage, route} from '@/route';
 
   export default {
     data: () => ({
@@ -73,7 +73,7 @@
       routesCopy: []
     }),
     methods: {
-      getCurrentMenu (data) {
+      getCurrentMenu(data) {
         let menu = [];
         menu = this.routesCopy[0].children.filter(f => f.meta.moduleId && (f.meta.perm === 'show' || data.includes(f.meta.perm)));
         menu.forEach(i => {
@@ -81,7 +81,7 @@
         });
         return menu;
       },
-      queryPermissions (url) {
+      queryPermissions(url) {
         this.routesCopy = deepCopy(route);
         this.loading = true;
         Auth.permission().then(res => {
@@ -105,7 +105,7 @@
           this.loading = false;
         });
       },
-      getCurrentUrl (url) {
+      getCurrentUrl(url) {
         if (!url) return '/';
         if (typeof url === 'string') return url;
         return {path: url.path, query: url.query};
@@ -134,11 +134,9 @@
           data = JSON.parse(data);
           this.$store.commit('initUser', data);
         }).catch(() => {
-          let valid = false;
-          Auth.logout().then(() => {
-            this.$router.addRoutes(ErrorPage);
-            this.$router.replace('/login');
-          });
+          this.$router.addRoutes(ErrorPage);
+          this.$router.replace('/login');
+          Auth.logout();
         });
       }
     }

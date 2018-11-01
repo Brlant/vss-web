@@ -49,6 +49,7 @@
       <tr>
         <th width="30" class="text-center">序号</th>
         <th width="400">货主货品</th>
+        <th>规格</th>
         <th v-show="isShowbatch">批号</th>
         <th v-show="isShowbatch">有效期</th>
         <th>数量</th>
@@ -61,6 +62,8 @@
         <td style="width: 400px">
           <span>{{product.name}}</span>
         </td>
+        <td style="width: 100px" v-if="product.orgGoodsDto.goodsDto">{{product.orgGoodsDto.goodsDto.specifications}}
+        </td>
         <td align="left" class="R" v-show="isShowbatch">
           {{ product.batchNumber || '无' }}
           <!--<el-tag v-show="product.inEffectiveFlag" type="danger">近效期</el-tag>-->
@@ -68,7 +71,8 @@
         <td align="left" v-show="isShowbatch">{{ product.expiryDate | date }}</td>
         <td align="left">
           {{product.amount}}
-          <dict :dict-group="'measurementUnit'" :dict-key="product.orgGoodsDto.goodsDto.measurementUnit"></dict>
+          <dict :dict-group="'measurementUnit'" v-if="product.orgGoodsDto.goodsDto"
+                :dict-key="product.orgGoodsDto.goodsDto.measurementUnit"></dict>
         </td>
         <td align="left" v-show="level !== 1">
           <span v-if="product.unitPrice">￥{{product.unitPrice}}</span>
