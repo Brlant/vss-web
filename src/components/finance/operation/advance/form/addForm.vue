@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -184,6 +183,10 @@
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
+            <el-form-item label="附件" v-if="type==='1'">
+              <oms-upload :fileList="attachmentList" @change="changeFiles"
+                          :formData="{ objectId: form.id, objectType: 'advancePayable'}"></oms-upload>
+            </el-form-item>
             <el-form-item>
               <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
             </el-form-item>
@@ -195,7 +198,7 @@
 </template>
 
 <script>
-  import { erpOrder, PaymentPending } from '../../../../../resources';
+  import {erpOrder, PaymentPending} from '../../../../../resources';
   import utils from '@/tools/utils';
   import methodsMixin from '@/mixins/methodsMixin';
 
@@ -228,14 +231,15 @@
         index: 0,
         orderDetailList: [],
         detailLoading: false,
-        createTimes: []
+        createTimes: [],
+        attachmentList: []
       };
     },
     computed: {
       PaymentMethod: function () {
         return this.$getDict('PaymentMethod');
       },
-      tabList () {
+      tabList() {
         let {type, title} = this;
         let billWay = type === 1 ? '付款' : '收款';
         return [
@@ -243,7 +247,7 @@
           {name: `${title}金额`, key: 1}
         ];
       },
-      totalMoney () {
+      totalMoney() {
         return this.orderDetailList.reduce(
           (pre, next) => {
             return {
@@ -255,13 +259,13 @@
       }
     },
     watch: {
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.resetForm();
         this.filterOrg();
         this.index = 0;
         this.orderDetailList = [];
       },
-      totalMoney (val) {
+      totalMoney(val) {
         this.form.amount = val.unitPrice || 0.00;
       }
     },
@@ -269,16 +273,25 @@
       this.filterOrg();
     },
     methods: {
+      changeFiles: function (fileList) {
+        let ids = [];
+        fileList.forEach(file => {
+          ids.push(file.attachmentId);
+        });
+        this.form.attachmentIdList = ids;
+      },
       resetForm: function () {// 重置表单
         this.$refs['addForm'].resetFields();
+        this.form.attachmentIdList = [];
+        this.attachmentList = [];
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.form.amount = utils.autoformatDecimalPoint(this.form.amount);
       },
       doClose: function () {
         this.$emit('close');
       },
-      orgIdChange (val) {
+      orgIdChange(val) {
         this.orderDetailList = [];
         if (!val) return;
         let params = {
@@ -310,7 +323,7 @@
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      createTimeChange () {
+      createTimeChange() {
         if (!this.form.orgId) {
           return this.$notify.info({message: `请选择${this.title}单位`});
         }
@@ -333,6 +346,7 @@
               money: m.unitPrice * m.amount
             };
           });
+          form.attachmentIdList = this.form.attachmentIdList;
           this.doing = true;
           PaymentPending.save(this.type, form).then(res => {
             this.resetForm();
