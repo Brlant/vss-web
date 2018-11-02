@@ -154,7 +154,7 @@
             <el-form-item label="状态:" class="mb0">
               {{getOrderStatus(billInfo)}}
             </el-form-item>
-            <el-form-item label="附件:" class="mb0">
+            <el-form-item label="附件:" class="mb0" v-if="type==='1'">
               <oms-upload :fileList="attachmentList" @change="changeFiles"
                           :formData="{ objectId:  billInfo.id, objectType:'advancePayable'}"></oms-upload>
             </el-form-item>
