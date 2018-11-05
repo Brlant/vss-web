@@ -40,7 +40,7 @@
     <table class="product-detail-list" v-loading="loading">
       <tbody>
       <tr>
-        <td colspan="3" width="180px" class="t-head">货品</td>
+        <td colspan="3" width="180px" class="t-head">疫苗</td>
         <td colspan="3" width="180px" class="t-head">生产厂商</td>
         <td colspan="2" width="120px" class="t-head">批号</td>
         <td colspan="2" width="120px" class="t-head">生产日期</td>
@@ -51,7 +51,7 @@
       <tr v-for="item in details">
         <td colspan="3">
           <div>
-            <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+            <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
               <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
             </el-tooltip>
           </div>

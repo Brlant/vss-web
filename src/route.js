@@ -276,7 +276,7 @@ export const route = [
           // {
           //   path: '/finance/sale',
           //   component: resolve => require(['./components/finance/bad/list.vue'], resolve),
-          //   meta: {moduleId: 'finance', title: '库存货品调价', perm: 'show'}
+          //   meta: {moduleId: 'finance', title: '库存疫苗调价', perm: 'show'}
           // }
         ]
       },
@@ -482,7 +482,7 @@ export const route = [
           {
             path: '/report/allotation',
             component: resolve => require(['./components/report/allotation.vue'], resolve),
-            meta: {moduleId: 'report', title: '出货货品统计表', perm: 'first-vaccine-distribution-manager'}
+            meta: {moduleId: 'report', title: '出货疫苗统计表', perm: 'first-vaccine-distribution-manager'}
           },
           {
             path: '/report/pov/two/repertory',

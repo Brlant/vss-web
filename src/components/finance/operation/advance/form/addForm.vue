@@ -153,7 +153,7 @@
             <table class="table" v-loading="detailLoading">
               <thead>
               <tr>
-                <th style="width: 280px">货品名称</th>
+                <th style="width: 280px">疫苗名称</th>
                 <th>订单号</th>
                 <th>{{type === 1 ? '待付款' : '待收款'}}金额</th>
                 <th>发生时间</th>

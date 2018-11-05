@@ -79,7 +79,7 @@
       <div class="order-list clearfix">
         <h2>合计信息</h2>
         <el-row class="order-list-header t-head" style="margin:0">
-          <el-col :span="8">货品名称</el-col>
+          <el-col :span="8">疫苗名称</el-col>
           <el-col :span="4">批号</el-col>
           <el-col :span="6">生产厂商</el-col>
           <el-col :span="3">生产日期</el-col>
@@ -131,7 +131,7 @@
 
         <el-row class="order-list-header t-head" style="margin:0">
           <el-col :span="8">追溯码</el-col>
-          <el-col :span="8">货品名称</el-col>
+          <el-col :span="8">疫苗名称</el-col>
           <el-col :span="5">批号</el-col>
           <el-col :span="3">包装类型</el-col>
         </el-row>

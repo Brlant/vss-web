@@ -168,7 +168,7 @@
                 (共{{list.length}}条)，总金额: ¥{{totalMoney.money | formatMoney}}
               </el-form-item>
               <el-table :data="list" style="width: 100%" class="header-list">
-                <el-table-column prop="orgGoodsName" label="货品名称" min-width="220"></el-table-column>
+                <el-table-column prop="orgGoodsName" label="疫苗名称" min-width="220"></el-table-column>
                 <el-table-column prop="orderNo" label="订单号" min-width="140"></el-table-column>
                 <el-table-column prop="money" label="金额" min-width="80">
                   <template slot-scope="scope"> ¥{{ scope.row.money | formatMoney}}</template>

@@ -48,7 +48,7 @@
       <thead>
       <tr>
         <th width="30" class="text-center">序号</th>
-        <th width="400">货主货品</th>
+        <th width="400">货主疫苗</th>
         <th>规格</th>
         <th v-show="isShowbatch">批号</th>
         <th v-show="isShowbatch">有效期</th>

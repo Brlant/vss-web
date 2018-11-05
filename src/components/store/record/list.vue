@@ -38,8 +38,8 @@
         </div>
         <el-form class="advanced-query-form clearfix" onsubmit="return false">
           <el-col :span="8">
-            <oms-form-row label="货主货品" :span="5">
-              <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+            <oms-form-row label="货主疫苗" :span="5">
+              <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="filterOrgGoods"
                          :clearable="true" @change="orgGoodsChange"
                          v-model="filters.orgGoodsId" popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.goodsName"
@@ -49,7 +49,7 @@
                   </div>
                   <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                     <span class="select-other-info pull-left"><span
                       v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -104,7 +104,7 @@
 
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <el-col :span="5">货主货品名称</el-col>
+          <el-col :span="5">货主疫苗名称</el-col>
           <el-col :span="3">批号</el-col>
           <el-col :span="2">原状态</el-col>
           <el-col :span="3">新状态</el-col>

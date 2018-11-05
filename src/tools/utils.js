@@ -307,7 +307,7 @@ export default {
     if (!smallPacking) return;
     if (amount < 0) {
       this.$notify.info({
-        message: '货品数量不能小于0, 已帮您调整为0'
+        message: '疫苗数量不能小于0, 已帮您调整为0'
       });
       return 0;
     }
@@ -320,13 +320,13 @@ export default {
     isMultiple = ri === 0;
     if (isMultiple) {
       this.$notify.info({
-        message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${integer}`
+        message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${integer}`
       });
       return integer;
     }
     let re = integer + smallPacking - ri;
     this.$notify.info({
-      message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
+      message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${re}`
     });
     return re;
   },
@@ -334,8 +334,8 @@ export default {
     if (!count || count < 0) {
       this.$notify({
         duration: 2000,
-        title: '货品资料不足',
-        message: '货品无最小包装单位，请补充资料，或者选择其他货品',
+        title: '疫苗资料不足',
+        message: '疫苗无最小包装单位，请补充资料，或者选择其他疫苗',
         type: 'error'
       });
     }

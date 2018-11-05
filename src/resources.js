@@ -895,7 +895,7 @@ export const InWork = resource('/stock-in', http, {
   }
 });
 
-// 货主货品
+// 货主疫苗
 export const OrgGoods = resource('/org/goods', http, {
   queryOneGoods: (id) => {
     return http.get('/org/goods/' + id, {});
@@ -908,7 +908,7 @@ export const OrgGoods = resource('/org/goods', http, {
   }
 });
 
-// 货品管理
+// 疫苗管理
 export const Goods = resource('/goods', http, {
   filterOrg: (orgId, params) => {
     return http.get('/goods/orgs/' + orgId, {params});
