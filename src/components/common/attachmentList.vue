@@ -36,7 +36,7 @@
               <i class="el-icon-t-download"></i>
             </a>
           </perm>
-          <perm :label="updatePerm===undefined?'erp-attachment-name-update':''">
+          <perm :label="updatePermission">
             <a href="#" class="download-link pull-right" @click.stop.prevent="editName(attachment)">
               <i class="el-icon-t-edit"></i>
             </a>
@@ -67,6 +67,32 @@
   import {OmsAttachment} from '../../resources';
 
   export default {
+    props: {
+      objectId: {
+        type: String,
+        default: ''
+      },
+      objectType: {
+        type: String,
+        default: ''
+      },
+      attachmentIdList: {
+        type: Array,
+        default: []
+      },
+      permission: {
+        type: String,
+        default: ''
+      },
+      deletePermission: {
+        type: String,
+        default: ''
+      },
+      updatePermission: {
+        type: String,
+        default: 'erp-attachment-name-update'
+      }
+    },
     data() {
       return {
         object: {
@@ -102,7 +128,6 @@
         this.perm = val;
       }
     },
-    props: ['objectId', 'objectType', 'attachmentIdList', 'permission', 'deletePermission', 'updatePermission'],
     methods: {
       onSubmit: function (formName) {
         this.$refs[formName].validate((valid) => {

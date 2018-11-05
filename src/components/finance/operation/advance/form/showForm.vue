@@ -159,7 +159,7 @@
                           :formData="{ objectId:  billInfo.id, objectType:'advancePayable'}"></oms-upload>
             </el-form-item>
             <el-form-item label="附件:" class="mb0" v-if="orgLevel!==3">
-              <attachment-lists attachmentIdList="" :objectId="billInfo.id" update-permission="true"
+              <attachment-lists attachmentIdList="" :objectId="billInfo.id" update-permission="'no'"
                                 :objectType="'advancePayable'"
                                 style="padding-top: 8px"></attachment-lists>
             </el-form-item>
