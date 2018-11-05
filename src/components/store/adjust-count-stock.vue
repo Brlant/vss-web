@@ -83,7 +83,7 @@
             <el-col :span="12">
               <el-col :span="12" v-show="searchWord.orgGoodsId">
                 <oms-form-row label="散件包装数量:" :span="10">
-                  <div style="margin-top: 7px">{{smallPackCount}}</div>
+                  <div>{{smallPackCount}}</div>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
