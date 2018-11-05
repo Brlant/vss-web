@@ -191,7 +191,7 @@
               v-show="form.detailList.length">
             <li class="show-item" style="background: #f1f1f1">
               <el-row type="flex">
-                <el-col :span="form.status==='0'?6:8">货品名称</el-col>
+                <el-col :span="form.status==='0'?6:8">疫苗名称</el-col>
                 <el-col :span="2">数量</el-col>
                 <el-col :span="form.status==='0'?5:6">订单号</el-col>
                 <el-col :span="4">发生时间</el-col>
@@ -287,7 +287,7 @@
           <!--v-show="form.detailList.length">-->
           <!--<li class="show-item" style="background: #f1f1f1">-->
           <!--<el-row type="flex">-->
-          <!--<el-col :span="form.status==='0'?6:8">货品名称</el-col>-->
+          <!--<el-col :span="form.status==='0'?6:8">疫苗名称</el-col>-->
           <!--<el-col :span="2">数量</el-col>-->
           <!--<el-col :span="form.status==='0'?5:6">订单号</el-col>-->
           <!--<el-col :span="4">发生时间</el-col>-->

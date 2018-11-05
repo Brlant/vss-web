@@ -65,7 +65,7 @@
                   </el-tooltip>
                 </div>
                 <div>
-                  <el-tooltip class="item" effect="dark" content="货品规格" placement="right">
+                  <el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">
                     <span style="font-size: 12px;">{{ item.specification }}</span>
                   </el-tooltip>
                 </div>

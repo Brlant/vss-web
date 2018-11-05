@@ -54,7 +54,7 @@
             <div v-loading="loadingData">
               <el-row class="mb-10">
                 <el-col :span="12">
-                  <oms-row label="货品" :span="4">{{currentItem.goodsName}}</oms-row>
+                  <oms-row label="疫苗" :span="4">{{currentItem.goodsName}}</oms-row>
                   <oms-row label="生产厂商" :span="4">{{currentItem.productFactory}}</oms-row>
                 </el-col>
                 <el-col :span="12">

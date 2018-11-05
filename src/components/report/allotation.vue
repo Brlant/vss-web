@@ -91,7 +91,7 @@
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/allotation'});
         this.$http.get('/erp-statement/first-vaccine-distribution/export', {params}).then(res => {
-          utils.download(res.data.path, '出货货品统计表');
+          utils.download(res.data.path, '出货疫苗统计表');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/allotation'});
         }).catch(error => {

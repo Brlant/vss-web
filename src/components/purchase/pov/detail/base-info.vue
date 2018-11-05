@@ -84,7 +84,7 @@
     <table class="table table-hover" style="margin-top: 10px">
       <thead>
       <tr>
-        <th>货品名称</th>
+        <th>疫苗名称</th>
         <th>规格</th>
         <th>单价</th>
         <th>申请数量</th>

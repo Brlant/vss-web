@@ -48,8 +48,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="平台货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索平台货品" :remote-method="filterVaccine"
+              <oms-form-row label="平台疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索平台疫苗" :remote-method="filterVaccine"
                            :clearable="true" @change="goodsChange" @click.native.once="filterVaccine('')"
                            v-model="searchWord.goodsId" popper-class="good-selects">
                   <el-option :value="vaccine.goodsId" :key="vaccine.goodsId"
@@ -120,8 +120,8 @@
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="orgName" label="接种点" min-width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="goodsName" label="接种点货品名称" min-width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="platformGoodsName" label="平台货品名称" min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="接种点疫苗名称" min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="platformGoodsName" label="平台疫苗名称" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column label="业务库存" align="center">
@@ -337,17 +337,17 @@
         let title = '';
         switch (property) {
           case 'qualifiedCount': {
-            content = '仓库内真实合格货品数量';
+            content = '仓库内真实合格疫苗数量';
             title = '合格';
             break;
           }
           case 'unqualifiedCount': {
-            content = '仓库内真实不合格货品数量';
+            content = '仓库内真实不合格疫苗数量';
             title = '不合格';
             break;
           }
           case 'transitCount': {
-            content = '在运输中的货品数量';
+            content = '在运输中的疫苗数量';
             title = '在途库存';
             break;
           }

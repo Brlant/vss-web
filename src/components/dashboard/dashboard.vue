@@ -25,7 +25,7 @@
     <!--接种点要货需求-->
     <dev-demand/>
 
-    <!--货品效期提醒-->
+    <!--疫苗效期提醒-->
     <stock-overdue-tip/>
     <licence/>
   </div>

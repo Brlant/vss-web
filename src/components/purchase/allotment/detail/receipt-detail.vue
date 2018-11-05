@@ -50,12 +50,12 @@
         <td colspan="2" style="width: 120px" class="t-head">名称</td>
         <td colspan="6" style="width: 360px">
           <div>
-            <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+            <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
               <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
             </el-tooltip>
           </div>
           <div>
-            <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+            <el-tooltip class="item" effect="dark" content="平台疫苗名称" placement="right">
               <span style="font-size: 12px;color:#999">{{ item.orgGoodsDto.goodsDto.name }}</span>
             </el-tooltip>
           </div>

@@ -63,7 +63,7 @@
           <tr>
             <td></td>
             <td></td>
-            <td>货品</td>
+            <td class="text-center">疫苗</td>
             <td class="text-center">规格</td>
             <td class="text-center">单价</td>
             <td class="text-center">数量</td>
@@ -88,17 +88,17 @@
             </td>
             <td>
               <div>
-                <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
                   <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="平台疫苗名称" placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
                 </el-tooltip>
               </div>
               <!--<div>-->
-              <!--<el-tooltip class="item" effect="dark" content="货品规格" placement="right">-->
+              <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
               <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
               <!--</el-tooltip>-->
               <!--</div>-->

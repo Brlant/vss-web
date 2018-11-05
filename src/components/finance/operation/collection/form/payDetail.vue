@@ -39,8 +39,8 @@
             </div>
           </el-select>
         </el-form-item>
-        <el-form-item label="货品名称">
-          <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索货品" :clearable="true"
+        <el-form-item label="疫苗名称">
+          <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索疫苗" :clearable="true"
                      @click.native="searchProduct('')" remote :remote-method="searchProduct"
                      popper-class="good-selects" @change="orgGoodsIdChange">
             <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
@@ -52,7 +52,7 @@
                 </div>
                 <div class="clearfix">
                   <span class="select-other-info pull-left">
-                    <span v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                    <span v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                   </span>
                   <span class="select-other-info pull-left"><span
                     v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -81,7 +81,7 @@
           <thead>
           <tr>
             <th width="30px">操作</th>
-            <th style="width: 240px">货品名称</th>
+            <th style="width: 240px">疫苗名称</th>
             <th>数量</th>
             <th>订单号</th>
             <th>待{{titleAry[type][2]}}金额</th>
@@ -137,7 +137,7 @@
         <table class="table">
           <thead>
           <tr>
-            <th style="width: 260px">订单号/货品名称</th>
+            <th style="width: 260px">订单号/疫苗名称</th>
             <th>数量</th>
             <th>发生时间</th>
             <th>待{{titleAry[type][2]}}金额</th>

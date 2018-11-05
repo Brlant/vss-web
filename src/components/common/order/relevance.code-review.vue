@@ -90,7 +90,7 @@
 
         <el-row class="order-list-header t-head" style="margin:0">
           <el-col :span="8">追溯码</el-col>
-          <el-col :span="8">货品名称</el-col>
+          <el-col :span="8">疫苗名称</el-col>
           <el-col :span="5">批号</el-col>
           <el-col :span="3">包装类型</el-col>
         </el-row>

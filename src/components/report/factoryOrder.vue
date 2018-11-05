@@ -41,8 +41,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="平台货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索货品" :remote-method="filterVaccine"
+              <oms-form-row label="平台疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterVaccine"
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects">
                   <el-option :value="vaccine.id" :key="vaccine.id"
@@ -54,10 +54,10 @@
                     </div>
                     <div style="overflow: hidden">
                       <!--<span class="select-other-info pull-left"><span-->
-                      <!--v-show="vaccine.code">货品编号</span>  {{vaccine.code}}-->
+                      <!--v-show="vaccine.code">疫苗编号</span>  {{vaccine.code}}-->
                       <!--</span>-->
                       <span class="select-other-info pull-left"><span
-                        v-show="vaccine.specifications">货品规格:</span>{{vaccine.specifications}}
+                        v-show="vaccine.specifications">疫苗规格:</span>{{vaccine.specifications}}
                         </span>
                       <!--<span class="select-other-info pull-left"><span-->
                       <!--v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}-->
@@ -126,8 +126,8 @@
             {{ scope.row.suppliersName }}
           </template>
         </el-table-column>
-        <el-table-column prop="orgGoodsName" label="货主货品" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="goodsName" label="平台货品" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="货主疫苗" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="goodsName" label="平台疫苗" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="specification" label="规格" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"
                          width="120"></el-table-column>

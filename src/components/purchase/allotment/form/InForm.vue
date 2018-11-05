@@ -173,7 +173,7 @@
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
             <el-form-item label-width="120px">
-              <el-button type="primary" @click="index++">添加货品</el-button>
+              <el-button type="primary" @click="index++">添加疫苗</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -201,7 +201,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                        v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left">
                           <span>标准价格:￥</span>{{ item.orgGoodsDto.unitPrice | formatMoney}}</span>
@@ -235,7 +235,7 @@
                       <goods-info-part :product-info="product"></goods-info-part>
                     </el-col>
                     <el-col :span="10">
-                      <span v-show="accessoryList.length">【组合货品】</span>
+                      <span v-show="accessoryList.length">【组合疫苗】</span>
                       <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                       <span style="margin-right: 10px">¥ {{ acce.unitPrice | formatMoney }}</span>
@@ -253,13 +253,13 @@
             </el-form>
           </div>
           <div class="product-list-detail">
-            <h3 style="background: #13ce66;color: #fff">已选货品</h3>
+            <h3 style="background: #13ce66;color: #fff">已选疫苗</h3>
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 300px">货品名称</th>
-                <th>货品单价</th>
-                <th>货品数量</th>
+                <th style="width: 300px">疫苗名称</th>
+                <th>疫苗单价</th>
+                <th>疫苗数量</th>
                 <th>金额</th>
                 <th>操作</th>
               </tr>
@@ -370,7 +370,7 @@
             'goodsDto': {}
           }
         },
-        accessoryList: [], // 组合货品列表
+        accessoryList: [], // 组合疫苗列表
         searchProductList: [],
         filterProductList: [],
         form: {
@@ -444,7 +444,7 @@
         index: 0,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '货品信息', key: 1}
+          {name: '疫苗信息', key: 1}
         ],
         orgList: [],
         customerList: [],
@@ -857,7 +857,7 @@
         });
         this.filterProductList = arr;
       },
-      getGoodDetail: function (OrgGoodsId) {// 选货品
+      getGoodDetail: function (OrgGoodsId) {// 选疫苗
         if (!OrgGoodsId) {
           this.product = {
             'amount': null,
@@ -893,7 +893,7 @@
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
-      addProduct: function () {// 货品加入到订单
+      addProduct: function () {// 疫苗加入到订单
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,

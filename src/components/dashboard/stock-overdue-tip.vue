@@ -1,10 +1,10 @@
 <template>
-  <card-box title="货品效期提醒">
+  <card-box title="疫苗效期提醒">
     <el-row class="list-item" type="flex"
             :gutter="15"
     >
       <el-col :span="10">
-        货主货品名称
+        货主疫苗名称
       </el-col>
       <el-col :span="8">
         生产厂商
@@ -23,7 +23,7 @@
       </el-col>
     </el-row>
     <div v-if="!stockList.length" class="no-info">
-      暂无效期货品
+      暂无效期疫苗
     </div>
     <el-row v-else="" v-for="(item, index) in stockList" :key="item.id" type="flex" :gutter="15"
             class="list-item"

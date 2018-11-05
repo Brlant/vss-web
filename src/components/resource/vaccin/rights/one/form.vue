@@ -149,7 +149,7 @@
           povList: {required: true, type: 'array', message: '请选择接种点', trigger: 'change'},
           povId: {required: true, message: '请选择销售价格组', trigger: 'change'}
         },
-        prices: [], // 货品列表
+        prices: [], // 疫苗列表
         title: '新增疫苗授权',
         orgList: [],
         unitPrice: '',

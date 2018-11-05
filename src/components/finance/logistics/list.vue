@@ -19,8 +19,8 @@
             <!--</oms-form-row>-->
             <!--</el-col>-->
             <!--<el-col :span="8">-->
-            <!--<oms-form-row label="疾控货品" :span="6">-->
-            <!--<el-select filterable remote placeholder="请输入名称搜索疾控货品" :remote-method="getGoodsList" :clearable="true"-->
+            <!--<oms-form-row label="疾控疫苗" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入名称搜索疾控疫苗" :remote-method="getGoodsList" :clearable="true"-->
             <!--v-model="filters.orgGoodsId" popper-class="good-selects">-->
             <!--<el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"-->
             <!--v-for="item in goodses">-->
@@ -29,7 +29,7 @@
             <!--</div>-->
             <!--<div style="overflow: hidden">-->
             <!--<span class="select-other-info pull-left"><span-->
-            <!--v-show="item.orgGoodsDto.goodsNo">货品编号</span>  {{item.orgGoodsDto.goodsNo}}-->
+            <!--v-show="item.orgGoodsDto.goodsNo">疫苗编号</span>  {{item.orgGoodsDto.goodsNo}}-->
             <!--</span>-->
             <!--<span class="select-other-info pull-left"><span-->
             <!--v-show="item.orgGoodsDto.salesFirmName">供货厂商</span>  {{ item.orgGoodsDto.salesFirmName }}-->
@@ -78,7 +78,7 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <!--<el-col :span="4">货品</el-col>-->
+          <!--<el-col :span="4">疫苗</el-col>-->
           <!--<el-col :span="2">疫苗类型</el-col>-->
           <el-col :span="6">采购（退）订单</el-col>
           <el-col :span="6">物流厂商</el-col>

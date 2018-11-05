@@ -182,7 +182,7 @@
               v-if="form.detailList.length">
             <li class="show-item" style="background: #f1f1f1">
               <el-row type="flex">
-                <el-col :span="form.billPayType === '1' ? 6 : 7">货品名称</el-col>
+                <el-col :span="form.billPayType === '1' ? 6 : 7">疫苗名称</el-col>
                 <el-col :span="2">数量</el-col>
                 <el-col :span="form.billPayType === '1' ? 4 : 5">订单号</el-col>
                 <el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>
@@ -268,7 +268,7 @@
           <!--v-if="form.detailList.length">-->
           <!--<li class="show-item" style="background: #f1f1f1">-->
           <!--<el-row type="flex">-->
-          <!--<el-col :span="form.billPayType === '1' ? 5 : 6">货品名称</el-col>-->
+          <!--<el-col :span="form.billPayType === '1' ? 5 : 6">疫苗名称</el-col>-->
           <!--<el-col :span="2">数量</el-col>-->
           <!--<el-col :span="form.billPayType === '1' ? 4 : 5">订单号</el-col>-->
           <!--<el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>-->

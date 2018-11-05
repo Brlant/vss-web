@@ -20,9 +20,9 @@
 <template>
   <div>
     <el-form ref="payForm" :inline="true" onsubmit="return false">
-      <el-form-item label="货品名称">
+      <el-form-item label="疫苗名称">
         <!--<oms-input v-model="searchCondition.goodsName"></oms-input>-->
-        <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货品"
+        <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索疫苗"
                    :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                    popper-class="good-selects">
           <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
@@ -33,7 +33,7 @@
             </div>
             <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
               <span class="select-other-info pull-left"><span
                 v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -62,7 +62,7 @@
         <thead>
         <tr>
           <th width="30px">操作</th>
-          <th style="width: 240px">货品名称</th>
+          <th style="width: 240px">疫苗名称</th>
           <th>数量</th>
           <th>订单号</th>
           <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
@@ -120,7 +120,7 @@
       <table class="table">
         <thead>
         <tr>
-          <th style="width: 240px">订单号/货品名称</th>
+          <th style="width: 240px">订单号/疫苗名称</th>
           <th>数量</th>
           <th>发生时间</th>
           <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
