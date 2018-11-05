@@ -215,13 +215,17 @@
                 </el-col>
               </el-row>
             </li>
+            <li class="text-right is-total" v-show="form.status==='2'">
+              <span>合计数量:{{total.count}}；</span>
+              <span>合计本次收款金额:¥{{total.paidMoney | formatMoney}}</span>
+            </li>
           </ul>
           <oms-row :span="4" label="审核意见" v-show="form.status ==='0' || form.status ==='-1'">
             <oms-input type="textarea"
                        v-model="form.auditOpinion" placeholder="请输入审核意见"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </oms-row>
-          <oms-row :span="form.status ==='0' || form.status ==='-1' ? 4 : 2" class="mt-10">
+          <oms-row label="" :span="form.status ==='0' || form.status ==='-1' ? 4 : 2" class="mt-10">
             <div v-if="type===1">
               <perm :label="perms[1]" v-show="form.status === '0'">
                 <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
@@ -385,6 +389,14 @@
         let {type, formItem} = this;
         let {status} = formItem;
         return type === 1 && status === '0' || type === 2 && (status === '-1' || status === '1');
+      },
+      total() {
+        return this.form.detailList.reduce((pre, next) => {
+          return {
+            count: Number(pre.count) + Number(next.count),
+            paidMoney: Number(pre.paidMoney) + Number(next.paidMoney)
+          };
+        }, {count: 0, paidMoney: 0}) || {};
       }
     },
     watch: {
