@@ -157,7 +157,7 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="text-center">货品</td>
+            <td>货品</td>
             <td class="text-center">批号</td>
             <!--<td>生产日期</td>-->
             <td class="text-center">有效期</td>

@@ -63,7 +63,7 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="text-center">货品</td>
+            <td>货品</td>
             <td class="text-center">规格</td>
             <td class="text-center">单价</td>
             <td class="text-center">数量</td>
