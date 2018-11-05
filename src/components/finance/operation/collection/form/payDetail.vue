@@ -173,6 +173,12 @@
                 删除</a>
             </td>
           </tr>
+          <tr>
+            <td :colspan="6" class="text-right is-total">
+              <span>合计数量:{{total.goodsCount}}；</span>
+              <span>合计本次{{titleAry[type][2]}}金额:¥{{total.payment | formatMoney}}</span>
+            </td>
+          </tr>
           </tbody>
         </table>
       </div>
@@ -226,6 +232,14 @@
     computed: {
       showPayments () {
         return this.payments.filter(f => this.selectPayments.every(e => e.id !== f.id));
+      },
+      total() {
+        return this.selectPayments.reduce((pre, next) => {
+          return {
+            goodsCount: Number(pre.goodsCount) + Number(next.goodsCount),
+            payment: Number(pre.payment) + Number(next.payment)
+          };
+        }, {goodsCount: 0, payment: 0}) || {};
       }
     },
     watch: {

@@ -332,6 +332,12 @@
         }
         this.orgIdChange(this.form.orgId);
       },
+      searchInOrder() {
+        if (!this.form.orgId) {
+          return this.$notify.info({message: `请选择${this.title}单位`});
+        }
+        this.orgIdChange(this.form.orgId);
+      },
       onSubmit: function () {// 提交表单
         this.$refs['addForm'].validate((valid) => {
           if (!valid || this.doing) {

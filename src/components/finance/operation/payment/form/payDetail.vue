@@ -16,7 +16,6 @@
       width: 310px;
     }
   }
-
 </style>
 <template>
   <div>
@@ -161,6 +160,12 @@
               删除</a>
           </td>
         </tr>
+        <tr>
+          <td :colspan="billPayType === '1' ? 7 : 6" class="text-right is-total">
+            <span>合计数量:{{total.goodsCount}}；</span>
+            <span>合计本次付款金额:¥{{total.payment | formatMoney}}</span>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -168,7 +173,7 @@
 
 </template>
 <script>
-  import { Vaccine } from '@/resources';
+  import {Vaccine} from '@/resources';
 
   export default {
     props: {
@@ -177,7 +182,7 @@
       factoryId: '',
       amount: ''
     },
-    data () {
+    data() {
       return {
         payments: [],
         form: {
@@ -203,19 +208,27 @@
       };
     },
     computed: {
-      showPayments () {
+      showPayments() {
         return this.payments.filter(f => this.selectPayments.every(e => e.id !== f.id));
+      },
+      total() {
+        return this.selectPayments.reduce((pre, next) => {
+          return {
+            goodsCount: Number(pre.goodsCount) + Number(next.goodsCount),
+            payment: Number(pre.payment) + Number(next.payment)
+          };
+        }, {goodsCount: 0, payment: 0}) || {};
       }
     },
     watch: {
-      factoryId (val) {
+      factoryId(val) {
         this.payments = [];
         this.goodesList = [];
         this.resetSearchForm();
         if (!val) return;
         this.queryPayments(1);
       },
-      billPayType () {
+      billPayType() {
         this.payments = [];
         this.goodesList = [];
         this.resetSearchForm();
@@ -231,7 +244,7 @@
       }
     },
     filters: {
-      formatCount (val) {
+      formatCount(val) {
         if (!val) return '0.00';
         if (typeof val === 'string') {
           return val;
@@ -241,7 +254,7 @@
       }
     },
     methods: {
-      queryPayments (pageNo) {
+      queryPayments(pageNo) {
         this.pager.currentPage = pageNo;
         this.loadingData = true;
         let params = Object.assign({}, {
@@ -261,7 +274,7 @@
           this.pager.count = res.data.count;
         });
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         if (!this.factoryId) return;
         let params = Object.assign({}, {
           keyWord: keyWord,
@@ -291,7 +304,7 @@
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      paymentChange (item) {
+      paymentChange(item) {
         let value = item.billAmount - item.prepaidAccounts;
         if (value < 0) {
           if (item.payment < value) {
@@ -309,13 +322,13 @@
         item.payment = Number(item.payment);
         item.payment = item.payment ? item.payment.toFixed(2) : 0.00;
       },
-      add (item) {
+      add(item) {
         let index = this.selectPayments.indexOf(item);
         if (index === -1) {
           this.selectPayments.push(item);
         }
       },
-      remove (item) {
+      remove(item) {
         let index = this.selectPayments.indexOf(item);
         this.selectPayments.splice(index, 1);
       }
