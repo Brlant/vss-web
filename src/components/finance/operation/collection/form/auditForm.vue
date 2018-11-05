@@ -216,8 +216,8 @@
               </el-row>
             </li>
             <li class="text-right is-total" v-show="form.status==='2'">
-              <span>合计数量:{{total.count}}；</span>
-              <span>合计本次收款金额:¥{{total.paidMoney | formatMoney}}</span>
+              <span>合计数量:{{total.count}}</span>
+              <span class="ml-15">合计本次收款金额:¥{{total.paidMoney | formatMoney}}</span>
             </li>
           </ul>
           <oms-row :span="4" label="审核意见" v-show="form.status ==='0' || form.status ==='-1'">

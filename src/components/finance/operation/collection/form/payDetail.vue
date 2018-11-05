@@ -175,8 +175,8 @@
           </tr>
           <tr>
             <td :colspan="6" class="text-right is-total">
-              <span>合计数量:{{total.goodsCount}}；</span>
-              <span>合计本次{{titleAry[type][2]}}金额:¥{{total.payment | formatMoney}}</span>
+              <span>合计数量:{{total.goodsCount}}</span>
+              <span class="ml-15">合计本次{{titleAry[type][2]}}金额:¥{{total.payment | formatMoney}}</span>
             </td>
           </tr>
           </tbody>
