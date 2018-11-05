@@ -154,9 +154,13 @@
             <el-form-item label="状态:" class="mb0">
               {{getOrderStatus(billInfo)}}
             </el-form-item>
-            <el-form-item label="附件:" class="mb0" v-if="type==='1'">
+            <el-form-item label="附件:" class="mb0" v-if="orgLevel===3">
               <oms-upload :fileList="attachmentList" @change="changeFiles"
                           :formData="{ objectId:  billInfo.id, objectType:'advancePayable'}"></oms-upload>
+            </el-form-item>
+            <el-form-item label="附件:" class="mb0" v-if="orgLevel===2">
+              <attachment-lists attachmentIdList="" :objectId="billInfo.id"
+                                :objectType="'advancePayable'" style="padding-top: 8px"></attachment-lists>
             </el-form-item>
             <div v-show="list.length">
               <el-form-item :label="`${title}明细`" class="mb0">
@@ -203,8 +207,12 @@
 
 <script>
   import {http, OmsAttachment} from '@/resources';
+  import attachmentLists from './../../../../common/attachmentList.vue';
 
   export default {
+    components: {
+      attachmentLists
+    },
     name: 'auditForm',
     loading: false,
     props: {
@@ -231,6 +239,9 @@
         const {type, billInfo} = this;
         const status = billInfo.status;
         return type === 1 && status === '0' || type === 2 && (status === '1' || status === '3');
+      },
+      orgLevel() {
+        return this.$store.state.orgLevel;
       },
       totalMoney() {
         return this.list.reduce(

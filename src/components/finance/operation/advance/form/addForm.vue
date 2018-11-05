@@ -183,7 +183,7 @@
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
-            <el-form-item label="附件" v-if="type==='1'">
+            <el-form-item label="附件" v-if="orgLevel===3">
               <oms-upload :fileList="attachmentList" @change="changeFiles"
                           :formData="{ objectId: form.id, objectType: 'advancePayable'}"></oms-upload>
             </el-form-item>
@@ -246,6 +246,9 @@
           {name: `${billWay}明细`, key: 0},
           {name: `${title}金额`, key: 1}
         ];
+      },
+      orgLevel() {
+        return this.$store.state.orgLevel;
       },
       totalMoney() {
         return this.orderDetailList.reduce(
