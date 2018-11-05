@@ -160,7 +160,8 @@
             </el-form-item>
             <el-form-item label="附件:" class="mb0" v-if="orgLevel!==3">
               <attachment-lists attachmentIdList="" :objectId="billInfo.id"
-                                :objectType="'advancePayable'" style="padding-top: 8px"></attachment-lists>
+                                :objectType="'advancePayable'"
+                                style="padding-top: 8px"></attachment-lists>
             </el-form-item>
             <div v-show="list.length">
               <el-form-item :label="`${title}明细`" class="mb0">
@@ -207,7 +208,7 @@
 
 <script>
   import {http, OmsAttachment} from '@/resources';
-  import attachmentLists from './../../../../common/attachmentList.vue';
+  import attachmentLists from './../../../../common/advancePayable-AttachmentList.vue';
 
   export default {
     components: {
