@@ -404,7 +404,7 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="12" style="padding-left:120px;" v-if="data.goodsDto">
+                <el-col :span="20" style="padding-left:120px;" v-if="data.goodsDto">
                   <attachment-lists attachmentIdList="" :objectId="data.goodsDto.id"
                                     :objectType="'goodsDocument'"
                                     :permission="'goods-attachment-download'"></attachment-lists>
