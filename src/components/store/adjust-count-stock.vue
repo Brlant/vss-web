@@ -15,6 +15,11 @@
       color: red;
     }
   }
+
+  .is-flex {
+    display: flex;
+    align-items: center;
+  }
 </style>
 <template>
   <div class="order-page">
@@ -68,7 +73,7 @@
               </oms-form-row>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row class="is-flex">
             <el-col :span="12">
               <oms-form-row label="仓库" :span="4">
                 <el-select v-model="searchWord.warehouseId" filterable clearable
@@ -82,7 +87,7 @@
             </el-col>
             <el-col :span="12">
               <el-col :span="12" v-show="searchWord.orgGoodsId">
-                <oms-form-row label="散件包装数量:" :span="10">
+                <oms-form-row class="is-flex" label="散件包装数量:" :span="10">
                   <div>{{smallPackCount}}</div>
                 </oms-form-row>
               </el-col>
@@ -94,7 +99,7 @@
           <el-row>
             <el-col :span="12">
               <el-col :span="12">
-                <oms-form-row label="可用库存" :span="10">
+                <oms-form-row label="可用库存" :span="8">
                   <el-input  type="number" v-model.number="form.availableCount"></el-input>
                 </oms-form-row>
               </el-col>
