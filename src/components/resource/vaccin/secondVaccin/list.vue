@@ -40,7 +40,7 @@
 
   .min-row {
     .el-row {
-      margin-bottom: 10px;
+      /*margin-bottom: 10px;*/
     }
   }
 
@@ -194,10 +194,10 @@
             </h2>
             <div class="page-main-body min-row">
               <el-row>
-                <el-col :span="4" class="text-right" style="font-size: 12px">
+                <el-col :span="6" class="text-right" style="font-size: 12px">
                   [ 产品图片 ]
                 </el-col>
-                <el-col :span="12" class="text-right" style="font-size: 12px">
+                <el-col :span="11" class="text-right" style="font-size: 12px">
                   [ 疫苗信息 ]
                 </el-col>
               </el-row>
@@ -209,10 +209,10 @@
                   </div>
                 </el-col>
                 <el-col :span="12">
-                  <goods-row label="疫苗编号" :span="8">
+                  <goods-row label="疫苗编号" :span="12">
                     {{ data.goodsNo}}
                   </goods-row>
-                  <goods-row label="疫苗名称" :span="8">
+                  <goods-row label="疫苗名称" :span="12">
                     {{ data.name}}
                   </goods-row>
                   <!--<goods-row label="疫苗分类" :span="8">-->
@@ -221,44 +221,44 @@
                   <!--<goods-row label="疫苗标志" :span="8">-->
                   <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
                   <!--</goods-row>-->
-                  <goods-row label="储存条件" :span="8">
+                  <goods-row label="储存条件" :span="12">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
-                  <goods-row label="标准单价" :span="8">
+                  <goods-row label="标准单价" :span="12">
                     <span v-if="data.unitPrice">¥</span> {{ data.unitPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="中标价格" :span="8">
+                  <goods-row label="中标价格" :span="12">
                     <span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="采购价格" :span="8">
+                  <goods-row label="采购价格" :span="12">
                     <span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="供货厂商" :span="8">
+                  <goods-row label="供货厂商" :span="12">
                     {{ data.salesFirmName }}
                   </goods-row>
-                  <goods-row label="销售价格" :span="8">
+                  <goods-row label="销售价格" :span="12">
                     <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="库存上限" :span="8">
+                  <goods-row label="库存上限" :span="12">
                     {{ data.inventoryUpperLimit }}
                   </goods-row>
-                  <goods-row label="库存下限" :span="8">
+                  <goods-row label="库存下限" :span="12">
                     {{ data.inventoryLowerLimit }}
                   </goods-row>
-                  <goods-row label="是否组合" :span="8" v-show="data.goodsIsCombination">
+                  <goods-row label="是否组合" :span="12" v-show="data.goodsIsCombination">
                     {{ data.goodsIsCombination | formatStatus}}
                   </goods-row>
-                  <goods-row label="是否计价" :span="8" v-show="data.valuationFlag">
+                  <goods-row label="是否计价" :span="12" v-show="data.valuationFlag">
                     {{ data.valuationFlag | formatStatus}}
                   </goods-row>
                 </el-col>
               </el-row>
               <div class="border-show"></div>
               <el-row>
-                <el-col :span="4" class="text-right" style="font-size: 12px">
+                <el-col :span="6" class="text-right" style="font-size: 12px">
                   [ 疫苗标准产品信息 ]
                 </el-col>
-                <el-col :span="12" class="text-right" style="font-size: 12px">
+                <el-col :span="11" class="text-right" style="font-size: 12px">
                   [ 包装存储信息 ]
                 </el-col>
               </el-row>
@@ -277,37 +277,39 @@
                   <goods-row label="批准文号" :span="12">{{ data.goodsDto.approvalNumber }}</goods-row>
                 </el-col>
                 <el-col :span="12">
-                  <goods-row label="存储类别" :span="8">
+                  <goods-row label="存储类别" :span="12">
                      <span v-for="(item, index) in data.goodsDto.storageType">
                        <dict :dict-group="'storageType'" :dict-key="item"></dict>
                        <span v-if="(data.goodsDto.storageType.length-1) !== index ">/</span>
                     </span>
                   </goods-row>
-                  <goods-row label="储存条件" :span="8">
+                  <goods-row label="储存条件" :span="12">
                     <dict :dict-group="'storageCondition'" :dict-key="data.goodsDto.storageConditionId"></dict>
                   </goods-row>
-                  <goods-row label="运输温度" :span="8">
+                  <goods-row label="运输温度" :span="12">
                     <span
                       v-show="data.goodsDto.transportStartTemperature">{{ data.goodsDto.transportStartTemperature}} ℃ - {{ data.goodsDto.transportEndTemperature
                       }} ℃</span>
                   </goods-row>
-                  <goods-row label="冷藏存储温度" :span="8">
+                  <goods-row label="冷藏存储温度" :span="12">
                     <span
                       v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ - {{ data.goodsDto.storageEndTemperature}} ℃
                     </span>
                   </goods-row>
                   <span v-for="(packageDto,index) in data.goodsDto.packageDtoList">
-                    <goods-row label="整件" :span="8"
+                    <goods-row label="整件" :span="12"
                                v-show="packageDto.conversionCount" v-if="data.goodsDto.wholePackageScheme===index+1">
                       {{ packageDto.conversionCount }}
                       <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                            v-show="packageDto.conversionCount"></dict> /  <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict>
+                            v-show="packageDto.conversionCount"></dict> /  <dict :dict-group="'shipmentPackingUnit'"
+                                                                                 :dict-key="packageDto.packageUnit"></dict>
                     </goods-row>
-                    <goods-row label="散件" :span="8"
+                    <goods-row label="散件" :span="12"
                                v-show="packageDto.conversionCount" v-if="index===0">
                       {{ packageDto.conversionCount }}
                       <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"
-                            v-show="packageDto.conversionCount"></dict> / <dict :dict-group="'shipmentPackingUnit'" :dict-key="packageDto.packageUnit"></dict>
+                            v-show="packageDto.conversionCount"></dict> / <dict :dict-group="'shipmentPackingUnit'"
+                                                                                :dict-key="packageDto.packageUnit"></dict>
                     </goods-row>
                   </span>
                 </el-col>
@@ -315,17 +317,17 @@
 
               <div class="border-show"></div>
               <el-row>
-                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='0'">
+                <el-col :span="6" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='0'">
                   [ 药品专用 ]
                 </el-col>
-                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
+                <el-col :span="6" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
                   [ 疾控专用 ]
                 </el-col>
-                <el-col :span="4" class="text-right" style="font-size: 12px"
+                <el-col :span="6" class="text-right" style="font-size: 12px"
                         v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                   [ 器械专用 ]
                 </el-col>
-                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
+                <el-col :span="6" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
                   [ 化妆品专用 ]
                 </el-col>
               </el-row>
@@ -354,6 +356,24 @@
                              v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.goodsRecordNOValidity | date }}
                   </goods-row>
+                  <goods-row label="人份" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
+                    {{ data.goodsDto.propertyMap.personPortion }}
+                  </goods-row>
+                  <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
+                    <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
+                  </goods-row>
+                  <goods-row label="是否近效期管理" :span="12"
+                             v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
+                    {{ data.goodsDto.propertyMap.lastMaintenanceFlag | formatStatus }}
+                  </goods-row>
+                  <goods-row label="近效期管理时间" :span="12" v-if="data.goodsDto.propertyMap.lastMaintenanceFlag">
+                    {{ data.goodsDto.propertyMap.lastMaintenanceDays }} 天
+                  </goods-row>
+                </el-col>
+                <el-col :span="12" v-if="data.goodsDto.typeId!=='4'">
+                  <goods-row label="是否打印药检报告" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
+                    {{ data.goodsDto.propertyMap.drugTestingSign | formatStatus }}
+                  </goods-row>
                   <goods-row label="OTC标志" :span="12" v-if="data.goodsDto.typeId==='0'">
                     {{ data.goodsDto.propertyMap.goodsOtc | formatStatus}}
                   </goods-row>
@@ -362,19 +382,6 @@
                   </goods-row>
                   <goods-row label="运动员慎用" :span="12" v-if="data.goodsDto.typeId==='0'">
                     {{data.goodsDto.propertyMap.athletesCaution | formatStatus}}
-                  </goods-row>
-                  <goods-row label="人份" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
-                    {{ data.goodsDto.propertyMap.personPortion }}
-                  </goods-row>
-                  <goods-row label="是否打印药检报告" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
-                    {{ data.goodsDto.propertyMap.drugTestingSign | formatStatus }}
-                  </goods-row>
-                  <goods-row label="是否近效期管理" :span="12"
-                             v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.lastMaintenanceFlag | formatStatus }}
-                  </goods-row>
-                  <goods-row label="近效期管理时间" :span="12" v-if="data.goodsDto.propertyMap.lastMaintenanceFlag">
-                    {{ data.goodsDto.propertyMap.lastMaintenanceDays }} 天
                   </goods-row>
                   <goods-row label="养护标志" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
                     {{ data.goodsDto.propertyMap.maintenanceSign | formatStatus }}
@@ -392,19 +399,17 @@
                   <!--<goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">-->
                   <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
                   <!--</goods-row>-->
-                  <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
-                    <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
-                  </goods-row>
                 </el-col>
               </el-row>
               <div class="border-show"></div>
               <el-row>
-                <el-col :span="4" class="text-right" style="font-size: 12px">
+                <el-col :span="6" class="text-right" style="font-size: 12px">
                   [ 附件 ]
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="20" style="padding-left:120px;" v-if="data.goodsDto">
+                <el-col :span="2"/>
+                <el-col :span="22" style="padding-left:120px;" v-if="data.goodsDto">
                   <attachment-lists attachmentIdList="" :objectId="data.goodsDto.id"
                                     :objectType="'goodsDocument'"
                                     :permission="'goods-attachment-download'"></attachment-lists>
@@ -412,7 +417,7 @@
               </el-row>
               <div class="border-show" v-show="combinationList.length>0"></div>
               <el-row v-show="combinationList.length>0">
-                <el-col :span="4" class="text-right" style="font-size: 12px">
+                <el-col :span="6" class="text-right" style="font-size: 12px">
                   [ 组合明细 ]
                 </el-col>
               </el-row>
@@ -479,7 +484,7 @@
         }
       };
     },
-    mounted () {
+    mounted() {
       this.$emit('loaded');
       this.getGoodsList(1);
     },
@@ -488,7 +493,7 @@
         this.getGoodsList(1);
       },
       filters: {
-        handler () {
+        handler() {
           this.getGoodsList(1);
         },
         deep: true
@@ -502,7 +507,7 @@
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       handlePreview: function (id) {
@@ -569,7 +574,7 @@
           this.vaccineType[1].num = data['disable'];
         });
       },
-      queryOrgGoods () {
+      queryOrgGoods() {
         let id = this.currentItem.orgGoodsDto.id;
         if (!id) return;
         Vaccine.queryVaccineDetail(id).then(res => {
