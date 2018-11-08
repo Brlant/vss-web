@@ -154,15 +154,20 @@
             <el-form-item label="状态:" class="mb0">
               {{getOrderStatus(billInfo)}}
             </el-form-item>
-            <el-form-item label="附件:" class="mb0" v-if="orgLevel===3">
-              <oms-upload :fileList="attachmentList" @change="changeFiles"
-                          :formData="{ objectId:  billInfo.id, objectType:'advancePayable'}"></oms-upload>
-            </el-form-item>
-            <el-form-item label="附件:" class="mb0" v-if="orgLevel!==3">
-              <attachment-lists attachmentIdList="" :objectId="billInfo.id" update-permission="'no'"
-                                :objectType="'advancePayable'"
-                                style="padding-top: 8px"></attachment-lists>
-            </el-form-item>
+            <perm label="advance-payable-attachment-upload">
+              <el-form-item label="附件:" class="mb0">
+                <oms-upload :fileList="attachmentList" @change="changeFiles"
+                            :formData="{ objectId:  billInfo.id, objectType:'advancePayable'}"></oms-upload>
+              </el-form-item>
+            </perm>
+            <perm label="advance-payable-attachment-watch">
+              <el-form-item label="附件:" class="mb0">
+                <attachment-lists attachmentIdList="" :objectId="billInfo.id"
+                                  update-permission="'no'"
+                                  :objectType="'advancePayable'"
+                                  style="padding-top: 8px"></attachment-lists>
+              </el-form-item>
+            </perm>
             <div v-show="list.length">
               <el-form-item :label="`${title}明细`" class="mb0">
                 (共{{list.length}}条)，总金额: ¥{{totalMoney.money | formatMoney}}
@@ -209,9 +214,11 @@
 <script>
   import {http, OmsAttachment} from '@/resources';
   import attachmentLists from './../../../../common/attachmentList.vue';
+  import Perm from '@/components/common/perm';
 
   export default {
     components: {
+      Perm,
       attachmentLists
     },
     name: 'auditForm',

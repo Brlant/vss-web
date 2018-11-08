@@ -183,10 +183,12 @@
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
-            <el-form-item label="附件" v-if="orgLevel===3">
-              <oms-upload :fileList="attachmentList" @change="changeFiles"
-                          :formData="{ objectId: form.id, objectType: 'advancePayable'}"></oms-upload>
-            </el-form-item>
+            <perm label="advance-payable-attachment-upload">
+              <el-form-item label="附件">
+                <oms-upload :fileList="attachmentList" @change="changeFiles"
+                            :formData="{ objectId: form.id, objectType: 'advancePayable'}"></oms-upload>
+              </el-form-item>
+            </perm>
             <el-form-item>
               <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
             </el-form-item>
@@ -201,9 +203,11 @@
   import {erpOrder, PaymentPending} from '../../../../../resources';
   import utils from '@/tools/utils';
   import methodsMixin from '@/mixins/methodsMixin';
+  import Perm from '@/components/common/perm';
 
   export default {
     name: 'addForm',
+    components: {Perm},
     loading: false,
     props: {
       defaultIndex: Number,
@@ -246,9 +250,6 @@
           {name: `${billWay}明细`, key: 0},
           {name: `${title}金额`, key: 1}
         ];
-      },
-      orgLevel() {
-        return this.$store.state.orgLevel;
       },
       totalMoney() {
         return this.orderDetailList.reduce(
