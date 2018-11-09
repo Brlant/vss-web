@@ -77,7 +77,7 @@
         default: ''
       },
       attachmentIdList: {
-        type: [Array, String],
+        type: [Array, String, Object],
         default: []
       },
       permission: {
