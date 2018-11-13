@@ -654,15 +654,16 @@
           this.getGoodsList(1);
           this.showRight = false;
         } else {
-          let self = this;
-          self.orgGoodsList.forEach(function (val, index) {
-            if (item.orgGoodsDto.id === val.orgGoodsDto.id) {
-              self.orgGoodsList.splice(index, 1, item);
-              self.data = item.orgGoodsDto;
-              self.currentItem = item;
-              self.combinationList = item.list;
-            }
-          });
+          this.getGoodsList(1);
+          // let self = this;
+          // self.orgGoodsList.forEach(function (val, index) {
+          //   if (item.orgGoodsDto.id === val.orgGoodsDto.id) {
+          //     self.orgGoodsList.splice(index, 1, item);
+          //     self.data = item.orgGoodsDto;
+          //     self.currentItem = item;
+          //     self.combinationList = item.list;
+          //   }
+          // });
           this.showRight = false;
         }
       }
