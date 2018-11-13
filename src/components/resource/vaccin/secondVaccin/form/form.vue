@@ -97,8 +97,8 @@
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
         <el-select placeholder="请选择疫苗种类" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
-                   :clearable="true" @change="getGoodsType(form.goodsId)" popper-class="good-selects"
-                   @clear="setUsedStatus">
+                   :clearable="true" @change="getOmsGoods" popper-class="good-selects"
+                   @clear="getOmsGoods">
           <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
             <div style="overflow: hidden">
               <span class="pull-left">{{item.name}}</span>
@@ -358,7 +358,7 @@
           this.selectGoodsList = this.form.combinationList;
 //          this.otherGoodsList = [];
 //          this.getCombinationGoods();
-//          this.getOmsGoods(val.goodsDto.name);
+         this.getOmsGoods(val.goodsDto.name);
 //          this.filterOrg(val.salesFirmName);
         } else {
 //          this.queryCombinationGoods();
@@ -398,9 +398,6 @@
       }
     },
     methods: {
-      setUsedStatus: function () {
-        this.usedStatus = true;
-      },
       setSalesFirm: function (id) {
         if (id) {
           this.orgList.forEach(val => {
@@ -438,7 +435,7 @@
           };
           SuccessfulBidder.queryInfo(params).then(res => {
             this.goodsList = res.data;
-            this.getGoodsType(this.form.goodsId);
+            // this.getGoodsType(this.form.goodsId);
           });
 //        }
       },
@@ -462,30 +459,6 @@
           let list = JSON.parse(JSON.stringify(res.data.list));
           this.filterSelectGoodsList(list);
         });
-      },
-      getGoodsType: function (id) {
-        if (!id) {
-          this.goodsType = '';
-          return;
-        }
-        this.goodsList.forEach(item => {
-          if (id === item.id) {
-            this.goodsType = item.typeId;
-          }
-        });
-        if (this.usedStatus) {
-          this.goodsList.forEach(val => {
-            if (val.id === id && id) {
-              let factoryId = val.factoryId;
-              if (factoryId) {
-                BaseInfo.queryBaseInfo(factoryId).then(res => {
-                  this.orgList = [];
-                  this.orgList.push(res.data.orgDto);
-                });
-              }
-            }
-          });
-        }
       },
       filtersCombinationGoods () {// 过滤已有的单位疫苗和本身
         let array = [];
