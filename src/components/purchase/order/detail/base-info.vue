@@ -39,6 +39,9 @@
           </oms-row>
         </el-col>
         <el-col :span="12">
+          <oms-row label="来源订单号" v-show="currentOrder.thirdPartyNumber">
+            {{currentOrder.thirdPartyNumber }}
+          </oms-row>
           <oms-row label="业务类型">
             <dict :dict-group="'bizInType'" :dict-key="currentOrder.bizType"></dict>
           </oms-row>
