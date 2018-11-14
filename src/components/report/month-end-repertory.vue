@@ -45,6 +45,7 @@
       </div>
       <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
+        <el-table-column prop="no" label="序号" width="70" :sortable="true"></el-table-column>
         <el-table-column prop="goodsName" label="疫苗名称" width="160" :sortable="true"></el-table-column>
         <el-table-column prop="goodsPrice" label="采购单价" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="salePrice" label="销售单价" width="100" :sortable="true"></el-table-column>
@@ -54,7 +55,8 @@
         <el-table-column prop="saleCount" label="采购金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleCount" label="销售数量" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleMoney" label="销售金额" width="100" :sortable="true"></el-table-column>
-        <el-table-column prop="saleReturnMoney" label="退区数量" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="saleReturnCount" label="退区数量" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="saleReturnMoney" label="退区金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="procurementReturnCount" label="退厂家数量" width="120" :sortable="true"></el-table-column>
         <el-table-column prop="procurementReturnMoney" label="退厂家金额" width="120" :sortable="true"></el-table-column>
         <el-table-column prop="scarpCount" label="报损数量" width="100" :sortable="true"></el-table-column>

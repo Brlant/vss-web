@@ -27,8 +27,8 @@
             <el-col :span="8">
               <oms-form-row label="出入库详细" :span="6">
                 <el-select v-model="searchWord.bizTypeList" multiple filterable clearable placeholder="请选择">
-                  <el-option v-for="(item, index) in bizTypeList" :value="index" :key="index"
-                             :label="item"></el-option>
+                  <el-option v-for="(item, index) in bizTypeList" :value="item.key" :key="index"
+                             :label="item.label"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
@@ -52,7 +52,8 @@
               <oms-form-row label="关联单位" :span="6">
                 <el-select filterable remote placeholder="请输入关联单位查询" :remote-method="filterRelation"
                            :clearable="true" :loading="selectLoading"
-                           v-model="searchWord.customerId" @click.native.once="filterRelation('')" popperClass="good-selects">
+                           v-model="searchWord.customerId" @click.native.once="filterRelation('')"
+                           popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -70,7 +71,8 @@
               <oms-form-row label="供/收货单位名称" :span="7">
                 <el-select filterable remote placeholder="请输入供/收货单位名称查询"
                            :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
-                           v-model="searchWord.factoryId" @click.native.once="filterProvide('')" popperClass="good-selects">
+                           v-model="searchWord.factoryId" @click.native.once="filterProvide('')"
+                           popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in provideList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -98,7 +100,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -138,7 +140,7 @@
         </el-form>
       </div>
       <el-table :data="reportChildList" class="header-list" :summary-method="getSummaries" show-summary border
-                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight">
+                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable" :maxHeight="getHeight">
         <el-table-column prop="type" label="出入库类型" :sortable="true" min-width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" min-width="120"></el-table-column>
         <el-table-column prop="date" label="日期" :sortable="true" min-width="100"></el-table-column>
@@ -155,7 +157,8 @@
       </el-table>
       <div class="text-center" v-show="reportChildList.length">
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
           :total="pager.count" :page-sizes="[10,20,50,100]" :pageSize="pager.pageSize"
           :current-page="pager.currentPage">
         </el-pagination>
@@ -171,7 +174,7 @@
 
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         selectLoading: false,
@@ -201,13 +204,17 @@
         bizDateAry: '',
         isLoading: false,
         typeList: ['入库', '出库'],
-        bizTypeList: ['采购订单', '销售退货', '盘盈入库', '调拨入库', '销售出库', '采购退货', '盘亏出库', '调拨出库'],
         goodsStatusList: ['不合格', '合格']
       };
     },
     computed: {
       getHeight: function () {
         return parseInt(this.$store.state.bodyHeight, 10) - 210 + this.fixedHeight + (this.showSearch ? 0 : 210);
+      },
+      bizTypeList() {
+        let inType = this.$getDict('bizInType') || [];
+        let outType = this.$getDict('bizOutType') || [];
+        return [].concat(inType, outType);
       }
     },
     methods: {
@@ -272,7 +279,7 @@
       handleCurrentChange(val) {
         this.getCurrentList(val);
       },
-      getCurrentList (pageNo) {
+      getCurrentList(pageNo) {
         this.loadingData = true;
         this.pager.currentPage = pageNo;
         const {pager} = this;
@@ -321,7 +328,7 @@
         }
         return title;
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -389,12 +396,12 @@
           this.selectLoading = false;
         });
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
           this.batchNumberList = res.data.list;
         });
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let params = Object.assign({}, {
           keyWord: query
         });

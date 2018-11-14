@@ -77,11 +77,14 @@
         <div class="d-table-left">
           <h2 class="header">
             <span class="pull-right">
-                <a href="#" class="btn-circle" @click.prevent="searchType"><i
-                  class="el-icon-t-search"></i> </a>
+                <a href="#" class="btn-circle" @click.prevent="searchType">
+                  <i class="el-icon-t-search"></i>
+                </a>
+                <perm label="accounts-payable-export">
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                     导出Excel
                   </el-button>
+                </perm>
             </span>
             <!--<span class="pull-right" style="margin-right: 8px">-->
             <!--<perm label="accounts-payable-add">-->
@@ -155,7 +158,7 @@
             </div>
             <div>
               <el-form class="payForm" ref="payForm" onsubmit="return false" label-width="80px">
-                <el-form-item label="货品">
+                <el-form-item label="疫苗">
                   <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                              :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
@@ -167,7 +170,7 @@
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -219,7 +222,7 @@
             <el-table :data="payDetails" class="header-list" border
                       :header-row-class-name="'headerClass'" v-loading="loadingData">
               <el-table-column prop="orderNo" label="订单号" min-width="85" :sortable="true"></el-table-column>
-              <el-table-column prop="goodsName" label="货品名称" :sortable="true" min-width="120"></el-table-column>
+              <el-table-column prop="goodsName" label="疫苗名称" :sortable="true" min-width="120"></el-table-column>
               <el-table-column prop="goodsCount" label="数量" width="80" :sortable="true"></el-table-column>
               <el-table-column prop="createTime" label="发生时间" min-width="110" :sortable="true">
                 <template slot-scope="scope">

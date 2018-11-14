@@ -163,7 +163,7 @@
                      style="margin-top: 10px">
                 <thead>
                 <tr>
-                  <th style="width: 240px">货品名称</th>
+                  <th style="width: 240px">疫苗名称</th>
                   <th>规格</th>
                   <th>单价</th>
                   <th>申请数量</th>
@@ -198,14 +198,9 @@
                   </td>
                 </tr>
                 <tr>
-                  <th style="width: 300px"></th>
-                  <th></th>
-                  <th></th>
-                  <th>
+                  <th colspan="5" class="text-right">
                     <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
-                  </th>
-                  <th>
-                    <total-count property="applyMoney" :showIcon="true" title="合计金额"
+                    <total-count property="applyMoney" :showIcon="true" title="；合计金额"
                                  :list="currentOrder.detailDtoList"></total-count>
                   </th>
                   <th v-show="filters.status === 4"></th>

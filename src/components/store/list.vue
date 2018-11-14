@@ -27,8 +27,8 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="货主货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+              <oms-form-row label="货主疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
@@ -39,7 +39,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -102,7 +102,7 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主货品名称"  min-width="200" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称"  min-width="200" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
@@ -285,17 +285,17 @@
         let title = '';
         switch (property) {
           case 'qualifiedCount': {
-            content = '仓库内真实合格货品数量';
+            content = '仓库内真实合格疫苗数量';
             title = '合格';
             break;
           }
           case 'unqualifiedCount': {
-            content = '仓库内真实不合格货品数量';
+            content = '仓库内真实不合格疫苗数量';
             title = '不合格';
             break;
           }
           case 'transitCount': {
-            content = '在运输中的货品数量';
+            content = '在运输中的疫苗数量';
             title = '在途库存';
             break;
           }

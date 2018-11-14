@@ -105,10 +105,10 @@
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="item.code">货品编号:</span>{{item.code}}
+                  v-show="item.code">疫苗编号:</span>{{item.code}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.specifications">货品规格:</span>{{item.specifications}}
+                v-show="item.specifications">疫苗规格:</span>{{item.specifications}}
                 </span>
               <span class="select-other-info pull-left"><span
                 v-show="item.approvalNumber">批准文号:</span>{{item.approvalNumber}}
@@ -190,10 +190,10 @@
               </div>
               <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.goodsDto.code">平台货品编号:</span>{{item.orgGoodsDto.goodsDto.code}}
+                v-show="item.orgGoodsDto.goodsDto.code">平台疫苗编号:</span>{{item.orgGoodsDto.goodsDto.code}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                  v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
                 <span class="select-other-info pull-left"><span
                   v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -473,7 +473,7 @@
           this.filtersCombinationGoods();
         });
       },
-      getCombinationGoods: function (keyWord) {// 获取其他组合货品列表
+      getCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {
           deleteFlag: false,
           orgId: this.$route.params.id,

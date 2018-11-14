@@ -51,11 +51,12 @@
       border: 0;
       h2 {
         background: #eef2f3;
-        padding: 0;
+        padding: 4px 0;
         text-align: left;
       }
     }
   }
+
   .oms-row {
     color: #777;
     text-align: left;
@@ -67,34 +68,52 @@
     <div class="content-part">
       <div class="content-left">
         <h2 class="clearfix right-title">添加收货信息</h2>
+
         <div class="product-list">
-          <div v-for="(product,key) in productList" :class="{'active': activeKey === key }"
-               @click="changeProduct(product, key)" class="product-item">
-            <oms-row label="货品名称" :span="span">{{product.name}}</oms-row>
-            <oms-row label="批号" :span="span">{{product.batchNumber}}</oms-row>
-            <oms-row label="规格" :span="span">{{product.orgGoodsDto.goodsDto.specifications}}</oms-row>
-            <oms-row label="生产厂商" :span="span">{{product.orgGoodsDto.goodsDto.factoryName}}</oms-row>
-            <oms-row label="数量" :span="span">{{product.amount}}</oms-row>
+          <div class="product-item is-total" style="cursor: default" v-show="!isValid">
+            <h2>基本信息:</h2>
+            <oms-row label="包装是否完好" :span="10" class="mb-10">
+              <el-radio-group v-model="form.packComplete">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
+              </el-radio-group>
+            </oms-row>
+            <oms-row label="温度是否合格" :span="10">
+              <el-radio-group v-model="form.tempQualified">
+                <el-radio :label="true">是</el-radio>
+                <el-radio :label="false">否</el-radio>
+              </el-radio-group>
+            </oms-row>
           </div>
-          <div class="product-item is-total" style="cursor: default">
-            <h2>合计:</h2>
-            <oms-row label="应收数量" :span="span">{{ totalCount }}</oms-row>
-            <oms-row label="实收数量" :span="span">{{ receiptCount }}</oms-row>
+          <div v-show="isValid">
+            <div v-for="(product,key) in productList" :class="{'active': activeKey === key }"
+                 @click="changeProduct(product, key)" class="product-item">
+              <oms-row label="疫苗名称" :span="span">{{product.name}}</oms-row>
+              <oms-row label="批号" :span="span">{{product.batchNumber}}</oms-row>
+              <oms-row label="规格" :span="span">{{product.orgGoodsDto.goodsDto.specifications}}</oms-row>
+              <oms-row label="生产厂商" :span="span">{{product.orgGoodsDto.goodsDto.factoryName}}</oms-row>
+              <oms-row label="数量" :span="span">{{product.amount}}</oms-row>
+            </div>
+            <div class="product-item is-total" style="cursor: default">
+              <h2>合计:</h2>
+              <oms-row label="应收数量" :span="span">{{ totalCount }}</oms-row>
+              <oms-row label="实收数量" :span="span">{{ receiptCount }}</oms-row>
+            </div>
           </div>
         </div>
-        <div class="btn-submit-save">
+        <div class="btn-submit-save" v-show="isValid">
           <perm label="pov-receipt-manager">
             <el-button type="primary" :plain="true" @click="autoComplete" :disabled="doing">一键收货</el-button>
           </perm>
           <el-button type="primary" @click="onSubmit" :disabled="doing">保存</el-button>
         </div>
       </div>
-      <div class="content-right content-padding">
+      <div class="content-right content-padding" v-show="isValid">
         <h3></h3>
         <div v-for="(item, key) in productList" v-show="key === activeKey">
           <el-form :ref=" 'form' + key" :model="item" :rules="rules" label-width="160px"
                    style="padding-right: 20px">
-            <el-form-item label="货品名称" style="margin-bottom: 5px">
+            <el-form-item label="疫苗名称" style="margin-bottom: 5px">
               <span>{{ item.name }}</span>
             </el-form-item>
             <el-form-item label="批号" style="margin-bottom: 5px">
@@ -111,14 +130,14 @@
   </div>
 </template>
 <script>
-  import { povReceipt, InWork } from '@/resources';
+  import {InWork, povReceipt} from '@/resources';
 
   export default {
     props: {
       orderId: String,
       showRight: Boolean
     },
-    data () {
+    data() {
       return {
         span: 8,
         currentOrder: {},
@@ -135,11 +154,19 @@
           bulkCount: [
             {required: true, type: 'number', message: '请输入散件数量', trigger: 'blur'}
           ]
+        },
+        form: {
+          packComplete: '',
+          tempQualified: ''
         }
       };
     },
     watch: {
-      showRight (val) {
+      showRight(val) {
+        this.form = {
+          packComplete: '',
+          tempQualified: ''
+        };
         if (!val) return;
         this.queryOrderDetail();
       }
@@ -158,10 +185,13 @@
           count += Number(i.currentAmount);
         });
         return count;
+      },
+      isValid() {
+        return this.form.packComplete && this.form.tempQualified;
       }
     },
     methods: {
-      onSubmit () {
+      onSubmit() {
         let isFullReceive = this.productList.every(item => item.currentAmount !== '');
         if (!isFullReceive) {
           this.$confirm('没有完全收货，是否确认保存', '', {
@@ -175,7 +205,7 @@
           this.save();
         }
       },
-      autoComplete () {
+      autoComplete() {
         this.$confirm('是否一键收货', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -198,12 +228,12 @@
           });
         });
       },
-      changeAmount (item) {
+      changeAmount(item) {
         if (item.currentAmount > item.amount) {
           item.currentAmount = item.amount;
         }
       },
-      save () {
+      save() {
         let obj = {
           list: []
         };
@@ -230,7 +260,7 @@
           });
         });
       },
-      queryOrderDetail () {
+      queryOrderDetail() {
         if (!this.orderId) return false;
         InWork.queryOrderDetail(this.orderId).then(res => {
           res.data.detailDtoList.forEach(f => {
@@ -246,7 +276,7 @@
           }
         });
       },
-      changeProduct (item, key) {
+      changeProduct(item, key) {
         this.currentItem = item;
         this.activeKey = key;
       }

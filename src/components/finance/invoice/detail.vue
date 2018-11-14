@@ -54,7 +54,7 @@
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 250px">货品名称</th>
+                <th style="width: 250px">疫苗名称</th>
                 <th>数量</th>
                 <th>订单号</th>
                 <th>应付金额</th>

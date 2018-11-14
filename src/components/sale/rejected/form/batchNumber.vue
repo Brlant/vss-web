@@ -108,7 +108,7 @@
         }
         let ary = this.productList.filter(f => f.orgGoodsDto.id === this.product.orgGoodsId);
         if (!ary.length) return [];
-        // 主货品
+        // 主疫苗
         this.batchNumbers.push({
           orgGoodsId: ary[0].orgGoodsDto.id,
           orgGoodsName: ary[0].orgGoodsDto.name,
@@ -116,7 +116,7 @@
           isMainly: true,
           lots: []
         });
-        // 组合货品
+        // 组合疫苗
         ary[0].list.forEach(i => {
           this.batchNumbers.push({
             orgGoodsId: i.accessory,
@@ -128,7 +128,7 @@
         });
       },
       /**
-       * 组合货品，得到多个API接口
+       * 组合疫苗，得到多个API接口
        * @returns {any[]}
        */
       getAPIAry () {
@@ -140,7 +140,7 @@
         });
       },
       /**
-       * 如果有组合货品，并发查询批号信息
+       * 如果有组合疫苗，并发查询批号信息
        */
       queryBatchNumber () {
         if (!this.batchNumbers.length) return;
@@ -165,7 +165,7 @@
         );
       },
       /**
-       * 编辑货品时，重设对应批号信息
+       * 编辑疫苗时，重设对应批号信息
        */
       editBatchNumbers () {
         if (!this.editItemProduct.batchNumberId) return;
@@ -218,7 +218,7 @@
         if (!isChecked) {
           this.$notify.info({
             duration: 2000,
-            message: '请选择货品批号'
+            message: '请选择疫苗批号'
           });
           return false;
         }
@@ -269,7 +269,7 @@
         //   if (!isPassed) {
         //     this.$notify.warning({
         //       duration: 2000,
-        //       message: '组合货品数量比例不匹配'
+        //       message: '组合疫苗数量比例不匹配'
         //     });
         //     return false;
         //   }

@@ -16,14 +16,13 @@
       width: 310px;
     }
   }
-
 </style>
 <template>
   <div>
     <el-form ref="payForm" :inline="true" onsubmit="return false">
-      <el-form-item label="货品名称">
+      <el-form-item label="疫苗名称">
         <!--<oms-input v-model="searchCondition.goodsName"></oms-input>-->
-        <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货品"
+        <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索疫苗"
                    :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                    popper-class="good-selects">
           <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
@@ -34,7 +33,7 @@
             </div>
             <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
               <span class="select-other-info pull-left"><span
                 v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -63,7 +62,7 @@
         <thead>
         <tr>
           <th width="30px">操作</th>
-          <th style="width: 240px">货品名称</th>
+          <th style="width: 240px">疫苗名称</th>
           <th>数量</th>
           <th>订单号</th>
           <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
@@ -121,7 +120,7 @@
       <table class="table">
         <thead>
         <tr>
-          <th style="width: 240px">订单号/货品名称</th>
+          <th style="width: 240px">订单号/疫苗名称</th>
           <th>数量</th>
           <th>发生时间</th>
           <th style="width: 100px" v-show="billPayType === '1'">关联发票号</th>
@@ -161,6 +160,12 @@
               删除</a>
           </td>
         </tr>
+        <tr>
+          <td :colspan="billPayType === '1' ? 7 : 6" class="text-right is-total">
+            <span>合计数量:{{total.goodsCount}}</span>
+            <span class="ml-15">合计本次付款金额:¥{{total.payment | formatMoney}}</span>
+          </td>
+        </tr>
         </tbody>
       </table>
     </div>
@@ -168,7 +173,7 @@
 
 </template>
 <script>
-  import { Vaccine } from '@/resources';
+  import {Vaccine} from '@/resources';
 
   export default {
     props: {
@@ -177,7 +182,7 @@
       factoryId: '',
       amount: ''
     },
-    data () {
+    data() {
       return {
         payments: [],
         form: {
@@ -203,19 +208,27 @@
       };
     },
     computed: {
-      showPayments () {
+      showPayments() {
         return this.payments.filter(f => this.selectPayments.every(e => e.id !== f.id));
+      },
+      total() {
+        return this.selectPayments.reduce((pre, next) => {
+          return {
+            goodsCount: Number(pre.goodsCount) + Number(next.goodsCount),
+            payment: Number(pre.payment) + Number(next.payment)
+          };
+        }, {goodsCount: 0, payment: 0}) || {};
       }
     },
     watch: {
-      factoryId (val) {
+      factoryId(val) {
         this.payments = [];
         this.goodesList = [];
         this.resetSearchForm();
         if (!val) return;
         this.queryPayments(1);
       },
-      billPayType () {
+      billPayType() {
         this.payments = [];
         this.goodesList = [];
         this.resetSearchForm();
@@ -231,7 +244,7 @@
       }
     },
     filters: {
-      formatCount (val) {
+      formatCount(val) {
         if (!val) return '0.00';
         if (typeof val === 'string') {
           return val;
@@ -241,7 +254,7 @@
       }
     },
     methods: {
-      queryPayments (pageNo) {
+      queryPayments(pageNo) {
         this.pager.currentPage = pageNo;
         this.loadingData = true;
         let params = Object.assign({}, {
@@ -261,7 +274,7 @@
           this.pager.count = res.data.count;
         });
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         if (!this.factoryId) return;
         let params = Object.assign({}, {
           keyWord: keyWord,
@@ -291,7 +304,7 @@
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      paymentChange (item) {
+      paymentChange(item) {
         let value = item.billAmount - item.prepaidAccounts;
         if (value < 0) {
           if (item.payment < value) {
@@ -309,13 +322,13 @@
         item.payment = Number(item.payment);
         item.payment = item.payment ? item.payment.toFixed(2) : 0.00;
       },
-      add (item) {
+      add(item) {
         let index = this.selectPayments.indexOf(item);
         if (index === -1) {
           this.selectPayments.push(item);
         }
       },
-      remove (item) {
+      remove(item) {
         let index = this.selectPayments.indexOf(item);
         this.selectPayments.splice(index, 1);
       }

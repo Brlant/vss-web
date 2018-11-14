@@ -26,7 +26,7 @@
   <div class="order-page">
     <div class="container">
       <el-alert
-        title="请选择货品和批号输入调整部分库存状态，可用库存可以转换成锁定库存或实际不合格库存，锁定库存可以转成实际不合格库存和可用库存。"
+        title="请选择疫苗和批号输入调整部分库存状态，可用库存可以转换成锁定库存或实际不合格库存，锁定库存可以转成实际不合格库存和可用库存。"
         type="warning">
       </el-alert>
       <div class="opera-btn-group" :class="{up:!showSearch}">
@@ -38,8 +38,8 @@
         <el-form class="advanced-query-form"  onsubmit="return false">
           <el-row>
             <el-col :span="12">
-              <oms-form-row label="货主货品" :span="3" :isRequire="true">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+              <oms-form-row label="货主疫苗" :span="3" :isRequire="true">
+                <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
@@ -50,7 +50,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -128,7 +128,7 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData"
                 :row-class-name="formatRowClass" :summary-method="getSummaries" show-summary
                 :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
@@ -292,17 +292,17 @@
             break;
           }
           case 5: {
-            content = '仓库内真实合格货品数量';
+            content = '仓库内真实合格疫苗数量';
             title = '实际合格库存';
             break;
           }
           case 6: {
-            content = '在运输中的货品数量';
+            content = '在运输中的疫苗数量';
             title = '在途库存';
             break;
           }
           case 7: {
-            content = '仓库内真实不合格货品数量';
+            content = '仓库内真实不合格疫苗数量';
             title = '实际不合格库存';
             break;
           }

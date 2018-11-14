@@ -25,7 +25,7 @@
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header">
-          <el-col :span="8">货品</el-col>
+          <el-col :span="8">疫苗</el-col>
           <el-col :span="5">批号</el-col>
           <el-col :span="4">数量</el-col>
           <el-col :span="4">盘点数量</el-col>
@@ -182,7 +182,7 @@
         Inventory.editDetailCount(item.id, obj).then(() => {
           this.$notify.success({
             title: '完成盘点',
-            message: `批号为${item.batchNumber}的货品实盘数量为${item.actualCount}`
+            message: `批号为${item.batchNumber}的疫苗实盘数量为${item.actualCount}`
           });
           this.setStatus(item);
         }).catch(error => {

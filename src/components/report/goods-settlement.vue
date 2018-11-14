@@ -22,8 +22,8 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="12">
-              <oms-form-row label="货主货品" :span="3">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+              <oms-form-row label="货主疫苗" :span="3">
+                <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')">
@@ -35,7 +35,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -56,11 +56,11 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="" :span="1">
-                <perm label="purchasing-detail-form-export">
-                  <el-button type="primary" @click="search" :disabled="loadingData">
-                    查询
-                  </el-button>
-                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <el-button type="primary" @click="search" :disabled="loadingData">
+                  查询
+                </el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <perm label="vaccine-month-settlement-manager-export">
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                     导出Excel
                   </el-button>
@@ -118,7 +118,7 @@
         if (!this.searchWord.orgGoodsId) {
           this.$notify.warning({
             duration: 2000,
-            message: '请选择货主货品！'
+            message: '请选择货主疫苗！'
           });
           return;
         }
@@ -148,7 +148,7 @@
         if (!this.searchWord.orgGoodsId) {
           this.$notify.warning({
             duration: 2000,
-            message: '请选择货主货品！'
+            message: '请选择货主疫苗！'
           });
           return;
         }

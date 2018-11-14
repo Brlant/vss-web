@@ -115,7 +115,7 @@
               </el-col>
               <el-col :span="6">
                 <oms-form-row label="" :span="2">
-                  <perm label="shipment-form-export">
+                  <perm label="accounts-receivable-export">
                     <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                       导出Excel
                     </el-button>
@@ -212,7 +212,7 @@
             </div>
             <div>
               <el-form class="payForm" ref="payForm" onsubmit="return false" label-width="100px">
-                <el-form-item label="货品">
+                <el-form-item label="疫苗">
                   <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                              :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
@@ -224,7 +224,7 @@
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -277,7 +277,7 @@
               <el-table :data="receiptDetails" class="header-list" border
                         :header-row-class-name="'headerClass'" v-loading="loadingData">
                 <el-table-column prop="orderNo" label="订单号" min-width="85" :sortable="true"></el-table-column>
-                <el-table-column prop="goodsName" label="货品名称" :sortable="true" min-width="120"></el-table-column>
+                <el-table-column prop="goodsName" label="疫苗名称" :sortable="true" min-width="120"></el-table-column>
                 <el-table-column prop="goodsCount" label="数量" width="80" :sortable="true"></el-table-column>
                 <el-table-column prop="createTime" label="发生时间" min-width="110" :sortable="true">
                   <template slot-scope="scope">
@@ -338,7 +338,7 @@
 
 </template>
 <script>
-  import {BaseInfo, receipt} from '@/resources';
+  import { BaseInfo, demandAssignment, procurementCollect, pullSignal, receipt, VaccineRights } from '@/resources';
   import utils from '@/tools/utils';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
@@ -604,18 +604,20 @@
         });
       },
       exportFile: function () {
-        this.searchCondition.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.bizDateAry[1]);
+        if (this.bizDateAry) {
+          this.searchCondition.createStartTime = this.formatTime(this.bizDateAry[0]);
+          this.searchCondition.createEndTime = this.formatTime(this.bizDateAry[1]);
+        }
         let params = Object.assign(this.filterRights, this.searchCondition);
         this.isLoading = true;
-        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/out'});
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: 'finance/pay'});
         this.$http.get('/accounts-receivable/export', {params}).then(res => {
           utils.download(res.data, '应收账款一览表');
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: 'finance/pay'});
         }).catch(error => {
           this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/out'});
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: 'finance/pay'});
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });

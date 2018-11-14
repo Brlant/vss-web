@@ -50,8 +50,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="货主货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+              <oms-form-row label="货主疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')">
@@ -63,7 +63,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供应商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -127,7 +127,7 @@
         <el-table-column prop="createTime" label="业务日期" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="customerName" label="客户" :sortable="true"></el-table-column>
         <el-table-column prop="orgName" label="保管帐" :sortable="true"></el-table-column>
-        <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="疫苗名称" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true" width="90"></el-table-column>
         <el-table-column prop="price" label="单价" :sortable="true" width="90">
           <template slot-scope="scope">

@@ -114,7 +114,7 @@
                   </div>
                   <div class="clearfix">
                     <!--<span class="select-other-info pull-left"><span-->
-                    <!--v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}-->
+                    <!--v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}-->
                     <!--</span>-->
                     <!--<span class="select-other-info pull-left"><span-->
                       <!--v-show="item.orgGoodsDto.goodsDto.specifications">规格:{{ item.orgGoodsDto.goodsDto.specifications}}</span>-->
@@ -164,7 +164,7 @@
           unitPrice: {required: true, message: '请输入单价', trigger: 'blur'},
           orgGoodsId: {required: true, message: '请选择疫苗', trigger: 'change'}
         },
-        goodses: [], // 货品列表
+        goodses: [], // 疫苗列表
         title: '新增二类疫苗销售价格组',
         doing: false
       };

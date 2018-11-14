@@ -63,8 +63,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="10">
-              <oms-form-row label="货主货品" :span="4">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="getGoodsList" :clearable="true"
+              <oms-form-row label="货主疫苗" :span="4">
+                <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="getGoodsList" :clearable="true"
                            v-model="searchWord.orgGoodsId" @click.native.once="getGoodsList('')">
                   <el-option :value="item.orgGoodsDto.id" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                              v-for="item in goodses">
@@ -73,7 +73,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                        v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left">
                       <span>销售价格:</span>{{item.orgGoodsDto.sellPrice | formatMoney}}
@@ -184,7 +184,7 @@
                   <oms-row label="销售价格组名称" :span="5">
                     {{currentItem.name}}
                   </oms-row>
-                  <oms-row label="货品名称" :span="5">
+                  <oms-row label="疫苗名称" :span="5">
                     {{currentItem.goodsName}}
                   </oms-row>
                   <oms-row label="销售单价" :span="5">

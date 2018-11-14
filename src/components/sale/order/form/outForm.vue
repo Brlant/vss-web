@@ -183,6 +183,7 @@
               <el-date-picker
                 v-model="form.expectedTime"
                 placeholder="请选择日期" format="yyyy-MM-dd"
+                :picker-options="pickerOptions"
                 value-format="timestamp">
               </el-date-picker>
             </el-form-item>
@@ -192,7 +193,7 @@
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
             <el-form-item label-width="160px">
-              <el-button type="primary" @click="index++">添加货品</el-button>
+              <el-button type="primary" @click="index++">添加疫苗</el-button>
             </el-form-item>
           </div>
           <div class="hide-content" v-bind:class="{'show-content' : index==1}">
@@ -219,7 +220,7 @@
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left" v-show="vaccineType==='2'"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left" v-show="vaccineType==='2'"><span
                           v-show="item.orgGoodsDto.sellPrice">销售价格:￥{{ item.orgGoodsDto.sellPrice
@@ -257,7 +258,7 @@
                         <goods-info-part :product-info="product"></goods-info-part>
                       </el-col>
                       <el-col :span="10">
-                        <span v-show="accessoryList.length">【组合货品】</span>
+                        <span v-show="accessoryList.length">【组合疫苗】</span>
                         <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                        <span style="margin-right: 10px"
@@ -285,15 +286,15 @@
             <!--<span v-show="batchNumbers.length" style="font-weight: 600">批号信息</span>-->
 
             <div class="product-list-detail">
-              <h3 style="background: #13ce66;color: #fff">已选货品</h3>
+              <h3 style="background: #13ce66;color: #fff">已选疫苗</h3>
               <table class="table">
                 <thead>
                 <tr>
-                  <th style="width: 240px">货品名称</th>
+                  <th style="width: 240px">疫苗名称</th>
                   <th>规格</th>
                   <th>批号</th>
-                  <th style="width: 70px" v-show="vaccineType==='2'">货品单价</th>
-                  <th style="width: 70px">货品数量</th>
+                  <th style="width: 70px" v-show="vaccineType==='2'">疫苗单价</th>
+                  <th style="width: 70px">疫苗数量</th>
                   <th v-show="vaccineType==='2'">金额</th>
                   <th style="width: 60px">操作</th>
                 </tr>
@@ -417,7 +418,7 @@
             'goodsDto': {}
           }
         },
-        accessoryList: [], // 组合货品列表
+        accessoryList: [], // 组合疫苗列表
         searchProductList: [],
         filterProductList: [],
         form: {
@@ -501,7 +502,7 @@
         index: 0,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '货品信息', key: 1}
+          {name: '疫苗信息', key: 1}
         ],
         orgList: [],
         customerList: [],
@@ -519,8 +520,8 @@
           expectedTimeLabel: '预计出库时间'
         },
         warehouses: [], // 接种点收货地址列表
-        batchNumbers: [], // 货品批号列表
-        selectBatchNumbers: [], // 已经选择的货品批号
+        batchNumbers: [], // 疫苗批号列表
+        selectBatchNumbers: [], // 已经选择的疫苗批号
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
@@ -903,7 +904,7 @@
       setIsHasBatchNumberInfo (val) {
         this.isHasBatchNumberInfo = val;
       },
-      getGoodDetail: function (OrgGoodsId) {// 选货品
+      getGoodDetail: function (OrgGoodsId) {// 选疫苗
         this.accessoryList = [];
         this.editItemProduct = {};
         if (!OrgGoodsId) {
@@ -960,7 +961,7 @@
         });
         this.filterProductList = arr;
       },
-      addProduct: function () {// 货品加入到订单
+      addProduct: function () {// 疫苗加入到订单
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,
@@ -1093,7 +1094,7 @@
           this.searchProduct();
         });
       },
-      remove: function (item) { // 删除货品
+      remove: function (item) { // 删除疫苗
         this.deleteItem(item);
         this.searchProduct();
       },
@@ -1126,7 +1127,7 @@
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
         let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);
         if (isDeleteAll) {
-          // 找出剩下的货品，重新计算组合货品数量，金额。
+          // 找出剩下的疫苗，重新计算组合疫苗数量，金额。
           let amount = 0;
           this.form.detailDtoList.forEach(f => {
             if (f.orgGoodsId === orgGoodsId) {

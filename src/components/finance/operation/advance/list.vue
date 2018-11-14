@@ -223,7 +223,7 @@
                   @right-close="resetRightBox" :getOrderStatus="getOrderStatus"></audit-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'900px','padding':0}">
-      <add-form @change="onSubmit" :title="title" :type="type" @right-close="resetRightBox"
+      <add-form @change="onSubmit" :title="title" :type="type"  @right-close="resetRightBox"
                 :defaultIndex="defaultIndex"></add-form>
     </page-right>
   </div>
@@ -231,7 +231,7 @@
 <script>
   import auditForm from './form/showForm.vue';
   import addForm from './form/addForm.vue';
-  import { PaymentPending } from '../../../../resources';
+  import {PaymentPending} from '../../../../resources';
   import methodsMixin from '@/mixins/methodsMixin';
   import utils from '@/tools/utils';
 
@@ -267,17 +267,17 @@
         statusNum: null
       };
     },
-    mounted () {
+    mounted() {
       this.getBillList(1);
     },
     computed: {
       title: function () {
         return this.type === 1 ? '预付款' : '预收款';
       },
-      type () {
+      type() {
         return this.$route.meta.type;
       },
-      statusType () {
+      statusType() {
         let ary = this.type === 1 ? {
           0: {'title': '待审批', status: '0', num: ''},
           1: {'title': 'CDC待确认', status: '1', num: ''},
@@ -297,7 +297,7 @@
         }
         return ary;
       },
-      perms () {
+      perms() {
         return this.$route.meta.perms;
       }
     },
@@ -308,7 +308,7 @@
         },
         deep: true
       },
-      type () {
+      type() {
         this.orgList = [];
         this.filterOrg();
         this.getBillList(1);

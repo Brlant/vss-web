@@ -76,8 +76,8 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="80px" style="padding-right: 20px">
-            <el-form-item label="货主货品" prop="orgGoodsId">
-              <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+            <el-form-item label="货主疫苗" prop="orgGoodsId">
+              <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="filterOrgGoods"
                          :clearable="true"
                          v-model="form.orgGoodsId" popper-class="good-selects"
                          @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
@@ -88,7 +88,7 @@
                   </div>
                   <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                     <span class="select-other-info pull-left"><span
                       v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -119,7 +119,7 @@
               <div class="empty-info" v-show="!batches.length">暂无库存信息</div>
               <el-row class="md-info" v-for="item in batches" :key="item.id">
                 <el-col :span="14">
-                  <oms-row label="货主货品名称" :sapn="span">{{item.goodsName}}</oms-row>
+                  <oms-row label="货主疫苗名称" :sapn="span">{{item.goodsName}}</oms-row>
                   <oms-row label="生产厂商" :sapn="span">{{item.factoryName}}</oms-row>
                   <oms-row label="批号" :sapn="span">{{item.batchNumber}}</oms-row>
                   <oms-row label="有效期" :sapn="span">{{item.expiryDate | date}}</oms-row>
@@ -186,7 +186,7 @@
           reason: ''
         },
         rules: {
-          orgGoodsId: {required: true, message: '请选择货主货品', trigger: 'change'},
+          orgGoodsId: {required: true, message: '请选择货主疫苗', trigger: 'change'},
           batchNumberId: {required: true, message: '请选择批号', trigger: 'change'},
           warehouseId: {required: true, message: '请选择仓库', trigger: 'change'},
           adjustType: {required: true, message: '请选择原状态', trigger: 'change'},
@@ -243,7 +243,7 @@
             break;
           }
           case 1: {
-            callback(new Error('缺少散件包装数量信息，请补充货品包装资料'));
+            callback(new Error('缺少散件包装数量信息，请补充疫苗包装资料'));
             break;
           }
           case 2: {

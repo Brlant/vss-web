@@ -1167,6 +1167,9 @@ $borderColor: rgba(82, 82, 82, 0.23);
     height: 46px;
     line-height: 46px;
   }
+  .el-button-group {
+    font-size: 0;
+  }
 }
 
 .pay-part {
@@ -1358,4 +1361,8 @@ $borderColor: rgba(82, 82, 82, 0.23);
   text-overflow: ellipsis;
   white-space: nowrap;
   display: inline-block;
+}
+
+.is-total {
+  font-weight: 500;
 }

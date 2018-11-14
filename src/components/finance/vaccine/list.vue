@@ -30,7 +30,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                        v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -84,7 +84,7 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <el-col :span="5">货品</el-col>
+          <el-col :span="5">疫苗</el-col>
           <el-col :span="4">采购订单号</el-col>
           <el-col :span="5">疫苗厂商</el-col>
           <el-col :span="3">采购数量</el-col>

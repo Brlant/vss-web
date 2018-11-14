@@ -15,12 +15,17 @@
       color: red;
     }
   }
+
+  .is-flex {
+    display: flex;
+    align-items: center;
+  }
 </style>
 <template>
   <div class="order-page">
     <div class="container">
       <el-alert
-        title="请选择货品和批号输入调整部分库存数，调整库存数必须是散件倍数，如果是正数则增加库存，如果是负数则减少库存。"
+        title="请选择疫苗和批号输入调整部分库存数，调整库存数必须是散件倍数，如果是正数则增加库存，如果是负数则减少库存。"
         type="warning">
       </el-alert>
       <div class="opera-btn-group" :class="{up:!showSearch}">
@@ -32,8 +37,8 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="12">
-              <oms-form-row :label="orgLevel===3?'被授权疫苗':'货主货品'" :span="4" :isRequire="true">
-                <el-select filterable remote :placeholder="orgLevel===3?'请输入名称搜索被授权疫苗':'请输入名称搜索货主货品'"
+              <oms-form-row :label="orgLevel===3?'被授权疫苗':'货主疫苗'" :span="4" :isRequire="true">
+                <el-select filterable remote :placeholder="orgLevel===3?'请输入名称搜索被授权疫苗':'请输入名称搜索货主疫苗'"
                            :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
@@ -45,7 +50,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -68,7 +73,7 @@
               </oms-form-row>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row class="is-flex">
             <el-col :span="12">
               <oms-form-row label="仓库" :span="4">
                 <el-select v-model="searchWord.warehouseId" filterable clearable
@@ -82,8 +87,8 @@
             </el-col>
             <el-col :span="12">
               <el-col :span="12" v-show="searchWord.orgGoodsId">
-                <oms-form-row label="散件包装数量:" :span="10">
-                  <div style="margin-top: 7px">{{smallPackCount}}</div>
+                <oms-form-row class="is-flex" label="散件包装数量:" :span="10">
+                  <div>{{smallPackCount}}</div>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
@@ -94,7 +99,7 @@
           <el-row>
             <el-col :span="12">
               <el-col :span="12">
-                <oms-form-row label="可用库存" :span="10">
+                <oms-form-row label="可用库存" :span="8">
                   <el-input  type="number" v-model.number="form.availableCount"></el-input>
                 </oms-form-row>
               </el-col>
@@ -130,7 +135,7 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData"
                 :row-class-name="formatRowClass" :summary-method="getSummaries"  show-summary
                 :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
@@ -299,17 +304,17 @@
             break;
           }
           case 5: {
-            content = '仓库内真实合格货品数量';
+            content = '仓库内真实合格疫苗数量';
             title = '实际合格库存';
             break;
           }
           case 6: {
-            content = '在运输中的货品数量';
+            content = '在运输中的疫苗数量';
             title = '在途库存';
             break;
           }
           case 7: {
-            content = '仓库内真实不合格货品数量';
+            content = '仓库内真实不合格疫苗数量';
             title = '实际不合格库存';
             break;
           }
@@ -479,7 +484,7 @@
       onSubmit () {
         if (!this.searchWord.orgGoodsId) {
           this.$notify.info({
-            message: '请选择货主货品'
+            message: '请选择货主疫苗'
           });
           return;
         }

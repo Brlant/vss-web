@@ -174,16 +174,13 @@
           povList: {required: true, type: 'array', message: '请选择接种点', trigger: 'change'},
           povId: {required: true, message: '请选择销售价格', trigger: 'change'}
         },
-        prices: [], // 货品列表
+        prices: [], // 疫苗列表
         title: '新增疫苗授权',
         orgList: [],
         unitPrice: '',
         doing: false,
         loading: false
       };
-    },
-    mounted () {
-      this.getOrgsList(1);
     },
     watch: {
       formItem (val) {

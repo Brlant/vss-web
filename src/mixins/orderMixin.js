@@ -1,6 +1,14 @@
 export default {
+  data() {
+    return {
+      pickerOptions: {
+        disabledDate: time => {
+          return time.getTime() < this.$moment().subtract(1, 'days');
+        }
+      }
+    };
+  },
   computed: {
-
     isShowGoodsList () {
       return this.$store.state.isShowGoodsList;
     }
@@ -26,7 +34,7 @@ export default {
       if (product.orgGoodsId) {
         this.$notify({
           duration: 2000,
-          message: `存在货品未加入${str}，请加入`,
+          message: `存在疫苗未加入${str}，请加入`,
           type: 'warning'
         });
         return false;
@@ -60,7 +68,7 @@ export default {
       }
     },
     /**
-     * 出库， 添加订单，合并同货主货品，同批号的订单货品
+     * 出库， 添加订单，合并同货主疫苗，同批号的订单疫苗
      * @param list
      * @returns {*}
      */
@@ -84,7 +92,7 @@ export default {
       return list;
     },
     /**
-     * 出库，添加订单，合并同货主货品的订单货品
+     * 出库，添加订单，合并同货主疫苗的订单疫苗
      * @param list
      * @returns {*}
      */
