@@ -98,7 +98,7 @@
             let userCopy = JSON.parse(JSON.stringify(this.user));
             userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
             userCopy.username = this.trim(this.user.username);
-            userCopy.password = Base64.encode(userCopy.password);
+            // userCopy.password = Base64.encode(userCopy.password);
             Auth.login(userCopy).then(response => {
               if (!response.data) return;
               let userId = window.localStorage.getItem('userId');
