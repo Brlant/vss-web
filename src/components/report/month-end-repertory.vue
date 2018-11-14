@@ -52,7 +52,7 @@
         <el-table-column prop="beforeStock" label="期前库存" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="restStockMoney" label="期前金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="procurementCount" label="采购数量" width="100" :sortable="true"></el-table-column>
-        <el-table-column prop="saleCount" label="采购金额" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="procurementMoney" label="采购金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleCount" label="销售数量" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleMoney" label="销售金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleReturnCount" label="退区数量" width="100" :sortable="true"></el-table-column>
