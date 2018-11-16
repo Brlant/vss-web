@@ -184,6 +184,7 @@
             // 将附件从附件列表中删除
             let index = this.attachmentList.indexOf(attachment);
             this.attachmentList.splice(index, 1);
+            this.$emit('change');
           }).catch(() => {
             this.$notify.error({
               duration: 2000,
