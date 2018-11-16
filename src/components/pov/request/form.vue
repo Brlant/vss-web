@@ -299,8 +299,8 @@
     data: function () {
       return {
         pickerOptions0: {
-          disabledDate (time) {
-            return new Date(time).getTime() < Date.now();
+          disabledDate: time => {
+            return time.getTime() < this.$moment().subtract(1, 'days');
           }
         },
         loading: false,
