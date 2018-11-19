@@ -820,14 +820,18 @@
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        let url = '';
-        if (this.orgLevel === 1) {
-          url = 'vaccine-info';
-          params.deleteFlag = false;
-          params.status = '1';
-        } else {
-          url = 'purchase-agreement/valid/org-goods';
-        }
+        // let url = '';
+        // if (this.orgLevel === 1) {
+        //   url = 'vaccine-info';
+        //   params.deleteFlag = false;
+        //   params.status = '1';
+        // } else {
+        //   url = 'purchase-agreement/valid/org-goods';
+        // }
+        // 无论市、区疾控, 调拨入库, 查询疫苗产品资料
+        let url = 'vaccine-info';
+        params.deleteFlag = false;
+        params.status = '1';
         http.get(url, {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;

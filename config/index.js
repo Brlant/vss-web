@@ -29,9 +29,9 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: {
       '/api': {
-        target: 'http://vss.cdcerp.net/',
+        // target: 'http://vss.cdcerp.net/',
         // target: 'https://cdcerp.cn/',
-        // target: 'http://erp.tinysoft.cc:88/',
+        target: 'http://erp.tinysoft.cc:88/',
         // target: 'http://next-erp.tinyapp.top',
         // target: 'http://localhost:8301',
         // target: 'http://192.168.2.198:8113/',
