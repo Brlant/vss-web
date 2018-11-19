@@ -73,7 +73,7 @@
 <template>
   <div class="pay-part">
     <div class="container">
-      <div class="container">
+      <perm label="accounts-receivable-export">
         <div class="opera-btn-group" :class="{up:showSearch}">
           <div class="opera-icon">
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
@@ -82,7 +82,8 @@
             <span v-show="showSearch">展开筛选</span>
           </span>
           </div>
-          <el-form class="advanced-query-form">
+          <el-form class="advanced-query-form clearfix"
+                   style="padding-top: 10px; background: #fff; padding: 10px 10px 10px;">
             <el-row>
               <el-col :span="8">
                 <oms-form-row label="日期" :span="6">
@@ -125,7 +126,7 @@
             </el-row>
           </el-form>
         </div>
-      </div>
+      </perm>
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item active"
              v-for="(item,key) in orgType">
