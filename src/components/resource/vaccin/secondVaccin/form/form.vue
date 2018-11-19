@@ -175,10 +175,10 @@
           <template slot="prepend">￥</template>
         </oms-input>
       </el-form-item>
-      <el-form-item label="库存上限" prop="inventoryUpperLimit">
+      <el-form-item label="库存上限">
         <oms-input type="number" :min="0" v-model.number="form.inventoryUpperLimit" placeholder="请输入库存上限"></oms-input>
       </el-form-item>
-      <el-form-item label="库存下限" prop="inventoryLowerLimit">
+      <el-form-item label="库存下限">
         <oms-input type="number" :min="0" v-model.number="form.inventoryLowerLimit" placeholder="请输入库存下限"></oms-input>
       </el-form-item>
       <el-form-item label="是否计价">
