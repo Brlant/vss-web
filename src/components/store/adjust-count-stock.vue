@@ -100,7 +100,7 @@
             <el-col :span="12">
               <el-col :span="12">
                 <oms-form-row label="可用库存" :span="8">
-                  <el-input  type="number" v-model.number="form.availableCount"></el-input>
+                  <el-input type="number" v-model.number="form.availableCount"></el-input>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
@@ -125,7 +125,7 @@
           <el-row>
             <el-col :span="12">
               <oms-form-row label="" :span="4">
-                <el-button type="primary" @click="onSubmit"  :disabled="doing">调整库存</el-button>
+                <el-button type="primary" @click="onSubmit" :disabled="doing">调整库存</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -133,7 +133,7 @@
       </div>
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData"
-                :row-class-name="formatRowClass" :summary-method="getSummaries"  show-summary
+                :row-class-name="formatRowClass" :summary-method="getSummaries" show-summary
                 :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
@@ -191,8 +191,9 @@
   export default {
     components: {
       OmsRow,
-      detail},
-    data () {
+      detail
+    },
+    data() {
       return {
         loadingData: false,
         showSearch: true,
@@ -241,12 +242,12 @@
         doing: false
       };
     },
-    mounted () {
+    mounted() {
       // this.getBatches(1);
       this.queryOrgWarehouse();
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
       bodyHeight: function () {
@@ -254,7 +255,7 @@
         height = height - 110;
         return height;
       },
-      smallPackCount () {
+      smallPackCount() {
         let count = '';
         if (!this.searchWord.orgGoodsId) return count;
         this.orgGoods.forEach(i => {
@@ -274,13 +275,13 @@
       }
     },
     methods: {
-      isValid (item) {
+      isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expiryDate);
         let days = b.diff(a, 'days');
         return a < b ? days > 90 ? 2 : 1 : 0;
       },
-      getBatches () { // 得到波次列表
+      getBatches() { // 得到波次列表
         let params = Object.assign({}, this.filters);
         this.loadingData = true;
         erpStock.query(params).then(res => {
@@ -288,7 +289,7 @@
           this.loadingData = false;
         });
       },
-      formatHeader (h, col) {
+      formatHeader(h, col) {
         let index = col.$index;
         let content = '';
         let title = '';
@@ -325,7 +326,7 @@
           </el-tooltip>
         );
       },
-      formatRowClass (data) {
+      formatRowClass(data) {
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
         }
@@ -343,18 +344,18 @@
           });
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchWord);
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -395,7 +396,7 @@
         Object.assign(this.filters, temp);
         this.batches = [];
       },
-      filterFactory (query) { // 生产厂商
+      filterFactory(query) { // 生产厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
@@ -409,7 +410,7 @@
           this.factories = res.data.list;
         });
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let level = this.$store.state.orgLevel;
         if (level === 3) {
           let params = Object.assign({}, {
@@ -430,13 +431,13 @@
           });
         }
       },
-      orgGoodsChange (val) {
+      orgGoodsChange(val) {
         this.searchWord.batchNumberId = '';
         this.batchNumberList = [];
         this.batches = [];
         this.filterBatchNumber();
       },
-      batchNumberChange (val) {
+      batchNumberChange(val) {
         if (!val) {
           this.filters.batchNumberId = '';
           this.batches = [];
@@ -445,7 +446,7 @@
         this.searchInOrder();
         this.getBatches(1);
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         if (!this.searchWord.orgGoodsId) return;
 
         let goodsId = '';
@@ -473,15 +474,15 @@
           this.warehouses = res.data;
         });
       },
-      warehouseChange (val) {
+      warehouseChange(val) {
         if (!this.searchWord.orgGoodsId || !this.searchWord.batchNumberId) return;
         this.searchInOrder();
         this.getBatches(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      onSubmit () {
+      onSubmit() {
         if (!this.searchWord.orgGoodsId) {
           this.$notify.info({
             message: '请选择货主疫苗'

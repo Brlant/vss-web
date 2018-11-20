@@ -1,6 +1,6 @@
 import {Address} from '@dtop/dtop-web-common';
 
-function funDownload (content, filename) {
+function funDownload(content, filename) {
   // 创建隐藏的可下载链接
   let eleLink = document.createElement('a');
   eleLink.download = filename;
@@ -164,7 +164,7 @@ export default {
    * 实时动态强制更改用户录入
    * @param th
    */
-  format2DecimalPoint (val) {
+  format2DecimalPoint(val) {
     let th = val.toString();
     const regStrs = [
       ['^0(\\d+)$', '$1'], // 禁止录入整数部分两位以上，但首位为0
@@ -268,7 +268,7 @@ export default {
     if (cls.replace(/\s/g, '').length === 0) return false;
     return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
   },
-  getPos (e) { // 这是一个 获取鼠标位置的函数
+  getPos(e) { // 这是一个 获取鼠标位置的函数
     let oEvent = e || event;
     return {
       x: oEvent.clientX + document.documentElement.scrollLeft || document.body.scrollLeft,
@@ -303,7 +303,7 @@ export default {
     }
     return label;
   },
-  changeTotalNumber (amount, smallPacking) {
+  changeTotalNumber(amount, smallPacking) {
     if (!smallPacking) return;
     if (amount < 0) {
       this.$notify.info({
@@ -330,7 +330,7 @@ export default {
     });
     return re;
   },
-  isCheckPackage (count) {
+  isCheckPackage(count) {
     if (!count || count < 0) {
       this.$notify({
         duration: 2000,
@@ -341,7 +341,7 @@ export default {
     }
     return count > 0;
   },
-  download (src, fileName) {
+  download(src, fileName) {
     let $a = document.createElement('a');
     $a.setAttribute('href', src);
     $a.setAttribute('download', fileName);
@@ -353,7 +353,7 @@ export default {
     fileLink.click();
     body.removeChild($a);
   },
-  downloadXml (src, fileName) {
+  downloadXml(src, fileName) {
     this.$http({
       url: src,
       timeout: 1000000,
@@ -362,7 +362,7 @@ export default {
       funDownload(res.data, fileName);
     });
   },
-  getCurrentHeight (vm, defaultHeight = 400) {
+  getCurrentHeight(vm, defaultHeight = 400) {
     if (vm) {
       let obj = vm.$el.getBoundingClientRect();
       let height = document.documentElement.clientHeight - obj.y;
@@ -376,7 +376,7 @@ export default {
    * 得到附件类型 1 图片 0 非图片
    * @returns {string}
    */
-  getType (attachmentStoragePath) {
+  getType(attachmentStoragePath) {
     let type = '';
     let url = attachmentStoragePath;
     let images = ['jpg', 'png', 'gif', 'jpeg'];
@@ -396,7 +396,7 @@ export default {
   }
 };
 
-export function getMousePos (event) {
+export function getMousePos(event) {
   let e = event || window.event;
   let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
   let scrollY = document.documentElement.scrollTop || document.body.scrollTop;

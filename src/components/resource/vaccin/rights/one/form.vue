@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -74,7 +73,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -129,14 +127,14 @@
   </div>
 </template>
 <script type="text/jsx">
-  import { http, VaccineRights } from '@/resources';
+  import {http, VaccineRights} from '@/resources';
 
   export default {
     props: {
       formItem: Object,
       currentItem: Object
     },
-    data () {
+    data() {
       return {
         form: {
           orgGoodsId: '',
@@ -158,7 +156,7 @@
       };
     },
     watch: {
-      formItem (val) {
+      formItem(val) {
         this.$refs['d-form'].resetFields();
         if (val && val.id) {
           this.title = '编辑疫苗授权';
@@ -187,8 +185,8 @@
     methods: {
       renderFuncPOV(h, option) {
         return (
-          <span title={option.subordinateName}>{ option.subordinateName }</span>
-      );
+          <span title={option.subordinateName}>{option.subordinateName}</span>
+        );
       },
       filterPOV: function (query) {// 过滤POV
         let params = Object.assign({}, {
@@ -201,14 +199,14 @@
           this.loading = false;
         });
       },
-      filterMethod (query, item) {
+      filterMethod(query, item) {
         if (!query) return true;
         return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
           item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
           item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
           item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;

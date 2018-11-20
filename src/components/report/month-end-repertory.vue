@@ -43,7 +43,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
+      <el-table :data="reportList" class="header-list" ref="reportTable" :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="no" label="序号" width="70" :sortable="true"></el-table-column>
         <el-table-column prop="goodsName" label="疫苗名称" width="160" :sortable="true"></el-table-column>
@@ -68,12 +68,12 @@
   </div>
 </template>
 <script>
-  import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
   import ReportMixin from '@/mixins/reportMixin';
+
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         reportList: [],

@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .list-style {
     cursor: pointer;
     padding: 10px;
@@ -88,7 +87,6 @@
 
   }
 
-
   .ml15 {
     margin-left: 40px;
   }
@@ -96,7 +94,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -182,7 +179,7 @@
 </template>
 
 <script>
-  import { BillPayable, pay } from '../../../../../resources';
+  import {BillPayable, pay} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
   import payDetail from './payDetail.vue';
 
@@ -247,13 +244,13 @@
       PaymentMethod: function () {
         return this.$getDict('PaymentMethod');
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
       selectPayments: {
-        handler (val) {
+        handler(val) {
           let amount = 0;
           val.forEach(i => {
             amount += Number(i.payment);
@@ -268,7 +265,7 @@
         },
         deep: true
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.form = {
           type: '0',
           payType: '2',
@@ -294,7 +291,7 @@
         this.orgList = [];
         this.logisticsList = [];
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.form.amount = utils.autoformatDecimalPoint(this.form.amount);
       },
       doClose: function () {

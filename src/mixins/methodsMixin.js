@@ -1,4 +1,4 @@
-import { BaseInfo, cerpAction } from '@/resources';
+import {BaseInfo, cerpAction} from '@/resources';
 
 export default {
   methods: {

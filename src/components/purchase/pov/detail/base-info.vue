@@ -30,6 +30,7 @@
   .content-body {
     margin: 20px 0;
   }
+
   .relation-no {
     cursor: pointer;
     color: #409EFF * 0.8;
@@ -118,7 +119,8 @@
       </tr>
       <tr>
         <th colspan="6" class="text-right">
-          <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>;
+          <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
+          ;
           <total-count property="applyMoney" :showIcon="true" title="合计金额"
                        :list="currentOrder.detailDtoList"></total-count>
         </th>
@@ -128,7 +130,7 @@
   </div>
 </template>
 <script>
-  import { pullSignal } from '@/resources';
+  import {pullSignal} from '@/resources';
 
   export default {
     props: {
@@ -141,7 +143,7 @@
       };
     },
     watch: {
-      currentItem () {
+      currentItem() {
         this.getDetail();
       }
     },

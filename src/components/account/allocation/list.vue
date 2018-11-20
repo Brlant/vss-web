@@ -150,7 +150,7 @@
 
 </template>
 <script>
-  import { BaseInfo, cerpAction, OrgUser, User } from '../../../resources';
+  import {BaseInfo, cerpAction, OrgUser, User} from '../../../resources';
   import editForm from './form/form.vue';
 
   export default {
@@ -203,7 +203,7 @@
         return height;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
     },
     watch: {
@@ -223,7 +223,7 @@
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       resetRightBox: function () {

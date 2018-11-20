@@ -20,7 +20,7 @@
   </card-box>
 </template>
 <script>
-  import { erpOrder, pullSignal } from '@/resources';
+  import {pullSignal} from '@/resources';
 
   export default {
     data: function () {
@@ -28,19 +28,19 @@
         requirementList: []
       };
     },
-    mounted () {
+    mounted() {
       this.getRequirementList();
     },
     computed: {
-      user () {
+      user() {
         return this.$store.state.user;
       },
-      level () {
+      level() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      level () {
+      level() {
         this.getRequirementList();
       }
     },

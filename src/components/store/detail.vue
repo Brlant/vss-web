@@ -1,5 +1,6 @@
 <style lang="scss" scoped="">
   @import "../../assets/mixins";
+
   .content-part {
     .content-right {
       > h3 {
@@ -97,11 +98,11 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
 
   export default {
     props: ['currentItem', 'isShowLock'],
-    data () {
+    data() {
       return {
         loadingData: false,
         storeDetails: [],
@@ -109,17 +110,17 @@
       };
     },
     watch: {
-      currentItem () {
+      currentItem() {
         this.queryStoreDetails();
       }
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
     methods: {
-      queryStoreDetails () {
+      queryStoreDetails() {
         this.storeDetails = [];
         if (!this.currentItem.id) return;
         this.loadingData = true;

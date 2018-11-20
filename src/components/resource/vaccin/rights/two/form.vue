@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -75,11 +74,9 @@
     color: #777
   }
 
-
   .productItem-info {
     float: left;
   }
-
 
   .ar {
     text-align: right;
@@ -130,7 +127,7 @@
               <el-select filterable remote placeholder="请输入名称搜索销售价格" :remote-method="filterPriceGroup"
                          :clearable="true" :default-first-option="true"
                          v-model="form.salePriceGroupId"
-                         @change="changeSelect"  popperClass="good-selects">
+                         @change="changeSelect" popperClass="good-selects">
                 <el-option :value="item.id" :key="item.id" :label="'￥' +item.unitPrice"
                            v-for="item in prices">
                   <div style="overflow: hidden">
@@ -153,7 +150,7 @@
   </div>
 </template>
 <script type="text/jsx">
-  import { BriceGroup, http, VaccineRights } from '@/resources';
+  import {BriceGroup, http, VaccineRights} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -161,7 +158,7 @@
       formItem: Object,
       currentItem: Object
     },
-    data () {
+    data() {
       return {
         form: {
           orgGoodsId: '',
@@ -183,7 +180,7 @@
       };
     },
     watch: {
-      formItem (val) {
+      formItem(val) {
         this.$refs['d-form'].resetFields();
         if (val && val.id) {
           this.title = '编辑疫苗授权';
@@ -217,13 +214,13 @@
     methods: {
       renderFuncPOV(h, option) {
         return (
-          <span title={option.subordinateName}>{ option.subordinateName }</span>
-      );
+          <span title={option.subordinateName}>{option.subordinateName}</span>
+        );
       },
       formatPrice: function () {// 格式化单价，保留两位小数
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
-      changeSelect (val) {
+      changeSelect(val) {
         if (!val) {
           this.unitPrice = '';
         }
@@ -256,14 +253,14 @@
           this.loading = false;
         });
       },
-      filterMethod (query, item) {
+      filterMethod(query, item) {
         if (!query) return true;
         return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
           item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
           item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
           item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;

@@ -63,10 +63,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="实际收货人">
-            <oms-input type="text" placeholder="请输入实际收货人" :maxlength="50" v-model="currentOrder.actualConsignee"></oms-input>
+            <oms-input type="text" placeholder="请输入实际收货人" :maxlength="50"
+                       v-model="currentOrder.actualConsignee"></oms-input>
           </el-form-item>
           <el-form-item label="收货人联系电话">
-            <oms-input type="text" placeholder="请输入收货人联系电话" :maxlength="50" v-model="currentOrder.consigneePhone" ></oms-input>
+            <oms-input type="text" placeholder="请输入收货人联系电话" :maxlength="50"
+                       v-model="currentOrder.consigneePhone"></oms-input>
           </el-form-item>
           <el-form-item label="运输条件" prop="transportationCondition">
             <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
@@ -238,7 +240,7 @@
 </template>
 <script>
   import utils from '@/tools/utils';
-  import { Address, LogisticsCenter } from '@/resources';
+  import {Address, LogisticsCenter} from '@/resources';
   import materialPart from '../material.vue';
 
   export default {
@@ -253,7 +255,7 @@
       isCheck: Boolean,
       vaccineType: String
     },
-    data () {
+    data() {
       return {
         span: 8,
         warehouses: [],
@@ -281,22 +283,22 @@
       };
     },
     computed: {
-      bizTypeList () {
+      bizTypeList() {
         return this.$getDict('bizOutType');
       },
-      transportationMeansList () {
+      transportationMeansList() {
         return this.$getDict('outTransportMeans');
       },
-      transportationConditionList () {
+      transportationConditionList() {
         return this.$getDict('transportationCondition');
       },
-      shipmentPackingUnit () {
+      shipmentPackingUnit() {
         return this.$getDict('shipmentPackingUnit');
       },
-      measurementUnitList () {
+      measurementUnitList() {
         return this.$getDict('measurementUnit');
       },
-      orgRelationList () {
+      orgRelationList() {
         return this.$getDict('orgRelation');
       },
       totalMoney: function () {
@@ -309,21 +311,21 @@
       }
     },
     watch: {
-      currentOrder (val) {
+      currentOrder(val) {
         if (!val.id) return;
         if (val.state === '0') {
           this.searchWarehouses();
           this.filterAddress();
         }
       },
-      isCheck (val) {
+      isCheck(val) {
         if (val) {
           this.check();
         }
       }
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
@@ -335,14 +337,14 @@
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
       },
-      changeRemark (form) {
+      changeRemark(form) {
         if (!this.currentOrder.remark) {
           this.currentOrder.remark = form.count + form.name;
         } else {
           this.currentOrder.remark += '，' + form.count + form.name;
         }
       },
-      searchWarehouses () {
+      searchWarehouses() {
         if (!this.currentOrder.customerId) {
           this.warehouses = [];
           return;
@@ -373,7 +375,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.currentOrder.orgId, {
           deleteFlag: false,
           orgId: this.currentOrder.orgId,
@@ -398,7 +400,7 @@
         }
         return state;
       },
-      check () {
+      check() {
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid) {
             return false;

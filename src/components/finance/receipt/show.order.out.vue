@@ -36,7 +36,7 @@
 <script>
   import basicInfo from '@/components/sale/order/detail/base-info.vue';
   import log from './log.vue';
-  import { InWork } from '@/resources';
+  import {InWork} from '@/resources';
 
   export default {
     components: {basicInfo, log},
@@ -47,7 +47,7 @@
       currentDetail: Object,
       state: String
     },
-    data () {
+    data() {
       return {
         currentOrder: {},
         index: 0,
@@ -59,14 +59,14 @@
       };
     },
     watch: {
-      orderId () {
+      orderId() {
         this.index = 0;
         this.title = '订单详情';
         this.queryOrderDetail();
       }
     },
     methods: {
-      queryOrderDetail () {
+      queryOrderDetail() {
         if (!this.orderId) return false;
         this.currentOrder = {};
         InWork.queryOrderDetail(this.orderId).then(res => {
@@ -74,7 +74,7 @@
           this.currentOrder = res.data;
         });
       },
-      showPart (item) {
+      showPart(item) {
         this.index = item.key;
         this.title = item.name;
       }

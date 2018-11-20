@@ -318,7 +318,7 @@
 </template>
 
 <script>
-  import { Auth, cerpAction } from '../../resources';
+  import {Auth, cerpAction} from '../../resources';
   import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
 
@@ -327,7 +327,7 @@
       omsUploadPicture
     },
     props: ['toRoute', 'level'],
-    data () {
+    data() {
       return {
         activeId: this.getGroupId(),
         logo_pic: logo_pic,
@@ -362,10 +362,10 @@
       activePath: function () {
         return this.$route.path;
       },
-      orgName () {
+      orgName() {
         return this.$store.state.orgName;
       },
-      weChatInfo () {
+      weChatInfo() {
         return this.$store.state.weChatInfo;
       }
     },
@@ -413,10 +413,10 @@
         this.skin = skin;
         window.localStorage.setItem('skin', JSON.stringify(skin));
       },
-      filterLevel (level) {
+      filterLevel(level) {
         return level === 1 ? '市疾控' : level === 2 ? '区疾控' : level === 3 ? '接种点' : '';
       },
-      unbind () {
+      unbind() {
         this.$confirm('是否解除绑定的微信？', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

@@ -1,7 +1,7 @@
 <style lang="scss">
   .material {
     .el-input-group--append {
-     > .el-input__inner {
+      > .el-input__inner {
         width: 120px;
       }
     }
@@ -28,10 +28,10 @@
   </div>
 </template>
 <script>
-  import { material } from '@/resources';
+  import {material} from '@/resources';
 
   export default {
-    data () {
+    data() {
       return {
         form: {
           name: '',
@@ -42,15 +42,15 @@
       };
     },
     computed: {
-      materialUnits () {
+      materialUnits() {
         return this.$getDict('materialUnit');
       }
     },
-    mounted () {
+    mounted() {
       this.queryMaterials();
     },
     methods: {
-      queryMaterials (query) {
+      queryMaterials(query) {
         let params = {
           deleteFlag: false,
           keyword: query,
@@ -60,7 +60,7 @@
           this.materials = res.data.list;
         });
       },
-      add () {
+      add() {
         if (!this.form.count) {
           this.$notify.info({
             message: '请输入物料数量'

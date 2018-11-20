@@ -76,7 +76,7 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
 
   export default {
     props: {
@@ -86,7 +86,7 @@
         default: -1
       }
     },
-    data () {
+    data() {
       return {
         details: [],
         plateNumber: '',
@@ -94,14 +94,14 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         if (val !== 1) return;
         this.details = [];
         this.getGoodsDetails();
       }
     },
     methods: {
-      getGoodsDetails () {
+      getGoodsDetails() {
         this.loading = true;
         http.get(`/erp-receipt/order/${this.currentOrder.id}/detail`).then(res => {
           this.details = res.data;

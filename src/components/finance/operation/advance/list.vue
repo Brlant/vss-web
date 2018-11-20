@@ -223,7 +223,7 @@
                   @right-close="resetRightBox" :getOrderStatus="getOrderStatus"></audit-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="resetRightBox" :css="{'width':'900px','padding':0}">
-      <add-form @change="onSubmit" :title="title" :type="type"  @right-close="resetRightBox"
+      <add-form @change="onSubmit" :title="title" :type="type" @right-close="resetRightBox"
                 :defaultIndex="defaultIndex"></add-form>
     </page-right>
   </div>

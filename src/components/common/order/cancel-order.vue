@@ -27,14 +27,14 @@
   </div>
 </template>
 <script>
-  import { erpOrder } from '@/resources';
+  import {erpOrder} from '@/resources';
 
   export default {
     name: 'CancelOrder',
     props: {
       orderId: ''
     },
-    data () {
+    data() {
       return {
         isShow: false,
         form: {
@@ -44,11 +44,11 @@
       };
     },
     watch: {
-      orderId () {
+      orderId() {
         this.isShow = false;
         this.form.reason = '';
       },
-      isShow (val) {
+      isShow(val) {
         if (val) {
           this.$nextTick(() => {
             this.$el.scrollIntoView();
@@ -62,7 +62,7 @@
       }
     },
     methods: {
-      cancel () {
+      cancel() {
         if (!this.form.reason) {
           this.$notify({
             duration: 2000,

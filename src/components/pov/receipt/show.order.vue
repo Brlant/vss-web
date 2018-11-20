@@ -44,7 +44,8 @@
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="1" v-show="index === 8"></relevance-code>
-        <relevance-code-review :currentOrder="currentOrder" :index="index" type="1" v-show="index === 9"></relevance-code-review>
+        <relevance-code-review :currentOrder="currentOrder" :index="index" type="1"
+                               v-show="index === 9"></relevance-code-review>
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
       </div>
     </div>
@@ -54,7 +55,7 @@
   import basicInfo from './base-info.vue';
   import log from '@/components/common/order.log.vue';
   import receipt from './receipt-detail.vue';
-  import { InWork, http } from '@/resources';
+  import {InWork} from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
   import batchNumbers from '../../purchase/order/detail/batch.number.vue';
@@ -67,7 +68,7 @@
       },
       state: String
     },
-    data () {
+    data() {
       return {
         currentOrder: {},
         index: 0,
@@ -75,14 +76,14 @@
       };
     },
     watch: {
-      orderId () {
+      orderId() {
         this.index = 0;
         this.title = '订单详情';
         this.queryOrderDetail();
       }
     },
     computed: {
-      pageSets () {
+      pageSets() {
         let menu = [];
         let perms = this.$store.state.permissions || [];
         menu.push({name: '订单详情', key: 0});
@@ -100,7 +101,7 @@
       }
     },
     methods: {
-      queryOrderDetail () {
+      queryOrderDetail() {
         if (!this.orderId) return false;
         this.currentOrder = {};
         InWork.queryOrderDetail(this.orderId).then(res => {
@@ -108,7 +109,7 @@
           this.currentOrder = res.data;
         });
       },
-      showPart (item) {
+      showPart(item) {
         this.index = item.key;
         this.title = item.name;
       }

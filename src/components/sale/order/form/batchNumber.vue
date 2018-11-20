@@ -71,7 +71,7 @@
       product: {},
       productList: {
         type: Array,
-        default () {
+        default() {
           return [];
         }
       },
@@ -79,7 +79,7 @@
       formCopy: {},
       orderType: String
     },
-    data () {
+    data() {
       return {
         batchNumbers: [],
         isHasBatchNumberInfo: false,
@@ -89,24 +89,24 @@
       };
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      'product.orgGoodsId' () {
+      'product.orgGoodsId'() {
         this.initBatchNumber();
         this.queryBatchNumber();
       },
       batchNumbers: {
-        handler () {
+        handler() {
           this.setIsHasBatchNumberInfo();
         },
         deep: true
       }
     },
     methods: {
-      initBatchNumber () {
+      initBatchNumber() {
         this.batchNumbers = [];
         if (!this.product.orgGoodsId || !this.productList.length) {
           return;
@@ -136,7 +136,7 @@
        * 组合疫苗，得到多个API接口
        * @returns {any[]}
        */
-      getAPIAry () {
+      getAPIAry() {
         return this.batchNumbers.map(m => {
           let params = {
             goodsId: m.goodsId,
@@ -149,7 +149,7 @@
       /**
        * 如果有组合疫苗，并发查询批号信息
        */
-      queryBatchNumber () {
+      queryBatchNumber() {
         if (!this.batchNumbers.length) return;
         this.doing = true;
         axios.all(this.batchNumbers.map(m => {
@@ -180,12 +180,12 @@
       isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expirationDate);
-        return a > b ;
+        return a > b;
       },
       /**
        * 编辑疫苗时，重设对应批号信息
        */
-      editBatchNumbers () {
+      editBatchNumbers() {
         if (!this.editItemProduct.batchNumberId) return;
         this.batchNumbers.forEach(i => {
           if (i.orgGoodsId === this.editItemProduct.orgGoodsId) {
@@ -214,7 +214,7 @@
           }
         });
       },
-      addBatchNumber (i) {
+      addBatchNumber(i) {
         i.lots.push({
           id: this.editItemProduct.batchNumberId,
           no: this.editItemProduct.no,
@@ -239,7 +239,7 @@
        * 全选
        * @param item
        */
-      checkItemAll (item) {
+      checkItemAll(item) {
         item.lots.forEach(l => {
           l.isChecked = item.isCheckedAll && !l.disabled;
         });
@@ -248,7 +248,7 @@
        * 输入数量校验
        * @param item
        */
-      isChangeValue (item, product) {
+      isChangeValue(item, product) {
         if (product.isMainly) {
           item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         }
@@ -266,7 +266,7 @@
        * @param item
        * @param product
        */
-      autoSelectBatchWhenIsCombination (item, product) {
+      autoSelectBatchWhenIsCombination(item, product) {
         let ary = this.productList.filter(f => f.orgGoodsDto.id === this.product.orgGoodsId);
         if (!ary.length) return;
         if (!ary[0].list) return;
@@ -311,7 +311,7 @@
        * @param totalCount
        * @returns {*}
        */
-      selectBatch (list, index, count, totalCount) {
+      selectBatch(list, index, count, totalCount) {
         if (!list.length) return count;
         if (index > list.length - 1) return count;
         if (!(count < totalCount)) return count;
@@ -328,12 +328,12 @@
         index++;
         return this.selectBatch(list, index, count, totalCount);
       },
-      setIsHasBatchNumberInfo () {
+      setIsHasBatchNumberInfo() {
         let batchNumbers = this.batchNumbers || [];
         this.isHasBatchNumberInfo = !batchNumbers.length || batchNumbers.length && batchNumbers.every(s => !s.lots.length);
         this.$emit('setIsHasBatchNumberInfo', this.isHasBatchNumberInfo);
       },
-      checkPass () {
+      checkPass() {
         if (this.isHasBatchNumberInfo) {
           this.$notify.info({
             duration: 2000,

@@ -153,7 +153,7 @@
       },
       type: String
     },
-    data () {
+    data() {
       return {
         loadingData: false,
         loadingDetailData: false,
@@ -177,7 +177,7 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         this.filters.code = '';
         if (val !== 9) return;
         this.files = [];
@@ -192,15 +192,15 @@
       }
     },
     methods: {
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getTraceCodes(1);
       },
-      handleCurrentChange (val) {
+      handleCurrentChange(val) {
         this.getTraceCodes(val);
       },
-      changeFiles (files) {
+      changeFiles(files) {
         this.files = files;
       },
       showAttachment: function (item) {// 显示预览
@@ -216,7 +216,7 @@
           this.queryAttachment();
         });
       },
-      onSubmit () {
+      onSubmit() {
         if (!this.orderAttachment.length) {
           this.$notify.info({
             message: '请选择文件'
@@ -240,7 +240,7 @@
           this.getTraceCodes(1);
         });
       },
-      queryCodes () {
+      queryCodes() {
         this.loadingDetailData = true;
         http.get(`/code/${this.currentOrder.id}/trace-code/result`).then(res => {
           this.isCheck = res.data.result;
@@ -248,12 +248,12 @@
           this.loadingDetailData = false;
         });
       },
-      queryAttachment () {
+      queryAttachment() {
         OmsAttachment.queryOneAttachmentList(this.currentOrder.id, 'traceCode').then(res => {
           this.orderAttachment = res.data;
         });
       },
-      getTraceCodes (pageNo) {
+      getTraceCodes(pageNo) {
         // if (pageNo === 1) {
         //   this.pager.count = 0;
         // }

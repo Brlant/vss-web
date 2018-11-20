@@ -11,7 +11,6 @@
     }
   }
 
-
   .el-form--inline .el-form-item {
     margin-right: 0;
   }
@@ -161,7 +160,7 @@
 
 </template>
 <script>
-  import { Vaccine } from '@/resources';
+  import {Vaccine} from '@/resources';
 
   export default {
     props: {
@@ -169,7 +168,7 @@
       factoryId: String,
       amount: String
     },
-    data () {
+    data() {
       return {
         payments: [],
         form: {
@@ -195,12 +194,12 @@
       };
     },
     computed: {
-      showPayments () {
+      showPayments() {
         return this.payments.filter(f => this.selectPayments.every(e => e.id !== f.id));
       }
     },
     watch: {
-      factoryId (val) {
+      factoryId(val) {
         this.payments = [];
         this.goodesList = [];
         this.resetSearchForm();
@@ -215,7 +214,7 @@
       }
     },
     methods: {
-      queryPayments (pageNo) {
+      queryPayments(pageNo) {
         this.pager.currentPage = pageNo;
         this.loadingData = true;
         let params = Object.assign({}, {
@@ -228,7 +227,7 @@
           this.pager.count = res.data.count;
         });
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         if (!this.factoryId) return;
         let params = Object.assign({}, {
           keyWord: keyWord,
@@ -258,13 +257,13 @@
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      add (item) {
+      add(item) {
         let index = this.selectPayments.indexOf(item);
         if (index === -1) {
           this.selectPayments.push(item);
         }
       },
-      remove (item) {
+      remove(item) {
         let index = this.selectPayments.indexOf(item);
         this.selectPayments.splice(index, 1);
       }

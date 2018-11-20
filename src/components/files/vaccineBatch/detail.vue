@@ -156,7 +156,7 @@
       attachmentLists
     },
     props: ['id'],
-    data () {
+    data() {
       return {
         loadingData: true,
         batchNumber: {},
@@ -238,7 +238,7 @@
           });
         }
       },
-      queryStoreDetails () {
+      queryStoreDetails() {
         this.loadingData = true;
         http.get(`/batch-number/${this.id}`).then(res => {
           this.batchNumber = res.data;

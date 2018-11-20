@@ -28,7 +28,7 @@ export function getRoleMenus(vm, property) {
  * @param vm
  * @param menus
  */
-function setParentIds (vm, menus) {
+function setParentIds(vm, menus) {
   let parentIds = [];
   getParentIds(menus, parentIds);
   vm.$store.commit('initMenuParentIds', parentIds);
@@ -39,7 +39,7 @@ function setParentIds (vm, menus) {
  * @param menus
  * @param parentsIds
  */
-function getParentIds (menus, parentsIds) {
+function getParentIds(menus, parentsIds) {
   menus.forEach(i => {
     if (i.children) {
       parentsIds.push(i.id);

@@ -46,11 +46,11 @@
         licenceList: []
       };
     },
-    mounted () {
+    mounted() {
       this.getLicenceList();
     },
     methods: {
-      formatRowClass (item) {
+      formatRowClass(item) {
         if (item.expireStatus === '1') {
           return 'effective-row';
         }
@@ -58,7 +58,7 @@
           return 'danger-row';
         }
       },
-      getLicenceList () {
+      getLicenceList() {
         this.$http.get('order-licence/overdue/licence').then(res => {
           this.licenceList = res.data;
         });

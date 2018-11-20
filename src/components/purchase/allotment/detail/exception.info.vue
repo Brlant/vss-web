@@ -52,25 +52,25 @@
               <!--{{ getOrderStatus(exception.link) }}-->
               <!--</oms-row>-->
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="异常环节">{{ getOrderStatus(exception.link) }} </oms-row>
+                <oms-row :span="8" label="异常环节">{{ getOrderStatus(exception.link) }}</oms-row>
               </el-col>
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="未处理是否放行">{{ exception.item.canRelease ? '是' : '否' }} </oms-row>
+                <oms-row :span="8" label="未处理是否放行">{{ exception.item.canRelease ? '是' : '否' }}</oms-row>
               </el-col>
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="创建人">{{exception.creatorName}} </oms-row>
+                <oms-row :span="8" label="创建人">{{exception.creatorName}}</oms-row>
               </el-col>
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="创建时间">{{exception.createTime | minute}} </oms-row>
+                <oms-row :span="8" label="创建时间">{{exception.createTime | minute}}</oms-row>
               </el-col>
               <el-col :span="12" class="mb-15" v-show="exception.verifyTime">
-                <oms-row :span="8" label="确认人">{{exception.verifierName}} </oms-row>
+                <oms-row :span="8" label="确认人">{{exception.verifierName}}</oms-row>
               </el-col>
               <el-col :span="12" class="mb-15" v-show="exception.verifyTime">
                 <oms-row :span="8" label="确认时间">{{exception.verifyTime | time}}
                 </oms-row>
               </el-col>
-              <oms-row :span="4" label="异常备注" class="mb-15">{{exception.description}} </oms-row>
+              <oms-row :span="4" label="异常备注" class="mb-15">{{exception.description}}</oms-row>
               <!--<oms-row :span="4" label="客户意见" class="mb-15">{{exception.dealDescriptionOrg}} </oms-row>-->
 
               <oms-row :span="4" label="异常原因附件" v-if="exception.reasonAttachments.length" class="mb-15">
@@ -156,28 +156,28 @@
                 {{ getOrderStatus(exception.link) }}
               </oms-row>
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="创建人">{{exception.creatorName}} </oms-row>
+                <oms-row :span="8" label="创建人">{{exception.creatorName}}</oms-row>
               </el-col>
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="创建时间">{{exception.createTime | minute}} </oms-row>
+                <oms-row :span="8" label="创建时间">{{exception.createTime | minute}}</oms-row>
               </el-col>
-              <oms-row :span="4" label="拒收原因" class="mb-15">{{exception.description}} </oms-row>
+              <oms-row :span="4" label="拒收原因" class="mb-15">{{exception.description}}</oms-row>
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="复核人">{{exception.verifierName}} </oms-row>
+                <oms-row :span="8" label="复核人">{{exception.verifierName}}</oms-row>
               </el-col>
               <el-col :span="12" class="mb-15">
                 <oms-row :span="8" label="复核时间">{{exception.verifyTime | time}}
                 </oms-row>
               </el-col>
-              <oms-row :span="4" label="复核意见" class="mb-15">{{exception.reviewComments}} </oms-row>
+              <oms-row :span="4" label="复核意见" class="mb-15">{{exception.reviewComments}}</oms-row>
               <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="处理人">{{exception.submitterName}} </oms-row>
+                <oms-row :span="8" label="处理人">{{exception.submitterName}}</oms-row>
               </el-col>
               <el-col :span="12" class="mb-15">
                 <oms-row :span="8" label="处理时间">{{exception.submitTime | time}}
                 </oms-row>
               </el-col>
-              <oms-row :span="4" label="客户意见" class="mb-15">{{exception.dealDescriptionOrg}} </oms-row>
+              <oms-row :span="4" label="客户意见" class="mb-15">{{exception.dealDescriptionOrg}}</oms-row>
               <oms-row :span="4" label="拒收原因附件" v-if="exception.reasonAttachments.length" class="mb-15">
 
                 <attachment-show :orderAttachment="exception.reasonAttachments"
@@ -211,7 +211,7 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
   import utils from '@/tools/utils';
   import attachmentShow from './attachmentShow.vue';
   import bgBox from '@/components/common/bgbox.vue';
@@ -234,7 +234,7 @@
         default: -1
       }
     },
-    data () {
+    data() {
       return {
         loadingData: true,
         exceptionDtoList: [], // 异常信息列表
@@ -262,7 +262,7 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         this.loadingData = true;
         this.exceptionDtoList = [];
         if (val === 3) this.queryAllExceptionList();
@@ -277,7 +277,7 @@
         this.currentItem.showDel = true;
         this.currentItem.attachmentIdList = ids;
       },
-      setItem (item) {
+      setItem(item) {
         this.currentItem = item;
       },
       queryAllExceptionList: function () {// 所有异常信息列表

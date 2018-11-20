@@ -339,7 +339,7 @@
 
 </template>
 <script>
-  import { BaseInfo, demandAssignment, procurementCollect, pullSignal, receipt, VaccineRights } from '@/resources';
+  import {BaseInfo, receipt} from '@/resources';
   import utils from '@/tools/utils';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
@@ -419,11 +419,11 @@
         height = (height - 30);
         return height;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
       this.queryTotalMoney();
     },
@@ -440,14 +440,14 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
         }
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       statusTitle: function (status) {
@@ -461,7 +461,7 @@
           return title;
         }
       },
-      filterStatusMethod (value, row) {
+      filterStatusMethod(value, row) {
         return row.status === value;
       },
       resetRightBox: function () {
@@ -499,7 +499,7 @@
 
         });
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         let o1 = this.$store.state.user.userCompanyAddress;
         let o2 = this.currentItem.remitteeId;
         if (!o1 || !o2) return;
@@ -512,17 +512,17 @@
           this.goodesList = res.data.list;
         });
       },
-      queryTotalMoney () {
+      queryTotalMoney() {
         this.$http.get('/accounts-receivable/statistics').then(res => {
           this.orgType[0].num = res.data['paidMoney'];
           this.orgType[1].num = res.data['totalMoney'] - res.data['paidMoney'];
         });
       },
-      refresh () {
+      refresh() {
         this.getOrgsList();
         this.resetRightBox();
       },
-      refreshDetails () {
+      refreshDetails() {
         this.getDetail();
         this.resetRightBox();
       },
@@ -566,12 +566,12 @@
         this.resetSearchForm();
         this.goodesList = [];
       },
-      showDetail (item) {
+      showDetail(item) {
         this.orderId = item.orderId;
         this.showPart = true;
         this.currentDetail = item;
       },
-      add () {
+      add() {
         if (!this.currentItem.id) {
           this.$notify.info({
             message: '请先添加付款方'
@@ -580,17 +580,17 @@
         }
         this.showRight = true;
       },
-      addDetail () {
+      addDetail() {
         this.showLeft = true;
       },
-      edit (row) {
+      edit(row) {
         this.form = row;
         this.showRight = true;
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      onSubmit () {
+      onSubmit() {
         this.getOrgsList();
       },
       filterOrg: function (query) {// 过滤供货商

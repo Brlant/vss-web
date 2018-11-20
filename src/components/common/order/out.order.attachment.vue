@@ -28,7 +28,7 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
   import attachmentShow from './attachmentShow.vue';
 
   export default {
@@ -48,7 +48,7 @@
         default: -1
       }
     },
-    data () {
+    data() {
       return {
         loadingData: true,
         accessory: {
@@ -72,7 +72,7 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         this.accessory = {
           followDocuments: [], // 随货同行单
           wayBills: [], // 运输单

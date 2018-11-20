@@ -88,15 +88,15 @@
             </oms-form-row>
           </el-col>
           <!--<el-col :span="12">-->
-            <!--<oms-form-row label="仓库" :span="3">-->
-              <!--<el-select v-model="filters.warehouseId" filterable clearable-->
-                         <!--@change="warehouseChange"-->
-                         <!--placeholder="请选择仓库">-->
-                <!--<el-option v-for="item in warehouses" :value="item.id" :key="item.id"-->
-                           <!--:label="item.name">-->
-                <!--</el-option>-->
-              <!--</el-select>-->
-            <!--</oms-form-row>-->
+          <!--<oms-form-row label="仓库" :span="3">-->
+          <!--<el-select v-model="filters.warehouseId" filterable clearable-->
+          <!--@change="warehouseChange"-->
+          <!--placeholder="请选择仓库">-->
+          <!--<el-option v-for="item in warehouses" :value="item.id" :key="item.id"-->
+          <!--:label="item.name">-->
+          <!--</el-option>-->
+          <!--</el-select>-->
+          <!--</oms-form-row>-->
           <!--</el-col>-->
 
         </el-form>
@@ -157,11 +157,11 @@
 </template>
 <script>
   import formPart from './form.vue';
-  import { Address, BaseInfo, erpStock, http } from '@/resources';
+  import {Address, http} from '@/resources';
 
   export default {
     components: {formPart},
-    data () {
+    data() {
       return {
         loadingData: false,
         showSearch: false,
@@ -188,14 +188,14 @@
         adjustTypeList: ['可用库存', '锁定库存', '实际不合格库存']
       };
     },
-    mounted () {
+    mounted() {
       this.getMaPage(1);
     },
     methods: {
       resetRightBox: function () {
         this.showPart = false;
       },
-      getMaPage (pageNo) { // 得到波次列表
+      getMaPage(pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
@@ -208,7 +208,7 @@
           this.loadingData = false;
         });
       },
-      refresh () {
+      refresh() {
         this.getMaPage(1);
         this.showPart = false;
       },
@@ -220,7 +220,7 @@
         }
         this.getMaPage(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') + ' 00:00:00' : '';
       },
       resetSearchForm: function () {// 重置表单
@@ -234,7 +234,7 @@
         this.expectedTime = '';
         this.getMaPage(1);
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           deleteFlag: false,
@@ -245,12 +245,12 @@
           this.orgGoods = res.data.list;
         });
       },
-      orgGoodsChange (val) {
+      orgGoodsChange(val) {
         this.filters.batchNumberId = '';
         this.batchNumberList = [];
         this.filterBatchNumber();
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         if (!this.filters.orgGoodsId) return;
         let goodsId = '';
         this.orgGoods.forEach(i => {
@@ -268,7 +268,7 @@
           this.batchNumberList = res.data.list;
         });
       },
-      queryOrgWarehouse () {
+      queryOrgWarehouse() {
         let param = Object.assign({}, {
           deleteFlag: false,
           auditedStatus: '1'
@@ -277,7 +277,7 @@
           this.warehouses = res.data;
         });
       },
-      add () {
+      add() {
         this.form = {};
         this.showPart = true;
       }

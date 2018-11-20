@@ -1,5 +1,6 @@
 <style lang="scss" scoped>
   @import "../../../assets/mixins";
+
   .table {
     table-layout: fixed;
     margin-top: 10px;
@@ -44,7 +45,7 @@
 </style>
 <template>
   <div v-if="isShowGoodsList">
-    <table class="table no-border table-product-list" v-show="orderItem.detailDtoList" >
+    <table class="table no-border table-product-list" v-show="orderItem.detailDtoList">
       <thead>
       <tr>
         <th width="30" class="text-center">序号</th>
@@ -90,13 +91,13 @@
       showBatch: Boolean
     },
     computed: {
-      isShowbatch () {
+      isShowbatch() {
         return this.orderItem.type === '1' || (this.orderItem.type === '0' && this.orderItem.bizType === '1-1') || this.showBatch;
       },
-      level () {
+      level() {
         return this.$store.state.orgLevel;
       },
-      isShowGoodsList () {
+      isShowGoodsList() {
         return this.$store.state.isShowGoodsList;
       }
     }

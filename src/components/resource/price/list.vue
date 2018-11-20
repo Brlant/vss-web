@@ -285,7 +285,7 @@
 </template>
 <script>
   import utils from '@/tools/utils';
-  import { BriceGroup, BriceGroupPov } from '@/resources';
+  import {BriceGroup, BriceGroupPov} from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
 
@@ -347,11 +347,11 @@
         height = (height - 90);
         return height;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
     },
     watch: {
@@ -367,14 +367,14 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
         }
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       resetRightBox: function () {
@@ -411,7 +411,7 @@
         });
         this.querySum(params);
       },
-      querySum (params) {
+      querySum(params) {
         let para = Object.assign({}, params);
         para.availabilityStatus = undefined;
         BriceGroup.querySum(para).then(res => {
@@ -419,11 +419,11 @@
           this.priceGroupType[1].num = res.data['invalid'];
         });
       },
-      refresh () {
+      refresh() {
         this.getOrgsList(1);
         this.resetRightBox();
       },
-      refreshDetails () {
+      refreshDetails() {
         this.getDetail();
         this.resetRightBox();
       },
@@ -463,7 +463,7 @@
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
       },
-      bindPov () {
+      bindPov() {
         let form = {
           'salePriceGroupId': this.currentItem.id,
           'povId': this.povId
@@ -486,7 +486,7 @@
           });
         });
       },
-      removePov (item) {
+      removePov(item) {
         this.$confirm('是否删除接种点"' + item.povName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -511,7 +511,7 @@
         this.currentItem = item;
         this.getDetail(1);
       },
-      showDetail (item) {
+      showDetail(item) {
         this.orderId = item.orderId;
         this.showPart = true;
         this.currentDetail = item;
@@ -525,10 +525,10 @@
         //   this.filterPOVs();
         // });
       },
-      filterPOVs () {
+      filterPOVs() {
         this.showOrgList = this.orgList.filter(f => !this.receiptDetails.some(s => f.subordinateId === s.povId));
       },
-      add () {
+      add() {
         if (!this.currentItem.id) {
           this.$notify.info({
             message: '请先添加付款方'
@@ -537,15 +537,15 @@
         }
         this.showRight = true;
       },
-      addDetail () {
+      addDetail() {
         this.showLeft = true;
         this.form = {};
       },
-      edit (row) {
+      edit(row) {
         this.form = row;
         this.showLeft = true;
       },
-      deletePriceGroup (item) {
+      deletePriceGroup(item) {
         this.$confirm('是否删除销售价格组"' + item.name + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -567,7 +567,7 @@
         this.activeStatus = item.availabilityStatus;
         this.filters.availabilityStatus = item.availabilityStatus;
       },
-      onSubmit () {
+      onSubmit() {
         this.getOrgsList();
       }
     }

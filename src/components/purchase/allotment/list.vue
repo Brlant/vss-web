@@ -108,7 +108,8 @@
           </span>
           <goods-switch class="pull-right"></goods-switch>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="货主订单号" :span="6">
@@ -184,7 +185,7 @@
         </el-form>
       </div>
 
-      <el-row >
+      <el-row>
         <el-col :span="13">
           <div class="order-list-status" style="margin-bottom:20px">
             <div class="status-item"
@@ -192,7 +193,8 @@
                  v-for="(item,key) in orgType" v-show="key < 4"
                  @click="changeStatus(item,key)">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              </div>
             </div>
           </div>
         </el-col>
@@ -203,7 +205,8 @@
                  v-for="(item,key) in orgType"
                  @click="changeStatus(item,key)" v-show="key > 3">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              </div>
             </div>
           </div>
         </el-col>
@@ -304,7 +307,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
-  import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
 
   export default {
@@ -368,7 +371,7 @@
       };
     },
     mixins: [OrderMixin],
-    mounted () {
+    mounted() {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
       if (orderId && orderId !== 'list' && orderId !== 'add') {
@@ -400,7 +403,7 @@
       }
     },
     methods: {
-      editOrder (item) {
+      editOrder(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
         this.showItemRight = true;
@@ -498,7 +501,7 @@
         }
         this.queryStatusNum(param);
       },
-      refreshOrder () {
+      refreshOrder() {
         this.currentOrderId = '';
         this.getOrderList(this.pager.currentPage);
       },
@@ -513,7 +516,7 @@
 //          this.orgList = res.data;
 //        });
 //      },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         let params = Object.assign({}, {
           keyWord: keyWord
         });

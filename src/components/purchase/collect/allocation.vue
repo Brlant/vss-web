@@ -121,10 +121,10 @@
   </div>
 </template>
 <script>
-  import { OrgGoods, procurementCollect } from '@/resources';
+  import {OrgGoods, procurementCollect} from '@/resources';
 
   export default {
-    data () {
+    data() {
       return {
         loadingData: false,
         allocationList: [],
@@ -144,11 +144,11 @@
         doing: false
       };
     },
-    mounted () {
+    mounted() {
       this.queryAllocationList(1);
     },
     methods: {
-      queryAllocationList (pageNo) { // 得到需求分配列表
+      queryAllocationList(pageNo) { // 得到需求分配列表
         this.allocationList = [];
         this.status = -1;
         if (!this.$route.query.id) return;
@@ -165,19 +165,19 @@
           this.loadingData = false;
         });
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showRight = false;
         this.showOrderForm = false;
         this.defaultIndex = -1;
         this.purchase = {};
         this.vaccineType = '';
       },
-      showPart (item) {
+      showPart(item) {
         this.currentItem = item;
         this.currentItemId = item.orgGoodsId;
         this.showRight = true;
       },
-      showOrderFormPart (item) {
+      showOrderFormPart(item) {
         OrgGoods.queryOneGoods(item.orgGoodsId).then(res => {
           this.vaccineType = res.data.orgGoodsDto.goodsDto.vaccineSign;
           this.currentItem = item;
@@ -190,14 +190,14 @@
           this.defaultIndex = 1;
         });
       },
-      change (item, count) {
+      change(item, count) {
         this.allocationList.forEach(i => {
           if (i.orgGoodsId === item.orgGoodsId) {
             i.resultAmount = i.inventoryQuantity - count;
           }
         });
       },
-      autoSave (item) {
+      autoSave(item) {
         let obj = {
           id: item.list[0].detailId,
           procurementCount: item.purchaseQuantity
@@ -206,7 +206,7 @@
         list.push(obj);
         procurementCollect.allotVaccine(list);
       },
-      save (item) {
+      save(item) {
         if (!item.purchaseQuantity) {
           item.purchaseQuantity = 0;
         }
@@ -226,7 +226,7 @@
           });
         });
       },
-      submit () {
+      submit() {
         this.doing = true;
         procurementCollect.createOrder(this.$route.query.id).then(() => {
           this.doing = false;

@@ -1,7 +1,8 @@
 import {getMousePos} from '../tools/utils';
+
 export default {
   methods: {
-    cellMouseEnter (row, column, cell, event) {
+    cellMouseEnter(row, column, cell, event) {
       let e = event ? event : window.event;
       let target = e.target || e.srcElement;
       const index = this.isValid(row);
@@ -26,7 +27,7 @@ export default {
         body.appendChild(el);
       }
     },
-    cellMouseLeave () {
+    cellMouseLeave() {
       let body = document.body;
       let el = document.getElementById('valid-tooltip');
       if (body && el) {

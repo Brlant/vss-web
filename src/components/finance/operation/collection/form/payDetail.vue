@@ -10,6 +10,7 @@
   .el-form--inline .el-form-item {
     margin-right: 0;
   }
+
   .el-select {
     width: 100%;
   }
@@ -18,8 +19,10 @@
   <div>
     <div v-show="index===1">
       <el-form ref="payForm" :model="searchCondition" label-width="100px">
-        <el-form-item :label="`${titleAry[type][3]}`" prop="orgId" :rules="{required: true, message: '请选择接种点', blur: 'change'}">
-          <el-select filterable remote :placeholder="`请输入名称搜索${titleAry[type][3]}`" :remote-method="filterOrg" :clearable="true"
+        <el-form-item :label="`${titleAry[type][3]}`" prop="orgId"
+                      :rules="{required: true, message: '请选择接种点', blur: 'change'}">
+          <el-select filterable remote :placeholder="`请输入名称搜索${titleAry[type][3]}`" :remote-method="filterOrg"
+                     :clearable="true"
                      v-model="searchCondition.orgId" popper-class="good-selects" @change="orgChange"
                      @click.native.once="filterOrg('')" @blur="">
             <div v-if="type === 2">
@@ -91,7 +94,7 @@
           <tbody>
           <tr v-if="!showPayments.length">
             <td colspan="6">
-             <div class="empty-info mini">暂无数据</div>
+              <div class="empty-info mini">暂无数据</div>
             </td>
           </tr>
           <tr v-for="product in showPayments">
@@ -188,7 +191,6 @@
 
 </template>
 <script>
-  import { VaccineRights, BaseInfo } from '@/resources';
   import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
@@ -201,7 +203,7 @@
       defaultIndex: Number
     },
     mixins: [methodsMixin],
-    data () {
+    data() {
       return {
         payments: [],
         form: {
@@ -230,7 +232,7 @@
       };
     },
     computed: {
-      showPayments () {
+      showPayments() {
         return this.payments.filter(f => this.selectPayments.every(e => e.id !== f.id));
       },
       total() {
@@ -243,7 +245,7 @@
       }
     },
     watch: {
-      type () {
+      type() {
         this.payments = [];
         this.goodesList = [];
         this.searchCondition.orgId = '';
@@ -251,7 +253,7 @@
         this.resetSearchForm();
         this.orgChange(false);
       },
-      defaultIndex () {
+      defaultIndex() {
         this.payments = [];
         this.goodesList = [];
         this.searchCondition.orgId = '';
@@ -267,7 +269,7 @@
       }
     },
     filters: {
-      formatCount (val) {
+      formatCount(val) {
         if (!val) return '0.00';
         if (typeof val === 'string') {
           return val;
@@ -277,7 +279,7 @@
       }
     },
     methods: {
-      queryPayments (pageNo) {
+      queryPayments(pageNo) {
         if (!this.searchCondition.orgId) return;
         this.pager.currentPage = pageNo;
         this.loadingData = true;
@@ -298,19 +300,19 @@
           this.pager.count = res.data.count;
         });
       },
-      orgChange (val) {
+      orgChange(val) {
         this.payments = [];
         this.$parent.selectPayments = [];
         val && this.searchInOrder();
         this.$emit('orgChange');
       },
-      orgGoodsIdChange (val) {
+      orgGoodsIdChange(val) {
         this.searchInOrder();
       },
-      createTimeChange (val) {
+      createTimeChange(val) {
         this.searchInOrder();
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         if (!this.searchCondition.orgId) return;
         if (!keyWord && this.goodesList.length) return;
         let o1 = this.$store.state.user.userCompanyAddress;
@@ -347,7 +349,7 @@
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      paymentChange (item) {
+      paymentChange(item) {
         let value = item.billAmount - item.prepaidAccounts;
         if (value < 0) {
           if (item.payment < value) {
@@ -361,17 +363,17 @@
         item.payment = Number(item.payment);
         item.payment = item.payment ? item.payment.toFixed(2) : 0.00;
       },
-      getTitle (tlt) {
+      getTitle(tlt) {
         let {titleAry, type} = this;
         return `输入的金额${tlt}待${titleAry[type][2]}金额，请修改本次${titleAry[type][2]}金额，否则无法添加${titleAry[type][0]}`;
       },
-      add (item) {
+      add(item) {
         let index = this.selectPayments.indexOf(item);
         if (index === -1) {
           this.selectPayments.push(item);
         }
       },
-      remove (item) {
+      remove(item) {
         let index = this.selectPayments.indexOf(item);
         this.selectPayments.splice(index, 1);
       }

@@ -18,7 +18,7 @@
   </card-box>
 </template>
 <script>
-  import { erpOrder } from '@/resources';
+  import {erpOrder} from '@/resources';
 
   export default {
     data: function () {
@@ -26,16 +26,16 @@
         orderList: []
       };
     },
-    mounted () {
+    mounted() {
       this.getOrderList();
     },
     computed: {
-      level () {
+      level() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      level () {
+      level() {
         this.getOrderList();
       }
     },
@@ -52,7 +52,7 @@
           this.orderList = res.data.list;
         });
       },
-      goToOrderUrl (item) {
+      goToOrderUrl(item) {
         if (!item.id) return;
         if (this.level === 1) {
           this.$router.push(`purchase/order/one/class/${item.id}`);

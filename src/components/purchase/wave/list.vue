@@ -26,7 +26,8 @@
              v-for="(item,key) in waveType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
       </div>
       <div class="order-list clearfix ">
@@ -69,7 +70,7 @@
                     <!--class="el-icon-t-link"></i></a>-->
                     <!--规划采购-->
                     <!--</span>-->
-                   <span @click.prevent="showDetail(item)">
+                    <span @click.prevent="showDetail(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-wave"></i></a>
                     疫苗分配
@@ -102,12 +103,12 @@
   </div>
 </template>
 <script>
-  import { demandAssignment } from '@/resources';
+  import {demandAssignment} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
 
-    data () {
+    data() {
       return {
         loadingData: false,
         allocationList: [],
@@ -127,7 +128,7 @@
         currentItem: {}
       };
     },
-    mounted () {
+    mounted() {
       this.queryAllocationList();
     },
     watch: {
@@ -139,7 +140,7 @@
       }
     },
     methods: {
-      queryAllocationList (pageNo) { // 得到需求分配列表
+      queryAllocationList(pageNo) { // 得到需求分配列表
         this.allocationList = [];
         this.pager.currentPage = pageNo;
         this.loadingData = true;
@@ -164,24 +165,24 @@
         }
         return num;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showRight = false;
       },
-      showPart (item) {
+      showPart(item) {
         this.currentItem = item;
         this.showRight = true;
       },
-      change (item, count) {
+      change(item, count) {
         this.allocationList.forEach(i => {
           if (i.orgGoodsId === item.orgGoodsId) {
             i.resultAmount = i.inventoryQuantity - count;
           }
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.$router.push({path: '/sale/allocation/task', query: {id: item.id}});
       },
-      purchase (item) {
+      purchase(item) {
         this.$router.push({path: '/sale/allocation/task', query: {id: item.id, type: 'purchase'}});
       },
       changeStatus: function (item, key) {// 订单分类改变
@@ -197,7 +198,7 @@
         }
         return status;
       },
-      submit () {
+      submit() {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
         if (isNotNormal) {
           this.$notify.info({

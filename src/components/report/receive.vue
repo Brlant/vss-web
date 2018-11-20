@@ -82,7 +82,7 @@
 
 <script>
   import utils from '@/tools/utils';
-  import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import {Vaccine} from '@/resources';
 
   export default {
     name: 'receive',

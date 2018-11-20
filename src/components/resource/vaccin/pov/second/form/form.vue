@@ -124,20 +124,20 @@
         </el-select>
       </el-form-item>
       <!--<el-form-item label="供货厂商" prop="salesFirm">-->
-        <!--<el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg" @click.native="filterOrg('')"-->
-                   <!--:clearable="true" v-model="form.salesFirmId" @change="setSalesFirm(form.salesFirmId)"-->
-                   <!--popperClass="good-selects">-->
-          <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
-            <!--<div style="overflow: hidden">-->
-              <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
-            <!--</div>-->
-            <!--<div style="overflow: hidden">-->
-              <!--<span class="select-other-info pull-left">-->
-                <!--<span>系统代码:</span>{{org.manufacturerCode}}-->
-              <!--</span>-->
-            <!--</div>-->
-          <!--</el-option>-->
-        <!--</el-select>-->
+      <!--<el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg" @click.native="filterOrg('')"-->
+      <!--:clearable="true" v-model="form.salesFirmId" @change="setSalesFirm(form.salesFirmId)"-->
+      <!--popperClass="good-selects">-->
+      <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
+      <!--<div style="overflow: hidden">-->
+      <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
+      <!--</div>-->
+      <!--<div style="overflow: hidden">-->
+      <!--<span class="select-other-info pull-left">-->
+      <!--<span>系统代码:</span>{{org.manufacturerCode}}-->
+      <!--</span>-->
+      <!--</div>-->
+      <!--</el-option>-->
+      <!--</el-select>-->
       <!--</el-form-item>-->
       <el-form-item label="供货厂商ID">
         {{form.salesFirm}}
@@ -177,10 +177,10 @@
         </oms-input>
       </el-form-item>
       <!--<el-form-item label="库存上限" prop="inventoryUpperLimit">-->
-        <!--<oms-input type="number" :min="0" v-model.number="form.inventoryUpperLimit" placeholder="请输入库存上限"></oms-input>-->
+      <!--<oms-input type="number" :min="0" v-model.number="form.inventoryUpperLimit" placeholder="请输入库存上限"></oms-input>-->
       <!--</el-form-item>-->
       <!--<el-form-item label="库存下限" prop="inventoryLowerLimit">-->
-        <!--<oms-input type="number" :min="0" v-model.number="form.inventoryLowerLimit" placeholder="请输入库存下限"></oms-input>-->
+      <!--<oms-input type="number" :min="0" v-model.number="form.inventoryLowerLimit" placeholder="请输入库存下限"></oms-input>-->
       <!--</el-form-item>-->
       <el-form-item label="是否计价">
         <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"

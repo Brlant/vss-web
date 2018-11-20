@@ -401,7 +401,7 @@
 
 </template>
 <script>
-  import { BaseInfo, Vendor } from '@/resources';
+  import {BaseInfo, Vendor} from '@/resources';
   import utils from '@/tools/utils';
   import photoShow from './photo/photo.show.vue';
 
@@ -454,10 +454,10 @@
       };
     },
     computed: {
-      orgRelationList () {
+      orgRelationList() {
         return this.$getDict('orgRelation');
       },
-      companyAddress () {
+      companyAddress() {
         let province = this.businessRelationItem.followOrg.orgDto.province;
         let city = this.businessRelationItem.followOrg.orgDto.city;
         let region = this.businessRelationItem.followOrg.orgDto.region;
@@ -471,7 +471,7 @@
     },
     watch: {
       filters: {
-        handler () {
+        handler() {
           this.getBusinessRelationList(1);
         },
         deep: true
@@ -482,11 +482,11 @@
         }
       }
     },
-    mounted () {
+    mounted() {
       this.getBusinessRelationList(1);
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       resetPhoto: function () {
@@ -498,7 +498,7 @@
         };
         this.resetRightBox();
       },
-      watchPhoto (item) {
+      watchPhoto(item) {
         if (item.photos.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item.photos[0].attachmentId,
@@ -526,7 +526,7 @@
         }
         return state;
       },
-      getBusinessRelationList (pageNo, isContinue = false) {
+      getBusinessRelationList(pageNo, isContinue = false) {
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -697,7 +697,7 @@
           }
         });
       },
-      doClose () {
+      doClose() {
         this.showRight = false;
         this.$refs['relationForm'].resetFields();
       },

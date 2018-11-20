@@ -30,8 +30,6 @@
     display: block;
   }
 
-
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -67,7 +65,6 @@
     }
 
   }
-
 
   .ml15 {
     margin-left: 40px;
@@ -117,7 +114,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, pay } from '@/resources';
+  import {BaseInfo, pay} from '@/resources';
 
   export default {
     data() {

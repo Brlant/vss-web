@@ -10,10 +10,11 @@
   <div></div>
 </template>
 <script>
-  import { Auth } from '@/resources';
+  import {Auth} from '@/resources';
+
   export default {
     name: 'error',
-    mounted () {
+    mounted() {
       Auth.checkLogin().then(() => {
         this.$router.replace('/');
       }).catch(() => {

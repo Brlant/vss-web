@@ -9,19 +9,19 @@ export default {
     };
   },
   computed: {
-    isShowGoodsList () {
+    isShowGoodsList() {
       return this.$store.state.isShowGoodsList;
     }
   },
   watch: {
-    isShowGoodsList () {
+    isShowGoodsList() {
       if (this.getOrderList) {
         this.getOrderList(1);
       }
     }
   },
   methods: {
-    beforeCloseConfirm (str = '订单信息未保存,是否关闭') {
+    beforeCloseConfirm(str = '订单信息未保存,是否关闭') {
       this.$confirm(str, '', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
@@ -30,7 +30,7 @@ export default {
         this.resetRightBox();
       });
     },
-    checkHasOrderNotAdded (product, str = '订单') {
+    checkHasOrderNotAdded(product, str = '订单') {
       if (product.orgGoodsId) {
         this.$notify({
           duration: 2000,
@@ -41,7 +41,7 @@ export default {
       }
       return true;
     },
-    handleRepetitiveOrgGoods (isHasBatchNumberInfo) {
+    handleRepetitiveOrgGoods(isHasBatchNumberInfo) {
       if (this.product.orgGoodsId !== this.editItemProduct.orgGoodsId) return;
       this.product.orgGoodsName = this.editItemProduct.orgGoodsName;
       let totalAmount = 0;
@@ -75,10 +75,10 @@ export default {
     mergeSameOrgGoodsIdAndBatchNumberWhenOut(list) {
       let a1 = new Set();
       list.forEach(i => {
-         let ary1 = list.filter(f => f.orgGoodsId === i.orgGoodsId && f.batchNumberId === i.batchNumberId);
-         if (ary1.length > 1) {
-           a1.add(ary1[0].orgGoodsId + ',' + ary1[0].batchNumberId);
-         }
+        let ary1 = list.filter(f => f.orgGoodsId === i.orgGoodsId && f.batchNumberId === i.batchNumberId);
+        if (ary1.length > 1) {
+          a1.add(ary1[0].orgGoodsId + ',' + ary1[0].batchNumberId);
+        }
       });
       [...a1].forEach(i => {
         let s1 = i.split(',');
@@ -96,7 +96,7 @@ export default {
      * @param list
      * @returns {*}
      */
-    mergeSameOrgGoodsWhenIn (list) {
+    mergeSameOrgGoodsWhenIn(list) {
       let a1 = new Set();
       list.forEach(i => {
         let ary1 = list.filter(f => f.orgGoodsId === i.orgGoodsId);

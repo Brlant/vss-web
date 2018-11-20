@@ -365,7 +365,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from '@/components/sale/order/form/batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
@@ -532,22 +532,22 @@
       };
     },
     computed: {
-      bizTypeList () {
+      bizTypeList() {
         return this.$getDict('bizOutType');
       },
-      transportationMeansList () {
+      transportationMeansList() {
         return this.$getDict('outTransportMeans');
       },
-      transportationConditionList () {
+      transportationConditionList() {
         return this.$getDict('transportationCondition');
       },
-      shipmentPackingUnit () {
+      shipmentPackingUnit() {
         return this.$getDict('shipmentPackingUnit');
       },
-      measurementUnitList () {
+      measurementUnitList() {
         return this.$getDict('measurementUnit');
       },
-      orgRelationList () {
+      orgRelationList() {
         return this.$getDict('orgRelation');
       },
       totalMoney: function () {
@@ -558,7 +558,7 @@
         });
         return totalMoney;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
@@ -570,7 +570,7 @@
           }
         });
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.formCopy = {};
         this.isStorageData = false;
         this.index = 0;
@@ -608,11 +608,11 @@
 //      }
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      setDefaultValue () {
+      setDefaultValue() {
         this.form.transportationMeansId = '1';
         this.form.transportationCondition = '0';
       },
@@ -636,7 +636,7 @@
         this.searchProductList = [];
         this.filterProductList = [];
       },
-      clearForm () {
+      clearForm() {
         this.accessoryList = [];
         this.batchNumbers = [];
         this.editItemProduct = {};
@@ -655,7 +655,7 @@
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.detailDtoList = [];
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
           this.resetForm();
@@ -682,10 +682,10 @@
           });
         });
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
       changeExpectedTime: function (date) {// 格式化日期
@@ -779,7 +779,7 @@
           }
         }
       },
-      changeTransportationMeans (val) {// 物流方式改变时
+      changeTransportationMeans(val) {// 物流方式改变时
         switch (val) {
           case '0': {
             this.showContent.expectedTimeLabel = '预计送货时间';
@@ -801,7 +801,7 @@
           this.showContent.expectedTimeLabel = '';
         }
       },
-      changeCustomerId (val) {// POV改变时
+      changeCustomerId(val) {// POV改变时
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.product.orgGoodsId = '';
           this.form.detailDtoList = [];
@@ -813,7 +813,7 @@
         this.searchWarehouses(val);
         this.searchProduct();
       },
-      searchWarehouses (orgId) {
+      searchWarehouses(orgId) {
         if (!orgId) {
           this.warehouses = [];
           this.form.transportationAddress = '';
@@ -849,7 +849,7 @@
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -959,7 +959,7 @@
         });
         this.filterProductList = arr;
       },
-      setIsHasBatchNumberInfo (val) {
+      setIsHasBatchNumberInfo(val) {
         this.isHasBatchNumberInfo = val;
       },
       addProduct: function () {// 疫苗加入到订单
@@ -1048,7 +1048,7 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         let orgGoodsId = item.orgGoodsId;
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
         let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);
@@ -1069,7 +1069,7 @@
           this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         }
       },
-      editItem (item) {
+      editItem(item) {
         this.product.orgGoodsId = '';
         this.$nextTick(() => {
           this.filterProductList.push({

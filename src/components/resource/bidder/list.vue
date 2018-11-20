@@ -114,7 +114,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="疫苗" :span="4">
@@ -173,7 +174,8 @@
              v-for="(item,key) in successBidderType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
       </div>
       <div class="order-list clearfix ">
@@ -263,7 +265,7 @@
 <script>
   import utils from '@/tools/utils';
   import editForm from './form/form.vue';
-  import {BaseInfo, http, Vaccine} from '@/resources';
+  import {http} from '@/resources';
 
   export default {
     components: {

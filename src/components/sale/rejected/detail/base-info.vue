@@ -41,7 +41,8 @@
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
           </oms-row>
-          <oms-row label="来自销售订单" :span="span" v-show="currentOrder.thirdPartyNumber && currentOrder.transportationMeansId === '4'">
+          <oms-row label="来自销售订单" :span="span"
+                   v-show="currentOrder.thirdPartyNumber && currentOrder.transportationMeansId === '4'">
             {{ currentOrder.thirdPartyNumber }}
           </oms-row>
           <oms-row label="退货原因" :span="span" v-show="currentOrder.returnReason">
@@ -120,9 +121,9 @@
                 </el-tooltip>
               </div>
               <!--<div>-->
-                <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
-                  <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
-                <!--</el-tooltip>-->
+              <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
+              <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
+              <!--</el-tooltip>-->
               <!--</div>-->
               <div>
                 <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
@@ -191,13 +192,13 @@
         }
       }
     },
-    data () {
+    data() {
       return {
         span: 8
       };
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },

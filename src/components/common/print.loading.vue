@@ -17,7 +17,7 @@
 <script>
   export default {
     computed: {
-      print () {
+      print() {
         let obj = {};
         let prints = this.$store.state.prints;
         prints.forEach(item => {

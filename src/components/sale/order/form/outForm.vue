@@ -30,8 +30,6 @@
     display: block;
   }
 
-
-
   .order-product-box {
     position: relative;
 
@@ -77,7 +75,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -149,7 +146,7 @@
               <oms-input type="text" placeholder="请输入实际收货人" :maxlength="50" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
             <el-form-item label="收货人联系电话" v-show="showContent.isShowOtherContent">
-              <oms-input type="text" placeholder="请输入收货人联系电话" :maxlength="50" v-model="form.consigneePhone" ></oms-input>
+              <oms-input type="text" placeholder="请输入收货人联系电话" :maxlength="50" v-model="form.consigneePhone"></oms-input>
             </el-form-item>
             <!--<el-form-item label="是否同批号">-->
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
@@ -367,6 +364,7 @@
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
+
   export default {
     name: 'addForm',
     loading: false,
@@ -531,22 +529,22 @@
       };
     },
     computed: {
-      bizTypeList () {
+      bizTypeList() {
         return this.$getDict('bizOutType');
       },
-      transportationMeansList () {
+      transportationMeansList() {
         return this.$getDict('outTransportMeans');
       },
-      transportationConditionList () {
+      transportationConditionList() {
         return this.$getDict('transportationCondition');
       },
-      shipmentPackingUnit () {
+      shipmentPackingUnit() {
         return this.$getDict('shipmentPackingUnit');
       },
-      measurementUnitList () {
+      measurementUnitList() {
         return this.$getDict('measurementUnit');
       },
-      orgRelationList () {
+      orgRelationList() {
         return this.$getDict('orgRelation');
       },
       totalMoney: function () {
@@ -566,7 +564,7 @@
           }
         });
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.formCopy = {};
         this.isStorageData = false;
         this.index = 0;
@@ -604,15 +602,15 @@
 //      }
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      setDefaultValue () {
+      setDefaultValue() {
         this.form.transportationMeansId = '0';
         this.form.transportationCondition = '0';
       },
-      getTitle () {
+      getTitle() {
         return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}销售订单`;
       },
       autoSave: function () {
@@ -634,7 +632,7 @@
         this.searchProductList = [];
         this.filterProductList = [];
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -671,17 +669,17 @@
           });
         });
       },
-      changeRemark (form) {
+      changeRemark(form) {
         if (!this.form.remark) {
           this.form.remark = form.count + form.name;
         } else {
           this.form.remark += '，' + form.count + form.name;
         }
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
       changeExpectedTime: function (date) {// 格式化日期
@@ -770,7 +768,7 @@
           }
         }
       },
-      changeTransportationMeans (val) {// 物流方式改变时
+      changeTransportationMeans(val) {// 物流方式改变时
         switch (val) {
           case '0': {
             this.showContent.expectedTimeLabel = '预计送货时间';
@@ -792,7 +790,7 @@
           this.showContent.expectedTimeLabel = '';
         }
       },
-      changeCustomerId (val, isEdit) {// POV改变时
+      changeCustomerId(val, isEdit) {// POV改变时
         if (!this.isStorageData) {// 有缓存时，不重置表单
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
@@ -804,13 +802,14 @@
         this.searchWarehouses(val, isEdit);
         this.searchProduct();
       },
-      searchWarehouses (orgId, isEdit) {
+      searchWarehouses(orgId, isEdit) {
         if (!orgId) {
           this.warehouses = [];
           this.form.transportationAddress = '';
           return;
         }
-        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0
+        Address.queryAddress(orgId, {
+          deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0
         }).then(res => {
           this.warehouses = res.data || [];
           // let fs = this.warehouses.filter(i => i.default)[0];
@@ -830,7 +829,7 @@
           // *************************//
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -901,7 +900,7 @@
           });
         });
       },
-      setIsHasBatchNumberInfo (val) {
+      setIsHasBatchNumberInfo(val) {
         this.isHasBatchNumberInfo = val;
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
@@ -979,7 +978,7 @@
           if (!valid) {
             return false;
           }
-         let isHasInSearchProductList = false;
+          let isHasInSearchProductList = false;
           this.searchProductList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
               isHasInSearchProductList = true;
@@ -1072,7 +1071,7 @@
           this.resetProductForm();
         });
       },
-      resetProductForm () {
+      resetProductForm() {
         this.$nextTick(function () {
           this.product = {
             'amount': null,
@@ -1098,7 +1097,7 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      editItem (item) {
+      editItem(item) {
 //        this.filterProductList = [];
 //        this.searchProductList = [];
 //        this.searchProductList.push({
@@ -1122,7 +1121,7 @@
           // this.queryBatchNumers();
         });
       },
-      deleteItem (item) {
+      deleteItem(item) {
         let orgGoodsId = item.orgGoodsId;
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
         let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);

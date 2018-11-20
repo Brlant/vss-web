@@ -19,7 +19,7 @@
   </el-form>
 </template>
 <script>
-  import {OmsAttachment, Notice} from '../../../../resources';
+  import {Notice, OmsAttachment} from '../../../../resources';
 
   export default {
     data: function () {

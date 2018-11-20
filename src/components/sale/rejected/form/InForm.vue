@@ -363,7 +363,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
@@ -546,7 +546,7 @@
         });
         return totalMoney;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
@@ -558,7 +558,7 @@
           }
         });
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -592,17 +592,17 @@
 //      this.initForm();
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      setDefaultValue () {
+      setDefaultValue() {
         this.form.transportationMeansId = '2';
         this.form.transportationCondition = '0';
         this.form.logisticsProviderId = '国控生物航启路物流中心';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -629,7 +629,7 @@
           });
         });
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
         if (this.product.amount > this.amount) {
           this.$notify.warning({
@@ -711,7 +711,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -895,7 +895,7 @@
         });
         this.filterProductList = arr;
       },
-      setIsHasBatchNumberInfo (val) {
+      setIsHasBatchNumberInfo(val) {
         this.isHasBatchNumberInfo = val;
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
@@ -1046,7 +1046,7 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         let orgGoodsId = item.orgGoodsId;
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
         let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);
@@ -1067,7 +1067,7 @@
           this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         }
       },
-      editItem (item) {
+      editItem(item) {
 //        this.filterProductList = [];
 //        this.searchProductList = [];
 //        this.searchProductList.push({

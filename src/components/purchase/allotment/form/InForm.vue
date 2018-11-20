@@ -25,11 +25,10 @@
       left: $leftWidth;
     }
   }
+
   .el-form .el-select {
     display: block;
   }
-
-
 
   .order-product-box {
     position: relative;
@@ -66,8 +65,6 @@
     }
 
   }
-
-
 
   .ml15 {
     margin-left: 40px;
@@ -301,7 +298,7 @@
                   <total-count property="amount" :list="form.detailDtoList"></total-count>
                 </td>
                 <td colspan="2" style="font-weight: 600"><span
-                                      v-show="form.detailDtoList.length && totalMoney">合计:</span><span
+                  v-show="form.detailDtoList.length && totalMoney">合计:</span><span
                   v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
               </tr>
               </tbody>
@@ -494,7 +491,7 @@
         });
         return totalMoney;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
@@ -506,7 +503,7 @@
           }
         });
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -542,11 +539,11 @@
 //      this.initForm();
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      createOrderInfo () {
+      createOrderInfo() {
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
         if (!orgGoodsId) return;
@@ -586,7 +583,7 @@
 //          });
         });
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -605,7 +602,7 @@
           });
         });
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
@@ -689,7 +686,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -914,7 +911,7 @@
           let isHasInSearchProductList = false;
           this.searchProductList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-             isHasInSearchProductList = true;
+              isHasInSearchProductList = true;
               this.product.orgGoodsName = item.orgGoodsDto.name;
               this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
               this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
@@ -960,11 +957,11 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
       },
-      editItem (item) {
+      editItem(item) {
 //        this.filterProductList = [];
 //        this.searchProductList = [];
 //        this.searchProductList.push({

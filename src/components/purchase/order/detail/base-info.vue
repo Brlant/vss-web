@@ -104,9 +104,9 @@
                 </el-tooltip>
               </div>
               <!--<div>-->
-                <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
-                  <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
-                <!--</el-tooltip>-->
+              <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
+              <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
+              <!--</el-tooltip>-->
               <!--</div>-->
               <div>
                 <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
@@ -160,7 +160,7 @@
       },
       vaccineType: ''
     },
-    data () {
+    data() {
       return {
         span: 8
       };

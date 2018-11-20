@@ -25,6 +25,7 @@
       left: $leftWidth;
     }
   }
+
   .el-form .el-select {
     display: block;
   }

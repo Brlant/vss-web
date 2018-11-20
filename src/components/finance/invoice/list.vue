@@ -28,7 +28,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="发票号码" :span="5">
@@ -69,7 +70,8 @@
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
       </div>
       <div class="order-list clearfix" style="margin-top: 10px">
@@ -119,9 +121,9 @@
                     </span>
               </el-col>
               <!--<el-col :span="3" class="R pt10">-->
-                    <!--<span>-->
-                      <!--{{ item.haveTo ? '已到' : '未到'}}-->
-                    <!--</span>-->
+              <!--<span>-->
+              <!--{{ item.haveTo ? '已到' : '未到'}}-->
+              <!--</span>-->
               <!--</el-col>-->
               <el-col :span="3" class="R pt10">
                     <span>
@@ -164,13 +166,14 @@
   </div>
 </template>
 <script>
-  import { invoiceManage, BaseInfo } from '@/resources';
+  import {BaseInfo, invoiceManage} from '@/resources';
   import formPart from './form.vue';
   import utils from '@/tools/utils';
   import detailPart from './detail.vue';
+
   export default {
     components: {formPart, detailPart},
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: true,
@@ -199,7 +202,7 @@
         orgList: []
       };
     },
-    mounted () {
+    mounted() {
       this.getMaPage(1);
     },
     watch: {
@@ -215,7 +218,7 @@
         this.showPart = false;
         this.showDetail = false;
       },
-      getMaPage (pageNo) { // 得到波次列表
+      getMaPage(pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
@@ -229,7 +232,7 @@
         });
         this.queryCount(params);
       },
-      queryCount (params) {
+      queryCount(params) {
         invoiceManage.queryCount(params).then(res => {
           this.orgType[0].num = res.data['non-payment'];
           this.orgType[1].num = res.data['paid'];
@@ -246,20 +249,20 @@
           this.orgList = res.data;
         });
       },
-      refresh () {
+      refresh() {
         this.getMaPage(1);
         this.showPart = false;
       },
-      add () {
+      add() {
         this.form = {};
         this.showPart = true;
       },
-      edit (item) {
+      edit(item) {
         this.currentId = item.id;
         this.form = item;
         this.showPart = true;
       },
-      showDetailPart (item) {
+      showDetailPart(item) {
         this.currentId = item.id;
         this.showDetail = true;
       },
@@ -278,7 +281,7 @@
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.$confirm('是否删除发票 "' + item.invoiceNumber + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

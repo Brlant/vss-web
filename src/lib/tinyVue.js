@@ -70,23 +70,23 @@ import {
   FA,
   Forbid,
   FormRow,
+  goodsSelect,
+  goodsSwitch,
   InputSingle,
   LoadingBottom,
   Nl2br,
+  orgGoodsSelect,
+  orgSelect,
   PageRight,
+  Pagination,
   Remove,
+  statusList,
   TimeLine,
   TimeLineItem,
   TinyInput,
   TinyLoading,
   TinyRow,
-  goodsSwitch,
-  TotalCount,
-  orgSelect,
-  orgGoodsSelect,
-  goodsSelect,
-  statusList,
-  Pagination
+  TotalCount
 } from '@dtop/dtop-web-common';
 
 import upload from '../components/common/upload.vue';

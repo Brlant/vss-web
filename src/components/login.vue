@@ -54,7 +54,6 @@
 <script>
   import {Auth, cerpAction} from '../resources';
   import AppFooter from './common/app.footer.vue';
-  import {Base64} from 'js-base64';
 
   export default {
     components: {

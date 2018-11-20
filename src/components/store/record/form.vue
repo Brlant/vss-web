@@ -165,13 +165,13 @@
   </div>
 </template>
 <script>
-  import { Address, erpStock, http } from '@/resources';
+  import {Address, erpStock, http} from '@/resources';
 
   export default {
     props: {
       formItem: Object
     },
-    data () {
+    data() {
       return {
         title: '库存状态调整',
         doing: false,
@@ -208,16 +208,16 @@
         span: 6
       };
     },
-    mounted () {
+    mounted() {
       this.queryOrgWarehouse();
     },
     watch: {
-      'form.adjustType' (val) {
+      'form.adjustType'(val) {
         this.form.adjustNewType = '';
       }
     },
     computed: {
-      smallPackCount () {
+      smallPackCount() {
         let count = '';
         if (!this.form.orgGoodsId) return count;
         this.orgGoods.forEach(i => {
@@ -227,7 +227,7 @@
         });
         return count;
       },
-      totalCount () {
+      totalCount() {
         if (this.batches.length && typeof this.form.adjustType === 'number') {
           return this.form.adjustType === 0 ? this.batches[0].availableCount : this.batches[0].undeterminedCount;
         }
@@ -235,7 +235,7 @@
       }
     },
     methods: {
-      validatePackageMultiple (rule, value, callback) {
+      validatePackageMultiple(rule, value, callback) {
         let obj = this.validPackage(value, this.smallPackCount, this.totalCount);
         switch (obj.type) {
           case 0: {
@@ -267,7 +267,7 @@
        * @param total
        * @returns {*}
        */
-      validPackage (count, packageCount, total) {
+      validPackage(count, packageCount, total) {
         const lack_count_data = 0; // 缺少输入数量
         const lack_package_data = 1; // 缺少包装资料
         const exceeded_number = 2; // 超过总数量
@@ -286,7 +286,7 @@
           count: curCount
         };
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           deleteFlag: false,
@@ -297,13 +297,13 @@
           this.orgGoods = res.data.list;
         });
       },
-      orgGoodsChange (val) {
+      orgGoodsChange(val) {
         this.form.batchNumberId = '';
         this.batchNumberList = [];
         this.batches = [];
         this.filterBatchNumber();
       },
-      batchNumberChange (val) {
+      batchNumberChange(val) {
         if (!val) {
           this.form.batchNumberId = '';
           this.batches = [];
@@ -311,7 +311,7 @@
         }
         this.getBatches();
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         if (!this.form.orgGoodsId) return;
         let goodsId = '';
         this.orgGoods.forEach(i => {
@@ -329,7 +329,7 @@
           this.batchNumberList = res.data.list;
         });
       },
-      queryOrgWarehouse () {
+      queryOrgWarehouse() {
         let param = Object.assign({}, {
           deleteFlag: false,
           auditedStatus: '1'
@@ -339,11 +339,11 @@
           this.form.warehouseId = res.data.length ? res.data[0].id : '';
         });
       },
-      warehouseChange (val) {
+      warehouseChange(val) {
         if (!this.form.orgGoodsId || !this.form.batchNumberId) return;
         this.getBatches();
       },
-      getBatches () { // 得到波次列表
+      getBatches() { // 得到波次列表
         let params = {
           orgGoodsId: this.form.orgGoodsId,
           batchNumberId: this.form.batchNumberId,
@@ -355,10 +355,10 @@
           this.loadingData = false;
         });
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid || this.doing) {
             return false;
