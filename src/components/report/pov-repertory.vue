@@ -109,7 +109,7 @@
 
   export default {
     mixins: [validMixin, ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         reportList: [],
@@ -123,7 +123,7 @@
       };
     },
     computed: {
-      type () {
+      type() {
         return this.$route.meta.type;
       },
       getHeight: function () {
@@ -131,19 +131,19 @@
       }
     },
     watch: {
-      type () {
+      type() {
         this.reportList = [];
         this.bizDateAry = '';
       }
     },
     methods: {
-      isValid (item) {
+      isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expirationDate);
         let days = b.diff(a, 'days');
         return a < b ? days > 90 ? 2 : 1 : 0;
       },
-      formatRowClass (data) {
+      formatRowClass(data) {
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
         }
@@ -181,7 +181,7 @@
           });
         });
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {

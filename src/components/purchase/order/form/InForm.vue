@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -75,11 +74,9 @@
     color: #777
   }
 
-
   .productItem-info {
     float: left;
   }
-
 
   .ar {
     /*text-align: right;*/
@@ -525,7 +522,7 @@
         });
         return totalMoney;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
@@ -537,7 +534,7 @@
           }
         });
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.isStorageData = false;
         this.index = 0;
         this.idNotify = true;
@@ -575,18 +572,18 @@
 //      this.initForm();
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      setDefaultValue () {
+      setDefaultValue() {
         this.form.transportationCondition = '0';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       },
-      getTitle () {
+      getTitle() {
         return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}采购订单`;
       },
-      createOrderInfo () {
+      createOrderInfo() {
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
         if (!orgGoodsId) return;
@@ -625,7 +622,7 @@
 //          });
         });
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -651,7 +648,7 @@
           });
         });
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
@@ -735,7 +732,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -993,7 +990,7 @@
           let isHasInSearchProductList = false;
           this.searchProductList.forEach((item) => {
             if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-             isHasInSearchProductList = true;
+              isHasInSearchProductList = true;
               this.product.orgGoodsName = item.orgGoodsDto.name;
               this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
               this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
@@ -1040,11 +1037,11 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
       },
-      editItem (item) {
+      editItem(item) {
 //        this.filterProductList = [];
 //        this.searchProductList = [];
 //        this.searchProductList.push({

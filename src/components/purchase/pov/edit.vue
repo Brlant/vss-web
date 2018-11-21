@@ -159,7 +159,7 @@
   </div>
 </template>
 <script>
-  import { pullSignal } from '@/resources';
+  import {pullSignal} from '@/resources';
   import axios from 'axios';
 
   export default {
@@ -175,7 +175,7 @@
       };
     },
     watch: {
-      showEditPart (val) {
+      showEditPart(val) {
         if (val) {
           this.getDetail();
         }
@@ -197,7 +197,7 @@
           })
         );
       },
-      getRepertoryCount (i, next) {
+      getRepertoryCount(i, next) {
         let count = 0;
         next.data.forEach(n => {
           if (n.orgGoodsId === i.orgGoodsId) {
@@ -206,10 +206,10 @@
         });
         return count;
       },
-      inputHandler (row) {
+      inputHandler(row) {
         row.isNoValid = row.actualCount > row.repertoryCount;
       },
-      validPackage (row) {
+      validPackage(row) {
         row.actualCount = row.actualCount || 0;
         if (row.actualCount < 0) {
           this.$notify.info({
@@ -235,7 +235,7 @@
           });
         });
       },
-      submit () {
+      submit() {
         // let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);
         // if (valid) {
         //   this.currentOrder.detailDtoList.forEach(i => {

@@ -209,7 +209,7 @@
         default: -1
       }
     },
-    data () {
+    data() {
       return {
         drugControlReportIdList: {},
         batchReleaseIdList: {},
@@ -244,13 +244,13 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         this.batchNumbers = [];
         if (val === 4) this.queryBatchNumbers();
       }
     },
     methods: {
-      watchDrugControlReport (item) {
+      watchDrugControlReport(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -260,7 +260,7 @@
           });
         }
       },
-      watchBatchRelease (item) {
+      watchBatchRelease(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -270,7 +270,7 @@
           });
         }
       },
-      watchImportCertificate (item) {
+      watchImportCertificate(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -280,7 +280,7 @@
           });
         }
       },
-      watchCustomsPass (item) {
+      watchCustomsPass(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -290,7 +290,7 @@
           });
         }
       },
-      isShow (item) {
+      isShow(item) {
         return item.attachmentMap.drugControlReports.length || item.attachmentMap.batchReleases.length ||
           item.attachmentMap.importCertificates.length || item.attachmentMap.customsPass.length;
       },
@@ -338,7 +338,7 @@
         });
         this.isShowFileList = true;
       },
-      queryBatchNumbers () {// 查询
+      queryBatchNumbers() {// 查询
         if (!this.currentOrder.id) return;
         http.get('/receipt/order/' + this.currentOrder.id).then(res => {
           this.batchNumbers = res.data;

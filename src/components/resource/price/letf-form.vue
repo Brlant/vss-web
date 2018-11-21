@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -79,7 +78,6 @@
     float: left;
   }
 
-
   .ar {
     text-align: right;
   }
@@ -117,7 +115,7 @@
                     <!--v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}-->
                     <!--</span>-->
                     <!--<span class="select-other-info pull-left"><span-->
-                      <!--v-show="item.orgGoodsDto.goodsDto.specifications">规格:{{ item.orgGoodsDto.goodsDto.specifications}}</span>-->
+                    <!--v-show="item.orgGoodsDto.goodsDto.specifications">规格:{{ item.orgGoodsDto.goodsDto.specifications}}</span>-->
                     <!--</span>-->
                     <span class="select-other-info pull-left"><span
                       v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName  }}</span>
@@ -151,7 +149,7 @@
     props: {
       formItem: Object
     },
-    data () {
+    data() {
       return {
         form: {
           name: '',
@@ -170,7 +168,7 @@
       };
     },
     watch: {
-      formItem (val) {
+      formItem(val) {
         if (val.id) {
           this.getGoodsList(val.goodsName);
           this.form = val;
@@ -201,14 +199,14 @@
       formatPrice: function () {// 格式化单价，保留两位小数
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
-      orgGoodsChange (val) {
+      orgGoodsChange(val) {
         this.goodses.forEach(item => {
           if (item.orgGoodsDto.id === val) {
             this.form.unitPrice = utils.autoformatDecimalPoint(item.orgGoodsDto.sellPrice.toString());
           }
         });
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;

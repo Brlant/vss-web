@@ -45,6 +45,7 @@
     }
 
   }
+
   .exceptionPosition {
     /*margin-left: 40px;*/
     position: absolute;
@@ -107,7 +108,8 @@
           </span>
           <goods-switch class="pull-right"></goods-switch>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="货主订单号" :span="6">
@@ -208,7 +210,7 @@
       </div>
 
 
-      <el-row >
+      <el-row>
         <el-col :span="13">
           <div class="order-list-status" style="margin-bottom:20px">
             <div class="status-item"
@@ -216,7 +218,8 @@
                  v-for="(item,key) in orgType" v-show="key < 4"
                  @click="changeStatus(item,key)">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              </div>
             </div>
           </div>
         </el-col>
@@ -227,7 +230,8 @@
                  v-for="(item,key) in orgType"
                  @click="changeStatus(item,key)" v-show="key > 3">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              </div>
             </div>
           </div>
         </el-col>
@@ -264,8 +268,10 @@
                 <div>
                   {{item.orgName }}
                 </div>
-                <div v-show="item.thirdPartyNumber&& item.transportationMeansId === '4'" class="f-grey" style="font-size: 12px">
-                  来自销售订单{{item.thirdPartyNumber}}</div>
+                <div v-show="item.thirdPartyNumber&& item.transportationMeansId === '4'" class="f-grey"
+                     style="font-size: 12px">
+                  来自销售订单{{item.thirdPartyNumber}}
+                </div>
               </el-col>
               <el-col :span="3">
                 <div class="vertical-center">
@@ -291,14 +297,15 @@
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn">
-                <perm label="sales-return-edit"  v-if="filters.state === '6' ">
+                <perm label="sales-return-edit" v-if="filters.state === '6' ">
                    <span @click.stop.prevent="editOrder(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-edit"></i></a>
                     编辑
                   </span>
                 </perm>
-                <perm label="sales-return-conversion"  v-if="filters.state === '7' || filters.state === '8' || filters.state === '10'">
+                <perm label="sales-return-conversion"
+                      v-if="filters.state === '7' || filters.state === '8' || filters.state === '10'">
                    <span @click.stop.prevent="transformSaleOrder(item)" v-show="item.transportationMeansId === '4'">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-reset"></i></a>
@@ -335,7 +342,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
-  import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
 
   export default {
@@ -400,7 +407,7 @@
       };
     },
     mixins: [OrderMixin],
-    mounted () {
+    mounted() {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
       if (orderId && orderId !== 'list') {
@@ -415,7 +422,7 @@
       bizInTypes: function () {
         return this.$getDict('bizInType');
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
@@ -428,7 +435,7 @@
       }
     },
     methods: {
-      editOrder (item) {
+      editOrder(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
         this.showItemRight = true;
@@ -517,7 +524,7 @@
         }
         this.queryStatusNum(param);
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         let params = Object.assign({}, {
           keyWord: keyWord,
           orgId: this.$store.state.user['userCompanyAddress']
@@ -528,7 +535,7 @@
           this.goodesList = res.data.list;
         });
       },
-      refreshOrder () {
+      refreshOrder() {
         this.currentOrderId = '';
         this.getOrderList(this.pager.currentPage);
       },
@@ -621,7 +628,7 @@
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      transformSaleOrder (item) {
+      transformSaleOrder(item) {
         this.$confirm('是否转换成销售订单', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

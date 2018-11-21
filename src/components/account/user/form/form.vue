@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import {User, Access, OrgUser} from '../../../../resources';
+  import {OrgUser, User} from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -123,11 +123,11 @@
       };
     },
     computed: {
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
-    mounted () {
+    mounted() {
       this.getRoleSelect();
     },
     watch: {
@@ -150,7 +150,7 @@
           this.$refs['accountform'].resetFields();
         }
       },
-      user (val) {
+      user(val) {
         this.getRoleSelect();
       }
     },
@@ -221,7 +221,7 @@
           }
         });
       },
-      getSelectRoles (formData, roles) {
+      getSelectRoles(formData, roles) {
         return roles.filter(f => formData.list.some(s => s.roleId === f.id)).map(m => {
           return {
             roleId: m.id,

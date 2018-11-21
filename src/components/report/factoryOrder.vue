@@ -172,7 +172,7 @@
   export default {
 //    components: {detail},
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: true,
@@ -201,14 +201,14 @@
         typeList: ['入库', '出库']
       };
     },
-    mounted () {
+    mounted() {
 //      this.getBatches(1);
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
-      bizTypeList () {
+      bizTypeList() {
         let inType = JSON.parse(JSON.stringify(this.$getDict('bizInType') || []));
         let outType = JSON.parse(JSON.stringify(this.$getDict('bizOutType') || []));
         inType.forEach(i => {
@@ -261,12 +261,12 @@
           this.vaccineList = res.data.list;
         });
       },
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getBatches(1);
       },
-      getBatches (pageNo) { // 得到订单列表
+      getBatches(pageNo) { // 得到订单列表
         this.pager.currentPage = pageNo;
         this.showTable = true;
         this.loadingData = true;
@@ -283,7 +283,7 @@
         this.$http({
           url: '/erp-statement/city/warehouse-detail',
           params,
-          paramsSerializer (params) {
+          paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -296,7 +296,7 @@
           this.setFixedHeight();
         });
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -342,7 +342,7 @@
         this.$http({
           url: '/erp-statement/city/warehouse-detail/export',
           params,
-          paramsSerializer (params) {
+          paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -382,7 +382,7 @@
         this.expectedTime = '';
         this.getBatches(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

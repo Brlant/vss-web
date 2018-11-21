@@ -152,7 +152,7 @@
 
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         reportList: [],
@@ -220,15 +220,15 @@
           this.setFixedHeight();
         });
       },
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getCurrentList(1);
       },
-      handleCurrentChange (val) {
+      handleCurrentChange(val) {
         this.getCurrentList(val);
       },
-      getCurrentList (pageNo) {
+      getCurrentList(pageNo) {
         this.loadingData = true;
         this.pager.currentPage = pageNo;
         const {pager} = this;
@@ -239,7 +239,7 @@
           this.loadingData = false;
         }, 300);
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -295,12 +295,12 @@
           this.orgList = res.data;
         });
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
           this.batchNumberList = res.data.list;
         });
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           keyWord: query,

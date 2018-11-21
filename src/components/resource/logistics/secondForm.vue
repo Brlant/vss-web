@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -78,6 +77,7 @@
   .productItem-info {
     float: left;
   }
+
   .ar {
     text-align: right;
   }

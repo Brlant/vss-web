@@ -32,7 +32,7 @@
 <script>
   import AsyncValidator from 'async-validator';
   import emitter from 'element-ui/lib/mixins/emitter';
-  import { getPropByPath, noop } from 'element-ui/lib/utils/util';
+  import {getPropByPath, noop} from 'element-ui/lib/utils/util';
 
   export default {
     name: 'ElFormItem',
@@ -41,7 +41,7 @@
 
     mixins: [emitter],
 
-    provide () {
+    provide() {
       return {
         elFormItem: this
       };
@@ -81,7 +81,7 @@
       }
     },
     computed: {
-      labelFor () {
+      labelFor() {
         return this.for || this.prop;
       },
       labelStyle() {
@@ -147,13 +147,13 @@
         }
         return isRequired;
       },
-      _formSize () {
+      _formSize() {
         return this.elForm.size;
       },
-      elFormItemSize () {
+      elFormItemSize() {
         return this.size || this._formSize;
       },
-      sizeClass () {
+      sizeClass() {
         return (this.$ELEMENT || {}).size || this.elFormItemSize;
       }
     },
@@ -197,7 +197,7 @@
           callback(this.validateMessage);
         });
       },
-      clearValidate () {
+      clearValidate() {
         this.validateState = '';
         this.validateMessage = '';
         this.validateDisabled = false;

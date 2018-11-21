@@ -31,7 +31,7 @@
 </template>
 
 <script>
-  import { http, OrgUser, User } from '../../../../resources';
+  import {http, OrgUser, User} from '../../../../resources';
 
   export default {
     name: 'editForm',
@@ -58,7 +58,7 @@
         default: true
       }
     },
-    mounted () {
+    mounted() {
 
     },
     data: function () {

@@ -106,7 +106,8 @@
           </span>
           <goods-switch class="pull-right"></goods-switch>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="货主订单号" :span="6">
@@ -207,91 +208,92 @@
       </div>
 
 
-  <div class="order-list-status container" style="margin-bottom:20px">
-    <div class="status-item"
-         :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4',
+      <div class="order-list-status container" style="margin-bottom:20px">
+        <div class="status-item"
+             :class="{'active':key==activeStatus,'exceptionPosition':key == 11,'w90':item.state === '4',
           'cancelPosition': item.state==='5'}"
-         v-for="(item,key) in orgType"
-         @click="changeStatus(item,key)">
-      <div class="status-bg" :class="['b_color_'+key]"></div>
-      <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
-    </div>
-  </div>
-  <div class="order-list clearfix">
-    <el-row class="order-list-header">
-      <el-col :span="5">货主/订单号</el-col>
-      <el-col :span="4">业务类型</el-col>
-      <el-col :span="5">接种点</el-col>
-      <el-col :span="5">时间</el-col>
-      <el-col :span="2">状态</el-col>
-      <el-col :span="3" class="opera-btn" v-if="filters.state < 4 ">操作</el-col>
-    </el-row>
-    <el-row v-if="loadingData">
-      <el-col :span="24">
-        <oms-loading :loading="loadingData"></oms-loading>
-      </el-col>
-    </el-row>
-    <el-row v-else-if="orderList.length == 0">
-      <el-col :span="24">
-        <div class="empty-info">
-          暂无信息
+             v-for="(item,key) in orgType"
+             @click="changeStatus(item,key)">
+          <div class="status-bg" :class="['b_color_'+key]"></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
-      </el-col>
-    </el-row>
-    <div v-else="" class="order-list-body flex-list-dom">
-      <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
-           :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
-        <el-row>
-          <el-col :span="5">
-            <div class="f-grey">
-              {{item.orderNo }}
-            </div>
-            <div>
-              {{item.orgName }}
-            </div>
+      </div>
+      <div class="order-list clearfix">
+        <el-row class="order-list-header">
+          <el-col :span="5">货主/订单号</el-col>
+          <el-col :span="4">业务类型</el-col>
+          <el-col :span="5">接种点</el-col>
+          <el-col :span="5">时间</el-col>
+          <el-col :span="2">状态</el-col>
+          <el-col :span="3" class="opera-btn" v-if="filters.state < 4 ">操作</el-col>
+        </el-row>
+        <el-row v-if="loadingData">
+          <el-col :span="24">
+            <oms-loading :loading="loadingData"></oms-loading>
           </el-col>
-          <el-col :span="4">
-            <div class="vertical-center">
-              <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
-            </div>
-          </el-col>
-          <el-col :span="5">
-            <div>{{item.transactOrgName }}</div>
-          </el-col>
-          <el-col :span="5">
-            <div>下单：{{item.createTime | minute }}</div>
-            <div>预计送货：{{ item.expectedTime | date }}</div>
-          </el-col>
-          <el-col :span="2">
-            <div class="vertical-center">
-              {{getOrderStatus(item)}}
+        </el-row>
+        <el-row v-else-if="orderList.length == 0">
+          <el-col :span="24">
+            <div class="empty-info">
+              暂无信息
             </div>
           </el-col>
-          <el-col :span="3" class="opera-btn" v-if="filters.state < 4">
-            <perm :label="vaccineType === '1'?'sales-order-edit': 'second-vaccine-sales-order-edit' "
-                  v-show="filters.state === '0' || filters.state === '1'">
+        </el-row>
+        <div v-else="" class="order-list-body flex-list-dom">
+          <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
+               :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
+            <el-row>
+              <el-col :span="5">
+                <div class="f-grey">
+                  {{item.orderNo }}
+                </div>
+                <div>
+                  {{item.orgName }}
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div class="vertical-center">
+                  <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
+                </div>
+              </el-col>
+              <el-col :span="5">
+                <div>{{item.transactOrgName }}</div>
+              </el-col>
+              <el-col :span="5">
+                <div>下单：{{item.createTime | minute }}</div>
+                <div>预计送货：{{ item.expectedTime | date }}</div>
+              </el-col>
+              <el-col :span="2">
+                <div class="vertical-center">
+                  {{getOrderStatus(item)}}
+                </div>
+              </el-col>
+              <el-col :span="3" class="opera-btn" v-if="filters.state < 4">
+                <perm :label="vaccineType === '1'?'sales-order-edit': 'second-vaccine-sales-order-edit' "
+                      v-show="filters.state === '0' || filters.state === '1'">
               <span @click.stop.prevent="editOrder(item)">
                 <a href="#" class="btn-circle" @click.prevent=""><i
                   class="el-icon-t-edit"></i></a>
                 编辑
               </span>
-            </perm>
-            <perm :label="vaccineType === '1'?'sales-order-conversion': 'second-vaccine-sales-order-conversion' "
-                  v-show="filters.state === '2' || filters.state === '3'">
+                </perm>
+                <perm :label="vaccineType === '1'?'sales-order-conversion': 'second-vaccine-sales-order-conversion' "
+                      v-show="filters.state === '2' || filters.state === '3'">
               <span @click.stop.prevent="transformReturnOrder(item)">
                 <a href="#" class="btn-circle" @click.prevent=""><i
                   class="el-icon-t-reset"></i></a>
                 <span style="font-size: 12px">转成销售退货订单</span>
               </span>
-            </perm>
-          </el-col>
-        </el-row>
-        <order-goods-info :order-item="item"></order-goods-info>
-        <div class="order-list-item-bg"></div>
+                </perm>
+              </el-col>
+            </el-row>
+            <order-goods-info :order-item="item"></order-goods-info>
+            <div class="order-list-item-bg"></div>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-  </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
       <el-pagination
         layout="prev, pager, next"
@@ -314,7 +316,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
-  import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
 
   export default {
@@ -380,7 +382,7 @@
       };
     },
     mixins: [OrderMixin],
-    mounted () {
+    mounted() {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
       if (orderId && orderId !== 'list') {
@@ -395,7 +397,7 @@
       bizInTypes: function () {
         return this.$getDict('bizOutType');
       },
-      vaccineType () {
+      vaccineType() {
         return this.$route.meta.type;
       }
     },
@@ -406,18 +408,18 @@
         },
         deep: true
       },
-      vaccineType () {
+      vaccineType() {
         this.getOrderList(1);
       }
     },
     methods: {
-      editOrder (item) {
+      editOrder(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
         this.showItemRight = true;
         this.defaultIndex = 2;
       },
-      showPartItem (item) {
+      showPartItem(item) {
         this.currentOrderId = item.id;
         this.showPart = true;
       },
@@ -457,7 +459,7 @@
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         let params = Object.assign({}, {
           keyWord: keyWord,
           orgId: this.$store.state.user['userCompanyAddress']
@@ -510,7 +512,7 @@
         });
         this.queryStatusNum(param);
       },
-      refreshOrder () {
+      refreshOrder() {
         this.getOrderList(this.pager.currentPage);
       },
       filterOrg: function (query) {// 过滤供货商
@@ -619,7 +621,7 @@
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      transformReturnOrder (item) {
+      transformReturnOrder(item) {
         this.$confirm('是否转换成销售退货订单', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

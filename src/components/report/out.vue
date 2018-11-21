@@ -51,7 +51,8 @@
           </el-row>
         </el-form>
       </div>
-      <el-table v-show="dataList.length" :data="dataList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
+      <el-table v-show="dataList.length" :data="dataList" class="header-list" ref="reportTable" :maxHeight="getHeight"
+                border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column v-if="firstLine.length===0"></el-table-column>
         <template v-for="(item, index) in firstLine">
@@ -63,12 +64,12 @@
   </div>
 </template>
 <script>
-  import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
   import ReportMixin from '@/mixins/reportMixin';
+
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         outReport: {},
@@ -84,7 +85,7 @@
       };
     },
     computed: {
-      currentWidth () {
+      currentWidth() {
         let length = this.outReport.map && this.outReport.map.firstLine.length || 0;
         if (!length) return 150;
         if (length > 0 && length < 8) return `${1080 / length}`;

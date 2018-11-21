@@ -104,7 +104,8 @@
           </span>
           <goods-switch class="pull-right"></goods-switch>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="货主订单号" :span="6">
@@ -207,7 +208,8 @@
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
       </div>
       <div class="order-list clearfix">
@@ -298,7 +300,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
-  import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
 
   export default {
@@ -362,7 +364,7 @@
       };
     },
     mixins: [OrderMixin],
-    mounted () {
+    mounted() {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
       if (orderId && orderId !== 'list') {
@@ -387,7 +389,7 @@
       }
     },
     methods: {
-      showPartItem (item) {
+      showPartItem(item) {
         this.currentOrderId = item.id;
         this.showPart = true;
       },
@@ -426,7 +428,7 @@
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
       },
-      editOrder (item) {
+      editOrder(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
         this.showItemRight = true;
@@ -479,11 +481,11 @@
         });
         this.queryStatusNum(param);
       },
-      refreshOrder () {
+      refreshOrder() {
         this.currentOrderId = '';
         this.getOrderList(this.pager.currentPage);
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         let params = Object.assign({}, {
           keyWord: keyWord,
           orgId: this.$store.state.user['userCompanyAddress']

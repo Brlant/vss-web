@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -203,7 +202,8 @@
             <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
               <el-form-item label="产品" prop="orgGoodsId">
                 <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true" :loading="loading"
+                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
+                           :loading="loading"
                            popper-class="order-good-selects"
                            @change="getGoodDetail">
                   <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
@@ -343,7 +343,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, http, LogisticsCenter, PurchaseContract } from './../../../../resources';
+  import {Address, BaseInfo, http, LogisticsCenter, PurchaseContract} from './../../../../resources';
   import utils from '@/tools/utils';
   import OrderMixin from '@/mixins/orderMixin';
 
@@ -492,13 +492,13 @@
         });
         return totalMoney;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
-      user () {
+      user() {
         return this.$store.state.user.userCompanyAddress;
       },
-      showTitle () {
+      showTitle() {
         let title = '新增';
         if (this.action === 'edit') {
           title = '编辑';
@@ -521,7 +521,7 @@
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       },
-      action (val) {
+      action(val) {
         this.index = 0;
         if (this.$store.state.user.userCompanyAddress && val === 'add') {
           BaseInfo.queryBaseInfo(this.$store.state.user.userCompanyAddress).then(res => {
@@ -569,7 +569,7 @@
           this.filterAddress(this.form.warehouseAddress);
         }
       },
-      orderId (val) {
+      orderId(val) {
         if (val) {
           this.orderId = val;
         }
@@ -579,16 +579,16 @@
       this.currentPartName = this.productListSet[0].name;
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      setDefaultValue () {
+      setDefaultValue() {
         this.form.transportationCondition = '0';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
         this.form.purchaseContractName = '';
       },
-      createOrderInfo () {
+      createOrderInfo() {
         this.form.purchaseContractName = '';
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
@@ -620,7 +620,7 @@
           });
         });
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
         PurchaseContract.queryContractDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -640,7 +640,7 @@
           });
         });
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
@@ -715,7 +715,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.$store.state.user.userCompanyAddress,
@@ -943,11 +943,11 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
       },
-      editItem (item) {
+      editItem(item) {
         this.filterProductList.push({
           orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []

@@ -7,12 +7,12 @@
       暂无操作日志信息
     </div>
     <bg-box v-else="" :title="log.actionTitle" v-for="log in orderLogList" :key="log.id">
-      <p>操作人:{{log.operatorName}}  <span class="ml-15">操作时间:{{log.operateTime | time}} </span></p>
+      <p>操作人:{{log.operatorName}} <span class="ml-15">操作时间:{{log.operateTime | time}} </span></p>
     </bg-box>
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
   import bgBox from '@/components/common/bgbox.vue';
 
   export default {
@@ -29,21 +29,21 @@
         default: -1
       }
     },
-    data () {
+    data() {
       return {
         loadingLog: true,
         orderLogList: []
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         if (val === 2) {
           this.getOrderLoglist();
         }
       }
     },
     methods: {
-      getOrderLoglist () {// 获取操作日志
+      getOrderLoglist() {// 获取操作日志
         this.orderLogList = [];
         if (!this.currentOrder.id) return;
         this.loadingLog = true;

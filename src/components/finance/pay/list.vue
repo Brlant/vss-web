@@ -354,14 +354,14 @@
         height = (height - 30);
         return height;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       },
-      level () {
+      level() {
         return this.$store.state.orgLevel;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
       this.queryTotalMoney();
     },
@@ -378,14 +378,14 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
         }
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       statusTitle: function (status) {
@@ -399,7 +399,7 @@
           return title;
         }
       },
-      filterStatusMethod (value, row) {
+      filterStatusMethod(value, row) {
         return row.status === value;
       },
       resetRightBox: function () {
@@ -437,21 +437,21 @@
 
         });
       },
-      queryTotalMoney () {
+      queryTotalMoney() {
         this.$http.get('/accounts-payable/statistics').then(res => {
           this.orgType[0].num = res.data['paidMoney'];
           this.orgType[1].num = res.data['totalMoney'] - res.data['paidMoney'];
         });
       },
-      refresh () {
+      refresh() {
         this.getOrgsList();
         this.resetRightBox();
       },
-      refreshDetails () {
+      refreshDetails() {
         this.getDetail();
         this.resetRightBox();
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         let level = this.$store.state.orgLevel;
         if (level !== 3) {
           let params = Object.assign({}, {
@@ -516,19 +516,19 @@
         this.getDetail(1);
         this.resetSearchForm();
       },
-      showDetail (item) {
+      showDetail(item) {
         this.orderId = item.orderId;
         this.currentDetail = item.remitteeId;
         this.showPart = true;
       },
-      edit (row) {
+      edit(row) {
         this.form = row;
         this.showRight = true;
       },
-      addDetail () {
+      addDetail() {
         this.showLeft = true;
       },
-      onSubmit () {
+      onSubmit() {
         this.getOrgsList();
       },
       formatTime: function (date) {

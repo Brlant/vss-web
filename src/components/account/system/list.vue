@@ -57,7 +57,7 @@
       </div>
       <div class="container d-table">
         <div class="d-table-left">
-            <h2 class="header">
+          <h2 class="header">
                 <span class="pull-right">
                   <perm label="access-role-add">
                     <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="el-icon-t-plus"></i> </a>
@@ -65,10 +65,10 @@
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="el-icon-t-search"></i> </a>
                 </span>
-              角色管理
-            </h2>
+            角色管理
+          </h2>
           <div class="d-table-col-wrap" :style="'height:'+ (bodyHeight - 60)  + 'px'" @scroll="scrollLoadingData">
-          <div class="search-left-box" v-show="showTypeSearch">
+            <div class="search-left-box" v-show="showTypeSearch">
               <oms-input v-model="filters.keyWord" placeholder="请输入名称搜索" :showFocus="showTypeSearch"></oms-input>
             </div>
             <div v-if="!currentItem.title" class="empty-info">
@@ -241,7 +241,7 @@
       user() {
         return this.$store.state.user;
       },
-      checkedMenuList () {
+      checkedMenuList() {
         let checkedMenuList = JSON.parse(JSON.stringify(this.menuList));
         let perms = this.resData.permissionList;
         if (!checkedMenuList || !perms) return [];

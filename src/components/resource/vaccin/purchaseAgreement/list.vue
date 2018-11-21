@@ -111,7 +111,8 @@
       <span v-show="!showSearch">展开筛选</span>
       </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="疫苗名称" :span="5">
@@ -206,7 +207,8 @@
               </el-col>
               <el-col :span="2">
                 <div>
-                  {{ item.amount}} <dict :dict-group="'measurementUnit'" :dict-key="item.unit"></dict>
+                  {{ item.amount}}
+                  <dict :dict-group="'measurementUnit'" :dict-key="item.unit"></dict>
                 </div>
               </el-col>
               <el-col :span="3">
@@ -236,7 +238,7 @@
 </template>
 <script>
   import goodsPart from './form/form.vue';
-  import { BaseInfo, PurchaseAgreement } from '../../../../resources';
+  import {BaseInfo, PurchaseAgreement} from '../../../../resources';
   import utils from '../../../../tools/utils';
 
   export default {
@@ -286,7 +288,7 @@
         this.filterOrg();
       },
       filters: {
-        handler () {
+        handler() {
           this.getGoodsList(1);
         },
         deep: true
@@ -370,12 +372,12 @@
         }, this.filters);
         this.loadingData = true;
         PurchaseAgreement.query(params).then(res => {
-            this.showTypeList = res.data.list;
-            if (res.data.list.length > 0) {
-              this.currentItem = Object.assign(this.showTypeList[0]);
-            } else {
-              this.currentItem = Object.assign({'id': ''});
-            }
+          this.showTypeList = res.data.list;
+          if (res.data.list.length > 0) {
+            this.currentItem = Object.assign(this.showTypeList[0]);
+          } else {
+            this.currentItem = Object.assign({'id': ''});
+          }
           this.loadingData = false;
           this.pager.count = res.data.count;
         });

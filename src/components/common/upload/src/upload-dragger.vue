@@ -17,18 +17,18 @@
     props: {
       disabled: Boolean
     },
-    data () {
+    data() {
       return {
         dragover: false
       };
     },
     methods: {
-      onDragover () {
+      onDragover() {
         if (!this.disabled) {
           this.dragover = true;
         }
       },
-      onDrop (e) {
+      onDrop(e) {
         if (!this.disabled) {
           this.dragover = false;
           this.$emit('file', e.dataTransfer.files);

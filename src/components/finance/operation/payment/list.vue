@@ -85,6 +85,7 @@
   .cursor-span {
     cursor: pointer;
   }
+
   .order-list-status {
     .status-item {
       width: 90px;
@@ -107,7 +108,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="付款单据编号" :span="7">
@@ -116,7 +118,8 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="付款单位" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索付款单位" :remote-method="filterOrg" @click.native="filterOrg('')"
+                <el-select filterable remote placeholder="请输入名称搜索付款单位" :remote-method="filterOrg"
+                           @click.native="filterOrg('')"
                            :clearable="true"
                            v-model="searchCondition.orgId">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -150,7 +153,8 @@
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
       </div>
       <div class="order-list clearfix">
@@ -251,7 +255,7 @@
   import utils from '../../../../tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import { BaseInfo, BillPayable } from '../../../../resources';
+  import {BaseInfo, BillPayable} from '../../../../resources';
 
   export default {
     components: {
@@ -383,9 +387,9 @@
         });
         BillPayable.query(param).then(res => {
           this.billList = res.data.list;
-            this.pager.count = res.data.count;
-            this.loadingData = false;
-          });
+          this.pager.count = res.data.count;
+          this.loadingData = false;
+        });
         this.queryStatusNum(param);
       },
       filterListColor: function (index) {// 过滤左边列表边角颜色

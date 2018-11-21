@@ -102,8 +102,8 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主疫苗名称"  min-width="200" :sortable="true"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true"></el-table-column>
+        <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
         <el-table-column label="业务库存" align="center">
@@ -147,7 +147,7 @@
               <span>{{scope.row.transitCount}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader"  :sortable="true"
+          <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader" :sortable="true"
                            width="100">
             <template slot-scope="scope">
               <span>{{scope.row.totalCount}}</span>
@@ -254,7 +254,7 @@
         },
         deep: true
       },
-      showSearch (val) {
+      showSearch(val) {
         window.localStorage.setItem(this.$route.path, val);
       }
     },
@@ -272,11 +272,13 @@
         this.loadingData = true;
         erpStock.query(params).then(res => {
           res.data.forEach(i => {
-             i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
+            i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
           });
           this.batches = res.data;
           this.loadingData = false;
-          setTimeout(() => {this.fixedHeight = Math.abs(this.fixedHeight - 1);}, 100);
+          setTimeout(() => {
+            this.fixedHeight = Math.abs(this.fixedHeight - 1);
+          }, 100);
         });
       },
       formatHeader(h, col) {

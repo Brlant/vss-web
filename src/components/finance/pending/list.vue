@@ -62,6 +62,7 @@
   .d-table > div.d-table-left {
     width: 220px;
   }
+
   .show-list .list-item {
     padding-right: 10px;
   }
@@ -113,12 +114,12 @@
           </div>
           <div v-else="" class="d-table-col-wrap" :style="'height:'+bodyHeight   + 'px'">
             <div class="content-body clearfix">
-                <oms-row :label="`${titleAry[type][1]}方`" :span="3">
-                  {{currentItem[type ===1 ? 'cdcName' :'povName']}}
-                </oms-row>
-                <oms-row label="余额" :span="3">
-                    ￥{{currentItem.money | formatMoney}}
-                </oms-row>
+              <oms-row :label="`${titleAry[type][1]}方`" :span="3">
+                {{currentItem[type ===1 ? 'cdcName' :'povName']}}
+              </oms-row>
+              <oms-row label="余额" :span="3">
+                ￥{{currentItem.money | formatMoney}}
+              </oms-row>
             </div>
             <div>
               <el-form class="payForm" ref="payForm" :inline="true" onsubmit="return false">
@@ -174,7 +175,8 @@
 
 </template>
 <script>
-  import { pay, Vaccine, PaymentPending } from '@/resources';
+  import {PaymentPending, Vaccine} from '@/resources';
+
   export default {
     data: function () {
       return {
@@ -237,14 +239,14 @@
         height = (height - 30);
         return height;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       },
-      type () {
+      type() {
         return this.$route.meta.type;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
     },
     watch: {
@@ -260,17 +262,17 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
         }
       },
-      type (val) {
+      type(val) {
         this.getOrgsList(1);
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       statusTitle: function (status) {
@@ -325,15 +327,15 @@
 
         });
       },
-      refresh () {
+      refresh() {
         this.getOrgsList();
         this.resetRightBox();
       },
-      refreshDetails () {
+      refreshDetails() {
         this.getDetail();
         this.resetRightBox();
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         let params = Object.assign({}, {
           keyWord: keyWord,
           salesFirm: this.currentItem.remitteeId
@@ -382,19 +384,19 @@
         this.goodesList = [];
         this.getDetail(1);
       },
-      showDetail (item) {
+      showDetail(item) {
         this.orderId = item.orderId;
         this.currentDetail = item.remitteeId;
         this.showPart = true;
       },
-      edit (row) {
+      edit(row) {
         this.form = row;
         this.showRight = true;
       },
-      addDetail () {
+      addDetail() {
         this.showLeft = true;
       },
-      onSubmit () {
+      onSubmit() {
         this.getOrgsList();
       },
       formatTime: function (date) {

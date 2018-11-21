@@ -130,7 +130,7 @@
   import {BaseInfo, cerpAccess, cerpAction} from '@/resources';
 
   export default {
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: false,
@@ -158,7 +158,7 @@
       };
     },
     computed: {
-      user () {
+      user() {
         return this.$store.state.user;
       },
       bodyHeight: function () {
@@ -166,7 +166,7 @@
         return height;
       }
     },
-    mounted () {
+    mounted() {
       if (this.level === '2') {
         this.isShowLeft = false;
         if (!this.$store.state.user.userCompanyAddress) return;
@@ -191,7 +191,7 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (!val.userCompanyAddress) return;
         this.cdcItem = {
           subordinateId: this.$store.state.user.userCompanyAddress
@@ -200,7 +200,7 @@
       }
     },
     methods: {
-      bindDistrict () {
+      bindDistrict() {
         if (!this.orgId) {
           this.$notify.info({
             message: '请选择接种点'
@@ -226,7 +226,7 @@
           });
         });
       },
-      filterAvaliableCDCs () {
+      filterAvaliableCDCs() {
         this.showOrgList = this.orgList.filter(f => !this.povs.some(s => f.id === s.subordinateId));
       },
       filterOrgs: function (query) {
@@ -240,7 +240,7 @@
           this.filterAvaliableCDCs();
         });
       },
-      getCDCPage () { // 得到疾控列表
+      getCDCPage() { // 得到疾控列表
         let params = Object.assign({
           pageNo: 1,
           pageSize: 20
@@ -254,7 +254,7 @@
           this.getPovPage(1);
         });
       },
-      getPovPage (pageNo) { // 得到POV列表
+      getPovPage(pageNo) { // 得到POV列表
         if (!this.cdcItem.subordinateId) return;
         this.pager.currentPage = pageNo;
         let params = Object.assign({
@@ -269,11 +269,11 @@
           this.filterAvaliableCDCs();
         });
       },
-      showType (item) {
+      showType(item) {
         this.cdcItem = item;
         this.getPovPage();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.$confirm('是否删除接种点 "' + item.subordinateName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

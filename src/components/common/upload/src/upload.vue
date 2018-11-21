@@ -62,7 +62,7 @@
       }
     },
 
-    data () {
+    data() {
       return {
         mouseover: false,
         reqs: {}
@@ -70,15 +70,15 @@
     },
 
     methods: {
-      isImage (str) {
+      isImage(str) {
         return str.indexOf('image') !== -1;
       },
-      handleChange (ev) {
+      handleChange(ev) {
         const files = ev.target.files;
         if (!files) return;
         this.uploadFiles(files);
       },
-      uploadFiles (files) {
+      uploadFiles(files) {
         let postFiles = Array.prototype.slice.call(files);
         if (!this.multiple) {
           postFiles = postFiles.slice(0, 1);
@@ -93,7 +93,7 @@
           if (this.autoUpload) this.upload(rawFile);
         });
       },
-      upload (rawFile, file) {
+      upload(rawFile, file) {
 
         this.$refs.input.value = null;
 
@@ -118,7 +118,7 @@
           this.onRemove(null, rawFile);
         }
       },
-      abort (file) {
+      abort(file) {
         const {reqs} = this;
         if (file) {
           let uid = file;
@@ -133,7 +133,7 @@
           });
         }
       },
-      post (rawFile) {
+      post(rawFile) {
         const {uid} = rawFile;
         const options = {
           headers: this.headers,
@@ -163,7 +163,7 @@
           req.then(options.onSuccess, options.onError);
         }
       },
-      handleClick () {
+      handleClick() {
         if (!this.disabled) {
           this.$refs.input.value = null;
           this.$refs.input.click();

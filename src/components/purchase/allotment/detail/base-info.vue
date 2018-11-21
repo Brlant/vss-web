@@ -153,7 +153,7 @@
         }
       }
     },
-    data () {
+    data() {
       return {
         span: 8
       };

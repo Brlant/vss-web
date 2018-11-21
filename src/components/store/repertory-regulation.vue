@@ -207,7 +207,7 @@
   export default {
     components: {detail},
     mixins: [validMixin],
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: true,
@@ -253,7 +253,7 @@
         vaccineList: []
       };
     },
-    mounted () {
+    mounted() {
       this.getBatches(1);
       let showSearch = JSON.parse(window.localStorage.getItem(this.$route.path));
       if (typeof showSearch === 'boolean') {
@@ -261,7 +261,7 @@
       }
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
       bodyHeight: function () {
@@ -277,7 +277,7 @@
         },
         deep: true
       },
-      showSearch (val) {
+      showSearch(val) {
         window.localStorage.setItem(this.$route.path, val);
       }
     },
@@ -287,18 +287,18 @@
           this.orgList = res.data.list;
         });
       },
-      isValid (item) {
+      isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expiryDate);
         let days = b.diff(a, 'days');
         return a < b ? days > 90 ? 2 : 1 : 0;
       },
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getBatches(1);
       },
-      getBatches (pageNo) { // 得到波次列表
+      getBatches(pageNo) { // 得到波次列表
         this.totalInfo = {};
         this.batches = [];
         this.pager.currentPage = pageNo;
@@ -310,7 +310,7 @@
         this.$http({
           url: 'erp-stock/total',
           params,
-          paramsSerializer (params) {
+          paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -325,7 +325,7 @@
           }, 100);
         });
       },
-      formatHeader (h, col) {
+      formatHeader(h, col) {
         let property = col.column.property;
         let content = '';
         let title = '';
@@ -372,7 +372,7 @@
           </el-tooltip>
         );
       },
-      formatRowClass (data) {
+      formatRowClass(data) {
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
         }
@@ -386,7 +386,7 @@
         this.$http({
           url: '/erp-stock/regulatory/export',
           params,
-          paramsSerializer (params) {
+          paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -399,18 +399,18 @@
           });
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchWord);
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -452,7 +452,7 @@
         Object.assign(this.filters, temp);
         this.batchNumberList = [];
       },
-      filterFactory (query) { // 生产厂商
+      filterFactory(query) { // 生产厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
@@ -466,12 +466,12 @@
           this.factories = res.data.list;
         });
       },
-      goodsChange (val) {
+      goodsChange(val) {
         this.searchWord.batchNumberId = '';
         this.batchNumberList = [];
         this.filterBatchNumber();
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         if (!this.searchWord.goodsId) return;
         this.$http.get('/batch-number/pager', {
           params: {
@@ -491,7 +491,7 @@
           this.vaccineList = res.data.list;
         });
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

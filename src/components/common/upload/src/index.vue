@@ -45,7 +45,7 @@
   import ElProgress from 'element-ui/lib/progress';
   import Migrating from 'element-ui/lib/mixins/migrating';
 
-  function noop () {
+  function noop() {
   }
 
   export default {
@@ -70,7 +70,7 @@
       },
       headers: {
         type: Object,
-        default () {
+        default() {
           return {};
         }
       },
@@ -118,7 +118,7 @@
       },
       fileList: {
         type: Array,
-        default () {
+        default() {
           return [];
         }
       },
@@ -135,7 +135,7 @@
       formData: {}
     },
 
-    data () {
+    data() {
       return {
         uploadFiles: [],
         dragOver: false,
@@ -147,7 +147,7 @@
     watch: {
       fileList: {
         immediate: true,
-        handler (fileList) {
+        handler(fileList) {
           this.uploadFiles = fileList.map(item => {
             item.uid = item.uid || (Date.now() + this.tempIndex++);
             item.status = 'success';
@@ -158,7 +158,7 @@
     },
 
     methods: {
-      handleStart (rawFile) {
+      handleStart(rawFile) {
         rawFile.uid = Date.now() + this.tempIndex++;
         let file = {
           status: 'ready',
@@ -179,13 +179,13 @@
         this.uploadFiles.push(file);
         this.onChange(file, this.uploadFiles);
       },
-      handleProgress (ev, rawFile) {
+      handleProgress(ev, rawFile) {
         const file = this.getFile(rawFile);
         this.onProgress(ev, file, this.uploadFiles);
         file.status = 'uploading';
         file.percentage = ev.percent || 0;
       },
-      handleSuccess (res, rawFile) {
+      handleSuccess(res, rawFile) {
         const file = this.getFile(rawFile);
 
         if (file) {
@@ -196,7 +196,7 @@
           this.onChange(file, this.uploadFiles);
         }
       },
-      handleError (err, rawFile) {
+      handleError(err, rawFile) {
         const file = this.getFile(rawFile);
         const fileList = this.uploadFiles;
 
@@ -207,7 +207,7 @@
         this.onError(err, file, this.uploadFiles);
         this.onChange(file, this.uploadFiles);
       },
-      handleRemove (file, raw) {
+      handleRemove(file, raw) {
         if (raw) {
           file = this.getFile(raw);
         }
@@ -216,7 +216,7 @@
         fileList.splice(fileList.indexOf(file), 1);
         this.onRemove(file, fileList);
       },
-      getFile (rawFile) {
+      getFile(rawFile) {
         let fileList = this.uploadFiles;
         let target;
         fileList.every(item => {
@@ -225,20 +225,20 @@
         });
         return target;
       },
-      abort (file) {
+      abort(file) {
         this.$refs['upload-inner'].abort(file);
       },
-      clearFiles () {
+      clearFiles() {
         this.uploadFiles = [];
       },
-      submit () {
+      submit() {
         this.uploadFiles
           .filter(file => file.status === 'ready')
           .forEach(file => {
             this.$refs['upload-inner'].upload(file.raw);
           });
       },
-      getMigratingConfig () {
+      getMigratingConfig() {
         return {
           props: {
             'default-file-list': 'default-file-list is renamed to file-list.',

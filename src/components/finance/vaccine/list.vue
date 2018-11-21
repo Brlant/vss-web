@@ -12,7 +12,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="订单号" :span="5">
@@ -139,10 +140,10 @@
   </div>
 </template>
 <script>
-  import { vaccineBills, BaseInfo, Vaccine } from '@/resources';
+  import {BaseInfo, Vaccine, vaccineBills} from '@/resources';
 
   export default {
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: false,
@@ -165,11 +166,11 @@
         goodses: []
       };
     },
-    mounted () {
+    mounted() {
       this.queryBillPage(1);
     },
     methods: {
-      queryBillPage (pageNo) {
+      queryBillPage(pageNo) {
         this.pager.currentPage = pageNo;
         let params = {};
         this.loadingData = true;
@@ -183,7 +184,7 @@
           this.loadingData = false;
         });
       },
-      filterFactory (query) { // 查询厂商
+      filterFactory(query) { // 查询厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = {
           keyWord: query,
@@ -218,7 +219,7 @@
         });
         this.queryBillPage(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

@@ -150,14 +150,14 @@
         </el-select>
       </el-form-item>
       <!--<el-form-item label="中标价格" prop="bidPrice">-->
-        <!--<oms-input type="text" v-model="form.bidPrice" placeholder="请输入中标价格" @blur="formatPrice" @change="setPrice">-->
-          <!--<template slot="prepend">￥</template>-->
-        <!--</oms-input>-->
+      <!--<oms-input type="text" v-model="form.bidPrice" placeholder="请输入中标价格" @blur="formatPrice" @change="setPrice">-->
+      <!--<template slot="prepend">￥</template>-->
+      <!--</oms-input>-->
       <!--</el-form-item>-->
       <!--<el-form-item label="采购价格" prop="procurementPrice">-->
-        <!--<oms-input type="text" v-model="form.procurementPrice" placeholder="请输入采购价格" @blur="formatPrice">-->
-          <!--<template slot="prepend">￥</template>-->
-        <!--</oms-input>-->
+      <!--<oms-input type="text" v-model="form.procurementPrice" placeholder="请输入采购价格" @blur="formatPrice">-->
+      <!--<template slot="prepend">￥</template>-->
+      <!--</oms-input>-->
       <!--</el-form-item>-->
       <!--<el-form-item label="销售价格" prop="sellPrice">-->
       <!--<oms-input type="text" v-model="form.sellPrice" placeholder="请输入销售价格" @blur="formatPrice">-->
@@ -229,7 +229,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, Goods, Vaccine } from '@/resources';
+  import {BaseInfo, Goods, Vaccine} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {

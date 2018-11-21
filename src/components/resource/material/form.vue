@@ -66,7 +66,6 @@
 
   }
 
-
   .ml15 {
     margin-left: 40px;
   }
@@ -74,7 +73,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -113,13 +111,13 @@
   </div>
 </template>
 <script>
-  import { material } from '@/resources';
+  import {material} from '@/resources';
 
   export default {
     props: {
       formItem: Object
     },
-    data () {
+    data() {
       return {
         form: {
           name: '',
@@ -134,7 +132,7 @@
       };
     },
     watch: {
-      formItem (val) {
+      formItem(val) {
         if (val.id) {
           Object.assign(this.form, val);
           this.title = '编辑物料';
@@ -148,7 +146,7 @@
       }
     },
     methods: {
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid || this.doing) {
             return false;

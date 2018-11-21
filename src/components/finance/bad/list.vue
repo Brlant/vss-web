@@ -9,7 +9,7 @@
     data: function () {
       return {};
     },
-    mounted () {
+    mounted() {
       console.log('ssss');
     },
     method: {}

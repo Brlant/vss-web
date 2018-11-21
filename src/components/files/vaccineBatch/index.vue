@@ -153,7 +153,7 @@
 
   export default {
     components: {detail},
-    data () {
+    data() {
       return {
 //        loadingData: true,
         showFlag: false,
@@ -182,7 +182,7 @@
         currentItemId: ''
       };
     },
-    mounted () {
+    mounted() {
       this.filterOrgGoods();
     },
     watch: {
@@ -194,7 +194,7 @@
       }
     },
     methods: {
-      getBatcheNumbers (pageNo) { // 得到批次列表
+      getBatcheNumbers(pageNo) { // 得到批次列表
         this.batches = [];
         this.pager.currentPage = pageNo;
         this.loadingData = true;
@@ -208,11 +208,11 @@
           this.pager.count = res.data.count;
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.currentItemId = item.id;
         this.showDetailPart = true;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
@@ -239,7 +239,7 @@
         this.showFlag = false;
 //        Object.assign(this.filters, temp);
       },
-      filterFactory (query) { // 查询厂商
+      filterFactory(query) { // 查询厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
@@ -253,7 +253,7 @@
           this.factories = res.data.list;
         });
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         this.orgGoods = [];
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {

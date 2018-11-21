@@ -53,7 +53,8 @@
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="1" v-show="index === 8"></relevance-code>
-        <relevance-code-review :currentOrder="currentOrder" :index="index" type="1" v-show="index === 9"></relevance-code-review>
+        <relevance-code-review :currentOrder="currentOrder" :index="index" type="1"
+                               v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
       </div>
@@ -63,7 +64,7 @@
 <script>
   import basicInfo from './detail/base-info.vue';
   import log from '@/components/common/order.log.vue';
-  import { http, InWork, erpOrder } from '@/resources';
+  import {erpOrder, http, InWork} from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
 
@@ -75,7 +76,7 @@
       },
       state: String
     },
-    data () {
+    data() {
       return {
         currentOrder: {},
         index: 0,
@@ -83,14 +84,14 @@
       };
     },
     watch: {
-      orderId () {
+      orderId() {
         this.index = 0;
         this.title = '订单详情';
         this.queryOrderDetail();
       }
     },
     computed: {
-      pageSets () {
+      pageSets() {
         let menu = [];
         let perms = this.$store.state.permissions || [];
 
@@ -108,7 +109,7 @@
       }
     },
     methods: {
-      queryOrderDetail () {
+      queryOrderDetail() {
         if (!this.orderId) return false;
         this.currentOrder = {};
         InWork.queryOrderDetail(this.orderId).then(res => {
@@ -116,11 +117,11 @@
           this.currentOrder = res.data;
         });
       },
-      showPart (item) {
+      showPart(item) {
         this.index = item.key;
         this.title = item.name;
       },
-      confirm () {
+      confirm() {
         this.$confirm('是否确认订单', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -139,7 +140,7 @@
           });
         });
       },
-      review () {
+      review() {
         this.$confirm('是否审单通过', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -157,11 +158,11 @@
           });
         });
       },
-      transformState (state) {
+      transformState(state) {
         this.currentOrder.state = state;
         this.$emit('refreshOrder');
       },
-      deleteOrder () {
+      deleteOrder() {
         this.$confirm('是否删除订单', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -180,7 +181,7 @@
           });
         });
       },
-      cancel () {
+      cancel() {
         this.index = 0;
         this.$refs['cancelPart'].isShow = true;
         this.$notify({

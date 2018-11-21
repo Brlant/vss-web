@@ -68,13 +68,13 @@
       product: {},
       productList: {
         type: Array,
-        default () {
+        default() {
           return [];
         }
       },
       editItemProduct: {}
     },
-    data () {
+    data() {
       return {
         batchNumbers: [],
         isHasBatchNumberInfo: false,
@@ -84,24 +84,24 @@
       };
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      'product.orgGoodsId' () {
+      'product.orgGoodsId'() {
         this.initBatchNumber();
         this.queryBatchNumber();
       },
       batchNumbers: {
-        handler () {
+        handler() {
           this.setIsHasBatchNumberInfo();
         },
         deep: true
       }
     },
     methods: {
-      initBatchNumber () {
+      initBatchNumber() {
         this.batchNumbers = [];
         if (!this.product.orgGoodsId || !this.productList.length) {
           return;
@@ -131,7 +131,7 @@
        * 组合疫苗，得到多个API接口
        * @returns {any[]}
        */
-      getAPIAry () {
+      getAPIAry() {
         return this.batchNumbers.map(m => {
           let params = {
             goodsId: m.goodsId
@@ -142,7 +142,7 @@
       /**
        * 如果有组合疫苗，并发查询批号信息
        */
-      queryBatchNumber () {
+      queryBatchNumber() {
         if (!this.batchNumbers.length) return;
         this.doing = true;
         axios.all(this.batchNumbers.map(m => {
@@ -167,7 +167,7 @@
       /**
        * 编辑疫苗时，重设对应批号信息
        */
-      editBatchNumbers () {
+      editBatchNumbers() {
         if (!this.editItemProduct.batchNumberId) return;
         this.batchNumbers.forEach(i => {
           if (i.orgGoodsId === this.editItemProduct.orgGoodsId) {
@@ -186,7 +186,7 @@
        * 全选
        * @param item
        */
-      checkItemAll (item) {
+      checkItemAll(item) {
         item.lots.forEach(l => {
           l.isChecked = item.isCheckedAll;
         });
@@ -195,18 +195,18 @@
        * 输入数量校验
        * @param item
        */
-      isChangeValue (item, product) {
+      isChangeValue(item, product) {
         if (product.isMainly) {
           item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         }
         item.isChecked = item.productCount > 0;
       },
-      setIsHasBatchNumberInfo () {
+      setIsHasBatchNumberInfo() {
         let batchNumbers = this.batchNumbers || [];
         this.isHasBatchNumberInfo = !batchNumbers.length || batchNumbers.length && batchNumbers.every(s => !s.lots.length);
         this.$emit('setIsHasBatchNumberInfo', this.isHasBatchNumberInfo);
       },
-      checkPass () {
+      checkPass() {
         if (this.isHasBatchNumberInfo) {
           this.$notify.info({
             duration: 2000,

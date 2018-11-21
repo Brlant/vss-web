@@ -193,7 +193,7 @@
   </div>
 </template>
 <script>
-  import { Access } from '@/resources';
+  import {Access} from '@/resources';
   import roleForm from './form/form.vue';
   import roleMixin from '@/mixins/roleMixin';
 
@@ -243,10 +243,10 @@
         height = (height - 20);
         return height;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       },
-      checkedMenuList () {
+      checkedMenuList() {
         let checkedMenuList = JSON.parse(JSON.stringify(this.menuList));
         let perms = this.resData.permissionList;
         if (!checkedMenuList || !perms) return [];
@@ -254,7 +254,7 @@
         return checkedMenuList;
       }
     },
-    mounted () {
+    mounted() {
       this.getPageList(1);
       this.getMenuList();
     },
@@ -265,7 +265,7 @@
         },
         deep: true
       },
-      user () {
+      user() {
         this.getMenuList(false);
       }
     },
@@ -273,7 +273,7 @@
       getMore: function () {
         this.getPageList(this.pager.currentPage + 1, true);
       },
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       getMenuList: function (cache = true) {

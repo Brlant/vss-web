@@ -56,7 +56,7 @@
         stockList: []
       };
     },
-    mounted () {
+    mounted() {
       this.getErpStockList();
     },
     methods: {
@@ -79,7 +79,7 @@
       queryErpStockOverdue: function () {
         return this.$http.get('/erp-stock/overdue');
       },
-      formatStockRowClass (item) {
+      formatStockRowClass(item) {
         if (item.status === '近效期') {
           return 'effective-row';
         }

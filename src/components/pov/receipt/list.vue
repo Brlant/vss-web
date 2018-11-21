@@ -25,7 +25,8 @@
         <div class="status-item" :class="{'active':key==activeStatus}"
              v-for="(item,key) in receiptType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
         <goods-switch class="pull-right"></goods-switch>
       </div>
@@ -104,7 +105,8 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <receipt-info :orderId="currentOrderId" :showRight="showRight" @close="resetRightBox" @refreshOrder="refreshOrder"></receipt-info>
+      <receipt-info :orderId="currentOrderId" :showRight="showRight" @close="resetRightBox"
+                    @refreshOrder="refreshOrder"></receipt-info>
     </page-right>
     <page-right :show="showDetailRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
       <show-detail :orderId="currentOrderId" :showRight="showDetailRight" @close="resetRightBox"></show-detail>
@@ -112,7 +114,7 @@
   </div>
 </template>
 <script>
-  import { http, povReceipt } from '@/resources';
+  import {http, povReceipt} from '@/resources';
   import utils from '@/tools/utils';
   import showDetail from './show.order.vue';
   import receiptInfo from './receipt.vue';
@@ -122,7 +124,7 @@
       showDetail,
       receiptInfo
     },
-    data () {
+    data() {
       return {
         loadingData: false,
         orderList: [],
@@ -143,7 +145,7 @@
       };
     },
     computed: {
-      isShowGoodsList () {
+      isShowGoodsList() {
         return this.$store.state.isShowGoodsList;
       }
     },
@@ -154,15 +156,15 @@
         },
         deep: true
       },
-      isShowGoodsList () {
+      isShowGoodsList() {
         this.queryOrderList(this.pager.currentPage);
       }
     },
-    mounted () {
+    mounted() {
       this.queryOrderList();
     },
     methods: {
-      queryOrderList (pageNo) { // 得到需求分配列表
+      queryOrderList(pageNo) { // 得到需求分配列表
         this.orderList = [];
         this.pager.currentPage = pageNo;
         this.loadingData = true;
@@ -179,13 +181,13 @@
         });
         this.queryCount(params);
       },
-      queryCount (params) {
+      queryCount(params) {
         http.get('/erp-receipt/order/count', {params}).then(res => {
           this.receiptType[0].num = this.obtionStatusNum(res.data['out-pov-receipt']);
           this.receiptType[1].num = this.obtionStatusNum(res.data['out-complete']);
         });
       },
-      refreshOrder () {
+      refreshOrder() {
         this.currentOrderId = '';
         this.queryOrderList(this.pager.currentPage);
       },
@@ -195,21 +197,21 @@
         }
         return num;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showRight = false;
         this.showDetailRight = false;
       },
-      showPart (item) {
+      showPart(item) {
         this.currentItem = item;
         this.currentOrderId = item.id;
         this.showRight = true;
       },
-      showDetailPart (item) {
+      showDetailPart(item) {
         this.currentItem = item;
         this.currentOrderId = item.id;
         this.showDetailRight = true;
       },
-      checkStatus (item, key) {
+      checkStatus(item, key) {
         this.activeStatus = key;
         this.filters.status = item.state;
       },

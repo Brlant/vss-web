@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -67,8 +66,6 @@
 
   }
 
-
-
   .ml15 {
     margin-left: 40px;
   }
@@ -76,7 +73,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -121,7 +117,7 @@
   import {receipt} from '@/resources';
 
   export default {
-    data () {
+    data() {
       return {
         form: {
           payerId: ''
@@ -134,7 +130,7 @@
       };
     },
     methods: {
-      queryPOVs (query) {
+      queryPOVs(query) {
         // this.povs = [];
         // let params = {
         //   keyWord: query
@@ -143,7 +139,7 @@
         //   this.povs = res.data.list;
         // });
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;

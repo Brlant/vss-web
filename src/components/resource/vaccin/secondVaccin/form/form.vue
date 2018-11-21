@@ -175,10 +175,10 @@
           <template slot="prepend">￥</template>
         </oms-input>
       </el-form-item>
-      <el-form-item label="库存上限" prop="inventoryUpperLimit">
+      <el-form-item label="库存上限">
         <oms-input type="number" :min="0" v-model.number="form.inventoryUpperLimit" placeholder="请输入库存上限"></oms-input>
       </el-form-item>
-      <el-form-item label="库存下限" prop="inventoryLowerLimit">
+      <el-form-item label="库存下限">
         <oms-input type="number" :min="0" v-model.number="form.inventoryLowerLimit" placeholder="请输入库存下限"></oms-input>
       </el-form-item>
       <el-form-item label="是否计价">
@@ -317,10 +317,10 @@
     mounted: function () {
     },
     computed: {
-      typeId () {
+      typeId() {
         return this.$getDict('typeId');
       },
-      storageCondition () {
+      storageCondition() {
         return this.$getDict('storageCondition');
       },
       showTitle() {
@@ -330,10 +330,10 @@
         }
         return tilet;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
@@ -358,7 +358,7 @@
           this.selectGoodsList = this.form.combinationList;
 //          this.otherGoodsList = [];
 //          this.getCombinationGoods();
-         this.getOmsGoods(val.goodsDto.name);
+          this.getOmsGoods(val.goodsDto.name);
 //          this.filterOrg(val.salesFirmName);
         } else {
 //          this.queryCombinationGoods();
@@ -429,14 +429,14 @@
         }
       },
       getOmsGoods: function (keyWord) {// 得到单位疫苗列表
-          let params = {
-            keyWord: keyWord,
-            availabilityStatus: true
-          };
-          SuccessfulBidder.queryInfo(params).then(res => {
-            this.goodsList = res.data;
-            // this.getGoodsType(this.form.goodsId);
-          });
+        let params = {
+          keyWord: keyWord,
+          availabilityStatus: true
+        };
+        SuccessfulBidder.queryInfo(params).then(res => {
+          this.goodsList = res.data;
+          // this.getGoodsType(this.form.goodsId);
+        });
 //        }
       },
       queryCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
@@ -460,7 +460,7 @@
           this.filterSelectGoodsList(list);
         });
       },
-      filtersCombinationGoods () {// 过滤已有的单位疫苗和本身
+      filtersCombinationGoods() {// 过滤已有的单位疫苗和本身
         let array = [];
         let isNotSame = false;
         this.invariantOtherGoodslist.forEach(tItem => {
@@ -489,13 +489,13 @@
           }
         });
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice);
         this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice);
         this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice);
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
-      remove () {
+      remove() {
         this.$confirm('确认删除该信息?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

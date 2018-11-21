@@ -55,7 +55,7 @@
 
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         outReport: {},
@@ -71,7 +71,7 @@
       };
     },
     computed: {
-      currentWidth () {
+      currentWidth() {
         let length = this.outReport.map && this.outReport.map.firstLine.length || 0;
         if (!length) return 150;
         if (length > 0 && length < 8) return `${1080 / length}`;
@@ -82,7 +82,7 @@
       }
     },
     watch: {
-      '$route.meta.type' () {
+      '$route.meta.type'() {
         this.resetSearchForm();
       }
     },

@@ -38,7 +38,7 @@
                 </perm>
               </el-col>
               <el-col :span="6" class="text-right">
-                  <span >
+                  <span>
                     <span class="btn-search-toggle open" v-show="showSearch">
                         <single-input v-model="filters.keyWord" placeholder="请输入名称搜索"
                                       :showFocus="showSearch"></single-input>
@@ -102,10 +102,10 @@
   </div>
 </template>
 <script>
-  import { cerpAccess, cerpAction } from '@/resources';
+  import {cerpAccess, cerpAction} from '@/resources';
 
   export default {
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: false,
@@ -124,7 +124,7 @@
         doing: false
       };
     },
-    mounted () {
+    mounted() {
       this.getCDCPage(1);
     },
     watch: {
@@ -136,7 +136,7 @@
       }
     },
     methods: {
-      bindDistrict () {
+      bindDistrict() {
         if (!this.orgId) {
           this.$notify.info({
             message: '请选择疾控'
@@ -161,7 +161,7 @@
           });
         });
       },
-      bindAll () {
+      bindAll() {
         this.$confirm('是否一键绑定区疾控和接种点', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -195,10 +195,10 @@
           this.filterAvaliableCDCs();
         });
       },
-      filterAvaliableCDCs () {
+      filterAvaliableCDCs() {
         this.showOrgList = this.orgList.filter(f => !this.CDCs.some(s => f.id === s.subordinateId));
       },
-      getCDCPage (pageNo) { // 得到波次列表
+      getCDCPage(pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
@@ -212,7 +212,7 @@
           this.filterAvaliableCDCs();
         });
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.$confirm('是否删除疾控 "' + item.subordinateName + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

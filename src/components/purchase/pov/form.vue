@@ -145,9 +145,12 @@
             </div>
             <el-row class="mt-10 text-right">
               <el-button-group>
-                <el-button plain @click="updateItem(--index)" :disabled="index === 0"><i class="el-icon-d-arrow-left"></i>上一条</el-button>
+                <el-button plain @click="updateItem(--index)" :disabled="index === 0"><i
+                  class="el-icon-d-arrow-left"></i>上一条
+                </el-button>
                 <el-button plain @click="updateItem(++index)" :disabled="index === TotalAllocationList.length - 1">
-                  <i class="el-icon-d-arrow-right"></i>下一条</el-button>
+                  <i class="el-icon-d-arrow-right"></i>下一条
+                </el-button>
                 <el-button plain @click="$emit('close')"><i class="el-icon-circle-close-outline"></i>关闭</el-button>
               </el-button-group>
             </el-row>
@@ -159,7 +162,7 @@
 
 </template>
 <script>
-  import { demandAssignment } from '@/resources';
+  import {demandAssignment} from '@/resources';
 
   export default {
     props: {
@@ -167,7 +170,7 @@
       status: Number,
       TotalAllocationList: Array
     },
-    data () {
+    data() {
       return {
         loadingData: false,
         allocationList: [],
@@ -176,13 +179,13 @@
       };
     },
     watch: {
-      currentItem (val) {
+      currentItem(val) {
         this.index = this.TotalAllocationList.indexOf(val);
         this.queryAllocationList();
       }
     },
     methods: {
-      queryAllocationList () { // 得到需求分配列表
+      queryAllocationList() { // 得到需求分配列表
         this.allocationList = [];
         this.loadingData = true;
         let params = {};
@@ -197,11 +200,11 @@
           this.loadingData = false;
         });
       },
-      updateItem (index) {
+      updateItem(index) {
         console.log(index);
         this.$emit('updateItem', this.TotalAllocationList[index]);
       },
-      submit (item) {
+      submit(item) {
         if (typeof item.actualCount !== 'number') return;
         if (item.actualCount < 0) {
           this.$notify.info({

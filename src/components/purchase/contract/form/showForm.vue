@@ -25,10 +25,10 @@
       left: $leftWidth;
     }
   }
+
   .el-form .el-select {
     display: block;
   }
-
 
   .order-product-box {
     position: relative;
@@ -73,7 +73,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -136,7 +135,8 @@
         <h3>{{currentPartName}}</h3>
 
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-          <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false" label-width="160px" style="padding-right: 20px">
+          <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
+                   label-width="160px" style="padding-right: 20px">
             <el-form-item label="合同名称">
               {{form.purchaseContractName}}
             </el-form-item>
@@ -358,7 +358,7 @@
           });
         });
       },
-      resetForm () {
+      resetForm() {
         this.form = {
           'purchaseContractNo': '',
           'purchaseContractName': '',
@@ -409,7 +409,7 @@
           });
         });
       },
-      exportExcel () {
+      exportExcel() {
         this.isPrinting = true;
         this.$http.get(`/contract-print/${this.orderId}`).then(res => {
           utils.download(res.data.url, '采购合同');

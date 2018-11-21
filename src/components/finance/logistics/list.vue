@@ -1,4 +1,3 @@
-
 <template>
   <div class="order-page">
     <div class="container">
@@ -144,10 +143,10 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, http, Vaccine } from '@/resources';
+  import {BaseInfo, http, Vaccine} from '@/resources';
 
   export default {
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: false,
@@ -171,11 +170,11 @@
         totalBill: {}
       };
     },
-    mounted () {
+    mounted() {
       this.queryBillPage(1);
     },
     methods: {
-      queryBillPage (pageNo) {
+      queryBillPage(pageNo) {
         this.pager.currentPage = pageNo;
         let params = {};
         this.loadingData = true;
@@ -190,13 +189,13 @@
         });
         this.queryTotal(params);
       },
-      queryTotal (params) {
+      queryTotal(params) {
         this.totalBill = {};
         http.get('/factory-reconciliation/providers/statistics/', {params}).then(res => {
           this.totalBill = res.data;
         });
       },
-      filterFactory (query) { // 查询厂商
+      filterFactory(query) { // 查询厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = {
           keyWord: query,
@@ -231,7 +230,7 @@
         });
         this.queryBillPage(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

@@ -216,7 +216,7 @@
         default: 'accessory'
       }
     },
-    data () {
+    data() {
       return {
         dialogFormVisible: false,
         form: {},
@@ -244,13 +244,13 @@
 //        }
         return isShow && this.isShowUpload;
       },
-      objId () {
+      objId() {
         let id = '';
         if (this.currentOrder.id) id = this.currentOrder.id;
         if (this.objectId) id = this.objectId;
         return id;
       },
-      currentAttachmentRight () {
+      currentAttachmentRight() {
         return Object.assign({upload: '', watch: '', download: '', remove: ''}, this.attachmentRight);
       }
     },

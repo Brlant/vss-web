@@ -1,4 +1,3 @@
-
 <template>
   <div class="order-page">
     <div class="container">
@@ -10,7 +9,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="接种时间" :span="6">
@@ -81,7 +81,7 @@
           <div class="order-list-item order-list-item-bg" v-for="item in CDCs" :key="">
             <el-row>
               <el-col :span="4" class="R pt10">
-                  {{ item.actualTime | minute}}
+                {{ item.actualTime | minute}}
               </el-col>
               <el-col :span="10" class="R pt10">
                 <div>
@@ -113,8 +113,9 @@
 </template>
 <script>
   import {VaccineRights} from '@/resources';
+
   export default {
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: true,
@@ -139,7 +140,7 @@
         doing: false
       };
     },
-    mounted () {
+    mounted() {
       this.getRecordPage(1);
     },
     watch: {
@@ -151,7 +152,7 @@
       }
     },
     methods: {
-      getRecordPage (pageNo) { // 得到波次列表
+      getRecordPage(pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,

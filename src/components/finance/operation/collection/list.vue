@@ -299,17 +299,17 @@
         statusNum: null
       };
     },
-    mounted () {
+    mounted() {
       this.getBillList(1);
     },
     computed: {
-      type () {
+      type() {
         return this.$route.meta.type;
       },
-      perms () {
+      perms() {
         return this.$route.meta.perms;
       },
-      orgType () {
+      orgType() {
         let ary = this.type === 1 ? {
           0: {'title': '待审核', status: '0', num: ''},
           1: {'title': 'CDC待确认', status: '1', num: ''},
@@ -337,7 +337,7 @@
         },
         deep: true
       },
-      type () {
+      type() {
         this.getBillList(1);
         this.filterOrg();
         this.searchCondition.orgId = '';

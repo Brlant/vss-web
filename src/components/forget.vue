@@ -92,7 +92,7 @@
 </template>
 
 <script>
-  import {User, http} from '../resources';
+  import {http, User} from '../resources';
 
   const timeInterval = 60;
   let phoneReg = /^1[0-9]{10}$/;

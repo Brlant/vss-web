@@ -214,11 +214,11 @@
         height = (height + 50);
         return height;
       },
-      type () {
+      type() {
         return this.$route.meta.type;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
     },
     watch: {
@@ -236,7 +236,7 @@
         },
         deep: true
       },
-      type () {
+      type() {
         this.showTypeList = [];
         this.currentItem = {};
         this.dataRows = [];
@@ -266,7 +266,7 @@
           });
         });
       },
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       resetRightBox: function () {

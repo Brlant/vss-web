@@ -102,7 +102,7 @@
         type: Object
       }
     },
-    data () {
+    data() {
       return {
         attachmentIdList: [],
         form: {}
@@ -111,7 +111,7 @@
     computed: {},
     watch: {
       formItem: {
-        handler (val) {
+        handler(val) {
           this.form = val;
           this.getFileList();
         }

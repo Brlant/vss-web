@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -78,6 +77,7 @@
   .productItem-info {
     float: left;
   }
+
   .ar {
     text-align: right;
   }
@@ -125,7 +125,7 @@
   import utils from '../../../tools/utils';
 
   export default {
-    data () {
+    data() {
       return {
         form: {
           orgId: '',
@@ -185,7 +185,7 @@
       formatPrice: function () {// 格式化单价，保留两位小数
         this.form.price = utils.autoformatDecimalPoint(this.form.price);
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;

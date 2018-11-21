@@ -73,7 +73,8 @@
                 <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="queryVaccines"
                            :clearable="true"
                            v-model="vaccineId">
-                  <el-option :value="item.orgGoodsDto.goodsId" :key="item.orgGoodsDto.goodsId" :label="item.orgGoodsDto.name"
+                  <el-option :value="item.orgGoodsDto.goodsId" :key="item.orgGoodsDto.goodsId"
+                             :label="item.orgGoodsDto.name"
                              v-for="item in vaccines"></el-option>
                 </el-select>
               </el-col>
@@ -138,7 +139,7 @@
 
 </template>
 <script>
-  import { Vaccine, VaccineRights } from '@/resources';
+  import {Vaccine, VaccineRights} from '@/resources';
 
   export default {
     data: function () {
@@ -181,7 +182,7 @@
         return this.$store.state.bodyHeight;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
     },
     watch: {
@@ -190,7 +191,7 @@
         this.orgName = '';
         this.getOrgsList();
       },
-      keyWord () {
+      keyWord() {
         this.pickTypeList();
       }
     },
@@ -229,7 +230,7 @@
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
       },
-      queryVaccines (query) {
+      queryVaccines(query) {
         let params = Object.assign({}, {
           keyWord: query
         });
@@ -262,7 +263,7 @@
           });
         });
       },
-      bindVaccine () {
+      bindVaccine() {
         let form = {
           'goodsId': this.vaccineId,
           'povId': this.currentItem.id

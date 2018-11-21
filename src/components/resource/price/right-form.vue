@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -119,7 +118,7 @@
     props: {
       formItem: Object
     },
-    data () {
+    data() {
       return {
         form: {
           detailId: '',
@@ -135,7 +134,7 @@
       formatPrice: function () {// 格式化单价，保留两位小数
         this.form.paymentAmount = utils.autoformatDecimalPoint(this.form.paymentAmount);
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['form'].validate((valid) => {
           if (!valid) {
             return false;

@@ -44,9 +44,9 @@
         </el-form>
       </div>
       <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary border
-                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable"  :maxHeight="getHeight">
-        <el-table-column prop="orgGoodsName" label="疫苗名称"  :sortable="true"></el-table-column>
-        <el-table-column prop="count" label="配送数量" :sortable="true"  width="200"></el-table-column>
+                :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable" :maxHeight="getHeight">
+        <el-table-column prop="orgGoodsName" label="疫苗名称" :sortable="true"></el-table-column>
+        <el-table-column prop="count" label="配送数量" :sortable="true" width="200"></el-table-column>
         <el-table-column prop="measurementUnit" label="基本单位" width="160" :sortable="true"></el-table-column>
       </el-table>
     </div>
@@ -54,12 +54,12 @@
   </div>
 </template>
 <script>
-  import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
   import ReportMixin from '@/mixins/reportMixin';
+
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         reportList: [],
@@ -102,7 +102,7 @@
           });
         });
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {

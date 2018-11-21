@@ -170,7 +170,7 @@
 </template>
 <script>
   import utils from '@/tools/utils';
-  import { Address, LogisticsCenter } from '@/resources';
+  import {Address, LogisticsCenter} from '@/resources';
 
   export default {
     props: {
@@ -181,7 +181,7 @@
         }
       }
     },
-    data () {
+    data() {
       return {
         span: 6,
         warehouses: [],
@@ -189,22 +189,22 @@
       };
     },
     computed: {
-      bizTypeList () {
+      bizTypeList() {
         return this.$getDict('bizOutType');
       },
-      transportationMeansList () {
+      transportationMeansList() {
         return this.$getDict('outTransportMeans');
       },
-      transportationConditionList () {
+      transportationConditionList() {
         return this.$getDict('transportationCondition');
       },
-      shipmentPackingUnit () {
+      shipmentPackingUnit() {
         return this.$getDict('shipmentPackingUnit');
       },
-      measurementUnitList () {
+      measurementUnitList() {
         return this.$getDict('measurementUnit');
       },
-      orgRelationList () {
+      orgRelationList() {
         return this.$getDict('orgRelation');
       },
       totalMoney: function () {
@@ -215,12 +215,12 @@
         });
         return totalMoney;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      currentOrder (val) {
+      currentOrder(val) {
         if (!val.id) return;
         this.searchWarehouses();
         this.filterLogisticsCenter();
@@ -235,7 +235,7 @@
 //      getWarehouseAdress: function (item) { // 得到仓库地址
 //        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
 //      },
-      searchWarehouses () {
+      searchWarehouses() {
         if (!this.currentOrder.customerId) {
           this.warehouses = [];
           return;
