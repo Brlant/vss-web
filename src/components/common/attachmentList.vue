@@ -20,11 +20,12 @@
     align-items: center;
     justify-content: space-between;
   }
+
 </style>
 <template>
   <div>
     <ul class="show-list">
-      <li class="list-item list_flex" v-for="attachment in attachmentList" @click="handlePreview(attachment)">
+      <li class="list-item list_flex list-item_pointer" v-for="attachment in attachmentList" @click="handlePreview(attachment)">
         <div class="attachment-name">
           <el-tooltip effect="dark" :content="attachment.attachmentFileName" placement="top">
             <span>
@@ -84,7 +85,7 @@
       },
       permission: {
         type: String,
-        default: ''
+        default: 'show'
       },
       deletePermission: {
         type: String,
