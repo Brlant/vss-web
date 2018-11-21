@@ -55,6 +55,7 @@
   import {Auth, cerpAction} from '../resources';
   import AppFooter from './common/app.footer.vue';
   import {base64} from '@dtop/dtop-web-common';
+
   export default {
     components: {
       AppFooter
@@ -98,6 +99,7 @@
             userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
             userCopy.username = this.trim(this.user.username);
             userCopy.encryptionPsw = base64(userCopy.password);
+            delete userCopy.password;
             Auth.login(userCopy).then(response => {
               if (!response.data) return;
               let userId = window.localStorage.getItem('userId');
