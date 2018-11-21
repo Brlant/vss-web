@@ -18,8 +18,7 @@
       <oms-loading :loading="!currentOrder.id"></oms-loading>
     </div>
     <div v-else="" class="page-main-body padding">
-
-      <div v-if="currentOrder.state === '0' " class="confirm-order">
+      <div>
         <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2-2' ">
           <el-col :span="12">
             <oms-row label="货主订单号" :span="span">
@@ -28,60 +27,10 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-          </el-col>
-          <el-col :span="12">
-            <oms-row label="业务类型">
-              <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
+            <oms-row label="运输方式" :span="span" v-show="isCdc">
+              <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
-            <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | minute}}</span>
-            </oms-row>
-            <oms-row label="订单状态">
-              {{ getOrderStatus(currentOrder) }}
-            </oms-row>
-          </el-col>
-        </el-row>
-        <el-form ref="orderAddForm" :rules="rules" :model="currentOrder"
-                 label-width="160px" style="padding-right: 20px">
-          <el-form-item label="运输条件" prop="transportationCondition">
-            <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
-              <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in transportationConditionList"></el-option>
-            </el-select>
-          </el-form-item>
-          <!--<el-form-item label="预计出库时间" prop="transportationMeansId">-->
-          <!--<el-date-picker-->
-          <!--v-model="currentOrder.expectedTime"-->
-          <!--placeholder="请选择日期" format="yyyy-MM-dd"-->
-          <!--value-format="timestamp">-->
-          <!--</el-date-picker>-->
-          <!--</el-form-item>-->
-          <el-form-item label="疾控仓库地址" prop="orgAddress">
-            <el-select placeholder="请选择疾控仓库地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
-              <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
-                         v-for="item in LogisticsCenter">
-                <span class="pull-left">{{ item.name }}</span>
-                <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!--<material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>-->
-          <el-form-item label="备注" class="clearfix">
-            <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
-                       :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-else="">
-        <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2-2' ">
-          <el-col :span="12">
-            <oms-row label="货主订单号" :span="span">
-              {{currentOrder.orderNo}}
-            </oms-row>
-            <oms-row label="货主" :span="span">
-              {{currentOrder.orgName}}
-            </oms-row>
-            <oms-row label="运输条件" :span="span">
+            <oms-row label="报损方式" :span="span" v-show="!isCdc">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
           </el-col>
@@ -106,7 +55,7 @@
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
-          <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
+          <oms-row :label="remarkTitle" :span="4">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 
@@ -266,6 +215,18 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      breakageOrgType() {
+        return this.$store.state.breakageOrgType;
+      },
+      orgType() {
+        return this.$store.state.orgLevel;
+      },
+      remarkTitle() {
+        return this.isCdc ? '备注' : '报损原因';
+      },
+      isCdc() { // 单位类型,是否是疾控
+        return this.orgType !== this.breakageOrgType[2];
       }
     },
     watch: {
