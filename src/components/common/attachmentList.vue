@@ -1,13 +1,15 @@
 <style lang="scss" scoped>
   .list-item {
     position: relative;
-    line-height: 25px;
+    line-height: 20px;
     padding-top: 0;
     padding-bottom: 0;
     border: 0;
+
     .download-link {
       display: none;
     }
+
     &:hover .download-link {
       display: block;
     }
@@ -101,7 +103,6 @@
         },
         attachmentList: [],
         perm: this.permission,
-        updatePerm: this.updatePermission,
         dialogFormVisible: false,
         form: {},
         formLabelWidth: '120px',

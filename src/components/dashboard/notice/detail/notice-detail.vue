@@ -77,7 +77,7 @@
           <el-col :span="2" class="attachment-title">附件:</el-col>
           <el-col :span="22">
             <attachment-lists :attachmentIdList="attachmentIdList" :objectId="form.noticeId"
-                              :objectType="'notice'"></attachment-lists>
+                              :objectType="'notice'" :permission="'erp-order-document-download'"></attachment-lists>
           </el-col>
         </el-row>
         <el-row>
