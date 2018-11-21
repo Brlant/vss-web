@@ -13,6 +13,10 @@
     &:hover .download-link {
       display: block;
     }
+
+    &.list-item_pointer{
+      cursor: pointer;
+    }
   }
 
   .list_flex {
@@ -20,6 +24,8 @@
     align-items: center;
     justify-content: space-between;
   }
+
+
 
 </style>
 <template>
