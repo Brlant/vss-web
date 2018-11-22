@@ -5,10 +5,12 @@
       width: $leftWidth;
       text-align: center;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -40,6 +42,24 @@
             <perm :label="vaccineType === '1'?'purchasing-order-cancel': 'second-vaccine-purchasing-order-cancel' "
                   v-show="currentOrder.state === '6'">
               <el-button type="danger" plain @click="deleteOrder">删除订单</el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm
+              :label="vaccineType === '1'?'purchasing-order-export-scrap-stock': 'second-vaccine-purchasing-order-export-scrap-stock' ">
+              <el-button type="primary" @click="exportScrapStockInfo" style="width: 160px;padding: 10px 10px"
+                         :loading="printing">
+                {{printing ? '正在导出' : '导出待报废库存登记表'}}
+              </el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm
+              :label="vaccineType === '1'?'purchasing-order-export-scrap-stock-transport': 'second-vaccine-purchasing-order-export-scrap-stock-transport' ">
+              <el-button type="primary" @click="exportScrapStockTransportInfo"
+                         style="width: 160px;padding: 10px 10px" :loading="printingTransport">
+                {{printingTransport ? '正在导出' : '导出待报废疫苗转运单'}}
+              </el-button>
             </perm>
           </li>
         </ul>
@@ -74,6 +94,7 @@
   import log from '@/components/common/order.log.vue';
   import {erpOrder, http, InWork} from '@/resources';
   import CancelOrder from '@/components/common/order/cancel-order';
+  import utils from '@/tools/utils';
 
   export default {
     components: {
@@ -91,7 +112,9 @@
       return {
         currentOrder: {},
         index: 0,
-        title: ''
+        title: '',
+        printing: false,
+        printingTransport: false
       };
     },
     computed: {
@@ -128,6 +151,30 @@
       }
     },
     methods: {
+      exportScrapStockInfo: function () {
+        this.printing = true;
+        this.$http.get(`erp-order/${this.currentOrder.id}/scrap-stock`, {}).then(res => {
+          utils.download(res.data.path, '导出待报废库存登记表');
+          this.printing = false;
+        }).catch(error => {
+          this.printing = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      exportScrapStockTransportInfo: function () {
+        this.printingTransport = true;
+        this.$http.get(`erp-order/${this.currentOrder.id}/scrap-stock-transport`, {}).then(res => {
+          utils.download(res.data.path, '导出待报废疫苗转运单');
+          this.printingTransport = false;
+        }).catch(error => {
+          this.printingTransport = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
       queryOrderDetail() {
         if (!this.orderId) return false;
         this.currentOrder = {};
