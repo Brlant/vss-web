@@ -173,7 +173,8 @@
             </el-form-item>
 
             <el-form-item label="报损方式" prop="transportationCondition" v-if="!isCdc">
-              <el-select type="text" placeholder="报损方式" v-model="form.transportationCondition">
+              <el-select type="text" placeholder="报损方式" v-model="form.transportationCondition"
+                         @change="transportationConditionChange">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
                            v-for="item in breakageType"></el-option>
               </el-select>
@@ -507,13 +508,13 @@
             {required: true, message: '请选择疾控发货地址', trigger: 'change'}
           ],
           transportationCondition: [
-            {required: true, message: '请选择运输条件', trigger: 'blur'}
+            {required: true, message: '请选择运输条件', trigger: 'change'}
           ],
           expectedTime: [
             {required: true, message: '请选择日期', trigger: 'change'}
           ],
           remark: [
-            {required: true, message: '请输入报损原因', trigger: 'blur'}
+            {required: true, message: '请输入报损原因', trigger: ['change', 'blur']}
           ]
         },
         orderGoodsRules: {
@@ -962,6 +963,9 @@
       },
       setIsHasBatchNumberInfo(val) {
         this.isHasBatchNumberInfo = val;
+      },
+      transportationConditionChange(val) {
+        this.form.remark = '';
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
         this.accessoryList = [];
