@@ -31,7 +31,7 @@
               <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
             <oms-row label="报损方式" :span="span" v-show="!isCdc">
-              <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
+              <dict :dict-group="'breakageType'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
           </el-col>
           <el-col :span="12">
@@ -221,6 +221,9 @@
       },
       orgType() {
         return this.$store.state.orgLevel;
+      },
+      breakageType() { // 报损方式
+        return this.$getDict('breakageType');
       },
       remarkTitle() {
         return this.isCdc ? '备注' : '报损原因';
