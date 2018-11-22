@@ -18,10 +18,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -38,15 +40,18 @@
     border-radius: 10px;
     font-size: 12px;
     line-height: 26px;
+
     .product-info-fix {
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
       margin-bottom: 10px;
     }
+
     &:hover {
       border-color: #aaa
     }
+
     .product-remove {
       position: absolute;
       right: 0;
@@ -57,10 +62,12 @@
       text-align: center;
       cursor: pointer;
       color: #666;
+
       &:hover {
         color: #333
       }
     }
+
     .order-goods-info {
       .col-label {
         padding-top: 4px;
@@ -164,10 +171,18 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="运输条件" prop="transportationCondition">
-              <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationCondition">
+
+            <el-form-item label="报损方式" prop="transportationCondition" v-if="!isCdc">
+              <el-select type="text" placeholder="报损方式" v-model="form.transportationCondition">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationConditionList"></el-option>
+                           v-for="item in breakageType"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="运输方式" prop="transportationMeansId" v-if="isCdc && isEntrustWarehouse">
+              <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationMeansId">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in transportationMeansList" v-show="item.key <= 1"></el-option>
               </el-select>
             </el-form-item>
             <!--<el-form-item label="是否进口">-->
@@ -184,9 +199,19 @@
             <!--</el-date-picker>-->
             <!--</el-form-item>-->
             <!--<material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>-->
-            <el-form-item label="备注" class="clearfix">
+            <el-form-item label="备注" v-if="isCdc">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
+            <el-form-item label="报损原因" prop="remark" v-if="isPovBreakage && !isCdc">
+              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
+                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            </el-form-item>
+            <el-form-item label="报损原因" prop="remark" v-if="!isPovBreakage && !isCdc">
+              <el-select type="text" placeholder="请选择报损原因" v-model="form.remark">
+                <el-option :value="item.label" :key="item.key" :label="item.label"
+                           v-for="item in breakageReason"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label-width="160px">
               <el-button type="primary" @click="index++">添加疫苗</el-button>
@@ -289,10 +314,11 @@
               <table class="table">
                 <thead>
                 <tr>
-                  <th style="width: 240px">疫苗名称</th>
+                  <th style="width: 200px">疫苗名称</th>
                   <th>规格</th>
                   <th>批号</th>
-                  <th>疫苗单价</th>
+                  <th>有效期</th>
+                  <th>单价</th>
                   <th style="width: 70px">疫苗数量</th>
                   <th>金额</th>
                   <th style="width: 60px">操作</th>
@@ -314,6 +340,9 @@
                   <td>
                     {{ product.no ? product.no : '无' }}
                     <el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>
+                  </td>
+                  <td>
+                    {{ product.expirationDate | date}}
                   </td>
                   <td class="ar">
                    <span v-show="Number(product.unitPrice)">
@@ -460,7 +489,7 @@
             {required: true, message: '请选择业务类型', trigger: 'change'}
           ],
           transportationMeansId: [
-            {required: true, message: '请选择物流方式', trigger: 'change'}
+            {required: true, message: '请选择运输方式', trigger: 'change'}
           ],
           transportationAddress: [
             {required: true, message: '请选择接种点收货地址', trigger: 'change'}
@@ -556,6 +585,33 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      breakageOrgType() { // 单位类型 0疾控 1pov
+        return this.$store.state.breakageOrgType;
+      },
+      orgType() { // 当前单位类型
+        return this.$store.state.orgLevel;
+      },
+      breakageReason() { // 报损原因
+        return this.$getDict('breakageReason');
+      },
+      breakageType() { // 报损方式
+        return this.$getDict('breakageType');
+      },
+      isPovBreakage() { // pov自行报损
+        return this.form.transportationCondition === '0';
+      },
+      isEntrustWarehouse() {
+        let status = false;
+        this.LogisticsCenter.forEach(i => {
+          if (i.id === this.form.orgAddress) {
+            status = i.warehouseType;
+          }
+        });
+        return status === '0';
+      },
+      isCdc() { // 单位类型,是否是疾控
+        return this.orgType !== this.breakageOrgType[2];
       }
     },
     watch: {
@@ -610,8 +666,8 @@
         return name + this.getWarehouseAdress(item);
       },
       setDefaultValue() {
-        this.form.transportationMeansId = '0';
-        this.form.transportationCondition = '0';
+        // this.form.transportationMeansId = '0';
+        // this.form.transportationCondition = '0';
       },
       getTitle() {
         return `${this.defaultIndex === 2 ? '编辑' : '增加'}报损出库`;
@@ -991,6 +1047,7 @@
                         let product = JSON.parse(JSON.stringify(this.product));
                         product.batchNumberId = bl.id;
                         product.no = bl.no;
+                        product.expirationDate = bl.expirationDate;
                         product.amount = bl.productCount;
                         product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
                         this.form.detailDtoList.push(product);
@@ -1007,6 +1064,7 @@
                           if (bl.isChecked) {
                             this.form.detailDtoList.push({
                               no: bl.no,
+                              expirationDate: bl.expirationDate,
                               batchNumberId: bl.id,
                               mainOrgId: item.orgGoodsDto.id,
                               isCombination: true,

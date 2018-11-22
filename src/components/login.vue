@@ -54,6 +54,7 @@
 <script>
   import {Auth, cerpAction} from '../resources';
   import AppFooter from './common/app.footer.vue';
+  import {base64} from '@dtop/dtop-web-common';
 
   export default {
     components: {
@@ -97,7 +98,8 @@
             let userCopy = JSON.parse(JSON.stringify(this.user));
             userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
             userCopy.username = this.trim(this.user.username);
-            // userCopy.password = Base64.encode(userCopy.password);
+            userCopy.encryptionPsw = base64(userCopy.password);
+            delete userCopy.password;
             Auth.login(userCopy).then(response => {
               if (!response.data) return;
               let userId = window.localStorage.getItem('userId');

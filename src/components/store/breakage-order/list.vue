@@ -5,12 +5,15 @@
     width: 800px;
     padding: 30px 0;
     overflow: auto;
+
     .title {
       margin-left: 30px;
     }
+
     .order-info-part {
       padding: 0 50px;
     }
+
     .goods-info-left {
       width: 330px;
       margin-left: 30px;
@@ -20,22 +23,27 @@
       border-top-left-radius: 4px;
       border-bottom-left-radius: 4px;
     }
+
     .goods-info-right {
       width: 210px;
       padding: 32px 20px 33px 20px;
       background-color: rgb(238, 238, 238);
       border: 1px solid rgb(238, 238, 238);
       float: left;
+
       .el-row {
         margin-bottom: 5px;
       }
+
       margin-bottom: 20px;
     }
+
     .min-gutter {
       .el-form-item {
         margin-bottom: 4px;
       }
     }
+
     .border-show {
       height: 15px;
       width: 100%;
@@ -60,8 +68,10 @@
       line-height: 20px;
       cursor: pointer;
     }
+
     border-collapse: separate;
     border-spacing: 0;
+
     > tbody > tr > td {
       border-top: 1px solid #eee;
     }
@@ -191,9 +201,9 @@
           <el-col :span="8">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
           <!--<el-col :span="5">接种点</el-col>-->
-          <el-col :span="7">时间</el-col>
+          <el-col :span="5">时间</el-col>
           <el-col :span="2">状态</el-col>
-          <el-col :span="3" class="opera-btn" v-if="filters.state < 4 ">操作</el-col>
+          <el-col :span="5" class="opera-btn" v-if="filters.state < 4 ">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -227,7 +237,7 @@
               <!--<el-col :span="5">-->
               <!--<div>{{item.transactOrgName }}</div>-->
               <!--</el-col>-->
-              <el-col :span="7">
+              <el-col :span="5">
                 <div>下单：{{item.createTime | minute }}</div>
                 <!--<div>预计出库：{{ item.expectedTime | date }}</div>-->
               </el-col>
@@ -236,14 +246,21 @@
                   {{getOrderStatus(item)}}
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state < 4">
+              <el-col :span="5" class="opera-btn" v-if="filters.state < 4">
+                <perm label="breakage-order-review-code" v-show="filters.state === '1'">
+                  <span @click.stop.prevent="scan(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="el-icon-t-scan"></i></a>
+                    扫码复核
+                  </span>
+                </perm>
                 <perm label="breakage-order-edit"
                       v-show="filters.state === '0' || filters.state === '1'">
-              <span @click.stop.prevent="editOrder(item)">
-                <a href="#" class="btn-circle" @click.prevent=""><i
-                  class="el-icon-t-edit"></i></a>
-                编辑
-              </span>
+                  <span @click.stop.prevent="editOrder(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="el-icon-t-edit"></i></a>
+                    编辑
+                  </span>
                 </perm>
               </el-col>
             </el-row>
@@ -269,6 +286,13 @@
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showItemRight" @right-close="beforeCloseConfirm" :css="{'width':'1000px','padding':0}">
+      <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
+                @close="resetRightBox"></add-form>
+    </page-right>
+    <page-right :show="showScanRight" :css="{'width':'800px','padding':0}" @right-close="resetRightBox">
+      <scan-code :orderId="currentOrderId" :show="showScanRight" @close="resetRightBox" @change="onSubmit"></scan-code>
+    </page-right>
   </div>
 </template>
 <script>
@@ -277,15 +301,17 @@
   import addForm from './form/outForm.vue';
   import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
+  import scanCode from './form/scan-code';
 
   export default {
     components: {
-      showForm, addForm
+      showForm, addForm, scanCode
     },
     data: function () {
       return {
         loadingData: true,
         showItemRight: false,
+        showScanRight: false,
         showPart: false,
         showDetail: false,
         showSearch: false,
@@ -355,6 +381,9 @@
       },
       bizInTypes: function () {
         return this.$getDict('bizOutType');
+      },
+      breakageOrgType() {
+        return this.$store.state.breakageOrgType;
       }
     },
     watch: {
@@ -371,6 +400,10 @@
         this.currentOrderId = item.id;
         this.showItemRight = true;
         this.defaultIndex = 2;
+      },
+      scan(item) {
+        this.currentOrderId = item.id;
+        this.showScanRight = true;
       },
       showPartItem(item) {
         this.currentOrderId = item.id;
@@ -429,6 +462,7 @@
         this.defaultIndex = 0;
         this.action = '';
         this.showPart = false;
+        this.showScanRight = false;
         // this.getOrderList(this.pager.currentPage);
         this.$router.push('list');
       },
