@@ -226,7 +226,7 @@
         return this.$getDict('breakageType');
       },
       remarkTitle() {
-        return this.isCdc ? '备注' : '报损原因';
+        return this.isCdc ? '报损原因' : '报损原因';
       },
       isCdc() { // 单位类型,是否是疾控
         return this.orgType !== this.breakageOrgType[2];

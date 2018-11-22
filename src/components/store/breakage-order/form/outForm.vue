@@ -199,9 +199,15 @@
             <!--</el-date-picker>-->
             <!--</el-form-item>-->
             <!--<material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>-->
-            <el-form-item label="备注" v-if="isCdc">
-              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
-                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            <!--<el-form-item label="备注" v-if="isCdc">-->
+            <!--<oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"-->
+            <!--:autosize="{ minRows: 2, maxRows: 5}"></oms-input>-->
+            <!--</el-form-item>-->
+            <el-form-item label="报损原因" prop="remark" v-if="isCdc">
+              <el-select type="text" placeholder="请选择报损原因" v-model="form.remark">
+                <el-option :value="item.label" :key="item.key" :label="item.label"
+                           v-for="item in breakageReason"></el-option>
+              </el-select>
             </el-form-item>
             <el-form-item label="报损原因" prop="remark" v-if="isPovBreakage && !isCdc">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
@@ -507,7 +513,7 @@
             {required: true, message: '请选择日期', trigger: 'change'}
           ],
           remark: [
-            {required: true, message: '请输入备注信息', trigger: 'blur'}
+            {required: true, message: '请输入报损原因', trigger: 'blur'}
           ]
         },
         orderGoodsRules: {
