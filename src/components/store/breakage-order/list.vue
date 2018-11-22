@@ -201,9 +201,9 @@
           <el-col :span="8">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
           <!--<el-col :span="5">接种点</el-col>-->
-          <el-col :span="7">时间</el-col>
+          <el-col :span="5">时间</el-col>
           <el-col :span="2">状态</el-col>
-          <el-col :span="3" class="opera-btn" v-if="filters.state < 4 ">操作</el-col>
+          <el-col :span="5" class="opera-btn" v-if="filters.state < 4 ">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -237,7 +237,7 @@
               <!--<el-col :span="5">-->
               <!--<div>{{item.transactOrgName }}</div>-->
               <!--</el-col>-->
-              <el-col :span="7">
+              <el-col :span="5">
                 <div>下单：{{item.createTime | minute }}</div>
                 <!--<div>预计出库：{{ item.expectedTime | date }}</div>-->
               </el-col>
@@ -246,7 +246,7 @@
                   {{getOrderStatus(item)}}
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state < 4">
+              <el-col :span="5" class="opera-btn" v-if="filters.state < 4">
                 <perm label="breakage-order-review-code" v-show="filters.state === '1'">
                   <span @click.stop.prevent="scan(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
