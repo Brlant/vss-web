@@ -239,6 +239,7 @@
         };
         this.productList.forEach(f => {
           obj.list.push({
+            orderDetailId: f.id,
             batchNumber: f.batchNumber,
             orgGoodsId: f.orgGoodsId,
             totalCount: f.currentAmount
