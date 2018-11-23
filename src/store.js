@@ -23,8 +23,7 @@ const state = {
   bottomLoading: false,
   isShowGoodsList: false,
   windowSize: {width: 1000, height: 500},
-  requestingDictAry: [],
-  breakageOrgType: [1, 2, 3]
+  requestingDictAry: []
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
