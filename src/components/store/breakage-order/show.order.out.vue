@@ -52,8 +52,8 @@
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm
-              :label="'breakage-order-export-scrap-stock' ">
-              <el-button type="primary" @click="exportScrapStockInfo" style="width: 160px;padding: 10px 10px"
+              :label="'breakage-order-export-scrap-stock' " v-show="currentOrder.state !== '0'">
+              <el-button type="primary" plain @click="exportScrapStockInfo" style="width: 160px;padding: 10px 10px"
                          :loading="printing">
                 {{printing ? '正在导出' : '导出待报废库存登记表'}}
               </el-button>
@@ -61,8 +61,8 @@
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm
-              :label="'breakage-order-export-scrap-stock-transport' ">
-              <el-button type="primary" @click="exportScrapStockTransportInfo"
+              :label="'breakage-order-export-scrap-stock-transport' " v-show="currentOrder.state !== '0'">
+              <el-button type="primary" plain @click="exportScrapStockTransportInfo"
                          style="width: 160px;padding: 10px 10px" :loading="printingTransport">
                 {{printingTransport ? '正在导出' : '导出待报废疫苗转运单'}}
               </el-button>
