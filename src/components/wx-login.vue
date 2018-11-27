@@ -1,9 +1,5 @@
 <style lang="scss" scoped="">
   @import "../assets/login.scss";
-
-  .el-icon-t-wx_icon {
-    color: #fff;
-  }
 </style>
 <template>
   <div class="main-box-rap">
@@ -45,19 +41,12 @@
                 {{btnString}} <i class="el-icon-loading" v-show="loading"></i></el-button>
 
             </el-form-item>
-            <el-form-item label-width="80px">
-              <el-button type="success" @click="loginByWx" :disabled="wxLoading" style="display:block;width:100%;"
-                         native-type="submit">
-                <i class="el-icon-t-wx_icon"></i><span>微信登录</span>
-              </el-button>
-            </el-form-item>
           </el-form>
         </div>
       </el-card>
     </div>
     <app-footer></app-footer>
   </div>
-
 </template>
 
 <script>
@@ -80,7 +69,6 @@
           orgCode: window.localStorage.getItem('orgCode') ? JSON.parse(window.localStorage.getItem('orgCode')) : ''
         },
         loading: false,
-        wxLoading: false,
         codeUrl: '',
         showCode: false,
         btnString: '登录',
@@ -110,7 +98,7 @@
             userCopy.username = this.trim(this.user.username);
             userCopy.encryptionPsw = base64(userCopy.password);
             delete userCopy.password;
-            Auth.login(userCopy).then(response => {
+            Auth.wxLogin(userCopy).then(response => {
               if (!response.data) return;
               let userId = window.localStorage.getItem('userId');
               this.$store.commit('initUser', response.data);
@@ -173,18 +161,6 @@
         }).catch(() => {
           this.$store.commit('initWeChatInfo', {});
         });
-      },
-      loginByWx() {
-        if (this.wxLoading) return;
-        this.wxLoading = true;
-        let a = document.createElement('a');
-        a.href = '/api/wechat/link';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        setTimeout(() => {
-          this.wxLoading = false;
-        }, 100);
       }
     },
     mounted: function () {

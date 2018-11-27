@@ -278,6 +278,9 @@ export const Auth = {
   login: (data) => {
     return http.post('/login', data);
   },
+  wxLogin: (data) => {
+    return http.post('/wechat/login', data);
+  },
   logout: () => {
     return http.get('/logout');
   },
@@ -1077,4 +1080,3 @@ function resource(path, http, actions) {
   };
   return Object.assign(obj, actions);
 }
-
