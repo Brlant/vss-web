@@ -637,6 +637,7 @@
         });
       },
       defaultIndex(val) {
+        if (!this.action) return;
         this.formCopy = {};
         this.isStorageData = false;
         this.index = 0;
@@ -652,7 +653,7 @@
           this.form.id = null;
           // 设置一些默认值
           this.setDefaultValue();
-          this.filterPOV();
+          // this.filterPOV();
         }
         this.filterAddress();
         this.searchProduct();
@@ -732,12 +733,12 @@
               detail: res.data.warehouseAddress
             }
           ];
-          this.filterPOV(res.data.customerName);
+          // this.filterPOV(res.data.customerName);
           this.form = JSON.parse(JSON.stringify(res.data));
           this.formCopy = JSON.parse(JSON.stringify(res.data));
           // ****** 2.0变化
-          this.changeCustomerId(this.form.customerId, true);
-          this.changeTransportationMeans(this.form.transportationMeansId);
+          // this.changeCustomerId(this.form.customerId, true);
+          // this.changeTransportationMeans(this.form.transportationMeansId);
           // ******
           this.$nextTick(() => {
             this.isStorageData = true;

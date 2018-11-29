@@ -290,10 +290,6 @@
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showItemRight" @right-close="beforeCloseConfirm" :css="{'width':'1000px','padding':0}">
-      <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
-                @close="resetRightBox"></add-form>
-    </page-right>
     <page-right :show="showScanRight" :css="{'width':'800px','padding':0}" @right-close="resetRightBox">
       <scan-code :orderId="currentOrderId" :show="showScanRight" @close="resetRightBox" @change="onSubmit"></scan-code>
     </page-right>
