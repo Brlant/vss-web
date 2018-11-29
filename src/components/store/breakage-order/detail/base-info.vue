@@ -27,14 +27,21 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="报损方式" :span="span">
+            <oms-row label="运输方式" :span="span" v-show="isCdc">
               <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
+            </oms-row>
+            <oms-row label="报损方式" :span="span" v-show="!isCdc ">
+              <dict :dict-group="'breakageType'" :dict-key="currentOrder.customerChannel"></dict>
+            </oms-row>
+            <oms-row label="疾控中心" :span="span" v-show="!isCdc && currentOrder.customerChannel === '1'">
+              {{currentOrder.customerName}}
             </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
               <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
             </oms-row>
+
             <oms-row label="下单时间">
               <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
@@ -47,12 +54,12 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <oms-row label="所在仓库" :span="4">
+          <oms-row label="仓库地址" :span="4">
             <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
-          <oms-row label="报损原因" :span="4">{{ currentOrder.remark }}</oms-row>
+          <oms-row :label="remarkTitle" :span="4">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 
@@ -212,6 +219,21 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      breakageOrgType() {
+        return this.$store.state.breakageOrgType;
+      },
+      orgType() {
+        return this.$store.state.orgLevel;
+      },
+      breakageType() { // 报损方式
+        return this.$getDict('breakageType');
+      },
+      remarkTitle() {
+        return this.isCdc ? '报损原因' : '报损原因';
+      },
+      isCdc() { // 单位类型,是否是疾控
+        return this.orgType !== this.breakageOrgType[2];
       }
     },
     watch: {

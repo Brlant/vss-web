@@ -122,15 +122,15 @@
           lots: []
         });
         // 组合疫苗
-        ary[0].list.forEach(i => {
-          this.batchNumbers.push({
-            orgGoodsId: i.accessory,
-            orgGoodsName: i.name,
-            goodsId: i.accessoryGoods.id,
-            isMainly: false,
-            lots: []
-          });
-        });
+        // ary[0].list.forEach(i => {
+        //   this.batchNumbers.push({
+        //     orgGoodsId: i.accessory,
+        //     orgGoodsName: i.name,
+        //     goodsId: i.accessoryGoods.id,
+        //     isMainly: false,
+        //     lots: []
+        //   });
+        // });
       },
       /**
        * 组合疫苗，得到多个API接口
@@ -259,7 +259,7 @@
           });
         }
         item.isChecked = item.productCount > 0;
-        this.autoSelectBatchWhenIsCombination(item, product);
+        // this.autoSelectBatchWhenIsCombination(item, product);
       },
       /**
        * 自动选出组合疫苗的批号
@@ -382,50 +382,50 @@
           });
           return false;
         }
-        if (!this.editItemProduct.orgGoodsId) {
-          let isPassed = true;
-          this.productList.forEach((item) => {
-            if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-              let list = item.list;
-              list.forEach(i => {
-                let count = 0;
-                this.batchNumbers.forEach(b => {
-                  if (b.orgGoodsId === i.accessory) {
-                    b.lots.forEach(bl => {
-                      if (bl.isChecked) {
-                        count += Number(bl.productCount);
-                      }
-                    });
-                  }
-                });
-                i.accessoryTotalCount = count;
-              });
-              let totalCount = 0;
-              this.batchNumbers.forEach(b => {
-                if (b.orgGoodsId === this.product.orgGoodsId) {
-                  b.lots.forEach(bl => {
-                    if (bl.isChecked) {
-                      totalCount += Number(bl.productCount);
-                    }
-                  });
-                }
-              });
-              list.forEach(i => {
-                let amount = Math.ceil(i.proportion * totalCount);
-                if (i.accessoryTotalCount !== amount) {
-                  isPassed = false;
-                }
-              });
-            }
-          });
-          if (!isPassed) {
-            this.$notify.warning({
-              duration: 2000,
-              message: '组合疫苗数量比例不匹配'
-            });
-            return false;
-          }
-        }
+        // if (!this.editItemProduct.orgGoodsId) {
+        //   let isPassed = true;
+        //   this.productList.forEach((item) => {
+        //     if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+        //       let list = item.list;
+        //       list.forEach(i => {
+        //         let count = 0;
+        //         this.batchNumbers.forEach(b => {
+        //           if (b.orgGoodsId === i.accessory) {
+        //             b.lots.forEach(bl => {
+        //               if (bl.isChecked) {
+        //                 count += Number(bl.productCount);
+        //               }
+        //             });
+        //           }
+        //         });
+        //         i.accessoryTotalCount = count;
+        //       });
+        //       let totalCount = 0;
+        //       this.batchNumbers.forEach(b => {
+        //         if (b.orgGoodsId === this.product.orgGoodsId) {
+        //           b.lots.forEach(bl => {
+        //             if (bl.isChecked) {
+        //               totalCount += Number(bl.productCount);
+        //             }
+        //           });
+        //         }
+        //       });
+        //       list.forEach(i => {
+        //         let amount = Math.ceil(i.proportion * totalCount);
+        //         if (i.accessoryTotalCount !== amount) {
+        //           isPassed = false;
+        //         }
+        //       });
+        //     }
+        //   });
+        //   if (!isPassed) {
+        //     this.$notify.warning({
+        //       duration: 2000,
+        //       message: '组合疫苗数量比例不匹配'
+        //     });
+        //     return false;
+        //   }
+        // }
         return true;
       }
     }

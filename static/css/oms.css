@@ -397,3 +397,11 @@ table th[class*="col-"] {
 .el-col {
   min-height: 1px;
 }
+
+[class^='el-icon-t-'], [class*='el-icon-t-'] {
+  font-family: "wmsfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}

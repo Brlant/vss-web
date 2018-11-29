@@ -536,6 +536,7 @@ export const basicRoutes = [
   {path: '/404', component: () => import('./components/error_404.vue')},
   {path: '/500', component: () => import('./components/error_500.vue')},
   {path: '/login', component: () => import('./components/login.vue')},
+  {path: '/wx/login', component: () => import('./components/wx-login.vue')},
   {path: '/forget', component: () => import('./components/forget.vue')},
   {path: '/code/:id', component: () => import('./components/resetpwd.vue')}
 ];

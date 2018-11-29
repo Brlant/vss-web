@@ -286,11 +286,13 @@
   import {Address, cerpAction, http, pullSignal, VaccineRights} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '@/components/sale/order/material.vue';
+  import OrderMixin from '@/mixins/orderMixin';
 
   export default {
     name: 'addForm',
     loading: false,
     components: {materialPart},
+    mixins: [OrderMixin],
     props: {
       index: Number,
       currentOrder: Object
@@ -621,6 +623,8 @@
                   return false;
                 }
               });
+              // 近效期提醒
+              this.checkGoodsRegistrationValid(item.orgGoodsDto.goodsDto.goodsApprovalNOValidity);
               this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
             }
           });

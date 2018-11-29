@@ -159,11 +159,11 @@
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
-            <el-form-item label="所在仓库" prop="orgAddress">
+            <el-form-item label="仓库地址" prop="orgAddress">
               <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
-              <el-select placeholder="请选择所在仓库" v-model="form.orgAddress" filterable :clearable="true">
+              <el-select placeholder="请选择仓库地址" v-model="form.orgAddress" filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenter">
                   <span class="pull-left">{{ item.name }}</span>
@@ -171,12 +171,26 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="报损方式" prop="transportationMeansId">
-              <el-select type="text" placeholder="请选择报损方式" v-model="form.transportationMeansId"
-                         @change="transportationConditionChange">
-                <el-option value="4" key="4" label="自行报损"></el-option>
+
+            <el-form-item label="报损方式" prop="customerChannel" v-if="!isCdc">
+              <el-select type="text" placeholder="请选择报损方式" v-model="form.customerChannel"
+                         @change="customerChannelChange">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationMeansList" v-if="item.key <= 1"></el-option>
+                           v-for="item in breakageType"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="运输方式" prop="transportationMeansId" v-if="isCdc && isEntrustWarehouse">
+              <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationMeansId">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in transportationMeansList" v-show="item.key <= 1"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="疾控中心" prop="customerId" v-if="form.customerChannel && !isPovBreakage && !isCdc">
+              <el-select placeholder="请选择疾控中心" v-model="form.customerId" clearable>
+                <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in customerList">
+                </el-option>
               </el-select>
             </el-form-item>
             <!--<el-form-item label="是否进口">-->
@@ -197,17 +211,17 @@
             <!--<oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"-->
             <!--:autosize="{ minRows: 2, maxRows: 5}"></oms-input>-->
             <!--</el-form-item>-->
-            <!--<el-form-item label="报损原因" prop="remark" v-if="isCdc">-->
-            <!--<el-select type="text" placeholder="请选择报损原因" v-model="form.remark">-->
-            <!--<el-option :value="item.label" :key="item.key" :label="item.label"-->
-            <!--v-for="item in breakageReason"></el-option>-->
-            <!--</el-select>-->
-            <!--</el-form-item>-->
-            <el-form-item label="报损原因" prop="remark" v-if="isPovBreakage">
-              <oms-input type="textarea" v-model="form.remark" placeholder="请输入报损原因"
+            <el-form-item label="报损原因" prop="remark" v-if="isCdc">
+              <el-select type="text" placeholder="请选择报损原因" v-model="form.remark">
+                <el-option :value="item.label" :key="item.key" :label="item.label"
+                           v-for="item in breakageReason"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="报损原因" prop="remark" v-if="isPovBreakage && !isCdc">
+              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
-            <el-form-item label="报损原因" prop="remark" v-if="!isPovBreakage">
+            <el-form-item label="报损原因" prop="remark" v-if="!isPovBreakage && !isCdc">
               <el-select type="text" placeholder="请选择报损原因" v-model="form.remark">
                 <el-option :value="item.label" :key="item.key" :label="item.label"
                            v-for="item in breakageReason"></el-option>
@@ -390,7 +404,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import {Address, BaseInfo, cerpAction, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
@@ -456,7 +470,7 @@
           'bizType': '2-4',
           'type': this.type,
           'logisticsProviderId': '',
-          'transportationCondition': '',
+          'customerChannel': '',
           transportationMeansId: '',
           transportationAddress: '',
           importedFlag: false,
@@ -483,13 +497,13 @@
             {required: true, message: '请选择货主', trigger: 'change'}
           ],
           customerId: [
-            {required: true, message: '请选择接种点', trigger: 'change'}
+            {required: true, message: '请选择疾控中心', trigger: 'change'}
           ],
           bizType: [
             {required: true, message: '请选择业务类型', trigger: 'change'}
           ],
           transportationMeansId: [
-            {required: true, message: '请选择报损', trigger: 'change'}
+            {required: true, message: '请选择运输方式', trigger: 'change'}
           ],
           transportationAddress: [
             {required: true, message: '请选择接种点收货地址', trigger: 'change'}
@@ -498,10 +512,10 @@
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择所在仓库', trigger: 'change'}
+            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
           ],
-          transportationCondition: [
-            {required: true, message: '请选择运输条件', trigger: 'change'}
+          customerChannel: [
+            {required: true, message: '请选择报损方式', trigger: 'change'}
           ],
           expectedTime: [
             {required: true, message: '请选择日期', trigger: 'change'}
@@ -586,11 +600,32 @@
         });
         return totalMoney;
       },
+      breakageOrgType() { // 单位类型 0疾控 1pov
+        return this.$store.state.breakageOrgType;
+      },
+      orgType() { // 当前单位类型
+        return this.$store.state.orgLevel;
+      },
       breakageReason() { // 报损原因
         return this.$getDict('breakageReason');
       },
+      breakageType() { // 报损方式
+        return this.$getDict('breakageType');
+      },
       isPovBreakage() { // pov自行报损
-        return this.form.transportationMeansId === '4';
+        return this.form.customerChannel === '0';
+      },
+      isEntrustWarehouse() {
+        let status = false;
+        this.LogisticsCenter.forEach(i => {
+          if (i.id === this.form.orgAddress) {
+            status = i.warehouseType;
+          }
+        });
+        return status === '0';
+      },
+      isCdc() { // 单位类型,是否是疾控
+        return this.orgType !== this.breakageOrgType[2];
       }
     },
     watch: {
@@ -602,6 +637,7 @@
         });
       },
       defaultIndex(val) {
+        if (!this.action) return;
         this.formCopy = {};
         this.isStorageData = false;
         this.index = 0;
@@ -617,7 +653,7 @@
           this.form.id = null;
           // 设置一些默认值
           this.setDefaultValue();
-          this.filterPOV();
+          // this.filterPOV();
         }
         this.filterAddress();
         this.searchProduct();
@@ -672,6 +708,8 @@
       },
       editOrderInfo() {
         if (!this.orderId) return;
+        // 查询疾控中心
+        this.queryOnCDCs();
         InWork.queryOrderDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
           this.resetForm();
@@ -695,12 +733,12 @@
               detail: res.data.warehouseAddress
             }
           ];
-          this.filterPOV(res.data.customerName);
+          // this.filterPOV(res.data.customerName);
           this.form = JSON.parse(JSON.stringify(res.data));
           this.formCopy = JSON.parse(JSON.stringify(res.data));
           // ****** 2.0变化
-          this.changeCustomerId(this.form.customerId, true);
-          this.changeTransportationMeans(this.form.transportationMeansId);
+          // this.changeCustomerId(this.form.customerId, true);
+          // this.changeTransportationMeans(this.form.transportationMeansId);
           // ******
           this.$nextTick(() => {
             this.isStorageData = true;
@@ -912,6 +950,11 @@
           });
         });
       },
+      queryOnCDCs() {
+        cerpAction.queryOnCDCs().then(res => {
+          this.customerList = res.data;
+        });
+      },
       searchProduct: function (query) {
         if (!this.form.orgId) {
           this.searchProductList = [];
@@ -936,7 +979,9 @@
       setIsHasBatchNumberInfo(val) {
         this.isHasBatchNumberInfo = val;
       },
-      transportationConditionChange(val) {
+      customerChannelChange(val) {
+        this.queryOnCDCs();
+        this.form.customerId = '';
         this.form.remark = '';
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
@@ -973,6 +1018,8 @@
                 return false;
               }
             });
+            // 近效期提醒
+            this.checkGoodsRegistrationValid(item.orgGoodsDto.goodsDto.goodsApprovalNOValidity);
           }
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
@@ -1207,8 +1254,14 @@
             delete item.orgGoodsDto;
           });
           saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
-          // 去向单位去货主
-          saveData.customerId = saveData.orgId;
+          let orgId = this.$store.state.user.userCompanyAddress;
+          if (this.isCdc) {
+            // 区疾控
+            saveData.customerId = orgId;
+          } else if (saveData.customerChannel === '0') {
+            // pov选择区疾控报损时
+            saveData.customerId = saveData.orgId;
+          }
           this.doing = true;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
