@@ -199,7 +199,7 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header">
           <el-col :span="8">货主/订单号</el-col>
-          <el-col :span="4">报损方式</el-col>
+          <el-col :span="4">业务类型</el-col>
           <!--<el-col :span="5">接种点</el-col>-->
           <el-col :span="5">时间</el-col>
           <el-col :span="2">状态</el-col>
@@ -235,7 +235,7 @@
                   <!--<dict :dict-group="'breakageType'" :dict-key="item.customerChannel" v-show="!isCdc"></dict>-->
                 </div>
                 <div class="vertical-center">
-                  <dict :dict-group="'outTransportMeans'" :dict-key="item.transportationMeansId"></dict>
+                  <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
               <!--<el-col :span="5">-->
@@ -385,6 +385,15 @@
       },
       bizInTypes: function () {
         return this.$getDict('bizOutType');
+      },
+      breakageOrgType() {
+        return this.$store.state.breakageOrgType;
+      },
+      orgLevel() {
+        return this.$store.state.orgLevel;
+      },
+      isCdc() { // 单位类型,是否是疾控
+        return this.orgLevel !== this.breakageOrgType[2];
       }
     },
     watch: {

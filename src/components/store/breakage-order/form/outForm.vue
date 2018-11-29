@@ -159,11 +159,11 @@
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
-            <el-form-item label="所在仓库" prop="orgAddress">
+            <el-form-item label="仓库地址" prop="orgAddress">
               <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
-              <el-select placeholder="请选择所在仓库" v-model="form.orgAddress" filterable :clearable="true">
+              <el-select placeholder="请选择仓库地址" v-model="form.orgAddress" filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenter">
                   <span class="pull-left">{{ item.name }}</span>
@@ -171,12 +171,19 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="报损方式" prop="transportationMeansId">
-              <el-select type="text" placeholder="请选择报损方式" v-model="form.transportationMeansId"
-                         @change="transportationConditionChange">
-                <el-option value="4" key="4" label="自行报损"></el-option>
+
+            <el-form-item label="报损方式" prop="customerChannel" v-if="!isCdc">
+              <el-select type="text" placeholder="请选择报损方式" v-model="form.customerChannel"
+                         @change="customerChannelChange">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationMeansList" v-if="item.key <= 1"></el-option>
+                           v-for="item in breakageType"></el-option>
+              </el-select>
+            </el-form-item>
+
+            <el-form-item label="运输方式" prop="transportationMeansId" v-if="isCdc && isEntrustWarehouse">
+              <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationMeansId">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in transportationMeansList" v-show="item.key <= 1"></el-option>
               </el-select>
             </el-form-item>
 
@@ -204,17 +211,17 @@
             <!--<oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"-->
             <!--:autosize="{ minRows: 2, maxRows: 5}"></oms-input>-->
             <!--</el-form-item>-->
-            <!--<el-form-item label="报损原因" prop="remark" v-if="isCdc">-->
-            <!--<el-select type="text" placeholder="请选择报损原因" v-model="form.remark">-->
-            <!--<el-option :value="item.label" :key="item.key" :label="item.label"-->
-            <!--v-for="item in breakageReason"></el-option>-->
-            <!--</el-select>-->
-            <!--</el-form-item>-->
-            <el-form-item label="报损原因" prop="remark" v-if="isPovBreakage">
-              <oms-input type="textarea" v-model="form.remark" placeholder="请输入报损原因"
+            <el-form-item label="报损原因" prop="remark" v-if="isCdc">
+              <el-select type="text" placeholder="请选择报损原因" v-model="form.remark">
+                <el-option :value="item.label" :key="item.key" :label="item.label"
+                           v-for="item in breakageReason"></el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="报损原因" prop="remark" v-if="isPovBreakage && !isCdc">
+              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
-            <el-form-item label="报损原因" prop="remark" v-if="!isPovBreakage">
+            <el-form-item label="报损原因" prop="remark" v-if="!isPovBreakage && !isCdc">
               <el-select type="text" placeholder="请选择报损原因" v-model="form.remark">
                 <el-option :value="item.label" :key="item.key" :label="item.label"
                            v-for="item in breakageReason"></el-option>
@@ -496,7 +503,7 @@
             {required: true, message: '请选择业务类型', trigger: 'change'}
           ],
           transportationMeansId: [
-            {required: true, message: '请选择报损', trigger: 'change'}
+            {required: true, message: '请选择运输方式', trigger: 'change'}
           ],
           transportationAddress: [
             {required: true, message: '请选择接种点收货地址', trigger: 'change'}
@@ -505,7 +512,7 @@
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择所在仓库', trigger: 'change'}
+            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
           ],
           customerChannel: [
             {required: true, message: '请选择报损方式', trigger: 'change'}
@@ -593,11 +600,32 @@
         });
         return totalMoney;
       },
+      breakageOrgType() { // 单位类型 0疾控 1pov
+        return this.$store.state.breakageOrgType;
+      },
+      orgType() { // 当前单位类型
+        return this.$store.state.orgLevel;
+      },
       breakageReason() { // 报损原因
         return this.$getDict('breakageReason');
       },
+      breakageType() { // 报损方式
+        return this.$getDict('breakageType');
+      },
       isPovBreakage() { // pov自行报损
-        return this.form.transportationMeansId === '4';
+        return this.form.customerChannel === '0';
+      },
+      isEntrustWarehouse() {
+        let status = false;
+        this.LogisticsCenter.forEach(i => {
+          if (i.id === this.form.orgAddress) {
+            status = i.warehouseType;
+          }
+        });
+        return status === '0';
+      },
+      isCdc() { // 单位类型,是否是疾控
+        return this.orgType !== this.breakageOrgType[2];
       }
     },
     watch: {
