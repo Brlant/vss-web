@@ -230,6 +230,10 @@
                 </div>
               </el-col>
               <el-col :span="4">
+                <div class="f-grey">
+                  <!--<dict :dict-group="'outTransportMeans'" :dict-key="item.transportationMeansId" v-show="isCdc"></dict>-->
+                  <!--<dict :dict-group="'breakageType'" :dict-key="item.customerChannel" v-show="!isCdc"></dict>-->
+                </div>
                 <div class="vertical-center">
                   <dict :dict-group="'outTransportMeans'" :dict-key="item.transportationMeansId"></dict>
                 </div>
@@ -299,7 +303,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
-  import {BaseInfo, erpOrder, Vaccine} from '@/resources';
+  import {BaseInfo, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
   import scanCode from './form/scan-code';
 
@@ -485,7 +489,7 @@
         });
         // 明细查询
         param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
-        erpOrder.query(param).then(res => {
+        this.$http.get('/erp-breakage', {params: param}).then(res => {
           this.orderList = res.data.list;
 //          this.pager.count = res.data.count;
           if (this.orderList.length === this.pager.pageSize) {
@@ -536,7 +540,7 @@
         this.filterLogistics();
       },
       queryStatusNum: function (params) {
-        erpOrder.queryStateNum(params).then(res => {
+        this.$http.get('/erp-breakage/count', {params}).then(res => {
           let data = res.data;
           this.orgType[0].num = this.obtionStatusNum(data['out-pend-confirm']);
           this.orgType[1].num = this.obtionStatusNum(data['out-pend-check']);

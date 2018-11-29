@@ -179,6 +179,13 @@
                            v-for="item in transportationMeansList" v-if="item.key <= 1"></el-option>
               </el-select>
             </el-form-item>
+
+            <el-form-item label="疾控中心" prop="customerId" v-if="form.customerChannel && !isPovBreakage && !isCdc">
+              <el-select placeholder="请选择疾控中心" v-model="form.customerId" clearable>
+                <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in customerList">
+                </el-option>
+              </el-select>
+            </el-form-item>
             <!--<el-form-item label="是否进口">-->
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.importedFlag"></el-switch>-->
@@ -390,7 +397,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import {Address, BaseInfo, cerpAction, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
@@ -456,7 +463,7 @@
           'bizType': '2-4',
           'type': this.type,
           'logisticsProviderId': '',
-          'transportationCondition': '',
+          'customerChannel': '',
           transportationMeansId: '',
           transportationAddress: '',
           importedFlag: false,
@@ -483,7 +490,7 @@
             {required: true, message: '请选择货主', trigger: 'change'}
           ],
           customerId: [
-            {required: true, message: '请选择接种点', trigger: 'change'}
+            {required: true, message: '请选择疾控中心', trigger: 'change'}
           ],
           bizType: [
             {required: true, message: '请选择业务类型', trigger: 'change'}
@@ -500,8 +507,8 @@
           orgAddress: [
             {required: true, message: '请选择所在仓库', trigger: 'change'}
           ],
-          transportationCondition: [
-            {required: true, message: '请选择运输条件', trigger: 'change'}
+          customerChannel: [
+            {required: true, message: '请选择报损方式', trigger: 'change'}
           ],
           expectedTime: [
             {required: true, message: '请选择日期', trigger: 'change'}
@@ -912,6 +919,11 @@
           });
         });
       },
+      queryOnCDCs() {
+        cerpAction.queryOnCDCs().then(res => {
+          this.customerList = res.data;
+        });
+      },
       searchProduct: function (query) {
         if (!this.form.orgId) {
           this.searchProductList = [];
@@ -936,7 +948,9 @@
       setIsHasBatchNumberInfo(val) {
         this.isHasBatchNumberInfo = val;
       },
-      transportationConditionChange(val) {
+      customerChannelChange(val) {
+        this.queryOnCDCs();
+        this.form.customerId = '';
         this.form.remark = '';
       },
       getGoodDetail: function (OrgGoodsId) {// 选疫苗
@@ -1209,8 +1223,14 @@
             delete item.orgGoodsDto;
           });
           saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
-          // 去向单位去货主
-          saveData.customerId = saveData.orgId;
+          let orgId = this.$store.state.user.userCompanyAddress;
+          if (this.isCdc) {
+            // 区疾控
+            saveData.customerId = orgId;
+          } else if (saveData.customerChannel === '0') {
+            // pov选择区疾控报损时
+            saveData.customerId = saveData.orgId;
+          }
           this.doing = true;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
