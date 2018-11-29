@@ -113,6 +113,26 @@ export default {
         list.push(a2[0]);
       });
       return list;
+    },
+    /**
+     * 校验批准文号, 30天内为近效期
+     * @param date
+     * @returns {*}
+     */
+    checkGoodsRegistrationValid(date) {
+      if (!date) return false;
+      let today = this.$moment(this.$moment().format('YYYY-MM-DD')).valueOf();
+      date = this.$moment(date).valueOf();
+      if (date - today < 0) {
+        return this.$notify.error({
+          message: '货品批准文号已过期'
+        });
+      }
+      if (this.$moment(today).add(29, 'd') >= date) {
+        return this.$notify.warning({
+          message: '货品批准文号近效期'
+        });
+      }
     }
   }
 };
