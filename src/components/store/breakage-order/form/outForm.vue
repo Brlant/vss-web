@@ -707,6 +707,8 @@
       },
       editOrderInfo() {
         if (!this.orderId) return;
+        // 查询疾控中心
+        this.queryOnCDCs();
         InWork.queryOrderDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
           this.resetForm();
