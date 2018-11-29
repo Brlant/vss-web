@@ -75,7 +75,7 @@
         },
         attachmentRight: {// 附件管理权限
           watch: 'erp-order-document-watch',
-          download: '',
+          download: 'erp-order-document-watch',
           upload: '',
           remove: ''
         }

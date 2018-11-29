@@ -91,7 +91,7 @@
   import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
   import {erpOrder, http, InWork} from '@/resources';
-  import orderAttachment from '@/components/common/order/out.order.attachment.vue';
+  import orderAttachment from './breakage-order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
   import utils from '@/tools/utils';
 
