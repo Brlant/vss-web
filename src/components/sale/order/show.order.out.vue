@@ -62,6 +62,8 @@
                                v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
+        <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"/>
+
       </div>
     </div>
   </div>
@@ -73,9 +75,9 @@
   import {erpOrder, http, InWork} from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
-
+  import customerFeedback from '@/components/common/order/customer-feedback.vue';
   export default {
-    components: {basicInfo, log, receipt, orderAttachment, relevanceCode},
+    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, customerFeedback},
     props: {
       orderId: {
         type: String
@@ -115,6 +117,7 @@
           menu.push({name: '复核追溯码', key: 9});
         }
         menu.push({name: '操作日志', key: 2});
+        menu.push({name: '反馈信息', key: 12});
         return menu;
       }
     },

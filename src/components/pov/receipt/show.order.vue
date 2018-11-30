@@ -47,6 +47,7 @@
         <relevance-code-review :currentOrder="currentOrder" :index="index" type="1"
                                v-show="index === 9"></relevance-code-review>
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
+        <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"/>
       </div>
     </div>
   </div>
@@ -58,10 +59,10 @@
   import {InWork} from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
+  import customerFeedback from '@/components/common/order/customer-feedback.vue';
   import batchNumbers from '../../purchase/order/detail/batch.number.vue';
-
   export default {
-    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, batchNumbers},
+    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, batchNumbers, customerFeedback},
     props: {
       orderId: {
         type: String
@@ -97,6 +98,7 @@
         // menu.push({name: '关联追溯码', key: 8});
         menu.push({name: '复核追溯码', key: 9});
         menu.push({name: '操作日志', key: 2});
+        menu.push({name: '反馈信息', key: 12});
         return menu;
       }
     },
