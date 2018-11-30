@@ -637,6 +637,10 @@
         });
       },
       defaultIndex(val) {
+        // 清空表单
+        this.resetForm();
+        this.form.state = '';
+        this.form.id = null;
         if (!this.action) return;
         this.formCopy = {};
         this.isStorageData = false;
@@ -647,13 +651,6 @@
         this.checkLicence(this.form.orgId);
         if (val === 2) {
           this.editOrderInfo();
-        } else {
-          this.resetForm();
-          this.form.state = '';
-          this.form.id = null;
-          // 设置一些默认值
-          this.setDefaultValue();
-          // this.filterPOV();
         }
         this.filterAddress();
         this.searchProduct();
