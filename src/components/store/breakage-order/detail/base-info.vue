@@ -27,13 +27,10 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="运输方式" :span="span" v-show="isCdc">
-              <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
-            </oms-row>
-            <oms-row label="报损方式" :span="span" v-show="!isCdc ">
+            <oms-row label="报损方式" :span="span">
               <dict :dict-group="'breakageType'" :dict-key="currentOrder.customerChannel"></dict>
             </oms-row>
-            <oms-row label="疾控中心" :span="span" v-show="!isCdc && currentOrder.customerChannel === '1'">
+            <oms-row label="上级疾控中心" :span="span" v-show="currentOrder.customerChannel === '1'">
               {{currentOrder.customerName}}
             </oms-row>
           </el-col>
@@ -59,7 +56,7 @@
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
-          <oms-row :label="remarkTitle" :span="4">{{ currentOrder.remark }}</oms-row>
+          <oms-row label="报损原因" :span="4">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 
@@ -223,17 +220,8 @@
       breakageOrgType() {
         return this.$store.state.breakageOrgType;
       },
-      orgType() {
-        return this.$store.state.orgLevel;
-      },
       breakageType() { // 报损方式
         return this.$getDict('breakageType');
-      },
-      remarkTitle() {
-        return this.isCdc ? '报损原因' : '报损原因';
-      },
-      isCdc() { // 单位类型,是否是疾控
-        return this.orgType !== this.breakageOrgType[2];
       }
     },
     watch: {
