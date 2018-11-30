@@ -98,7 +98,10 @@
         // menu.push({name: '关联追溯码', key: 8});
         menu.push({name: '复核追溯码', key: 9});
         menu.push({name: '操作日志', key: 2});
-        menu.push({name: '反馈信息', key: 12});
+
+        if (perms.includes('pov-order-upload-data')) {
+          menu.push({name: '反馈信息', key: 12});
+        }
         return menu;
       }
     },

@@ -117,7 +117,9 @@
           menu.push({name: '复核追溯码', key: 9});
         }
         menu.push({name: '操作日志', key: 2});
-        menu.push({name: '反馈信息', key: 12});
+        if (perms.includes(this.vaccineType === '1' ? 'sales-order-upload-data' : 'second-vaccine-sales-order-upload-data')) {
+          menu.push({name: '反馈信息', key: 12});
+        }
         return menu;
       }
     },
