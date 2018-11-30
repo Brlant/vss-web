@@ -68,6 +68,15 @@
               </el-button>
             </perm>
           </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm
+              :label="'breakage-order-export-scrap-stock-tag' " v-show="currentOrder.state > 0">
+              <el-button type="primary" plain @click="exportScarpVaccineTag"
+                         style="width: 170px;padding: 10px 10px" :loading="printingTransport">
+                {{printingTransport ? '正在导出' : '导出待报废疫苗专用标签'}}
+              </el-button>
+            </perm>
+          </li>
         </ul>
       </div>
       <div class="content-right content-padding">
@@ -111,7 +120,8 @@
         title: '',
         isCheck: false,
         printing: false,
-        printingTransport: false
+        printingTransport: false,
+        printingTag: false
       };
     },
     watch: {
@@ -161,6 +171,18 @@
           this.printingTransport = false;
         }).catch(error => {
           this.printingTransport = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      exportScarpVaccineTag: function () {
+        this.printingTag = true;
+        this.$http.get(`erp-order/${this.currentOrder.id}/scrap-vaccine-tag`, {}).then(res => {
+          utils.download(res.data.path, '导出待报废疫苗专用标签');
+          this.printingTag = false;
+        }).catch(error => {
+          this.printingTag = false;
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '导出失败'
           });
