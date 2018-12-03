@@ -1,4 +1,16 @@
-<style>
+<style scoped lang="scss">
+  .title {
+    font-size: 24px;
+    margin: 10px 0;
+    text-align: center;
+
+    .el-tag {
+      font-size: 24px;
+      line-height: 26px;
+      height: 26px;
+    }
+  }
+
   .qp-box {
     margin-bottom: 20px;
     padding: 20px;
@@ -8,9 +20,12 @@
 </style>
 <template>
   <div v-loading="loading">
-    <div class="empty-info" v-if="!list.length">暂无反馈信息</div>
+    <div class="empty-info" v-if="!detail || detail.signFlag === null">暂无反馈信息</div>
     <div v-else>
-      <div class="qp-box" v-for="item in list">
+      <h3 class="title">
+        {{detail.signFlag ? '已签收': '未签收'}}
+      </h3>
+      <div class="qp-box" v-for="item in detail.list">
         <h3>
           {{ item.calltime }}
           <el-tag v-if="item.result === 0" type="success">正常</el-tag>
@@ -31,13 +46,13 @@
     },
     data() {
       return {
-        list: [],
+        detail: null,
         loading: false
       };
     },
     watch: {
       index(val) {
-        this.list = [];
+        this.detail = null;
         if (val !== 12) return;
         this.query();
       }
@@ -48,12 +63,15 @@
         this.loading = true;
         this.$http.get(`upload-data/order/${this.orderId}`).then(res => {
           let list = [];
-          res.data.forEach(i => {
+          res.data.list && res.data.list.forEach(i => {
             if (i.json) {
               list.push(JSON.parse(i.json));
             }
           });
-          this.list = list;
+          this.detail = {
+            list,
+            signFlag: res.data.signFlag
+          };
           this.loading = false;
         });
       }
