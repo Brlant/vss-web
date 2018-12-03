@@ -30,6 +30,9 @@
             <oms-row label="报损方式" :span="span">
               <dict :dict-group="'breakageType'" :dict-key="currentOrder.customerChannel"></dict>
             </oms-row>
+            <oms-row label="运输方式" :span="span" v-show="currentOrder.transportationMeansId">
+              <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
+            </oms-row>
             <oms-row label="上级疾控中心" :span="span" v-show="currentOrder.customerChannel === '1'">
               {{currentOrder.customerName}}
             </oms-row>
@@ -38,7 +41,6 @@
             <oms-row label="业务类型">
               <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
             </oms-row>
-
             <oms-row label="下单时间">
               <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>

@@ -163,7 +163,8 @@
               <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
-              <el-select placeholder="请选择仓库地址" v-model="form.orgAddress" filterable :clearable="true">
+              <el-select placeholder="请选择仓库地址" v-model="form.orgAddress" filterable :clearable="true"
+                         @change="orgAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenter">
                   <span class="pull-left">{{ item.name }}</span>
@@ -185,12 +186,12 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item label="运输方式" v-if="isSelfBreakage">-->
-            <!--<el-select type="text" placeholder="请选择运输条件" v-model="form.transportationMeansId">-->
-            <!--<el-option :value="item.key" :key="item.key" :label="item.label"-->
-            <!--v-for="item in transportationMeansList" v-show="item.key <= 1"></el-option>-->
-            <!--</el-select>-->
-            <!--</el-form-item>-->
+            <el-form-item label="运输方式" v-if="isEntrustWarehouse" prop="transportationMeansId">
+              <el-select type="text" placeholder="请选择运输方式" v-model="form.transportationMeansId">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in transportationMeansList" v-show="item.key <= 1"></el-option>
+              </el-select>
+            </el-form-item>
 
             <!--<el-form-item label="是否进口">-->
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
@@ -602,6 +603,15 @@
       },
       isSelfBreakage() { // pov自行报损
         return this.form.customerChannel === '0';
+      },
+      isEntrustWarehouse() {
+        let status = false;
+        this.LogisticsCenter.forEach(i => {
+          if (i.id === this.form.orgAddress) {
+            status = i.warehouseType;
+          }
+        });
+        return status === '0';
       }
     },
     watch: {
@@ -878,6 +888,9 @@
           });
           // *************************//
         });
+      },
+      orgAddressChange(val) {
+        this.form.transportationMeansId = '';
       },
       filterAddress() {
         Address.queryAddress(this.form.orgId, {
