@@ -62,7 +62,8 @@
                                v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
-        <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"/>
+        <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"
+                           :perm="vaccineType === '1' ? 'sales-order-upload-data-operate' : 'second-vaccine-sales-order-upload-data-operate'"/>
 
       </div>
     </div>

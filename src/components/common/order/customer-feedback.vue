@@ -2,8 +2,6 @@
   .title {
     font-size: 24px;
     margin: 10px 0;
-    text-align: center;
-
     .el-tag {
       font-size: 24px;
       line-height: 26px;
@@ -25,6 +23,11 @@
       <h3 class="title">
         {{detail.signFlag ? '已签收': '未签收'}}
       </h3>
+      <div v-show="!detail.list.length">
+        <perm :label="perm">
+          <el-button type="primary" size="mini" @click="uploadData">上传数据</el-button>
+        </perm>
+      </div>
       <div class="qp-box" v-for="item in detail.list">
         <h3>
           {{ item.calltime }}
@@ -42,7 +45,8 @@
   export default {
     props: {
       orderId: String,
-      index: Number
+      index: Number,
+      perm: String
     },
     data() {
       return {
@@ -73,6 +77,18 @@
             signFlag: res.data.signFlag
           };
           this.loading = false;
+        });
+      },
+      uploadData() {
+        if (this.loading) return;
+        this.loading = true;
+        this.$http.get(`/pov-order/${this.orderId}`).then(() => {
+          this.query();
+        }).catch(e => {
+          this.loading = false;
+          this.$notify.error({
+            message: e.response && e.response.data.msg || '无法上传数据'
+          });
         });
       }
     }

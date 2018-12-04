@@ -47,7 +47,8 @@
         <relevance-code-review :currentOrder="currentOrder" :index="index" type="1"
                                v-show="index === 9"></relevance-code-review>
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
-        <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"/>
+        <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"
+                           perm="pov-order-upload-data-operate"/>
       </div>
     </div>
   </div>
