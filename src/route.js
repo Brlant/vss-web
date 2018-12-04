@@ -52,6 +52,11 @@ export const route = [
             meta: {moduleId: 'sale', title: '二类苗销售订单', perm: 'second-vaccine-sales-order', type: '2'}
           },
           {
+            path: '/sale/no/feedback/:id',
+            component: resolve => require(['./components/sale/feedback/list.vue'], resolve),
+            meta: {moduleId: 'sale', title: '未反馈订单', perm: 'no-feedback-order-manager'}
+          },
+          {
             path: '/sale/pov/:id',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
             meta: {moduleId: 'sale', title: '接种点要货需求', perm: 'demand-assignment'},
@@ -109,6 +114,11 @@ export const route = [
           }
         ]
       },
+      // {
+      //   path: '/sale/no/feedback',
+      //   component: resolve => require(['./components/sale/feedback/list.vue'], resolve),
+      //   meta: {moduleId: 'sale', title: '未反馈订单', perm: 'second-vaccine-sales-order'}
+      // },
       {
         path: '/pov',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),

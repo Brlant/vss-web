@@ -128,6 +128,16 @@ export default {
     2: {'title': '正常', status: 1, num: ''},
     3: {'title': '异常', status: 2, num: ''}
   },
+  assginOutAndPovType: {
+    0: {'title': '待确认', state: '0', num: ''},
+    1: {'title': '待复核', state: '1', num: ''},
+    2: {'title': '执行中', state: '2', num: ''},
+    // 3: {'title': '待收货', state: '3', num: ''},
+    4: {'title': '已完成', state: '4', num: ''},
+    5: {'title': '已取消', state: '5', num: ''},
+    7: {'title': '待收货', state: '10', num: ''},
+    8: {'title': '已完成', state: '8', num: ''}
+  },
   packageType: ['第一级包装', '第二级包装', '第三级包装', '第四级包装',
     '第五级包装', '第六级包装', '第七级包装', '第八级包装', '第九级包装', '第十级包装'],
   /**
