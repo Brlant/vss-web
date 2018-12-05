@@ -86,7 +86,8 @@ import {
   TinyInput,
   TinyLoading,
   TinyRow,
-  TotalCount
+  TotalCount,
+  compressedImg
 } from '@dtop/dtop-web-common';
 
 import upload from '../components/common/upload.vue';
@@ -189,7 +190,8 @@ const tinyVue = [
   orgGoodsSelect,
   goodsSelect,
   statusList,
-  relevanceCodeReview
+  relevanceCodeReview,
+  compressedImg
 ];
 
 const install = function (Vue, opts = {}) {
