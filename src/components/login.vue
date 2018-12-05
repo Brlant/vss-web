@@ -45,12 +45,12 @@
                 {{btnString}} <i class="el-icon-loading" v-show="loading"></i></el-button>
 
             </el-form-item>
-            <!--<el-form-item label-width="80px">-->
-            <!--<el-button type="success" @click="loginByWx" :disabled="wxLoading" style="display:block;width:100%;"-->
-            <!--native-type="submit">-->
-            <!--<i class="el-icon-t-wx_icon"></i><span>微信登录</span>-->
-            <!--</el-button>-->
-            <!--</el-form-item>-->
+            <el-form-item label-width="80px">
+              <el-button type="success" @click="loginByWx" :disabled="wxLoading" style="display:block;width:100%;"
+                         native-type="submit">
+                <i class="el-icon-t-wx_icon"></i><span>微信登录</span>
+              </el-button>
+            </el-form-item>
           </el-form>
         </div>
       </el-card>
