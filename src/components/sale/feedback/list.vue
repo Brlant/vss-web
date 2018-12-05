@@ -103,12 +103,6 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <perm :label="vaccineType === '1'?'sales-order-add': 'second-vaccine-sales-order-add' ">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
-                      class="el-icon-t-plus"></i> </a>添加
-            </perm>
-          </span>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -124,14 +118,14 @@
                 <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="物流方式" :span="6">
-                <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
-                  <el-option :value="item.key" :key="item.key" :label="item.label"
-                             v-for="item in transportationMeansList"></el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="物流方式" :span="6">-->
+            <!--<el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">-->
+            <!--<el-option :value="item.key" :key="item.key" :label="item.label"-->
+            <!--v-for="item in transportationMeansList"></el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
             <!--<el-col :span="8">-->
             <!--<oms-form-row label="接种点" :span="6">-->
             <!--<el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"-->
@@ -155,6 +149,17 @@
                 <el-col :span="24">
                   <el-date-picker
                     v-model="createdTime"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row :label="`预计${isInOrder ? '到': '送'}货时间`" :span="7">
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="expectedTime"
                     type="daterange"
                     placeholder="请选择" format="yyyy-MM-dd">
                   </el-date-picker>
@@ -189,30 +194,20 @@
             <!--</el-select>-->
             <!--</oms-form-row>-->
             <!--</el-col>-->
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="下单时间" :span="6">-->
+            <!--<el-col :span="24">-->
+            <!--<el-date-picker-->
+            <!--v-model="createdTime"-->
+            <!--type="daterange"-->
+            <!--placeholder="请选择" format="yyyy-MM-dd">-->
+            <!--</el-date-picker>-->
+            <!--</el-col>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
+
             <el-col :span="8">
-              <oms-form-row label="下单时间" :span="6">
-                <el-col :span="24">
-                  <el-date-picker
-                    v-model="createdTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
-                  </el-date-picker>
-                </el-col>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="预计到货时间" :span="6">
-                <el-col :span="24">
-                  <el-date-picker
-                    v-model="expectedTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
-                  </el-date-picker>
-                </el-col>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="" :span="3">
+              <oms-form-row label="" :span="6">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
@@ -237,7 +232,7 @@
         <el-row class="order-list-header">
           <el-col :span="6">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6">{{orgLevel === 3 ? '供货单位' : '接种点'}}</el-col>
+          <el-col :span="6" v-show="orderList.length">{{isInOrder ? '供货单位' : '接种点'}}</el-col>
           <el-col :span="6">时间</el-col>
           <el-col :span="2">状态</el-col>
         </el-row>
@@ -246,7 +241,7 @@
             <oms-loading :loading="loadingData"></oms-loading>
           </el-col>
         </el-row>
-        <el-row v-else-if="orderList.length == 0">
+        <el-row v-else-if="!orderList.length">
           <el-col :span="24">
             <div class="empty-info">
               暂无信息
@@ -255,7 +250,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in orderList" @click.prevent="showItem(item)"
-               :class="[{'active':currentOrderId==item.id}]">
+               :class="[{'active':currentOrderId===item.id}]">
             <el-row>
               <el-col :span="6">
                 <div class="f-grey">
@@ -291,7 +286,7 @@
     </div>
     <div class="text-center" v-show="orderList.length&& !loadingData">
       <el-pagination
-        layout="prev, pager, next"
+        layout="prev, pager, next, total"
         :total="pager.count" :pageSize="pager.pageSize" @current-change="getOrderList"
         :current-page="pager.currentPage">
       </el-pagination>
@@ -299,7 +294,7 @@
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
-                 @close="resetRightBox" :vaccineType="vaccineType"></show-form>
+                 @close="resetRightBox"></show-form>
     </page-right>
   </div>
 </template>
@@ -322,13 +317,12 @@
         showSearch: false,
         orderList: [],
         filters: {
-          type: 1,
           state: '',
           orderNo: '',
           logisticsProviderId: '',
           createStartTime: '',
           createEndTime: '',
-          bizType: '2-0',
+          bizType: '',
           transportationMeansId: '',
           transactOrgId: '',
           thirdPartyNumber: '',
@@ -339,7 +333,6 @@
           expectedEndTime: ''
         },
         searchCondition: {
-          searchType: 1,
           orderNo: '',
           logisticsProviderId: '',
           createStartTime: '',
@@ -362,7 +355,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20
+          pageSize: 10
         },
         defaultIndex: 0, // 添加订单默认选中第一个tab
         action: '',
@@ -382,16 +375,10 @@
     },
     computed: {
       transportationMeansList: function () {
-        return this.$getDict('outTransportMeans');
+        return this.$getDict(this.isInOrder ? 'transportationMeans' : 'outTransportMeans');
       },
-      bizInTypes: function () {
-        return this.$getDict('bizOutType');
-      },
-      vaccineType() {
-        return this.$route.meta.type;
-      },
-      orgLevel() {
-        return this.$store.state.orgLevel;
+      isInOrder() {
+        return this.orderList.some(s => s.bizType[0] === '1');
       }
     },
     watch: {
@@ -400,9 +387,6 @@
           this.getOrderList(1);
         },
         deep: true
-      },
-      vaccineType() {
-        this.getOrderList(1);
       }
     },
     methods: {
@@ -490,12 +474,11 @@
         this.loadingData = true;
         param = Object.assign({}, this.filters, {
           pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          goodsType: this.vaccineType === '1' ? '0' : '1'
+          pageSize: this.pager.pageSize
         });
         // 明细查询
         param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
-        this.$http.get('/pov-order/pager', param).then(res => {
+        this.$http.get('/pov-order/pager', {params: param}).then(res => {
           this.orderList = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;

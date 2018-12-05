@@ -27,33 +27,32 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row :label="orgLevel === 3 ? '供货单位' : '接种点'" :span="span">
-              {{currentOrder[orgLevel === 3 ? 'supplierName' : 'customerName']}}
+            <oms-row :label="isInOrder ? '供货单位' : '接种点'" :span="span">
+              {{currentOrder[isInOrder ? 'supplierName' : 'customerName']}}
             </oms-row>
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
+            <oms-row label="备注" :span="span" v-show="currentOrder.remark">{{ currentOrder.remark }}</oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
               <dict :dict-group="'bizType'" :dict-key="currentOrder.bizType"></dict>
             </oms-row>
             <oms-row label="物流方式">
-              <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
+              <dict :dict-group="isInOrder ? 'transportationMeans' : 'outTransportMeans'"
+                    :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
             <oms-row label="下单时间">
               <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
-            <oms-row label="预计到货" v-show="currentOrder.expectedTime">
+            <oms-row :label="`预计${isInOrder ? '到': '送'}货`" v-show="currentOrder.expectedTime">
               <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
             </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
           </el-col>
-        </el-row>
-        <el-row v-show="currentOrder.remark">
-          <oms-row label="备注" :span="3">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 
@@ -68,9 +67,9 @@
             <td class="text-center">批号</td>
             <!--<td>生产日期</td>-->
             <td class="text-center">有效期</td>
-            <td class="text-center" v-show="vaccineType==='2'">单价</td>
+            <td class="text-center">单价</td>
             <td class="text-center">数量</td>
-            <td class="text-center" v-show="vaccineType==='2'">金额</td>
+            <td class="text-center">金额</td>
           </tr>
           </thead>
           <tbody>
@@ -112,7 +111,7 @@
             </td>
             <!--<td>{{ item.productionDate | date }}</td>-->
             <td width="90px" class="text-center">{{ item.expiryDate | date }}</td>
-            <td width="80px" class="text-center" v-show="vaccineType==='2'">
+            <td width="80px" class="text-center">
               <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
               <span v-if="!item.unitPrice">-</span>
             </td>
@@ -120,7 +119,7 @@
               {{item.amount}}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
-            <td class="text-center" v-show="vaccineType==='2'">
+            <td class="text-center">
             <span v-if="item.unitPrice">
               <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
             </span>
@@ -131,7 +130,7 @@
             <td colspan="6" align="right">
               <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
             </td>
-            <td colspan="2" align="right" v-show="vaccineType==='2'">
+            <td colspan="2" align="right">
             <span style="font-weight:600;"
                   v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney
               }}</span>
@@ -212,8 +211,8 @@
         });
         return totalMoney;
       },
-      orgLevel() {
-        return this.$store.state.orgLevel;
+      isInOrder() {
+        return this.currentOrder.bizType[0] === '1';
       }
     },
     watch: {
