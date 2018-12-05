@@ -38,6 +38,8 @@
                                v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
+        <customer-feedback :orderId="currentOrder.id" :index="index" perm="show" v-show="index === 12"/>
+
       </div>
     </div>
   </div>
@@ -84,6 +86,7 @@
         let state = this.state;
         menu.push({name: '复核追溯码', key: 9});
         menu.push({name: '操作日志', key: 2});
+        menu.push({name: '反馈信息', key: 12});
         return menu;
       }
     },

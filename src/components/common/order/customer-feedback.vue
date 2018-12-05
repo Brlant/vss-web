@@ -25,7 +25,7 @@
       </h3>
       <div v-show="!detail.list.length">
         <perm :label="perm">
-          <el-button type="primary" size="mini" @click="uploadData">上传数据</el-button>
+          <el-button type="primary" size="mini" @click="uploadData">推送数据</el-button>
         </perm>
       </div>
       <div class="qp-box" v-for="item in detail.list">
@@ -87,7 +87,7 @@
         }).catch(e => {
           this.loading = false;
           this.$notify.error({
-            message: e.response && e.response.data.msg || '无法上传数据'
+            message: e.response && e.response.data.msg || '无法推送数据'
           });
         });
       }
