@@ -1009,6 +1009,8 @@
             delete item.orgGoodsDto;
           });
           saveData.detailDtoList = this.mergeSameOrgGoodsWhenIn(saveData.detailDtoList);
+          // 来源单位 设置成自己
+          saveData.supplierId = saveData.orgId;
           this.doing = true;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
