@@ -187,7 +187,7 @@
                 <el-row>
                   <el-col :span="12" style="padding-left:50px;">
                     <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
-                      <img :src="data.goodsDto.photo +'?image&action=resize:w_380,m_0'"/>
+                      <compressed-img :src="data.goodsDto.photo +'?image&action=resize:w_380,m_0'"/>
                     </div>
                   </el-col>
                   <el-col :span="12">

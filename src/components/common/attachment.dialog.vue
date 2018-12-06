@@ -108,7 +108,7 @@
       <div @click.stop="closeDialog" style="height:100%;width:100%;">
         <div v-if="type=='image'" class="dialog-image-rap">
           <div id="dialog-image-rap" :style="style">
-            <img :src="fileUrl+'?image&action=resize:'+ 'h_'+(windowSize.height-50)+',m_2'" alt=''>
+            <img :src="fileUrl" alt=''>
           </div>
         </div>
         <div v-if="groupLen>1" class="img-button">
@@ -272,6 +272,8 @@
         let images = ['jpg', 'png', 'gif', 'jpeg'];
         let docs = ['txt', 'doc', 'docx', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx'];
         if (url) {
+          // 去除签名
+          url = url.split('?')[0];
           type = url.substring(url.lastIndexOf('.'));
         }
         if (type) {
