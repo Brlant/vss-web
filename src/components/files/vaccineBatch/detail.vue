@@ -62,8 +62,8 @@
                     <div class="base-pic-list" v-if="drugControlReportList.length>0">
                       <div class="base-pic-item" v-if="Util.getType(drugControlReportList[0].attachmentStoragePath)">
                         <div @click="watchDrugControlReport(drugControlReportList[0])">
-                          <img
-                            :src="drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -84,7 +84,7 @@
                     <div class="base-pic-list" v-if="batchReleaseList.length>0">
                       <div class="base-pic-item" v-if="Util.getType(batchReleaseList[0].attachmentStoragePath)">
                         <div @click="watchBatchRelease(batchReleaseList[0])">
-                          <img :src="batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img :src="batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -107,8 +107,8 @@
                     <div class="base-pic-list" v-if="importCertificateList.length>0">
                       <div class="base-pic-item" v-if="Util.getType(importCertificateList[0].attachmentStoragePath)">
                         <div @click="watchImportCertificate(importCertificateList[0])">
-                          <img
-                            :src="importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -129,7 +129,7 @@
                     <div class="base-pic-list" v-if="customsPassList.length>0">
                       <div class="base-pic-item" v-if="Util.getType(customsPassList[0].attachmentStoragePath)">
                         <div @click="watchCustomsPass(customsPassList[0])">
-                          <img :src="customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img :src="customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
