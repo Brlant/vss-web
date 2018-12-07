@@ -10,11 +10,13 @@
     height: $topMenuHeight;
     z-index: 800;
     box-shadow: 0 5px 5px rgba(221, 221, 221, 0.22);
+
     ul, li {
       padding: 0;
       margin: 0;
       list-style: none
     }
+
     a {
       text-decoration: none
     }
@@ -24,6 +26,7 @@
       line-height: $topMenuHeight;
       height: $topMenuHeight;
       margin-left: 15px;
+
       img {
         vertical-align: middle;
       }
@@ -36,6 +39,7 @@
       z-index: 3;
       top: 50%;
       transform: translateY(-50%);
+
       .top-right-item {
         border-radius: 18px;
         background: #ebebeb;
@@ -43,6 +47,7 @@
         display: inline-block;
         padding: 3px 10px;
         cursor: pointer;
+
         img {
           vertical-align: middle;
           height: 23px;
@@ -65,6 +70,7 @@
   .menu-user-part {
     display: flex;
     align-items: center;
+
     > div > img {
       margin-right: 10px;
       border-radius: 50%;
@@ -72,6 +78,7 @@
       width: 40px;
       border: 1px solid #eee
     }
+
     .menu-usr-part-phone {
       color: #666;
       font-size: 12px;
@@ -80,11 +87,13 @@
 
   .menu-user {
     padding: 8px 10px;
+
     .last-login {
       color: #999;
       font-size: 12px;
       margin: 10px 0;
     }
+
     a {
       color: $activeColor;
       font-size: 12px;
@@ -113,17 +122,21 @@
     left: 0;
     z-index: 1;
     width: 200px;
+
     .menu-wrap {
       max-height: 100%;
+
       > .el-menu > li {
 
       }
     }
+
     .el-menu {
       li {
         min-width: 40px;
       }
     }
+
     .main-nav-scrollbar {
       position: absolute;
       top: 0;
@@ -131,10 +144,12 @@
       bottom: 30px;
       left: 0;
     }
+
     .main-nav-scrollbar /deep/ .el-scrollbar__wrap {
       overflow: hidden;
       overflow-y: auto;
     }
+
     .change-collapse {
       position: absolute;
       right: 0;
@@ -144,6 +159,7 @@
       padding: 5px;
       cursor: pointer;
       background: rgba(238, 243, 246, 0.5);
+
       &:hover {
         background: #cbdce6;
       }
@@ -158,6 +174,7 @@
     font-weight: normal;
     line-height: 30px;
     background: rgba(243, 243, 243, 1);
+
     .position-nav-text {
       position: relative;
       left: -20px;
@@ -189,19 +206,23 @@
 
   .wechat-info {
     font-size: 12px;
+
     .weChat-img {
       width: 20px;
       height: 20px;
       vertical-align: middle;
       float: left;
     }
+
     .wechat-nick {
       float: left;
       margin-left: 10px;
     }
+
     .btn-wechat {
       float: left;
     }
+
     margin-bottom: 5px;
   }
 
@@ -241,9 +262,9 @@
             </span>
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
-                <img v-if="user.userIcon" :src="user.userIcon">
-                <img v-else src="/static/img/logo_user_default.png">{{user.userName}}
-                <i class="el-icon-caret-bottom"></i>
+                <compressed-img v-if="user.userIcon" :src="user.userIcon+'?image&action=resize:w_50,h_50,m_2'"/>
+                  <img v-else src="/static/img/logo_user_default.png">{{user.userName}}
+                  <i class="el-icon-caret-bottom"></i>
               </div>
               <el-dropdown-menu class="top-right-user-dropdown" slot="dropdown">
                 <div class="menu-user">
