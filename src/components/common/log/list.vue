@@ -169,11 +169,9 @@
         let data = Object.assign({}, {
           pageNo: 1,
           pageSize: 20,
-          objectId: 'cerp-system',
-          keyWord: query,
-          status: 1
+          keyWord: query
         });
-        User.query(data).then(res => {
+        User.queryAllUser(data).then(res => {
           this.userList = res.data.list;
         });
       },
