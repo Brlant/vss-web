@@ -247,6 +247,10 @@ export const Access = resource('/oms/access', http, {
 
 // 平台用户权限对象
 export const User = resource('/oms/user', http, {
+  queryAllUser: (params) => {
+    return http.get('/oms/user/all', {params}
+    );
+  },
   checkEmail: (email, userId, orgId) => {
     return http.get('/oms/user/email', {
       params: {email: email, userId: userId, orgId: orgId}
