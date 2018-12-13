@@ -247,7 +247,7 @@
         // 过滤来源单位
         let params = {
           keyWord: query,
-          orgRelationTypeList: ['Supplier']
+          orgRelationTypeList: ['Supplier', 'Manufacture']
         };
         BaseInfo.queryByOrgRelationTypeList(params).then(res => {
           this.factories = res.data.list;
