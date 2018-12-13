@@ -165,9 +165,9 @@
     methods: {
       getCurrentOrderStatus: function (state) {// 获取订单状态
         let retstate = '';
-        for (let key in utils.inOrderType) {
-          if (state === utils.inOrderType[key].state) {
-            retstate = utils.inOrderType[key].title;
+        for (let key in utils.receiptType) {
+          if (state === utils.receiptType[key].state) {
+            retstate = utils.receiptType[key].title;
           }
         }
         return retstate;
