@@ -20,7 +20,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">报损出库详情</h2>
+        <h2 class="clearfix right-title">报损详情</h2>
         <ul>
           <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -127,7 +127,7 @@
     watch: {
       orderId() {
         this.index = 0;
-        this.title = '报损出库详情';
+        this.title = '报损详情';
         this.queryOrderDetail();
       }
     },
@@ -136,7 +136,7 @@
         let menu = [];
         let perms = this.$store.state.permissions || [];
         menu.push({name: '报损详情', key: 0});
-        if (this.state === '4') {
+        if (this.state === '4' && this.currentOrder.customerChannel) {
           menu.push({name: '收货详情', key: 1});
         }
         if (perms.includes('erp-order-document-watch')) {
