@@ -62,9 +62,9 @@
                                v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
+        <waybill-info :currentOrder="currentOrder" :index="index" v-show="index === 11"></waybill-info>
         <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"
                            :perm="vaccineType === '1' ? 'sales-order-upload-data-operate' : 'second-vaccine-sales-order-upload-data-operate'"/>
-
       </div>
     </div>
   </div>
@@ -77,8 +77,9 @@
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
   import customerFeedback from '@/components/common/order/customer-feedback.vue';
+  import WaybillInfo from '@/components/common/order/waybillInfo';
   export default {
-    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, customerFeedback},
+    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, customerFeedback, WaybillInfo},
     props: {
       orderId: {
         type: String
@@ -118,6 +119,15 @@
           menu.push({name: '复核追溯码', key: 9});
         }
         menu.push({name: '操作日志', key: 2});
+
+        if (perms.includes(this.vaccineType === '1' ? 'sales-order-delivery-information' : 'second-vaccine-sales-order-delivery-information')) {
+          // 待收货，收货完成, 配送上门，显示配送信息
+          if (this.currentOrder.state === '3' || this.currentOrder.state === '4') {
+            if (this.currentOrder.transportationMeansId === '0') {
+              menu.push({name: '配送信息', key: 11});
+            }
+          }
+        }
         if (perms.includes(this.vaccineType === '1' ? 'sales-order-upload-data' : 'second-vaccine-sales-order-upload-data')) {
           menu.push({name: '反馈信息', key: 12});
         }

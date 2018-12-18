@@ -86,6 +86,7 @@ import {
   TinyInput,
   TinyLoading,
   TinyRow,
+  TinyCol,
   TotalCount,
   compressedImg
 } from '@dtop/dtop-web-common';
@@ -184,6 +185,7 @@ const tinyVue = [
   TinyInput,
   TinyLoading,
   TinyRow,
+  TinyCol,
   goodsSwitch,
   TotalCount,
   orgSelect,
