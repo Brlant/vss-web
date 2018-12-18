@@ -5,12 +5,17 @@ export default {
         disabledDate: time => {
           return time.getTime() < this.$moment().subtract(1, 'days');
         }
-      }
+      },
+      selectedList: [],
+      checkAll: false
     };
   },
   computed: {
     isShowGoodsList() {
       return this.$store.state.isShowGoodsList;
+    },
+    isShowCheckBox() {
+      return this.filters.state === '6' || this.filters.state === '1';
     }
   },
   watch: {
@@ -21,6 +26,36 @@ export default {
     }
   },
   methods: {
+    initCheck(list) {
+      list.forEach(i => {
+        i.checked = false;
+      });
+    },
+    checkAllOrder(val) {
+      this.orderList.forEach(i => {
+        i.checked = val;
+      });
+    },
+    batchAuditOrder() {
+      let list = this.orderList.filter(f => f.checked).map(m => m.id);
+      if (!list.length) {
+        return this.$notify.info('请选择订单');
+      }
+      let obj = {
+        orderIdList: list
+      };
+      this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path, text: '审单中...'});
+      this.$http.put('/erp-order/batch/check', obj).then(res => {
+        this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        this.$notify.success('审单完成');
+        this.getOrderList(1);
+        this.checkAll = false;
+      }).catch((e) => {
+        let data = e.response.data;
+        this.$notify.success(data && data.msg || '审单失败');
+        this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+      });
+    },
     beforeCloseConfirm(str = '订单信息未保存,是否关闭') {
       this.$confirm(str, '', {
         confirmButtonText: '确认',

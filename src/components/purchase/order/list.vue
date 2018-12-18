@@ -107,6 +107,13 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
           <goods-switch class="pull-right"></goods-switch>
+          <span class="pull-right cursor-span" style="margin-right: 15px" @click.prevent="batchAuditOrder"
+                v-show="isShowCheckBox">
+            <perm :label="vaccineType === '1'?'purchasing-order-audit': 'second-vaccine-purchasing-order-audit' ">
+                  <a href="#" class="btn-circle" @click.prevent=""><i
+                    class="el-icon-document"></i> </a>批量审单
+            </perm>
+          </span>
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
                  onsubmit="return false">
@@ -232,7 +239,10 @@
       </el-row>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
+          <el-col :span="filters.state === '6' ? 5: 7">
+            <el-checkbox v-model="checkAll" @change="checkAllOrder" v-show="isShowCheckBox"/>
+            货主/订单号
+          </el-col>
           <el-col :span="3">业务类型</el-col>
           <el-col :span="filters.state === '6' ? 5: 6">供货厂商</el-col>
           <el-col :span="4">时间</el-col>
@@ -256,11 +266,24 @@
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
               <el-col :span="filters.state === '6' ? 5: 7">
-                <div class="f-grey">
-                  {{item.orderNo }}
+                <div v-show="isShowCheckBox" class="flex-layout" @click.stop="item.checked = !item.checked">
+                  <el-checkbox v-model="item.checked" class="mr-5"/>
+                  <div>
+                    <div class="f-grey">
+                      {{item.orderNo }}
+                    </div>
+                    <div>
+                      {{item.orgName }}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  {{item.orgName }}
+                <div v-show="!isShowCheckBox">
+                  <div class="f-grey">
+                    {{item.orderNo }}
+                  </div>
+                  <div>
+                    {{item.orgName }}
+                  </div>
                 </div>
               </el-col>
               <el-col :span="3">
@@ -514,6 +537,7 @@
         param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         if (this.filters.state !== '20') {
           erpOrder.query(param).then(res => {
+            this.initCheck(res.data.list);
             this.orderList = res.data.list;
 //            this.pager.count = res.data.count;
             if (this.orderList.length === this.pager.pageSize) {
