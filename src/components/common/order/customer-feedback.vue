@@ -2,6 +2,7 @@
   .title {
     font-size: 24px;
     margin: 10px 0;
+
     .el-tag {
       font-size: 24px;
       line-height: 26px;
@@ -23,7 +24,7 @@
       <h3 class="title">
         {{detail.signFlag ? '已签收': '未签收'}}
       </h3>
-      <div v-show="!detail.list.length">
+      <div v-show="isShowPushBtn">
         <perm :label="perm">
           <el-button type="primary" size="mini" @click="uploadData">推送数据</el-button>
         </perm>
@@ -53,6 +54,12 @@
         detail: null,
         loading: false
       };
+    },
+    computed: {
+      isShowPushBtn() {
+        // 推送数据条件： 反馈信息不存在 或者最新反馈信息推送异常
+        return !this.detail.list.length || this.detail.list[0].result !== 0;
+      }
     },
     watch: {
       index(val) {
