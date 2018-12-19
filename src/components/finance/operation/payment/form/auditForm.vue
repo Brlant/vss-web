@@ -151,7 +151,7 @@
           <el-row>
             <el-col :span="12">
               <oms-row :span="8" label="发票付款">{{form.billPayType === '0' ? '无' : '有' }}</oms-row>
-              <oms-row :span="8" label="付款单位"> {{form.orgName }}</oms-row>
+              <oms-row :span="8" label="收款单位"> {{form.orgName }}</oms-row>
               <oms-row :span="8" label="付款方式">
                 <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
               </oms-row>
@@ -174,11 +174,11 @@
             </el-col>
           </el-row>
           <div class="detail-title">
-            <span>付款明细:</span>
-            <span v-if="!form.detailList.length">无</span>
-            <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
+            <span>付款明细</span>
+            <span v-if="!form.detailList.length">：无</span>
+            <span class="pull-right" v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
           </div>
-          <ul class="show-list invoice-list"
+          <ul class="show-list invoice-list clearfix"
               v-if="form.detailList.length">
             <li class="show-item" style="background: #f1f1f1">
               <el-row type="flex">

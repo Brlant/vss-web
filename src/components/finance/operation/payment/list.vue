@@ -117,8 +117,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="付款单位" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索付款单位" :remote-method="filterOrg"
+              <oms-form-row label="收款单位" :span="6">
+                <el-select filterable remote placeholder="请输入名称搜索收款单位" :remote-method="filterOrg"
                            @click.native="filterOrg('')"
                            :clearable="true"
                            v-model="searchCondition.orgId">
@@ -159,11 +159,12 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="5">付款单据编号</el-col>
-          <el-col :span="7">付款单位</el-col>
+          <el-col :span="3">付款单据编号</el-col>
+          <el-col :span="6">收款单位</el-col>
           <el-col :span="2">付款方式</el-col>
           <el-col :span="4">付款金额</el-col>
-          <el-col :span="6">付款说明</el-col>
+          <el-col :span="5">付款说明</el-col>
+          <el-col :span="4">创建时间</el-col>
           <!--<el-col :span="3">操作</el-col>-->
         </el-row>
         <el-row v-if="loadingData">
@@ -183,12 +184,12 @@
                :class="['status-'+filterListColor(item.status),{'active':currentId==item.id}]"
                @click.stop="showItem(item)">
             <el-row>
-              <el-col :span="5">
+              <el-col :span="3">
                 <div>
                   {{item.no }}
                 </div>
               </el-col>
-              <el-col :span="7" class="pt10">
+              <el-col :span="6" class="pt10">
                 <div class="f-grey">
                   系统代码{{item.orgNo }}
                 </div>
@@ -204,9 +205,14 @@
                   <span v-if="item.amount">¥</span> {{item.amount | formatMoney}}
                 </div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="5">
                 <div>
                   {{item.explain}}
+                </div>
+              </el-col>
+              <el-col :span="4">
+                <div>
+                  {{item.createTime | time}}
                 </div>
               </el-col>
               <!--<el-col :span="3" class="opera-btn">-->
