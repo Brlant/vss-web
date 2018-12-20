@@ -118,32 +118,29 @@
                 <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
               </oms-form-row>
             </el-col>
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="物流方式" :span="6">-->
-            <!--<el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">-->
-            <!--<el-option :value="item.key" :key="item.key" :label="item.label"-->
-            <!--v-for="item in transportationMeansList"></el-option>-->
-            <!--</el-select>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="接种点" :span="6">-->
-            <!--<el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"-->
-            <!--v-model="searchCondition.transactOrgId" popperClass="good-selects"-->
-            <!--@click.native.once="filterOrg('')">-->
-            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
-            <!--</div>-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="select-other-info pull-left">-->
-            <!--<span>系统代码:</span>{{org.manufacturerCode}}-->
-            <!--</span>-->
-            <!--</div>-->
-            <!--</el-option>-->
-            <!--</el-select>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
+            <el-col :span="8">
+              <oms-form-row label="接种点" :span="6">
+                <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterOrg" :clearable="true"
+                           v-model="searchCondition.transactOrgId" popperClass="good-selects"
+                           @click.native.once="filterOrg('')">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                      <span>系统代码:</span>{{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="单位区域代码" :span="7">
+                <oms-input type="text" v-model="searchCondition.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
+              </oms-form-row>
+            </el-col>
             <el-col :span="8">
               <oms-form-row label="下单时间" :span="6">
                 <el-col :span="24">
@@ -166,46 +163,6 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-          </el-row>
-          <el-row>
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="货主疫苗" :span="6">-->
-            <!--<el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货主疫苗"-->
-            <!--:remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"-->
-            <!--popper-class="good-selects">-->
-            <!--<el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"-->
-            <!--:label="item.orgGoodsDto.name"-->
-            <!--:value="item.orgGoodsDto.id">-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="pull-left">{{item.orgGoodsDto.name}}</span>-->
-            <!--</div>-->
-            <!--<div style="overflow: hidden">-->
-            <!--<span class="select-other-info pull-left"><span-->
-            <!--v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}-->
-            <!--</span>-->
-            <!--<span class="select-other-info pull-left"><span-->
-            <!--v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}-->
-            <!--</span>-->
-            <!--<span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">-->
-            <!--<span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}-->
-            <!--</span>-->
-            <!--</div>-->
-            <!--</el-option>-->
-            <!--</el-select>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="下单时间" :span="6">-->
-            <!--<el-col :span="24">-->
-            <!--<el-date-picker-->
-            <!--v-model="createdTime"-->
-            <!--type="daterange"-->
-            <!--placeholder="请选择" format="yyyy-MM-dd">-->
-            <!--</el-date-picker>-->
-            <!--</el-col>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
-
             <el-col :span="8">
               <oms-form-row label="" :span="6">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
