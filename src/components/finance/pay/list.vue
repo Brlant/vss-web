@@ -117,6 +117,17 @@
               </el-col>
             </el-row>
           </perm>
+        </el-form>
+      </div>
+      <div class="opera-btn-group" :class="{up:!showSearch2}">
+        <div class="opera-icon">
+          <span class="pull-left switching-icon" @click="showSearch2 = !showSearch2">
+            <i class="el-icon-arrow-up"></i>
+            <span v-show="showSearch2">收起筛选</span>
+            <span v-show="!showSearch2">展开筛选</span>
+          </span>
+        </div>
+        <el-form class="advanced-query-form">
           <perm label="accounts-payable-paid-info-export">
             <el-row>
               <el-col :span="10">
@@ -127,8 +138,8 @@
                 </oms-form-row>
               </el-col>
               <el-col :span="8">
-                <oms-form-row label="付款单位" :span="5">
-                  <el-select filterable remote placeholder="请输入名称搜索付款单位" :remote-method="filterOrg2" :clearable="true"
+                <oms-form-row label="收款单位" :span="5">
+                  <el-select filterable remote placeholder="请输入名称搜索收款单位" :remote-method="filterOrg2" :clearable="true"
                              v-model="searchWord2.receiptOrgId" popperClass="good-selects"
                              @click.native.once="filterOrg2('')">
                     <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList2">
@@ -392,6 +403,7 @@
         showPart: false,
         showTypeSearch: false,
         showSearch: true,
+        showSearch2: true,
         showTypeList: [],
         filters: {
           keyWord: ''
@@ -520,11 +532,16 @@
         this.search();
       },
       filterOrg2: function (query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          return;
+        }
+        // 过滤来源单位
         let params = {
           keyWord: query
         };
-        BaseInfo.query(params).then(res => {
-          this.orgList2 = res.data.list;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList2 = res.data;
         });
       },
       formatExportTime2: function (date, str = 'YYYY-MM-DD HH:mm:ss') {
@@ -558,11 +575,16 @@
         this.search();
       },
       filterOrg: function (query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          return;
+        }
+        // 过滤来源单位
         let params = {
           keyWord: query
         };
-        BaseInfo.query(params).then(res => {
-          this.orgList = res.data.list;
+        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+          this.orgList = res.data;
         });
       },
       formatExportTime: function (date, str = 'YYYY-MM-DD HH:mm:ss') {
