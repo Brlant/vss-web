@@ -498,7 +498,7 @@
         let params = Object.assign({}, this.searchWord2);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/finance/pay'});
-        this.$http.get('/bill-payable/export/paid-info', {params}).then(res => {
+        this.$http.get('/accounts-payable/export/paid-info', {params}).then(res => {
           utils.download(res.data.path, '未付账款表');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/finance/pay'});
