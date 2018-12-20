@@ -24,6 +24,10 @@
   margin-right: 10px;
 }
 
+.mr-5 {
+  margin-right: 5px;
+}
+
 .f20 {
   font-size: 20px;
 }
@@ -35,6 +39,23 @@
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.flex-layout {
+  display: flex;
+  align-items: center;
+}
+
+.cursor-span:hover {
+  color: $primary-color;
+
+  .btn-circle {
+    background: $primary-color;
+
+    i {
+      color: #fff;
+    }
+  }
 }
 
 .app-body {

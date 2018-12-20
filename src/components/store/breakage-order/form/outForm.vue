@@ -668,7 +668,7 @@
         // this.form.transportationCondition = '0';
       },
       getTitle() {
-        return `${this.defaultIndex === 2 ? '编辑' : '增加'}报损出库`;
+        return `${this.defaultIndex === 2 ? '编辑' : '添加'}报损`;
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -1251,7 +1251,7 @@
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '编辑报损出库成功',
+                message: '编辑报损成功',
                 type: 'success'
               });
               self.$emit('change');
@@ -1262,7 +1262,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '编辑报损出库失败',
+                title: '编辑报损失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
@@ -1271,7 +1271,7 @@
             erpOrder.save(saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '新增报损出库成功',
+                message: '新增报损成功',
                 type: 'success'
               });
               window.localStorage.removeItem(this.saveKey);
@@ -1283,7 +1283,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '新增报损出库失败',
+                title: '新增报损失败',
                 message: error.response.data.msg,
                 type: 'error'
               });

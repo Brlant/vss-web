@@ -25,24 +25,21 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="货主疫苗" :span="6">
-                <el-select v-model="searchCondition.vaccineId" filterable remote placeholder="请输入名称搜索货主疫苗"
-                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
-                           popper-class="good-selects">
-                  <el-option v-for="item in orgList" :key="item.orgGoodsDto.id"
-                             :label="item.orgGoodsDto.name"
-                             :value="item.orgGoodsDto.goodsId">
+                <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="searchProduct"
+                           :clearable="true"
+                           v-model="searchCondition.vaccineId" popper-class="good-selects"
+                           @click.native.once="searchProduct('')">
+                  <el-option :value="org.goodsId" :key="org.id" :label="org.goodsName"
+                             v-for="org in orgList">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      <span class="pull-left">{{org.goodsName}}</span>
                     </div>
                     <div style="overflow: hidden">
-                        <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
-                        </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
-                        </span>
-                      <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
                       </span>
                     </div>
                   </el-option>
@@ -166,10 +163,13 @@
         });
       },
       searchProduct(query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
+          deleteFlag: false,
+          orgId: orgId,
           keyWord: query
         });
-        VaccineRights.queryPovVaccineByType(params).then(res => {
+        this.$http.get('/erp-stock/goods', {params}).then(res => {
           this.orgList = res.data.list;
         });
       },

@@ -135,8 +135,8 @@
               >
               </el-switch>
             </el-form-item>
-            <el-form-item label="厂商" prop="orgId">
-              <el-select filterable remote placeholder="请输入名称搜索厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="收款单位" prop="orgId">
+              <el-select filterable remote placeholder="请输入名称搜索收款单位" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" @click.native.once="filterOrg('')">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
                            v-for="org in orgList">
@@ -223,7 +223,7 @@
             {required: true, message: '请选择付款方式', trigger: 'change'}
           ],
           orgId: [
-            {required: true, message: '请选择厂商', trigger: 'change'}
+            {required: true, message: '请选择收款单位', trigger: 'change'}
           ],
           amount: [
             {required: true, message: '请选择付款明细，自动计算总额', trigger: 'blur'}
@@ -297,7 +297,7 @@
       doClose: function () {
         this.$emit('close');
       },
-      filterOrg: function (query) {// 厂商
+      filterOrg: function (query) {// 收款单位
         let params = Object.assign({}, {
           pageNo: 1,
           pageSize: 20,

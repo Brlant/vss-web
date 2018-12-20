@@ -122,11 +122,13 @@
       this.routesCopy = deepCopy(route);
       window.localStorage.removeItem('noticeError');
       if (!this.$store.state.user || !this.$store.state.user.userId) {
+        this.loading = true;
         Auth.checkLogin().then((res) => {
           this.queryPermissions(this.$route);
           window.localStorage.setItem('user', JSON.stringify(res.data));
           this.$store.commit('initUser', res.data);
         }).catch(() => {
+          this.loading = false;
           this.$router.addRoutes(ErrorPage);
           this.$router.replace('/login');
           Auth.logout();

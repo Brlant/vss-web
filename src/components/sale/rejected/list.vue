@@ -107,6 +107,13 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
           <goods-switch class="pull-right"></goods-switch>
+          <span class="pull-right cursor-span" style="margin-right: 15px" @click.prevent="batchAuditOrder"
+                v-show="isShowCheckBox">
+            <perm label="sales-return-audit">
+                  <a href="#" class="btn-circle" @click.prevent=""><i
+                    class="el-icon-document"></i> </a>批量审单
+            </perm>
+          </span>
         </div>
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
                  onsubmit="return false">
@@ -238,7 +245,10 @@
       </el-row>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="5">货主/订单号</el-col>
+          <el-col :span="5">
+            <el-checkbox v-model="checkAll" @change="checkAllOrder" v-show="isShowCheckBox"/>
+            货主/订单号
+          </el-col>
           <el-col :span="3">业务类型</el-col>
           <el-col :span="5">接种点</el-col>
           <el-col :span="5">时间</el-col>
@@ -262,15 +272,32 @@
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
               <el-col :span="5">
-                <div class="f-grey">
-                  {{item.orderNo }}
+                <div class="flex-layout" v-show="isShowCheckBox" @click.stop="item.checked = !item.checked">
+                  <el-checkbox v-model="item.checked" class="mr-5"/>
+                  <div>
+                    <div class="f-grey">
+                      {{item.orderNo }}
+                    </div>
+                    <div>
+                      {{item.orgName }}
+                    </div>
+                    <div v-show="item.thirdPartyNumber&& item.transportationMeansId === '4'" class="f-grey"
+                         style="font-size: 12px">
+                      来自销售订单{{item.thirdPartyNumber}}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  {{item.orgName }}
-                </div>
-                <div v-show="item.thirdPartyNumber&& item.transportationMeansId === '4'" class="f-grey"
-                     style="font-size: 12px">
-                  来自销售订单{{item.thirdPartyNumber}}
+                <div v-show="!isShowCheckBox">
+                  <div class="f-grey">
+                    {{item.orderNo }}
+                  </div>
+                  <div>
+                    {{item.orgName }}
+                  </div>
+                  <div v-show="item.thirdPartyNumber&& item.transportationMeansId === '4'" class="f-grey"
+                       style="font-size: 12px">
+                    来自销售订单{{item.thirdPartyNumber}}
+                  </div>
                 </div>
               </el-col>
               <el-col :span="3">
@@ -514,6 +541,7 @@
           });
         } else {
           erpOrder.queryOrderExcepiton(param).then(res => {
+            this.initCheck(res.data.list);
             this.orderList = res.data.list;
 //            this.pager.count = res.data.count;
             if (this.orderList.length === this.pager.pageSize) {

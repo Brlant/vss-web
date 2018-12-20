@@ -183,11 +183,11 @@
                 </span>
           </oms-row>
           <div class="detail-title">
-            <span>{{`${titleAry[type][2]}明细`}}:</span>
-            <span v-show="!form.detailList.length">无</span>
-            <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
+            <span>{{`${titleAry[type][2]}明细`}}</span>
+            <span v-show="!form.detailList.length">：无</span>
+            <span class="pull-right" v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
           </div>
-          <ul class="show-list invoice-list"
+          <ul class="show-list invoice-list clearfix"
               v-show="form.detailList.length">
             <li class="show-item" style="background: #f1f1f1">
               <el-row type="flex">
