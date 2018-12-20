@@ -76,7 +76,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form class="advanced-query-form">
+        <el-form class="advanced-query-form clearfix"
+                 style="padding-top: 10px; background: #fff; padding: 10px 10px 10px;">
           <perm label="accounts-payable-unpaid-info-export">
             <el-row>
               <el-col :span="10">
@@ -117,17 +118,6 @@
               </el-col>
             </el-row>
           </perm>
-        </el-form>
-      </div>
-      <div class="opera-btn-group" :class="{up:!showSearch2}">
-        <div class="opera-icon">
-          <span class="pull-left switching-icon" @click="showSearch2 = !showSearch2">
-            <i class="el-icon-arrow-up"></i>
-            <span v-show="showSearch2">收起筛选</span>
-            <span v-show="!showSearch2">展开筛选</span>
-          </span>
-        </div>
-        <el-form class="advanced-query-form">
           <perm label="accounts-payable-paid-info-export">
             <el-row>
               <el-col :span="10">
@@ -403,7 +393,6 @@
         showPart: false,
         showTypeSearch: false,
         showSearch: true,
-        showSearch2: true,
         showTypeList: [],
         filters: {
           keyWord: ''
