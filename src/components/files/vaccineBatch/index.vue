@@ -240,6 +240,8 @@
 //        Object.assign(this.filters, temp);
       },
       filterFactory(query) { // 查询厂商
+
+
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
