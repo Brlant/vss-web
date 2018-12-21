@@ -78,86 +78,51 @@
         </div>
         <el-form class="advanced-query-form clearfix"
                  style="padding-top: 10px; background: #fff; padding: 10px 10px 10px;">
-          <perm label="accounts-payable-unpaid-info-export">
-            <el-row>
-              <el-col :span="10">
-                <oms-form-row label="发生时间" :span="4">
-                  <el-date-picker v-model="bizDateAry" type="datetimerange" :default-time="['00:00:00', '23:59:59']"
-                                  placeholder="请选择日期">
-                  </el-date-picker>
-                </oms-form-row>
-              </el-col>
-              <el-col :span="8">
-                <oms-form-row label="收款单位" :span="5">
-                  <el-select filterable remote placeholder="请输入名称搜索收款单位" :remote-method="filterOrg" :clearable="true"
-                             v-model="searchWord.receiptOrgId" popperClass="good-selects"
-                             @click.native.once="filterOrg('')">
-                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                      <div style="overflow: hidden">
-                        <span class="pull-left" style="clear: right">{{org.name}}</span>
-                        <span class="pull-right" style="color: #999">
+          <el-row>
+            <el-col :span="10">
+              <oms-form-row label="发生时间" :span="4">
+                <el-date-picker v-model="bizDateAry" type="datetimerange" :default-time="['00:00:00', '23:59:59']"
+                                placeholder="请选择日期">
+                </el-date-picker>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="7">
+              <oms-form-row label="收款单位" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索收款单位" :remote-method="filterOrg" :clearable="true"
+                           v-model="searchWord.receiptOrgId" popperClass="good-selects"
+                           @click.native.once="filterOrg('')">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                      <span class="pull-right" style="color: #999">
                      <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
                     </span>
-                      </div>
-                      <div style="overflow: hidden">
+                    </div>
+                    <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
                         <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
-                      </div>
-                    </el-option>
-                  </el-select>
-                </oms-form-row>
-              </el-col>
-              <el-col :span="6">
-                <oms-form-row label="" :span="1">
-                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="7">
+              <oms-form-row label="" :span="1">
+                <el-button native-type="reset" @click="resetExportForm">重置</el-button>
+                <perm label="accounts-payable-unpaid-info-export">
+                  <el-button :plain="true" type="success" @click="exportUnPayment" :disabled="isLoading">
+                    导出未付账款
+                  </el-button>
+                </perm>
+                <perm label="accounts-payable-paid-info-export">
                   <el-button :plain="true" type="success" @click="exportPayment" :disabled="isLoading">
-                    导出未付账款Excel
+                    导出已付账款
                   </el-button>
-                </oms-form-row>
-              </el-col>
-            </el-row>
-          </perm>
-          <perm label="accounts-payable-paid-info-export">
-            <el-row>
-              <el-col :span="10">
-                <oms-form-row label="付款时间" :span="4">
-                  <el-date-picker v-model="bizDateAry2" type="datetimerange" :default-time="['00:00:00', '23:59:59']"
-                                  placeholder="请选择日期">
-                  </el-date-picker>
-                </oms-form-row>
-              </el-col>
-              <el-col :span="8">
-                <oms-form-row label="收款单位" :span="5">
-                  <el-select filterable remote placeholder="请输入名称搜索收款单位" :remote-method="filterOrg2" :clearable="true"
-                             v-model="searchWord2.receiptOrgId" popperClass="good-selects"
-                             @click.native.once="filterOrg2('')">
-                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList2">
-                      <div style="overflow: hidden">
-                        <span class="pull-left" style="clear: right">{{org.name}}</span>
-                        <span class="pull-right" style="color: #999">
-                     <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
-                    </span>
-                      </div>
-                      <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{org.manufacturerCode}}
-                      </span>
-                      </div>
-                    </el-option>
-                  </el-select>
-                </oms-form-row>
-              </el-col>
-              <el-col :span="6">
-                <oms-form-row label="" :span="1">
-                  <el-button native-type="reset" @click="resetSearchForm2">重置</el-button>
-                  <el-button :plain="true" type="success" @click="exportPayment2" :disabled="isLoading">
-                    导出已付账款Excel
-                  </el-button>
-                </oms-form-row>
-              </el-col>
-            </el-row>
-          </perm>
+                </perm>
+              </oms-form-row>
+            </el-col>
+          </el-row>
         </el-form>
       </div>
       <div class="order-list-status container" style="margin-bottom:20px">
@@ -443,17 +408,12 @@
         searchWord: {
           receiptOrgId: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          startTime: '',
+          endTime: ''
         },
         orgList: [],
-        bizDateAry: '',
-        searchWord2: {
-          receiptOrgId: '',
-          createStartTime: '',
-          createEndTime: ''
-        },
-        orgList2: [],
-        bizDateAry2: ''
+        bizDateAry: ''
       };
     },
     computed: {
@@ -493,10 +453,10 @@
       }
     },
     methods: {
-      exportPayment2: function () {
-        this.searchWord.createStartTime = this.formatExportTime2(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatExportTime2(this.bizDateAry[1]);
-        let params = Object.assign({}, this.searchWord2);
+      exportPayment: function () {
+        this.searchWord.startTime = this.formatExportTime(this.bizDateAry[0]);
+        this.searchWord.endTime = this.formatExportTime(this.bizDateAry[1]);
+        let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/finance/pay'});
         this.$http.get('/accounts-payable/export/paid-info', {params}).then(res => {
@@ -511,32 +471,7 @@
           });
         });
       },
-      resetSearchForm2: function () {
-        this.searchWord2 = {
-          receiptOrgId: '',
-          createStartTime: '',
-          createEndTime: ''
-        };
-        this.bizDateAry2 = '';
-        this.search();
-      },
-      filterOrg2: function (query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          return;
-        }
-        // 过滤来源单位
-        let params = {
-          keyWord: query
-        };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-          this.orgList2 = res.data;
-        });
-      },
-      formatExportTime2: function (date, str = 'YYYY-MM-DD HH:mm:ss') {
-        return date ? this.$moment(date).format(str) : '';
-      },
-      exportPayment: function () {
+      exportUnPayment: function () {
         this.searchWord.createStartTime = this.formatExportTime(this.bizDateAry[0]);
         this.searchWord.createEndTime = this.formatExportTime(this.bizDateAry[1]);
         let params = Object.assign({}, this.searchWord);
@@ -558,10 +493,11 @@
         this.searchWord = {
           receiptOrgId: '',
           createStartTime: '',
-          createEndTime: ''
+          createEndTime: '',
+          startTime: '',
+          endTime: ''
         };
         this.bizDateAry = '';
-        this.search();
       },
       filterOrg: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
