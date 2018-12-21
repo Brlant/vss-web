@@ -189,7 +189,7 @@
         <el-row class="order-list-header">
           <el-col :span="6">货主/订单号</el-col>
           <el-col :span="4">业务类型</el-col>
-          <el-col :span="6" v-show="orderList.length">{{isInOrder ? '供货单位' : '接种点'}}</el-col>
+          <el-col :span="6" v-show="orderList.length">{{isInOrder ? '供货单位' : '接种点'}}/订单号</el-col>
           <el-col :span="6">时间</el-col>
           <el-col :span="2">状态</el-col>
         </el-row>
@@ -223,6 +223,7 @@
                 </div>
               </el-col>
               <el-col :span="6">
+                <div class="f-grey" v-show="item.thirdPartyNumber">{{item.thirdPartyNumber }}</div>
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="6">

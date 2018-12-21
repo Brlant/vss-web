@@ -30,6 +30,9 @@
             <oms-row :label="isInOrder ? '供货单位' : '接种点'" :span="span">
               {{currentOrder[isInOrder ? 'supplierName' : 'customerName']}}
             </oms-row>
+            <oms-row :label="isInOrder ? '供货单位订单号' : '接种点订单号'" :span="span" v-show="currentOrder.thirdPartyNumber">
+              {{currentOrder.thirdPartyNumber}}
+            </oms-row>
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
