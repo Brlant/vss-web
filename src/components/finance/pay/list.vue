@@ -80,7 +80,7 @@
                  style="padding-top: 10px; background: #fff; padding: 10px 10px 10px;">
           <el-row>
             <el-col :span="10">
-              <oms-form-row label="发生时间" :span="4">
+              <oms-form-row label="时间" :span="4">
                 <el-date-picker v-model="bizDateAry" type="datetimerange" :default-time="['00:00:00', '23:59:59']"
                                 placeholder="请选择日期">
                 </el-date-picker>
