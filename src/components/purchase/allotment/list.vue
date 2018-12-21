@@ -109,7 +109,7 @@
           <goods-switch class="pull-right"></goods-switch>
           <span class="pull-right cursor-span" style="margin-right: 15px" @click.prevent="batchAuditOrder"
                 v-show="isShowCheckBox">
-            <perm label="allocating-order-audit">
+            <perm label="allocating-order-batch-audit">
                   <a href="#" class="btn-circle" @click.prevent=""><i
                     class="el-icon-document"></i> </a>批量审单
             </perm>

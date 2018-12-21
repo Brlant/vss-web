@@ -107,7 +107,7 @@
           <goods-switch class="pull-right"></goods-switch>
           <span class="pull-right cursor-span" style="margin-right: 15px" @click.prevent="batchAuditOrder"
                 v-show="isShowCheckBox">
-            <perm :label="vaccineType === '1'?'sales-order-audit': 'second-vaccine-sales-order-audit' ">
+            <perm :label="vaccineType === '1'?'sales-order-batch-audit': 'second-vaccine-sales-order-batch-audit' ">
                   <a href="#" class="btn-circle" @click.prevent=""><i
                     class="el-icon-document"></i> </a>批量审单
             </perm>
