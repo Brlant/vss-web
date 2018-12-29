@@ -54,12 +54,21 @@
           },
           dataZoom: [
             {
-              id: 'dataZoomX',
+              id: 'dataZoomXslider',
+              type: 'slider',
+              xAxisIndex: [0],
+              filterMode: 'filter'
+            },
+            {
+              id: 'dataZoomXinside',
               type: 'inside',
               xAxisIndex: [0],
               filterMode: 'filter'
             }
           ],
+          grid: {
+            bottom: 80
+          },
           series: [
             {
               name: '温度',
