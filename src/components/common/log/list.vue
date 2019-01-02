@@ -47,11 +47,11 @@
         </div>
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
-            <el-col :span="10">
-              <oms-form-row label="日志操作人" :span="5">
+            <el-col :span="8">
+              <oms-form-row label="日志操作人" :span="6">
                 <el-select filterable remote placeholder="请输入名称/拼音首字母缩写搜索" :remote-method="filterUser"
                            :clearable="true"
-                           v-model="searchWord.logOperatorId" popperClass="good-selects">
+                           v-model="searchWord.operatorId" popperClass="good-selects">
                   <el-option :value="user.id" :key="user.id" :label="user.name" v-for="user in userList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{user.name}}</span>
@@ -63,8 +63,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="10">
-              <oms-form-row label="日志操作时间" :span="5">
+            <el-col :span="8">
+              <oms-form-row label="日志操作时间" :span="7">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
@@ -74,7 +74,14 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="8">
+              <oms-form-row label="操作类型" :span="6">
+                <oms-input v-model="searchWord.actionType" placeholder="请输入操作类型"/>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
               <oms-form-row label="" :span="2">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -85,7 +92,7 @@
       </div>
 
       <el-table :data="logList" border @row-click="showDetail" class="clearfix" :header-row-class-name="'headerClass'"
-                ref="orderDetail">
+                ref="orderDetail" v-loading="loadingData">
         <el-table-column prop="operationTime" label="日志操作时间" :sortable="true"
                          width="200">
           <template slot-scope="scope">
@@ -129,14 +136,16 @@
         showSearch: true,
         logList: [],
         filters: {
-          logOperatorId: '',
+          operatorId: '',
           startTime: '',
-          endTime: ''
+          endTime: '',
+          actionType: ''
         },
         searchWord: {
-          logOperatorId: '',
+          operatorId: '',
           startTime: '',
-          endTime: ''
+          endTime: '',
+          actionType: ''
         },
         pager: {
           currentPage: 1,
@@ -217,9 +226,10 @@
       },
       resetSearchForm: function () {// 重置表单
         this.searchWord = {
-          logOperatorId: '',
+          operatorId: '',
           startTime: '',
-          endTime: ''
+          endTime: '',
+          actionType: ''
         };
         this.expectedTime = '';
         Object.assign(this.filters, this.searchWord);
