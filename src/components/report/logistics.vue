@@ -68,8 +68,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="9">
-              <oms-form-row label="供/收货单位名称" :span="7">
-                <el-select filterable remote placeholder="请输入供/收货单位名称查询"
+              <oms-form-row label="货品供货厂商" :span="7">
+                <el-select filterable remote placeholder="请输入货品供货厂商查询"
                            :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
                            v-model="searchWord.factoryId" @click.native.once="filterProvide('')"
                            popperClass="good-selects">
