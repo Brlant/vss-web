@@ -35,10 +35,10 @@
     <el-form-item label="协议采购数量">
       <oms-input type="number" v-model.number="form.amount" min="0" placeholder="请输入协议采购数量"></oms-input>
     </el-form-item>
-    <el-form-item label="协议到期时间" prop="expireTime" ref="expireTime">
-      <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" value-format="timestamp">
-      </el-date-picker>
-    </el-form-item>
+    <!--<el-form-item label="协议到期时间" prop="expireTime" ref="expireTime">-->
+    <!--<el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" value-format="timestamp">-->
+    <!--</el-date-picker>-->
+    <!--</el-form-item>-->
     <el-form-item label="是否生效">
       <el-switch v-model="form.availabilityStatus" active-text="是" inactive-text="否"
                  active-color="#13ce66"
