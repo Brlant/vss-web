@@ -16,7 +16,7 @@
         </div>
         <el-form class="advanced-query-form">
           <el-row>
-            <el-col :span="8">
+            <el-col :span="7">
               <oms-form-row label="出入库类型" :span="6">
                 <el-select v-model="searchWord.typeList" multiple filterable clearable placeholder="请选择">
                   <el-option v-for="(item, index) in typeList" :value="index" :key="index"
@@ -24,7 +24,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="9">
               <oms-form-row label="出入库详细" :span="6">
                 <el-select v-model="searchWord.bizTypeList" multiple filterable clearable placeholder="请选择">
                   <el-option v-for="(item, index) in bizTypeList" :value="item.key" :key="index"
@@ -43,12 +43,12 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="8" class="clearfix">
+            <el-col :span="7" class="clearfix">
               <oms-form-row label="区县" :span="6">
                 <oms-input type="text" v-model="searchWord.areaCode" placeholder="请输入区县"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="9">
               <oms-form-row label="供/收货单位" :span="6">
                 <el-select filterable remote placeholder="请输入供/收货单位名称查询" :remote-method="filterRelation"
                            :clearable="true" :loading="selectLoading"
@@ -113,7 +113,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="7">
               <oms-form-row label="批号" :span="6">
                 <el-select v-model="searchWord.batchNumberId" filterable clearable remote
                            :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号"
@@ -123,8 +123,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="" :span="3">
+            <el-col :span="17">
+              <oms-form-row label="" :span="2">
                 <perm label="first-vaccine-logistics-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
