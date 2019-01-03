@@ -16,7 +16,7 @@
         </div>
         <el-form class="advanced-query-form">
           <el-row>
-            <el-col :span="7">
+            <el-col :span="8">
               <oms-form-row label="出入库类型" :span="6">
                 <el-select v-model="searchWord.typeList" multiple filterable clearable placeholder="请选择">
                   <el-option v-for="(item, index) in typeList" :value="index" :key="index"
@@ -32,8 +32,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="9">
-              <oms-form-row label="业务日期" :span="4">
+            <el-col :span="8">
+              <oms-form-row label="业务日期" :span="5">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
@@ -43,14 +43,14 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="7" class="clearfix">
+            <el-col :span="8" class="clearfix">
               <oms-form-row label="区县" :span="6">
                 <oms-input type="text" v-model="searchWord.areaCode" placeholder="请输入区县"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="关联单位" :span="6">
-                <el-select filterable remote placeholder="请输入关联单位查询" :remote-method="filterRelation"
+              <oms-form-row label="供/收货单位" :span="6">
+                <el-select filterable remote placeholder="请输入供/收货单位名称查询" :remote-method="filterRelation"
                            :clearable="true" :loading="selectLoading"
                            v-model="searchWord.customerId" @click.native.once="filterRelation('')"
                            popperClass="good-selects">
@@ -67,27 +67,27 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="9">
-              <oms-form-row label="货品供货厂商" :span="7">
-                <el-select filterable remote placeholder="请输入货品供货厂商查询"
-                           :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
-                           v-model="searchWord.factoryId" @click.native.once="filterProvide('')"
-                           popperClass="good-selects">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in provideList">
-                    <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{org.manufacturerCode}}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="10">
-              <oms-form-row label="产品名称" :span="4">
+            <!--<el-col :span="9">-->
+            <!--<oms-form-row label="货品供货厂商" :span="7">-->
+            <!--<el-select filterable remote placeholder="请输入货品供货厂商查询"-->
+            <!--:remote-method="filterProvide" :clearable="true" :loading="selectLoading"-->
+            <!--v-model="searchWord.factoryId" @click.native.once="filterProvide('')"-->
+            <!--popperClass="good-selects">-->
+            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in provideList">-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
+            <!--</div>-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="select-other-info pull-left">-->
+            <!--<span>系统代码:</span>{{org.manufacturerCode}}-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--</el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
+            <el-col :span="8">
+              <oms-form-row label="产品名称" :span="5">
                 <el-select filterable remote placeholder="请输入产品名称" :remote-method="filterOrgGoods"
                            :clearable="true" multiple
                            v-model="searchWord.orgGoodsIdList" popper-class="good-selects"
@@ -114,7 +114,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="批号" :span="5">
+              <oms-form-row label="批号" :span="6">
                 <el-select v-model="searchWord.batchNumberId" filterable clearable remote
                            :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号"
                            @click.native.once="filterBatchNumber('')">
@@ -123,8 +123,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="1">
+            <el-col :span="8">
+              <oms-form-row label="" :span="3">
                 <perm label="first-vaccine-logistics-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
