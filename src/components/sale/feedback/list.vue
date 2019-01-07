@@ -453,7 +453,7 @@
           keyWord: query,
           relation: '0'
         };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+        BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
         });
       },
@@ -464,7 +464,7 @@
           this.logisticsList = [];
           return;
         }
-        BaseInfo.queryOrgByValidReation(orgId, {keyWord: query, relation: '3'}).then(res => {
+        BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
           this.logisticsList = res.data;
         });
       },

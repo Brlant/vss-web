@@ -964,6 +964,11 @@ export const BaseInfo = resource('/orgs', http, {
     obj.size = -1;
     return http.get('/orgs/' + orgId + '/valid-relation/', {params: obj});
   },
+  // 根据业务关系查询相关的单位
+  queryOrgByAllRelation: (orgId, obj) => {
+    obj.size = -1;
+    return http.get('/orgs/' + orgId + '/all-relation/', {params: obj});
+  },
   // 校验邮箱
   checkEmail: (email, userId) => {
     return http.get('/oms/user/email', {
