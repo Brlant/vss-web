@@ -160,13 +160,10 @@
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
             <el-form-item label="仓库地址" prop="orgAddress">
-              <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
-              <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
-              <!--</el-select>-->
               <el-select placeholder="请选择仓库地址" v-model="form.orgAddress" filterable :clearable="true"
                          @change="orgAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
-                           v-for="item in LogisticsCenter">
+                           v-for="item in LogisticsCenterAddressList">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -192,7 +189,12 @@
                            v-for="item in transportationMeansList" v-show="item.key <= 1"></el-option>
               </el-select>
             </el-form-item>
-
+            <el-form-item label="物流中心" prop="logisticsCentreId" v-if="isEntrustWarehouse">
+              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"
+                         @change="changeLogisticsCenterId">
+                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
+              </el-select>
+            </el-form-item>
             <!--<el-form-item label="是否进口">-->
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.importedFlag"></el-switch>-->
@@ -462,6 +464,7 @@
           'customerChannel': '0',
           transportationMeansId: '',
           transportationAddress: '',
+          logisticsCentreId: '',
           importedFlag: false,
           orgRelation: '',
           orgAddress: '',
@@ -503,6 +506,9 @@
           orgAddress: [
             {required: true, message: '请选择疾控发货地址', trigger: 'change'}
           ],
+          logisticsCentreId: [
+            {required: true, message: '请选择物流中心', trigger: 'change'}
+          ],
           customerChannel: [
             {required: true, message: '请选择报损方式', trigger: 'change'}
           ],
@@ -541,6 +547,7 @@
         logisticsList: [],
         goodsList: {},
         relationList: [],
+        LogisticsCenterAddressList: [],
         LogisticsCenter: [],
         doing: false,
         isSupplierOrOrg: false,
@@ -606,7 +613,7 @@
       },
       isEntrustWarehouse() {
         let status = false;
-        this.LogisticsCenter.forEach(i => {
+        this.LogisticsCenterAddressList.forEach(i => {
           if (i.id === this.form.orgAddress) {
             status = i.warehouseType;
           }
@@ -649,7 +656,9 @@
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-//      this.filterLogisticsCenter();
+      // 默认物流中心
+      this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
+      this.filterLogisticsCenter();
 //      this.filterAddress();
 //      let oldForm = window.localStorage.getItem(this.saveKey);
 //      if (oldForm) {
@@ -764,6 +773,14 @@
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
         });
+      },
+      changeLogisticsCenterId() {// 物流中心改变时, 重置货品列表
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.accessoryList = [];
+        this.batchNumbers = [];
+        this.form.detailDtoList = [];
+        this.product.orgGoodsId = '';
+        this.searchProduct();
       },
       filterLogisticsCenter: function () {// 过滤物流中心
         let param = {
@@ -891,6 +908,7 @@
       },
       orgAddressChange(val) {
         this.form.transportationMeansId = '';
+        this.form.logisticsCentreId = '';
       },
       filterAddress() {
         Address.queryAddress(this.form.orgId, {
@@ -899,7 +917,7 @@
           auditedStatus: '1',
           status: 0
         }).then(res => {
-          this.LogisticsCenter = res.data;
+          this.LogisticsCenterAddressList = res.data;
           let defaultStore = res.data.filter(item => item.default);
           this.form.orgAddress = defaultStore.length ? defaultStore[0].id : '';
         });
@@ -942,13 +960,14 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.orgId) {
+        if (!this.form.orgId || !this.form.logisticsCentreId) {
           this.searchProductList = [];
           this.filterProductList = [];
           return;
         }
         let params = {
-          keyWord: query
+          keyWord: query,
+          logisticsCentreId: this.form.logisticsCentreId // 查询货品传入物流中心
         };
         let rTime = Date.now();
         this.requestTime = rTime;
