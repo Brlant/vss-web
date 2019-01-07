@@ -18,10 +18,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -38,15 +40,18 @@
     border-radius: 10px;
     font-size: 12px;
     line-height: 26px;
+
     .product-info-fix {
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
       margin-bottom: 10px;
     }
+
     &:hover {
       border-color: #aaa
     }
+
     .product-remove {
       position: absolute;
       right: 0;
@@ -57,10 +62,12 @@
       text-align: center;
       cursor: pointer;
       color: #666;
+
       &:hover {
         color: #333
       }
     }
+
     .order-goods-info {
       .col-label {
         padding-top: 4px;
@@ -153,15 +160,18 @@
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
             <el-form-item label="疾控发货地址" prop="orgAddress">
-              <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
-              <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
-              <!--</el-select>-->
               <el-select placeholder="请选择疾控发货地址" v-model="form.orgAddress" filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
-                           v-for="item in LogisticsCenter">
+                           v-for="item in LogisticsCenterAddressList">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="物流中心" prop="logisticsCentreId">
+              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"
+                         @change="changeLogisticsCenterId">
+                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
             </el-form-item>
             <el-form-item label="运输条件" prop="transportationCondition">
@@ -428,6 +438,7 @@
           'transportationCondition': '',
           transportationMeansId: '',
           transportationAddress: '',
+          logisticsCentreId: '',
           importedFlag: false,
           orgRelation: '',
           orgAddress: '',
@@ -469,6 +480,9 @@
           orgAddress: [
             {required: true, message: '请选择疾控发货地址', trigger: 'change'}
           ],
+          logisticsCentreId: [
+            {required: true, message: '请选择物流中心', trigger: 'change'}
+          ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
           ],
@@ -507,6 +521,7 @@
         logisticsList: [],
         goodsList: {},
         relationList: [],
+        LogisticsCenterAddressList: [],
         LogisticsCenter: [],
         doing: false,
         isSupplierOrOrg: false,
@@ -592,7 +607,7 @@
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-//      this.filterLogisticsCenter();
+      this.filterLogisticsCenter();
 //      this.filterAddress();
 //      let oldForm = window.localStorage.getItem(this.saveKey);
 //      if (oldForm) {
@@ -609,6 +624,8 @@
       setDefaultValue() {
         this.form.transportationMeansId = '0';
         this.form.transportationCondition = '0';
+        // 默认物流中心
+        this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       },
       getTitle() {
         return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}销售订单`;
@@ -705,6 +722,14 @@
         BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
         });
+      },
+      changeLogisticsCenterId() {// 物流中心改变时, 重置货品列表
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.accessoryList = [];
+        this.batchNumbers = [];
+        this.form.detailDtoList = [];
+        this.product.orgGoodsId = '';
+        this.searchProduct();
       },
       filterLogisticsCenter: function () {// 过滤物流中心
         let param = {
@@ -836,7 +861,7 @@
           auditedStatus: '1',
           status: 0
         }).then(res => {
-          this.LogisticsCenter = res.data;
+          this.LogisticsCenterAddressList = res.data;
           let defaultStore = res.data.filter(item => item.default);
           this.form.orgAddress = defaultStore.length ? defaultStore[0].id : '';
         });
@@ -874,7 +899,7 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.customerId || !this.form.orgId) {
+        if (!this.form.customerId || !this.form.orgId || !this.form.logisticsCentreId) {
           this.searchProductList = [];
           this.filterProductList = [];
           return;
@@ -883,7 +908,8 @@
           cdcId: this.form.orgId,
           povId: this.form.customerId,
           vaccineType: this.vaccineType,
-          keyWord: query
+          keyWord: query,
+          logisticsCentreId: this.form.logisticsCentreId // 查询货品传入物流中心
         };
         let rTime = Date.now();
         this.requestTime = rTime;

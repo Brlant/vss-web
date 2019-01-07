@@ -39,6 +39,9 @@
             <oms-row label="疾控仓库地址" :span="span">
               <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
             </oms-row>
+            <oms-row label="物流中心" :span="span">
+              {{currentOrder.centreName}}
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -66,7 +69,7 @@
           </el-col>
         </el-row>
         <el-row v-show="currentOrder.remark">
-          <oms-row label="备注" :span="3">{{ currentOrder.remark }}</oms-row>
+          <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 
@@ -183,7 +186,7 @@
     },
     data() {
       return {
-        span: 6,
+        span: 8,
         warehouses: [],
         LogisticsCenter: []
       };

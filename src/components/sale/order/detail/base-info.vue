@@ -31,6 +31,11 @@
             <oms-row label="接种点" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
+            <oms-row label="物流中心" :span="span">
+              <span class="goods-span">
+                {{currentOrder.centreName}}
+              </span>
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -113,6 +118,11 @@
             </oms-row>
             <oms-row label="接种点收货地址" :span="span">
               {{currentOrder.warehouseAddress}}
+            </oms-row>
+            <oms-row label="物流中心" :span="span">
+              <span class="goods-span">
+                {{currentOrder.centreName}}
+              </span>
             </oms-row>
             <oms-row label="实际收货人" :span="span">
               <span class="goods-span">{{currentOrder.actualConsignee}}</span>
