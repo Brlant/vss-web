@@ -164,10 +164,10 @@
               <ul class="show-list">
                 <li v-for="item in businessRelationList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
-                  <div class="id-part">
-                    <el-tag type="warning" v-show=" isExpirationTime(item) === '1' ">即将到期</el-tag>
-                    <el-tag type="danger" v-show=" isExpirationTime(item) === '2' ">已过期</el-tag>
-                  </div>
+                  <!--<div class="id-part">-->
+                  <!--<el-tag type="warning" v-show=" isExpirationTime(item) === '1' ">即将到期</el-tag>-->
+                  <!--<el-tag type="danger" v-show=" isExpirationTime(item) === '2' ">已过期</el-tag>-->
+                  <!--</div>-->
                   <div>
                     {{item.followOrgName }}
                   </div>
@@ -294,12 +294,12 @@
                 <!--{{ businessRelationItem.followOrg.orgDto.remarks }}-->
                 <!--</el-col>-->
 
-                <el-col :span="5" class="text-right">
-                  有效期限：
-                </el-col>
-                <el-col :span="8">
-                  {{businessRelationItem.expirationDate | date}}
-                </el-col>
+                <!--<el-col :span="5" class="text-right">-->
+                <!--有效期限：-->
+                <!--</el-col>-->
+                <!--<el-col :span="8">-->
+                <!--{{businessRelationItem.expirationDate | date}}-->
+                <!--</el-col>-->
               </el-row>
               <div v-show="businessRelationItem.followOrg.scopes.length>0">
                 <el-row style="margin-bottom: 0">
@@ -382,11 +382,11 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="有效期" prop="expirationDate">
-          <el-date-picker v-model="form.expirationDate" format="yyyy-MM-dd" placeholder="选择日期"
-                          style="width: 100%;" value-format="timestamp">
-          </el-date-picker>
-        </el-form-item>
+        <!--<el-form-item label="有效期" prop="expirationDate">-->
+        <!--<el-date-picker v-model="form.expirationDate" format="yyyy-MM-dd" placeholder="选择日期"-->
+        <!--style="width: 100%;" value-format="timestamp">-->
+        <!--</el-date-picker>-->
+        <!--</el-form-item>-->
         <el-form-item label-width="120px">
           <el-button type="primary" @click="onSubmit('relationForm')" native-type="submit" :disabled="doing">保存
           </el-button>
