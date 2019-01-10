@@ -51,6 +51,8 @@
                 </el-col>
               </oms-form-row>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="10">
               <oms-form-row label="产品名称" :span="4">
                 <el-select filterable remote placeholder="请输入产品名称" :remote-method="filterOrgGoods"
@@ -98,6 +100,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="8">
               <oms-form-row label="批号" :span="5">
                 <el-select v-model="searchWord.batchNumberId" filterable clearable remote
@@ -109,9 +113,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-            </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="1">
+              <oms-form-row label="" :span="3">
                 <perm label="cdc-free-vaccine-sale-manager-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
@@ -376,7 +378,7 @@
         });
       },
       filterBatchNumber(query) {
-        this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
+        this.$http.get('erp-stock/municipal/batch-number', {params: {keyWord: query}}).then(res => {
           this.batchNumberList = res.data.list;
         });
       },
@@ -384,7 +386,7 @@
         let params = Object.assign({}, {
           keyWord: query
         });
-        Vaccine.query(params).then(res => {
+        this.$http.get('/vaccine-info/municipal/pager').then(res => {
           this.orgGoods = res.data.list;
         });
       },
