@@ -362,8 +362,8 @@
         });
       },
       searchInOrder: function () {// 搜索
-        this.searchWord.createStartTime = this.formatTime(this.expectedTime[0]);
-        this.searchWord.createEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.expectedTime, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.expectedTime, 1);
         this.getBatches(1);
       },
       resetSearchForm: function () {// 重置表单

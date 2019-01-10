@@ -197,8 +197,8 @@
     },
     methods: {
       exportFile: function () {
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/sale'});
@@ -215,8 +215,8 @@
         });
       },
       search: function () {// 搜索
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.pager.currentPage = 1;
         this.loadingData = true;

@@ -467,8 +467,8 @@
         return state;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.createStartTime = this.formatTime(this.expectedTime[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchCondition.createStartTime = this.$formatAryTime(this.expectedTime, 0);
+        this.searchCondition.createEndTime = this.$formatAryTime(this.expectedTime, 1);
         Object.assign(this.filters, this.searchCondition);
       },
       searchProduct(keyWord) {

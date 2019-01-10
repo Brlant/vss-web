@@ -332,8 +332,8 @@
         if (!this.searchCondition.orgId && isShowTip) {
           return this.$notify.info({message: `请选择${titleAry[type][3]}`});
         }
-        this.searchCondition.createStartTime = this.formatTime(this.createTimes && this.createTimes[0] || '');
-        this.searchCondition.createEndTime = this.formatTime(this.createTimes && this.createTimes[1] || '');
+        this.searchCondition.createStartTime = this.$formatAryTime(this.createTimes, 0);
+        this.searchCondition.createEndTime = this.$formatAryTime(this.createTimes, 1);
         Object.assign(this.filterRights, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单

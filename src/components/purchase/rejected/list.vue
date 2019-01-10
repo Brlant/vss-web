@@ -426,10 +426,10 @@
         return state;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.expectedStartTime = this.formatTime(this.expectedTime[0]);
-        this.searchCondition.expectedEndTime = this.formatTime(this.expectedTime[1]);
-        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
+        this.searchCondition.expectedStartTime = this.$formatAryTime(this.expectedTime, 0);
+        this.searchCondition.expectedEndTime = this.$formatAryTime(this.expectedTime, 1);
+        this.searchCondition.createStartTime = this.$formatAryTime(this.createTimes, 0);
+        this.searchCondition.createEndTime = this.$formatAryTime(this.createTimes, 1);
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单

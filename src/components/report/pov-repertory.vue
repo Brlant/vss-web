@@ -155,8 +155,8 @@
           });
           return;
         }
-        this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord, {type: this.type - 1});
         this.isLoading = true;
         this.$store.commit('initPrint', {
@@ -224,8 +224,8 @@
           });
           return;
         }
-        this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord, {type: this.type - 1});
         this.loadingData = true;
         this.$http.get('/erp-statement/pov-stock', {params}).then(res => {

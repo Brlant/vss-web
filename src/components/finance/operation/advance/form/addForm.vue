@@ -308,8 +308,8 @@
         let orgId = this.$store.state.user.userCompanyAddress;
         params.orgId = this.type === 1 ? val : orgId;
         params.transactOrgId = this.type === 1 ? orgId : val;
-        params.createStartTime = this.formatTime(this.createTimes && this.createTimes[0] || '');
-        params.createEndTime = this.formatTime(this.createTimes && this.createTimes[1] || '');
+        params.createStartTime = this.$formatAryTime(this.createTimes, 0);
+        params.createEndTime = this.$formatAryTime(this.createTimes, 1);
         this.detailLoading = true;
         erpOrder.query(params).then(res => {
           let ary = [];

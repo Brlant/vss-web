@@ -215,8 +215,8 @@
         });
       },
       searchInOrder: function () {// 搜索
-        this.filters.arriveStartTime = this.formatTime(this.aryTime[0]);
-        this.filters.arriveEndTime = this.formatTime(this.aryTime[1]);
+        this.filters.arriveStartTime = this.$formatAryTime(this.aryTime, 0);
+        this.filters.arriveEndTime = this.$formatAryTime(this.aryTime, 1);
         this.queryBillPage(1);
       },
       resetSearchForm: function () {// 重置表单

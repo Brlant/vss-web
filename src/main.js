@@ -174,6 +174,10 @@ Vue.prototype.$httpRequestOpera = function (httpPromise, option = {
   });
 };
 
+Vue.prototype.$formatAryTime = function (ary, index, str = 'YYYY-MM-DD') {
+  return Array.isArray(ary) && ary[index] ? this.$moment(ary[index]).format(str) : '';
+};
+
 new Vue({
   router,
   store,

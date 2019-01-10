@@ -89,8 +89,8 @@
           });
           return;
         }
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/repertory'});
@@ -113,8 +113,8 @@
           });
           return;
         }
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
         this.$http.get('/erp-statement/stock-detail', {params}).then(res => {

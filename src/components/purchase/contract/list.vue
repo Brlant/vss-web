@@ -469,8 +469,8 @@
         this.showDetail = true;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.startDate = this.formatTime(this.createTimes[0]);
-        this.searchCondition.endDate = this.formatTime(this.createTimes[1]);
+        this.searchCondition.startDate = this.$formatAryTime(this.createTimes, 0);
+        this.searchCondition.endDate = this.$formatAryTime(this.createTimes, 1);
         Object.assign(this.filters, this.searchCondition);
         this.getOrderList(1);
       },

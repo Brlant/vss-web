@@ -153,8 +153,8 @@
         return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
       },
       searchInOrder: function () {// 搜索
-        this.filters.startTime = this.formatTime(this.createTimes[0]);
-        this.filters.endTime = this.formatTime(this.createTimes[1]);
+        this.filters.startTime = this.$formatAryTime(this.createTimes, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.filters.endTime = this.$formatAryTime(this.createTimes, 1, 'YYYY-MM-DD HH:mm:ss');
         this.getOrders(1);
       },
       resetSearchForm: function () {// 重置表单

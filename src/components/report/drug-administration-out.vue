@@ -91,8 +91,8 @@
         let moduleId = this.$route.meta.type === '0' ? '/drug-administration/report/in' : '/drug-administration/report/out';
         let url = this.$route.meta.type === '0' ? '/erp-statement/drug-administration/in-warehouse/export' : '/erp-statement/drug-administration/out-warehouse/export';
         let fileName = this.$route.meta.type === '0' ? '购进数据.xml' : '销售数据.xml';
-        let startTime = this.formatTime(this.bizDateAry ? this.bizDateAry[0] : '');
-        let endTime = this.formatTime(this.bizDateAry ? this.bizDateAry[1] : '');
+        let startTime = this.$formatAryTime(this.bizDateAry, 0);
+        let endTime = this.$formatAryTime(this.bizDateAry, 1);
         if (startTime && endTime) {
           fileName = startTime + '至' + endTime + fileName;
         }

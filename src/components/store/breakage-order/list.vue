@@ -409,10 +409,10 @@
         return state;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.createStartTime = this.formatTime(this.createdTime[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.createdTime[1]);
-        this.searchCondition.expectedStartTime = this.formatTime(this.expectedTime[0]);
-        this.searchCondition.expectedEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchCondition.createStartTime = this.$formatAryTime(this.createdTime, 0);
+        this.searchCondition.createEndTime = this.$formatAryTime(this.createdTime, 1);
+        this.searchCondition.expectedStartTime = this.$formatAryTime(this.expectedTime, 0);
+        this.searchCondition.expectedEndTime = this.$formatAryTime(this.expectedTime, 1);
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单

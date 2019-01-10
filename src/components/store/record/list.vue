@@ -213,8 +213,8 @@
         this.showPart = false;
       },
       searchInOrder: function () {// 搜索
-        this.filters.startTime = this.formatTime(this.expectedTime[0]);
-        this.filters.endTime = this.formatTime(this.expectedTime[1]);
+        this.filters.startTime = this.$formatAryTime(this.expectedTime, 0);
+        this.filters.endTime = this.$formatAryTime(this.expectedTime, 1);
         if (this.filters.startTime && this.filters.startTime === this.filters.endTime) {
           this.filters.endTime = this.filters.endTime.split(' ')[0] + ' 23:59:59';
         }

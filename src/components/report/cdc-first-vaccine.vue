@@ -199,8 +199,8 @@
     },
     methods: {
       exportFile: function () {
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/cdc/first-vaccine'});
@@ -226,8 +226,8 @@
         // if (!this.isSelectCondition()) {
         //   return this.$notify.info({message: '请选择查询条件'});
         // }
-        this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
         this.$http({

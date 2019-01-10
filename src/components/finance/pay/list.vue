@@ -72,8 +72,8 @@
         <div class="opera-icon">
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
-            <span v-show="showSearch">收起筛选</span>
-            <span v-show="!showSearch">展开筛选</span>
+            <span v-show="showSearch">收起</span>
+            <span v-show="!showSearch">展开</span>
           </span>
         </div>
         <el-form class="advanced-query-form clearfix"
@@ -454,8 +454,8 @@
     },
     methods: {
       exportPayment: function () {
-        this.searchWord.startTime = this.formatExportTime(this.bizDateAry[0]);
-        this.searchWord.endTime = this.formatExportTime(this.bizDateAry[1]);
+        this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss');
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/finance/pay'});
@@ -472,8 +472,8 @@
         });
       },
       exportUnPayment: function () {
-        this.searchWord.createStartTime = this.formatExportTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatExportTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss');
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/finance/pay'});
@@ -622,8 +622,8 @@
         });
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
+        this.searchCondition.createStartTime = this.$formatAryTime(this.createTimes, 0);
+        this.searchCondition.createEndTime = this.$formatAryTime(this.createTimes, 1);
         Object.assign(this.filterRights, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单

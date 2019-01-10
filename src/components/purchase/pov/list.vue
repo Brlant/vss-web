@@ -441,8 +441,8 @@
       },
       searchInOrder: function () {// 搜索
         if (this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0]) {
-          this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
-          this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
+          this.searchWord.demandStartTime = this.$formatAryTime(this.demandTime, 0);
+          this.searchWord.demandEndTime = this.$formatAryTime(this.demandTime, 1);
           Object.assign(this.filters, this.searchWord);
         } else {
           this.$notify.info({
@@ -470,8 +470,8 @@
           });
           return;
         }
-        this.searchWord.demandStartTime = this.changeTime(this.demandTime[0]);
-        this.searchWord.demandEndTime = this.changeTime(this.demandTime[1]);
+        this.searchWord.demandStartTime = this.$formatAryTime(this.demandTime, 0);
+        this.searchWord.demandEndTime = this.$formatAryTime(this.demandTime, 1);
         let filters = {
           status: this.filters.status,
           povId: this.searchWord.povId,

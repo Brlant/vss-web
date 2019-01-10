@@ -174,8 +174,8 @@
         });
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.actualStartTime = this.formatTime(this.actualTime[0]);
-        this.searchCondition.actualEndTime = this.formatTime(this.actualTime[1]);
+        this.searchCondition.actualStartTime = this.$formatAryTime(this.actualTime, 0);
+        this.searchCondition.actualEndTime = this.$formatAryTime(this.actualTime, 1);
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
