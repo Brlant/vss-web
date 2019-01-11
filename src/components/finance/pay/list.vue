@@ -136,14 +136,19 @@
         <div class="d-table-left">
           <h2 class="header">
             <span class="pull-right">
-                <a href="#" class="btn-circle" @click.prevent="searchType">
-                  <i class="el-icon-t-search"></i>
+              <a href="#" class="btn-circle" @click.prevent="searchType">
+                <i class="el-icon-t-search"></i>
+              </a>
+              <!--<perm label="accounts-payable-export">-->
+                <!--<el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">-->
+                  <!--导出Excel-->
+                <!--</el-button>-->
+              <!--</perm>-->
+              <perm label="accounts-payable-export">
+                <a href="#" class="btn-circle" @click.stop.prevent="exportFile" :disabled="isLoading">
+                  <i class="el-icon-t-export"></i>
                 </a>
-                <perm label="accounts-payable-export">
-                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
-                    导出Excel
-                  </el-button>
-                </perm>
+              </perm>
             </span>
             <!--<span class="pull-right" style="margin-right: 8px">-->
             <!--<perm label="accounts-payable-add">-->
