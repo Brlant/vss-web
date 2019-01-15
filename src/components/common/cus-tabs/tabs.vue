@@ -7,7 +7,7 @@
     </el-tabs>
     <el-dropdown @command="handleTab">
         <span class="el-dropdown-link">
-          更多<i class="el-icon-arrow-down el-icon--right"></i>
+          <i class="el-icon-more"></i>
         </span>
       <el-dropdown-menu slot="dropdown">
         <el-dropdown-item command="0">关闭当前标签页</el-dropdown-item>

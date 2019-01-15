@@ -12,15 +12,20 @@
       &.is-closable .el-icon-close {
         width: 14px;
       }
-
       &.is-active {
         background: #f9f9f9;
         border-bottom: 0;
+
+        &:focus.is-focus:not(:active) {
+          box-shadow: none;
+          border-radius: 0;
+        }
       }
       &.is-closable:hover {
         padding-left: 20px;
         padding-right: 20px;
       }
+
     }
   }
 
