@@ -173,7 +173,7 @@
     font-size: 16px;
     font-weight: normal;
     line-height: 30px;
-    background: rgba(243, 243, 243, 1);
+    background: #eee;
 
     .position-nav-text {
       position: relative;
