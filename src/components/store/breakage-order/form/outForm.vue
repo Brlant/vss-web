@@ -165,7 +165,7 @@
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenterAddressList">
                   <span class="pull-left">{{ item.name }}</span>
-                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}（{{storeType[item.warehouseType]}}）</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -566,7 +566,8 @@
         requestTime: '',
         editItemProduct: {},
         isHasBatchNumberInfo: false,
-        formCopy: {}
+        formCopy: {},
+        storeType: ['物流公司仓库', '本地仓库']
       };
     },
     computed: {
@@ -670,7 +671,7 @@
     methods: {
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
-        return name + this.getWarehouseAdress(item);
+        return name + this.getWarehouseAdress(item) + `（${this.storeType[item.warehouseType]}）`;
       },
       setDefaultValue() {
         // this.form.transportationMeansId = '0';
