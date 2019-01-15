@@ -98,12 +98,12 @@ export const route = [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-                meta: {moduleId: 'sale', title: '销售分配', perm: ''}
+                meta: {moduleId: 'sale', title: '销售分配', perm: 'cerp-create-wave'}
               },
               {
                 path: '/sale/allocation/task',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'sale', title: '销售分配', perm: ''}
+                meta: {moduleId: 'sale', title: '销售分配', perm: 'cerp-create-wave'}
               }
             ]
           },
@@ -179,12 +179,12 @@ export const route = [
               {
                 path: '',
                 component: resolve => require(['./components/store/inventory/list.vue'], resolve),
-                meta: {moduleId: 'store', title: '库存盘点'}
+                meta: {moduleId: 'store', title: '库存盘点', perm: 'erp-stock-inventory-query'}
               },
               {
                 path: '/store/inventory/detail',
                 component: resolve => require(['./components/store/inventory/details.vue'], resolve),
-                meta: {moduleId: 'store', title: '库存盘点'}
+                meta: {moduleId: 'store', title: '库存盘点', perm: 'erp-stock-inventory-query'}
               }
             ]
           },
