@@ -28,15 +28,17 @@
       $route: {
         handler(val) {
           if (!val.meta || !val.meta.title) return;
-          let item = this.list.find(f => f.meta.perm === val.meta.perm);
-          if (!item) {
+          let index = this.list.findIndex(f => f.meta.perm === val.meta.perm);
+          if (index === -1) {
             this.list.push(val);
             this.$nextTick(() => {
               this.active = val.path;
             });
             return;
           }
-          this.active = item.path;
+          // 覆盖旧的路由信息
+          this.list.splice(index, 1, val);
+          this.active = this.list[index].path;
         },
         immediate: true
       }
