@@ -61,6 +61,11 @@
             <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
           </oms-row>
         </el-row>
+        <el-row style="margin-bottom:0">
+          <oms-row label="收货地址" :span="4">
+            <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
+          </oms-row>
+        </el-row>
         <el-row v-show="currentOrder.remark">
           <oms-row label="报损原因" :span="4">{{ currentOrder.remark }}</oms-row>
         </el-row>
