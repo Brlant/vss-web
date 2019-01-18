@@ -133,8 +133,8 @@
                            v-for="item in breakageType"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="上级疾控中心" prop="customerId" v-if="!isSelfBreakage" @change="customerIdChange">
-              <el-select placeholder="请选择上级疾控中心" v-model="form.customerId" clearable>
+            <el-form-item label="上级疾控中心" prop="customerId" v-if="!isSelfBreakage">
+              <el-select placeholder="请选择上级疾控中心" v-model="form.customerId" clearable @change="customerIdChange">
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in customerList">
                 </el-option>
               </el-select>
@@ -160,6 +160,10 @@
                          @change="changeLogisticsCenterId">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
+            </el-form-item>
+            <el-form-item label="是否合格">
+              <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
+                         v-model="form.qualifiedFlag" @change="qualifiedFlagChange"></el-switch>
             </el-form-item>
             <el-form-item label="报损原因" prop="remark" v-if="isSelfBreakage">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
@@ -405,6 +409,7 @@
           importedFlag: false,
           orgRelation: '',
           orgAddress: '',
+          qualifiedFlag: true,
           sameBatchNumber: false,
           actualConsignee: '',
           'consigneePhone': '',
@@ -636,6 +641,10 @@
       },
       setIndexValue: function (value) {// 左侧显示页切换
         this.index = value;
+      },
+      qualifiedFlagChange() { // 改变是否合格
+        this.resetProductForm();
+        this.form.detailDtoList = [];
       },
       changeLogisticsCenterId() {// 改变物流中心
         this.$refs['orderGoodsAddForm'].resetFields();

@@ -47,7 +47,10 @@
             <oms-row label="下单时间">
               <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
-
+            <oms-row label="是否合格">
+              <span class="goods-span" v-show="currentOrder.qualifiedFlag">合格</span>
+              <span class="goods-span" v-show="!currentOrder.qualifiedFlag">不合格</span>
+            </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
