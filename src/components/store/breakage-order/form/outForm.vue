@@ -165,6 +165,11 @@
               <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                          v-model="form.qualifiedFlag" @change="qualifiedFlagChange"></el-switch>
             </el-form-item>
+            <el-form-item label="预计送货时间" prop="expectedTime" v-if="form.transportationMeansId === '0'">
+              <el-date-picker v-model="form.expectedTime" placeholder="请选择预计送货时间"
+                              format="yyyy-MM-dd" :picker-options="pickerOptions" value-format="timestamp">
+              </el-date-picker>
+            </el-form-item>
             <el-form-item label="报损原因" prop="remark" v-if="isSelfBreakage">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
@@ -457,7 +462,7 @@
             {required: true, message: '请选择报损方式', trigger: 'change'}
           ],
           expectedTime: [
-            {required: true, message: '请选择日期', trigger: 'change'}
+            {required: true, message: '请选择预计报送时间', trigger: 'change'}
           ],
           remark: [
             {required: true, message: '请输入报损原因', trigger: ['change', 'blur']}
