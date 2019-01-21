@@ -138,6 +138,11 @@ export const route = [
             path: '/pov/record',
             component: resolve => require(['./components/pov/record/list.vue'], resolve),
             meta: {moduleId: 'pov', title: '注射记录', perm: 'injection-task-manager'}
+          },
+          {
+            path: '/pov/subordinate/record',
+            component: resolve => require(['./components/pov/record/subordinate/list.vue'], resolve),
+            meta: {moduleId: 'pov', title: '下属单位注射记录', perm: 'subordinate-injection-task-manager'}
           }
         ]
       },
