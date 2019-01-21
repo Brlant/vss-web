@@ -164,7 +164,7 @@
                            v-for="item in transportationConditionList"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流中心">
+            <el-form-item label="物流中心" prop="logisticsCentreId">
               <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
@@ -415,6 +415,9 @@
           ],
           logisticsProviderId: [
             {required: true, message: '请选择物流商', trigger: 'change'}
+          ],
+          logisticsCentreId: [
+            {required: true, message: '请选择物流中心', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'change'}

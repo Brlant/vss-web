@@ -44,7 +44,8 @@
             </td>
             <td>
               {{ bm.batchNumber }}
-              <el-tag v-show="bm.inEffectiveFlag" type="warning">近效期</el-tag>
+              <goods-status-tag :item="bm" :form="form"/>
+              <!--<el-tag v-show="bm.inEffectiveFlag" type="warning">近效期</el-tag>-->
             </td>
             <td>{{ bm.productionDate | date }}</td>
             <td>{{ bm.expirationDate | date }}</td>

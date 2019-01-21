@@ -321,7 +321,9 @@
                   </td>
                   <td>
                     {{ product.no ? product.no : '无' }}
-                    <el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>
+                    <!--<el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>-->
+                    <goods-status-tag :item="product" :form="form"/>
+
                   </td>
                   <td class="ar" v-show="vaccineType==='2'">
                    <span v-show="Number(product.unitPrice)">
@@ -1023,6 +1025,8 @@
                         product.no = bl.no;
                         product.amount = bl.productCount;
                         product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
+                        // 有效期
+                        product.expirationDate = bl.expirationDate;
                         this.form.detailDtoList.push(product);
                         totalAmount += bl.productCount;
                       }
@@ -1047,6 +1051,7 @@
                               measurementUnit: m.accessoryGoods.measurementUnit,
                               packingCount: null,
                               specificationsId: '',
+                              expirationDate: m.expirationDate, // 有效期
                               specifications: m.accessoryGoods.specifications,
                               proportion: m.proportion
                             });
@@ -1067,7 +1072,8 @@
                           packingCount: null,
                           specificationsId: '',
                           specifications: m.accessoryGoods.specifications,
-                          proportion: m.proportion
+                          proportion: m.proportion,
+                          expirationDate: m.expirationDate // 有效期
                         });
                       }
                     }
@@ -1089,7 +1095,8 @@
                     packingCount: null,
                     specificationsId: '',
                     specifications: m.accessoryGoods.specifications,
-                    proportion: m.proportion
+                    proportion: m.proportion,
+                    expirationDate: m.expirationDate // 有效期
                   });
                 });
               }
@@ -1195,6 +1202,7 @@
             delete item.isCombination;
             delete item.proportion;
             delete item.orgGoodsDto;
+            delete item.expirationDate; // 删除有效期
           });
           saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
           this.doing = true;

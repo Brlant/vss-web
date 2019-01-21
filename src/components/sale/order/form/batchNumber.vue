@@ -45,8 +45,11 @@
             </td>
             <td>
               {{ batchNumber.no }}
-              <el-tag v-show="batchNumber.inEffectiveFlag" type="warning">近效期</el-tag>
-              <el-tag v-show="batchNumber.disabled" type="danger">已过期</el-tag>
+              <span v-show="form.bizType === '2-0'">
+                  <el-tag v-show="!batchNumber.disabled && batchNumber.inEffectiveFlag" type="warning">近效期</el-tag>
+                  <el-tag v-show="batchNumber.disabled" type="danger">已过期</el-tag>
+              </span>
+              <goods-status-tag v-show="form.bizType === '2-1'" :item="batchNumber" :form="form"/>
             </td>
             <td>{{ batchNumber.count }}</td>
             <td>{{ batchNumber.productionDate | date }}</td>
@@ -178,7 +181,7 @@
         );
       },
       isValid(item) {
-        let a = this.$moment();
+        let a = this.$moment(this.form.createTime || Date.now());
         let b = this.$moment(item.expirationDate);
         return a > b;
       },

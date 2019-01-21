@@ -132,7 +132,8 @@
               </div>
               <div>
                 批号：{{ item.batchNumber || '无' }}
-                <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
+                <!--<el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>-->
+                <goods-status-tag :item="item" :form="currentOrder"/>
               </div>
             </td>
             <!--<td class="text-center" width="160px">-->

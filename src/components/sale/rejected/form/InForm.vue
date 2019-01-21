@@ -318,7 +318,8 @@
                 </td>
                 <td>
                   {{ product.no ? product.no : '无' }}
-                  <el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>
+                  <!--<el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>-->
+                  <goods-status-tag :item="product" :form="form"/>
                 </td>
                 <td class="ar" v-show="orgLevel === 2">
                   <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
@@ -973,6 +974,8 @@
                       product.no = bl.batchNumber;
                       product.amount = bl.productCount;
                       product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
+                      // 有效期
+                      product.expirationDate = bl.expirationDate;
                       this.form.detailDtoList.push(product);
                       totalAmount += bl.productCount;
                     }
@@ -998,7 +1001,8 @@
                             packingCount: null,
                             specificationsId: '',
                             specifications: m.accessoryGoods.specifications,
-                            proportion: m.proportion
+                            proportion: m.proportion,
+                            expirationDate: m.expirationDate
                           });
                         }
                       });
@@ -1017,7 +1021,8 @@
                         packingCount: null,
                         specificationsId: '',
                         specifications: m.accessoryGoods.specifications,
-                        proportion: m.proportion
+                        proportion: m.proportion,
+                        expirationDate: m.expirationDate
                       });
                     }
                   }

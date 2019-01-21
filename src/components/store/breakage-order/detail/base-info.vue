@@ -36,6 +36,9 @@
             <oms-row label="物流中心" :span="span" v-show="currentOrder.centreName">
               {{currentOrder.centreName}}
             </oms-row>
+            <oms-row label="仓库地址" :span="span">
+              <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -47,7 +50,13 @@
             <oms-row label="下单时间">
               <span class="goods-span">{{currentOrder.createTime | minute}}</span>
             </oms-row>
-
+            <oms-row label="预计送货时间" v-show="currentOrder.expectedTime">
+              <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
+            </oms-row>
+            <oms-row label="是否合格">
+              <span class="goods-span" v-show="currentOrder.qualifiedFlag">合格</span>
+              <span class="goods-span" v-show="!currentOrder.qualifiedFlag">不合格</span>
+            </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
@@ -56,9 +65,9 @@
             <!--</oms-row>-->
           </el-col>
         </el-row>
-        <el-row style="margin-bottom:0">
-          <oms-row label="仓库地址" :span="4">
-            <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
+        <el-row style="margin-bottom:0" v-show="currentOrder.warehouseAddress">
+          <oms-row label="收货地址" :span="4">
+            <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
@@ -117,7 +126,8 @@
             </td>
             <td width="100px" class="R text-center">
               {{ item.batchNumber || '无' }}
-              <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
+              <!--<el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>-->
+              <goods-status-tag :item="item" :form="currentOrder"/>
             </td>
             <!--<td>{{ item.productionDate | date }}</td>-->
             <td width="90px" class="text-center">{{ item.expiryDate | date }}</td>

@@ -168,12 +168,12 @@
 
   .position-nav {
     margin: 0 0 8px;
-    padding: 5px 15px 5px 20px;
-    border-bottom: 1px solid #eee;
+    /*padding: 5px;*/
+    /*border-bottom: 1px solid #eee;*/
     font-size: 16px;
     font-weight: normal;
     line-height: 30px;
-    background: rgba(243, 243, 243, 1);
+    background: #eee;
 
     .position-nav-text {
       position: relative;
@@ -240,7 +240,7 @@
       <div>
         <div class="top-logo">
           <router-link to='/' class="a-link"><img :src="logo_pic" class="logo_pic" @click="activeId=''">
-            <span class="logo-span" :style="'color:'+skin.color">疫苗供应链管理系统</span>
+            <span class="logo-span" :style="'color:'+skin.color">上海市疫苗供应链管理系统</span>
           </router-link>
         </div>
         <div class="top-right">
@@ -332,7 +332,8 @@
     </div>
     <h4 class="position-nav">
       <div class="container">
-        <span class="position-nav-text">{{$route.meta.title}}</span>
+        <!--<span class="position-nav-text">{{$route.meta.title}}</span>-->
+        <cus-tabs/>
       </div>
     </h4>
   </div>
@@ -342,10 +343,10 @@
   import {Auth, cerpAction} from '../../resources';
   import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
-
+  import CusTabs from '@/components/common/cus-tabs/tabs.vue';
   export default {
     components: {
-      omsUploadPicture
+      omsUploadPicture, CusTabs
     },
     props: ['toRoute', 'level'],
     data() {
