@@ -213,7 +213,8 @@
             </td>
             <td width="100px" class="R text-center">
               {{ item.batchNumber || '无' }}
-              <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
+              <!--<el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>-->
+              <goods-status-tag :item="item" :form="currentOrder"/>
             </td>
             <!--<td>{{ item.productionDate | date }}</td>-->
             <td width="90px" class="text-center">{{ item.expiryDate | date }}</td>

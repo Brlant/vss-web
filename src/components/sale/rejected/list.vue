@@ -518,6 +518,7 @@
         this.action = 'add';
       },
       onSubmit: function () {
+        this.currentOrderId = '';
         this.getOrderList(1);
       },
       getOrderList: function (pageNo) {

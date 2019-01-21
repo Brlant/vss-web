@@ -328,7 +328,10 @@
                     <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
                     <span v-else="">{{ product.specifications }}</span>
                   </td>
-                  <td>{{ product.no ? product.no : '无' }}</td>
+                  <td>
+                    {{ product.no ? product.no : '无' }}
+                    <goods-status-tag :item="product" :form="form"/>
+                  </td>
                   <td class="ar" v-show="orgLevel === 2">
                     <span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>
                     <span v-if="!Number(product.unitPrice)">-</span>
@@ -1018,6 +1021,8 @@
                     product.no = bl.no;
                     product.amount = bl.productCount;
                     product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
+                    // 有效期
+                    product.expirationDate = bl.expirationDate;
                     this.form.detailDtoList.push(product);
                     totalAmount += bl.productCount;
                   }
@@ -1039,6 +1044,7 @@
                   measurementUnit: m.accessoryGoods.measurementUnit,
                   packingCount: null,
                   specificationsId: '',
+                  expirationDate: m.expirationDate, // 有效期
                   specifications: m.accessoryGoods.specifications,
                   proportion: m.proportion
                 });

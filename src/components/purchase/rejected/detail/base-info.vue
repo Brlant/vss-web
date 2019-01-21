@@ -130,6 +130,7 @@
               </div>
               <div>
                 批号：{{item.batchNumber || '无' }}
+                <goods-status-tag :item="item" :form="currentOrder"/>
               </div>
             </td>
             <td class="text-center" width="70px">

@@ -286,7 +286,9 @@
                   </td>
                   <td>
                     {{ product.no ? product.no : '无' }}
-                    <el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>
+                    <!--<el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>-->
+                    <goods-status-tag :item="product" :form="form"/>
+
                   </td>
                   <td>
                     {{ product.expirationDate | date}}
@@ -880,7 +882,8 @@
                           packingCount: null,
                           specificationsId: '',
                           specifications: m.accessoryGoods.specifications,
-                          proportion: m.proportion
+                          proportion: m.proportion,
+                          expirationDate: m.expirationDate
                         });
                       }
                     }
@@ -902,7 +905,8 @@
                     packingCount: null,
                     specificationsId: '',
                     specifications: m.accessoryGoods.specifications,
-                    proportion: m.proportion
+                    proportion: m.proportion,
+                    expirationDate: m.expirationDate
                   });
                 });
               }

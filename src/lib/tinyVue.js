@@ -99,7 +99,7 @@ import goodsInfoPart from '@/components/common/order/goods-info-part';
 import cancelOrder from '@/components/common/order/cancel-order';
 import orderGoodsInfo from '@/components/common/order/order-goods-info';
 import relevanceCodeReview from '@/components/common/order/relevance.code-review.vue';
-
+import goodsStatusTag from '@/components/common/order/goods-status-tag';
 import CardBox from '@/components/common/card-box';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
@@ -193,7 +193,8 @@ const tinyVue = [
   goodsSelect,
   statusList,
   relevanceCodeReview,
-  compressedImg
+  compressedImg,
+  goodsStatusTag
 ];
 
 const install = function (Vue, opts = {}) {

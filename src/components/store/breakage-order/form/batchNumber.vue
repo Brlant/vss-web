@@ -32,11 +32,11 @@
           <tbody>
           <tr v-for=" batchNumber in item.lots">
             <td>
-              <el-checkbox v-model="batchNumber.isChecked" :disabled="batchNumber.disabled"></el-checkbox>
+              <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
             </td>
             <td>
               <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                        @blur="isChangeValue(batchNumber, item)" :disabled="batchNumber.disabled">
+                        @blur="isChangeValue(batchNumber, item)">
                 <template slot="append">
                   <dict :dict-group="'measurementUnit'"
                         :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
@@ -45,8 +45,7 @@
             </td>
             <td>
               {{ batchNumber.no }}
-              <el-tag v-show="batchNumber.inEffectiveFlag" type="warning">近效期</el-tag>
-              <el-tag v-show="batchNumber.disabled" type="danger">已过期</el-tag>
+              <goods-status-tag :item="batchNumber" :form="form"/>
             </td>
             <td>{{ batchNumber.count }}</td>
             <td>{{ batchNumber.productionDate | date }}</td>
@@ -166,9 +165,6 @@
               args[index].data.forEach(f => {
                 f.isChecked = false;
                 f.productCount = '';
-                if (this.form.bizType === '2-0') {
-                  f.disabled = this.isValid(f);
-                }
               });
               i.lots = args[index].data || [];
             });
@@ -176,11 +172,6 @@
             this.doing = false;
           })
         );
-      },
-      isValid(item) {
-        let a = this.$moment();
-        let b = this.$moment(item.expirationDate);
-        return a > b;
       },
       /**
        * 编辑疫苗时，重设对应批号信息
@@ -241,7 +232,7 @@
        */
       checkItemAll(item) {
         item.lots.forEach(l => {
-          l.isChecked = item.isCheckedAll && !l.disabled;
+          l.isChecked = item.isCheckedAll;
         });
       },
       /**
