@@ -416,7 +416,7 @@
           let params = Object.assign({}, {
             keyWord: query
           });
-          http.get('/vaccine-authorization/pov', {params}).then(res => {
+          http.get('/erp-stock/pov/all-goods', {params}).then(res => {
             this.orgGoods = res.data.list;
           });
         } else {
