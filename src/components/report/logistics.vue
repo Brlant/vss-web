@@ -286,32 +286,8 @@
       //   return isSelected;
       // },
       showOrderType: function (item) {
-        let title = '';
-        if (item === '1-0') {
-          title = '采购订单';
-        }
-        if (item === '1-1') {
-          title = '销售退货';
-        }
-        if (item === '1-2') {
-          title = '盘盈入库';
-        }
-        if (item === '1-3') {
-          title = '调拨入库';
-        }
-        if (item === '2-0') {
-          title = '销售出库';
-        }
-        if (item === '2-1') {
-          title = '采购退货';
-        }
-        if (item === '2-2') {
-          title = '盘亏出库';
-        }
-        if (item === '2-3') {
-          title = '调拨出库';
-        }
-        return title;
+        let type = this.bizTypeList.find(f => f.key === item);
+        return type && type.label || '';
       },
       getSummaries(param) {
         const {columns, data} = param;

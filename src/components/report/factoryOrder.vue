@@ -219,38 +219,19 @@
         });
         return [].concat(inType, outType);
       },
+      dictBizTypeList() {
+        let inType = this.$getDict('bizInType') || [];
+        let outType = this.$getDict('bizOutType') || [];
+        return [].concat(inType, outType);
+      },
       getHeight: function () {
         return parseInt(this.$store.state.bodyHeight, 10) - 155 + this.fixedHeight + (this.showSearch ? 0 : 155);
       }
     },
     methods: {
       showOrderType: function (item) {
-        let title = '';
-        if (item === '1-0') {
-          title = '采购订单';
-        }
-        if (item === '1-1') {
-          title = '销售退货';
-        }
-        if (item === '1-2') {
-          title = '盘盈入库';
-        }
-        if (item === '1-3') {
-          title = '调拨入库';
-        }
-        if (item === '2-0') {
-          title = '销售出库';
-        }
-        if (item === '2-1') {
-          title = '采购退货';
-        }
-        if (item === '2-2') {
-          title = '盘亏出库';
-        }
-        if (item === '2-3') {
-          title = '调拨出库';
-        }
-        return title;
+        let type = this.dictBizTypeList.find(f => f.key === item);
+        return type && type.label || '';
       },
       filterVaccine: function (query) {
         let params = Object.assign({}, {
