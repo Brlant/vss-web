@@ -161,6 +161,12 @@
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
             </el-form-item>
+            <el-form-item label="运输条件" prop="transportationCondition" v-if="form.transportationMeansId === '0'">
+              <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationCondition">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in transportationConditionList"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="是否合格">
               <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                          v-model="form.qualifiedFlag" @change="qualifiedFlagChange"></el-switch>
@@ -413,6 +419,7 @@
           transportationMeansId: '',
           transportationAddress: '',
           logisticsCentreId: '',
+          transportationCondition: '',
           importedFlag: false,
           orgRelation: '',
           orgAddress: '',
@@ -457,6 +464,9 @@
           ],
           logisticsCentreId: [
             {required: true, message: '请选择物流中心', trigger: 'change'}
+          ],
+          transportationCondition: [
+            {required: true, message: '请选择运输条件', trigger: 'change'}
           ],
           customerChannel: [
             {required: true, message: '请选择报损方式', trigger: 'change'}
@@ -624,6 +634,7 @@
         this.form.detailDtoList = [];
         this.form.customerId = '';
         this.form.transportationAddress = '';
+        this.form.transportationCondition = '';
         this.form.orgAddress = '';
         this.searchProductList = [];
         this.filterProductList = [];
@@ -672,6 +683,7 @@
       transportationMeansIdChange(val) { // 改变运输方式
         this.warehouses = [];
         this.form.transportationAddress = '';
+        this.form.transportationCondition = '';
         if (val !== '0') return;
         this.searchWarehouses();
       },
