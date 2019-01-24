@@ -100,8 +100,9 @@
       </div>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="getRecordPage"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pager.count" :page-sizes="[pager.pageSize,30,50,100]" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
           :current-page="pager.currentPage">
         </el-pagination>
       </div>
@@ -149,6 +150,13 @@
       }
     },
     methods: {
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getRecordPage(1);
+      },
+      handleCurrentChange(val) {
+        this.getRecordPage(val);
+      },
       getRecordPage(pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
         let params = Object.assign({
