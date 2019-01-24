@@ -79,9 +79,10 @@
         <el-row class="order-list-header">
           <el-col :span="4">接种时间</el-col>
           <el-col :span="6">接种疫苗</el-col>
-          <el-col :span="6">接种点名称</el-col>
+          <el-col :span="5">接种点名称</el-col>
           <el-col :span="4">批号</el-col>
           <el-col :span="4">追溯码</el-col>
+          <el-col :span="1">来源</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -109,7 +110,7 @@
                   {{ item.specification }}
                 </div>
               </el-col>
-              <el-col :span="6" class="R pt10">
+              <el-col :span="5" class="R pt10">
                 {{ item.povName }}
               </el-col>
               <el-col :span="4" class="R pt10">
@@ -117,6 +118,9 @@
               </el-col>
               <el-col :span="4" class="R pt10">
                 {{ item.actualCode}}
+              </el-col>
+              <el-col :span="1">
+                {{item.sourceSystem ? 'vss' : ''}}
               </el-col>
             </el-row>
           </div>

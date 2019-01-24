@@ -58,9 +58,10 @@
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
           <el-col :span="4">接种时间</el-col>
-          <el-col :span="10">接种疫苗</el-col>
+          <el-col :span="9">接种疫苗</el-col>
           <el-col :span="4">批号</el-col>
           <el-col :span="6">追溯码</el-col>
+          <el-col :span="1">来源</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -80,7 +81,7 @@
               <el-col :span="4" class="R pt10">
                 {{ item.actualTime | minute}}
               </el-col>
-              <el-col :span="10" class="R pt10">
+              <el-col :span="9" class="R pt10">
                 <div>
                   {{ item.goodsName }}
                 </div>
@@ -93,6 +94,9 @@
               </el-col>
               <el-col :span="6" class="R pt10">
                 {{ item.actualCode}}
+              </el-col>
+              <el-col :span="1">
+                {{item.sourceSystem ? 'vss' : ''}}
               </el-col>
             </el-row>
           </div>
