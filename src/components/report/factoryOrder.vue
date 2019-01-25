@@ -89,6 +89,15 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row label="单位类型" :span="5">
+                <el-select v-model="searchWord.orgTypeList" multiple filterable clearable placeholder="请选择">
+                  <el-option :value="item.key" :key="item.key" :label="item.title"
+                             v-for="item in kindsMenu">
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -178,6 +187,7 @@
         showSearch: true,
         batches: [],
         searchWord: {
+          orgTypeList: [],
           shipper: '',
           suppliers: '',
           batchNumber: '',
@@ -226,6 +236,16 @@
       },
       getHeight: function () {
         return parseInt(this.$store.state.bodyHeight, 10) - 155 + this.fixedHeight + (this.showSearch ? 0 : 155);
+      },
+      kindsMenu() {
+        let typeList = this.$getDict('orgRelationType');
+        let kindsMenu = [];
+        if (typeList) {
+          typeList.forEach(val => {
+            kindsMenu.push({title: val.label, key: val.key});
+          });
+        }
+        return kindsMenu;
       }
     },
     methods: {
