@@ -135,6 +135,11 @@
             {{ scope.row.suppliersName }}
           </template>
         </el-table-column>
+        <el-table-column prop="suppliersName" label="单位类型" :sortable="true" width="120">
+          <template slot-scope="scope">
+            {{convertOrgType(scope.row)}}
+          </template>
+        </el-table-column>
         <el-table-column prop="orgGoodsName" label="货主疫苗" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="goodsName" label="平台疫苗" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="specification" label="规格" :sortable="true" width="120"></el-table-column>
@@ -385,6 +390,19 @@
       },
       formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      },
+      convertOrgType(row) {
+        let str = '';
+        let orgList = [];
+        orgList = this.kindsMenu;
+        orgList.forEach(value => {
+          row.orgTypeList.forEach(value1 => {
+            if (value1 === value.key) {
+              str = str + '/' + value.title;
+            };
+          });
+        });
+        return str.substring(1, str.length);
       }
     }
   };
