@@ -89,6 +89,15 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row label="单位类型" :span="5">
+                <el-select v-model="searchWord.orgTypeList" multiple filterable clearable placeholder="请选择">
+                  <el-option :value="item.key" :key="item.key" :label="item.title"
+                             v-for="item in kindsMenu">
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -124,6 +133,11 @@
         <el-table-column prop="suppliersName" label="客户/供应商" :sortable="true" width="120">
           <template slot-scope="scope">
             {{ scope.row.suppliersName }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="suppliersName" label="单位类型" :sortable="true" width="120">
+          <template slot-scope="scope">
+            {{convertOrgType(scope.row)}}
           </template>
         </el-table-column>
         <el-table-column prop="orgGoodsName" label="货主疫苗" :sortable="true" width="150"></el-table-column>
@@ -178,6 +192,7 @@
         showSearch: true,
         batches: [],
         searchWord: {
+          orgTypeList: [],
           shipper: '',
           suppliers: '',
           batchNumber: '',
@@ -226,6 +241,16 @@
       },
       getHeight: function () {
         return parseInt(this.$store.state.bodyHeight, 10) - 155 + this.fixedHeight + (this.showSearch ? 0 : 155);
+      },
+      kindsMenu() {
+        let typeList = this.$getDict('orgRelationType');
+        let kindsMenu = [];
+        if (typeList) {
+          typeList.forEach(val => {
+            kindsMenu.push({title: val.label, key: val.key});
+          });
+        }
+        return kindsMenu;
       }
     },
     methods: {
@@ -365,6 +390,19 @@
       },
       formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      },
+      convertOrgType(row) {
+        let str = '';
+        let orgList = [];
+        orgList = this.kindsMenu;
+        orgList.forEach(value => {
+          row.orgTypeList.forEach(value1 => {
+            if (value1 === value.key) {
+              str = str + '/' + value.title;
+            };
+          });
+        });
+        return str.substring(1, str.length);
       }
     }
   };
