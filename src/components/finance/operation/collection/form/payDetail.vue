@@ -113,7 +113,7 @@
               <span>{{product.orderNo}}</span>
             </td>
             <td>
-              <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
+              <span> ¥{{ product.billAmount | formatCount}}</span>
             </td>
             <td>
               {{product.createTime | date }}
@@ -161,7 +161,7 @@
               {{product.createTime | date }}
             </td>
             <td>
-              <span> ¥{{ (product.billAmount - product.prepaidAccounts) | formatCount}}</span>
+              <span> ¥{{ product.billAmount | formatCount}}</span>
             </td>
             <td>
               <el-input v-model="product.payment" style="width: 150px" @blur="paymentChange(product)">
@@ -293,7 +293,7 @@
         this.$http.get(url, {params}).then(res => {
           this.loadingData = false;
           res.data.list.forEach(item => {
-            let count = item.billAmount - item.prepaidAccounts;
+            let count = item.billAmount;
             item.payment = count ? count.toFixed(2) : 0.00;
           });
           this.payments = res.data.list;
@@ -350,7 +350,7 @@
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       paymentChange(item) {
-        let value = item.billAmount - item.prepaidAccounts;
+        let value = item.billAmount;
         if (value < 0) {
           if (item.payment < value) {
             this.$notify.info({message: this.getTitle('小于')});
