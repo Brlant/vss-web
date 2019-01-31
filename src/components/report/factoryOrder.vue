@@ -310,7 +310,7 @@
             sums[index] = '合计';
             return;
           }
-          if (column.property !== 'count' && column.property !== 'price' &&
+          if (column.property !== 'count' &&
             column.property !== 'totalMoney') {
             sums[index] = '';
             return;
@@ -330,8 +330,8 @@
           }
         });
         sums.forEach((i, index) => {
-          if (index > sums.length - 3) {
-            sums[index] = '￥' + i;
+          if (index > sums.length - 2) {
+            sums[index] = '￥' + i && Number(i).toFixed(1) || i;
           }
         });
         return sums;
