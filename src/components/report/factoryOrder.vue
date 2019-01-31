@@ -374,6 +374,7 @@
       },
       resetSearchForm: function () {// 重置表单
         this.searchWord = {
+          orgTypeList: [],
           shipper: '',
           suppliers: '',
           batchNumber: '',
