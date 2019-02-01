@@ -315,14 +315,14 @@
           });
           return;
         }
-        isQualified = this.selectPayments.some(s => s.payment && s.payment > (s.billAmount - s.prepaidAccounts));
+        isQualified = this.selectPayments.some(s => s.payment && s.payment > s.billAmount);
         if (isQualified) {
           this.$notify.info({
             message: '付款明细中，存在本次付款金额大于待付金额的明细，请调整后，再进行保存'
           });
           return;
         }
-        isQualified = this.selectPayments.some(s => s.payment < 0 && s.payment < (s.billAmount - s.prepaidAccounts));
+        isQualified = this.selectPayments.some(s => s.payment < 0 && s.payment < s.billAmount);
         if (isQualified) {
           this.$notify.info({
             message: '付款明细中，存在本次付款金额小于待付金额的明细，请调整后，再进行保存'

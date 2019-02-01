@@ -78,7 +78,7 @@
                   <span v-if="!Number(product.billAmount)">-</span>
                 </td>
                 <td>
-                  <span>¥{{ (product.billAmount - product.prepaidAccounts) | formatMoney}}</span>
+                  <span>¥{{ product.billAmount | formatMoney}}</span>
                 </td>
                 <td>
                   {{product.createTime | date }}
