@@ -181,7 +181,7 @@
           orgId: orgId,
           keyWord: query
         });
-        this.$http.get('/erp-stock/goods', {params}).then(res => {
+        this.$http.get('/erp-stock/goods-list', {params}).then(res => {
           this.orgList = res.data.list;
         });
       },
