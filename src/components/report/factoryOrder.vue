@@ -9,6 +9,9 @@
     cursor: pointer;
   }
 
+  .opera-btn-group {
+    margin: 10px 0;
+  }
   .header-list {
     overflow: hidden;
   }
