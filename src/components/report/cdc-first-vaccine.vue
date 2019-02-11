@@ -156,7 +156,7 @@
   </div>
 </template>
 <script>
-  import {BaseInfo, Vaccine} from '@/resources';
+  import {BaseInfo} from '@/resources';
   import utils from '@/tools/utils';
   import qs from 'qs';
   import ReportMixin from '@/mixins/reportMixin';
@@ -332,6 +332,7 @@
         };
         this.bizDateAry = '';
         this.reportChildList = [];
+        this.search();
       },
       filterRelation: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
