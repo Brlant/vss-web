@@ -243,14 +243,18 @@
         return parseInt(this.$store.state.bodyHeight, 10) - 155 + this.fixedHeight + (this.showSearch ? 0 : 155);
       },
       kindsMenu() {
-        let typeList = this.$getDict('orgRelationType');
-        let kindsMenu = [];
-        if (typeList) {
-          typeList.forEach(val => {
-            kindsMenu.push({title: val.label, key: val.key});
-          });
-        }
-        return kindsMenu;
+        return [
+          {title: '0接种单位', key: 'POV'},
+          {title: '1社区接种门诊', key: 'POV-1'},
+          {title: '2医院产科接种室', key: 'POV-2'},
+          {title: '3犬伤处置门诊', key: 'POV-3'},
+          {title: '4卡介苗接种门诊', key: 'POV-4'},
+          {title: '5集体单位接种门诊', key: 'POV-5'},
+          {title: '6特需接种门诊', key: 'POV-6'},
+          {title: '7疾控中心', key: 'CDC'},
+          {title: '8批发企业', key: 'Supplier'},
+          {title: '9生产企业', key: 'Manufacture'}
+        ];
       }
     },
     methods: {
