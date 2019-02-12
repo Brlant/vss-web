@@ -221,7 +221,7 @@
       },
       searchInOrder: function () {// 搜索
         this.searchWord.startTime = this.formatTimeToRangeByFormat(this.$formatAryTime(this.expectedTime, 0));
-        this.searchWord.endTime = this.formatTimeToRangeByFormat(this.$formatAryTime(this.expectedTime, 1) + ' ' + '23:59:59', 1);
+        this.searchWord.endTime = this.formatTimeToRangeByFormat(this.$formatAryTime(this.expectedTime, 1), 1);
         Object.assign(this.filters, this.searchWord);
       },
       formatTimeToRangeByFormat(time, type) {

@@ -481,6 +481,7 @@
           startDate: '',
           endDate: ''
         };
+        this.createTimes = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
         this.getOrderList(1);

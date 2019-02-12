@@ -1,3 +1,8 @@
+<style lang="scss" scoped="">
+  .opera-btn-group {
+    margin: 10px 0;
+  }
+</style>
 <template>
   <div class="order-page">
     <div class="container">
@@ -38,7 +43,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="下单时间" :span="6">
+              <oms-form-row label="完成时间" :span="6">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="dateyear"
