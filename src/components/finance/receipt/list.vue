@@ -608,6 +608,9 @@
         if (this.bizDateAry) {
           this.searchCondition.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
           this.searchCondition.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
+        } else {
+          this.searchCondition.createStartTime = '';
+          this.searchCondition.createEndTime = '';
         }
         let params = Object.assign(this.filterRights, this.searchCondition);
         this.isLoading = true;
