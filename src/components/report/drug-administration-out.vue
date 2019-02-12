@@ -96,8 +96,8 @@
         if (startTime && endTime) {
           fileName = startTime + '至' + endTime + fileName;
         }
-        this.searchWord.createStartTime = startTime + ' ' + '00:00:00';
-        this.searchWord.createEndTime = endTime + ' ' + '23:59:59';
+        this.searchWord.createStartTime = startTime ? startTime + ' ' + '00:00:00' : '';
+        this.searchWord.createEndTime = endTime ? endTime + ' ' + '23:59:59' : '';
         this.searchWord.type = this.$route.meta.type;
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;

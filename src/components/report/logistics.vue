@@ -332,6 +332,7 @@
         };
         this.bizDateAry = '';
         this.reportList = [];
+        this.search();
       },
       filterRelation: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
