@@ -147,6 +147,9 @@
           count: 0,
           pageSize: 15
         },
+        exportPager: {
+          pageNo: 1
+        },
         doing: false
       };
     },
@@ -211,7 +214,8 @@
       exportFile: function () {// 导出表单
         this.searchCondition.actualStartTime = this.$formatAryTime(this.actualTime, 0);
         this.searchCondition.actualEndTime = this.$formatAryTime(this.actualTime, 1);
-        let params = Object.assign({}, this.searchCondition);
+        this.exportPager.pageNo = this.pager.currentPage;
+        let params = Object.assign({}, this.pager, this.exportPager, this.searchCondition);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/pov'});
         this.$http.get('/injection-task/export', {params}).then(res => {
