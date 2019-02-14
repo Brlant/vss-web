@@ -359,7 +359,7 @@
                   <goods-row label="人份" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
                     {{ data.goodsDto.propertyMap.personPortion }}
                   </goods-row>
-                  <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
+                  <goods-row label="最小销售单位" :span="12">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
                   </goods-row>
                   <goods-row label="是否近效期管理" :span="12"
