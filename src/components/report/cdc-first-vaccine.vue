@@ -353,7 +353,7 @@
           keyWord: query
         };
         this.selectLoading = true;
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+        this.$http.get(`/orgs/${orgId}/biz-relation/all`, {params}).then(res => {
           this.provideList = res.data;
           this.selectLoading = false;
         });
