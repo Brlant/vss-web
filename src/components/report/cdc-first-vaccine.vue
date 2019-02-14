@@ -130,7 +130,12 @@
       <el-table :data="reportChildList" class="header-list" :summary-method="getSummaries" show-summary border
                 :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable" :maxHeight="getHeight">
         <el-table-column prop="type" label="出入库类型" :sortable="true" min-width="120"></el-table-column>
-        <el-table-column prop="bizType" label="出入库详细" :sortable="true" min-width="120"></el-table-column>
+        <el-table-column prop="bizType" label="出入库详细" :sortable="true" min-width="120">
+          <template slot-scope="scope">
+            {{showOrderType(scope.row.bizType)}}
+            <!--<dict :dict-group="scope.row.type === '0' ? 'bizInType' : 'bizOutType' " :dict-key="scope.row.bizType" ></dict>-->
+          </template>
+        </el-table-column>
         <el-table-column prop="date" label="日期" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="area" label="区县" :sortable="true" width="100"></el-table-column>
         <el-table-column prop="customerCode" label="关联单位" :sortable="true" min-width="100"></el-table-column>
@@ -245,7 +250,7 @@
         }).then(res => {
           this.reportList = res.data.map(m => {
             m.type = this.typeList[m.type];
-            m.bizType = this.showOrderType(m.bizType);
+            // m.bizType = this.showOrderType(m.bizType);
             m.date = this.formatTime(m.date);
             m.expirationDate = this.formatTime(m.expirationDate);
             m.goodsStatus = this.goodsStatusList[m.goodsStatus];
@@ -351,7 +356,8 @@
         if (!orgId) return;
         let params = {
           keyWord: query,
-          size: -1
+          size: -1,
+          relation: '2'
         };
         this.selectLoading = true;
         this.$http.get(`/orgs/${orgId}/biz-relation/all`, {params}).then(res => {
