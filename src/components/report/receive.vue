@@ -115,7 +115,7 @@
         }
         if (!this.dateyear) {
           return this.$notify.info({
-            message: '请选择下单时间'
+            message: '请选择完成时间'
           });
         }
         this.searchCondition.year = this.formatTime(this.dateyear);
@@ -127,7 +127,6 @@
               message: '没有相应数据'
             });
           }
-          ;
           this.reportList = res.data.list;
           this.loadingData = false;
         });
@@ -140,7 +139,7 @@
         }
         if (!this.dateyear) {
           return this.$notify.info({
-            message: '请选择下单时间'
+            message: '请选择完成时间'
           });
         }
         this.searchCondition.year = this.formatTime(this.dateyear);
@@ -151,7 +150,6 @@
           if (res.data) {
             utils.download(res.data, '疾病预防控制中心各单位领苗一览表');
           }
-          ;
           this.isLoading = false;
           this.dateyear = '';
           this.searchCondition.year = '';
