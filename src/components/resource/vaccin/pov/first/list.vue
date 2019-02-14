@@ -354,7 +354,7 @@
                     <!--<goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">-->
                     <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
                     <!--</goods-row>-->
-                    <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
+                    <goods-row label="最小销售单位" :span="12">
                       <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
                     </goods-row>
                   </el-col>
