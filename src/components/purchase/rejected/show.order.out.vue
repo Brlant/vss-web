@@ -129,6 +129,11 @@
         this.title = item.name;
       },
       confirm() {
+        let createDate = this.$moment(this.currentOrder.createTime).format('YYYY-MM-DD');
+        let createTime = this.$moment(createDate).valueOf();
+        if (this.currentOrder.expectedTime < createTime) {
+          return this.$notify.info('预计出库时间小于下单时间，请修改');
+        }
         this.$confirm('是否确认订单', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
