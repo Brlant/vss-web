@@ -368,7 +368,7 @@
         let params = Object.assign({}, {
           keyWord: query
         });
-        this.$http.get('/vaccine-info/municipal/pager').then(res => {
+        this.$http.get('/vaccine-info/municipal/pager', {params: {keyWord: query}}).then(res => {
           this.orgGoods = res.data.list;
         });
       },
