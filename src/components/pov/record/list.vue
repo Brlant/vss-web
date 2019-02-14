@@ -46,10 +46,15 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <perm label="injection-task-export">
+                  <el-button style="margin-left: 10px" :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                    导出Excel
+                  </el-button>
+                </perm>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -114,6 +119,8 @@
   </div>
 </template>
 <script>
+  import {Vaccine} from '@/resources';
+  import utils from '@/tools/utils';
   import {VaccineRights} from '@/resources';
 
   export default {
@@ -121,6 +128,7 @@
       return {
         loadingData: true,
         showSearch: true,
+        isLoading: false,
         CDCs: [],
         filters: {
           actualStartTime: '',
@@ -138,6 +146,9 @@
           currentPage: 1,
           count: 0,
           pageSize: 15
+        },
+        exportPager: {
+          pageNo: 1
         },
         doing: false
       };
@@ -199,6 +210,25 @@
         this.actualTime = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
+      },
+      exportFile: function () {// 导出表单
+        this.searchCondition.actualStartTime = this.$formatAryTime(this.actualTime, 0);
+        this.searchCondition.actualEndTime = this.$formatAryTime(this.actualTime, 1);
+        this.exportPager.pageNo = this.pager.currentPage;
+        let params = Object.assign({}, this.pager, this.exportPager, this.searchCondition);
+        this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/pov'});
+        this.$http.get('/injection-task/export', {params}).then(res => {
+          utils.download(res.data.path, '疫苗注射记录表');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/pov'});
+        }).catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/pov'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';

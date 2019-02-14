@@ -4,10 +4,12 @@
     .content-left {
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -78,6 +80,7 @@
   import relevanceCode from '@/components/common/order/relevance.code.vue';
   import customerFeedback from '@/components/common/order/customer-feedback.vue';
   import WaybillInfo from '@/components/common/order/waybillInfo';
+
   export default {
     components: {basicInfo, log, receipt, orderAttachment, relevanceCode, customerFeedback, WaybillInfo},
     props: {
@@ -154,6 +157,11 @@
         });
       },
       checkPass() {
+        let createDate = this.$moment(this.currentOrder.createTime).format('YYYY-MM-DD');
+        let createTime = this.$moment(createDate).valueOf();
+        if (this.currentOrder.expectedTime < createTime) {
+          return this.$notify.info('预计送货时间小于下单时间，请修改');
+        }
         http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
           this.$notify.success({
             message: '确认订单成功'
