@@ -350,7 +350,8 @@
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) return;
         let params = {
-          keyWord: query
+          keyWord: query,
+          size: -1
         };
         this.selectLoading = true;
         this.$http.get(`/orgs/${orgId}/biz-relation/all`, {params}).then(res => {
