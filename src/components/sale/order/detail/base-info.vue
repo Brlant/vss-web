@@ -84,7 +84,7 @@
           <el-form-item label="预计送货时间" prop="transportationMeansId">
             <el-date-picker
               v-model="currentOrder.expectedTime"
-              placeholder="请选择日期" format="yyyy-MM-dd"
+              placeholder="请选择日期" format="yyyy-MM-dd" :picker-options="pickerOptions"
               value-format="timestamp">
             </el-date-picker>
           </el-form-item>
@@ -290,6 +290,11 @@
           remark: [
             {required: true, message: '请输入备注信息', trigger: 'blur'}
           ]
+        },
+        pickerOptions: {
+          disabledDate: time => {
+            return time.getTime() < this.$moment().subtract(1, 'days');
+          }
         }
       };
     },
