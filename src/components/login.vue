@@ -133,7 +133,7 @@
             }, error => {
               let data = error.response.data;
               this.$notify.error({
-                message: data.msg
+                message: data.msg || '无法登陆'
               });
               if (data.code === 101 || data.code === 100) {
                 this.getCode();
