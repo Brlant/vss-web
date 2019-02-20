@@ -39,7 +39,7 @@
         <el-form class="advanced-query-form clearfix" onsubmit="return false">
           <el-col :span="8">
             <oms-form-row label="货主疫苗" :span="5">
-              <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="filterOrgGoods"
+              <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="filterOrgGoods"
                          :clearable="true" @change="orgGoodsChange"
                          v-model="filters.orgGoodsId" popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.goodsName"

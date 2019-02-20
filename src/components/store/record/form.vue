@@ -77,7 +77,7 @@
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="80px" style="padding-right: 20px">
             <el-form-item label="货主疫苗" prop="orgGoodsId">
-              <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="filterOrgGoods"
+              <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="filterOrgGoods"
                          :clearable="true"
                          v-model="form.orgGoodsId" popper-class="good-selects"
                          @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">

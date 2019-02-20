@@ -38,7 +38,7 @@
           <el-row>
             <el-col :span="12">
               <oms-form-row :label="orgLevel===3?'被授权疫苗':'货主疫苗'" :span="4" :isRequire="true">
-                <el-select filterable remote :placeholder="orgLevel===3?'请输入名称搜索被授权疫苗':'请输入名称搜索货主疫苗'"
+                <el-select filterable remote :placeholder="orgLevel===3?'请输入名称或编号搜索被授权疫苗':'请输入名称或编号搜索货主疫苗'"
                            :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"

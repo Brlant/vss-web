@@ -126,7 +126,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="货主疫苗" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索货主疫苗" :remote-method="searchProduct"
+                <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="searchProduct"
                            :clearable="true" v-model="searchCondition.orgGoodsId" popper-class="good-selects"
                            @click.native.once="searchProduct('')">
                   <el-option :value="org.id" :key="org.id" :label="org.goodsName"
