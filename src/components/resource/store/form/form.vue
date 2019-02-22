@@ -34,11 +34,6 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="物流中心">
-      <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable clearable>
-        <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
-      </el-select>
-    </el-form-item>
     <el-form-item label="联系人" prop="contact">
       <oms-input type="text" v-model="form.contact" placeholder="请输入联系人"></oms-input>
     </el-form-item>
@@ -67,7 +62,7 @@
   </el-form>
 </template>
 <script>
-  import {Address, BaseInfo, LogisticsCenter} from '../../../../resources';
+  import {Address, BaseInfo} from '../../../../resources';
   import utils from './../../../../tools/utils';
 
   export default {
@@ -94,8 +89,7 @@
           telephone: '',
           default: false,
           detail: '',
-          type: '',
-          logisticsCentreId: ''
+          type: ''
         },
         orgList: [],
         options: utils.address,
@@ -124,8 +118,7 @@
             {required: true, message: '请选择所属物流公司', trigger: 'blur'}
           ]
         },
-        doing: false,
-        LogisticsCenter: []
+        doing: false
       };
     },
     props: ['formItem', 'formType', 'actionType'],
@@ -150,18 +143,7 @@
         return this.$getDict('orgAddress');
       }
     },
-    mounted() {
-      this.filterLogisticsCenter();
-    },
     methods: {
-      filterLogisticsCenter: function () {// 过滤物流中心
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
-        });
-      },
       getOrgs: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
@@ -195,8 +177,7 @@
             warehouseSourceFirm: '',
             default: false,
             detail: '',
-            type: '',
-            logisticsCentreId: ''
+            type: ''
           };
         }
       },

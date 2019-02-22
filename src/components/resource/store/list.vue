@@ -97,9 +97,6 @@
               <oms-row label="所属物流公司" :span="4" v-if="data.warehouseType==='0'">
                 {{data.warehouseSourceFirmName}}
               </oms-row>
-              <oms-row label="物流中心" :span="4" v-show="data.logisticsCentreId">
-                {{ data.logisticsCentreName}}
-              </oms-row>
               <oms-row label="仓库地址类型" :span="4">
                 <dict :dict-group="'orgAddress'" :dict-key="formatAddress"></dict>
               </oms-row>
