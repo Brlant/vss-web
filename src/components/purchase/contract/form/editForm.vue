@@ -123,7 +123,7 @@
             </el-form-item>
             <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(currentItem.transportationMeansId==='1' || currentItem.transportationMeansId==='3')">
-              {{currentItem.logisticsProviderId}}
+              {{currentItem.logisticsProviderName}}
             </el-form-item>
             <el-form-item label="提货地址" v-show="showContent.isShowOtherContent&&currentItem.transportationMeansId==='2' "
                           :clearable="true">

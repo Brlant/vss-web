@@ -65,6 +65,16 @@ export default {
         this.resetRightBox();
       });
     },
+    transportationAddressChange(val) {
+      // 清空物流商
+      this.form.logisticsProvider = '';
+      this.form.logisticsProviderName = '';
+      if (!val) return;
+      let item = this[this.form.type === '0' ? 'cdcWarehouses' : 'LogisticsCenterAddressList'].find(f => f.id === val);
+      if (!item) return;
+      this.form.logisticsProviderName = item.warehouseSourceFirmName;
+      this.form.logisticsProvider = item.warehouseSourceFirm;
+    },
     checkHasOrderNotAdded(product, str = '订单') {
       if (product.orgGoodsId) {
         this.$notify({

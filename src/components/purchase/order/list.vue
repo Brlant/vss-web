@@ -370,7 +370,7 @@
           type: 0,
           state: '6',
           orderNo: '',
-          logisticsProviderId: '',
+          logisticsProviderName: '',
           createStartTime: '',
           createEndTime: '',
           bizType: '1-0',
@@ -384,7 +384,7 @@
         searchCondition: {
           searchType: 1,
           orderNo: '',
-          logisticsProviderId: '',
+          logisticsProviderName: '',
           createStartTime: '',
           createEndTime: '',
           transportationMeansId: '',
@@ -486,7 +486,7 @@
         let temp = {
           searchType: '',
           orderNo: '',
-          logisticsProviderId: '',
+          logisticsProviderName: '',
           createStartTime: '',
           createEndTime: '',
           transportationMeansId: '',
@@ -576,7 +576,7 @@
       filterLogistics: function (query) {// 过滤物流提供方
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
-          this.searchCondition.logisticsProviderId = '';
+          this.searchCondition.logisticsProvider = '';
           this.logisticsList = [];
           return;
         }

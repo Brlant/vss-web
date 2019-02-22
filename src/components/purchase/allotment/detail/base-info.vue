@@ -20,7 +20,7 @@
           </oms-row>
           <oms-row label="物流商" :span="span"
                    v-show="currentOrder.transportationMeansId === '1' || currentOrder.transportationMeansId === '3'  ">
-            {{currentOrder.logisticsProviderId}}
+            {{currentOrder.logisticsProviderName}}
           </oms-row>
           <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
             {{currentOrder.pickUpWarehouseAddress}}

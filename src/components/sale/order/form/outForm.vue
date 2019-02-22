@@ -160,7 +160,8 @@
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
             <el-form-item label="疾控发货地址" prop="orgAddress">
-              <el-select placeholder="请选择疾控发货地址" v-model="form.orgAddress" filterable :clearable="true">
+              <el-select placeholder="请选择疾控发货地址" v-model="form.orgAddress" filterable :clearable="true"
+                         @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenterAddressList">
                   <span class="pull-left">{{ item.name }}</span>
@@ -436,7 +437,7 @@
           'customerId': '',
           'bizType': '2-0',
           'type': this.type,
-          'logisticsProviderId': '',
+          'logisticsProviderName': '',
           'transportationCondition': '',
           transportationMeansId: '',
           transportationAddress: '',
@@ -476,7 +477,7 @@
           transportationAddress: [
             {required: true, message: '请选择接种点收货地址', trigger: 'change'}
           ],
-          logisticsProviderId: [
+          logisticsProviderName: [
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
@@ -598,8 +599,8 @@
           // 设置一些默认值
           this.setDefaultValue();
           this.filterPOV();
+          this.filterAddress();
         }
-        this.filterAddress();
       }
 //      form: {
 //        handler: 'autoSave',
@@ -642,7 +643,7 @@
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.actualConsignee = '';
         this.form.consigneePhone = '';
-        this.form.logisticsProviderId = '';
+        this.form.logisticsProviderName = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
         this.form.customerId = '';
@@ -676,6 +677,7 @@
               detail: res.data.warehouseAddress
             }
           ];
+          this.filterAddress(this.isStorageData);
           this.filterPOV(res.data.customerName);
           this.form = JSON.parse(JSON.stringify(res.data));
           this.formCopy = JSON.parse(JSON.stringify(res.data));
@@ -856,7 +858,7 @@
           // *************************//
         });
       },
-      filterAddress() {
+      filterAddress(isStorageData) {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -864,8 +866,10 @@
           status: 0
         }).then(res => {
           this.LogisticsCenterAddressList = res.data;
+          if (isStorageData) return;
           let defaultStore = res.data.filter(item => item.default);
           this.form.orgAddress = defaultStore.length ? defaultStore[0].id : '';
+          this.transportationAddressChange(this.form.orgAddress);
         });
       },
       changeWarehouseAdress: function (val) {

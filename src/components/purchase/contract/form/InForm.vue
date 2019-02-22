@@ -143,7 +143,7 @@
             </el-form-item>
             <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <oms-input type="text" v-model="form.logisticsProviderId" placeholder="请输入物流商名称"></oms-input>
+              <oms-input type="text" v-model="form.logisticsProviderName" placeholder="请输入物流商名称"></oms-input>
             </el-form-item>
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
@@ -380,7 +380,7 @@
           'customerId': '',
           'bizType': '1-0',
           'type': this.type,
-          'logisticsProviderId': '',
+          'logisticsProviderName': '',
           'transportationCondition': '0',
           'transportationMeansId': '1',
           'transportationAddress': '',
@@ -413,7 +413,7 @@
           pickUpAddress: [
             {required: true, message: '请选择提货地址', trigger: 'change'}
           ],
-          logisticsProviderId: [
+          logisticsProviderName: [
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           logisticsCentreId: [
@@ -539,7 +539,7 @@
             'customerId': '',
             'bizType': '1-0',
             'type': this.type,
-            'logisticsProviderId': '',
+            'logisticsProviderName': '',
             'transportationCondition': '0',
             'transportationMeansId': '1',
             'transportationAddress': '',
@@ -662,7 +662,7 @@
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.supplierId = '';
         this.form.actualConsignee = '';
-        this.form.logisticsProviderId = '';
+        this.form.logisticsProviderName = '';
         this.form.logisticsCentreId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
@@ -703,7 +703,7 @@
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.logisticsList = [];
-          this.form.logisticsProviderId = '';
+          this.form.logisticsProviderName = '';
           return;
         }
         BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
@@ -769,7 +769,7 @@
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.pickUpAddress = '';
-          this.form.logisticsProviderId = '';
+          this.form.logisticsProviderName = '';
           this.form.supplierId = '';
         }
       },

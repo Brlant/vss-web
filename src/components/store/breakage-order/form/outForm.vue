@@ -414,7 +414,7 @@
           'customerId': '',
           'bizType': '2-4',
           'type': this.type,
-          'logisticsProviderId': '',
+          'logisticsProviderName': '',
           'customerChannel': '0',
           transportationMeansId: '',
           transportationAddress: '',
@@ -456,7 +456,7 @@
           transportationAddress: [
             {required: true, message: '请选择收货地址', trigger: 'change'}
           ],
-          logisticsProviderId: [
+          logisticsProviderName: [
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
@@ -629,7 +629,7 @@
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.actualConsignee = '';
         this.form.consigneePhone = '';
-        this.form.logisticsProviderId = '';
+        this.form.logisticsProviderName = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
         this.form.customerId = '';

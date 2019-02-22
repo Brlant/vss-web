@@ -18,10 +18,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -35,15 +37,18 @@
     border-radius: 10px;
     font-size: 12px;
     line-height: 26px;
+
     .product-info-fix {
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
       margin-bottom: 20px;
     }
+
     &:hover {
       border-color: #aaa
     }
+
     .product-remove {
       position: absolute;
       right: 0;
@@ -54,10 +59,12 @@
       text-align: center;
       cursor: pointer;
       color: #666;
+
       &:hover {
         color: #333
       }
     }
+
     .order-goods-info {
       .col-label {
         padding-top: 4px;
@@ -138,7 +145,7 @@
             </el-form-item>
             <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <oms-input v-model="form.logisticsProviderId" placeholder="请输入物流商"></oms-input>
+              <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
             </el-form-item>
             <el-form-item label="提货地址"
                           v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
@@ -166,7 +173,8 @@
               </el-select>
             </el-form-item>
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
+              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress"
+                         filterable :clearable="true" @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -406,7 +414,7 @@
           'customerId': '',
           'bizType': '1-0',
           'type': this.type,
-          'logisticsProviderId': '',
+          'logisticsProviderName': '',
           'transportationCondition': '',
           'transportationMeansId': '1',
           'transportationAddress': '',
@@ -441,7 +449,7 @@
           pickUpAddress: [
             {required: true, message: '请选择提货地址', trigger: 'change'}
           ],
-          logisticsProviderId: [
+          logisticsProviderName: [
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           transportationCondition: [
@@ -544,7 +552,6 @@
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
         this.filterLogistics();
-        this.filterAddress();
         this.checkLicence(this.form.orgId);
         if (this.purchase.id) {
           this.filterOrg();
@@ -559,6 +566,7 @@
           this.form.id = null;
           // 设默认值
           this.setDefaultValue();
+          this.filterAddress();
         }
       },
 //      form: {
@@ -640,6 +648,7 @@
               name: res.data.supplierName
             }
           ];
+          this.filterAddress(this.isStorageData);
           this.filterOrg(res.data.supplierName);
           this.form = JSON.parse(JSON.stringify(res.data));
           // ******2.0变化
@@ -672,7 +681,7 @@
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.supplierId = '';
         this.form.actualConsignee = '';
-        this.form.logisticsProviderId = '';
+        this.form.logisticsProviderName = '';
         this.form.logisticsCentreId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
@@ -720,7 +729,7 @@
         let orgId = this.form.orgId;
         if (!orgId) {
           this.logisticsList = [];
-          this.form.logisticsProviderId = '';
+          this.form.logisticsProviderName = '';
           return;
         }
         BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
@@ -735,15 +744,17 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress() {
+      filterAddress(isStorageData) {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
           auditedStatus: '1', status: 0
         }).then(res => {
           this.cdcWarehouses = res.data;
+          if (isStorageData) return;
           let defaultStore = res.data.filter(item => item.default);
           this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
+          this.transportationAddressChange(this.form.transportationAddress);
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
@@ -856,7 +867,7 @@
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.pickUpAddress = '';
           this.form.actualConsignee = '';
-          this.form.logisticsProviderId = '';
+          this.form.logisticsProviderName = '';
           this.form.supplierId = '';
         }
       },

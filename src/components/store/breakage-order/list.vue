@@ -289,7 +289,7 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.out.vue';
   import addForm from './form/outForm.vue';
-  import {BaseInfo, Vaccine} from '@/resources';
+  import {BaseInfo} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
   import scanCode from './form/scan-code';
 
@@ -310,7 +310,7 @@
           type: 1,
           state: '0',
           orderNo: '',
-          logisticsProviderId: '',
+          logisticsProviderName: '',
           createStartTime: '',
           createEndTime: '',
           bizType: '2-4',
@@ -326,7 +326,7 @@
         searchCondition: {
           searchType: 1,
           orderNo: '',
-          logisticsProviderId: '',
+          logisticsProviderName: '',
           createStartTime: '',
           createEndTime: '',
           transportationMeansId: '',
@@ -419,7 +419,7 @@
         let temp = {
           searchType: '',
           orderNo: '',
-          logisticsProviderId: '',
+          logisticsProviderName: '',
           createStartTime: '',
           createEndTime: '',
           transportationMeansId: '',
@@ -506,7 +506,7 @@
       filterLogistics: function (query) {// 过滤物流提供方
         let orgId = this.searchCondition.orgId;
         if (!orgId) {
-          this.searchCondition.logisticsProviderId = '';
+          this.searchCondition.logisticsProvider = '';
           this.logisticsList = [];
           return;
         }

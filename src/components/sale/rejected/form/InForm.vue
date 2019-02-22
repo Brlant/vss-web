@@ -137,10 +137,10 @@
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
               <!--<el-select filterable remote placeholder="请输入名称搜索物流商" :remote-method="filterLogistics"-->
               <!--:clearable="true"-->
-              <!--v-model="form.logisticsProviderId">-->
+              <!--v-model="form.logisticsProviderName">-->
               <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>-->
               <!--</el-select>-->
-              <oms-input v-model="form.logisticsProviderId" placeholder="请输入物流商"></oms-input>
+              <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
             </el-form-item>
             <el-form-item label="提货地址" v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
               <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable :clearable="true"
@@ -168,7 +168,8 @@
               </el-select>
             </el-form-item>
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
+              <el-select placeholder="请选择疾控仓库地址" @change="transportationAddressChange"
+                         v-model="form.transportationAddress" filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -428,7 +429,7 @@
           'customerId': '',
           'bizType': '1-1',
           'type': this.type,
-          'logisticsProviderId': '',
+          'logisticsProviderName': '',
           'transportationCondition': '',
           'transportationMeansId': '1',
           'pickUpAddress': '',
@@ -464,7 +465,7 @@
           transportationAddress: [
             {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
           ],
-          logisticsProviderId: [
+          logisticsProviderName: [
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           transportationCondition: [
@@ -603,7 +604,6 @@
       setDefaultValue() {
         this.form.transportationMeansId = '2';
         this.form.transportationCondition = '0';
-        this.form.logisticsProviderId = '国控生物航启路物流中心';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       },
       editOrderInfo() {
@@ -660,7 +660,7 @@
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.supplierId = '';
         this.form.actualConsignee = '';
-        this.form.logisticsProviderId = '';
+        this.form.logisticsProviderName = '';
         this.form.logisticsCentreId = '';
         this.form.remark = '';
         this.form.returnReason = '';
@@ -700,7 +700,7 @@
         let orgId = this.form.orgId;
         if (!orgId) {
           this.logisticsList = [];
-          this.form.logisticsProviderId = '';
+          this.form.logisticsProviderName = '';
           return;
         }
         BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
@@ -715,15 +715,17 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress() {
+      filterAddress(isStorageData) {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
           auditedStatus: '1', status: 0
         }).then(res => {
           this.cdcWarehouses = res.data;
+          if (isStorageData) return;
           let defaultStore = res.data.filter(item => item.default);
           this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
+          this.transportationAddressChange(this.form.transportationAddress);
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
@@ -836,7 +838,7 @@
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.pickUpAddress = '';
           this.form.actualConsignee = '';
-          this.form.logisticsProviderId = '';
+          this.form.logisticsProviderName = '';
           this.form.supplierId = '';
         }
       },
