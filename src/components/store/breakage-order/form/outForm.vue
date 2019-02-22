@@ -117,7 +117,7 @@
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
             <el-form-item label="仓库地址" prop="orgAddress">
               <el-select placeholder="请选择仓库地址" v-model="form.orgAddress" filterable :clearable="true"
-                         @change="orgAddressChange">
+                         @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenterAddressList">
                   <span class="pull-left">{{ item.name }}</span>
@@ -601,8 +601,9 @@
         this.checkLicence(this.form.orgId);
         if (val === 2) {
           this.editOrderInfo();
+        } else {
+          this.filterAddress();
         }
-        this.filterAddress();
         this.searchProduct();
       }
     },
@@ -651,6 +652,8 @@
           });
           this.form = res.data;
           this.formCopy = JSON.parse(JSON.stringify(res.data));
+
+          this.filterAddress(true);
           this.searchWarehouses();
         });
       },
@@ -713,7 +716,7 @@
           this.warehouses = res.data || [];
         });
       },
-      filterAddress() { // 查询仓库地址
+      filterAddress(isStorageData) {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
@@ -721,8 +724,10 @@
           status: 0
         }).then(res => {
           this.LogisticsCenterAddressList = res.data;
+          if (isStorageData) return;
           let defaultStore = res.data.filter(item => item.default);
           this.form.orgAddress = defaultStore.length ? defaultStore[0].id : '';
+          this.transportationAddressChange(this.form.orgAddress);
         });
       },
       queryOnCDCs() { // 查询上级疾控中心
