@@ -151,6 +151,13 @@
         };
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
+          // 设置供货厂商id
+          this.form.orgGoodsId && this.goodsList.forEach(val => {
+            if (val.orgGoodsDto.id === this.form.orgGoodsId) {
+              this.salesFirmName = val.orgGoodsDto.salesFirmName;
+              this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
+            }
+          });
         });
       },
       formatUnitPrice() {// 格式化单价，保留两位小数
