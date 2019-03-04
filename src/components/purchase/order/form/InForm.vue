@@ -174,7 +174,7 @@
             </el-form-item>
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
               <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress"
-                         filterable :clearable="true" @change="transportationAddressChange">
+                         filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -754,7 +754,7 @@
           if (isStorageData) return;
           let defaultStore = res.data.filter(item => item.default);
           this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
-          this.transportationAddressChange(this.form.transportationAddress);
+          // this.transportationAddressChange(this.form.transportationAddress);
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
