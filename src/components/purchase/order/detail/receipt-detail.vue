@@ -12,7 +12,7 @@
       border: 1px solid $table-background-color;
     }
     .t-head {
-      background: $table-background-color * 1.05;
+      background: #eaf2f8;
       color: #1f2d3d;
       font-weight: bold;
     }
@@ -24,7 +24,7 @@
     }
     &.is-tint {
       > tbody > tr > td {
-        border: 1px solid $table-background-color-tint * 0.9;
+        border: 1px solid #d6d6d6;
       }
       .t-head {
         background: $table-background-color-tint;
