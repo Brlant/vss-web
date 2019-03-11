@@ -19,7 +19,8 @@
           <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                    @submit.prevent="done" onsubmit="return false">
             <el-form-item label="系统代码" prop="orgCode" v-if="needCode">
-              <oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>
+              <!--<oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>-->
+              <tn-input-auto-complete :list="orgCodeList" placeholder="请输入业务单位编号" v-model="user.orgCode"/>
             </el-form-item>
             <el-form-item label="用户名" prop="username">
               <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"
@@ -71,6 +72,8 @@
     },
     name: 'login',
     data: () => {
+      let orgCodeList = JSON.parse(window.localStorage.getItem('orgCodeList')) || [];
+      let needCode = !!orgCodeList.length;
       return ({
         user: {
           username: window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')).userAccount : '',
@@ -87,7 +90,7 @@
         isFocus: -1,
         rules: {
           orgCode: [
-            {required: true, message: '请输入系统代码', trigger: 'blur'}
+            {required: true, message: '请输入系统代码', trigger: ['blur', 'change']}
           ],
           username: [
             {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -96,7 +99,8 @@
             {required: true, message: '请输入密码', trigger: 'blur'}
           ]
         },
-        needCode: false
+        needCode,
+        orgCodeList
       });
     },
     methods: {
@@ -151,9 +155,10 @@
         // 为空时, 不用做判断
         if (!this.user.username) return;
         this.$http.post('/login/check', {username: this.trim(this.user.username)}).catch(error => {
-          let data = error.response.data;
-          if (data.code === 405) {
+          if (error.response.status === 405) {
             this.needCode = true;
+            let list = error.response.data && error.response.data.map(m => ({value: m}));
+            window.localStorage.setItem('orgCodeList', JSON.stringify(list || ''));
           }
         });
       },

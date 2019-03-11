@@ -66,6 +66,7 @@ import locale from 'element-ui/lib/locale';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 
 import {
+  compressedImg,
   Dict,
   FA,
   Forbid,
@@ -83,12 +84,12 @@ import {
   statusList,
   TimeLine,
   TimeLineItem,
+  TinyCol,
   TinyInput,
   TinyLoading,
   TinyRow,
-  TinyCol,
-  TotalCount,
-  compressedImg
+  TnInputAutoComplete,
+  TotalCount
 } from '@dtop/dtop-web-common';
 
 import upload from '../components/common/upload.vue';
@@ -194,7 +195,8 @@ const tinyVue = [
   statusList,
   relevanceCodeReview,
   compressedImg,
-  goodsStatusTag
+  goodsStatusTag,
+  TnInputAutoComplete
 ];
 
 const install = function (Vue, opts = {}) {
