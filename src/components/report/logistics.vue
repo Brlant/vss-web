@@ -359,7 +359,7 @@
         });
       },
       filterBatchNumber(query) {
-        this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
+        this.$http.get('erp-stock/all/batch-number', {params: {keyWord: query}}).then(res => {
           this.batchNumberList = res.data.list;
         });
       },
