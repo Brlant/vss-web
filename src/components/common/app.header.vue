@@ -137,6 +137,10 @@
       }
     }
 
+    .horizontal-collapse-transition {
+      transition: 0s width ease-in-out, 0s padding-left ease-in-out, 0s padding-right ease-in-out;
+    }
+
     .main-nav-scrollbar {
       position: absolute;
       top: 0;
@@ -344,6 +348,7 @@
   import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import CusTabs from '@/components/common/cus-tabs/tabs.vue';
+
   export default {
     components: {
       omsUploadPicture, CusTabs

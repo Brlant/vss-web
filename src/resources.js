@@ -100,6 +100,15 @@ http.interceptors.response.use(response => {
 
 Vue.prototype.$http = http;
 
+// 接种者档案
+export const inoculateInfo = resource('/inoculator-info', http);
+
+// 接种任务
+export const inoculateTask = resource('', http);
+
+// 接种平台
+export const inoculatePlatform = resource('', http);
+
 // pov盘点对象
 export const Inventory = resource('/erp-inventory', http, {
   queryDetail(id, params) {

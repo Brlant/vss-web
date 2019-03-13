@@ -143,6 +143,21 @@ export const route = [
             path: '/pov/subordinate/record',
             component: resolve => require(['./components/pov/record/subordinate/list.vue'], resolve),
             meta: {moduleId: 'pov', title: '下属单位注射记录', perm: 'subordinate-injection-task-manager'}
+          },
+          {
+            path: '/pov/inoculate/info',
+            component: resolve => require(['./components/pov/inoculate/info'], resolve),
+            meta: {moduleId: 'pov', title: '接种者档案', perm: 'pull-signal-1'}
+          },
+          {
+            path: '/pov/inoculate/task',
+            component: resolve => require(['./components/pov/inoculate/injection'], resolve),
+            meta: {moduleId: 'pov', title: '接种任务', perm: 'pull-signal-1'}
+          },
+          {
+            path: '/pov/inoculate/console',
+            component: resolve => require(['./components/pov/inoculate/platform'], resolve),
+            meta: {moduleId: 'pov', title: '接种台', perm: 'pull-signal-1'}
           }
         ]
       },

@@ -1,0 +1,228 @@
+<style lang="scss" scoped="">
+
+</style>
+<template>
+  <div class="order-page">
+    <div class="container">
+      <div class="opera-btn-group" :class="{up:!showSearch}">
+        <div class="opera-icon">
+          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
+         <a href="#" class="btn-circle" @click.prevent=""><i
+           class="el-icon-t-plus"></i> </a>添加
+          </span>
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
+            <i class="el-icon-arrow-up"></i>
+            <span v-show="showSearch">收起筛选</span>
+            <span v-show="!showSearch">展开筛选</span>
+          </span>
+        </div>
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
+          <el-row>
+            <el-col :span="8">
+              <oms-form-row label="姓名" :span="8">
+                <oms-input type="text" v-model="searchCondition.inoculatorName" placeholder="请输入姓名"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="接种证编号" :span="8">
+                <oms-input type="text" v-model="searchCondition.inoculatorNumber" placeholder="请输入接种证编号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="身份证号" :span="8">
+                <oms-input type="text" v-model="searchCondition.inoculatorCardNumber" placeholder="请输入身份证号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="出生证号" :span="8">
+                <oms-input type="text" v-model="searchCondition.birthCertificateNumber"
+                           placeholder="请输入出生证号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="6">
+              <oms-form-row label="" :span="5">
+                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+      <div class="order-list clearfix">
+        <el-row class="order-list-header">
+          <el-col :span="2">姓名</el-col>
+          <el-col :span="2">性别</el-col>
+          <el-col :span="3">生日</el-col>
+          <el-col :span="4">接种证编号</el-col>
+          <el-col :span="5">身份证</el-col>
+          <el-col :span="4">出生证号</el-col>
+          <el-col :span="4">操作</el-col>
+        </el-row>
+        <el-row v-if="loadingData">
+          <el-col :span="24">
+            <oms-loading :loading="loadingData"></oms-loading>
+          </el-col>
+        </el-row>
+        <el-row v-else-if="!dataList.length">
+          <el-col :span="24">
+            <div class="empty-info">
+              暂无信息
+            </div>
+          </el-col>
+        </el-row>
+        <div v-else="" class="order-list-body flex-list-dom">
+          <div class="order-list-item order-list-item-bg" v-for="item in dataList" @click.prevent="showItem(item)"
+               :class="[{'active':currentItem.id===item.id}]">
+            <el-row>
+              <el-col :span="2">
+                {{item.inoculatorName}}
+              </el-col>
+              <el-col :span="2">
+                {{item.inoculatorSex}}
+              </el-col>
+              <el-col :span="3">
+                {{item.inoculatorBirthday}}
+              </el-col>
+              <el-col :span="4">
+                {{item.inoculatorNumber}}
+              </el-col>
+              <el-col :span="5">
+                {{item.inoculatorCardNumber}}
+              </el-col>
+              <el-col :span="4">
+                {{item.birthCertificateNumber}}
+              </el-col>
+              <el-col :span="4" class="opera-btn">
+                  <span @click.stop.prevent="editItem(item)">
+                      <a href="#" class="btn-circle" @click.prevent=""><i
+                        class="el-icon-t-edit"></i></a>
+                    编辑
+                  </span>
+                <span @click.stop.prevent="deleteItem(item)">
+                        <a href="#" class="btn-circle" @click.prevent=""><i
+                          class="el-icon-t-delete"></i></a>删除
+                  </span>
+              </el-col>
+            </el-row>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <el-pagination
+        layout="prev, pager, next"
+        :total="pager.count" :pageSize="pager.pageSize" @current-change="queryList"
+        :current-page="pager.currentPage">
+      </el-pagination>
+    </div>
+
+    <page-right :show="!!defaultIndex" @right-close="resetRightBox">
+      <add-form :formItem="form" @close="resetRightBox" @change="formChange"></add-form>
+    </page-right>
+  </div>
+</template>
+<script>
+  import AddForm from './form';
+  import {inoculateInfo} from '@/resources';
+
+  export default {
+    components: {AddForm},
+    data: function () {
+      return {
+        loadingData: false,
+        showSearch: true,
+        dataList: [],
+        filters: {},
+        searchCondition: {
+          inoculatorName: '',
+          inoculatorNumber: '',
+          inoculatorCardNumber: '',
+          birthCertificateNumber: ''
+        },
+        currentItem: {},
+        form: {},
+        defaultIndex: 0,
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20
+        }
+      };
+    },
+    mounted() {
+      this.queryList();
+    },
+    computed: {},
+    methods: {
+      searchInOrder: function () {// 搜索
+        this.searchCondition.createStartTime = this.$formatAryTime(this.expectedTime, 0);
+        this.searchCondition.createEndTime = this.$formatAryTime(this.expectedTime, 1);
+        Object.assign(this.filters, this.searchCondition);
+        this.queryList(1);
+      },
+      resetSearchForm: function () {// 重置表单
+        let temp = {
+          inoculatorName: '',
+          inoculatorNumber: '',
+          inoculatorCardNumber: '',
+          birthCertificateNumber: ''
+        };
+        this.expectedTime = '';
+        Object.assign(this.searchCondition, temp);
+        Object.assign(this.filters, temp);
+        this.queryList(1);
+      },
+      resetRightBox: function () {
+        this.defaultIndex = 0;
+      },
+      add: function () {
+        this.form = {};
+        this.defaultIndex = 1;
+      },
+      editItem(item) {
+        this.currentItem = item;
+        this.form = item;
+        this.defaultIndex = 2;
+      },
+      deleteItem(item) {
+        this.$confirm(`是否删除${item.birthCertificateNumber}`, '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          inoculateInfo.delete(item.id).then(() => {
+            this.$notify.success({
+              message: `删除${item.birthCertificateNumber}成功`
+            });
+            this.queryList(1);
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || `删除${item.birthCertificateNumber}失败`
+            });
+          });
+        });
+      },
+      showItem(item) {
+        this.currentItem = item;
+      },
+      formChange() {
+        this.resetRightBox();
+        this.queryList();
+      },
+      queryList: function (pageNo) {
+        this.pager.currentPage = pageNo;
+        let params = Object.assign({
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        }, this.filters);
+        this.loadingData = true;
+        inoculateInfo.query(params).then(res => {
+          this.dataList = res.data.list;
+          this.pager.count = res.data.count;
+          this.loadingData = false;
+        });
+      }
+    }
+  };
+</script>
