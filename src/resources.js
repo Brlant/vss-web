@@ -104,7 +104,29 @@ Vue.prototype.$http = http;
 export const inoculateInfo = resource('/inoculator-info', http);
 
 // 接种任务
-export const inoculateTask = resource('', http);
+export const inoculateTask = resource('/injection-task', http, {
+  save(obj) {
+    return http.post('/injection-task/add-vaccination-task', obj);
+  },
+  queryStateNum(params) {
+    return http.get('/injection-task/count', {params});
+  },
+  cancelTask(id) {
+    return http.get(`/injection-task/cancel-task/${id}`);
+  },
+  update(obj) {
+    return http.post('/injection-task/edit-vaccination-task', obj);
+  },
+  queryDetail(id) {
+    return http.get(`/injection-task/queryInfo/${id}`);
+  },
+  reviewCode(params) {
+    return http.get('/injection-task/code/review', {params});
+  },
+  confirmTask(obj) {
+    return http.post('/injection-task/confirm-task', obj);
+  }
+});
 
 // 接种平台
 export const inoculatePlatform = resource('', http);

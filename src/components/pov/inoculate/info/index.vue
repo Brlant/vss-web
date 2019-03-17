@@ -6,10 +6,13 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-         <a href="#" class="btn-circle" @click.prevent=""><i
-           class="el-icon-t-plus"></i> </a>添加
-          </span>
+          <perm label="add-inoculator-info">
+              <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
+           <a href="#" class="btn-circle" @click.prevent=""><i
+             class="el-icon-t-plus"></i> </a>添加
+            </span>
+          </perm>
+
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -82,7 +85,7 @@
                 {{item.inoculatorSex}}
               </el-col>
               <el-col :span="3">
-                {{item.inoculatorBirthday}}
+                {{item.inoculatorBirthday | date}}
               </el-col>
               <el-col :span="4">
                 {{item.inoculatorNumber}}
@@ -94,15 +97,17 @@
                 {{item.birthCertificateNumber}}
               </el-col>
               <el-col :span="4" class="opera-btn">
+                <perm label="add-inoculator-info">
                   <span @click.stop.prevent="editItem(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-edit"></i></a>
                     编辑
                   </span>
-                <span @click.stop.prevent="deleteItem(item)">
+                  <span @click.stop.prevent="deleteItem(item)">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-delete"></i></a>删除
                   </span>
+                </perm>
               </el-col>
             </el-row>
           </div>

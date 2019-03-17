@@ -34,7 +34,7 @@ module.exports = {
         // target: 'http://erp.tinysoft.cc:88/',
         // target: 'http://next-erp.tinyapp.top',
         // target: 'http://localhost:8301',
-        // target: 'http://192.168.2.198:8113/',
+        // target: 'http://192.168.2.128:8301/',
         changeOrigin: true
       }
     },

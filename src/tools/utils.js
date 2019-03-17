@@ -138,6 +138,11 @@ export default {
     7: {'title': '待收货', state: '10', num: ''},
     8: {'title': '已完成', state: '8', num: ''}
   },
+  injectionType: {
+    0: {'title': '未接种', status: '0', num: ''},
+    1: {'title': '已接种', status: '1', num: ''},
+    2: {'title': '已取消', status: '2', num: ''}
+  },
   packageType: ['第一级包装', '第二级包装', '第三级包装', '第四级包装',
     '第五级包装', '第六级包装', '第七级包装', '第八级包装', '第九级包装', '第十级包装'],
   /**

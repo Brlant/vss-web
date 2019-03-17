@@ -147,17 +147,17 @@ export const route = [
           {
             path: '/pov/inoculate/info',
             component: resolve => require(['./components/pov/inoculate/info'], resolve),
-            meta: {moduleId: 'pov', title: '接种者档案', perm: 'pull-signal-1'}
+            meta: {moduleId: 'pov', title: '接种者档案', perm: 'query-inoculator-info'}
           },
           {
             path: '/pov/inoculate/task',
             component: resolve => require(['./components/pov/inoculate/injection'], resolve),
-            meta: {moduleId: 'pov', title: '接种任务', perm: 'pull-signal-1'}
+            meta: {moduleId: 'pov', title: '接种任务', perm: 'query-injection-task'}
           },
           {
             path: '/pov/inoculate/console',
             component: resolve => require(['./components/pov/inoculate/platform'], resolve),
-            meta: {moduleId: 'pov', title: '接种台', perm: 'pull-signal-1'}
+            meta: {moduleId: 'pov', title: '接种台', perm: 'query-vaccination-task'}
           }
         ]
       },

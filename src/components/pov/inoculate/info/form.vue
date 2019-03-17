@@ -106,7 +106,9 @@
             birthCertificateNumber: ''
           };
         }
-        this.$refs['form'].clearValidate();
+        this.$nextTick(() => {
+          this.$refs['form'].clearValidate();
+        });
       }
     },
     methods: {

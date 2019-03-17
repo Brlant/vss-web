@@ -1,4 +1,4 @@
-import {BatchNumber, inoculateInfo, Vaccine} from '@/resources';
+import {erpStock, inoculateInfo} from '@/resources';
 
 export default {
   data() {
@@ -19,7 +19,7 @@ export default {
   methods: {
     queryPersonList(query) {
       const params = {
-        keyWord: query
+        keyword: query
       };
       inoculateInfo.query(params).then(res => {
         this.personList = res.data.list;
@@ -29,14 +29,25 @@ export default {
       const params = {
         keyWord: query
       };
-      Vaccine.query(params).then(res => {
+      this.$http.get('/erp-stock/goods', {params}).then(res => {
         this.orgGoodsList = res.data.list;
       });
     },
     queryBatchNumberList(prop) {
       const params = prop || {};
-      BatchNumber.query(params).then(res => {
+      this.$http.get('/batch-number/pager', {params}).then(res => {
         this.batchNumberList = res.data.list;
+      });
+    },
+    getStockAndBatchNumber({
+                             before = () => {
+                             }, success = () => {
+      }
+                           }) {
+      let params = {};
+      before(params);
+      erpStock.query(params).then(res => {
+        success(res);
       });
     }
   }

@@ -3,53 +3,62 @@
     <div class="container">
       <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
-          <span @click.prevent="add" class="pull-right cursor-span" style="margin-left: 10px">
-         <a @click.prevent="" class="btn-circle" href="#"><i
-           class="el-icon-t-plus"></i> </a>添加
-          </span>
+          <perm label="add-vaccination-task">
+            <span @click.prevent="add" class="pull-right cursor-span" style="margin-left: 10px">
+               <a @click.prevent="" class="btn-circle" href="#"><i
+                 class="el-icon-t-plus"></i> </a>添加
+            </span>
+          </perm>
           <span @click="showSearch = !showSearch" class="pull-left switching-icon">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-
         <el-form class="advanced-query-form clearfix" onsubmit="return false" style="padding-top: 10px"
                  v-show="showSearch">
           <el-row>
             <el-col :span="9">
               <oms-form-row :span="8" label="接种者登记编号">
-                <oms-input placeholder="请输入接种者登记编号" type="text" v-model="searchCondition.code"></oms-input>
+                <oms-input placeholder="请输入接种者登记编号" type="text" v-model="searchCondition.inoculatorNumber"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="9">
               <oms-form-row :span="4" label="疫苗">
                 <el-select :clearable="true" :remote-method="queryOrgGoodsList" @click.native="queryOrgGoodsList('')"
-                           filterable
+                           @change="orgGoodsIdChange" filterable
                            placeholder="请输入名称或编号搜索疫苗" popper-class="good-selects" remote
-                           v-model="searchCondition.orgGoodsId">
-                  <el-option :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
-                             :value="item.orgGoodsDto.id"
+                           v-model="searchCondition.vaccineId">
+                  <el-option :key="item.goodsId" :label="item.goodsName" :value="item.goodsId"
                              v-for="item in orgGoodsList">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      <span class="pull-left">{{item.goodsName}}</span>
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
                         </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                      <span class="select-other-info pull-left">
+                          <span v-show="item.saleFirmName">供货厂商:</span>{{ item.saleFirmName }}
                         </span>
-                      <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>
-                        {{ item.orgGoodsDto.goodsDto.factoryName }}
-                      </span>
                     </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="6">
+              <oms-form-row :span="5" label="批号">
+                <el-select :remote-method="queryBatchNumbers"
+                           clearable filterable placeholder="请选择批号" popper-class="order-good-selects"
+                           remote v-model="searchCondition.batchNumberId">
+                  <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
+                             v-for="item in batchNumberList">
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="6">
               <oms-form-row :span="5" label="">
                 <el-button @click="searchInOrder" native-type="submit" type="primary">查询</el-button>
@@ -59,13 +68,22 @@
           </el-row>
         </el-form>
       </div>
+
+      <div class="order-list-status container" style="margin-bottom:20px">
+        <div :class="{'active':key===activeStatus}" @click="changeStatus(item,key)" class="status-item"
+             v-for="(item,key) in injectionType">
+          <div :class="['b_color_'+key]" class="status-bg"></div>
+          <div><i class="el-icon-caret-right" v-if="key===activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
+        </div>
+      </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="4">接种者登记编号</el-col>
+          <el-col :span="3">登记编号</el-col>
           <el-col :span="2">姓名</el-col>
           <el-col :span="5">疫苗名称</el-col>
           <el-col :span="3">批号</el-col>
-          <el-col :span="3">时间</el-col>
+          <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
           <el-col :span="4">操作</el-col>
         </el-row>
@@ -82,34 +100,47 @@
           </el-col>
         </el-row>
         <div class="order-list-body flex-list-dom" v-else="">
-          <div :class="[{'active':currentItem.code===item.code}]" @click.prevent="showItem(item)"
-               class="order-list-item order-list-item-bg pointer"
-               v-for="item in taskList">
+          <div :class="[{'active':currentItem.id===item.id}]" @click.prevent="showItem(item)"
+               class="order-list-item order-list-item-bg pointer" v-for="item in taskList">
             <el-row>
-              <el-col :span="4">
-                {{item.code}}
+              <el-col :span="3">
+                {{item.inoculatorNumber}}
+                <el-tag type="success" v-show="item.payCostType === 1">已缴费</el-tag>
+                <el-tag type="warning" v-show="item.payCostType === 0">未缴费</el-tag>
               </el-col>
               <el-col :span="2">
-                {{item.name}}
+                {{item.inoculatorName}}
               </el-col>
               <el-col :span="5">
+                <div>{{item.orgGoodsName}}</div>
+                <div class="font-gray">{{item.specification}}</div>
               </el-col>
               <el-col :span="3">
+                {{item.batchNumber}}
+              </el-col>
+              <el-col :span="4">
+                <div v-show="item.createTime">创建：{{item.createTime | minute}}</div>
+                <div v-show="item.registrationTime">登记：{{item.registrationTime | minute}}</div>
+                <div v-show="item.actualTime">接种：{{item.actualTime | minute}}</div>
               </el-col>
               <el-col :span="3">
-              </el-col>
-              <el-col :span="3">
+                {{getStatusTitle(item.status)}}
               </el-col>
               <el-col :span="4" class="opera-btn">
-                  <span @click.stop.prevent="editItem(item)">
+                <div v-show="activeStatus === '0'">
+                  <perm label="edit-vaccination-task">
+                      <span @click.stop.prevent="editItem(item)">
                       <a @click.prevent="" class="btn-circle" href="#"><i
                         class="el-icon-t-edit"></i></a>
                     编辑
                   </span>
-                <span @click.stop.prevent="deleteItem(item)">
-                        <a @click.prevent="" class="btn-circle" href="#"><i
-                          class="el-icon-t-delete"></i></a>删除
+                  </perm>
+                  <perm label="cancel-vaccination-task">
+                      <span @click.stop.prevent="deleteItem(item)">
+                        <a @click.prevent="" class="btn-circle" href="#"><i class="el-icon-close"></i></a>取消
                   </span>
+                  </perm>
+                </div>
               </el-col>
             </el-row>
           </div>
@@ -126,7 +157,7 @@
 
     <page-right :show="!!defaultIndex" @right-close="resetRightBox">
       <add-form :formItem="form" @change="formChange" @close="resetRightBox" v-show="defaultIndex < 3"></add-form>
-      <detail :defaultIndex="defaultIndex" :formItem="form" @change="formChange"
+      <detail :defaultIndex="defaultIndex" :getStatusTitle="getStatusTitle" :id="currentItem.id"
               @close="resetRightBox" v-show="defaultIndex === 3"></detail>
     </page-right>
   </div>
@@ -136,6 +167,7 @@
   import {inoculateTask} from '@/resources';
   import Detail from './detail';
   import methods from '../mixin/methods';
+  import utils from '@/tools/utils';
 
   export default {
     components: {AddForm, Detail},
@@ -143,16 +175,21 @@
     data: function () {
       return {
         loadingData: false,
-        showSearch: true,
+        showSearch: false,
         taskList: [],
         filters: {
-          code: '',
-          orgGoodsId: ''
+          status: '0',
+          inoculatorNumber: '',
+          vaccineId: '',
+          batchNumberId: ''
         },
+        injectionType: utils.injectionType,
         searchCondition: {
-          code: '',
-          orgGoodsId: ''
+          inoculatorNumber: '',
+          vaccineId: '',
+          batchNumberId: ''
         },
+        activeStatus: '0',
         currentItem: {},
         form: {},
         defaultIndex: 0,
@@ -168,6 +205,22 @@
     },
     computed: {},
     methods: {
+      queryBatchNumbers(query) {
+        if (!this.searchCondition.vaccineId) return;
+        this.queryBatchNumberList({
+          keyWord: query
+        });
+      },
+      orgGoodsIdChange(val) {
+        this.batchNumberList = [];
+        this.searchCondition.batchNumberId = '';
+        this.queryBatchNumbers();
+      },
+      changeStatus: function (item, key) {// 订单分类改变
+        this.activeStatus = key;
+        this.filters.status = item.status;
+        this.queryList(1);
+      },
       searchInOrder: function () {// 搜索
         this.searchCondition.createStartTime = this.$formatAryTime(this.expectedTime, 0);
         this.searchCondition.createEndTime = this.$formatAryTime(this.expectedTime, 1);
@@ -176,10 +229,12 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          code: '',
-          orgGoodsId: ''
+          inoculatorNumber: '',
+          vaccineId: '',
+          batchNumberId: ''
         };
         this.expectedTime = '';
+        this.batchNumberList = [];
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
         this.queryList(1);
@@ -197,19 +252,19 @@
         this.defaultIndex = 2;
       },
       deleteItem(item) {
-        this.$confirm(`是否删除${item.name}`, '', {
+        this.$confirm(`是否取消"${item.inoculatorName}"的接种任务`, '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          inoculateTask.delete(item.id).then(() => {
+          inoculateTask.cancelTask(item.id).then(() => {
             this.$notify.success({
-              message: `删除${item.name}成功`
+              message: `取消${item.inoculatorName}成功`
             });
             this.queryList(1);
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || `删除${item.name}失败`
+              message: error.response.data && error.response.data.msg || `取消${item.inoculatorName}失败`
             });
           });
         });
@@ -219,63 +274,46 @@
         this.defaultIndex = 3;
       },
       formChange() {
+        this.resetRightBox();
         this.queryList();
       },
       queryList: function (pageNo) {
-        this.taskList = [
-          {
-            name: '张三',
-            sex: '男',
-            date: '2019-01-01',
-            inoculateCode: '001',
-            idCard: '341222201910000000',
-            lifeCard: '341222201910000000',
-            code: '341222201910000000',
-            doctor: '李医生',
-            list: [
-              {goodsName: '06070511A/乙脑-蓉生-0.5ml-L-鼠肾5.4Lg冻西', batchNumber: '20190201'}
-            ]
-          },
-          {
-            name: '李四',
-            sex: '女',
-            date: '2019-01-02',
-            inoculateCode: '002',
-            idCard: '341222201910000001',
-            lifeCard: '341222201910000001',
-            code: '341222201910000001',
-            doctor: '赵医生',
-            list: [
-              {goodsName: '07060523A/流脑-兰生-0.5ml-D-AC多糖50ug冻西0.5ml', batchNumber: '20190202'}
-            ]
-          },
-          {
-            name: '王二',
-            sex: '女',
-            date: '2019-01-03',
-            inoculateCode: '003',
-            idCard: '341222201910000002',
-            lifeCard: '341222201910000002',
-            code: '341222201910000002',
-            doctor: '王医生',
-            list: [
-              {goodsName: '11010510A/麻腮风-上生-0.5ml-L-3+4.3+3Lg冻西', batchNumber: '20190203'}
-            ]
-          },
-          {
-            name: '赵五',
-            sex: '男',
-            date: '2019-01-05',
-            inoculateCode: '004',
-            idCard: '341222201910000003',
-            lifeCard: '341222201910000003',
-            code: '341222201910000003',
-            doctor: '江医生',
-            list: [
-              {goodsName: '07060523A/流脑-兰生-稀释液0.5ml', batchNumber: '20190204'}
-            ]
+        this.pager.currentPage = pageNo;
+        let params = Object.assign({
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize
+        }, this.filters);
+        this.loadingData = true;
+        inoculateTask.query(params).then(res => {
+          this.taskList = res.data.list;
+          this.pager.count = res.data.count;
+          this.loadingData = false;
+        });
+        this.queryStatusNum(params);
+      },
+      queryStatusNum: function (params) {
+        let cParams = Object.assign({}, params, {status: null});
+        inoculateTask.queryStateNum(cParams).then(res => {
+          let data = res.data;
+          this.injectionType[0].num = this.obtionStatusNum(data['waiting']);
+          this.injectionType[1].num = this.obtionStatusNum(data['confirm']);
+          this.injectionType[2].num = this.obtionStatusNum(data['cancel']);
+        });
+      },
+      obtionStatusNum: function (num) {
+        if (typeof num !== 'number') {
+          return 0;
+        }
+        return num;
+      },
+      getStatusTitle: function (status) {
+        let title = '';
+        for (let key in this.injectionType) {
+          if (status === this.injectionType[key].status * 1) {
+            title = this.injectionType[key].title;
           }
-        ];
+        }
+        return title;
       }
     }
   };

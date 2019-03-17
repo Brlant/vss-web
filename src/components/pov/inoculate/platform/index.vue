@@ -72,12 +72,11 @@
   }
 
   .valid-sign {
-    height: 36px;
-    margin: 0 10px;
     display: flex;
     align-items: center;
     justify-content: center;
     color: #ffff;
+    padding: 10px 0;
 
     &.success {
       background: #67C23A;
@@ -105,7 +104,7 @@
         </h2>
         <div class="d-table-col-wrap" :style="'height:'+ bodyHeight  + 'px'" @scroll="$scrollLoadingData">
           <div class="search-left-box" v-show="showSearch">
-            <oms-input v-model="filters.keyWord" placeholder="输入接种证/身份证搜索" :showFocus="showSearch"></oms-input>
+            <oms-input v-model="filters.keyword" placeholder="输入接种证/身份证搜索" :showFocus="showSearch"></oms-input>
           </div>
           <div v-if="!leftList.length" class="empty-info">
             暂无信息
@@ -113,12 +112,12 @@
           <div v-else>
             <ul class="show-list">
               <li v-for="item in leftList" class="list-item" @click="showItem(item)"
-                  :class="{'active':item.code===currentItem.code}">
+                  :class="{'active':item.id===currentItemId}">
                 <div class="id-part">
-                  {{item.code }}
+                  {{item.inoculatorNumber }}
                 </div>
                 <div>
-                  {{item.name }}
+                  {{item.inoculatorName }}
                 </div>
               </li>
             </ul>
@@ -131,74 +130,107 @@
           </div>
         </div>
       </div>
-      <div class="d-table-right">
-        <section>
+      <div class="d-table-right" v-loading="loading">
+        <section v-if="currentItem.inoculatorInfoDto">
           <h2>接种者信息</h2>
           <oms-row class="row-mg" label="姓名" :span="5">
-            {{currentItem.name}}测试战鼓
-            <span class="col-label">性别：</span>{{currentItem.sex}}
-            <span class="col-label">生日：</span>{{currentItem.date}}
+            {{currentItem.inoculatorInfoDto.inoculatorName}}
+            <span class="col-label">性别：</span>{{currentItem.inoculatorInfoDto.inoculatorSex}}
+            <span class="col-label">生日：</span>{{currentItem.inoculatorInfoDto.inoculatorBirthday | date}}
           </oms-row>
-          <oms-row class="row-mg" label="接种证编号" :span="5">{{currentItem.inoculateCode}}</oms-row>
-          <oms-row class="row-mg" label="身份证" :span="5">{{currentItem.idCard}}</oms-row>
-          <oms-row class="row-mg" label="出生证号" :span="5">{{currentItem.lifeCard}}</oms-row>
+          <oms-row class="row-mg" label="接种证编号" :span="5"
+                   v-show="currentItem.inoculatorInfoDto.inoculateCode">{{currentItem.inoculatorInfoDto.inoculateCode}}
+          </oms-row>
+          <oms-row class="row-mg" label="身份证" :span="5"
+                   v-show="currentItem.inoculatorInfoDto.inoculatorCardNumber">
+            {{currentItem.inoculatorInfoDto.inoculatorCardNumber}}
+          </oms-row>
+          <oms-row class="row-mg" label="出生证号" :span="5"
+                   v-show="currentItem.inoculatorInfoDto.birthCertificateNumber">
+            {{currentItem.inoculatorInfoDto.birthCertificateNumber}}
+          </oms-row>
         </section>
-        <section>
+        <section v-if="currentItem.injectionTaskDto">
           <h2>
             接种任务
           </h2>
           <el-row>
             <el-col :span="12">
-              <oms-row class="row-mg" label="登记编号" :span="span">{{currentItem.code}}
-                <el-tag type="success">已缴费</el-tag>
+              <oms-row class="row-mg" label="登记编号" :span="span">{{currentItem.injectionTaskDto.inoculatorNumber}}
+                <el-tag type="success" v-show="currentItem.injectionTaskDto.payCostType === 1">已缴费</el-tag>
+                <el-tag type="warning" v-show="currentItem.injectionTaskDto.payCostType === 0">未缴费</el-tag>
               </oms-row>
             </el-col>
             <el-col :span="12">
-              <oms-row class="row-mg" label="登记时间" :span="span">2019-01-01 10:10:23</oms-row>
+              <oms-row class="row-mg" label="登记时间" :span="span">{{currentItem.injectionTaskDto.registrationTime | time}}
+              </oms-row>
             </el-col>
           </el-row>
-          <oms-row class="row-mg" label="疫苗名称" :span="5">{{currentItem.list[0].goodsName}}</oms-row>
-          <oms-row class="row-mg" label="规格" :span="5">0.5ml</oms-row>
+          <oms-row class="row-mg" label="疫苗名称" :span="5">{{currentItem.injectionTaskDto.orgGoodsName}}</oms-row>
+          <oms-row class="row-mg" label="生产厂商" :span="5">{{currentItem.injectionTaskDto.origin}}</oms-row>
+          <oms-row class="row-mg" label="规格" :span="5">{{currentItem.injectionTaskDto.specification}}</oms-row>
+          <oms-row class="row-mg" label="接种途径" :span="5">
+            <dict :dict-group="'inoculationChannel'" :dict-key="currentItem.injectionTaskDto.inoculationChannel"></dict>
+          </oms-row>
           <oms-row class="row-mg flex-row" label="批号" :span="5">
             <el-select v-model="form.batchNumberId" filterable remote :remote-method="queryBatchNumbers"
-                       placeholder="请选择批号"
-                       clearable popper-class="order-good-selects">
-              <el-option v-for="item in batchNumberList" :key="item.id" :label="item.batchNumber"
-                         :value="item.id"></el-option>
+                       placeholder="请选择批号" @change="batchNumberIdChange"
+                       clearable popper-class="order-good-selects" :disabled="validating">
+              <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
+                         :value="item.batchNumberId">
+                <div>{{item.batchNumber}}</div>
+                <div class="font-gray">库存：{{item.qualifiedBizServings}}</div>
+              </el-option>
             </el-select>
           </oms-row>
+          <oms-row class="row-mg" label="数量" :span="5" v-show="form.batchNumberId && form.qualifiedBizServings">
+            {{form.qualifiedBizServings}}
+          </oms-row>
           <oms-row class="row-mg flex-row" label="接种部位" :span="5">
-            <el-select type="text" v-model="form.part" placeholder="请选择接种部位">
+            <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
               <el-option :value="item.key" :key="item.key" :label="item.label"
                          v-for="item in inoculationPositionList"></el-option>
             </el-select>
           </oms-row>
-          <oms-row class="row-mg flex-row" label="接种途径" :span="5">
-            <el-select type="text" v-model="form.way" placeholder="请选择接种途径">
-              <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in inoculationChannelList"></el-option>
-            </el-select>
-          </oms-row>
           <oms-row class="row-mg flex-row" label="追溯码" :span="5">
             <el-col :span="12">
-              <oms-input v-model="form.code" placeholder="请输入追溯码"></oms-input>
+              <oms-input v-model="form.actualCode" placeholder="请输入追溯码" @blur="validCode"
+                         :disabled="validating"></oms-input>
             </el-col>
             <el-col :span="12">
-              <div class="valid-sign" :class="{success: form.code, error: !form.code}">
-                 <span v-if="form.code">
-                <i class="el-icon-success"></i>
-                  <span>追溯码校验成功</span>
-                </span>
-                <span v-else>
-                <i class="el-icon-error"></i>
-                  <span>追溯码校验失败</span>
-                </span>
-              </div>
+              <!--<div class="valid-sign" :class="{success: validSign, error: !validSign}">-->
+              <!--<span v-if="validSign">-->
+              <!--<i class="el-icon-success"></i>-->
+              <!--<span>追溯码校验成功</span>-->
+              <!--</span>-->
+              <!--<span v-else>-->
+              <!--<i class="el-icon-error"></i>-->
+              <!--<span>追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败</span>-->
+              <!--</span>-->
+              <!--</div>-->
             </el-col>
           </oms-row>
-          <oms-row class="row-mg flex-row" :span="5" v-if="form.code">
-            <el-button type="primary">确认接种</el-button>
+          <oms-row class="row-mg" label="" :span="5" v-if="validating">
+            <el-button :loading="validating" type="success">正在校验追溯码</el-button>
           </oms-row>
+          <oms-row class="row-mg flex-row" label="" :span="5" v-if="typeof validSign === 'boolean'">
+
+            <div class="valid-sign" :class="{success: validSign, error: !validSign}">
+              <span v-if="validSign">
+                <i class="el-icon-success"></i>
+                  <span>追溯码校验成功</span>
+              </span>
+              <span v-else="">
+                <i class="el-icon-error"></i>
+                  <span>{{errorDetail.title}}</span>
+                </span>
+            </div>
+          </oms-row>
+          <perm label="confirm-vaccination-task">
+            <oms-row class="row-mg flex-row" label="" :span="5" v-if="validSign">
+              <el-button type="primary" @click="confirmTask" :doing="doing">确认接种</el-button>
+            </oms-row>
+          </perm>
         </section>
       </div>
     </div>
@@ -206,6 +238,7 @@
 </template>
 <script>
   import methods from '../mixin/methods';
+  import {inoculateTask} from '@/resources';
 
   export default {
     mixins: [methods],
@@ -215,8 +248,9 @@
         showSearch: true,
         leftList: [],
         currentItem: {},
+        currentItemId: '',
         filters: {
-          keyWord: ''
+          keyword: ''
         },
         pager: {
           currentPage: 1,
@@ -226,10 +260,15 @@
         },
         form: {
           batchNumberId: '',
-          part: '',
-          code: '',
-          way: ''
-        }
+          inoculationPosition: '',
+          actualCode: '',
+          qualifiedBizServings: null
+        },
+        loading: false,
+        validating: false,
+        doing: false,
+        validSign: null,
+        errorDetail: {}
       };
     },
     computed: {
@@ -243,95 +282,141 @@
       }
     },
     watch: {
-      filters() {
-        this.queryList();
+      filters: {
+        handler() {
+          this.queryList(1);
+        },
+        deep: true
       }
     },
     mounted() {
-      this.queryList();
+      this.queryList(1);
       // 全屏
       // this.setElFullScreen();
     },
     methods: {
       queryBatchNumbers(query) {
-        this.queryBatchNumberList({
-          keyWord: query
+        this.getStockAndBatchNumber({
+          before: (params) => {
+            params.orgGoodsId = this.form.orgGoodsId;
+            params.keyWord = query;
+          },
+          success: (res) => {
+            this.batchNumberList = res.data.filter(f => f.qualifiedBizServings).sort((pre, cur) => pre.expiryDate - cur.expiryDate);
+          }
         });
       },
-      queryList() {
-        this.leftList = [
-          {
-            name: '张三',
-            sex: '男',
-            date: '2019-01-01',
-            inoculateCode: '001',
-            idCard: '341222201910000000',
-            lifeCard: '341222201910000000',
-            code: '341222201910000000',
-            doctor: '李医生',
-            list: [
-              {goodsName: '06070511A/乙脑-蓉生-0.5ml-L-鼠肾5.4Lg冻西', batchNumber: '20190201'}
-            ]
-          },
-          {
-            name: '李四',
-            sex: '女',
-            date: '2019-01-02',
-            inoculateCode: '002',
-            idCard: '341222201910000001',
-            lifeCard: '341222201910000001',
-            code: '341222201910000001',
-            doctor: '赵医生',
-            list: [
-              {goodsName: '07060523A/流脑-兰生-0.5ml-D-AC多糖50ug冻西0.5ml', batchNumber: '20190202'}
-            ]
-          },
-          {
-            name: '王二',
-            sex: '女',
-            date: '2019-01-03',
-            inoculateCode: '003',
-            idCard: '341222201910000002',
-            lifeCard: '341222201910000002',
-            code: '341222201910000002',
-            doctor: '王医生',
-            list: [
-              {goodsName: '11010510A/麻腮风-上生-0.5ml-L-3+4.3+3Lg冻西', batchNumber: '20190203'}
-            ]
-          },
-          {
-            name: '赵五',
-            sex: '男',
-            date: '2019-01-05',
-            inoculateCode: '004',
-            idCard: '341222201910000003',
-            lifeCard: '341222201910000003',
-            code: '341222201910000003',
-            doctor: '江医生',
-            list: [
-              {goodsName: '07060523A/流脑-兰生-稀释液0.5ml', batchNumber: '20190204'}
-            ]
+      queryList(pageNo, isContinue = false) {
+        this.pager.currentPage = pageNo;
+        let params = Object.assign({
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize,
+          status: '0'
+        }, this.filters);
+        this.loadingData = true;
+        inoculateTask.query(params).then(res => {
+          this.$store.commit('initBottomLoading', false);
+          if (isContinue) {
+            this.leftList = this.leftList.concat(res.data.list);
+          } else {
+            this.leftList = res.data.list;
+            this.leftList[0] && this.showItem(this.leftList[0]);
           }
-        ];
-        this.showItem(this.leftList[0]);
+          this.pager.totalPage = res.data.totalPage;
+          this.loadingData = false;
+        });
       },
       showItem(item) {
-        this.currentItem = item;
+        this.currentItemId = item.id;
+        this.loading = true;
+        inoculateTask.queryDetail(item.id).then(res => {
+          this.loading = false;
+          this.currentItem = res.data;
+          this.form.inoculationPosition = res.data.injectionTaskDto.inoculationPosition;
+          this.form.batchNumberId = res.data.injectionTaskDto.batchNumberId;
+          this.form.batchNumber = item.batchNumber;
+          this.form.erpStockId = item.erpStockId;
+          this.batchNumberList = [
+            {
+              id: res.data.injectionTaskDto.batchNumberId,
+              batchNumber: res.data.injectionTaskDto.batchNumber
+            }
+          ];
+          this.queryBatchNumbers(res.data.injectionTaskDto.batchNumber);
+        }).catch(e => {
+          this.loading = false;
+        });
         this.resetForm();
       },
       resetForm() {
         this.form = {
           batchNumberId: '',
-          part: '',
-          code: '',
-          way: ''
+          inoculationPosition: '',
+          actualCode: '',
+          qualifiedBizServings: null
         };
       },
       getMore() {
-
+        this.queryList(this.pager.currentPage + 1, true);
       },
-      addType() {
-
+      batchNumberIdChange(val) {
+        this.form.qualifiedBizServings = '';
+        this.form.erpStockId = '';
+        this.form.batchNumber = '';
+        if (!val) return;
+        let item = this.batchNumberList.find(f => f.batchNumberId === val);
+        this.form.batchNumber = item.batchNumber;
+        this.form.qualifiedBizServings = item.qualifiedBizServings;
+        this.form.erpStockId = item.id;
+        this.validCode();
+      },
+      validCode() {
+        this.validSign = null;
+        if (!this.form.batchNumberId) return;
+        if (!this.form.actualCode) return;
+        // 校验追溯码和批号
+        let params = {
+          batchNumberId: this.form.batchNumberId,
+          code: this.form.actualCode
+        };
+        this.validating = true;
+        inoculateTask.reviewCode(params).then(res => {
+          this.validating = false;
+          this.validSign = res.data.passFlag;
+          this.errorDetail = res.data;
+        }).catch(() => {
+          this.validating = false;
+          this.$notify.error({
+            message: '校验错误'
+          });
+        });
+      },
+      confirmTask() {
+        if (this.doing) return;
+        if (!this.form.batchNumberId) {
+          return this.$notify.info('请选择批号');
+        }
+        if (!this.form.inoculationPosition) {
+          return this.$notify.info('请选择接种部位');
+        }
+        if (!this.form.actualCode) {
+          return this.$notify.info('请输入追溯码');
+        }
+        this.form.id = this.currentItem.injectionTaskDto.id;
+        this.doing = true;
+        inoculateTask.confirmTask(this.form).then(res => {
+          this.$notify.success({
+            message: '确认接种完成'
+          });
+          this.doing = false;
+          this.queryList(1);
+          this.validSign = null;
+        }).catch(error => {
+          this.doing = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '确认接种失败'
+          });
+        });
       },
       setElFullScreen() {
         const root = document.documentElement;
