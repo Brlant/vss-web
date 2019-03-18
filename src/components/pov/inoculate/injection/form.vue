@@ -79,7 +79,7 @@
           </el-col>
           <el-col :span="12">
             <el-form-item label="剩余人份" v-show="form.qualifiedBizServings">
-              <span>{{form.qualifiedBizServings}}</span>
+              <span>{{form.qualifiedBizServings}}人次</span>
             </el-form-item>
           </el-col>
         </el-row>
