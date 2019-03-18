@@ -155,7 +155,7 @@
       </el-pagination>
     </div>
 
-    <page-right :show="!!defaultIndex" @right-close="resetRightBox">
+    <page-right :css="{width: width + 'px'}" :show="!!defaultIndex" @right-close="resetRightBox">
       <add-form :formItem="form" @change="formChange" @close="resetRightBox" v-show="defaultIndex < 3"></add-form>
       <detail :defaultIndex="defaultIndex" :getStatusTitle="getStatusTitle" :id="currentItem.id"
               @close="resetRightBox" v-show="defaultIndex === 3"></detail>
@@ -197,7 +197,8 @@
           currentPage: 1,
           count: 0,
           pageSize: 20
-        }
+        },
+        width: 800
       };
     },
     mounted() {
@@ -243,10 +244,12 @@
         this.defaultIndex = 0;
       },
       add: function () {
+        this.width = 800;
         this.form = {};
         this.defaultIndex = 1;
       },
       editItem(item) {
+        this.width = 800;
         this.currentItem = item;
         this.form = item;
         this.defaultIndex = 2;
@@ -270,6 +273,7 @@
         });
       },
       showItem(item) {
+        this.width = 600;
         this.currentItem = item;
         this.defaultIndex = 3;
       },

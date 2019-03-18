@@ -83,6 +83,9 @@
           <oms-row label="是否缴费" :span="span">
             {{currentItem.injectionTaskDto.payCostType === 1 ? '已缴费' : '未交费'}}
           </oms-row>
+          <oms-row label="是否新开瓶" :span="span">
+            {{currentItem.injectionTaskDto.newInoculationStatus === 1 ? '是' : '否'}}
+          </oms-row>
           <oms-row label="状态" :span="span">
             {{getStatusTitle(currentItem.injectionTaskDto.status)}}
           </oms-row>

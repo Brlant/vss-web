@@ -1,4 +1,6 @@
 <style lang="scss" scoped="">
+  @import "~@/assets/mixins";
+
   .el-form .el-select {
     display: block;
   }
@@ -8,12 +10,32 @@
       margin-bottom: 0px;
     }
   }
+
+  .el-form {
+    h2 {
+      /*font-weight: bold;*/
+      margin: 6px 0 14px 0;
+      padding: 6px;
+      background: #eee;
+      border-left: 10px solid $activeColor;
+    }
+  }
+</style>
+<style lang="scss">
+  .inoculatorInfo-form {
+    .info {
+      .el-form-item__label, .el-form-item__content {
+        line-height: normal;
+      }
+    }
+  }
 </style>
 <template>
-  <div>
+  <div class="inoculatorInfo-form">
     <h2 class="clearfix">{{title}}</h2>
     <el-form ref="form" :model="form" label-width="100px" :rules="rules"
              @submit.prevent="onSubmit('form')" onsubmit="return false">
+      <h2>基本信息</h2>
       <el-form-item label="接种者" prop="inoculatorInfoId">
         <el-select v-model="form.inoculatorInfoId" filterable remote :remote-method="queryPersons"
                    placeholder="请输入名称/身份证号/出生证号搜索" @click.native.once="queryPersonList('')"
@@ -31,9 +53,33 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="登记编号" prop="inoculatorNumber">
-        <oms-input placeholder="请输入登记编号" v-model="form.inoculatorNumber"></oms-input>
-      </el-form-item>
+      <el-row>
+        <el-col :span="10">
+          <el-form-item label="登记编号" prop="inoculatorNumber">
+            <oms-input placeholder="请输入登记编号" v-model="form.inoculatorNumber"></oms-input>
+          </el-form-item>
+        </el-col>
+        <el-col :span="7">
+          <el-form-item label="是否缴费" label-width="80px">
+            <el-radio-group v-model="form.payCostType">
+              <el-radio :label="1">已缴</el-radio>
+              <el-radio :label="0">未缴</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+        <el-col :span="7">
+          <el-form-item label="是否新开瓶" label-width="90px">
+            <el-radio-group v-model="form.newInoculationStatus">
+              <el-radio :label="1">是</el-radio>
+              <el-radio :label="0">否</el-radio>
+            </el-radio-group>
+          </el-form-item>
+        </el-col>
+      </el-row>
+    </el-form>
+    <el-form ref="addForm" :model="form" label-width="100px" :rules="rules"
+             @submit.prevent="onSubmit('form')" onsubmit="return false">
+      <h2>疫苗信息</h2>
       <el-form-item label="疫苗" prop="vaccineId">
         <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsList"
                    placeholder="请输入名称搜索疫苗" @click.native.once="queryOrgGoodsList('')"
@@ -69,40 +115,42 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <div>
-        <el-row v-show="form.vaccineId && form.batchNumberId" class="mini-form">
-          <el-form-item label="生产厂商" v-show="form.factoryName">{{form.factoryName}}</el-form-item>
-        </el-row>
-        <el-row v-show="form.vaccineId&& form.batchNumberId">
-          <el-col :span="12" v-show="form.specifications">
-            <el-form-item label="规格">{{form.specifications}}</el-form-item>
-          </el-col>
-          <el-col :span="12">
-            <el-form-item label="剩余人份" v-show="form.qualifiedBizServings">
-              <span>{{form.qualifiedBizServings}}人次</span>
-            </el-form-item>
-          </el-col>
-        </el-row>
-      </div>
-      <el-form-item label="接种部位" prop="inoculationPosition">
-        <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
-          <el-option :value="item.key" :key="item.key" :label="item.label"
-                     v-for="item in inoculationPositionList"></el-option>
-        </el-select>
+      <el-row class="info" v-show="form.vaccineId&& form.batchNumberId">
+        <el-col :span="10" v-show="form.factoryName">
+          <el-form-item label="生产厂商">{{form.factoryName}}</el-form-item>
+        </el-col>
+        <el-col :span="8" v-show="form.specifications">
+          <el-form-item label="规格">{{form.specifications}}</el-form-item>
+        </el-col>
+        <el-col :span="6" v-show="form.qualifiedBizServings">
+          <el-form-item label="剩余人份">
+            <span>{{form.qualifiedBizServings}}人次</span>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="12">
+          <el-form-item label="接种部位" prop="inoculationPosition">
+            <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
+              <el-option :value="item.key" :key="item.key" :label="item.label"
+                         v-for="item in inoculationPositionList"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="接种途径" prop="inoculationChannel">
+            <el-select type="text" v-model="form.inoculationChannel" placeholder="请选择接种途径">
+              <el-option :value="item.key" :key="item.key" :label="item.label"
+                         v-for="item in inoculationChannelList"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-form-item label-width="100px" v-if="!form.id">
+        <el-button type="primary" @click="addGoods">添加疫苗</el-button>
       </el-form-item>
-      <el-form-item label="接种途径" prop="inoculationChannel">
-        <el-select type="text" v-model="form.inoculationChannel" placeholder="请选择接种途径">
-          <el-option :value="item.key" :key="item.key" :label="item.label"
-                     v-for="item in inoculationChannelList"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="是否缴费">
-        <el-radio-group v-model="form.payCostType">
-          <el-radio :label="1">已缴</el-radio>
-          <el-radio :label="0">未缴</el-radio>
-        </el-radio-group>
-      </el-form-item>
-      <el-form-item label-width="100px">
+      <goods-list :goodsList="form.list" @deleteItem="deleteItem" v-if="!form.id"/>
+      <el-form-item label-width="100px" v-show=" form.id || form.list.length">
         <el-button type="primary" @click="onSubmit('form')" native-type="submit" :disabled="doing">保存</el-button>
         <el-button @click="doClose">取消</el-button>
       </el-form-item>
@@ -113,10 +161,11 @@
 <script>
   import {inoculateTask} from '@/resources';
   import methods from '../mixin/methods';
+  import GoodsList from './goods-list';
 
   export default {
-    inoculatorInfoId: 'editForm',
     mixins: [methods],
+    components: {GoodsList},
     props: {
       formItem: {
         type: Object,
@@ -135,9 +184,11 @@
           inoculationPosition: '',
           inoculationChannel: '',
           payCostType: 1,
+          newInoculationStatus: 0,
           qualifiedBizServings: '',
           specifications: '',
-          factoryName: ''
+          factoryName: '',
+          list: []
         },
         rules: {
           inoculatorInfoId: [
@@ -194,6 +245,11 @@
             }
           ];
           this.form = Object.assign({}, this.formItem);
+          this.form.list = [];
+          this.$http.get('/org/goods/' + this.form.orgGoodsId).then(res => {
+            this.form.specifications = res.data.orgGoodsDto.goodsDto.specifications;
+            this.form.factoryName = res.data.orgGoodsDto.goodsDto.factoryName;
+          });
         } else {
           this.form = {
             inoculatorInfoId: '',
@@ -203,13 +259,16 @@
             inoculationPosition: '',
             inoculationChannel: '',
             payCostType: 1,
+            newInoculationStatus: 0,
             qualifiedBizServings: '',
             specifications: '',
-            factoryName: ''
+            factoryName: '',
+            list: []
           };
         }
         this.$nextTick(() => {
           this.$refs['form'].clearValidate();
+          this.$refs['addForm'].clearValidate();
         });
       }
     },
@@ -241,6 +300,8 @@
               this.form.erpStockId = this.batchNumberList[0].id;
               this.form.batchNumber = this.batchNumberList[0].batchNumber;
               this.form.batchNumberId = this.batchNumberList[0].batchNumberId;
+              this.form.expiryDate = this.batchNumberList[0].expiryDate;
+              this.form.qualifiedBizServings = this.batchNumberList[0].qualifiedBizServings;
             }
           }
         });
@@ -254,6 +315,7 @@
         if (!val) return;
         let item = this.orgGoodsList.find(f => f.goodsId === val);
         this.form.orgGoodsId = item.id;
+        this.form.orgGoodsName = item.goodsName;
         this.queryBatchNumbers('', true);
         this.$http.get('/org/goods/' + this.form.orgGoodsId).then(res => {
           this.form.inoculationPosition = res.data.orgGoodsDto.goodsDto.propertyMap.inoculationPosition;
@@ -269,8 +331,45 @@
         if (!val) return;
         let item = this.batchNumberList.find(f => f.batchNumberId === val);
         this.form.batchNumber = item.batchNumber;
+        this.form.expiryDate = item.expiryDate;
         this.form.qualifiedBizServings = item.qualifiedBizServings;
         this.form.erpStockId = item.id;
+      },
+      addGoods() {
+        this.$refs['addForm'].validate((valid) => {
+          if (!valid) {
+            return false;
+          }
+          let item = {
+            orgGoodsName: this.form.orgGoodsName,
+            orgGoodsId: this.form.orgGoodsId,
+            specifications: this.form.specifications,
+            vaccineId: this.form.vaccineId,
+            batchNumber: this.form.batchNumber,
+            batchNumberId: this.form.batchNumberId,
+            expiryDate: this.form.expiryDate,
+            erpStockId: this.form.erpStockId,
+            inoculationPosition: this.form.inoculationPosition,
+            inoculationChannel: this.form.inoculationChannel
+          };
+          this.form.orgGoodsId = '';
+          this.form.orgGoodsName = '';
+          this.form.specifications = '';
+          this.form.vaccineId = '';
+          this.form.batchNumber = '';
+          this.form.batchNumberId = '';
+          this.form.expiryDate = '';
+          this.form.erpStockId = '';
+          this.form.inoculationPosition = '';
+          this.form.inoculationChannel = '';
+          this.$nextTick(() => {
+            this.$refs['addForm'].clearValidate();
+          });
+          this.form.list.push(item);
+        });
+      },
+      deleteItem(item) {
+        this.form.list = this.form.list.filter(f => f !== item);
       },
       onSubmit: function (formName) {
         let self = this;
@@ -284,7 +383,15 @@
           this.doing = true;
           let formData = JSON.parse(JSON.stringify(this.form));
           if (!formData.id) {
-            inoculateTask.save(formData).then(() => {
+            const list = formData.list.map(m => {
+              return Object.assign({}, m, {
+                inoculatorInfoId: formData.inoculatorInfoId,
+                inoculatorNumber: formData.inoculatorNumber,
+                payCostType: formData.payCostType,
+                newInoculationStatus: formData.newInoculationStatus
+              });
+            });
+            inoculateTask.save(list).then(() => {
               this.doing = false;
               this.$notify.success({
                 duration: 2000,
