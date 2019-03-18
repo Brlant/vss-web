@@ -247,8 +247,10 @@
           this.form = Object.assign({}, this.formItem);
           this.form.list = [];
           this.$http.get('/org/goods/' + this.form.orgGoodsId).then(res => {
-            this.form.specifications = res.data.orgGoodsDto.goodsDto.specifications;
-            this.form.factoryName = res.data.orgGoodsDto.goodsDto.factoryName;
+            this.form = Object.assign({}, this.form, {
+              specifications: res.data.orgGoodsDto.goodsDto.specifications,
+              factoryName: res.data.orgGoodsDto.goodsDto.factoryName
+            });
           });
         } else {
           this.form = {
