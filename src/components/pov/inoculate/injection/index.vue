@@ -29,7 +29,7 @@
                            @change="orgGoodsIdChange" filterable
                            placeholder="请输入名称或编号搜索疫苗" popper-class="good-selects" remote
                            v-model="searchCondition.vaccineId">
-                  <el-option :key="item.goodsId" :label="item.goodsName" :value="item.goodsId"
+                  <el-option :key="item.id" :label="item.goodsName" :value="item.goodsId"
                              v-for="item in orgGoodsList">
                     <div style="overflow: hidden">
                       <span class="pull-left">{{item.goodsName}}</span>

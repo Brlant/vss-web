@@ -17,9 +17,11 @@
       <el-form-item label="接种者" prop="inoculatorInfoId">
         <el-select v-model="form.inoculatorInfoId" filterable remote :remote-method="queryPersons"
                    placeholder="请输入名称/身份证号/出生证号搜索" @click.native.once="queryPersonList('')"
-                   clearable popper-class="order-good-selects">
+                   clearable popper-class="good-selects">
           <el-option v-for="item in personList" :key="item.id" :label="item.inoculatorName" :value="item.id">
-            <div>{{item.inoculatorName}}</div>
+            <div>
+              <span>{{item.inoculatorName}}</span>
+            </div>
             <div>
               <span class="select-other-info"><span v-show="item.inoculatorNumber">接种证编号:</span>{{item.inoculatorNumber}}</span>
               <span class="select-other-info"><span v-show="item.inoculatorCardNumber">身份证:</span>{{item.inoculatorCardNumber}}</span>
@@ -60,7 +62,10 @@
           <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
                      :value="item.batchNumberId">
             <div>{{item.batchNumber}}</div>
-            <div class="font-gray">库存：{{item.qualifiedBizServings}}</div>
+            <div class="font-gray">
+              <span>剩余人份：{{item.qualifiedBizServings}}人次</span>
+              <span class="ml-15">有效期：{{item.expiryDate | date}}</span>
+            </div>
           </el-option>
         </el-select>
       </el-form-item>
@@ -73,8 +78,8 @@
             <el-form-item label="规格">{{form.specifications}}</el-form-item>
           </el-col>
           <el-col :span="12">
-            <el-form-item label="数量" v-show="form.qualifiedBizServings">
-              <span>{{form.qualifiedBizServings}}</span>
+            <el-form-item label="剩余人份" v-show="form.qualifiedBizServings">
+              <span>{{form.qualifiedBizServings}}没有可用库存</span>
             </el-form-item>
           </el-col>
         </el-row>
@@ -228,6 +233,9 @@
           },
           success: (res) => {
             this.batchNumberList = res.data.filter(f => f.qualifiedBizServings).sort((pre, cur) => pre.expiryDate - cur.expiryDate);
+            if (!this.batchNumberList.length) {
+              return this.$notify.info('没有可用库存');
+            }
             if (first && this.batchNumberList[0]) {
               this.form.qualifiedBizServings = this.batchNumberList[0].qualifiedBizServings;
               this.form.erpStockId = this.batchNumberList[0].id;
