@@ -207,7 +207,7 @@
               </el-select>
             </el-col>
             <el-col :span="12">
-              <oms-row label="剩余计次" :span="10" v-show="form.batchNumberId && form.qualifiedBizServings">
+              <oms-row label="剩余计次" :span="14" v-show="form.batchNumberId && form.qualifiedBizServings">
                 {{form.qualifiedBizServings}}
               </oms-row>
             </el-col>
