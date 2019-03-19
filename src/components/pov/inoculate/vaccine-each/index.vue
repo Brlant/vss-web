@@ -22,25 +22,32 @@
         <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
                  onsubmit="return false">
           <el-row>
-            <el-col :span="8">
-              <oms-form-row label="姓名" :span="8">
-                <oms-input type="text" v-model="searchCondition.inoculatorName" placeholder="请输入姓名"></oms-input>
+            <el-col :span="9">
+              <oms-form-row :span="4" label="疫苗">
+                <el-select :clearable="true" :remote-method="queryOrgGoodsList" @click.native="queryOrgGoodsList('')"
+                           filterable
+                           placeholder="请输入名称或编号搜索疫苗" popper-class="good-selects" remote
+                           v-model="searchCondition.vaccineId">
+                  <el-option :key="item.id" :label="item.goodsName" :value="item.goodsId"
+                             v-for="item in orgGoodsList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.goodsName}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
+                        </span>
+                      <span class="select-other-info pull-left">
+                          <span v-show="item.saleFirmName">供货厂商:</span>{{ item.saleFirmName }}
+                        </span>
+                    </div>
+                  </el-option>
+                </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="接种证编号" :span="8">
-                <oms-input type="text" v-model="searchCondition.inoculatorNumber" placeholder="请输入接种证编号"></oms-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="身份证号" :span="8">
-                <oms-input type="text" v-model="searchCondition.inoculatorCardNumber" placeholder="请输入身份证号"></oms-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="出生证号" :span="8">
-                <oms-input type="text" v-model="searchCondition.birthCertificateNumber"
-                           placeholder="请输入出生证号"></oms-input>
+              <oms-form-row label="追溯码" :span="8">
+                <oms-input type="text" v-model="searchCondition.code" placeholder="请输入追溯码"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="6">
@@ -54,13 +61,10 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="2">姓名</el-col>
-          <el-col :span="2">性别</el-col>
-          <el-col :span="3">生日</el-col>
-          <el-col :span="4">接种证编号</el-col>
-          <el-col :span="5">身份证</el-col>
-          <el-col :span="4">出生证号</el-col>
-          <el-col :span="4">操作</el-col>
+          <el-col :span="6">疫苗名称</el-col>
+          <el-col :span="6">追溯码</el-col>
+          <el-col :span="6">时间</el-col>
+          <el-col :span="6">人份</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -78,36 +82,21 @@
           <div class="order-list-item order-list-item-bg" v-for="item in dataList" @click.prevent="showItem(item)"
                :class="[{'active':currentItem.id===item.id}]">
             <el-row>
-              <el-col :span="2">
+              <el-col :span="6">
                 {{item.inoculatorName}}
               </el-col>
-              <el-col :span="2">
-                {{item.inoculatorSex}}
+              <el-col :span="6">
+                {{item.code}}
               </el-col>
-              <el-col :span="3">
-                {{item.inoculatorBirthday | date}}
+              <el-col :span="6">
+                <div>开启：</div>
+                <div>失效：</div>
+                <div>最后使用：</div>
               </el-col>
-              <el-col :span="4">
-                {{item.inoculatorNumber}}
-              </el-col>
-              <el-col :span="5">
-                {{item.inoculatorCardNumber}}
-              </el-col>
-              <el-col :span="4">
-                {{item.birthCertificateNumber}}
-              </el-col>
-              <el-col :span="4" class="opera-btn">
-                <perm label="add-inoculator-info">
-                  <span @click.stop.prevent="editItem(item)">
-                      <a href="#" class="btn-circle" @click.prevent=""><i
-                        class="el-icon-t-edit"></i></a>
-                    编辑
-                  </span>
-                  <span @click.stop.prevent="deleteItem(item)">
-                        <a href="#" class="btn-circle" @click.prevent=""><i
-                          class="el-icon-t-delete"></i></a>删除
-                  </span>
-                </perm>
+              <el-col :span="6">
+                <div>最大使用：{{item.code}}</div>
+                <div>当前使用：{{item.code}}</div>
+                <div>剩余使用：{{item.code}}</div>
               </el-col>
             </el-row>
           </div>
@@ -125,8 +114,10 @@
 </template>
 <script>
   import {inoculateInfo} from '@/resources';
+  import methods from '../mixin/methods';
 
   export default {
+    mixins: [methods],
     data: function () {
       return {
         loadingData: false,
@@ -134,10 +125,8 @@
         dataList: [],
         filters: {},
         searchCondition: {
-          inoculatorName: '',
-          inoculatorNumber: '',
-          inoculatorCardNumber: '',
-          birthCertificateNumber: ''
+          vaccineId: '',
+          code: ''
         },
         currentItem: {},
         form: {},
@@ -162,10 +151,8 @@
       },
       resetSearchForm: function () {// 重置表单
         let temp = {
-          inoculatorName: '',
-          inoculatorNumber: '',
-          inoculatorCardNumber: '',
-          birthCertificateNumber: ''
+          vaccineId: '',
+          code: ''
         };
         this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
