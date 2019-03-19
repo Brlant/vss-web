@@ -109,7 +109,7 @@
                      :value="item.batchNumberId">
             <div>{{item.batchNumber}}</div>
             <div class="font-gray">
-              <span>剩余人份：{{item.qualifiedBizServings}}人次</span>
+              <span>剩余计次：{{item.qualifiedBizServings}}</span>
               <span class="ml-15">有效期：{{item.expiryDate | date}}</span>
             </div>
           </el-option>
@@ -123,8 +123,8 @@
           <el-form-item label="规格">{{form.specifications}}</el-form-item>
         </el-col>
         <el-col :span="6" v-show="form.qualifiedBizServings">
-          <el-form-item label="剩余人份">
-            <span>{{form.qualifiedBizServings}}人次</span>
+          <el-form-item label="剩余计次">
+            <span>{{form.qualifiedBizServings}}</span>
           </el-form-item>
         </el-col>
       </el-row>

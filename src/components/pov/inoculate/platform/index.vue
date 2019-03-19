@@ -90,6 +90,18 @@
   .el-select {
     display: block;
     width: 50%;
+
+    &.is-large {
+      width: 100%;
+    }
+  }
+</style>
+<style lang="scss">
+  .flex-row-col {
+    .el-col-19 {
+      display: flex;
+      align-items: center;
+    }
   }
 </style>
 <template>
@@ -170,7 +182,7 @@
           <oms-row class="row-mg" label="生产厂商" :span="5">{{currentItem.injectionTaskDto.origin}}</oms-row>
           <el-row>
             <el-col :span="12">
-              <oms-row class="row-mg" label="规格" :span="5">{{currentItem.injectionTaskDto.specification}}</oms-row>
+              <oms-row class="row-mg" label="规格" :span="10">{{currentItem.injectionTaskDto.specification}}</oms-row>
             </el-col>
             <el-col :span="12">
               <oms-row class="row-mg" label="是否新开瓶" :span="10">
@@ -181,19 +193,24 @@
           <oms-row class="row-mg" label="接种途径" :span="5">
             <dict :dict-group="'inoculationChannel'" :dict-key="currentItem.injectionTaskDto.inoculationChannel"></dict>
           </oms-row>
-          <oms-row class="row-mg flex-row" label="批号" :span="5">
-            <el-select v-model="form.batchNumberId" filterable remote :remote-method="queryBatchNumbers"
-                       placeholder="请选择批号" @change="batchNumberIdChange"
-                       clearable popper-class="order-good-selects" :disabled="validating">
-              <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
-                         :value="item.batchNumberId">
-                <div>{{item.batchNumber}}</div>
-                <div class="font-gray">剩余人份：{{item.qualifiedBizServings}}人次</div>
-              </el-option>
-            </el-select>
-          </oms-row>
-          <oms-row class="row-mg" label="剩余人份" :span="5" v-show="form.batchNumberId && form.qualifiedBizServings">
-            {{form.qualifiedBizServings}}人次
+          <oms-row class="row-mg flex-row flex-row-col" label="批号" :span="5">
+            <el-col :span="12">
+              <el-select class="is-large" v-model="form.batchNumberId" filterable remote
+                         :remote-method="queryBatchNumbers"
+                         placeholder="请选择批号" @change="batchNumberIdChange"
+                         clearable popper-class="order-good-selects" :disabled="validating">
+                <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
+                           :value="item.batchNumberId">
+                  <div>{{item.batchNumber}}</div>
+                  <div class="font-gray">剩余计次：{{item.qualifiedBizServings}}</div>
+                </el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="12">
+              <oms-row label="剩余计次" :span="10" v-show="form.batchNumberId && form.qualifiedBizServings">
+                {{form.qualifiedBizServings}}
+              </oms-row>
+            </el-col>
           </oms-row>
           <oms-row class="row-mg flex-row" label="接种部位" :span="5">
             <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
