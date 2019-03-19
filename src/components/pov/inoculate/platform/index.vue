@@ -202,12 +202,12 @@
                 <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
                            :value="item.batchNumberId">
                   <div>{{item.batchNumber}}</div>
-                  <div class="font-gray">剩余计次：{{item.qualifiedBizServings}}</div>
+                  <div class="font-gray">剩余剂次：{{item.qualifiedBizServings}}</div>
                 </el-option>
               </el-select>
             </el-col>
             <el-col :span="12">
-              <oms-row label="剩余计次" :span="14" v-show="form.batchNumberId && form.qualifiedBizServings">
+              <oms-row label="剩余剂次" :span="14" v-show="form.batchNumberId && form.qualifiedBizServings">
                 {{form.qualifiedBizServings}}
               </oms-row>
             </el-col>
