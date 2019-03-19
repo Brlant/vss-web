@@ -151,8 +151,10 @@
         <goods-list :goodsList="form.list" @deleteItem="deleteItem"/>
       </div>
       <el-form-item label-width="100px">
-        <el-button type="primary" @click="addGoods" v-show="!form.id">添加疫苗</el-button>
-        <el-button type="success" @click="onSubmit('form')" native-type="submit" :disabled="doing">保存</el-button>
+        <el-button type="primary" plain @click="addGoods" v-show="!form.id && form.vaccineId">添加多种疫苗</el-button>
+      </el-form-item>
+      <el-form-item label-width="100px" v-show="form.vaccineId || form.list.length">
+        <el-button type="primary" @click="onSubmit('form')" native-type="submit" :disabled="doing">保存接种任务</el-button>
         <el-button @click="doClose">取消</el-button>
       </el-form-item>
     </el-form>
