@@ -1,6 +1,5 @@
 <template>
   <div class="product-list-detail">
-    <h3 style="background: #13ce66;color: #fff">已选疫苗</h3>
     <table class="table">
       <thead>
       <tr>
@@ -16,7 +15,7 @@
       <tr :key="product.goodsId" v-for="product in goodsList">
         <td>
           <span>{{product.orgGoodsName}}</span>
-          <div class="f-grey">
+          <div class="font-gray">
             规格：{{product.specifications}}
           </div>
         </td>

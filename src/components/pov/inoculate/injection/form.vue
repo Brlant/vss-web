@@ -54,12 +54,12 @@
         </el-select>
       </el-form-item>
       <el-row>
-        <el-col :span="10">
+        <el-col :span="14">
           <el-form-item label="登记编号" prop="inoculatorNumber">
             <oms-input placeholder="请输入登记编号" v-model="form.inoculatorNumber"></oms-input>
           </el-form-item>
         </el-col>
-        <el-col :span="7">
+        <el-col :span="10">
           <el-form-item label="是否缴费" label-width="80px">
             <el-radio-group v-model="form.payCostType">
               <el-radio :label="1">已缴</el-radio>
@@ -67,14 +67,14 @@
             </el-radio-group>
           </el-form-item>
         </el-col>
-        <el-col :span="7">
-          <el-form-item label="是否新开瓶" label-width="90px">
-            <el-radio-group v-model="form.newInoculationStatus">
-              <el-radio :label="1">是</el-radio>
-              <el-radio :label="0">否</el-radio>
-            </el-radio-group>
-          </el-form-item>
-        </el-col>
+        <!--<el-col :span="7">-->
+        <!--<el-form-item label="是否新开瓶" label-width="90px">-->
+        <!--<el-radio-group v-model="form.newInoculationStatus">-->
+        <!--<el-radio :label="1">是</el-radio>-->
+        <!--<el-radio :label="0">否</el-radio>-->
+        <!--</el-radio-group>-->
+        <!--</el-form-item>-->
+        <!--</el-col>-->
       </el-row>
     </el-form>
     <el-form ref="addForm" :model="form" label-width="100px" :rules="rules"
@@ -146,12 +146,13 @@
           </el-form-item>
         </el-col>
       </el-row>
-      <el-form-item label-width="100px" v-if="!form.id">
-        <el-button type="primary" @click="addGoods">添加疫苗</el-button>
-      </el-form-item>
-      <goods-list :goodsList="form.list" @deleteItem="deleteItem" v-if="!form.id"/>
-      <el-form-item label-width="100px" v-show=" form.id || form.list.length">
-        <el-button type="primary" @click="onSubmit('form')" native-type="submit" :disabled="doing">保存</el-button>
+      <div v-show="form.list.length">
+        <h2>已选疫苗</h2>
+        <goods-list :goodsList="form.list" @deleteItem="deleteItem"/>
+      </div>
+      <el-form-item label-width="100px">
+        <el-button type="primary" @click="addGoods" v-show="!form.id">添加疫苗</el-button>
+        <el-button type="success" @click="onSubmit('form')" native-type="submit" :disabled="doing">保存</el-button>
         <el-button @click="doClose">取消</el-button>
       </el-form-item>
     </el-form>
@@ -210,7 +211,8 @@
             {required: true, message: '请选择接种途径', trigger: 'change'}
           ]
         },
-        doing: false
+        doing: false,
+        injectionType: 0 // 0 添加一个疫苗, 1 添加2个疫苗
       };
     },
     computed: {
@@ -368,6 +370,7 @@
             this.$refs['addForm'].clearValidate();
           });
           this.form.list.push(item);
+          this.injectionType = 1;
         });
       },
       deleteItem(item) {
@@ -382,47 +385,84 @@
             this.doing = false;
             return false;
           }
-          this.doing = true;
           let formData = JSON.parse(JSON.stringify(this.form));
           if (!formData.id) {
-            const list = formData.list.map(m => {
-              return Object.assign({}, m, {
-                inoculatorInfoId: formData.inoculatorInfoId,
-                inoculatorNumber: formData.inoculatorNumber,
-                payCostType: formData.payCostType,
-                newInoculationStatus: formData.newInoculationStatus
+            if (this.injectionType === 1) {
+              if (!formData.list.length) {
+                return this.$notify.info('请添加疫苗');
+              }
+              this.add(formData);
+            } else {
+              this.$refs['addForm'].validate((valid) => {
+                if (!valid) {
+                  this.doing = false;
+                  return false;
+                }
+                let item = {
+                  orgGoodsName: this.form.orgGoodsName,
+                  orgGoodsId: this.form.orgGoodsId,
+                  specifications: this.form.specifications,
+                  vaccineId: this.form.vaccineId,
+                  batchNumber: this.form.batchNumber,
+                  batchNumberId: this.form.batchNumberId,
+                  expiryDate: this.form.expiryDate,
+                  erpStockId: this.form.erpStockId,
+                  inoculationPosition: this.form.inoculationPosition,
+                  inoculationChannel: this.form.inoculationChannel
+                };
+                formData.list.push(item);
+                this.doing = true;
+                this.add(formData);
               });
-            });
-            inoculateTask.save(list).then(() => {
-              this.doing = false;
-              this.$notify.success({
-                duration: 2000,
-                inoculatorInfoId: '成功',
-                message: '新增成功'
-              });
-              this.$emit('change');
-            }).catch((error) => {
-              this.$notify.error({
-                message: error.response.data && error.response.data.msg || '新增失败'
-              });
-              this.doing = false;
-            });
+            }
           } else {
-            inoculateTask.update(formData).then(() => {
-              this.doing = false;
-              this.$notify.success({
-                duration: 2000,
-                inoculatorInfoId: '成功',
-                message: '修改成功'
+            this.$refs['addForm'].validate((valid) => {
+              if (!valid) {
+                this.doing = false;
+                return false;
+              }
+              this.doing = true;
+              inoculateTask.update(formData).then(() => {
+                this.doing = false;
+                this.$notify.success({
+                  duration: 2000,
+                  inoculatorInfoId: '成功',
+                  message: '修改成功'
+                });
+                this.$emit('change');
+              }).catch(error => {
+                this.$notify.error({
+                  message: error.response.data && error.response.data.msg || '修改失败'
+                });
+                this.doing = false;
               });
-              this.$emit('change');
-            }).catch(error => {
-              this.$notify.error({
-                message: error.response.data && error.response.data.msg || '修改失败'
-              });
-              this.doing = false;
             });
           }
+        });
+      },
+      add(formData) {
+        const list = formData.list.map(m => {
+          return Object.assign({}, m, {
+            inoculatorInfoId: formData.inoculatorInfoId,
+            inoculatorNumber: formData.inoculatorNumber,
+            payCostType: formData.payCostType,
+            newInoculationStatus: formData.newInoculationStatus
+          });
+        });
+        this.doing = true;
+        inoculateTask.save(list).then(() => {
+          this.doing = false;
+          this.$notify.success({
+            duration: 2000,
+            inoculatorInfoId: '成功',
+            message: '新增成功'
+          });
+          this.$emit('change');
+        }).catch((error) => {
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '新增失败'
+          });
+          this.doing = false;
         });
       },
       doClose: function () {
