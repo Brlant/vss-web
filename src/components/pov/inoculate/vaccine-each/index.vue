@@ -47,7 +47,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="追溯码" :span="8">
-                <oms-input type="text" v-model="searchCondition.code" placeholder="请输入追溯码"></oms-input>
+                <oms-input type="text" v-model="searchCondition.reviewCodeDetail" placeholder="请输入追溯码"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="6">
@@ -64,7 +64,7 @@
           <el-col :span="6">疫苗名称</el-col>
           <el-col :span="6">追溯码</el-col>
           <el-col :span="6">时间</el-col>
-          <el-col :span="6">人份</el-col>
+          <el-col :span="6">剂次</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -83,20 +83,20 @@
                :class="[{'active':currentItem.id===item.id}]">
             <el-row>
               <el-col :span="6">
-                {{item.inoculatorName}}
+                {{item.vaccineName}}
               </el-col>
               <el-col :span="6">
-                {{item.code}}
+                {{item.reviewCodeDetail}}
               </el-col>
               <el-col :span="6">
-                <div>开启：</div>
-                <div>失效：</div>
-                <div>最后使用：</div>
+                <div>开启：{{item.openTime | time}}</div>
+                <div>失效：{{item.failureTime | time}}</div>
+                <div>最后使用：{{item.lastTime | time}}</div>
               </el-col>
               <el-col :span="6">
-                <div>最大使用：{{item.code}}</div>
-                <div>当前使用：{{item.code}}</div>
-                <div>剩余使用：{{item.code}}</div>
+                <div>最大使用：{{item.maximumOfPeople}}</div>
+                <div>当前使用：{{item.nowNumber}}</div>
+                <div>剩余使用：{{item.remainingNumber}}</div>
               </el-col>
             </el-row>
           </div>
@@ -113,7 +113,7 @@
   </div>
 </template>
 <script>
-  import {inoculateInfo} from '@/resources';
+  import {multiAging} from '@/resources';
   import methods from '../mixin/methods';
 
   export default {
@@ -126,7 +126,7 @@
         filters: {},
         searchCondition: {
           vaccineId: '',
-          code: ''
+          reviewCodeDetail: ''
         },
         currentItem: {},
         form: {},
@@ -152,7 +152,7 @@
       resetSearchForm: function () {// 重置表单
         let temp = {
           vaccineId: '',
-          code: ''
+          reviewCodeDetail: ''
         };
         this.expectedTime = '';
         Object.assign(this.searchCondition, temp);
@@ -177,7 +177,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          inoculateInfo.delete(item.id).then(() => {
+          multiAging.delete(item.id).then(() => {
             this.$notify.success({
               message: `删除${item.birthCertificateNumber}成功`
             });
@@ -190,7 +190,7 @@
         });
       },
       showItem(item) {
-        this.currentItem = item;
+        // this.currentItem = item;
       },
       formChange() {
         this.resetRightBox();
@@ -203,7 +203,7 @@
           pageSize: this.pager.pageSize
         }, this.filters);
         this.loadingData = true;
-        inoculateInfo.query(params).then(res => {
+        multiAging.query(params).then(res => {
           this.dataList = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
