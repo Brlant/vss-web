@@ -162,7 +162,7 @@ export const route = [
           {
             path: '/pov/inoculate/vaccine/each',
             component: resolve => require(['./components/pov/inoculate/vaccine-each'], resolve),
-            meta: {moduleId: 'pov', title: '多人份剂次时效记录', perm: 'query-vaccination-task'}
+            meta: {moduleId: 'pov', title: '多人份剂次时效记录', perm: 'query-multi-person-aging'}
           }
         ]
       },
