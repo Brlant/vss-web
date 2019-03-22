@@ -185,9 +185,9 @@
               <oms-row class="row-mg" label="规格" :span="10">{{currentItem.injectionTaskDto.specification}}</oms-row>
             </el-col>
             <el-col :span="12">
-              <oms-row class="row-mg" label="是否新开瓶" :span="10">
-                {{currentItem.injectionTaskDto.newInoculationStatus === 1 ? '是' : '否'}}
-              </oms-row>
+              <!--<oms-row class="row-mg" label="是否新开瓶" :span="10">-->
+              <!--{{currentItem.injectionTaskDto.newInoculationStatus === 1 ? '是' : '否'}}-->
+              <!--</oms-row>-->
             </el-col>
           </el-row>
           <oms-row class="row-mg" label="接种途径" :span="5">
@@ -212,11 +212,22 @@
               </oms-row>
             </el-col>
           </oms-row>
-          <oms-row class="row-mg flex-row" label="接种部位" :span="5">
-            <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
-              <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in inoculationPositionList"></el-option>
-            </el-select>
+          <oms-row class="row-mg flex-row flex-row-col" label="接种部位" :span="5">
+            <el-col :span="12">
+              <el-select style="width: 100%" type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in inoculationPositionList"></el-option>
+              </el-select>
+            </el-col>
+            <el-col :span="12" v-if="currentItem.injectionTaskDto.maximumOfPeople > 1">
+              <oms-row label="是否新开瓶" label-width="90px">
+                <el-radio-group v-model="form.newInoculationStatus" @change="newInoculationStatusChange"
+                                :disabled="validating">
+                  <el-radio :label="1">是</el-radio>
+                  <el-radio :label="0">否</el-radio>
+                </el-radio-group>
+              </oms-row>
+            </el-col>
           </oms-row>
           <oms-row class="row-mg flex-row" label="追溯码" :span="5">
             <el-col :span="12">
@@ -255,7 +266,9 @@
           <perm label="confirm-vaccination-task">
             <oms-row class="row-mg flex-row" label="" :span="5" v-if="validSign">
               <el-button type="primary" @click="confirmTask(0)" :doing="doing">确认接种</el-button>
-              <el-button type="primary" @click="confirmTask(1)" :doing="doing">新开瓶接种</el-button>
+              <el-button type="primary" @click="confirmTask(1)" :doing="doing"
+                         v-if="currentItem.injectionTaskDto.maximumOfPeople === 1">新开瓶接种
+              </el-button>
             </oms-row>
           </perm>
         </section>
@@ -289,7 +302,8 @@
           batchNumberId: '',
           inoculationPosition: '',
           actualCode: '',
-          qualifiedBizServings: null
+          qualifiedBizServings: null,
+          newInoculationStatus: 0
         },
         loading: false,
         validating: false,
@@ -361,8 +375,9 @@
           this.currentItem = res.data;
           this.form.inoculationPosition = res.data.injectionTaskDto.inoculationPosition;
           this.form.batchNumberId = res.data.injectionTaskDto.batchNumberId;
-          this.form.batchNumber = item.batchNumber;
-          this.form.erpStockId = item.erpStockId;
+          this.form.batchNumber = res.data.injectionTaskDto.batchNumber;
+          this.form.erpStockId = res.data.injectionTaskDto.erpStockId;
+          this.form.newInoculationStatus = res.data.injectionTaskDto.newInoculationStatus;
           this.batchNumberList = [
             {
               id: res.data.injectionTaskDto.batchNumberId,
@@ -380,7 +395,8 @@
           batchNumberId: '',
           inoculationPosition: '',
           actualCode: '',
-          qualifiedBizServings: null
+          qualifiedBizServings: null,
+          newInoculationStatus: 0
         };
       },
       getMore() {
@@ -397,6 +413,9 @@
         this.form.erpStockId = item.id;
         this.validCode();
       },
+      newInoculationStatusChange() {
+        this.validCode();
+      },
       validCode() {
         this.validSign = null;
         if (!this.form.batchNumberId) return;
@@ -404,8 +423,13 @@
         // 校验追溯码和批号
         let params = {
           batchNumberId: this.form.batchNumberId,
-          code: this.form.actualCode
+          code: this.form.actualCode,
+          newInoculationStatus: this.form.newInoculationStatus
         };
+        // 人份大于1, 校验是否新开瓶
+        if (this.currentItem.injectionTaskDto.maximumOfPeople > 1) {
+          params.newInoculationStatus = this.form.newInoculationStatus;
+        }
         this.validating = true;
         inoculateTask.reviewCode(params).then(res => {
           this.validating = false;
@@ -430,7 +454,10 @@
           return this.$notify.info('请输入追溯码');
         }
         this.form.id = this.currentItem.injectionTaskDto.id;
-        this.form.newInoculationStatus = val;
+        // 人份等于1, 校验是否新开瓶
+        if (this.currentItem.injectionTaskDto.maximumOfPeople === 1) {
+          this.form.newInoculationStatus = val;
+        }
         this.doing = true;
         inoculateTask.confirmTask(this.form).then(res => {
           this.$notify.success({
