@@ -41,7 +41,8 @@
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
           </oms-row>
-          <oms-row label="来自销售订单" :span="span" v-show="currentOrder.thirdPartyNumber && currentOrder.transportationMeansId === '4'">
+          <oms-row label="来自销售订单" :span="span"
+                   v-show="currentOrder.thirdPartyNumber && currentOrder.transportationMeansId === '4'">
             {{ currentOrder.thirdPartyNumber }}
           </oms-row>
           <oms-row label="退货原因" :span="span" v-show="currentOrder.returnReason">
@@ -80,7 +81,7 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="text-center">货品</td>
+            <td class="text-center">疫苗</td>
             <td class="text-center">规格</td>
             <td class="text-center">生产/有效日期</td>
             <!--<td class="text-center">供货厂商</td>-->
@@ -98,10 +99,10 @@
             <td width="80">
               <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                           effect="light" placement="right">
-                <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
-                     class="product-img">
-                <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
-                     class="product-img">
+                <compressed-img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
+                     class="product-img"/>
+                <compressed-img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
+                     class="product-img"/>
               </el-tooltip>
               <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
                 <img :src="'../../../../static/img/userpic.png'" class="product-img">
@@ -110,19 +111,19 @@
             </td>
             <td>
               <div>
-                <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
                   <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="平台疫苗名称" placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
                 </el-tooltip>
               </div>
               <!--<div>-->
-                <!--<el-tooltip class="item" effect="dark" content="货品规格" placement="right">-->
-                  <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
-                <!--</el-tooltip>-->
+              <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
+              <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
+              <!--</el-tooltip>-->
               <!--</div>-->
               <div>
                 <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
@@ -131,7 +132,8 @@
               </div>
               <div>
                 批号：{{ item.batchNumber || '无' }}
-                <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
+                <!--<el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>-->
+                <goods-status-tag :item="item" :form="currentOrder"/>
               </div>
             </td>
             <!--<td class="text-center" width="160px">-->
@@ -191,13 +193,13 @@
         }
       }
     },
-    data () {
+    data() {
       return {
         span: 8
       };
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },

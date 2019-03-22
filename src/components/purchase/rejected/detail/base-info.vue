@@ -39,6 +39,9 @@
             <oms-row label="疾控仓库地址" :span="span">
               <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
             </oms-row>
+            <oms-row label="物流中心" :span="span">
+              {{currentOrder.centreName}}
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -66,7 +69,7 @@
           </el-col>
         </el-row>
         <el-row v-show="currentOrder.remark">
-          <oms-row label="备注" :span="3">{{ currentOrder.remark }}</oms-row>
+          <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 
@@ -78,7 +81,7 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="text-center">货品</td>
+            <td class="text-center">疫苗</td>
             <td class="text-center">规格</td>
             <!--<td>批号</td>-->
             <td class="text-center">生产/有效日期</td>
@@ -94,10 +97,10 @@
             <td width="80">
               <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                           effect="light" placement="right">
-                <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
-                     class="product-img">
-                <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
-                     class="product-img">
+                <compressed-img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
+                     class="product-img"/>
+                <compressed-img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
+                     class="product-img"/>
               </el-tooltip>
               <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
                 <img :src="'../../../../static/img/userpic.png'" class="product-img">
@@ -106,17 +109,17 @@
             </td>
             <td>
               <div>
-                <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
                   <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="平台疫苗名称" placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
                 </el-tooltip>
               </div>
               <!--<div>-->
-              <!--<el-tooltip class="item" effect="dark" content="货品规格" placement="right">-->
+              <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
               <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
               <!--</el-tooltip>-->
               <!--</div>-->
@@ -127,6 +130,7 @@
               </div>
               <div>
                 批号：{{item.batchNumber || '无' }}
+                <goods-status-tag :item="item" :form="currentOrder"/>
               </div>
             </td>
             <td class="text-center" width="70px">
@@ -170,7 +174,7 @@
 </template>
 <script>
   import utils from '@/tools/utils';
-  import { Address, LogisticsCenter } from '@/resources';
+  import {Address, LogisticsCenter} from '@/resources';
 
   export default {
     props: {
@@ -181,30 +185,30 @@
         }
       }
     },
-    data () {
+    data() {
       return {
-        span: 6,
+        span: 8,
         warehouses: [],
         LogisticsCenter: []
       };
     },
     computed: {
-      bizTypeList () {
+      bizTypeList() {
         return this.$getDict('bizOutType');
       },
-      transportationMeansList () {
+      transportationMeansList() {
         return this.$getDict('outTransportMeans');
       },
-      transportationConditionList () {
+      transportationConditionList() {
         return this.$getDict('transportationCondition');
       },
-      shipmentPackingUnit () {
+      shipmentPackingUnit() {
         return this.$getDict('shipmentPackingUnit');
       },
-      measurementUnitList () {
+      measurementUnitList() {
         return this.$getDict('measurementUnit');
       },
-      orgRelationList () {
+      orgRelationList() {
         return this.$getDict('orgRelation');
       },
       totalMoney: function () {
@@ -215,12 +219,12 @@
         });
         return totalMoney;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      currentOrder (val) {
+      currentOrder(val) {
         if (!val.id) return;
         this.searchWarehouses();
         this.filterLogisticsCenter();
@@ -235,7 +239,7 @@
 //      getWarehouseAdress: function (item) { // 得到仓库地址
 //        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
 //      },
-      searchWarehouses () {
+      searchWarehouses() {
         if (!this.currentOrder.customerId) {
           this.warehouses = [];
           return;

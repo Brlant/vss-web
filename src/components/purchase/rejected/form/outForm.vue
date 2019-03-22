@@ -163,12 +163,19 @@
               <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
               <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
               <!--</el-select>-->
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true">
+              <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true"
+                         @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
-                           v-for="item in LogisticsCenter">
+                           v-for="item in LogisticsCenterAddressList">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
+              </el-select>
+            </el-form-item>
+            <el-form-item label="物流中心" prop="logisticsCentreId">
+              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"
+                         @change="changeLogisticsCenterId">
+                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
             </el-form-item>
             <el-form-item label="是否合格">
@@ -203,7 +210,7 @@
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
             <el-form-item label-width="160px">
-              <el-button type="primary" @click="index++">添加货品</el-button>
+              <el-button type="primary" @click="index++">添加疫苗</el-button>
             </el-form-item>
           </div>
           <div class="hide-content" v-bind:class="{'show-content' : index==1}">
@@ -230,7 +237,7 @@
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <!--<span class="select-other-info pull-left"><span-->
                         <!--v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice-->
@@ -261,7 +268,7 @@
                         <goods-info-part :product-info="product"></goods-info-part>
                       </el-col>
                       <el-col :span="10">
-                        <span v-show="accessoryList.length">【组合货品】</span>
+                        <span v-show="accessoryList.length">【组合疫苗】</span>
                         <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                        <span style="margin-right: 10px"
@@ -296,11 +303,11 @@
             <!--<span v-show="batchNumbers.length" style="font-weight: 600">批号信息</span>-->
 
             <div class="product-list-detail">
-              <h3 style="background: #13ce66;color: #fff">已选货品</h3>
+              <h3 style="background: #13ce66;color: #fff">已选疫苗</h3>
               <table class="table">
                 <thead>
                 <tr>
-                  <th style="width: 300px">货品名称</th>
+                  <th style="width: 300px">疫苗名称</th>
                   <th>规格</th>
                   <th>批号</th>
                   <th v-show="orgLevel === 2">单价</th>
@@ -322,7 +329,10 @@
                     <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
                     <span v-else="">{{ product.specifications }}</span>
                   </td>
-                  <td>{{ product.no ? product.no : '无' }}</td>
+                  <td>
+                    {{ product.no ? product.no : '无' }}
+                    <goods-status-tag :item="product" :form="form"/>
+                  </td>
                   <td class="ar" v-show="orgLevel === 2">
                     <span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>
                     <span v-if="!Number(product.unitPrice)">-</span>
@@ -365,7 +375,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter } from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from '@/components/sale/order/form/batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
@@ -421,7 +431,7 @@
             'goodsDto': {}
           }
         },
-        accessoryList: [], // 组合货品列表
+        accessoryList: [], // 组合疫苗列表
         searchProductList: [],
         filterProductList: [],
         form: {
@@ -429,10 +439,11 @@
           'customerId': '',
           'bizType': '2-1',
           'type': this.type,
-          'logisticsProviderId': '',
+          'logisticsProviderName': '',
           'transportationCondition': '',
           transportationMeansId: '',
           transportationAddress: '',
+          logisticsCentreId: '',
           importedFlag: false,
           orgRelation: '',
           orgAddress: '',
@@ -469,11 +480,14 @@
           transportationAddress: [
             {required: true, message: '请选择去向地址', trigger: 'blur'}
           ],
-          logisticsProviderId: [
+          logisticsProviderName: [
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
             {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+          ],
+          logisticsCentreId: [
+            {required: true, message: '请选择物流中心', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
@@ -503,13 +517,14 @@
         index: 0,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '货品信息', key: 1}
+          {name: '疫苗信息', key: 1}
         ],
         orgList: [],
         customerList: [],
         logisticsList: [],
         goodsList: {},
         relationList: [],
+        LogisticsCenterAddressList: [],
         LogisticsCenter: [],
         doing: false,
         isSupplierOrOrg: false,
@@ -521,8 +536,8 @@
           expectedTimeLabel: '预计出库时间'
         },
         warehouses: [], // 供货厂商仓库列表
-        batchNumbers: [], // 货品批号列表
-        selectBatchNumbers: [], // 已经选择的货品批号
+        batchNumbers: [], // 疫苗批号列表
+        selectBatchNumbers: [], // 已经选择的疫苗批号
         changeTotalNumber: utils.changeTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
@@ -532,22 +547,22 @@
       };
     },
     computed: {
-      bizTypeList () {
+      bizTypeList() {
         return this.$getDict('bizOutType');
       },
-      transportationMeansList () {
+      transportationMeansList() {
         return this.$getDict('outTransportMeans');
       },
-      transportationConditionList () {
+      transportationConditionList() {
         return this.$getDict('transportationCondition');
       },
-      shipmentPackingUnit () {
+      shipmentPackingUnit() {
         return this.$getDict('shipmentPackingUnit');
       },
-      measurementUnitList () {
+      measurementUnitList() {
         return this.$getDict('measurementUnit');
       },
-      orgRelationList () {
+      orgRelationList() {
         return this.$getDict('orgRelation');
       },
       totalMoney: function () {
@@ -558,7 +573,7 @@
         });
         return totalMoney;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
@@ -570,7 +585,7 @@
           }
         });
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.formCopy = {};
         this.isStorageData = false;
         this.index = 0;
@@ -588,8 +603,8 @@
           // 设默认值
           this.setDefaultValue();
           this.filterOrg();
+          this.filterAddress();
         }
-        this.filterAddress();
       }
 //      form: {
 //        handler: 'autoSave',
@@ -599,7 +614,7 @@
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-//      this.filterLogisticsCenter();
+      this.filterLogisticsCenter();
 //      let oldForm = window.localStorage.getItem(this.saveKey);
 //      if (oldForm) {
 //        this.form = Object.assign({}, this.form, JSON.parse(oldForm));
@@ -608,13 +623,15 @@
 //      }
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      setDefaultValue () {
+      setDefaultValue() {
         this.form.transportationMeansId = '1';
         this.form.transportationCondition = '0';
+        // 默认物流中心
+        this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -625,7 +642,7 @@
         this.$refs['orderAddForm'].resetFields();
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.actualConsignee = '';
-        this.form.logisticsProviderId = '';
+        this.form.logisticsProviderName = '';
         this.form.remark = '';
         this.form.returnReason = '';
         this.form.detailDtoList = [];
@@ -636,7 +653,7 @@
         this.searchProductList = [];
         this.filterProductList = [];
       },
-      clearForm () {
+      clearForm() {
         this.accessoryList = [];
         this.batchNumbers = [];
         this.editItemProduct = {};
@@ -655,7 +672,7 @@
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.detailDtoList = [];
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
           this.resetForm();
@@ -670,6 +687,7 @@
               name: res.data.customerName
             }
           ];
+          this.filterAddress(this.isStorageData);
           this.filterOrg(res.data.customerName);
           this.form = JSON.parse(JSON.stringify(res.data));
           this.formCopy = JSON.parse(JSON.stringify(res.data));
@@ -682,10 +700,10 @@
           });
         });
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
       changeExpectedTime: function (date) {// 格式化日期
@@ -713,9 +731,17 @@
           keyWord: query,
           relation: '1'
         };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+        BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
         });
+      },
+      changeLogisticsCenterId() {// 物流中心改变时, 重置货品列表
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.accessoryList = [];
+        this.batchNumbers = [];
+        this.form.detailDtoList = [];
+        this.product.orgGoodsId = '';
+        this.searchProduct();
       },
       filterLogisticsCenter: function () {// 过滤物流中心
         let param = {
@@ -779,7 +805,7 @@
           }
         }
       },
-      changeTransportationMeans (val) {// 物流方式改变时
+      changeTransportationMeans(val) {// 物流方式改变时
         switch (val) {
           case '0': {
             this.showContent.expectedTimeLabel = '预计送货时间';
@@ -801,7 +827,7 @@
           this.showContent.expectedTimeLabel = '';
         }
       },
-      changeCustomerId (val) {// POV改变时
+      changeCustomerId(val) {// POV改变时
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.product.orgGoodsId = '';
           this.form.detailDtoList = [];
@@ -813,7 +839,7 @@
         this.searchWarehouses(val);
         this.searchProduct();
       },
-      searchWarehouses (orgId) {
+      searchWarehouses(orgId) {
         if (!orgId) {
           this.warehouses = [];
           this.form.transportationAddress = '';
@@ -849,15 +875,17 @@
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
       },
-      filterAddress () {
+      filterAddress(isStorageData) {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.form.orgId,
           auditedStatus: '1', status: 0
         }).then(res => {
-          this.LogisticsCenter = res.data;
+          this.LogisticsCenterAddressList = res.data;
+          if (isStorageData) return;
           let defaultStore = res.data.filter(item => item.default);
           this.form.orgAddress = defaultStore.length ? defaultStore[0].id : '';
+          this.transportationAddressChange(this.form.orgAddress);
         });
       },
       checkLicence: function (val) {// 检查货主/单位证照是否过期
@@ -878,14 +906,15 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.customerId) {
+        if (!this.form.customerId || !this.form.logisticsCentreId) {
           this.searchProductList = [];
           this.filterProductList = [];
           return;
         }
         let params = {
           keyWord: query,
-          factoryId: this.form.customerId
+          factoryId: this.form.customerId,
+          logisticsCentreId: this.form.logisticsCentreId // 查询货品传入物流中心
         };
         let rTime = Date.now();
         this.requestTime = rTime;
@@ -900,7 +929,7 @@
           });
         });
       },
-      getGoodDetail: function (OrgGoodsId) {// 选货品
+      getGoodDetail: function (OrgGoodsId) {// 选疫苗
         this.accessoryList = [];
         this.batchNumbers = [];
         this.editItemProduct = {};
@@ -934,6 +963,8 @@
                 return false;
               }
             });
+            // 近效期提醒
+            // this.checkGoodsRegistrationValid(item.orgGoodsDto.goodsDto.goodsApprovalNOValidity);
           }
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
@@ -959,10 +990,10 @@
         });
         this.filterProductList = arr;
       },
-      setIsHasBatchNumberInfo (val) {
+      setIsHasBatchNumberInfo(val) {
         this.isHasBatchNumberInfo = val;
       },
-      addProduct: function () {// 货品加入到订单
+      addProduct: function () {// 疫苗加入到订单
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,
@@ -994,6 +1025,8 @@
                     product.no = bl.no;
                     product.amount = bl.productCount;
                     product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
+                    // 有效期
+                    product.expirationDate = bl.expirationDate;
                     this.form.detailDtoList.push(product);
                     totalAmount += bl.productCount;
                   }
@@ -1015,6 +1048,7 @@
                   measurementUnit: m.accessoryGoods.measurementUnit,
                   packingCount: null,
                   specificationsId: '',
+                  expirationDate: m.expirationDate, // 有效期
                   specifications: m.accessoryGoods.specifications,
                   proportion: m.proportion
                 });
@@ -1044,16 +1078,16 @@
           });
         });
       },
-      remove: function (item) { // 删除货品
+      remove: function (item) { // 删除疫苗
         this.deleteItem(item);
         this.searchProduct();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         let orgGoodsId = item.orgGoodsId;
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1); // mainOrgId
         let isDeleteAll = this.form.detailDtoList.some(s => s.orgGoodsId === orgGoodsId);
         if (isDeleteAll) {
-          // 找出剩下的货品，重新计算组合货品数量，金额。
+          // 找出剩下的疫苗，重新计算组合疫苗数量，金额。
           let amount = 0;
           this.form.detailDtoList.forEach(f => {
             if (f.orgGoodsId === orgGoodsId) {
@@ -1069,7 +1103,7 @@
           this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
         }
       },
-      editItem (item) {
+      editItem(item) {
         this.product.orgGoodsId = '';
         this.$nextTick(() => {
           this.filterProductList.push({

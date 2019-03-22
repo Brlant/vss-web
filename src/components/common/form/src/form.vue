@@ -12,7 +12,7 @@
 
     componentName: 'ElForm',
 
-    provide () {
+    provide() {
       return {
         elForm: this
       };
@@ -70,7 +70,7 @@
           field.resetField();
         });
       },
-      clearValidate () {
+      clearValidate() {
         this.fields.forEach(field => {
           field.clearValidate();
         });

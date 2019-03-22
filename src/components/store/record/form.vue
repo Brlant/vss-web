@@ -76,8 +76,8 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="80px" style="padding-right: 20px">
-            <el-form-item label="货主货品" prop="orgGoodsId">
-              <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+            <el-form-item label="货主疫苗" prop="orgGoodsId">
+              <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="filterOrgGoods"
                          :clearable="true"
                          v-model="form.orgGoodsId" popper-class="good-selects"
                          @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
@@ -88,7 +88,7 @@
                   </div>
                   <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                     <span class="select-other-info pull-left"><span
                       v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -119,7 +119,7 @@
               <div class="empty-info" v-show="!batches.length">暂无库存信息</div>
               <el-row class="md-info" v-for="item in batches" :key="item.id">
                 <el-col :span="14">
-                  <oms-row label="货主货品名称" :sapn="span">{{item.goodsName}}</oms-row>
+                  <oms-row label="货主疫苗名称" :sapn="span">{{item.goodsName}}</oms-row>
                   <oms-row label="生产厂商" :sapn="span">{{item.factoryName}}</oms-row>
                   <oms-row label="批号" :sapn="span">{{item.batchNumber}}</oms-row>
                   <oms-row label="有效期" :sapn="span">{{item.expiryDate | date}}</oms-row>
@@ -165,13 +165,13 @@
   </div>
 </template>
 <script>
-  import { Address, erpStock, http } from '@/resources';
+  import {Address, erpStock, http} from '@/resources';
 
   export default {
     props: {
       formItem: Object
     },
-    data () {
+    data() {
       return {
         title: '库存状态调整',
         doing: false,
@@ -186,7 +186,7 @@
           reason: ''
         },
         rules: {
-          orgGoodsId: {required: true, message: '请选择货主货品', trigger: 'change'},
+          orgGoodsId: {required: true, message: '请选择货主疫苗', trigger: 'change'},
           batchNumberId: {required: true, message: '请选择批号', trigger: 'change'},
           warehouseId: {required: true, message: '请选择仓库', trigger: 'change'},
           adjustType: {required: true, message: '请选择原状态', trigger: 'change'},
@@ -208,16 +208,16 @@
         span: 6
       };
     },
-    mounted () {
+    mounted() {
       this.queryOrgWarehouse();
     },
     watch: {
-      'form.adjustType' (val) {
+      'form.adjustType'(val) {
         this.form.adjustNewType = '';
       }
     },
     computed: {
-      smallPackCount () {
+      smallPackCount() {
         let count = '';
         if (!this.form.orgGoodsId) return count;
         this.orgGoods.forEach(i => {
@@ -227,7 +227,7 @@
         });
         return count;
       },
-      totalCount () {
+      totalCount() {
         if (this.batches.length && typeof this.form.adjustType === 'number') {
           return this.form.adjustType === 0 ? this.batches[0].availableCount : this.batches[0].undeterminedCount;
         }
@@ -235,7 +235,7 @@
       }
     },
     methods: {
-      validatePackageMultiple (rule, value, callback) {
+      validatePackageMultiple(rule, value, callback) {
         let obj = this.validPackage(value, this.smallPackCount, this.totalCount);
         switch (obj.type) {
           case 0: {
@@ -243,7 +243,7 @@
             break;
           }
           case 1: {
-            callback(new Error('缺少散件包装数量信息，请补充货品包装资料'));
+            callback(new Error('缺少散件包装数量信息，请补充疫苗包装资料'));
             break;
           }
           case 2: {
@@ -267,7 +267,7 @@
        * @param total
        * @returns {*}
        */
-      validPackage (count, packageCount, total) {
+      validPackage(count, packageCount, total) {
         const lack_count_data = 0; // 缺少输入数量
         const lack_package_data = 1; // 缺少包装资料
         const exceeded_number = 2; // 超过总数量
@@ -286,7 +286,7 @@
           count: curCount
         };
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           deleteFlag: false,
@@ -297,13 +297,13 @@
           this.orgGoods = res.data.list;
         });
       },
-      orgGoodsChange (val) {
+      orgGoodsChange(val) {
         this.form.batchNumberId = '';
         this.batchNumberList = [];
         this.batches = [];
         this.filterBatchNumber();
       },
-      batchNumberChange (val) {
+      batchNumberChange(val) {
         if (!val) {
           this.form.batchNumberId = '';
           this.batches = [];
@@ -311,7 +311,7 @@
         }
         this.getBatches();
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         if (!this.form.orgGoodsId) return;
         let goodsId = '';
         this.orgGoods.forEach(i => {
@@ -329,7 +329,7 @@
           this.batchNumberList = res.data.list;
         });
       },
-      queryOrgWarehouse () {
+      queryOrgWarehouse() {
         let param = Object.assign({}, {
           deleteFlag: false,
           auditedStatus: '1'
@@ -339,11 +339,11 @@
           this.form.warehouseId = res.data.length ? res.data[0].id : '';
         });
       },
-      warehouseChange (val) {
+      warehouseChange(val) {
         if (!this.form.orgGoodsId || !this.form.batchNumberId) return;
         this.getBatches();
       },
-      getBatches () { // 得到波次列表
+      getBatches() { // 得到波次列表
         let params = {
           orgGoodsId: this.form.orgGoodsId,
           batchNumberId: this.form.batchNumberId,
@@ -355,10 +355,10 @@
           this.loadingData = false;
         });
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid || this.doing) {
             return false;

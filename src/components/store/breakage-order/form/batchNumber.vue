@@ -32,11 +32,11 @@
           <tbody>
           <tr v-for=" batchNumber in item.lots">
             <td>
-              <el-checkbox v-model="batchNumber.isChecked" :disabled="batchNumber.disabled"></el-checkbox>
+              <el-checkbox v-model="batchNumber.isChecked"></el-checkbox>
             </td>
             <td>
               <el-input style="width:160px" type="number" v-model.number="batchNumber.productCount" :min="0"
-                        @blur="isChangeValue(batchNumber, item)" :disabled="batchNumber.disabled">
+                        @blur="isChangeValue(batchNumber, item)">
                 <template slot="append">
                   <dict :dict-group="'measurementUnit'"
                         :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
@@ -45,8 +45,7 @@
             </td>
             <td>
               {{ batchNumber.no }}
-              <el-tag v-show="batchNumber.inEffectiveFlag" type="warning">近效期</el-tag>
-              <el-tag v-show="batchNumber.disabled" type="danger">已过期</el-tag>
+              <goods-status-tag :item="batchNumber" :form="form"/>
             </td>
             <td>{{ batchNumber.count }}</td>
             <td>{{ batchNumber.productionDate | date }}</td>
@@ -113,7 +112,7 @@
         }
         let ary = this.productList.filter(f => f.orgGoodsDto.id === this.product.orgGoodsId);
         if (!ary.length) return [];
-        // 主货品
+        // 主疫苗
         this.batchNumbers.push({
           orgGoodsId: ary[0].orgGoodsDto.id,
           orgGoodsName: ary[0].orgGoodsDto.name,
@@ -121,19 +120,19 @@
           isMainly: true,
           lots: []
         });
-        // 组合货品
-        ary[0].list.forEach(i => {
-          this.batchNumbers.push({
-            orgGoodsId: i.accessory,
-            orgGoodsName: i.name,
-            goodsId: i.accessoryGoods.id,
-            isMainly: false,
-            lots: []
-          });
-        });
+        // 组合疫苗
+        // ary[0].list.forEach(i => {
+        //   this.batchNumbers.push({
+        //     orgGoodsId: i.accessory,
+        //     orgGoodsName: i.name,
+        //     goodsId: i.accessoryGoods.id,
+        //     isMainly: false,
+        //     lots: []
+        //   });
+        // });
       },
       /**
-       * 组合货品，得到多个API接口
+       * 组合疫苗，得到多个API接口
        * @returns {any[]}
        */
       getAPIAry() {
@@ -147,7 +146,7 @@
         });
       },
       /**
-       * 如果有组合货品，并发查询批号信息
+       * 如果有组合疫苗，并发查询批号信息
        */
       queryBatchNumber() {
         if (!this.batchNumbers.length) return;
@@ -158,7 +157,7 @@
             orgId: this.form.orgId,
             orgGoodsId: m.orgGoodsId
           };
-          return this.$http.get(this.form.bizType !== '2-1' ||
+          return this.$http.get(this.form.bizType !== '2-4' ||
           this.form.qualifiedFlag ? '/erp-stock/valid/batch' : '/erp-stock/unqualified/batch', {params});
         })).then(
           axios.spread((...args) => {
@@ -166,9 +165,6 @@
               args[index].data.forEach(f => {
                 f.isChecked = false;
                 f.productCount = '';
-                if (this.form.bizType === '2-0') {
-                  f.disabled = this.isValid(f);
-                }
               });
               i.lots = args[index].data || [];
             });
@@ -177,13 +173,8 @@
           })
         );
       },
-      isValid(item) {
-        let a = this.$moment();
-        let b = this.$moment(item.expirationDate);
-        return a > b;
-      },
       /**
-       * 编辑货品时，重设对应批号信息
+       * 编辑疫苗时，重设对应批号信息
        */
       editBatchNumbers() {
         if (!this.editItemProduct.batchNumberId) return;
@@ -198,7 +189,7 @@
                 i.lots.forEach(i => {
                   if (i.id === this.editItemProduct.batchNumberId) {
                     i.productCount = this.editItemProduct.amount;
-                    // 编辑时，如果是已经保存的货品，取其相应的数量+还剩下的可用库存
+                    // 编辑时，如果是已经保存的疫苗，取其相应的数量+还剩下的可用库存
                     this.formCopy.detailDtoList.forEach(p => {
                       if (p.batchNumberId === this.editItemProduct.batchNumberId) {
                         i.count = i.count + p.amount;
@@ -224,7 +215,7 @@
           expirationDate: this.editItemProduct.expiryDate,
           isChecked: true
         });
-        // 编辑时，如果是已经保存的货品，取其相应的数量当可用库存
+        // 编辑时，如果是已经保存的疫苗，取其相应的数量当可用库存
         this.formCopy.detailDtoList.forEach(p => {
           if (p.batchNumberId === this.editItemProduct.batchNumberId) {
             i.lots.forEach(il => {
@@ -241,7 +232,7 @@
        */
       checkItemAll(item) {
         item.lots.forEach(l => {
-          l.isChecked = item.isCheckedAll && !l.disabled;
+          l.isChecked = item.isCheckedAll;
         });
       },
       /**
@@ -259,10 +250,10 @@
           });
         }
         item.isChecked = item.productCount > 0;
-        this.autoSelectBatchWhenIsCombination(item, product);
+        // this.autoSelectBatchWhenIsCombination(item, product);
       },
       /**
-       * 自动选出组合货品的批号
+       * 自动选出组合疫苗的批号
        * @param item
        * @param product
        */
@@ -272,7 +263,7 @@
         if (!ary[0].list) return;
         if (!product.isMainly) return;
         let totalCount = 0;
-        // 主货品总数量
+        // 主疫苗总数量
         this.batchNumbers.forEach(b => {
           if (b.orgGoodsId === this.product.orgGoodsId) {
             b.lots.forEach(bl => {
@@ -283,7 +274,7 @@
           }
         });
         this.batchNumbers.filter(f => f.orgGoodsId !== this.product.orgGoodsId).forEach(i => {
-          // 组合货品总数量
+          // 组合疫苗总数量
           let comTotalCount = 0;
           ary[0].list.forEach(p => {
             if (p.accessory === i.orgGoodsId) {
@@ -345,7 +336,7 @@
         if (!isChecked) {
           this.$notify.info({
             duration: 2000,
-            message: '请选择货品批号'
+            message: '请选择疫苗批号'
           });
           return false;
         }
@@ -382,50 +373,50 @@
           });
           return false;
         }
-        if (!this.editItemProduct.orgGoodsId) {
-          let isPassed = true;
-          this.productList.forEach((item) => {
-            if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-              let list = item.list;
-              list.forEach(i => {
-                let count = 0;
-                this.batchNumbers.forEach(b => {
-                  if (b.orgGoodsId === i.accessory) {
-                    b.lots.forEach(bl => {
-                      if (bl.isChecked) {
-                        count += Number(bl.productCount);
-                      }
-                    });
-                  }
-                });
-                i.accessoryTotalCount = count;
-              });
-              let totalCount = 0;
-              this.batchNumbers.forEach(b => {
-                if (b.orgGoodsId === this.product.orgGoodsId) {
-                  b.lots.forEach(bl => {
-                    if (bl.isChecked) {
-                      totalCount += Number(bl.productCount);
-                    }
-                  });
-                }
-              });
-              list.forEach(i => {
-                let amount = Math.ceil(i.proportion * totalCount);
-                if (i.accessoryTotalCount !== amount) {
-                  isPassed = false;
-                }
-              });
-            }
-          });
-          if (!isPassed) {
-            this.$notify.warning({
-              duration: 2000,
-              message: '组合货品数量比例不匹配'
-            });
-            return false;
-          }
-        }
+        // if (!this.editItemProduct.orgGoodsId) {
+        //   let isPassed = true;
+        //   this.productList.forEach((item) => {
+        //     if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+        //       let list = item.list;
+        //       list.forEach(i => {
+        //         let count = 0;
+        //         this.batchNumbers.forEach(b => {
+        //           if (b.orgGoodsId === i.accessory) {
+        //             b.lots.forEach(bl => {
+        //               if (bl.isChecked) {
+        //                 count += Number(bl.productCount);
+        //               }
+        //             });
+        //           }
+        //         });
+        //         i.accessoryTotalCount = count;
+        //       });
+        //       let totalCount = 0;
+        //       this.batchNumbers.forEach(b => {
+        //         if (b.orgGoodsId === this.product.orgGoodsId) {
+        //           b.lots.forEach(bl => {
+        //             if (bl.isChecked) {
+        //               totalCount += Number(bl.productCount);
+        //             }
+        //           });
+        //         }
+        //       });
+        //       list.forEach(i => {
+        //         let amount = Math.ceil(i.proportion * totalCount);
+        //         if (i.accessoryTotalCount !== amount) {
+        //           isPassed = false;
+        //         }
+        //       });
+        //     }
+        //   });
+        //   if (!isPassed) {
+        //     this.$notify.warning({
+        //       duration: 2000,
+        //       message: '组合疫苗数量比例不匹配'
+        //     });
+        //     return false;
+        //   }
+        // }
         return true;
       }
     }

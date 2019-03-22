@@ -3,10 +3,11 @@ html, body {
   margin: 0;
   color: #333;
   font-size: 14px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
   background: #f9f9f9;
   overflow: hidden;
   height: 100%;
+  word-wrap: break-word;
+  word-break: break-all;
 }
 
 a {
@@ -396,4 +397,12 @@ table th[class*="col-"] {
 
 .el-col {
   min-height: 1px;
+}
+
+[class^='el-icon-t-'], [class*='el-icon-t-'] {
+  font-family: "wmsfont" !important;
+  font-size: 16px;
+  font-style: normal;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }

@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -165,7 +164,7 @@
                     </div>
                     <div class="clearfix">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}</span>
+                        v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}</span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.sellPrice">销售价格:￥{{ item.sellPrice
                         }}</span>
@@ -173,8 +172,8 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}</span>
                       <!--<span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">-->
-                          <!--<span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}-->
-                <!--</span>-->
+                      <!--<span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}-->
+                      <!--</span>-->
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->
@@ -285,7 +284,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
+  import {Address, BaseInfo, cerpAction, http, pullSignal, VaccineRights} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '@/components/sale/order/material.vue';
 
@@ -300,7 +299,7 @@
     data: function () {
       return {
         pickerOptions0: {
-          disabledDate (time) {
+          disabledDate(time) {
             return new Date(time).getTime() < Date.now();
           }
         },
@@ -373,13 +372,13 @@
         });
         return totalMoney;
       },
-      type () {
+      type() {
         let level = this.$store.state.orgLevel;
         return level === 1 ? 1 : 2;
       }
     },
     watch: {
-      index (val) {
+      index(val) {
         if (!val) return;
         this.form = {
           detailDtoList: [],
@@ -405,18 +404,18 @@
       }
     },
     methods: {
-      filterGoods (query) {
+      filterGoods(query) {
         this.filterProductList = this.totalFilterProductList.filter(f => f.orgGoodsNameAcronymy.indexOf(query) !== -1 ||
           f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1 || f.orgGoodsNamePhonetic.indexOf(query) !== -1);
       },
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
       },
-      editOrderInfo () {
+      editOrderInfo() {
         pullSignal.get(this.currentOrder.id).then(res => {
           let currentOrder = res.data;
           let orgDetailGoods = currentOrder.detailDtoList.map(m => {
@@ -452,7 +451,7 @@
 //        this.form = JSON.parse(JSON.stringify(currentOrder));
         });
       },
-      addOrderInfo () {
+      addOrderInfo() {
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
           return {
             amount: m.applyCount,
@@ -479,20 +478,20 @@
         });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
-      changeRemark (form) {
+      changeRemark(form) {
         if (!this.form.remark) {
           this.form.remark = form.count + form.name;
         } else {
           this.form.remark += '，' + form.count + form.name;
         }
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       changeTime: function (date) {// 格式化时间
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      changeType () {
+      changeType() {
         this.product = {
           'amount': null,
           'measurementUnit': '',
@@ -511,7 +510,7 @@
         this.filterProduct();
         this.searchProduct();
       },
-      povChange (val, isEdited) {
+      povChange(val, isEdited) {
         this.product = {
           'amount': null,
           'measurementUnit': '',
@@ -563,23 +562,28 @@
           keyWord: query,
           relation: '0'
         };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+        BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
         });
       },
-      queryOnCDCs () {
+      queryOnCDCs() {
         cerpAction.queryOnCDCs().then(res => {
           this.cdcs = res.data;
           this.filterProduct();
           this.searchProduct();
         });
       },
-      filterProduct () {
+      filterProduct() {
         this.showCdcs = this.cdcs.filter(f => f.level === this.type);
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
-      searchWarehouses (val, isEdited) {
-        Address.queryAddress(this.form.povId, {deleteFlag: false, orgId: this.form.povId, auditedStatus: '1', status: 0}).then(res => {
+      searchWarehouses(val, isEdited) {
+        Address.queryAddress(this.form.povId, {
+          deleteFlag: false,
+          orgId: this.form.povId,
+          auditedStatus: '1',
+          status: 0
+        }).then(res => {
           this.warehouses = res.data || [];
           // let fs = this.warehouses.filter(i => i.default)[0];
           // if (fs) {
@@ -717,11 +721,11 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
       },
-      editItem (item) {
+      editItem(item) {
         this.filterProductList.push({
           orgGoodsId: item.orgGoodsId,
           goodsName: item.orgGoodsName
@@ -810,7 +814,7 @@
           }
         });
       },
-      resetForm () {
+      resetForm() {
         this.$refs['orderGoodsForm'].resetFields();
         this.$refs['orderAddForm'].resetFields();
         this.form.detailDtoList = [];

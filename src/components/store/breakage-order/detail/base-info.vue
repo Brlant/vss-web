@@ -18,8 +18,7 @@
       <oms-loading :loading="!currentOrder.id"></oms-loading>
     </div>
     <div v-else="" class="page-main-body padding">
-
-      <div v-if="currentOrder.state === '0' " class="confirm-order">
+      <div>
         <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2-2' ">
           <el-col :span="12">
             <oms-row label="货主订单号" :span="span">
@@ -28,69 +27,38 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-          </el-col>
-          <el-col :span="12">
-            <oms-row label="业务类型">
-              <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
+            <oms-row label="报损方式" :span="span">
+              <dict :dict-group="'breakageType'" :dict-key="currentOrder.customerChannel"></dict>
             </oms-row>
-            <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | minute}}</span>
+            <oms-row label="上级疾控中心" :span="span" v-show="currentOrder.customerChannel === '1'">
+              {{currentOrder.customerName}}
             </oms-row>
-            <oms-row label="订单状态">
-              {{ getOrderStatus(currentOrder) }}
-            </oms-row>
-          </el-col>
-        </el-row>
-        <el-form ref="orderAddForm" :rules="rules" :model="currentOrder"
-                 label-width="160px" style="padding-right: 20px">
-          <el-form-item label="运输条件" prop="transportationCondition">
-            <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
-              <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in transportationConditionList"></el-option>
-            </el-select>
-          </el-form-item>
-          <!--<el-form-item label="预计出库时间" prop="transportationMeansId">-->
-          <!--<el-date-picker-->
-          <!--v-model="currentOrder.expectedTime"-->
-          <!--placeholder="请选择日期" format="yyyy-MM-dd"-->
-          <!--value-format="timestamp">-->
-          <!--</el-date-picker>-->
-          <!--</el-form-item>-->
-          <el-form-item label="疾控仓库地址" prop="orgAddress">
-            <el-select placeholder="请选择疾控仓库地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
-              <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
-                         v-for="item in LogisticsCenter">
-                <span class="pull-left">{{ item.name }}</span>
-                <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
-              </el-option>
-            </el-select>
-          </el-form-item>
-          <!--<material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>-->
-          <el-form-item label="备注" class="clearfix">
-            <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
-                       :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
-          </el-form-item>
-        </el-form>
-      </div>
-      <div v-else="">
-        <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2-2' ">
-          <el-col :span="12">
-            <oms-row label="货主订单号" :span="span">
-              {{currentOrder.orderNo}}
-            </oms-row>
-            <oms-row label="货主" :span="span">
-              {{currentOrder.orgName}}
+            <oms-row label="物流中心" :span="span" v-show="currentOrder.centreName">
+              {{currentOrder.centreName}}
             </oms-row>
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
+            <oms-row label="仓库地址" :span="span">
+              <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
               <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
             </oms-row>
+            <oms-row label="运输方式" v-show="currentOrder.transportationMeansId">
+              <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
+            </oms-row>
             <oms-row label="下单时间">
               <span class="goods-span">{{currentOrder.createTime | minute}}</span>
+            </oms-row>
+            <oms-row label="预计送货时间" v-show="currentOrder.expectedTime">
+              <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
+            </oms-row>
+            <oms-row label="是否合格">
+              <span class="goods-span" v-show="currentOrder.qualifiedFlag">合格</span>
+              <span class="goods-span" v-show="!currentOrder.qualifiedFlag">不合格</span>
             </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
@@ -100,13 +68,13 @@
             <!--</oms-row>-->
           </el-col>
         </el-row>
-        <el-row style="margin-bottom:0">
-          <oms-row label="疾控仓库地址" :span="4">
-            <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
+        <el-row style="margin-bottom:0" v-show="currentOrder.warehouseAddress">
+          <oms-row label="收货地址" :span="4">
+            <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
           </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
-          <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
+          <oms-row label="报损原因" :span="4">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 
@@ -117,7 +85,7 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="text-center">货品</td>
+            <td class="text-center">疫苗</td>
             <td class="text-center">批号</td>
             <!--<td>生产日期</td>-->
             <td class="text-center">有效期</td>
@@ -132,10 +100,10 @@
             <td width="80">
               <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                           effect="light" placement="right">
-                <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_80,w_80,m_2' "
-                     class="product-img">
-                <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
-                     class="product-img">
+                <compressed-img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_80,w_80,m_2' "
+                     class="product-img"/>
+                <compressed-img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
+                     class="product-img"/>
               </el-tooltip>
               <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
                 <img :src="'../../../../static/img/userpic.png'" class="product-img">
@@ -144,24 +112,25 @@
             </td>
             <td>
               <div>
-                <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
                   <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="平台疫苗名称" placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="货品规格" placement="right">
+                <el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">
                   <span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>
                 </el-tooltip>
               </div>
             </td>
             <td width="100px" class="R text-center">
               {{ item.batchNumber || '无' }}
-              <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
+              <!--<el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>-->
+              <goods-status-tag :item="item" :form="currentOrder"/>
             </td>
             <!--<td>{{ item.productionDate | date }}</td>-->
             <td width="90px" class="text-center">{{ item.expiryDate | date }}</td>
@@ -266,6 +235,12 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      breakageOrgType() {
+        return this.$store.state.breakageOrgType;
+      },
+      breakageType() { // 报损方式
+        return this.$getDict('breakageType');
       }
     },
     watch: {

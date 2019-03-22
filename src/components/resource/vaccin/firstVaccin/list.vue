@@ -119,7 +119,8 @@
              v-for="(item,key) in vaccineType"
              @click="changeType(key,item)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span
+            class="status-num">{{item.num}}</span></div>
         </div>
       </div>
       <div class="d-table">
@@ -209,7 +210,7 @@
               <el-row>
                 <el-col :span="12" style="padding-left:50px;">
                   <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
-                    <img
+                    <compressed-img
                       :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
                   </div>
                 </el-col>
@@ -224,22 +225,22 @@
                   <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
                   <!--</goods-row>-->
                   <!--<goods-row label="疫苗标志" :span="8">-->
-                    <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                  <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
                   <!--</goods-row>-->
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
                   <!--<goods-row label="中标价格" :span="8">-->
-                    <!--<span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}-->
+                  <!--<span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}-->
                   <!--</goods-row>-->
                   <!--<goods-row label="采购价格" :span="8">-->
-                    <!--<span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}-->
+                  <!--<span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}-->
                   <!--</goods-row>-->
                   <goods-row label="供货厂商" :span="8">
                     {{ data.salesFirmName }}
                   </goods-row>
                   <!--<goods-row label="销售价格" :span="8">-->
-                    <!--<span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}-->
+                  <!--<span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}-->
                   <!--</goods-row>-->
                   <goods-row label="库存上限" :span="8">
                     {{ data.inventoryUpperLimit }}
@@ -318,7 +319,8 @@
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
                   [ 疾控专用 ]
                 </el-col>
-                <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
+                <el-col :span="4" class="text-right" style="font-size: 12px"
+                        v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                   [ 器械专用 ]
                 </el-col>
                 <el-col :span="4" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
@@ -337,7 +339,8 @@
                   <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
                     {{ data.goodsDto.propertyMap.productionLicenseValidity | date }}
                   </goods-row>
-                  <goods-row label="厂家备案凭证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
+                  <goods-row label="厂家备案凭证号" :span="12"
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.recordNumber
                     }}
                   </goods-row>
@@ -345,7 +348,8 @@
                              v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.registrationRecordNumber }}
                   </goods-row>
-                  <goods-row label="备案凭证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
+                  <goods-row label="备案凭证号有效期" :span="12"
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
                     {{ data.goodsDto.propertyMap.goodsRecordNOValidity | date }}
                   </goods-row>
                   <goods-row label="OTC标志" :span="12" v-if="data.goodsDto.typeId==='0'">
@@ -384,9 +388,9 @@
                     }}
                   </goods-row>
                   <!--<goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">-->
-                    <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
+                  <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
                   <!--</goods-row>-->
-                  <goods-row label="最小销售单位" :span="12" v-if="data.goodsDto.typeId==='1'">
+                  <goods-row label="最小销售单位" :span="12">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
                   </goods-row>
                 </el-col>
@@ -495,7 +499,7 @@
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       handlePreview: function (id) {

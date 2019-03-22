@@ -31,6 +31,11 @@
             <oms-row label="接种点" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
+            <oms-row label="物流中心" :span="span">
+              <span class="goods-span">
+                {{currentOrder.centreName}}
+              </span>
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -63,10 +68,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="实际收货人">
-            <oms-input type="text" placeholder="请输入实际收货人" :maxlength="50" v-model="currentOrder.actualConsignee"></oms-input>
+            <oms-input type="text" placeholder="请输入实际收货人" :maxlength="50"
+                       v-model="currentOrder.actualConsignee"></oms-input>
           </el-form-item>
           <el-form-item label="收货人联系电话">
-            <oms-input type="text" placeholder="请输入收货人联系电话" :maxlength="50" v-model="currentOrder.consigneePhone" ></oms-input>
+            <oms-input type="text" placeholder="请输入收货人联系电话" :maxlength="50"
+                       v-model="currentOrder.consigneePhone"></oms-input>
           </el-form-item>
           <el-form-item label="运输条件" prop="transportationCondition">
             <el-select type="text" placeholder="请选择运输条件" v-model="currentOrder.transportationCondition">
@@ -77,7 +84,7 @@
           <el-form-item label="预计送货时间" prop="transportationMeansId">
             <el-date-picker
               v-model="currentOrder.expectedTime"
-              placeholder="请选择日期" format="yyyy-MM-dd"
+              placeholder="请选择日期" format="yyyy-MM-dd" :picker-options="pickerOptions"
               value-format="timestamp">
             </el-date-picker>
           </el-form-item>
@@ -111,6 +118,11 @@
             </oms-row>
             <oms-row label="接种点收货地址" :span="span">
               {{currentOrder.warehouseAddress}}
+            </oms-row>
+            <oms-row label="物流中心" :span="span">
+              <span class="goods-span">
+                {{currentOrder.centreName}}
+              </span>
             </oms-row>
             <oms-row label="实际收货人" :span="span">
               <span class="goods-span">{{currentOrder.actualConsignee}}</span>
@@ -157,7 +169,7 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="text-center">货品</td>
+            <td class="text-center">疫苗</td>
             <td class="text-center">批号</td>
             <!--<td>生产日期</td>-->
             <td class="text-center">有效期</td>
@@ -172,10 +184,10 @@
             <td width="80">
               <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                           effect="light" placement="right">
-                <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_80,w_80,m_2' "
-                     class="product-img">
-                <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
-                     class="product-img">
+                <compressed-img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_80,w_80,m_2' "
+                     class="product-img"/>
+                <compressed-img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
+                     class="product-img"/>
               </el-tooltip>
               <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
                 <img :src="'../../../../static/img/userpic.png'" class="product-img">
@@ -184,24 +196,25 @@
             </td>
             <td>
               <div>
-                <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
                   <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="平台疫苗名称" placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="货品规格" placement="right">
+                <el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">
                   <span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>
                 </el-tooltip>
               </div>
             </td>
             <td width="100px" class="R text-center">
               {{ item.batchNumber || '无' }}
-              <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
+              <!--<el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>-->
+              <goods-status-tag :item="item" :form="currentOrder"/>
             </td>
             <!--<td>{{ item.productionDate | date }}</td>-->
             <td width="90px" class="text-center">{{ item.expiryDate | date }}</td>
@@ -238,7 +251,7 @@
 </template>
 <script>
   import utils from '@/tools/utils';
-  import { Address, LogisticsCenter } from '@/resources';
+  import {Address, LogisticsCenter} from '@/resources';
   import materialPart from '../material.vue';
 
   export default {
@@ -253,7 +266,7 @@
       isCheck: Boolean,
       vaccineType: String
     },
-    data () {
+    data() {
       return {
         span: 8,
         warehouses: [],
@@ -277,26 +290,31 @@
           remark: [
             {required: true, message: '请输入备注信息', trigger: 'blur'}
           ]
+        },
+        pickerOptions: {
+          disabledDate: time => {
+            return time.getTime() < this.$moment().subtract(1, 'days');
+          }
         }
       };
     },
     computed: {
-      bizTypeList () {
+      bizTypeList() {
         return this.$getDict('bizOutType');
       },
-      transportationMeansList () {
+      transportationMeansList() {
         return this.$getDict('outTransportMeans');
       },
-      transportationConditionList () {
+      transportationConditionList() {
         return this.$getDict('transportationCondition');
       },
-      shipmentPackingUnit () {
+      shipmentPackingUnit() {
         return this.$getDict('shipmentPackingUnit');
       },
-      measurementUnitList () {
+      measurementUnitList() {
         return this.$getDict('measurementUnit');
       },
-      orgRelationList () {
+      orgRelationList() {
         return this.$getDict('orgRelation');
       },
       totalMoney: function () {
@@ -309,21 +327,21 @@
       }
     },
     watch: {
-      currentOrder (val) {
+      currentOrder(val) {
         if (!val.id) return;
         if (val.state === '0') {
           this.searchWarehouses();
           this.filterAddress();
         }
       },
-      isCheck (val) {
+      isCheck(val) {
         if (val) {
           this.check();
         }
       }
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
@@ -335,14 +353,14 @@
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
       },
-      changeRemark (form) {
+      changeRemark(form) {
         if (!this.currentOrder.remark) {
           this.currentOrder.remark = form.count + form.name;
         } else {
           this.currentOrder.remark += '，' + form.count + form.name;
         }
       },
-      searchWarehouses () {
+      searchWarehouses() {
         if (!this.currentOrder.customerId) {
           this.warehouses = [];
           return;
@@ -373,7 +391,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.currentOrder.orgId, {
           deleteFlag: false,
           orgId: this.currentOrder.orgId,
@@ -398,7 +416,7 @@
         }
         return state;
       },
-      check () {
+      check() {
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid) {
             return false;

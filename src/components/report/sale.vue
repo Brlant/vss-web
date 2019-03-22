@@ -50,8 +50,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="货主货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+              <oms-form-row label="货主疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')">
@@ -63,7 +63,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供应商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -127,7 +127,7 @@
         <el-table-column prop="createTime" label="业务日期" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="customerName" label="客户" :sortable="true"></el-table-column>
         <el-table-column prop="orgName" label="保管帐" :sortable="true"></el-table-column>
-        <el-table-column prop="orgGoodsName" label="货品名称" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="orgGoodsName" label="疫苗名称" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="count" label="数量" :sortable="true" width="90"></el-table-column>
         <el-table-column prop="price" label="单价" :sortable="true" width="90">
           <template slot-scope="scope">
@@ -162,7 +162,7 @@
 
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         reportList: [],
@@ -197,8 +197,8 @@
     },
     methods: {
       exportFile: function () {
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/sale'});
@@ -215,8 +215,8 @@
         });
       },
       search: function () {// 搜索
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.pager.currentPage = 1;
         this.loadingData = true;
@@ -233,15 +233,15 @@
           this.setFixedHeight();
         });
       },
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getCurrentList(1);
       },
-      handleCurrentChange (val) {
+      handleCurrentChange(val) {
         this.getCurrentList(val);
       },
-      getCurrentList (pageNo) {
+      getCurrentList(pageNo) {
         this.loadingData = true;
         this.pager.currentPage = pageNo;
         const {pager} = this;
@@ -252,7 +252,7 @@
           this.loadingData = false;
         }, 300);
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -320,12 +320,12 @@
           this.orgList = res.data;
         });
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
           this.batchNumberList = res.data.list;
         });
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           keyWord: query,

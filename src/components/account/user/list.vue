@@ -151,7 +151,7 @@
       };
     },
     computed: {
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
@@ -160,7 +160,7 @@
         return list.map(m => m.title).join('，');
       }
     },
-    mounted () {
+    mounted() {
       this.getPageList(1);
     },
     watch: {
@@ -170,7 +170,7 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (val.userCompanyAddress) {
           this.getPageList(1);
         }

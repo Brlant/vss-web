@@ -151,7 +151,7 @@
           <el-row>
             <el-col :span="12">
               <oms-row :span="8" label="发票付款">{{form.billPayType === '0' ? '无' : '有' }}</oms-row>
-              <oms-row :span="8" label="付款单位"> {{form.orgName }}</oms-row>
+              <oms-row :span="8" label="收款单位"> {{form.orgName }}</oms-row>
               <oms-row :span="8" label="付款方式">
                 <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
               </oms-row>
@@ -174,15 +174,15 @@
             </el-col>
           </el-row>
           <div class="detail-title">
-            <span>付款明细:</span>
-            <span v-if="!form.detailList.length">无</span>
-            <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
+            <span>付款明细</span>
+            <span v-if="!form.detailList.length">：无</span>
+            <span class="pull-right" v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
           </div>
-          <ul class="show-list invoice-list"
+          <ul class="show-list invoice-list clearfix"
               v-if="form.detailList.length">
             <li class="show-item" style="background: #f1f1f1">
               <el-row type="flex">
-                <el-col :span="form.billPayType === '1' ? 6 : 7">货品名称</el-col>
+                <el-col :span="form.billPayType === '1' ? 6 : 7">疫苗名称</el-col>
                 <el-col :span="2">数量</el-col>
                 <el-col :span="form.billPayType === '1' ? 4 : 5">订单号</el-col>
                 <el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>
@@ -210,12 +210,16 @@
                 </el-col>
               </el-row>
             </li>
+            <li class="text-right is-total" v-show="form.status==='2'">
+              <span>合计数量:{{total.count}}</span>
+              <span class="ml-15">合计本次付款金额:¥{{total.paidMoney | formatMoney}}</span>
+            </li>
           </ul>
           <oms-row :span="4" label="审批意见" v-show="form.status ==='0'">
             <oms-input type="textarea" v-model="form.auditOpinion" placeholder="请输入审批意见"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </oms-row>
-          <oms-row :span="form.status ==='0' ? 4 : 2" class="mt-10">
+          <oms-row label="" :span="form.status ==='0' ? 4 : 2" class="mt-10">
             <perm label="payment-payable-audit">
               <el-button v-show="form.status ==='0'" style="width: 100px" :plain="true" type="success"
                          @click="audited"
@@ -264,7 +268,7 @@
           <!--v-if="form.detailList.length">-->
           <!--<li class="show-item" style="background: #f1f1f1">-->
           <!--<el-row type="flex">-->
-          <!--<el-col :span="form.billPayType === '1' ? 5 : 6">货品名称</el-col>-->
+          <!--<el-col :span="form.billPayType === '1' ? 5 : 6">疫苗名称</el-col>-->
           <!--<el-col :span="2">数量</el-col>-->
           <!--<el-col :span="form.billPayType === '1' ? 4 : 5">订单号</el-col>-->
           <!--<el-col :span="4" v-show="form.billPayType === '1'">关联发票号</el-col>-->
@@ -355,7 +359,16 @@
         loadingData: true
       };
     },
-    computed: {},
+    computed: {
+      total() {
+        return this.form.detailList.reduce((pre, next) => {
+          return {
+            count: Number(pre.count) + Number(next.count),
+            paidMoney: Number(pre.paidMoney) + Number(next.paidMoney)
+          };
+        }, {count: 0, paidMoney: 0}) || {};
+      }
+    },
     watch: {
       detailId: function (val) {
         this.form = {

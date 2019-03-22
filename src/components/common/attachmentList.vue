@@ -1,15 +1,21 @@
 <style lang="scss" scoped>
   .list-item {
     position: relative;
-    line-height: 25px;
+    line-height: 20px;
     padding-top: 0;
     padding-bottom: 0;
     border: 0;
+
     .download-link {
       display: none;
     }
+
     &:hover .download-link {
       display: block;
+    }
+
+    &.list-item_pointer{
+      cursor: pointer;
     }
   }
 
@@ -18,11 +24,14 @@
     align-items: center;
     justify-content: space-between;
   }
+
+
+
 </style>
 <template>
   <div>
     <ul class="show-list">
-      <li class="list-item list_flex" v-for="attachment in attachmentList" @click="handlePreview(attachment)">
+      <li class="list-item list_flex list-item_pointer" v-for="attachment in attachmentList" @click="handlePreview(attachment)">
         <div class="attachment-name">
           <el-tooltip effect="dark" :content="attachment.attachmentFileName" placement="top">
             <span>
@@ -36,7 +45,7 @@
               <i class="el-icon-t-download"></i>
             </a>
           </perm>
-          <perm label="erp-attachment-name-update">
+          <perm :label="updatePermission">
             <a href="#" class="download-link pull-right" @click.stop.prevent="editName(attachment)">
               <i class="el-icon-t-edit"></i>
             </a>
@@ -67,7 +76,33 @@
   import {OmsAttachment} from '../../resources';
 
   export default {
-    data () {
+    props: {
+      objectId: {
+        type: String,
+        default: ''
+      },
+      objectType: {
+        type: String,
+        default: ''
+      },
+      attachmentIdList: {
+        type: [Array, String, Object],
+        default: []
+      },
+      permission: {
+        type: String,
+        default: 'show'
+      },
+      deletePermission: {
+        type: String,
+        default: ''
+      },
+      updatePermission: {
+        type: String,
+        default: 'erp-attachment-name-update'
+      }
+    },
+    data() {
       return {
         object: {
           objectId: this.objectId,
@@ -101,7 +136,6 @@
         this.perm = val;
       }
     },
-    props: ['objectId', 'objectType', 'attachmentIdList', 'permission', 'deletePermission'],
     methods: {
       onSubmit: function (formName) {
         this.$refs[formName].validate((valid) => {
@@ -140,7 +174,7 @@
           this.$refs['form'].clearValidate();
         }
       },
-      handleRemove (attachment) {
+      handleRemove(attachment) {
         if (!attachment) {
           return;
         }
@@ -158,6 +192,7 @@
             // 将附件从附件列表中删除
             let index = this.attachmentList.indexOf(attachment);
             this.attachmentList.splice(index, 1);
+            this.$emit('change');
           }).catch(() => {
             this.$notify.error({
               duration: 2000,
@@ -172,11 +207,11 @@
           this.attachmentList = res.data;
         });
       },
-      handlePreview (file) {
+      handlePreview(file) {
         this.$store.commit('changeAttachment', {currentId: file.attachmentId, attachmentList: this.attachmentList});
       }
     },
-    mounted () {
+    mounted() {
       this.getFileList();
     }
   };

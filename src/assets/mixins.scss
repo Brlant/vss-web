@@ -2,8 +2,8 @@ $topMenuHeight: 50px;
 
 //$activeColor: #20a0ff;
 
-$order_color_0: #00CCFF*1.7;
-$order_color_1: #FF9933*1.7;
+$order_color_0: #00ffff;
+$order_color_1: #ffff57;
 $order_color_2: #CCCC66;
 $order_color_3: #00CC99;
 $order_color_4: #66CCFF;
@@ -13,7 +13,7 @@ $order_color_7: #666666;
 $order_color_8: #6699CC;
 $order_color_9: #339999;
 $order_color_10: #996699;
-$order_color_11: #FF6666*1.7;
+$order_color_11: #ffadad;
 $dialog-left-bg: #eef2f3;
 
 $primary-color: #409EFF;
@@ -34,6 +34,6 @@ $font-size-base: 14px;
 $font-size-small: 12px;
 
 $activeColor: $primary-color;
-$activeHoverColor: $activeColor*1.2;
+$activeHoverColor: #4dbeff;
 $activeColorFont: #fff;
 $tableHeaderColor: #dfebf8;

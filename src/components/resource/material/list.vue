@@ -10,6 +10,7 @@
   .d-table > div.d-table-right {
     padding: 10px 20px;
   }
+
   .container {
     padding-left: 10px;
     padding-right: 10px;
@@ -108,12 +109,12 @@
   </div>
 </template>
 <script>
-  import { material } from '@/resources';
+  import {material} from '@/resources';
   import formPart from './form.vue';
 
   export default {
     components: {formPart},
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: false,
@@ -132,7 +133,7 @@
         currentId: ''
       };
     },
-    mounted () {
+    mounted() {
       this.getMaPage(1);
     },
     watch: {
@@ -147,7 +148,7 @@
       resetRightBox: function () {
         this.showPart = false;
       },
-      getMaPage (pageNo) { // 得到波次列表
+      getMaPage(pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
@@ -160,20 +161,20 @@
           this.loadingData = false;
         });
       },
-      refresh () {
+      refresh() {
         this.getMaPage(1);
         this.showPart = false;
       },
-      add () {
+      add() {
         this.form = {};
         this.showPart = true;
       },
-      edit (item) {
+      edit(item) {
         this.currentId = item.id;
         this.form = item;
         this.showPart = true;
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.$confirm('是否删除物料 "' + item.name + '"?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

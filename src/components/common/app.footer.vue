@@ -49,11 +49,11 @@
 <template>
   <footer class="main-footer">
     <div class="container">
-      <div class="col-xs-12 col-md-7 pl-0 pr-0 police-part">
-        <span class="mr-10">沪ICP备10213462号-3</span>
-        <a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011502400202" target="_blank">
-          <img src="/static/img/police_logo.png" class="img-police"> 公安部备案号 31011502400202号</a>
-      </div>
+      <!--<div class="col-xs-12 col-md-7 pl-0 pr-0 police-part">-->
+      <!--<span class="mr-10">沪ICP备10213462号-3</span>-->
+      <!--<a href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=31011502400202" target="_blank">-->
+      <!--<img src="/static/img/police_logo.png" class="img-police"> 公安部备案号 31011502400202号</a>-->
+      <!--</div>-->
     </div>
   </footer>
 </template>

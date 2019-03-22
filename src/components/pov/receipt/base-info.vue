@@ -23,7 +23,7 @@
           </oms-row>
           <oms-row label="物流商" :span="span"
                    v-show="currentOrder.transportationMeansId === '1' || currentOrder.transportationMeansId === '3'  ">
-            {{currentOrder.logisticsProviderId}}
+            {{currentOrder.logisticsProviderName}}
           </oms-row>
           <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
             {{currentOrder.pickUpWarehouseAddress}}
@@ -66,7 +66,7 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="text-center">货品</td>
+            <td class="text-center">疫苗</td>
             <td class="text-center">批号</td>
             <!--<td>生产日期</td>-->
             <td class="text-center">有效期</td>
@@ -81,10 +81,10 @@
             <td width="80">
               <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                           effect="light" placement="right">
-                <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_80,w_80,m_2' "
-                     class="product-img">
-                <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
-                     class="product-img">
+                <compressed-img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_80,w_80,m_2' "
+                     class="product-img"/>
+                <compressed-img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
+                     class="product-img"/>
               </el-tooltip>
               <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
                 <img :src="'../../../../static/img/userpic.png'" class="product-img">
@@ -93,24 +93,26 @@
             </td>
             <td>
               <div>
-                <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
                   <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="平台疫苗名称" placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="货品规格" placement="right">
+                <el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">
                   <span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>
                 </el-tooltip>
               </div>
             </td>
             <td width="100px" class="R text-center">
               {{ item.batchNumber || '无' }}
-              <el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>
+              <!--<el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>-->
+              <goods-status-tag :item="item" :form="currentOrder"/>
+
             </td>
             <!--<td>{{ item.productionDate | date }}</td>-->
             <td width="90px" class="text-center">{{ item.expiryDate | date }}</td>
@@ -165,9 +167,9 @@
     methods: {
       getCurrentOrderStatus: function (state) {// 获取订单状态
         let retstate = '';
-        for (let key in utils.inOrderType) {
-          if (state === utils.inOrderType[key].state) {
-            retstate = utils.inOrderType[key].title;
+        for (let key in utils.receiptType) {
+          if (state === utils.receiptType[key].state) {
+            retstate = utils.receiptType[key].title;
           }
         }
         return retstate;

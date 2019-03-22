@@ -23,7 +23,7 @@
           </oms-row>
           <oms-row label="物流商" :span="span"
                    v-show="currentOrder.transportationMeansId === '1' || currentOrder.transportationMeansId === '3'  ">
-            {{currentOrder.logisticsProviderId}}
+            {{currentOrder.logisticsProviderName}}
           </oms-row>
           <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
             {{currentOrder.pickUpWarehouseAddress}}
@@ -39,6 +39,9 @@
           </oms-row>
         </el-col>
         <el-col :span="12">
+          <oms-row label="来源订单号" v-show="currentOrder.thirdPartyNumber">
+            {{currentOrder.thirdPartyNumber }}
+          </oms-row>
           <oms-row label="业务类型">
             <dict :dict-group="'bizInType'" :dict-key="currentOrder.bizType"></dict>
           </oms-row>
@@ -66,7 +69,7 @@
           <tr>
             <td></td>
             <td></td>
-            <td class="text-center">货品</td>
+            <td class="text-center">疫苗</td>
             <td class="text-center">规格</td>
             <td class="text-center" v-show="vaccineType==='2'">单价</td>
             <td class="text-center">数量</td>
@@ -79,10 +82,10 @@
             <td width="80">
               <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                           effect="light" placement="right">
-                <img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
-                     class="product-img">
-                <img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
-                     class="product-img">
+                <compressed-img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
+                     class="product-img"/>
+                <compressed-img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
+                     class="product-img"/>
               </el-tooltip>
               <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
                 <img :src="'../../../../static/img/userpic.png'" class="product-img">
@@ -91,19 +94,19 @@
             </td>
             <td>
               <div>
-                <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
                   <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+                <el-tooltip class="item" effect="dark" content="平台疫苗名称" placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
                 </el-tooltip>
               </div>
               <!--<div>-->
-                <!--<el-tooltip class="item" effect="dark" content="货品规格" placement="right">-->
-                  <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
-                <!--</el-tooltip>-->
+              <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
+              <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
+              <!--</el-tooltip>-->
               <!--</div>-->
               <div>
                 <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
@@ -157,7 +160,7 @@
       },
       vaccineType: ''
     },
-    data () {
+    data() {
       return {
         span: 8
       };

@@ -4,10 +4,12 @@
     .content-left {
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -58,9 +60,13 @@
         <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
         <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
         <relevance-code :currentOrder="currentOrder" :index="index" type="1" v-show="index === 8"></relevance-code>
-        <relevance-code-review :currentOrder="currentOrder" :index="index" type="1" v-show="index === 9"></relevance-code-review>
+        <relevance-code-review :currentOrder="currentOrder" :index="index" type="1"
+                               v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
+        <waybill-info :currentOrder="currentOrder" :index="index" v-show="index === 11"></waybill-info>
+        <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"
+                           :perm="vaccineType === '1' ? 'sales-order-upload-data-operate' : 'second-vaccine-sales-order-upload-data-operate'"/>
       </div>
     </div>
   </div>
@@ -69,12 +75,14 @@
   import basicInfo from './detail/base-info.vue';
   import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
-  import { erpOrder, http, InWork } from '@/resources';
+  import {erpOrder, http, InWork} from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
+  import customerFeedback from '@/components/common/order/customer-feedback.vue';
+  import WaybillInfo from '@/components/common/order/waybillInfo';
 
   export default {
-    components: {basicInfo, log, receipt, orderAttachment, relevanceCode},
+    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, customerFeedback, WaybillInfo},
     props: {
       orderId: {
         type: String
@@ -82,7 +90,7 @@
       state: String,
       vaccineType: String
     },
-    data () {
+    data() {
       return {
         currentOrder: {},
         index: 0,
@@ -91,14 +99,14 @@
       };
     },
     watch: {
-      orderId () {
+      orderId() {
         this.index = 0;
         this.title = '订单详情';
         this.queryOrderDetail();
       }
     },
     computed: {
-      pageSets () {
+      pageSets() {
         let menu = [];
         let perms = this.$store.state.permissions || [];
         menu.push({name: '订单详情', key: 0});
@@ -114,11 +122,23 @@
           menu.push({name: '复核追溯码', key: 9});
         }
         menu.push({name: '操作日志', key: 2});
+
+        if (perms.includes(this.vaccineType === '1' ? 'sales-order-delivery-information' : 'second-vaccine-sales-order-delivery-information')) {
+          // 待收货，收货完成, 配送上门，显示配送信息
+          if (this.currentOrder.state === '3' || this.currentOrder.state === '4') {
+            if (this.currentOrder.transportationMeansId === '0') {
+              menu.push({name: '配送信息', key: 11});
+            }
+          }
+        }
+        if (perms.includes(this.vaccineType === '1' ? 'sales-order-upload-data' : 'second-vaccine-sales-order-upload-data')) {
+          menu.push({name: '反馈信息', key: 12});
+        }
         return menu;
       }
     },
     methods: {
-      queryOrderDetail () {
+      queryOrderDetail() {
         if (!this.orderId) return false;
         this.currentOrder = {};
         InWork.queryOrderDetail(this.orderId).then(res => {
@@ -126,17 +146,22 @@
           this.currentOrder = res.data;
         });
       },
-      showPart (item) {
+      showPart(item) {
         this.index = item.key;
         this.title = item.name;
       },
-      check () {
+      check() {
         this.isCheck = false;
         this.$nextTick(() => {
           this.isCheck = true;
         });
       },
-      checkPass () {
+      checkPass() {
+        let createDate = this.$moment(this.currentOrder.createTime).format('YYYY-MM-DD');
+        let createTime = this.$moment(createDate).valueOf();
+        if (this.currentOrder.expectedTime < createTime) {
+          return this.$notify.info('预计送货时间小于下单时间，请修改');
+        }
         http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
           this.$notify.success({
             message: '确认订单成功'
@@ -149,7 +174,7 @@
           });
         });
       },
-      review () {
+      review() {
         this.$confirm('是否审单通过', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -167,11 +192,11 @@
           });
         });
       },
-      transformState (state) {
+      transformState(state) {
         this.currentOrder.state = state;
         this.$emit('refreshOrder');
       },
-      deleteOrder () {
+      deleteOrder() {
         this.$confirm('是否删除订单', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -190,7 +215,7 @@
           });
         });
       },
-      cancel () {
+      cancel() {
         this.index = 0;
         this.$refs['cancelPart'].isShow = true;
         this.$notify({

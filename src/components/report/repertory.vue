@@ -43,7 +43,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
+      <el-table :data="reportList" class="header-list" ref="reportTable" :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="goodsName" label="疫苗名称" min-width="100" :sortable="true"></el-table-column>
         <el-table-column prop="restStockCount" label="期前库存" :sortable="true"></el-table-column>
@@ -58,12 +58,12 @@
   </div>
 </template>
 <script>
-  import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
   import ReportMixin from '@/mixins/reportMixin';
+
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         reportList: [],
@@ -89,8 +89,8 @@
           });
           return;
         }
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/repertory'});
@@ -113,8 +113,8 @@
           });
           return;
         }
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
         this.$http.get('/erp-statement/stock-detail', {params}).then(res => {

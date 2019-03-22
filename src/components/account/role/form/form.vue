@@ -19,20 +19,24 @@
     text-align: center;
     padding: 15px;
   }
+
   .check-all {
     margin-left: 24px;
   }
+
   .filter-input.el-input {
     padding-right: 40px;
     margin-bottom: 10px;
     margin-left: 22px;
     width: 67.5%;
   }
+
   .role-title {
     margin: 10px 0 10px 10px;
   }
+
   .el-tree {
-    width:70%;
+    width: 70%;
   }
 </style>
 <template>
@@ -64,11 +68,11 @@
         </el-form-item>
         <h4 class="clearfix role-title">配置角色权限</h4>
         <el-input class="filter-input"
-          placeholder="输入关键字进行过滤"
-          v-model="filterText">
+                  placeholder="输入关键字进行过滤"
+                  v-model="filterText">
         </el-input>
         <div class="check-all">
-          <el-checkbox label="全选"  v-model="checkAllRoles"
+          <el-checkbox label="全选" v-model="checkAllRoles"
                        @change="checkAll()"></el-checkbox>
         </div>
         <el-tree :data="tree" show-checkbox default-expand-all node-key="id" ref="tree" highlight-current

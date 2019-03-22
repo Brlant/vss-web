@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .list-style {
     cursor: pointer;
     padding: 10px;
@@ -88,7 +87,6 @@
 
   }
 
-
   .ml15 {
     margin-left: 40px;
   }
@@ -96,7 +94,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -138,8 +135,8 @@
               >
               </el-switch>
             </el-form-item>
-            <el-form-item label="厂商" prop="orgId">
-              <el-select filterable remote placeholder="请输入名称搜索厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="收款单位" prop="orgId">
+              <el-select filterable remote placeholder="请输入名称搜索收款单位" :remote-method="filterOrg" :clearable="true"
                          v-model="form.orgId" @click.native.once="filterOrg('')">
                 <el-option :value="org.remitteeId" :key="org.remitteeId" :label="org.remitteeName"
                            v-for="org in orgList">
@@ -182,7 +179,7 @@
 </template>
 
 <script>
-  import { BillPayable, pay } from '../../../../../resources';
+  import {BillPayable, pay} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
   import payDetail from './payDetail.vue';
 
@@ -226,7 +223,7 @@
             {required: true, message: '请选择付款方式', trigger: 'change'}
           ],
           orgId: [
-            {required: true, message: '请选择厂商', trigger: 'change'}
+            {required: true, message: '请选择收款单位', trigger: 'change'}
           ],
           amount: [
             {required: true, message: '请选择付款明细，自动计算总额', trigger: 'blur'}
@@ -247,13 +244,13 @@
       PaymentMethod: function () {
         return this.$getDict('PaymentMethod');
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
       selectPayments: {
-        handler (val) {
+        handler(val) {
           let amount = 0;
           val.forEach(i => {
             amount += Number(i.payment);
@@ -268,7 +265,7 @@
         },
         deep: true
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.form = {
           type: '0',
           payType: '2',
@@ -294,13 +291,13 @@
         this.orgList = [];
         this.logisticsList = [];
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.form.amount = utils.autoformatDecimalPoint(this.form.amount);
       },
       doClose: function () {
         this.$emit('close');
       },
-      filterOrg: function (query) {// 厂商
+      filterOrg: function (query) {// 收款单位
         let params = Object.assign({}, {
           pageNo: 1,
           pageSize: 20,
@@ -318,14 +315,14 @@
           });
           return;
         }
-        isQualified = this.selectPayments.some(s => s.payment && s.payment > (s.billAmount - s.prepaidAccounts));
+        isQualified = this.selectPayments.some(s => s.payment && s.payment > s.billAmount);
         if (isQualified) {
           this.$notify.info({
             message: '付款明细中，存在本次付款金额大于待付金额的明细，请调整后，再进行保存'
           });
           return;
         }
-        isQualified = this.selectPayments.some(s => s.payment < 0 && s.payment < (s.billAmount - s.prepaidAccounts));
+        isQualified = this.selectPayments.some(s => s.payment < 0 && s.payment < s.billAmount);
         if (isQualified) {
           this.$notify.info({
             message: '付款明细中，存在本次付款金额小于待付金额的明细，请调整后，再进行保存'

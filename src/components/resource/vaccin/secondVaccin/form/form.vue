@@ -97,18 +97,18 @@
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
         <el-select placeholder="请选择疫苗种类" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
-                   :clearable="true" @change="getGoodsType(form.goodsId)" popper-class="good-selects"
-                   @clear="setUsedStatus">
+                   :clearable="true" @change="getOmsGoods" popper-class="good-selects"
+                   @clear="getOmsGoods">
           <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
             <div style="overflow: hidden">
               <span class="pull-left">{{item.name}}</span>
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="item.code">货品编号:</span>{{item.code}}
+                  v-show="item.code">疫苗编号:</span>{{item.code}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.specifications">货品规格:</span>{{item.specifications}}
+                v-show="item.specifications">疫苗规格:</span>{{item.specifications}}
                 </span>
               <span class="select-other-info pull-left"><span
                 v-show="item.approvalNumber">批准文号:</span>{{item.approvalNumber}}
@@ -175,10 +175,10 @@
           <template slot="prepend">￥</template>
         </oms-input>
       </el-form-item>
-      <el-form-item label="库存上限" prop="inventoryUpperLimit">
+      <el-form-item label="库存上限">
         <oms-input type="number" :min="0" v-model.number="form.inventoryUpperLimit" placeholder="请输入库存上限"></oms-input>
       </el-form-item>
-      <el-form-item label="库存下限" prop="inventoryLowerLimit">
+      <el-form-item label="库存下限">
         <oms-input type="number" :min="0" v-model.number="form.inventoryLowerLimit" placeholder="请输入库存下限"></oms-input>
       </el-form-item>
       <el-form-item label="是否计价">
@@ -201,10 +201,10 @@
               </div>
               <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.goodsDto.code">平台货品编号:</span>{{item.orgGoodsDto.goodsDto.code}}
+                v-show="item.orgGoodsDto.goodsDto.code">平台疫苗编号:</span>{{item.orgGoodsDto.goodsDto.code}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                  v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
                 <span class="select-other-info pull-left"><span
                   v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -317,10 +317,10 @@
     mounted: function () {
     },
     computed: {
-      typeId () {
+      typeId() {
         return this.$getDict('typeId');
       },
-      storageCondition () {
+      storageCondition() {
         return this.$getDict('storageCondition');
       },
       showTitle() {
@@ -330,10 +330,10 @@
         }
         return tilet;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
@@ -358,7 +358,7 @@
           this.selectGoodsList = this.form.combinationList;
 //          this.otherGoodsList = [];
 //          this.getCombinationGoods();
-//          this.getOmsGoods(val.goodsDto.name);
+          this.getOmsGoods(val.goodsDto.name);
 //          this.filterOrg(val.salesFirmName);
         } else {
 //          this.queryCombinationGoods();
@@ -398,9 +398,6 @@
       }
     },
     methods: {
-      setUsedStatus: function () {
-        this.usedStatus = true;
-      },
       setSalesFirm: function (id) {
         if (id) {
           this.orgList.forEach(val => {
@@ -432,14 +429,14 @@
         }
       },
       getOmsGoods: function (keyWord) {// 得到单位疫苗列表
-          let params = {
-            keyWord: keyWord,
-            availabilityStatus: true
-          };
-          SuccessfulBidder.queryInfo(params).then(res => {
-            this.goodsList = res.data;
-            this.getGoodsType(this.form.goodsId);
-          });
+        let params = {
+          keyWord: keyWord,
+          availabilityStatus: true
+        };
+        SuccessfulBidder.queryInfo(params).then(res => {
+          this.goodsList = res.data;
+          // this.getGoodsType(this.form.goodsId);
+        });
 //        }
       },
       queryCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
@@ -452,7 +449,7 @@
           this.filtersCombinationGoods();
         });
       },
-      getCombinationGoods: function (keyWord) {// 获取其他组合货品列表
+      getCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {
           deleteFlag: false,
           orgId: this.$route.params.id,
@@ -463,31 +460,7 @@
           this.filterSelectGoodsList(list);
         });
       },
-      getGoodsType: function (id) {
-        if (!id) {
-          this.goodsType = '';
-          return;
-        }
-        this.goodsList.forEach(item => {
-          if (id === item.id) {
-            this.goodsType = item.typeId;
-          }
-        });
-        if (this.usedStatus) {
-          this.goodsList.forEach(val => {
-            if (val.id === id && id) {
-              let factoryId = val.factoryId;
-              if (factoryId) {
-                BaseInfo.queryBaseInfo(factoryId).then(res => {
-                  this.orgList = [];
-                  this.orgList.push(res.data.orgDto);
-                });
-              }
-            }
-          });
-        }
-      },
-      filtersCombinationGoods () {// 过滤已有的单位疫苗和本身
+      filtersCombinationGoods() {// 过滤已有的单位疫苗和本身
         let array = [];
         let isNotSame = false;
         this.invariantOtherGoodslist.forEach(tItem => {
@@ -516,13 +489,13 @@
           }
         });
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.form.bidPrice = utils.autoformatDecimalPoint(this.form.bidPrice);
         this.form.procurementPrice = utils.autoformatDecimalPoint(this.form.procurementPrice);
         this.form.sellPrice = utils.autoformatDecimalPoint(this.form.sellPrice);
         this.form.unitPrice = utils.autoformatDecimalPoint(this.form.unitPrice);
       },
-      remove () {
+      remove() {
         this.$confirm('确认删除该信息?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

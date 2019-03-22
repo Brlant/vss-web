@@ -1,4 +1,3 @@
-
 <template>
   <el-form ref="form" :rules="rules" :model="form" label-width="120px" class="demo-ruleForm">
     <h2 class="clearfix">{{showTitle}}区二类疫苗</h2>
@@ -12,10 +11,10 @@
           </div>
           <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
-              <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+            <span class="select-other-info pull-left"><span
+              v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
               </span>
             <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -36,10 +35,10 @@
     <el-form-item label="协议采购数量">
       <oms-input type="number" v-model.number="form.amount" min="0" placeholder="请输入协议采购数量"></oms-input>
     </el-form-item>
-    <el-form-item label="协议到期时间" prop="expireTime" ref="expireTime">
-      <el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" value-format="timestamp">
-      </el-date-picker>
-    </el-form-item>
+    <!--<el-form-item label="协议到期时间" prop="expireTime" ref="expireTime">-->
+    <!--<el-date-picker v-model="form.expireTime" format="yyyy-MM-dd" placeholder="选择到期时间" value-format="timestamp">-->
+    <!--</el-date-picker>-->
+    <!--</el-form-item>-->
     <el-form-item label="是否生效">
       <el-switch v-model="form.availabilityStatus" active-text="是" inactive-text="否"
                  active-color="#13ce66"
@@ -152,6 +151,13 @@
         };
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
+          // 设置供货厂商id
+          this.form.orgGoodsId && this.goodsList.forEach(val => {
+            if (val.orgGoodsDto.id === this.form.orgGoodsId) {
+              this.salesFirmName = val.orgGoodsDto.salesFirmName;
+              this.form.supplyCompanyId = val.orgGoodsDto.salesFirm;
+            }
+          });
         });
       },
       formatUnitPrice() {// 格式化单价，保留两位小数

@@ -25,7 +25,7 @@
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header">
-          <el-col :span="8">货品</el-col>
+          <el-col :span="8">疫苗</el-col>
           <el-col :span="5">批号</el-col>
           <el-col :span="4">数量</el-col>
           <el-col :span="4">盘点数量</el-col>
@@ -83,7 +83,7 @@
   import utils from '@/tools/utils';
 
   export default {
-    data () {
+    data() {
       return {
         activeStatus: '0', // 当前状态
         loadingData: false,
@@ -103,7 +103,7 @@
         }
       };
     },
-    mounted () {
+    mounted() {
       this.getOrders(1);
     },
     watch: {
@@ -115,11 +115,11 @@
       }
     },
     methods: {
-      checkStatus (item, key) {
+      checkStatus(item, key) {
         this.activeStatus = key;
         this.filters.status = item.status;
       },
-      exportExcel () {
+      exportExcel() {
         this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
         this.$http.get(`/erp-inventory/${this.$route.query.id}/detail/export`).then(res => {
           utils.download(res.data.path, '库存盘点详情');
@@ -131,7 +131,7 @@
           });
         });
       },
-      getOrders (pageNo) { // 查询盘点作业列表
+      getOrders(pageNo) { // 查询盘点作业列表
         let id = this.$route.query.id;
         if (!id) return;
         this.pager.currentPage = pageNo;
@@ -147,7 +147,7 @@
         });
         this.queryStatusNum();
       },
-      queryStatusNum () {
+      queryStatusNum() {
         let id = this.$route.query.id;
         let params = Object.assign({}, this.filters);
         Inventory.queryStatusNum(id, params).then(res => {
@@ -166,14 +166,14 @@
         }
         return status;
       },
-      isShow () {
+      isShow() {
         return this.$store.state.permissions.indexOf('erp-stock-inventory-operate') !== -1;
       },
-      setStatus (item) {
+      setStatus(item) {
         let s = item.actualCount - item.inventoryCount;
         item.status = s === 0 ? 1 : 2;
       },
-      onSubmit (item) {
+      onSubmit(item) {
         if (!item.actualCount) return;
         let obj = {
           id: item.id,
@@ -182,7 +182,7 @@
         Inventory.editDetailCount(item.id, obj).then(() => {
           this.$notify.success({
             title: '完成盘点',
-            message: `批号为${item.batchNumber}的货品实盘数量为${item.actualCount}`
+            message: `批号为${item.batchNumber}的疫苗实盘数量为${item.actualCount}`
           });
           this.setStatus(item);
         }).catch(error => {
@@ -191,12 +191,12 @@
           });
         });
       },
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getOrders(1);
       },
-      handleCurrentChange (val) {
+      handleCurrentChange(val) {
         this.getOrders(val);
       }
     }

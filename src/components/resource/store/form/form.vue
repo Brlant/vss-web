@@ -62,7 +62,7 @@
   </el-form>
 </template>
 <script>
-  import { Address, BaseInfo } from '../../../../resources';
+  import {Address, BaseInfo} from '../../../../resources';
   import utils from './../../../../tools/utils';
 
   export default {

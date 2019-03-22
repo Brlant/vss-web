@@ -107,8 +107,17 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
           <goods-switch class="pull-right"></goods-switch>
+          <span class="pull-right cursor-span" style="margin-right: 15px" @click.prevent="batchAuditOrder"
+                v-show="isShowCheckBox">
+            <perm
+              :label="vaccineType === '1'?'purchasing-order-batch-audit': 'second-vaccine-purchasing-order-batch-audit' ">
+                  <a href="#" class="btn-circle" @click.prevent=""><i
+                    class="el-icon-document"></i> </a>批量审单
+            </perm>
+          </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="货主订单号" :span="6">
@@ -145,8 +154,8 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="货主货品" :span="6">
-                <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货主货品"
+              <oms-form-row label="货主疫苗" :span="6">
+                <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称或编号搜索货主疫苗"
                            :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                            popper-class="good-selects">
                   <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
@@ -157,7 +166,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -203,7 +212,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-row >
+      <el-row>
         <el-col :span="13">
           <div class="order-list-status" style="margin-bottom:20px">
             <div class="status-item"
@@ -211,7 +220,8 @@
                  v-for="(item,key) in orgType" v-show="key < 4"
                  @click="changeStatus(item,key)">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              </div>
             </div>
           </div>
         </el-col>
@@ -222,14 +232,18 @@
                  v-for="(item,key) in orgType"
                  @click="changeStatus(item,key)" v-show="key > 3">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              </div>
             </div>
           </div>
         </el-col>
       </el-row>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="filters.state === '6' ? 5: 7">货主/订单号</el-col>
+          <el-col :span="filters.state === '6' ? 5: 7">
+            <el-checkbox v-model="checkAll" @change="checkAllOrder" v-show="isShowCheckBox"/>
+            货主/订单号
+          </el-col>
           <el-col :span="3">业务类型</el-col>
           <el-col :span="filters.state === '6' ? 5: 6">供货厂商</el-col>
           <el-col :span="4">时间</el-col>
@@ -253,11 +267,24 @@
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
               <el-col :span="filters.state === '6' ? 5: 7">
-                <div class="f-grey">
-                  {{item.orderNo }}
+                <div v-show="isShowCheckBox" class="flex-layout" @click.stop="item.checked = !item.checked">
+                  <el-checkbox v-model="item.checked" class="mr-5"/>
+                  <div>
+                    <div class="f-grey">
+                      {{item.orderNo }}
+                    </div>
+                    <div>
+                      {{item.orgName }}
+                    </div>
+                  </div>
                 </div>
-                <div>
-                  {{item.orgName }}
+                <div v-show="!isShowCheckBox">
+                  <div class="f-grey">
+                    {{item.orderNo }}
+                  </div>
+                  <div>
+                    {{item.orgName }}
+                  </div>
                 </div>
               </el-col>
               <el-col :span="3">
@@ -266,6 +293,7 @@
                 </div>
               </el-col>
               <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
+                <div class="f-grey" v-show="item.thirdPartyNumber">来源订单号：{{item.thirdPartyNumber }}</div>
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
@@ -324,8 +352,9 @@
   import utils from '@/tools/utils';
   import showForm from './show.order.in.vue';
   import addForm from './form/InForm.vue';
-  import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
+
   export default {
     components: {
       showForm, addForm
@@ -341,7 +370,7 @@
           type: 0,
           state: '6',
           orderNo: '',
-          logisticsProviderId: '',
+          logisticsProviderName: '',
           createStartTime: '',
           createEndTime: '',
           bizType: '1-0',
@@ -355,7 +384,7 @@
         searchCondition: {
           searchType: 1,
           orderNo: '',
-          logisticsProviderId: '',
+          logisticsProviderName: '',
           createStartTime: '',
           createEndTime: '',
           transportationMeansId: '',
@@ -384,7 +413,7 @@
       };
     },
     mixins: [OrderMixin],
-    mounted () {
+    mounted() {
       this.getOrderList(1);
       let orderId = this.$route.params.id;
       if (orderId && orderId !== 'list' && orderId !== 'add') {
@@ -406,7 +435,7 @@
       bizInTypes: function () {
         return this.$getDict('bizInType');
       },
-      vaccineType () {
+      vaccineType() {
         return this.$route.meta.type;
       }
     },
@@ -417,12 +446,12 @@
         },
         deep: true
       },
-      vaccineType () {
+      vaccineType() {
         this.getOrderList(1);
       }
     },
     methods: {
-      editOrder (item) {
+      editOrder(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
         this.showItemRight = true;
@@ -438,11 +467,11 @@
         return state;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.createStartTime = this.formatTime(this.expectedTime[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchCondition.createStartTime = this.$formatAryTime(this.expectedTime, 0);
+        this.searchCondition.createEndTime = this.$formatAryTime(this.expectedTime, 1);
         Object.assign(this.filters, this.searchCondition);
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         let params = Object.assign({}, {
           keyWord: keyWord,
           orgId: this.$store.state.user['userCompanyAddress']
@@ -457,7 +486,7 @@
         let temp = {
           searchType: '',
           orderNo: '',
-          logisticsProviderId: '',
+          logisticsProviderName: '',
           createStartTime: '',
           createEndTime: '',
           transportationMeansId: '',
@@ -509,6 +538,7 @@
         param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         if (this.filters.state !== '20') {
           erpOrder.query(param).then(res => {
+            this.initCheck(res.data.list);
             this.orderList = res.data.list;
 //            this.pager.count = res.data.count;
             if (this.orderList.length === this.pager.pageSize) {
@@ -528,7 +558,7 @@
         }
         this.queryStatusNum(param);
       },
-      refreshOrder () {
+      refreshOrder() {
         this.currentOrderId = '';
         this.getOrderList(this.pager.currentPage);
       },
@@ -546,11 +576,11 @@
       filterLogistics: function (query) {// 过滤物流提供方
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
-          this.searchCondition.logisticsProviderId = '';
+          this.searchCondition.logisticsProvider = '';
           this.logisticsList = [];
           return;
         }
-        BaseInfo.queryOrgByValidReation(orgId, {keyWord: query, relation: '3'}).then(res => {
+        BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
           this.logisticsList = res.data;
         });
       },

@@ -1,3 +1,8 @@
+<style lang="scss" scoped="">
+  .opera-btn-group {
+    margin: 10px 0;
+  }
+</style>
 <template>
   <div class="order-page">
     <div class="container">
@@ -12,8 +17,8 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="9">
-              <oms-form-row label="货主货品" :span="4">
-                <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索货主货品"
+              <oms-form-row label="货主疫苗" :span="4">
+                <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称或编号搜索货主疫苗"
                            :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                            popper-class="good-selects">
                   <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
@@ -24,7 +29,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -38,7 +43,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="下单时间" :span="6">
+              <oms-form-row label="完成时间" :span="6">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="dateyear"
@@ -82,7 +87,7 @@
 
 <script>
   import utils from '@/tools/utils';
-  import { BaseInfo, erpOrder, Vaccine } from '@/resources';
+  import {Vaccine} from '@/resources';
 
   export default {
     name: 'receive',
@@ -105,12 +110,12 @@
       Search: function () {// 搜索
         if (!this.searchCondition.orgGoodsId) {
           return this.$notify.info({
-            message: '请选择货主货品'
+            message: '请选择货主疫苗'
           });
         }
         if (!this.dateyear) {
           return this.$notify.info({
-            message: '请选择下单时间'
+            message: '请选择完成时间'
           });
         }
         this.searchCondition.year = this.formatTime(this.dateyear);
@@ -122,7 +127,6 @@
               message: '没有相应数据'
             });
           }
-          ;
           this.reportList = res.data.list;
           this.loadingData = false;
         });
@@ -130,12 +134,12 @@
       exportFile: function () {// 导出Excel
         if (!this.searchCondition.orgGoodsId) {
           return this.$notify.info({
-            message: '请选择货主货品'
+            message: '请选择货主疫苗'
           });
         }
         if (!this.dateyear) {
           return this.$notify.info({
-            message: '请选择下单时间'
+            message: '请选择完成时间'
           });
         }
         this.searchCondition.year = this.formatTime(this.dateyear);
@@ -146,7 +150,6 @@
           if (res.data) {
             utils.download(res.data, '疾病预防控制中心各单位领苗一览表');
           }
-          ;
           this.isLoading = false;
           this.dateyear = '';
           this.searchCondition.year = '';

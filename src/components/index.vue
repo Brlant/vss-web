@@ -48,6 +48,7 @@
     align-items: center;
 
   }
+
   .app-content-view {
     padding-right: 15px;
   }
@@ -82,7 +83,7 @@
 <script>
   import AppHeader from './common/app.header.vue';
   import AppFooter from './common/app.footer.vue';
-  import { BaseInfo, cerpAccess, cerpAction } from '../resources';
+  import {BaseInfo, cerpAccess, cerpAction} from '../resources';
   import utils from '../tools/utils';
   import attachmentDialog from './common/attachment.dialog.vue';
   import printDialog from './common/print.loading.vue';
@@ -109,18 +110,18 @@
         return this.$store.state.bodySize['left'];
       }
     },
-    beforeRouteEnter (to, form, next) {
+    beforeRouteEnter(to, form, next) {
       next(vm => {
         vm.toRoute = to;
       });
     },
-    beforeRouteUpdate (to, from, next) {
+    beforeRouteUpdate(to, from, next) {
       utils.removeClass(document.getElementsByTagName('body')[0], 'overflow-hidden');
       this.toRoute = to;
       next();
     },
     watch: {
-      $route () {
+      $route() {
         this.$store.commit('initBottomLoading', false);
       }
     },
@@ -136,7 +137,7 @@
       this.setBodyHeight();
     },
     methods: {
-      queryRoles () {
+      queryRoles() {
         cerpAccess.bindMunicipal().then(() => {
           this.loading = false;
           this.queryLevel();
@@ -148,7 +149,7 @@
           });
         });
       },
-      queryLevel () {
+      queryLevel() {
         cerpAction.queryLevel().then(res => {
           this.level = res.data;
           window.localStorage.setItem('logLevel', res.data);
@@ -156,14 +157,14 @@
           this.isPermission = res.data === 0;
         });
       },
-      queryWeChat () {
+      queryWeChat() {
         cerpAction.queryWeChatInfo().then(res => {
           this.$store.commit('initWeChatInfo', res.data);
         }).catch(() => {
           this.$store.commit('initWeChatInfo', {});
         });
       },
-      queryBaseInfo (data) {
+      queryBaseInfo(data) {
         BaseInfo.queryBaseInfo(data.userCompanyAddress).then(res => {
           this.$store.commit('initOrgName', res.data.orgDto.name);
           window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');

@@ -7,7 +7,8 @@ import './assets/element-variables.scss';
 import './assets/dtop-variables.scss';
 import '../static/css/oms.css';
 import '../static/fonts/iconfont.css';
-
+import Raven from 'raven-js';
+import RavenVue from 'raven-js/plugins/vue';
 import '@/assets/erp.scss';
 
 import Vuex from 'vuex';
@@ -16,7 +17,7 @@ import store from './store';
 import omsCostTime from './components/common/timeCost.vue';
 import App from './components/App.vue';
 
-import { initViewPort } from '@dtop/dtop-web-common';
+import {initViewPort} from '@dtop/dtop-web-common';
 // 初始化视口宽度
 initViewPort(router);
 
@@ -173,6 +174,19 @@ Vue.prototype.$httpRequestOpera = function (httpPromise, option = {
     error(e);
   });
 };
+
+Vue.prototype.$formatAryTime = function (ary, index, str = 'YYYY-MM-DD') {
+  return Array.isArray(ary) && ary[index] ? this.$moment(ary[index]).format(str) : '';
+};
+
+if (process.env.NODE_ENV === 'production') {
+  Raven
+    .config('http://62f56ceea555483fab3d6238ff4a80d0@f-log.cdcerp.net/3', {
+      serverName: 'vss'
+    })
+    .addPlugin(RavenVue, Vue)
+    .install();
+}
 
 new Vue({
   router,

@@ -30,8 +30,6 @@
     display: block;
   }
 
-
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -67,7 +65,6 @@
     }
 
   }
-
 
   .ml15 {
     margin-left: 40px;
@@ -141,7 +138,7 @@
             </el-form-item>
             <!--<el-form-item label="是否已到" prop="haveTo">-->
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
-                         <!--v-model="form.haveTo"></el-switch>-->
+            <!--v-model="form.haveTo"></el-switch>-->
             <!--</el-form-item>-->
           </el-form>
         </div>
@@ -153,7 +150,7 @@
   </div>
 </template>
 <script>
-  import { BaseInfo, invoiceManage } from '@/resources';
+  import {BaseInfo, invoiceManage} from '@/resources';
   import utils from '@/tools/utils';
   import payDetail from './payDetail.vue';
 
@@ -164,7 +161,7 @@
     props: {
       formItem: Object
     },
-    data () {
+    data() {
       return {
         form: {
           factoryId: '',
@@ -194,7 +191,7 @@
       };
     },
     watch: {
-      formItem (val) {
+      formItem(val) {
         if (val.id) {
           Object.assign(this.form, val);
           this.title = '编辑发票';
@@ -211,7 +208,7 @@
         }
       },
       selectPayments: {
-        handler (val) {
+        handler(val) {
           let amount = 0;
           val.forEach(i => {
             amount += Number(i.billAmount);
@@ -247,7 +244,7 @@
       formatAmount: function () {// 格式化单价，保留两位小数
         this.form.amount = utils.autoformatDecimalPoint(this.form.amount);
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;

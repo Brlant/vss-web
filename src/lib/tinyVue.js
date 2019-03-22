@@ -66,27 +66,30 @@ import locale from 'element-ui/lib/locale';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
 
 import {
+  compressedImg,
   Dict,
   FA,
   Forbid,
   FormRow,
+  goodsSelect,
+  goodsSwitch,
   InputSingle,
   LoadingBottom,
   Nl2br,
+  orgGoodsSelect,
+  orgSelect,
   PageRight,
+  Pagination,
   Remove,
+  statusList,
   TimeLine,
   TimeLineItem,
+  TinyCol,
   TinyInput,
   TinyLoading,
   TinyRow,
-  goodsSwitch,
-  TotalCount,
-  orgSelect,
-  orgGoodsSelect,
-  goodsSelect,
-  statusList,
-  Pagination
+  TnInputAutoComplete,
+  TotalCount
 } from '@dtop/dtop-web-common';
 
 import upload from '../components/common/upload.vue';
@@ -97,7 +100,7 @@ import goodsInfoPart from '@/components/common/order/goods-info-part';
 import cancelOrder from '@/components/common/order/cancel-order';
 import orderGoodsInfo from '@/components/common/order/order-goods-info';
 import relevanceCodeReview from '@/components/common/order/relevance.code-review.vue';
-
+import goodsStatusTag from '@/components/common/order/goods-status-tag';
 import CardBox from '@/components/common/card-box';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
@@ -183,13 +186,17 @@ const tinyVue = [
   TinyInput,
   TinyLoading,
   TinyRow,
+  TinyCol,
   goodsSwitch,
   TotalCount,
   orgSelect,
   orgGoodsSelect,
   goodsSelect,
   statusList,
-  relevanceCodeReview
+  relevanceCodeReview,
+  compressedImg,
+  goodsStatusTag,
+  TnInputAutoComplete
 ];
 
 const install = function (Vue, opts = {}) {

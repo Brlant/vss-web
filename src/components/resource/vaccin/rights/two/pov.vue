@@ -187,7 +187,7 @@
 </template>
 <script>
   import addForm from './form.vue';
-  import { BaseInfo, Vaccine, VaccineRights } from '@/resources';
+  import {BaseInfo, Vaccine, VaccineRights} from '@/resources';
 
   export default {
     components: {
@@ -245,7 +245,7 @@
         return height;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
     },
     watch: {
@@ -254,7 +254,7 @@
         this.orgName = '';
         this.getOrgsList();
       },
-      keyWord () {
+      keyWord() {
         this.pickTypeList();
       },
       filters: {
@@ -265,7 +265,7 @@
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       resetRightBox: function () {
@@ -305,7 +305,7 @@
       getOrgMore: function () {
         this.getOrgsList(this.typePager.currentPage + 1, true);
       },
-      queryVaccines (query) {
+      queryVaccines(query) {
         let params = Object.assign({}, {
           keyWord: query
         });
@@ -314,7 +314,7 @@
           this.filterPOVs();
         });
       },
-      filterPOVs () {
+      filterPOVs() {
         this.showOrgList = this.orgList.filter(f => !this.dataRows.some(s => f.subordinateId === s.povId));
       },
       filterPOV: function (query) {// 过滤POV
@@ -354,7 +354,7 @@
           this.loadingData = false;
         });
       },
-      refreshDetails () {
+      refreshDetails() {
         this.getPageList(this.pager.currentPage);
         this.showRight = false;
       },
@@ -376,7 +376,7 @@
           });
         });
       },
-      bindVaccinePOV () {
+      bindVaccinePOV() {
         let form = {
           'orgGoodsId': this.currentItem.orgGoodsId,
           'povId': this.povId
@@ -410,15 +410,15 @@
         this.currentItem = item;
         this.getPageList(1);
       },
-      add () {
+      add() {
         this.formPara = {};
         this.showRight = true;
       },
-      edit (item) {
+      edit(item) {
         this.formPara = item;
         this.showRight = true;
       },
-      changeItem (item) {
+      changeItem(item) {
         if (this.action === 'add') {
           this.getPageList(1);
         } else {
@@ -426,7 +426,7 @@
         }
         this.showRight = false;
       },
-      onceCancelRights () {
+      onceCancelRights() {
         this.$confirm('是否取消疫苗"' + this.currentItem.orgGoodsName + '"的所有接种点授权', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',

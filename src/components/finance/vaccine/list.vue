@@ -12,7 +12,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="订单号" :span="5">
@@ -30,7 +31,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                        v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -84,7 +85,7 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <el-col :span="5">货品</el-col>
+          <el-col :span="5">疫苗</el-col>
           <el-col :span="4">采购订单号</el-col>
           <el-col :span="5">疫苗厂商</el-col>
           <el-col :span="3">采购数量</el-col>
@@ -139,10 +140,10 @@
   </div>
 </template>
 <script>
-  import { vaccineBills, BaseInfo, Vaccine } from '@/resources';
+  import {BaseInfo, Vaccine, vaccineBills} from '@/resources';
 
   export default {
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: false,
@@ -165,11 +166,11 @@
         goodses: []
       };
     },
-    mounted () {
+    mounted() {
       this.queryBillPage(1);
     },
     methods: {
-      queryBillPage (pageNo) {
+      queryBillPage(pageNo) {
         this.pager.currentPage = pageNo;
         let params = {};
         this.loadingData = true;
@@ -183,7 +184,7 @@
           this.loadingData = false;
         });
       },
-      filterFactory (query) { // 查询厂商
+      filterFactory(query) { // 查询厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = {
           keyWord: query,
@@ -203,8 +204,8 @@
         });
       },
       searchInOrder: function () {// 搜索
-        this.filters.arriveStartTime = this.formatTime(this.aryTime[0]);
-        this.filters.arriveEndTime = this.formatTime(this.aryTime[1]);
+        this.filters.arriveStartTime = this.$formatAryTime(this.aryTime, 0);
+        this.filters.arriveEndTime = this.$formatAryTime(this.aryTime, 1);
         this.queryBillPage(1);
       },
       resetSearchForm: function () {// 重置表单
@@ -218,7 +219,7 @@
         });
         this.queryBillPage(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

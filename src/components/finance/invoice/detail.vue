@@ -54,7 +54,7 @@
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 250px">货品名称</th>
+                <th style="width: 250px">疫苗名称</th>
                 <th>数量</th>
                 <th>订单号</th>
                 <th>应付金额</th>
@@ -78,7 +78,7 @@
                   <span v-if="!Number(product.billAmount)">-</span>
                 </td>
                 <td>
-                  <span>¥{{ (product.billAmount - product.prepaidAccounts) | formatMoney}}</span>
+                  <span>¥{{ product.billAmount | formatMoney}}</span>
                 </td>
                 <td>
                   {{product.createTime | date }}
@@ -93,21 +93,21 @@
   </div>
 </template>
 <script>
-  import { invoiceManage } from '@/resources';
+  import {invoiceManage} from '@/resources';
 
   export default {
     props: {
       currentId: String,
       showDetail: Boolean
     },
-    data () {
+    data() {
       return {
         span: 8,
         info: {}
       };
     },
     watch: {
-      currentId (val) {
+      currentId(val) {
         this.info = {};
         if (!val) return;
         if (!this.showDetail) return;
@@ -115,7 +115,7 @@
       }
     },
     methods: {
-      queryDetail () {
+      queryDetail() {
         invoiceManage.get(this.currentId).then(res => {
           this.info = res.data;
         });

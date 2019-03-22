@@ -1,13 +1,15 @@
 <style lang="scss" scoped>
-  $leftWidth: 180px;
+  $leftWidth: 220px;
   .content-part {
     .content-left {
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -18,7 +20,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">报损出库详情</h2>
+        <h2 class="clearfix right-title">报损详情</h2>
         <ul>
           <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -26,16 +28,16 @@
           <li class="text-center order-btn" style="margin-top: 40px">
             <perm label="breakage-order-confirm"
                   v-show="currentOrder.state === '0' ">
-              <el-button type="primary" @click="check">确认订单</el-button>
+              <el-button type="primary" @click="checkPass">确认订单</el-button>
             </perm>
           </li>
 
-          <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="breakage-order-audit"
-                  v-show="currentOrder.state === '1' ">
-              <el-button type="primary" @click="review">审单通过</el-button>
-            </perm>
-          </li>
+          <!--<li class="text-center order-btn" style="margin-top: 10px">-->
+          <!--<perm label="breakage-order-audit"-->
+          <!--v-show="currentOrder.state === '1' ">-->
+          <!--<el-button type="primary" @click="review">审单通过</el-button>-->
+          <!--</perm>-->
+          <!--</li>-->
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="breakage-order-cancel"
                   v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'">
@@ -46,6 +48,33 @@
             <perm label="breakage-order-cancel"
                   v-show="currentOrder.state === '0'">
               <el-button type="danger" plain @click="deleteOrder">删除订单</el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm
+              :label="'breakage-order-export-scrap-stock' " v-show="currentOrder.state > 0">
+              <el-button type="primary" plain @click="exportScrapStockInfo" style="width: 200px;padding: 10px 10px"
+                         :loading="printing">
+                {{printing ? '正在导出' : '导出待报废库存登记表'}}
+              </el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm
+              :label="'breakage-order-export-scrap-stock-transport' " v-show="currentOrder.state > 0">
+              <el-button type="primary" plain @click="exportScrapStockTransportInfo"
+                         style="width: 200px; padding: 10px 10px" :loading="printingTransport">
+                {{printingTransport ? '正在导出' : '导出待报废疫苗转运单'}}
+              </el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px">
+            <perm
+              :label="'breakage-order-export-scrap-stock-tag' " v-show="currentOrder.state > 0">
+              <el-button type="primary" plain @click="exportScarpVaccineTag"
+                         style="width: 200px;padding: 10px 10px" :loading="printingTransport">
+                {{printingTransport ? '正在导出' : '导出待报废疫苗专用标签'}}
+              </el-button>
             </perm>
           </li>
         </ul>
@@ -71,8 +100,9 @@
   import log from '@/components/common/order.log.vue';
   import receipt from './detail/receipt.vue';
   import {erpOrder, http, InWork} from '@/resources';
-  import orderAttachment from '@/components/common/order/out.order.attachment.vue';
+  import orderAttachment from './breakage-order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
+  import utils from '@/tools/utils';
 
   export default {
     components: {basicInfo, log, receipt, orderAttachment, relevanceCode},
@@ -88,13 +118,16 @@
         currentOrder: {},
         index: 0,
         title: '',
-        isCheck: false
+        isCheck: false,
+        printing: false,
+        printingTransport: false,
+        printingTag: false
       };
     },
     watch: {
       orderId() {
         this.index = 0;
-        this.title = '报损出库详情';
+        this.title = '报损详情';
         this.queryOrderDetail();
       }
     },
@@ -103,7 +136,7 @@
         let menu = [];
         let perms = this.$store.state.permissions || [];
         menu.push({name: '报损详情', key: 0});
-        if (this.state === '4') {
+        if (this.state === '4' && this.currentOrder.customerChannel) {
           menu.push({name: '收货详情', key: 1});
         }
         if (perms.includes('erp-order-document-watch')) {
@@ -119,6 +152,42 @@
       }
     },
     methods: {
+      exportScrapStockInfo: function () {
+        this.printing = true;
+        this.$http.get(`erp-order/${this.currentOrder.id}/scrap-stock`, {}).then(res => {
+          utils.download(res.data.path, '导出待报废库存登记表');
+          this.printing = false;
+        }).catch(error => {
+          this.printing = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      exportScrapStockTransportInfo: function () {
+        this.printingTransport = true;
+        this.$http.get(`erp-order/${this.currentOrder.id}/scrap-stock-transport`, {}).then(res => {
+          utils.download(res.data.path, '导出待报废疫苗转运单');
+          this.printingTransport = false;
+        }).catch(error => {
+          this.printingTransport = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      exportScarpVaccineTag: function () {
+        this.printingTag = true;
+        this.$http.get(`erp-order/${this.currentOrder.id}/scrap-vaccine-tag`, {}).then(res => {
+          utils.download(res.data.path, '导出待报废疫苗专用标签');
+          this.printingTag = false;
+        }).catch(error => {
+          this.printingTag = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
       queryOrderDetail() {
         if (!this.orderId) return false;
         this.currentOrder = {};

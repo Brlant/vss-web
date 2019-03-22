@@ -250,13 +250,13 @@
         return (height - 70) + 'px';
       }
     },
-    mounted () {
+    mounted() {
       this.$emit('loaded');
       this.getPageList(1);
     },
     watch: {
       filters: {
-        handler () {
+        handler() {
           this.getPageList(1);
         },
         deep: true
@@ -275,7 +275,7 @@
           return 1;
         }
       },
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       getPageList: function (pageNo) {

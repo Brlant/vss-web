@@ -9,7 +9,6 @@
     cursor: pointer;
   }
 
-
   .header-list {
     overflow: hidden;
   }
@@ -26,7 +25,7 @@
   <div class="order-page">
     <div class="container">
       <el-alert
-        title="请选择货品和批号输入调整部分库存状态，可用库存可以转换成锁定库存或实际不合格库存，锁定库存可以转成实际不合格库存和可用库存。"
+        title="请选择疫苗和批号输入调整部分库存状态，可用库存可以转换成锁定库存或实际不合格库存，锁定库存可以转成实际不合格库存和可用库存。"
         type="warning">
       </el-alert>
       <div class="opera-btn-group" :class="{up:!showSearch}">
@@ -35,11 +34,11 @@
             <i class="el-icon-t-adjust"></i>
           </span>
         </div>
-        <el-form class="advanced-query-form"  onsubmit="return false">
+        <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="12">
-              <oms-form-row label="货主货品" :span="3" :isRequire="true">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+              <oms-form-row label="货主疫苗" :span="3" :isRequire="true">
+                <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
@@ -50,7 +49,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -128,7 +127,7 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData"
                 :row-class-name="formatRowClass" :summary-method="getSummaries" show-summary
                 :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
@@ -176,13 +175,12 @@
 </template>
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import { Address, BaseInfo, erpStock, http } from '@/resources';
+  import {Address, erpStock, http} from '@/resources';
   import detail from './detail.vue';
-  import utils from '@/tools/utils';
 
   export default {
     components: {detail},
-    data () {
+    data() {
       return {
         loadingData: false,
         showSearch: true,
@@ -234,12 +232,12 @@
         doing: false
       };
     },
-    mounted () {
+    mounted() {
       // this.getBatches(1);
       this.queryOrgWarehouse();
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
       bodyHeight: function () {
@@ -255,20 +253,20 @@
         },
         deep: true
       },
-      'form.adjustType' (val) {
+      'form.adjustType'(val) {
         if (!val) {
           this.form.adjustNewType = '';
         }
       }
     },
     methods: {
-      isValid (item) {
+      isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expiryDate);
         let days = b.diff(a, 'days');
         return a < b ? days > 90 ? 2 : 1 : 0;
       },
-      getBatches () { // 得到波次列表
+      getBatches() { // 得到波次列表
         let params = Object.assign({}, this.filters);
         this.loadingData = true;
         erpStock.query(params).then(res => {
@@ -276,7 +274,7 @@
           this.loadingData = false;
         });
       },
-      formatHeader (h, col) {
+      formatHeader(h, col) {
         let index = col.$index;
         let content = '';
         let title = '';
@@ -292,17 +290,17 @@
             break;
           }
           case 5: {
-            content = '仓库内真实合格货品数量';
+            content = '仓库内真实合格疫苗数量';
             title = '实际合格库存';
             break;
           }
           case 6: {
-            content = '在运输中的货品数量';
+            content = '在运输中的疫苗数量';
             title = '在途库存';
             break;
           }
           case 7: {
-            content = '仓库内真实不合格货品数量';
+            content = '仓库内真实不合格疫苗数量';
             title = '实际不合格库存';
             break;
           }
@@ -313,23 +311,23 @@
           </el-tooltip>
         );
       },
-      formatRowClass (data) {
+      formatRowClass(data) {
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
         }
       },
-      showDetail (item) {
+      showDetail(item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchWord);
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -370,7 +368,7 @@
         Object.assign(this.filters, temp);
         this.batches = [];
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           deleteFlag: false,
@@ -381,13 +379,13 @@
           this.orgGoods = res.data.list;
         });
       },
-      orgGoodsChange (val) {
+      orgGoodsChange(val) {
         this.searchWord.batchNumberId = '';
         this.batchNumberList = [];
         this.batches = [];
         this.filterBatchNumber();
       },
-      batchNumberChange (val) {
+      batchNumberChange(val) {
         if (!val) {
           this.filters.batchNumberId = '';
           this.batches = [];
@@ -396,7 +394,7 @@
         this.searchInOrder();
         this.getBatches(1);
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         if (!this.searchWord.orgGoodsId) return;
 
         let goodsId = '';
@@ -415,7 +413,7 @@
           this.batchNumberList = res.data.list;
         });
       },
-      queryOrgWarehouse () {
+      queryOrgWarehouse() {
         let param = Object.assign({}, {
           deleteFlag: false,
           auditedStatus: '1'
@@ -424,18 +422,18 @@
           this.warehouses = res.data;
         });
       },
-      warehouseChange (val) {
+      warehouseChange(val) {
         if (!this.searchWord.orgGoodsId || !this.searchWord.batchNumberId) return;
         this.searchInOrder();
         this.getBatches(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      setDefaultValue (obj, val) {
-        Object.keys(obj).forEach(k => obj[k] = obj[k] ? obj[k] : val)
+      setDefaultValue(obj, val) {
+        Object.keys(obj).forEach(k => obj[k] = obj[k] ? obj[k] : val);
       },
-      onSubmit () {
+      onSubmit() {
         if (!this.batches.length) {
           this.$notify.info({
             message: '无库存信息，请重新选择'

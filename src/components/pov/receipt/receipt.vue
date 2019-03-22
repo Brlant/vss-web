@@ -88,7 +88,7 @@
           <div v-show="isValid">
             <div v-for="(product,key) in productList" :class="{'active': activeKey === key }"
                  @click="changeProduct(product, key)" class="product-item">
-              <oms-row label="货品名称" :span="span">{{product.name}}</oms-row>
+              <oms-row label="疫苗名称" :span="span">{{product.name}}</oms-row>
               <oms-row label="批号" :span="span">{{product.batchNumber}}</oms-row>
               <oms-row label="规格" :span="span">{{product.orgGoodsDto.goodsDto.specifications}}</oms-row>
               <oms-row label="生产厂商" :span="span">{{product.orgGoodsDto.goodsDto.factoryName}}</oms-row>
@@ -113,7 +113,7 @@
         <div v-for="(item, key) in productList" v-show="key === activeKey">
           <el-form :ref=" 'form' + key" :model="item" :rules="rules" label-width="160px"
                    style="padding-right: 20px">
-            <el-form-item label="货品名称" style="margin-bottom: 5px">
+            <el-form-item label="疫苗名称" style="margin-bottom: 5px">
               <span>{{ item.name }}</span>
             </el-form-item>
             <el-form-item label="批号" style="margin-bottom: 5px">
@@ -239,6 +239,8 @@
         };
         this.productList.forEach(f => {
           obj.list.push({
+            orderDetailId: f.id,
+            batchNumberId: f.batchNumberId,
             batchNumber: f.batchNumber,
             orgGoodsId: f.orgGoodsId,
             totalCount: f.currentAmount

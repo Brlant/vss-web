@@ -11,7 +11,7 @@
     <li
       v-for="(file, index) in files"
       :class="['el-upload-list__item', 'is-' + file.status]"
-      :key="index"
+      :key="file.uid"
     >
       <img
         class="el-upload-list__item-thumbnail"
@@ -66,7 +66,7 @@
     props: {
       files: {
         type: Array,
-        default () {
+        default() {
           return [];
         }
       },
@@ -78,10 +78,10 @@
       listType: String
     },
     methods: {
-      parsePercentage (val) {
+      parsePercentage(val) {
         return parseInt(val, 10);
       },
-      handleClick (file) {
+      handleClick(file) {
         this.handlePreview && this.handlePreview(file);
       }
     }

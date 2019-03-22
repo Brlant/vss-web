@@ -1,4 +1,3 @@
-
 <template>
   <div class="order-page">
     <div class="container">
@@ -10,7 +9,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="接种时间" :span="6">
@@ -24,35 +24,37 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="货主货品" :span="6">
-                <el-select v-model="searchCondition.vaccineId" filterable remote placeholder="请输入名称搜索货主货品"
-                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
-                           popper-class="good-selects">
-                  <el-option v-for="item in orgList" :key="item.orgGoodsDto.id"
-                             :label="item.orgGoodsDto.name"
-                             :value="item.orgGoodsDto.goodsId">
+              <oms-form-row label="货主疫苗" :span="6">
+                <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="searchProduct"
+                           :clearable="true"
+                           v-model="searchCondition.vaccineId" popper-class="good-selects"
+                           @click.native.once="searchProduct('')">
+                  <el-option :value="org.goodsId" :key="org.id" :label="org.goodsName"
+                             v-for="org in orgList">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      <span class="pull-left">{{org.goodsName}}</span>
                     </div>
                     <div style="overflow: hidden">
-                        <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
-                        </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
-                        </span>
-                      <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
                       </span>
                     </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <perm label="injection-task-export">
+                  <el-button style="margin-left: 10px" :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                    导出Excel
+                  </el-button>
+                </perm>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -61,9 +63,10 @@
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
           <el-col :span="4">接种时间</el-col>
-          <el-col :span="10">接种疫苗</el-col>
+          <el-col :span="9">接种疫苗</el-col>
           <el-col :span="4">批号</el-col>
           <el-col :span="6">追溯码</el-col>
+          <el-col :span="1">来源</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -81,9 +84,9 @@
           <div class="order-list-item order-list-item-bg" v-for="item in CDCs" :key="">
             <el-row>
               <el-col :span="4" class="R pt10">
-                  {{ item.actualTime | minute}}
+                {{ item.actualTime | minute}}
               </el-col>
-              <el-col :span="10" class="R pt10">
+              <el-col :span="9" class="R pt10">
                 <div>
                   {{ item.goodsName }}
                 </div>
@@ -97,14 +100,18 @@
               <el-col :span="6" class="R pt10">
                 {{ item.actualCode}}
               </el-col>
+              <el-col :span="1">
+                {{item.sourceSystem ? 'vss' : ''}}
+              </el-col>
             </el-row>
           </div>
         </div>
       </div>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="getRecordPage"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="pager.count" :page-sizes="[pager.pageSize,30,50,100]" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
           :current-page="pager.currentPage">
         </el-pagination>
       </div>
@@ -112,12 +119,16 @@
   </div>
 </template>
 <script>
+  import {Vaccine} from '@/resources';
+  import utils from '@/tools/utils';
   import {VaccineRights} from '@/resources';
+
   export default {
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: true,
+        isLoading: false,
         CDCs: [],
         filters: {
           actualStartTime: '',
@@ -139,7 +150,7 @@
         doing: false
       };
     },
-    mounted () {
+    mounted() {
       this.getRecordPage(1);
     },
     watch: {
@@ -151,7 +162,14 @@
       }
     },
     methods: {
-      getRecordPage (pageNo) { // 得到波次列表
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.getRecordPage(1);
+      },
+      handleCurrentChange(val) {
+        this.getRecordPage(val);
+      },
+      getRecordPage(pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
@@ -165,16 +183,19 @@
         });
       },
       searchProduct(query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
+          deleteFlag: false,
+          orgId: orgId,
           keyWord: query
         });
-        VaccineRights.queryPovVaccineByType(params).then(res => {
+        this.$http.get('/erp-stock/goods-list', {params}).then(res => {
           this.orgList = res.data.list;
         });
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.actualStartTime = this.formatTime(this.actualTime[0]);
-        this.searchCondition.actualEndTime = this.formatTime(this.actualTime[1]);
+        this.searchCondition.actualStartTime = this.$formatAryTime(this.actualTime, 0);
+        this.searchCondition.actualEndTime = this.$formatAryTime(this.actualTime, 1);
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
@@ -186,6 +207,24 @@
         this.actualTime = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
+      },
+      exportFile: function () {// 导出表单
+        this.searchCondition.actualStartTime = this.$formatAryTime(this.actualTime, 0);
+        this.searchCondition.actualEndTime = this.$formatAryTime(this.actualTime, 1);
+        let params = Object.assign({}, this.searchCondition);
+        this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/pov'});
+        this.$http.get('/injection-task/export', {params}).then(res => {
+          utils.download(res.data.path, '疫苗注射记录表');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/pov'});
+        }).catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/pov'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';

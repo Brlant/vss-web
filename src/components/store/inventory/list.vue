@@ -98,7 +98,7 @@
   import utils from '@/tools/utils';
 
   export default {
-    data () {
+    data() {
       return {
         loadingData: false,
         showSearch: true,
@@ -118,11 +118,11 @@
         operators: []
       };
     },
-    mounted () {
+    mounted() {
       this.getOrders(1);
     },
     methods: {
-      filterOperators (query) {
+      filterOperators(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) return;
         let params = {keyWord: query};
@@ -149,12 +149,12 @@
           });
         });
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD HH:mm:ss') : '';
       },
       searchInOrder: function () {// 搜索
-        this.filters.startTime = this.formatTime(this.createTimes[0]);
-        this.filters.endTime = this.formatTime(this.createTimes[1]);
+        this.filters.startTime = this.$formatAryTime(this.createTimes, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.filters.endTime = this.$formatAryTime(this.createTimes, 1, 'YYYY-MM-DD HH:mm:ss');
         this.getOrders(1);
       },
       resetSearchForm: function () {// 重置表单
@@ -166,7 +166,7 @@
         this.createTimes = '';
         this.getOrders(1);
       },
-      getOrders (pageNo) { // 查询盘点作业列表
+      getOrders(pageNo) { // 查询盘点作业列表
         this.pager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -179,7 +179,7 @@
           this.loadingData = false;
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.currentOrderId = item.id;
         this.$router.push({path: '/store/inventory/detail', query: {id: item.id}});
       },
@@ -202,7 +202,7 @@
           });
         });
       },
-      exportExcel (item) {
+      exportExcel(item) {
         this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
         this.$http.get(`/erp-inventory/${item.id}/detail/export`).then(res => {
           utils.download(res.data.path, '库存盘点详情');
@@ -214,12 +214,12 @@
           });
         });
       },
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getOrders(1);
       },
-      handleCurrentChange (val) {
+      handleCurrentChange(val) {
         this.getOrders(val);
       }
     }

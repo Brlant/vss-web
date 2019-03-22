@@ -16,32 +16,32 @@
         </div>
         <el-form class="advanced-query-form">
           <el-row>
-            <el-col :span="7" class="clearfix">
+            <el-col :span="6" class="clearfix">
               <oms-form-row label="区县" :span="6">
                 <oms-input type="text" v-model="searchWord.areaCode" placeholder="请输入区县"></oms-input>
               </oms-form-row>
             </el-col>
+            <!--<el-col :span="8">-->
+            <!--<oms-form-row label="关联单位" :span="6">-->
+            <!--<el-select filterable remote placeholder="请输入关联单位查询" :remote-method="filterRelation"-->
+            <!--:clearable="true" :loading="selectLoading"-->
+            <!--v-model="searchWord.customerId" @click.native.once="filterRelation('')"-->
+            <!--popperClass="good-selects">-->
+            <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
+            <!--</div>-->
+            <!--<div style="overflow: hidden">-->
+            <!--<span class="select-other-info pull-left">-->
+            <!--<span>系统代码:</span>{{org.manufacturerCode}}-->
+            <!--</span>-->
+            <!--</div>-->
+            <!--</el-option>-->
+            <!--</el-select>-->
+            <!--</oms-form-row>-->
+            <!--</el-col>-->
             <el-col :span="8">
-              <oms-form-row label="关联单位" :span="6">
-                <el-select filterable remote placeholder="请输入关联单位查询" :remote-method="filterRelation"
-                           :clearable="true" :loading="selectLoading"
-                           v-model="searchWord.customerId" @click.native.once="filterRelation('')"
-                           popperClass="good-selects">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                    <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{org.manufacturerCode}}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="9">
-              <oms-form-row label="业务日期" :span="4">
+              <oms-form-row label="业务日期" :span="6">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
@@ -65,7 +65,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -78,12 +78,13 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="2"></el-col>
+          </el-row>
+          <el-row>
             <el-col :span="12">
-              <oms-form-row label="供/收货单位名称" :span="5">
+              <oms-form-row label="供/收货单位名称" :span="7">
                 <el-select filterable remote placeholder="请输入供/收货单位名称查询"
                            :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
-                           v-model="searchWord.factoryId" @click.native.once="filterProvide('')"
+                           v-model="searchWord.customerId" @click.native.once="filterProvide('')"
                            popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in provideList">
                     <div style="overflow: hidden">
@@ -98,7 +99,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="12">
               <oms-form-row label="批号" :span="5">
                 <el-select v-model="searchWord.batchNumberId" filterable clearable remote
                            :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号"
@@ -108,9 +109,9 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-            </el-col>
-            <el-col :span="6">
+          </el-row>
+          <el-row>
+            <el-col :span="24">
               <oms-form-row label="" :span="1">
                 <perm label="cdc-free-vaccine-sale-manager-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
@@ -129,7 +130,12 @@
       <el-table :data="reportChildList" class="header-list" :summary-method="getSummaries" show-summary border
                 :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable" :maxHeight="getHeight">
         <el-table-column prop="type" label="出入库类型" :sortable="true" min-width="120"></el-table-column>
-        <el-table-column prop="bizType" label="出入库详细" :sortable="true" min-width="120"></el-table-column>
+        <el-table-column prop="bizType" label="出入库详细" :sortable="true" min-width="120">
+          <template slot-scope="scope">
+            {{showOrderType(scope.row.bizType)}}
+            <!--<dict :dict-group="scope.row.type === '0' ? 'bizInType' : 'bizOutType' " :dict-key="scope.row.bizType" ></dict>-->
+          </template>
+        </el-table-column>
         <el-table-column prop="date" label="日期" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="area" label="区县" :sortable="true" width="100"></el-table-column>
         <el-table-column prop="customerCode" label="关联单位" :sortable="true" min-width="100"></el-table-column>
@@ -154,7 +160,7 @@
   </div>
 </template>
 <script>
-  import {BaseInfo, Vaccine} from '@/resources';
+  import {BaseInfo} from '@/resources';
   import utils from '@/tools/utils';
   import qs from 'qs';
   import ReportMixin from '@/mixins/reportMixin';
@@ -195,12 +201,17 @@
     computed: {
       getHeight: function () {
         return parseInt(this.$store.state.bodyHeight, 10) - 210 + this.fixedHeight + (this.showSearch ? 0 : 210);
+      },
+      bizTypeList() {
+        let inType = this.$getDict('bizInType') || [];
+        let outType = this.$getDict('bizOutType') || [];
+        return [].concat(inType, outType);
       }
     },
     methods: {
       exportFile: function () {
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/cdc/first-vaccine'});
@@ -226,8 +237,8 @@
         // if (!this.isSelectCondition()) {
         //   return this.$notify.info({message: '请选择查询条件'});
         // }
-        this.searchWord.startTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.endTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
         this.$http({
@@ -239,7 +250,7 @@
         }).then(res => {
           this.reportList = res.data.map(m => {
             m.type = this.typeList[m.type];
-            m.bizType = this.showOrderType(m.bizType);
+            // m.bizType = this.showOrderType(m.bizType);
             m.date = this.formatTime(m.date);
             m.expirationDate = this.formatTime(m.expirationDate);
             m.goodsStatus = this.goodsStatusList[m.goodsStatus];
@@ -281,32 +292,8 @@
       //   return isSelected;
       // },
       showOrderType: function (item) {
-        let title = '';
-        if (item === '1-0') {
-          title = '采购订单';
-        }
-        if (item === '1-1') {
-          title = '销售退货';
-        }
-        if (item === '1-2') {
-          title = '盘盈入库';
-        }
-        if (item === '1-3') {
-          title = '调拨入库';
-        }
-        if (item === '2-0') {
-          title = '销售出库';
-        }
-        if (item === '2-1') {
-          title = '采购退货';
-        }
-        if (item === '2-2') {
-          title = '盘亏出库';
-        }
-        if (item === '2-3') {
-          title = '调拨出库';
-        }
-        return title;
+        let type = this.bizTypeList.find(f => f.key === item);
+        return type && type.label || '';
       },
       getSummaries(param) {
         const {columns, data} = param;
@@ -349,6 +336,7 @@
         };
         this.bizDateAry = '';
         this.reportChildList = [];
+        this.search();
       },
       filterRelation: function (query) {
         let orgId = this.$store.state.user.userCompanyAddress;
@@ -367,16 +355,18 @@
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) return;
         let params = {
-          keyWord: query
+          keyWord: query,
+          size: -1,
+          relation: '2'
         };
         this.selectLoading = true;
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+        this.$http.get(`/orgs/${orgId}/biz-relation/all`, {params}).then(res => {
           this.provideList = res.data;
           this.selectLoading = false;
         });
       },
       filterBatchNumber(query) {
-        this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
+        this.$http.get('erp-stock/municipal/batch-number', {params: {keyWord: query}}).then(res => {
           this.batchNumberList = res.data.list;
         });
       },
@@ -384,7 +374,7 @@
         let params = Object.assign({}, {
           keyWord: query
         });
-        Vaccine.query(params).then(res => {
+        this.$http.get('/vaccine-info/municipal/pager', {params: {keyWord: query}}).then(res => {
           this.orgGoods = res.data.list;
         });
       },

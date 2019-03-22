@@ -1,6 +1,9 @@
 <style lang="scss" scoped="">
   @import "../assets/login.scss";
 
+  .el-icon-t-wx_icon {
+    color: #fff;
+  }
 </style>
 <template>
   <div class="main-box-rap">
@@ -8,7 +11,7 @@
       <div class="bg-logo"></div>
       <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part-s clearfix">
-        <div class="m-logo">疫苗供应链管理系统</div>
+        <div class="m-logo">上海市疫苗供应链管理系统</div>
         <div class="e-logo">Vaccine Supply Chain Management System</div>
       </div>
       <el-card class="box-card ">
@@ -16,7 +19,8 @@
           <el-form label-position="top" ref="loginForm" label-width="80px" :model="user" :rules="rules"
                    @submit.prevent="done" onsubmit="return false">
             <el-form-item label="系统代码" prop="orgCode" v-if="needCode">
-              <oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>
+              <!--<oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>-->
+              <tn-input-auto-complete :list="orgCodeList" placeholder="请输入业务单位编号" v-model="user.orgCode"/>
             </el-form-item>
             <el-form-item label="用户名" prop="username">
               <oms-input v-model="user.username" :showFocus="isFocus === 2" placeholder="手机号/邮箱/用户名"
@@ -42,6 +46,12 @@
                 {{btnString}} <i class="el-icon-loading" v-show="loading"></i></el-button>
 
             </el-form-item>
+            <!--<el-form-item label-width="80px">-->
+            <!--<el-button type="success" @click="loginByWx" :disabled="wxLoading" style="display:block;width:100%;"-->
+            <!--native-type="submit">-->
+            <!--<i class="el-icon-t-wx_icon"></i><span>微信登录</span>-->
+            <!--</el-button>-->
+            <!--</el-form-item>-->
           </el-form>
         </div>
       </el-card>
@@ -54,6 +64,7 @@
 <script>
   import {Auth, cerpAction} from '../resources';
   import AppFooter from './common/app.footer.vue';
+  import {base64} from '@dtop/dtop-web-common';
 
   export default {
     components: {
@@ -61,6 +72,8 @@
     },
     name: 'login',
     data: () => {
+      let orgCodeList = JSON.parse(window.localStorage.getItem('orgCodeList')) || [];
+      let needCode = !!orgCodeList.length;
       return ({
         user: {
           username: window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')).userAccount : '',
@@ -70,13 +83,14 @@
           orgCode: window.localStorage.getItem('orgCode') ? JSON.parse(window.localStorage.getItem('orgCode')) : ''
         },
         loading: false,
+        wxLoading: false,
         codeUrl: '',
         showCode: false,
         btnString: '登录',
         isFocus: -1,
         rules: {
           orgCode: [
-            {required: true, message: '请输入系统代码', trigger: 'blur'}
+            {required: true, message: '请输入系统代码', trigger: ['blur', 'change']}
           ],
           username: [
             {required: true, message: '请输入用户名', trigger: 'blur'}
@@ -85,7 +99,8 @@
             {required: true, message: '请输入密码', trigger: 'blur'}
           ]
         },
-        needCode: false
+        needCode,
+        orgCodeList
       });
     },
     methods: {
@@ -97,6 +112,8 @@
             let userCopy = JSON.parse(JSON.stringify(this.user));
             userCopy.orgCode = this.needCode ? this.trim(this.user.orgCode) : '';
             userCopy.username = this.trim(this.user.username);
+            userCopy.encryptionPsw = base64(userCopy.password);
+            delete userCopy.password;
             Auth.login(userCopy).then(response => {
               if (!response.data) return;
               let userId = window.localStorage.getItem('userId');
@@ -120,7 +137,7 @@
             }, error => {
               let data = error.response.data;
               this.$notify.error({
-                message: data.msg
+                message: data.msg || '无法登陆'
               });
               if (data.code === 101 || data.code === 100) {
                 this.getCode();
@@ -135,10 +152,13 @@
         });
       },
       check() {
+        // 为空时, 不用做判断
+        if (!this.user.username) return;
         this.$http.post('/login/check', {username: this.trim(this.user.username)}).catch(error => {
-          let data = error.response.data;
-          if (data.code === 405) {
+          if (error.response.status === 405) {
             this.needCode = true;
+            let list = error.response.data && error.response.data.map(m => ({value: m}));
+            window.localStorage.setItem('orgCodeList', JSON.stringify(list || ''));
           }
         });
       },
@@ -158,6 +178,18 @@
         }).catch(() => {
           this.$store.commit('initWeChatInfo', {});
         });
+      },
+      loginByWx() {
+        if (this.wxLoading) return;
+        this.wxLoading = true;
+        let a = document.createElement('a');
+        a.href = '/api/wechat/link';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(() => {
+          this.wxLoading = false;
+        }, 100);
       }
     },
     mounted: function () {

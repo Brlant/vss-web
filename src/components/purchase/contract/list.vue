@@ -109,7 +109,8 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="合同名称/编号" :span="7">
@@ -162,7 +163,8 @@
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
       </div>
       <div class="order-list clearfix">
@@ -265,9 +267,11 @@
     </div>
     <page-right :show="showItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
-      <add-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action" @right-close="resetRightBox"></add-form>
+      <add-form type="0" :orderId="currentOrderId" @change="onSubmit" :action="action"
+                @right-close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showEditItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
+    <page-right :show="showEditItemRight" class="specific-part-z-index"
+                @right-close="beforeCloseConfirm('合同信息未保存,是否关闭')"
                 :css="{'width':'1000px','padding':0}">
       <edit-form type="0" :orderId="editOrderId" :action="action" @change="onSubmit"
                  @right-close="resetRightBox"></edit-form>
@@ -465,8 +469,8 @@
         this.showDetail = true;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.startDate = this.formatTime(this.createTimes[0]);
-        this.searchCondition.endDate = this.formatTime(this.createTimes[1]);
+        this.searchCondition.startDate = this.$formatAryTime(this.createTimes, 0);
+        this.searchCondition.endDate = this.$formatAryTime(this.createTimes, 1);
         Object.assign(this.filters, this.searchCondition);
         this.getOrderList(1);
       },
@@ -477,6 +481,7 @@
           startDate: '',
           endDate: ''
         };
+        this.createTimes = '';
         Object.assign(this.searchCondition, temp);
         Object.assign(this.filters, temp);
         this.getOrderList(1);
@@ -526,10 +531,10 @@
       },
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.$store.state.user.userCompanyAddress;
-          if (!orgId) {
-            this.searchCondition.transactOrgId = '';
-            this.orgList = [];
-            return;
+        if (!orgId) {
+          this.searchCondition.transactOrgId = '';
+          this.orgList = [];
+          return;
         }
         BaseInfo.queryOrgByReation(orgId, {keyWord: query, relation: '1'}).then(res => {
           this.orgList = res.data;

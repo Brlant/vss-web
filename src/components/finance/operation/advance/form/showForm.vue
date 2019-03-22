@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -155,14 +154,29 @@
             <el-form-item label="状态:" class="mb0">
               {{getOrderStatus(billInfo)}}
             </el-form-item>
+            <perm label="advance-payable-attachment-upload">
+              <el-form-item label="附件:" class="mb0">
+                <oms-upload :fileList="attachmentList" @change="changeFiles"
+                            :formData="{ objectId:  billInfo.id, objectType:'advancePayable'}"></oms-upload>
+              </el-form-item>
+            </perm>
+            <perm label="advance-payable-attachment-watch">
+              <el-form-item label="附件:" class="mb0">
+                <attachment-lists attachmentIdList="" :objectId="billInfo.id"
+                                  update-permission="'no'"
+                                  :objectType="'advancePayable'"
+                                  style="padding-top: 8px"></attachment-lists>
+              </el-form-item>
+            </perm>
             <div v-show="list.length">
               <el-form-item :label="`${title}明细`" class="mb0">
-                (共{{list.length}}条)，总金额: ¥{{totalMoney.money | formatMoney}}</el-form-item>
+                (共{{list.length}}条)，总金额: ¥{{totalMoney.money | formatMoney}}
+              </el-form-item>
               <el-table :data="list" style="width: 100%" class="header-list">
-                <el-table-column prop="orgGoodsName" label="货品名称" min-width="220"></el-table-column>
-                <el-table-column prop="orderNo" label="订单号"  min-width="140"></el-table-column>
+                <el-table-column prop="orgGoodsName" label="疫苗名称" min-width="220"></el-table-column>
+                <el-table-column prop="orderNo" label="订单号" min-width="140"></el-table-column>
                 <el-table-column prop="money" label="金额" min-width="80">
-                  <template slot-scope="scope"> ¥{{ scope.row.money  | formatMoney}}</template>
+                  <template slot-scope="scope"> ¥{{ scope.row.money | formatMoney}}</template>
                 </el-table-column>
                 <el-table-column prop="createTime" label="发生时间" min-width="150">
                   <template slot-scope="scope"> {{ scope.row.createTime | time }}</template>
@@ -198,9 +212,15 @@
 </template>
 
 <script>
-  import { http } from '@/resources';
+  import {http, OmsAttachment} from '@/resources';
+  import attachmentLists from './../../../../common/attachmentList.vue';
+  import Perm from '@/components/common/perm';
 
   export default {
+    components: {
+      Perm,
+      attachmentLists
+    },
     name: 'auditForm',
     loading: false,
     props: {
@@ -217,16 +237,21 @@
     data: function () {
       return {
         doing: false,
-        list: []
+        list: [],
+        attachmentList: [],
+        attachmentIdList: []
       };
     },
     computed: {
-      isShowButton () {
+      isShowButton() {
         const {type, billInfo} = this;
         const status = billInfo.status;
         return type === 1 && status === '0' || type === 2 && (status === '1' || status === '3');
       },
-      totalMoney () {
+      orgLevel() {
+        return this.$store.state.orgLevel;
+      },
+      totalMoney() {
         return this.list.reduce(
           (pre, next) => ({
             money: pre.money + next.money
@@ -235,16 +260,36 @@
       }
     },
     watch: {
-      billInfo (val) {
+      billInfo(val) {
         this.list = [];
         if (!val.id) return;
         this.queryDetail(val.id);
+        this.getFileList(val.id);
       }
     },
     methods: {
-      queryDetail (key) {
+      changeFiles: function (fileList) {
+        let ids = [];
+        console.log(fileList);
+        fileList.forEach(file => {
+          ids.push(file.attachmentId);
+        });
+        this.billInfo.attachmentIdList = ids;
+      },
+      queryDetail(key) {
         http.get(`/advance-payment/${key}`).then(res => {
           this.list = res.data.detailList;
+        });
+      },
+      getFileList: function (val) {
+        if (!val) return;
+        OmsAttachment.queryOneAttachmentList(val, 'advancePayable').then(res => {
+          this.attachmentList = res.data;
+          let ids = [];
+          this.attachmentList.forEach(val => {
+            ids.push(val.attachmentId);
+          });
+          this.attachmentIdList = ids;
         });
       },
       doClose: function () {
@@ -276,7 +321,7 @@
           });
         });
       },
-      cancelItem () {
+      cancelItem() {
         this.$confirmOpera('确认取消' + this.title + '作业？', () => {
           this.doing = true;
           let httpRequest = this.$http.put(`/advance-payment/cancel/${this.billInfo.id}`);

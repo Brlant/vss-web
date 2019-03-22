@@ -73,16 +73,17 @@
 <template>
   <div class="pay-part">
     <div class="container">
-      <div class="container">
+      <perm label="accounts-receivable-export">
         <div class="opera-btn-group" :class="{up:showSearch}">
           <div class="opera-icon">
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
-            <span v-show="!showSearch">收起筛选</span>
-            <span v-show="showSearch">展开筛选</span>
+            <span v-show="!showSearch">收起</span>
+            <span v-show="showSearch">展开</span>
           </span>
           </div>
-          <el-form class="advanced-query-form">
+          <el-form class="advanced-query-form clearfix"
+                   style="padding-top: 10px; background: #fff; padding: 10px 10px 10px;">
             <el-row>
               <el-col :span="8">
                 <oms-form-row label="日期" :span="6">
@@ -125,7 +126,7 @@
             </el-row>
           </el-form>
         </div>
-      </div>
+      </perm>
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item active"
              v-for="(item,key) in orgType">
@@ -212,7 +213,7 @@
             </div>
             <div>
               <el-form class="payForm" ref="payForm" onsubmit="return false" label-width="100px">
-                <el-form-item label="货品">
+                <el-form-item label="疫苗">
                   <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                              :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
@@ -224,7 +225,7 @@
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -277,7 +278,7 @@
               <el-table :data="receiptDetails" class="header-list" border
                         :header-row-class-name="'headerClass'" v-loading="loadingData">
                 <el-table-column prop="orderNo" label="订单号" min-width="85" :sortable="true"></el-table-column>
-                <el-table-column prop="goodsName" label="货品名称" :sortable="true" min-width="120"></el-table-column>
+                <el-table-column prop="goodsName" label="疫苗名称" :sortable="true" min-width="120"></el-table-column>
                 <el-table-column prop="goodsCount" label="数量" width="80" :sortable="true"></el-table-column>
                 <el-table-column prop="createTime" label="发生时间" min-width="110" :sortable="true">
                   <template slot-scope="scope">
@@ -338,7 +339,7 @@
 
 </template>
 <script>
-  import { BaseInfo, demandAssignment, procurementCollect, pullSignal, receipt, VaccineRights } from '@/resources';
+  import {BaseInfo, receipt} from '@/resources';
   import utils from '@/tools/utils';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
@@ -415,14 +416,14 @@
     computed: {
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
-        height = (height - 30);
+        height = (height - 140);
         return height;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
       this.queryTotalMoney();
     },
@@ -439,14 +440,14 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
         }
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       statusTitle: function (status) {
@@ -460,7 +461,7 @@
           return title;
         }
       },
-      filterStatusMethod (value, row) {
+      filterStatusMethod(value, row) {
         return row.status === value;
       },
       resetRightBox: function () {
@@ -498,7 +499,7 @@
 
         });
       },
-      searchProduct (keyWord) {
+      searchProduct(keyWord) {
         let o1 = this.$store.state.user.userCompanyAddress;
         let o2 = this.currentItem.remitteeId;
         if (!o1 || !o2) return;
@@ -511,17 +512,17 @@
           this.goodesList = res.data.list;
         });
       },
-      queryTotalMoney () {
+      queryTotalMoney() {
         this.$http.get('/accounts-receivable/statistics').then(res => {
           this.orgType[0].num = res.data['paidMoney'];
           this.orgType[1].num = res.data['totalMoney'] - res.data['paidMoney'];
         });
       },
-      refresh () {
+      refresh() {
         this.getOrgsList();
         this.resetRightBox();
       },
-      refreshDetails () {
+      refreshDetails() {
         this.getDetail();
         this.resetRightBox();
       },
@@ -541,8 +542,8 @@
         });
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.createStartTime = this.formatTime(this.createTimes[0]);
-        this.searchCondition.createEndTime = this.formatTime(this.createTimes[1]);
+        this.searchCondition.createStartTime = this.$formatAryTime(this.createTimes, 0);
+        this.searchCondition.createEndTime = this.$formatAryTime(this.createTimes, 1);
         Object.assign(this.filterRights, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
@@ -565,12 +566,12 @@
         this.resetSearchForm();
         this.goodesList = [];
       },
-      showDetail (item) {
+      showDetail(item) {
         this.orderId = item.orderId;
         this.showPart = true;
         this.currentDetail = item;
       },
-      add () {
+      add() {
         if (!this.currentItem.id) {
           this.$notify.info({
             message: '请先添加付款方'
@@ -579,17 +580,17 @@
         }
         this.showRight = true;
       },
-      addDetail () {
+      addDetail() {
         this.showLeft = true;
       },
-      edit (row) {
+      edit(row) {
         this.form = row;
         this.showRight = true;
       },
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      onSubmit () {
+      onSubmit() {
         this.getOrgsList();
       },
       filterOrg: function (query) {// 过滤供货商
@@ -605,8 +606,11 @@
       },
       exportFile: function () {
         if (this.bizDateAry) {
-          this.searchCondition.createStartTime = this.formatTime(this.bizDateAry[0]);
-          this.searchCondition.createEndTime = this.formatTime(this.bizDateAry[1]);
+          this.searchCondition.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+          this.searchCondition.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
+        } else {
+          this.searchCondition.createStartTime = '';
+          this.searchCondition.createEndTime = '';
         }
         let params = Object.assign(this.filterRights, this.searchCondition);
         this.isLoading = true;

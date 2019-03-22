@@ -43,7 +43,7 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" ref="reportTable"  :maxHeight="getHeight" border
+      <el-table :data="reportList" class="header-list" ref="reportTable" :maxHeight="getHeight" border
                 :header-row-class-name="'headerClass'" v-loading="loadingData">
         <el-table-column prop="no" label="序号" width="70" :sortable="true"></el-table-column>
         <el-table-column prop="goodsName" label="疫苗名称" width="160" :sortable="true"></el-table-column>
@@ -52,7 +52,7 @@
         <el-table-column prop="beforeStock" label="期前库存" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="restStockMoney" label="期前金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="procurementCount" label="采购数量" width="100" :sortable="true"></el-table-column>
-        <el-table-column prop="saleCount" label="采购金额" width="100" :sortable="true"></el-table-column>
+        <el-table-column prop="procurementMoney" label="采购金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleCount" label="销售数量" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleMoney" label="销售金额" width="100" :sortable="true"></el-table-column>
         <el-table-column prop="saleReturnCount" label="退区数量" width="100" :sortable="true"></el-table-column>
@@ -68,12 +68,12 @@
   </div>
 </template>
 <script>
-  import { cerpAction } from '@/resources';
   import utils from '@/tools/utils';
   import ReportMixin from '@/mixins/reportMixin';
+
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         reportList: [],
@@ -99,8 +99,8 @@
           });
           return;
         }
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/month/repertory'});
@@ -123,8 +123,8 @@
           });
           return;
         }
-        this.searchWord.createStartTime = this.formatTime(this.bizDateAry[0]);
-        this.searchWord.createEndTime = this.formatTime(this.bizDateAry[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1);
         let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
         this.$http.get('/erp-statement/cdc-stock', {params}).then(res => {

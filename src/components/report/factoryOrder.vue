@@ -9,6 +9,9 @@
     cursor: pointer;
   }
 
+  .opera-btn-group {
+    margin: 10px 0;
+  }
   .header-list {
     overflow: hidden;
   }
@@ -41,8 +44,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="平台货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索货品" :remote-method="filterVaccine"
+              <oms-form-row label="平台疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterVaccine"
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects">
                   <el-option :value="vaccine.id" :key="vaccine.id"
@@ -54,10 +57,10 @@
                     </div>
                     <div style="overflow: hidden">
                       <!--<span class="select-other-info pull-left"><span-->
-                      <!--v-show="vaccine.code">货品编号</span>  {{vaccine.code}}-->
+                      <!--v-show="vaccine.code">疫苗编号</span>  {{vaccine.code}}-->
                       <!--</span>-->
                       <span class="select-other-info pull-left"><span
-                        v-show="vaccine.specifications">货品规格:</span>{{vaccine.specifications}}
+                        v-show="vaccine.specifications">疫苗规格:</span>{{vaccine.specifications}}
                         </span>
                       <!--<span class="select-other-info pull-left"><span-->
                       <!--v-show="vaccine.approvalNumber">批准文号</span>  {{vaccine.approvalNumber}}-->
@@ -86,6 +89,15 @@
                     placeholder="请选择" format="yyyy-MM-dd">
                   </el-date-picker>
                 </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="单位类型" :span="5">
+                <el-select v-model="searchWord.orgTypeList" multiple filterable clearable placeholder="请选择">
+                  <el-option :value="item.key" :key="item.key" :label="item.title"
+                             v-for="item in kindsMenu">
+                  </el-option>
+                </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
@@ -126,8 +138,13 @@
             {{ scope.row.suppliersName }}
           </template>
         </el-table-column>
-        <el-table-column prop="orgGoodsName" label="货主货品" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="goodsName" label="平台货品" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="suppliersName" label="单位类型" :sortable="true" width="120">
+          <template slot-scope="scope">
+            {{convertOrgType(scope.row)}}
+          </template>
+        </el-table-column>
+        <el-table-column prop="orgGoodsName" label="货主疫苗" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="goodsName" label="平台疫苗" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="specification" label="规格" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"
                          width="120"></el-table-column>
@@ -172,12 +189,13 @@
   export default {
 //    components: {detail},
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: true,
         batches: [],
         searchWord: {
+          orgTypeList: [],
           shipper: '',
           suppliers: '',
           batchNumber: '',
@@ -201,14 +219,14 @@
         typeList: ['入库', '出库']
       };
     },
-    mounted () {
+    mounted() {
 //      this.getBatches(1);
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
-      bizTypeList () {
+      bizTypeList() {
         let inType = JSON.parse(JSON.stringify(this.$getDict('bizInType') || []));
         let outType = JSON.parse(JSON.stringify(this.$getDict('bizOutType') || []));
         inType.forEach(i => {
@@ -219,38 +237,33 @@
         });
         return [].concat(inType, outType);
       },
+      dictBizTypeList() {
+        let inType = this.$getDict('bizInType') || [];
+        let outType = this.$getDict('bizOutType') || [];
+        return [].concat(inType, outType);
+      },
       getHeight: function () {
         return parseInt(this.$store.state.bodyHeight, 10) - 155 + this.fixedHeight + (this.showSearch ? 0 : 155);
+      },
+      kindsMenu() {
+        return [
+          {title: '0接种单位', key: 'POV'},
+          {title: '1社区接种门诊', key: 'POV-1'},
+          {title: '2医院产科接种室', key: 'POV-2'},
+          {title: '3犬伤处置门诊', key: 'POV-3'},
+          {title: '4卡介苗接种门诊', key: 'POV-4'},
+          {title: '5集体单位接种门诊', key: 'POV-5'},
+          {title: '6特需接种门诊', key: 'POV-6'},
+          {title: '7疾控中心', key: 'CDC'},
+          {title: '8批发企业', key: 'Supplier'},
+          {title: '9生产企业', key: 'Manufacture'}
+        ];
       }
     },
     methods: {
       showOrderType: function (item) {
-        let title = '';
-        if (item === '1-0') {
-          title = '采购订单';
-        }
-        if (item === '1-1') {
-          title = '销售退货';
-        }
-        if (item === '1-2') {
-          title = '盘盈入库';
-        }
-        if (item === '1-3') {
-          title = '调拨入库';
-        }
-        if (item === '2-0') {
-          title = '销售出库';
-        }
-        if (item === '2-1') {
-          title = '采购退货';
-        }
-        if (item === '2-2') {
-          title = '盘亏出库';
-        }
-        if (item === '2-3') {
-          title = '调拨出库';
-        }
-        return title;
+        let type = this.dictBizTypeList.find(f => f.key === item);
+        return type && type.label || '';
       },
       filterVaccine: function (query) {
         let params = Object.assign({}, {
@@ -261,12 +274,12 @@
           this.vaccineList = res.data.list;
         });
       },
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getBatches(1);
       },
-      getBatches (pageNo) { // 得到订单列表
+      getBatches(pageNo) { // 得到订单列表
         this.pager.currentPage = pageNo;
         this.showTable = true;
         this.loadingData = true;
@@ -283,7 +296,7 @@
         this.$http({
           url: '/erp-statement/city/warehouse-detail',
           params,
-          paramsSerializer (params) {
+          paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -296,7 +309,7 @@
           this.setFixedHeight();
         });
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -304,7 +317,7 @@
             sums[index] = '合计';
             return;
           }
-          if (column.property !== 'count' && column.property !== 'price' &&
+          if (column.property !== 'count' &&
             column.property !== 'totalMoney') {
             sums[index] = '';
             return;
@@ -324,8 +337,8 @@
           }
         });
         sums.forEach((i, index) => {
-          if (index > sums.length - 3) {
-            sums[index] = '￥' + i;
+          if (index > sums.length - 2) {
+            sums[index] = '￥' + i && Number(i).toFixed(1) || i;
           }
         });
         return sums;
@@ -342,7 +355,7 @@
         this.$http({
           url: '/erp-statement/city/warehouse-detail/export',
           params,
-          paramsSerializer (params) {
+          paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -362,12 +375,13 @@
         });
       },
       searchInOrder: function () {// 搜索
-        this.searchWord.createStartTime = this.formatTime(this.expectedTime[0]);
-        this.searchWord.createEndTime = this.formatTime(this.expectedTime[1]);
+        this.searchWord.createStartTime = this.$formatAryTime(this.expectedTime, 0);
+        this.searchWord.createEndTime = this.$formatAryTime(this.expectedTime, 1);
         this.getBatches(1);
       },
       resetSearchForm: function () {// 重置表单
         this.searchWord = {
+          orgTypeList: [],
           shipper: '',
           suppliers: '',
           batchNumber: '',
@@ -382,8 +396,21 @@
         this.expectedTime = '';
         this.getBatches(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      },
+      convertOrgType(row) {
+        let str = '';
+        let orgList = [];
+        orgList = this.kindsMenu;
+        orgList.forEach(value => {
+          row.orgTypeList.forEach(value1 => {
+            if (value1 === value.key) {
+              str = str + '/' + value.title;
+            };
+          });
+        });
+        return str.substring(1, str.length);
       }
     }
   };

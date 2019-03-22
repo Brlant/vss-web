@@ -15,12 +15,17 @@
       color: red;
     }
   }
+
+  .is-flex {
+    display: flex;
+    align-items: center;
+  }
 </style>
 <template>
   <div class="order-page">
     <div class="container">
       <el-alert
-        title="请选择货品和批号输入调整部分库存数，调整库存数必须是散件倍数，如果是正数则增加库存，如果是负数则减少库存。"
+        title="请选择疫苗和批号输入调整部分库存数，调整库存数必须是散件倍数，如果是正数则增加库存，如果是负数则减少库存。"
         type="warning">
       </el-alert>
       <div class="opera-btn-group" :class="{up:!showSearch}">
@@ -32,8 +37,8 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="12">
-              <oms-form-row :label="orgLevel===3?'被授权疫苗':'货主货品'" :span="4" :isRequire="true">
-                <el-select filterable remote :placeholder="orgLevel===3?'请输入名称搜索被授权疫苗':'请输入名称搜索货主货品'"
+              <oms-form-row :label="orgLevel===3?'被授权疫苗':'货主疫苗'" :span="4" :isRequire="true">
+                <el-select filterable remote :placeholder="orgLevel===3?'请输入名称或编号搜索被授权疫苗':'请输入名称或编号搜索货主疫苗'"
                            :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
@@ -45,7 +50,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -68,7 +73,7 @@
               </oms-form-row>
             </el-col>
           </el-row>
-          <el-row>
+          <el-row class="is-flex">
             <el-col :span="12">
               <oms-form-row label="仓库" :span="4">
                 <el-select v-model="searchWord.warehouseId" filterable clearable
@@ -82,8 +87,8 @@
             </el-col>
             <el-col :span="12">
               <el-col :span="12" v-show="searchWord.orgGoodsId">
-                <oms-form-row label="散件包装数量:" :span="10">
-                  <div style="margin-top: 7px">{{smallPackCount}}</div>
+                <oms-form-row class="is-flex" label="散件包装数量:" :span="10">
+                  <div>{{smallPackCount}}</div>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
@@ -94,8 +99,8 @@
           <el-row>
             <el-col :span="12">
               <el-col :span="12">
-                <oms-form-row label="可用库存" :span="10">
-                  <el-input  type="number" v-model.number="form.availableCount"></el-input>
+                <oms-form-row label="可用库存" :span="8">
+                  <el-input type="number" v-model.number="form.availableCount"></el-input>
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
@@ -120,7 +125,7 @@
           <el-row>
             <el-col :span="12">
               <oms-form-row label="" :span="4">
-                <el-button type="primary" @click="onSubmit"  :disabled="doing">调整库存</el-button>
+                <el-button type="primary" @click="onSubmit" :disabled="doing">调整库存</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -128,9 +133,9 @@
       </div>
       <el-table :data="batches" class="header-list store" border @row-click="showDetail"
                 :header-row-class-name="'headerClass'" v-loading="loadingData"
-                :row-class-name="formatRowClass" :summary-method="getSummaries"  show-summary
+                :row-class-name="formatRowClass" :summary-method="getSummaries" show-summary
                 :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主货品名称" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
@@ -186,8 +191,9 @@
   export default {
     components: {
       OmsRow,
-      detail},
-    data () {
+      detail
+    },
+    data() {
       return {
         loadingData: false,
         showSearch: true,
@@ -236,12 +242,12 @@
         doing: false
       };
     },
-    mounted () {
+    mounted() {
       // this.getBatches(1);
       this.queryOrgWarehouse();
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
       bodyHeight: function () {
@@ -249,7 +255,7 @@
         height = height - 110;
         return height;
       },
-      smallPackCount () {
+      smallPackCount() {
         let count = '';
         if (!this.searchWord.orgGoodsId) return count;
         this.orgGoods.forEach(i => {
@@ -269,13 +275,13 @@
       }
     },
     methods: {
-      isValid (item) {
+      isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expiryDate);
         let days = b.diff(a, 'days');
         return a < b ? days > 90 ? 2 : 1 : 0;
       },
-      getBatches () { // 得到波次列表
+      getBatches() { // 得到波次列表
         let params = Object.assign({}, this.filters);
         this.loadingData = true;
         erpStock.query(params).then(res => {
@@ -283,7 +289,7 @@
           this.loadingData = false;
         });
       },
-      formatHeader (h, col) {
+      formatHeader(h, col) {
         let index = col.$index;
         let content = '';
         let title = '';
@@ -299,17 +305,17 @@
             break;
           }
           case 5: {
-            content = '仓库内真实合格货品数量';
+            content = '仓库内真实合格疫苗数量';
             title = '实际合格库存';
             break;
           }
           case 6: {
-            content = '在运输中的货品数量';
+            content = '在运输中的疫苗数量';
             title = '在途库存';
             break;
           }
           case 7: {
-            content = '仓库内真实不合格货品数量';
+            content = '仓库内真实不合格疫苗数量';
             title = '实际不合格库存';
             break;
           }
@@ -320,7 +326,7 @@
           </el-tooltip>
         );
       },
-      formatRowClass (data) {
+      formatRowClass(data) {
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
         }
@@ -338,18 +344,18 @@
           });
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchWord);
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -390,7 +396,7 @@
         Object.assign(this.filters, temp);
         this.batches = [];
       },
-      filterFactory (query) { // 生产厂商
+      filterFactory(query) { // 生产厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
@@ -404,13 +410,13 @@
           this.factories = res.data.list;
         });
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let level = this.$store.state.orgLevel;
         if (level === 3) {
           let params = Object.assign({}, {
             keyWord: query
           });
-          http.get('/vaccine-authorization/pov', {params}).then(res => {
+          http.get('/erp-stock/pov/all-goods', {params}).then(res => {
             this.orgGoods = res.data.list;
           });
         } else {
@@ -425,13 +431,13 @@
           });
         }
       },
-      orgGoodsChange (val) {
+      orgGoodsChange(val) {
         this.searchWord.batchNumberId = '';
         this.batchNumberList = [];
         this.batches = [];
         this.filterBatchNumber();
       },
-      batchNumberChange (val) {
+      batchNumberChange(val) {
         if (!val) {
           this.filters.batchNumberId = '';
           this.batches = [];
@@ -440,7 +446,7 @@
         this.searchInOrder();
         this.getBatches(1);
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         if (!this.searchWord.orgGoodsId) return;
 
         let goodsId = '';
@@ -468,18 +474,18 @@
           this.warehouses = res.data;
         });
       },
-      warehouseChange (val) {
+      warehouseChange(val) {
         if (!this.searchWord.orgGoodsId || !this.searchWord.batchNumberId) return;
         this.searchInOrder();
         this.getBatches(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      onSubmit () {
+      onSubmit() {
         if (!this.searchWord.orgGoodsId) {
           this.$notify.info({
-            message: '请选择货主货品'
+            message: '请选择货主疫苗'
           });
           return;
         }

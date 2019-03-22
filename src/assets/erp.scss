@@ -1,4 +1,5 @@
 @import "login";
+@import "tn-tabs-list";
 
 [v-cloak] {
   display: none
@@ -24,6 +25,10 @@
   margin-right: 10px;
 }
 
+.mr-5 {
+  margin-right: 5px;
+}
+
 .f20 {
   font-size: 20px;
 }
@@ -35,6 +40,23 @@
 
 .overflow-hidden {
   overflow: hidden;
+}
+
+.flex-layout {
+  display: flex;
+  align-items: center;
+}
+
+.cursor-span:hover {
+  color: $primary-color;
+
+  .btn-circle {
+    background: $primary-color;
+
+    i {
+      color: #fff;
+    }
+  }
 }
 
 .app-body {
@@ -325,7 +347,7 @@ $leftWidth: 260px;
   top: $topMenuHeight;
   bottom: 0;
   right: 0;
-  z-index: 50;
+  z-index: 1200;
   overflow: auto;
   background: #fff;
   h2 {
@@ -340,7 +362,7 @@ $leftWidth: 260px;
   bottom: 0;
   left: 0;
   right: 0;
-  z-index: 40;
+  z-index: 1100;
 }
 
 .search-left-box {
@@ -672,6 +694,10 @@ $leftWidth: 260px;
       margin-top: 10px;
       box-shadow: 0 1px 2px rgba(51, 51, 51, 0.15);
       font-weight: 500;
+
+      &.pointer {
+        cursor: pointer;
+      }
       .order-list-item-bg {
         position: absolute;
         opacity: 0.3;
@@ -924,11 +950,11 @@ $leftWidth: 260px;
   margin-left: 10px
 }
 
-.specific-part-z-index {
-  .page-right-part {
-    z-index: 1000;
-  }
-}
+//.specific-part-z-index {
+//  .page-right-part {
+//    z-index: 1000;
+//  }
+//}
 
 //.order-list-status {
 //  .status-title {
@@ -1052,6 +1078,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
     padding-top: 4px;
     padding-bottom: 4px;
     height: auto;
+    line-height: normal;
     span {
       line-height: initial !important;
     }
@@ -1150,7 +1177,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
     color: #fff;
   }
   .el-date-editor .el-range-input {
-    width: 35%;
+    width: 40%;
   }
   .el-transfer__buttons .el-button {
     padding: 10px;
@@ -1166,6 +1193,9 @@ $borderColor: rgba(82, 82, 82, 0.23);
   .el-menu-item, .el-submenu__title {
     height: 46px;
     line-height: 46px;
+  }
+  .el-button-group {
+    font-size: 0;
   }
 }
 
@@ -1358,4 +1388,8 @@ $borderColor: rgba(82, 82, 82, 0.23);
   text-overflow: ellipsis;
   white-space: nowrap;
   display: inline-block;
+}
+
+.is-total {
+  font-weight: 500;
 }

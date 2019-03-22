@@ -5,23 +5,58 @@ export default {
         disabledDate: time => {
           return time.getTime() < this.$moment().subtract(1, 'days');
         }
-      }
+      },
+      selectedList: [],
+      checkAll: false
     };
   },
   computed: {
-    isShowGoodsList () {
+    isShowGoodsList() {
       return this.$store.state.isShowGoodsList;
+    },
+    isShowCheckBox() {
+      return this.filters.state === '6' || this.filters.state === '1';
     }
   },
   watch: {
-    isShowGoodsList () {
+    isShowGoodsList() {
       if (this.getOrderList) {
         this.getOrderList(1);
       }
     }
   },
   methods: {
-    beforeCloseConfirm (str = '订单信息未保存,是否关闭') {
+    initCheck(list) {
+      list.forEach(i => {
+        i.checked = false;
+      });
+    },
+    checkAllOrder(val) {
+      this.orderList.forEach(i => {
+        i.checked = val;
+      });
+    },
+    batchAuditOrder() {
+      let list = this.orderList.filter(f => f.checked).map(m => m.id);
+      if (!list.length) {
+        return this.$notify.info('请选择订单');
+      }
+      let obj = {
+        orderIdList: list
+      };
+      this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path, text: '审单中...'});
+      this.$http.put('/erp-order/batch/check', obj).then(res => {
+        this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        this.$notify.success('审单完成');
+        this.getOrderList(1);
+        this.checkAll = false;
+      }).catch((e) => {
+        let data = e.response.data;
+        this.$notify.success(data && data.msg || '审单失败');
+        this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+      });
+    },
+    beforeCloseConfirm(str = '订单信息未保存,是否关闭') {
       this.$confirm(str, '', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
@@ -30,18 +65,30 @@ export default {
         this.resetRightBox();
       });
     },
-    checkHasOrderNotAdded (product, str = '订单') {
+    transportationAddressChange(val) {
+      // 清空物流商
+      this.form.logisticsProvider = '';
+      this.form.logisticsProviderName = '';
+      if (!val) return;
+      let item = this[this.form.type === '0' ? 'cdcWarehouses' : 'LogisticsCenterAddressList'].find(f => f.id === val);
+      if (!item) return;
+      this.form.logisticsProviderName = item.warehouseSourceFirmName;
+      if (this.form.type === '1') {
+        this.form.logisticsProvider = item.warehouseSourceFirm;
+      }
+    },
+    checkHasOrderNotAdded(product, str = '订单') {
       if (product.orgGoodsId) {
         this.$notify({
           duration: 2000,
-          message: `存在货品未加入${str}，请加入`,
+          message: `存在疫苗未加入${str}，请加入`,
           type: 'warning'
         });
         return false;
       }
       return true;
     },
-    handleRepetitiveOrgGoods (isHasBatchNumberInfo) {
+    handleRepetitiveOrgGoods(isHasBatchNumberInfo) {
       if (this.product.orgGoodsId !== this.editItemProduct.orgGoodsId) return;
       this.product.orgGoodsName = this.editItemProduct.orgGoodsName;
       let totalAmount = 0;
@@ -68,17 +115,17 @@ export default {
       }
     },
     /**
-     * 出库， 添加订单，合并同货主货品，同批号的订单货品
+     * 出库， 添加订单，合并同货主疫苗，同批号的订单疫苗
      * @param list
      * @returns {*}
      */
     mergeSameOrgGoodsIdAndBatchNumberWhenOut(list) {
       let a1 = new Set();
       list.forEach(i => {
-         let ary1 = list.filter(f => f.orgGoodsId === i.orgGoodsId && f.batchNumberId === i.batchNumberId);
-         if (ary1.length > 1) {
-           a1.add(ary1[0].orgGoodsId + ',' + ary1[0].batchNumberId);
-         }
+        let ary1 = list.filter(f => f.orgGoodsId === i.orgGoodsId && f.batchNumberId === i.batchNumberId);
+        if (ary1.length > 1) {
+          a1.add(ary1[0].orgGoodsId + ',' + ary1[0].batchNumberId);
+        }
       });
       [...a1].forEach(i => {
         let s1 = i.split(',');
@@ -92,11 +139,11 @@ export default {
       return list;
     },
     /**
-     * 出库，添加订单，合并同货主货品的订单货品
+     * 出库，添加订单，合并同货主疫苗的订单疫苗
      * @param list
      * @returns {*}
      */
-    mergeSameOrgGoodsWhenIn (list) {
+    mergeSameOrgGoodsWhenIn(list) {
       let a1 = new Set();
       list.forEach(i => {
         let ary1 = list.filter(f => f.orgGoodsId === i.orgGoodsId);
@@ -113,6 +160,26 @@ export default {
         list.push(a2[0]);
       });
       return list;
+    },
+    /**
+     * 校验批准文号, 30天内为近效期
+     * @param date
+     * @returns {*}
+     */
+    checkGoodsRegistrationValid(date) {
+      if (!date) return false;
+      let today = this.$moment(this.$moment().format('YYYY-MM-DD')).valueOf();
+      date = this.$moment(date).valueOf();
+      if (date - today < 0) {
+        return this.$notify.error({
+          message: '货品批准文号已过期'
+        });
+      }
+      if (this.$moment(today).add(29, 'd') >= date) {
+        return this.$notify.warning({
+          message: '货品批准文号近效期'
+        });
+      }
     }
   }
 };

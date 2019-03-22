@@ -55,7 +55,7 @@
 
   export default {
     mixins: [ReportMixin],
-    data () {
+    data() {
       return {
         loadingData: false,
         outReport: {},
@@ -71,7 +71,7 @@
       };
     },
     computed: {
-      currentWidth () {
+      currentWidth() {
         let length = this.outReport.map && this.outReport.map.firstLine.length || 0;
         if (!length) return 150;
         if (length > 0 && length < 8) return `${1080 / length}`;
@@ -82,7 +82,7 @@
       }
     },
     watch: {
-      '$route.meta.type' () {
+      '$route.meta.type'() {
         this.resetSearchForm();
       }
     },
@@ -91,13 +91,13 @@
         let moduleId = this.$route.meta.type === '0' ? '/drug-administration/report/in' : '/drug-administration/report/out';
         let url = this.$route.meta.type === '0' ? '/erp-statement/drug-administration/in-warehouse/export' : '/erp-statement/drug-administration/out-warehouse/export';
         let fileName = this.$route.meta.type === '0' ? '购进数据.xml' : '销售数据.xml';
-        let startTime = this.formatTime(this.bizDateAry ? this.bizDateAry[0] : '');
-        let endTime = this.formatTime(this.bizDateAry ? this.bizDateAry[1] : '');
+        let startTime = this.$formatAryTime(this.bizDateAry, 0);
+        let endTime = this.$formatAryTime(this.bizDateAry, 1);
         if (startTime && endTime) {
           fileName = startTime + '至' + endTime + fileName;
         }
-        this.searchWord.createStartTime = startTime + ' ' + '00:00:00';
-        this.searchWord.createEndTime = endTime + ' ' + '23:59:59';
+        this.searchWord.createStartTime = startTime ? startTime + ' ' + '00:00:00' : '';
+        this.searchWord.createEndTime = endTime ? endTime + ' ' + '23:59:59' : '';
         this.searchWord.type = this.$route.meta.type;
         let params = Object.assign({}, this.searchWord);
         this.isLoading = true;

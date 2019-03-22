@@ -112,7 +112,7 @@
         <table class="table table-hover" style="margin-top: 10px">
           <thead>
           <tr>
-            <th>货品名称</th>
+            <th>疫苗名称</th>
             <th>规格</th>
             <th width="70px">单价</th>
             <th width="80px">申请数量</th>
@@ -159,7 +159,7 @@
   </div>
 </template>
 <script>
-  import { pullSignal } from '@/resources';
+  import {pullSignal} from '@/resources';
   import axios from 'axios';
 
   export default {
@@ -175,7 +175,7 @@
       };
     },
     watch: {
-      showEditPart (val) {
+      showEditPart(val) {
         if (val) {
           this.getDetail();
         }
@@ -197,7 +197,7 @@
           })
         );
       },
-      getRepertoryCount (i, next) {
+      getRepertoryCount(i, next) {
         let count = 0;
         next.data.forEach(n => {
           if (n.orgGoodsId === i.orgGoodsId) {
@@ -206,10 +206,10 @@
         });
         return count;
       },
-      inputHandler (row) {
+      inputHandler(row) {
         row.isNoValid = row.actualCount > row.repertoryCount;
       },
-      validPackage (row) {
+      validPackage(row) {
         row.actualCount = row.actualCount || 0;
         if (row.actualCount < 0) {
           this.$notify.info({
@@ -219,7 +219,7 @@
         }
         if (row.actualCount % row.smallPackCount !== 0) {
           this.$notify.info({
-            message: '货品' + row.goodsName + '，输入的分配数量不是散件倍数, 请调整'
+            message: '疫苗' + row.goodsName + '，输入的分配数量不是散件倍数, 请调整'
           });
           return;
         }
@@ -231,11 +231,11 @@
             // 不存在或者大于一条，不做处理
             if (!sameGoods.length || sameGoods.length > 1) return;
             sameGoods[0].actualCount = row.actualCount * i.proportion;
-            this.$notify.info({message: `组合货品:${sameGoods[0].goodsName}数量调整为${row.actualCount * i.proportion}`});
+            this.$notify.info({message: `组合疫苗:${sameGoods[0].goodsName}数量调整为${row.actualCount * i.proportion}`});
           });
         });
       },
-      submit () {
+      submit() {
         // let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);
         // if (valid) {
         //   this.currentOrder.detailDtoList.forEach(i => {

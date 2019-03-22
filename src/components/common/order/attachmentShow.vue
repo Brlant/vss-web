@@ -5,15 +5,18 @@
       border: 1px solid #eee;
       border-radius: 5px;
       padding: 0 20px 10px 20px;
+
       h2 {
         line-height: 20px;
         margin: 10px 0;
         padding: 0;
       }
+
       .accessory-item {
         margin-top: 10px;
       }
     }
+
     .accessory-list {
       .show-list {
         .list-item {
@@ -23,13 +26,16 @@
             color: #fff;
             font-size: 16px;
           }
+
           &:hover .attachment-delete {
             color: red;
           }
+
           &:hover .download-link {
             display: block;
             color: #1c8de0;
           }
+
           .download-link {
             display: none;
           }
@@ -52,14 +58,17 @@
         padding-top: 3px;
         padding-bottom: 3px;
         border: 0;
+
         .attachment-span, .download-link {
           float: right;
           padding: 0 3px;
           color: #fff;
         }
+
         &:hover .attachment-span {
           color: red;
         }
+
         &:hover .download-link {
           color: #1c8de0;
         }
@@ -119,7 +128,7 @@
         <div class="accessory-item" v-show="isShowAttachmentUpload">
           <perm :label="currentAttachmentRight.upload">
             <oms-upload-relation :formData="{objectId:objId,objectType:objectType}" :showFileList="false"
-                                 @change="changeAttachmentFiles"></oms-upload-relation>
+                                 @refreshCodes="changeAttachmentFiles"></oms-upload-relation>
           </perm>
         </div>
       </div>
@@ -217,7 +226,7 @@
         default: 'accessory'
       }
     },
-    data () {
+    data() {
       return {
         dialogFormVisible: false,
         form: {},
@@ -245,13 +254,13 @@
 //        }
         return isShow && this.isShowUpload;
       },
-      objId () {
+      objId() {
         let id = '';
         if (this.currentOrder.id) id = this.currentOrder.id;
         if (this.objectId) id = this.objectId;
         return id;
       },
-      currentAttachmentRight () {
+      currentAttachmentRight() {
         return Object.assign({upload: '', watch: '', download: '', remove: ''}, this.attachmentRight);
       }
     },

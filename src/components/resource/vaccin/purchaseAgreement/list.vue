@@ -111,7 +111,8 @@
       <span v-show="!showSearch">展开筛选</span>
       </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px" onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
+                 onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row label="疫苗名称" :span="5">
@@ -155,15 +156,15 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="7">疫苗名称</el-col>
-          <el-col :span="5">供货厂商</el-col>
-          <el-col :span="5">生产企业</el-col>
+          <el-col :span="8">疫苗名称</el-col>
+          <el-col :span="6">供货厂商</el-col>
+          <el-col :span="6">生产企业</el-col>
           <el-col :span="2">采购单价</el-col>
           <el-col :span="2">协议采购数量</el-col>
-          <el-col :span="3">协议有效时间
-            <i class="el-icon-caret-top" v-if="filters.asc" @click="filters.asc=false" style="cursor:pointer;"></i>
-            <i class="el-icon-caret-bottom" v-if="!filters.asc" @click="filters.asc=true" style="cursor:pointer;"></i>
-          </el-col>
+          <!--<el-col :span="3">协议有效时间-->
+          <!--<i class="el-icon-caret-top" v-if="filters.asc" @click="filters.asc=false" style="cursor:pointer;"></i>-->
+          <!--<i class="el-icon-caret-bottom" v-if="!filters.asc" @click="filters.asc=true" style="cursor:pointer;"></i>-->
+          <!--</el-col>-->
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -181,7 +182,7 @@
           <div class="order-list-item" v-for="item in showTypeList" @click="edit(item)"
                :class="['status-'+filterListColor(item.availabilityStatus),{'active':currentItem.id==item.id}]">
             <el-row>
-              <el-col :span="7">
+              <el-col :span="8">
                 <div class="f-grey">
                   {{item.orgGoodsNo }}
                 </div>
@@ -189,12 +190,12 @@
                   {{item.orgGoodsName }}
                 </div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="6">
                 <div>
                   {{item.supplyCompanyName}}
                 </div>
               </el-col>
-              <el-col :span="5">
+              <el-col :span="6">
                 <div>
                   {{item.factoryName}}
                 </div>
@@ -206,16 +207,17 @@
               </el-col>
               <el-col :span="2">
                 <div>
-                  {{ item.amount}} <dict :dict-group="'measurementUnit'" :dict-key="item.unit"></dict>
+                  {{ item.amount}}
+                  <dict :dict-group="'measurementUnit'" :dict-key="item.unit"></dict>
                 </div>
               </el-col>
-              <el-col :span="3">
-                <div>
-                  {{ item.expireTime | date}}
-                  <el-tag type="warning" v-show="item.isOverdue==='1'">即将到期</el-tag>
-                  <el-tag type="danger" v-show="item.isOverdue==='2'">已过期</el-tag>
-                </div>
-              </el-col>
+              <!--<el-col :span="3">-->
+              <!--<div>-->
+              <!--{{ item.expireTime | date}}-->
+              <!--<el-tag type="warning" v-show="item.isOverdue==='1'">即将到期</el-tag>-->
+              <!--<el-tag type="danger" v-show="item.isOverdue==='2'">已过期</el-tag>-->
+              <!--</div>-->
+              <!--</el-col>-->
             </el-row>
             <div class="order-list-item-bg"></div>
           </div>
@@ -236,7 +238,7 @@
 </template>
 <script>
   import goodsPart from './form/form.vue';
-  import { BaseInfo, PurchaseAgreement } from '../../../../resources';
+  import {BaseInfo, PurchaseAgreement} from '../../../../resources';
   import utils from '../../../../tools/utils';
 
   export default {
@@ -286,7 +288,7 @@
         this.filterOrg();
       },
       filters: {
-        handler () {
+        handler() {
           this.getGoodsList(1);
         },
         deep: true
@@ -370,12 +372,12 @@
         }, this.filters);
         this.loadingData = true;
         PurchaseAgreement.query(params).then(res => {
-            this.showTypeList = res.data.list;
-            if (res.data.list.length > 0) {
-              this.currentItem = Object.assign(this.showTypeList[0]);
-            } else {
-              this.currentItem = Object.assign({'id': ''});
-            }
+          this.showTypeList = res.data.list;
+          if (res.data.list.length > 0) {
+            this.currentItem = Object.assign(this.showTypeList[0]);
+          } else {
+            this.currentItem = Object.assign({'id': ''});
+          }
           this.loadingData = false;
           this.pager.count = res.data.count;
         });

@@ -56,12 +56,12 @@
         <td colspan="2" style="width: 120px" class="t-head">名称</td>
         <td colspan="6" style="width: 360px">
           <div>
-            <el-tooltip class="item" effect="dark" content="货主货品名称" placement="right">
+            <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
               <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
             </el-tooltip>
           </div>
           <div>
-            <el-tooltip class="item" effect="dark" content="平台货品名称" placement="right">
+            <el-tooltip class="item" effect="dark" content="平台疫苗名称" placement="right">
               <span style="font-size: 12px;color:#999">{{ item.orgGoodsDto.goodsDto.name }}</span>
             </el-tooltip>
           </div>
@@ -129,7 +129,7 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
 
   export default {
     props: {
@@ -145,7 +145,7 @@
         default: -1
       }
     },
-    data () {
+    data() {
       return {
         goodsDetails: [],
         plateNumber: '',
@@ -153,7 +153,7 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         if (val !== 1) return;
         this.goodsDetails = [];
         if (!this.currentOrder.detailDtoList) return;
@@ -162,7 +162,7 @@
       }
     },
     methods: {
-      getGoodsDetails () {
+      getGoodsDetails() {
         this.loading = true;
         http.get(`/receipt/order/${this.currentOrder.id}`).then(res => {
           this.goodsDetails = this.currentOrder.detailDtoList.slice();
@@ -172,7 +172,7 @@
           this.loading = false;
         });
       },
-      getTotalNumber (item) {
+      getTotalNumber(item) {
         if (!item.batchNumbers) return 0;
         let num = 0;
         item.batchNumbers.forEach(b => {
@@ -180,7 +180,7 @@
         });
         return num;
       },
-      getPlateNumber () {
+      getPlateNumber() {
         let params = {
           orderId: this.currentOrder.id
         };
@@ -188,10 +188,10 @@
           this.plateNumber = res.data.length ? res.data[0].plateNumber : '';
         });
       },
-      getPackageUint (batchNumber, item) {
+      getPackageUint(batchNumber, item) {
         return batchNumber.packageScheme === 0 ? item.orgGoodsDto.goodsDto.largePackageUnit : batchNumber.packageScheme === 1 ? item.orgGoodsDto.goodsDto.mediumPackageUnit : batchNumber.packageScheme === 2 ? item.orgGoodsDto.goodsDto.smallPackageUnit : '';
       },
-      getPackageType (batchNumber) {
+      getPackageType(batchNumber) {
         let type = batchNumber.packageScheme;
         if (typeof type === 'number') {
           return type.toString();

@@ -105,12 +105,12 @@
   </div>
 </template>
 <script>
-  import { demandAssignment, procurementCollect } from '@/resources';
+  import {demandAssignment, procurementCollect} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
 
-    data () {
+    data() {
       return {
         loadingData: false,
         allocationList: [],
@@ -130,7 +130,7 @@
         currentItem: {}
       };
     },
-    mounted () {
+    mounted() {
       this.queryAllocationList();
     },
     watch: {
@@ -142,7 +142,7 @@
       }
     },
     methods: {
-      queryAllocationList (pageNo) { // 得到需求分配列表
+      queryAllocationList(pageNo) { // 得到需求分配列表
         this.allocationList = [];
         this.pager.currentPage = pageNo;
         this.loadingData = true;
@@ -167,24 +167,24 @@
         }
         return num;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showRight = false;
       },
-      showPart (item) {
+      showPart(item) {
         this.currentItem = item;
         this.showRight = true;
       },
-      change (item, count) {
+      change(item, count) {
         this.allocationList.forEach(i => {
           if (i.orgGoodsId === item.orgGoodsId) {
             i.resultAmount = i.inventoryQuantity - count;
           }
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.$router.push({path: '/purchase/allocation/task', query: {id: item.id}});
       },
-      purchase (item) {
+      purchase(item) {
         this.$router.push({path: '/purchase/allocation/task', query: {id: item.id, type: 'purchase'}});
       },
       changeStatus: function (item, key) {// 订单分类改变
@@ -200,7 +200,7 @@
         }
         return status;
       },
-      submit () {
+      submit() {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
         if (isNotNormal) {
           this.$notify.info({

@@ -17,11 +17,11 @@
 <script>
   export default {
     computed: {
-      print () {
+      print() {
         let obj = {};
         let prints = this.$store.state.prints;
         prints.forEach(item => {
-          if (item.moduleId === this.$route.path) {
+          if (item.moduleId === this.$route.path || item.moduleId === window.location.hash.substring(1)) {
             obj = item;
           }
         });

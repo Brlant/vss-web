@@ -48,8 +48,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="平台货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索平台货品" :remote-method="filterVaccine"
+              <oms-form-row label="平台疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索平台疫苗" :remote-method="filterVaccine"
                            :clearable="true" @change="goodsChange" @click.native.once="filterVaccine('')"
                            v-model="searchWord.goodsId" popper-class="good-selects">
                   <el-option :value="vaccine.goodsId" :key="vaccine.goodsId"
@@ -120,8 +120,8 @@
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="orgName" label="接种点" min-width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="goodsName" label="接种点货品名称" min-width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="platformGoodsName" label="平台货品名称" min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="接种点疫苗名称" min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="platformGoodsName" label="平台疫苗名称" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column label="业务库存" align="center">
@@ -207,7 +207,7 @@
   export default {
     components: {detail},
     mixins: [validMixin],
-    data () {
+    data() {
       return {
         loadingData: true,
         showSearch: true,
@@ -253,7 +253,7 @@
         vaccineList: []
       };
     },
-    mounted () {
+    mounted() {
       this.getBatches(1);
       let showSearch = JSON.parse(window.localStorage.getItem(this.$route.path));
       if (typeof showSearch === 'boolean') {
@@ -261,7 +261,7 @@
       }
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
       bodyHeight: function () {
@@ -277,7 +277,7 @@
         },
         deep: true
       },
-      showSearch (val) {
+      showSearch(val) {
         window.localStorage.setItem(this.$route.path, val);
       }
     },
@@ -293,18 +293,18 @@
           this.orgList = res.data;
         });
       },
-      isValid (item) {
+      isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expiryDate);
         let days = b.diff(a, 'days');
         return a < b ? days > 90 ? 2 : 1 : 0;
       },
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.getBatches(1);
       },
-      getBatches (pageNo) { // 得到波次列表
+      getBatches(pageNo) { // 得到波次列表
         this.totalInfo = {};
         this.batches = [];
         this.pager.currentPage = pageNo;
@@ -316,7 +316,7 @@
         this.$http({
           url: '/erp-stock/pov/total',
           params,
-          paramsSerializer (params) {
+          paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -331,23 +331,23 @@
           }, 100);
         });
       },
-      formatHeader (h, col) {
+      formatHeader(h, col) {
         let property = col.column.property;
         let content = '';
         let title = '';
         switch (property) {
           case 'qualifiedCount': {
-            content = '仓库内真实合格货品数量';
+            content = '仓库内真实合格疫苗数量';
             title = '合格';
             break;
           }
           case 'unqualifiedCount': {
-            content = '仓库内真实不合格货品数量';
+            content = '仓库内真实不合格疫苗数量';
             title = '不合格';
             break;
           }
           case 'transitCount': {
-            content = '在运输中的货品数量';
+            content = '在运输中的疫苗数量';
             title = '在途库存';
             break;
           }
@@ -378,7 +378,7 @@
           </el-tooltip>
         );
       },
-      formatRowClass (data) {
+      formatRowClass(data) {
         if (this.isValid(data.row) === 1) {
           return 'effective-row';
         }
@@ -392,7 +392,7 @@
         this.$http({
           url: '/erp-stock/regulatory/pov/export',
           params,
-          paramsSerializer (params) {
+          paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
@@ -405,18 +405,18 @@
           });
         });
       },
-      showDetail (item) {
+      showDetail(item) {
         this.currentItemId = item.id;
         this.currentItem = item;
         this.showDetailPart = true;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
         Object.assign(this.filters, this.searchWord);
       },
-      getSummaries (param) {
+      getSummaries(param) {
         const {columns, data} = param;
         const sums = [];
         columns.forEach((column, index) => {
@@ -458,7 +458,7 @@
         Object.assign(this.filters, temp);
         this.batchNumberList = [];
       },
-      filterFactory (query) { // 生产厂商
+      filterFactory(query) { // 生产厂商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;
@@ -472,12 +472,12 @@
           this.factories = res.data.list;
         });
       },
-      goodsChange (val) {
+      goodsChange(val) {
         this.searchWord.batchNumberId = '';
         this.batchNumberList = [];
         this.filterBatchNumber();
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         if (!this.searchWord.goodsId) return;
         this.$http.get('/batch-number/pager', {
           params: {
@@ -497,7 +497,7 @@
           this.vaccineList = res.data.list;
         });
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
     }

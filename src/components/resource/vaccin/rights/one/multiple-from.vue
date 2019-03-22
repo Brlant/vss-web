@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -67,7 +66,6 @@
 
   }
 
-
   .ml15 {
     margin-left: 40px;
   }
@@ -75,7 +73,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -149,14 +146,14 @@
   </div>
 </template>
 <script type="text/jsx">
-  import { http } from '@/resources';
+  import {http} from '@/resources';
 
   export default {
     props: {
       formItem: Object,
       currentItem: Object
     },
-    data () {
+    data() {
       return {
         form: {
           orgGoodsId: '',
@@ -170,7 +167,7 @@
           povList: {required: true, type: 'array', message: '请选择接种点', trigger: 'change'},
           povId: {required: true, message: '请选择销售价格组', trigger: 'change'}
         },
-        prices: [], // 货品列表
+        prices: [], // 疫苗列表
         title: '新增疫苗授权',
         orgList: [],
         unitPrice: '',
@@ -180,7 +177,7 @@
       };
     },
     watch: {
-      formItem (val) {
+      formItem(val) {
         this.$refs['d-form'].resetFields();
         if (val && val.id) {
           this.title = '编辑疫苗授权';
@@ -211,13 +208,13 @@
     methods: {
       renderFunc(h, option) {
         return (
-          <span title={option.label}>{ option.label }</span>
+          <span title={option.label}>{option.label}</span>
         );
       },
       renderFuncPOV(h, option) {
         return (
-          <span title={option.subordinateName}>{ option.subordinateName }</span>
-      );
+          <span title={option.subordinateName}>{option.subordinateName}</span>
+        );
       },
       filterPOV: function (query) {// 过滤POV
         let params = Object.assign({}, {
@@ -229,7 +226,7 @@
           this.loading = false;
         });
       },
-      filterVaccineMethod () {
+      filterVaccineMethod() {
         let params = Object.assign({}, {
           pageSize: -1,
           status: '1'
@@ -242,20 +239,20 @@
           this.vaccineList = res.data.list;
         });
       },
-      filterMethod (query, item) {
+      filterMethod(query, item) {
         if (!query) return true;
         return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
           item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
           item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
           item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
       },
-      filterVaccine (query, item) {
+      filterVaccine(query, item) {
         if (!query) return true;
         return item.orgGoodsDto.name && item.orgGoodsDto.name.indexOf(query) > -1 ||
           item.orgGoodsDto.goodsDto && item.orgGoodsDto.goodsDto.nameAcronymy.indexOf(query) > -1 ||
-          item.orgGoodsDto.goodsDto && item.orgGoodsDto.goodsDto.code.indexOf(query) > -1 ;
+          item.orgGoodsDto.goodsDto && item.orgGoodsDto.goodsDto.code.indexOf(query) > -1;
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;

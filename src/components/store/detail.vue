@@ -1,5 +1,6 @@
 <style lang="scss" scoped="">
   @import "../../assets/mixins";
+
   .content-part {
     .content-right {
       > h3 {
@@ -42,15 +43,17 @@
         <el-row class="batch-info">
           <el-col :span="12">
             <oms-row label="货主" :span="span">{{ currentItem.orgName }}</oms-row>
-            <oms-row label="货主货品名称" :span="span">{{currentItem.goodsName }}</oms-row>
+            <oms-row label="货主疫苗名称" :span="span">{{currentItem.goodsName }}</oms-row>
             <oms-row label="生产厂商" :span="span">{{ currentItem.factoryName }}</oms-row>
             <oms-row label="批号" :span="span">{{ currentItem.batchNumber }}</oms-row>
             <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
           </el-col>
           <el-col :span="12">
+            <oms-row label="业务剂次库存" :span="span">{{ currentItem.qualifiedBizServings }}</oms-row>
             <oms-row label="合格业务库存" :span="span">{{ currentItem.availableCount }}</oms-row>
             <oms-row label="不合格业务库存" :span="span">{{ currentItem.unqualifiedBizCount }}</oms-row>
             <oms-row label="业务停销" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
+            <oms-row label="实物剂次库存" :span="span">{{ currentItem.qualifiedActualServings }}</oms-row>
             <oms-row label="合格实物库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
             <oms-row label="不合格实物库存" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
             <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
@@ -97,11 +100,11 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
 
   export default {
     props: ['currentItem', 'isShowLock'],
-    data () {
+    data() {
       return {
         loadingData: false,
         storeDetails: [],
@@ -109,17 +112,17 @@
       };
     },
     watch: {
-      currentItem () {
+      currentItem() {
         this.queryStoreDetails();
       }
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
     methods: {
-      queryStoreDetails () {
+      queryStoreDetails() {
         this.storeDetails = [];
         if (!this.currentItem.id) return;
         this.loadingData = true;

@@ -53,7 +53,7 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
 
   export default {
     props: {
@@ -72,7 +72,7 @@
         default: -2
       }
     },
-    data () {
+    data() {
       return {
         loadingLog: true,
         orderLogList: [],
@@ -80,14 +80,14 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         if (val === this.defaultIndex) {
           this.getOrderLoglist();
         }
       }
     },
     methods: {
-      getOrderLoglist () {// 获取操作日志
+      getOrderLoglist() {// 获取操作日志
         this.orderLogList = [];
         if (!this.currentOrder.id) return;
         this.loadingLog = true;

@@ -31,7 +31,8 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
+
   export default {
     props: {
       currentDetail: {
@@ -45,21 +46,21 @@
         default: -1
       }
     },
-    data () {
+    data() {
       return {
         loadingLog: true,
         orderLogList: []
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         if (val === 1) {
           this.getPayLogs();
         }
       }
     },
     methods: {
-      getPayLogs () {// 获取操作日志
+      getPayLogs() {// 获取操作日志
         this.orderLogList = [];
         if (!this.currentDetail.id) return;
         this.loadingLog = true;

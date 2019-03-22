@@ -108,7 +108,7 @@
       <div @click.stop="closeDialog" style="height:100%;width:100%;">
         <div v-if="type=='image'" class="dialog-image-rap">
           <div id="dialog-image-rap" :style="style">
-            <img :src="fileUrl+'?image&action=resize:'+ 'h_'+(windowSize.height-50)+',m_2'" alt=''>
+            <compressed-img :src="fileUrl" id="dialog-image" @click.native.stop=""/>
           </div>
         </div>
         <div v-if="groupLen>1" class="img-button">
@@ -187,7 +187,8 @@
         return this.$store.state.attachmentDialog.attachmentList.length;
       },
       fileUrl: function () {
-        return this.Attachment.attachmentStoragePath;
+        let compress = `?image&action=resize:h_${this.$store.state.windowSize.height - 42}`;
+        return this.Attachment.attachmentStoragePath + compress;
       },
       docViewUrl: function () {
         return 'https://doc-view.sinopharm-bio.com/view/url?url=' + encodeURIComponent(this.Attachment.attachmentStoragePath);
@@ -272,6 +273,8 @@
         let images = ['jpg', 'png', 'gif', 'jpeg'];
         let docs = ['txt', 'doc', 'docx', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx'];
         if (url) {
+          // 去除签名
+          url = url.split('?')[0];
           type = url.substring(url.lastIndexOf('.'));
         }
         if (type) {
@@ -359,7 +362,7 @@
 
         setTimeout(() => {
           let self = this;
-          let dom = document.getElementById('dialog-image-rap');
+          let dom = document.getElementById('dialog-image');
           if (!dom) return;
           dom.onmousedown = null;
 

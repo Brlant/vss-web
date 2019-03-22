@@ -25,18 +25,19 @@
         <div class="status-item" :class="{'active':key==activeStatus}"
              v-for="(item,key) in receiptType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
         <goods-switch class="pull-right"></goods-switch>
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header">
-          <el-col :span=" filters.status === '10' ? 5 : 6">货主/订单号</el-col>
+          <el-col :span=" isReceiving ? 5 : 6">货主/订单号</el-col>
           <el-col :span="3">业务类型</el-col>
-          <el-col :span="filters.status === '10' ? 5 : 6">供货单位</el-col>
-          <el-col :span="filters.status === '10' ? 5 : 6">时间</el-col>
+          <el-col :span="isReceiving ? 5 : 6">供货单位</el-col>
+          <el-col :span="isReceiving ? 5 : 6">时间</el-col>
           <el-col :span="3">状态</el-col>
-          <el-col :span="3" v-if="filters.status === '10'">操作</el-col>
+          <el-col :span="3" v-if="isReceiving">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -54,7 +55,7 @@
           <div class="order-list-item" v-for="item in orderList" @click="showDetailPart(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.status === '10' ? 5 : 6">
+              <el-col :span="isReceiving ? 5 : 6">
                 <div class="f-grey">
                   {{item.orderNo }}
                 </div>
@@ -67,10 +68,11 @@
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="filters.status === '10' ? 5 : 6">
+              <el-col :span="isReceiving ? 5: 6" class="pt10">
+                <div class="f-grey" v-show="item.thirdPartyNumber">来源订单号：{{item.thirdPartyNumber }}</div>
                 <div>{{item.transactOrgName }}</div>
               </el-col>
-              <el-col :span="filters.status === '10' ? 5 : 6">
+              <el-col :span="isReceiving ? 5 : 6">
                 <div>下单：{{item.createTime | minute }}</div>
                 <div>预计送货：{{ item.expectedTime | date }}</div>
               </el-col>
@@ -79,7 +81,7 @@
                   {{getOrderStatus(item)}}
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn pt10" v-if="filters.status === '10' ">
+              <el-col :span="3" class="opera-btn pt10" v-if="isReceiving ">
                 <perm label="pov-receipt-manager">
                   <span @click.stop="showPart(item)">
                     <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
@@ -103,7 +105,8 @@
       </div>
     </div>
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <receipt-info :orderId="currentOrderId" :showRight="showRight" @close="resetRightBox" @refreshOrder="refreshOrder"></receipt-info>
+      <receipt-info :orderId="currentOrderId" :showRight="showRight" @close="resetRightBox"
+                    @refreshOrder="refreshOrder"></receipt-info>
     </page-right>
     <page-right :show="showDetailRight" @right-close="resetRightBox" :css="{'width':'1100px','padding':0}">
       <show-detail :orderId="currentOrderId" :showRight="showDetailRight" @close="resetRightBox"></show-detail>
@@ -111,7 +114,7 @@
   </div>
 </template>
 <script>
-  import { http, povReceipt } from '@/resources';
+  import {http, povReceipt} from '@/resources';
   import utils from '@/tools/utils';
   import showDetail from './show.order.vue';
   import receiptInfo from './receipt.vue';
@@ -121,7 +124,7 @@
       showDetail,
       receiptInfo
     },
-    data () {
+    data() {
       return {
         loadingData: false,
         orderList: [],
@@ -134,7 +137,7 @@
           pageSize: 15
         },
         filters: {
-          status: '10'
+          status: '11'
         },
         activeStatus: 0,
         currentOrderId: '',
@@ -142,8 +145,11 @@
       };
     },
     computed: {
-      isShowGoodsList () {
+      isShowGoodsList() {
         return this.$store.state.isShowGoodsList;
+      },
+      isReceiving() {
+        return this.filters.status === this.receiptType[0].state;
       }
     },
     watch: {
@@ -153,15 +159,15 @@
         },
         deep: true
       },
-      isShowGoodsList () {
+      isShowGoodsList() {
         this.queryOrderList(this.pager.currentPage);
       }
     },
-    mounted () {
+    mounted() {
       this.queryOrderList();
     },
     methods: {
-      queryOrderList (pageNo) { // 得到需求分配列表
+      queryOrderList(pageNo) { // 得到需求分配列表
         this.orderList = [];
         this.pager.currentPage = pageNo;
         this.loadingData = true;
@@ -178,13 +184,13 @@
         });
         this.queryCount(params);
       },
-      queryCount (params) {
+      queryCount(params) {
         http.get('/erp-receipt/order/count', {params}).then(res => {
           this.receiptType[0].num = this.obtionStatusNum(res.data['out-pov-receipt']);
           this.receiptType[1].num = this.obtionStatusNum(res.data['out-complete']);
         });
       },
-      refreshOrder () {
+      refreshOrder() {
         this.currentOrderId = '';
         this.queryOrderList(this.pager.currentPage);
       },
@@ -194,21 +200,21 @@
         }
         return num;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showRight = false;
         this.showDetailRight = false;
       },
-      showPart (item) {
+      showPart(item) {
         this.currentItem = item;
         this.currentOrderId = item.id;
         this.showRight = true;
       },
-      showDetailPart (item) {
+      showDetailPart(item) {
         this.currentItem = item;
         this.currentOrderId = item.id;
         this.showDetailRight = true;
       },
-      checkStatus (item, key) {
+      checkStatus(item, key) {
         this.activeStatus = key;
         this.filters.status = item.state;
       },

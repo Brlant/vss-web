@@ -164,10 +164,10 @@
               <ul class="show-list">
                 <li v-for="item in businessRelationList" class="list-item" @click="showType(item)"
                     :class="{'active':item.id==currentItem.id}">
-                  <div class="id-part">
-                    <el-tag type="warning" v-show=" isExpirationTime(item) === '1' ">即将到期</el-tag>
-                    <el-tag type="danger" v-show=" isExpirationTime(item) === '2' ">已过期</el-tag>
-                  </div>
+                  <!--<div class="id-part">-->
+                  <!--<el-tag type="warning" v-show=" isExpirationTime(item) === '1' ">即将到期</el-tag>-->
+                  <!--<el-tag type="danger" v-show=" isExpirationTime(item) === '2' ">已过期</el-tag>-->
+                  <!--</div>-->
                   <div>
                     {{item.followOrgName }}
                   </div>
@@ -294,12 +294,12 @@
                 <!--{{ businessRelationItem.followOrg.orgDto.remarks }}-->
                 <!--</el-col>-->
 
-                <el-col :span="5" class="text-right">
-                  有效期限：
-                </el-col>
-                <el-col :span="8">
-                  {{businessRelationItem.expirationDate | date}}
-                </el-col>
+                <!--<el-col :span="5" class="text-right">-->
+                <!--有效期限：-->
+                <!--</el-col>-->
+                <!--<el-col :span="8">-->
+                <!--{{businessRelationItem.expirationDate | date}}-->
+                <!--</el-col>-->
               </el-row>
               <div v-show="businessRelationItem.followOrg.scopes.length>0">
                 <el-row style="margin-bottom: 0">
@@ -344,7 +344,7 @@
                 <div class="base-pic-list">
                   <div v-for=" licence in businessRelationItem.followOrg.licenses" class="base-pic-item">
                     <div @click="watchPhoto(licence)">
-                      <img :src="licence.photoThumb+'?image&action=resize:w_180,h_180,m_2'">
+                      <compressed-img :src="licence.photoThumb+'?image&action=resize:w_180,h_180,m_2'"/>
                       <h3>{{licence.name}}</h3>
                       <div>有效期:{{licence.validStartTime | date}}至{{licence.validEndTime | date}}</div>
                       <div>
@@ -382,11 +382,11 @@
             </el-option>
           </el-select>
         </el-form-item>
-        <el-form-item label="有效期" prop="expirationDate">
-          <el-date-picker v-model="form.expirationDate" format="yyyy-MM-dd" placeholder="选择日期"
-                          style="width: 100%;" value-format="timestamp">
-          </el-date-picker>
-        </el-form-item>
+        <!--<el-form-item label="有效期" prop="expirationDate">-->
+        <!--<el-date-picker v-model="form.expirationDate" format="yyyy-MM-dd" placeholder="选择日期"-->
+        <!--style="width: 100%;" value-format="timestamp">-->
+        <!--</el-date-picker>-->
+        <!--</el-form-item>-->
         <el-form-item label-width="120px">
           <el-button type="primary" @click="onSubmit('relationForm')" native-type="submit" :disabled="doing">保存
           </el-button>
@@ -401,7 +401,7 @@
 
 </template>
 <script>
-  import { BaseInfo, Vendor } from '@/resources';
+  import {BaseInfo, Vendor} from '@/resources';
   import utils from '@/tools/utils';
   import photoShow from './photo/photo.show.vue';
 
@@ -454,10 +454,10 @@
       };
     },
     computed: {
-      orgRelationList () {
+      orgRelationList() {
         return this.$getDict('orgRelation');
       },
-      companyAddress () {
+      companyAddress() {
         let province = this.businessRelationItem.followOrg.orgDto.province;
         let city = this.businessRelationItem.followOrg.orgDto.city;
         let region = this.businessRelationItem.followOrg.orgDto.region;
@@ -471,7 +471,7 @@
     },
     watch: {
       filters: {
-        handler () {
+        handler() {
           this.getBusinessRelationList(1);
         },
         deep: true
@@ -482,11 +482,11 @@
         }
       }
     },
-    mounted () {
+    mounted() {
       this.getBusinessRelationList(1);
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       resetPhoto: function () {
@@ -498,7 +498,7 @@
         };
         this.resetRightBox();
       },
-      watchPhoto (item) {
+      watchPhoto(item) {
         if (item.photos.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item.photos[0].attachmentId,
@@ -526,7 +526,7 @@
         }
         return state;
       },
-      getBusinessRelationList (pageNo, isContinue = false) {
+      getBusinessRelationList(pageNo, isContinue = false) {
         this.typePager.currentPage = pageNo;
         let params = Object.assign({}, {
           pageNo: pageNo,
@@ -697,7 +697,7 @@
           }
         });
       },
-      doClose () {
+      doClose() {
         this.showRight = false;
         this.$refs['relationForm'].resetFields();
       },

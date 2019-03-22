@@ -38,8 +38,8 @@
         </div>
         <el-form class="advanced-query-form clearfix" onsubmit="return false">
           <el-col :span="8">
-            <oms-form-row label="货主货品" :span="5">
-              <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+            <oms-form-row label="货主疫苗" :span="5">
+              <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="filterOrgGoods"
                          :clearable="true" @change="orgGoodsChange"
                          v-model="filters.orgGoodsId" popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.goodsName"
@@ -49,7 +49,7 @@
                   </div>
                   <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                     <span class="select-other-info pull-left"><span
                       v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -88,15 +88,15 @@
             </oms-form-row>
           </el-col>
           <!--<el-col :span="12">-->
-            <!--<oms-form-row label="仓库" :span="3">-->
-              <!--<el-select v-model="filters.warehouseId" filterable clearable-->
-                         <!--@change="warehouseChange"-->
-                         <!--placeholder="请选择仓库">-->
-                <!--<el-option v-for="item in warehouses" :value="item.id" :key="item.id"-->
-                           <!--:label="item.name">-->
-                <!--</el-option>-->
-              <!--</el-select>-->
-            <!--</oms-form-row>-->
+          <!--<oms-form-row label="仓库" :span="3">-->
+          <!--<el-select v-model="filters.warehouseId" filterable clearable-->
+          <!--@change="warehouseChange"-->
+          <!--placeholder="请选择仓库">-->
+          <!--<el-option v-for="item in warehouses" :value="item.id" :key="item.id"-->
+          <!--:label="item.name">-->
+          <!--</el-option>-->
+          <!--</el-select>-->
+          <!--</oms-form-row>-->
           <!--</el-col>-->
 
         </el-form>
@@ -104,7 +104,7 @@
 
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <el-col :span="5">货主货品名称</el-col>
+          <el-col :span="5">货主疫苗名称</el-col>
           <el-col :span="3">批号</el-col>
           <el-col :span="2">原状态</el-col>
           <el-col :span="3">新状态</el-col>
@@ -157,11 +157,11 @@
 </template>
 <script>
   import formPart from './form.vue';
-  import { Address, BaseInfo, erpStock, http } from '@/resources';
+  import {Address, http} from '@/resources';
 
   export default {
     components: {formPart},
-    data () {
+    data() {
       return {
         loadingData: false,
         showSearch: false,
@@ -188,14 +188,14 @@
         adjustTypeList: ['可用库存', '锁定库存', '实际不合格库存']
       };
     },
-    mounted () {
+    mounted() {
       this.getMaPage(1);
     },
     methods: {
       resetRightBox: function () {
         this.showPart = false;
       },
-      getMaPage (pageNo) { // 得到波次列表
+      getMaPage(pageNo) { // 得到波次列表
         this.pager.currentPage = pageNo;
         let params = Object.assign({
           pageNo: pageNo,
@@ -208,19 +208,19 @@
           this.loadingData = false;
         });
       },
-      refresh () {
+      refresh() {
         this.getMaPage(1);
         this.showPart = false;
       },
       searchInOrder: function () {// 搜索
-        this.filters.startTime = this.formatTime(this.expectedTime[0]);
-        this.filters.endTime = this.formatTime(this.expectedTime[1]);
+        this.filters.startTime = this.$formatAryTime(this.expectedTime, 0);
+        this.filters.endTime = this.$formatAryTime(this.expectedTime, 1);
         if (this.filters.startTime && this.filters.startTime === this.filters.endTime) {
           this.filters.endTime = this.filters.endTime.split(' ')[0] + ' 23:59:59';
         }
         this.getMaPage(1);
       },
-      formatTime (date) {
+      formatTime(date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') + ' 00:00:00' : '';
       },
       resetSearchForm: function () {// 重置表单
@@ -234,7 +234,7 @@
         this.expectedTime = '';
         this.getMaPage(1);
       },
-      filterOrgGoods (query) {
+      filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           deleteFlag: false,
@@ -245,12 +245,12 @@
           this.orgGoods = res.data.list;
         });
       },
-      orgGoodsChange (val) {
+      orgGoodsChange(val) {
         this.filters.batchNumberId = '';
         this.batchNumberList = [];
         this.filterBatchNumber();
       },
-      filterBatchNumber (query) {
+      filterBatchNumber(query) {
         if (!this.filters.orgGoodsId) return;
         let goodsId = '';
         this.orgGoods.forEach(i => {
@@ -268,7 +268,7 @@
           this.batchNumberList = res.data.list;
         });
       },
-      queryOrgWarehouse () {
+      queryOrgWarehouse() {
         let param = Object.assign({}, {
           deleteFlag: false,
           auditedStatus: '1'
@@ -277,7 +277,7 @@
           this.warehouses = res.data;
         });
       },
-      add () {
+      add() {
         this.form = {};
         this.showPart = true;
       }

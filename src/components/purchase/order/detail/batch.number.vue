@@ -63,8 +63,8 @@
                       <div class="base-pic-item"
                            v-if="Util.getType(item.drugControlReportList[0].attachmentStoragePath)">
                         <div @click="watchDrugControlReport(item.drugControlReportList)">
-                          <img
-                            :src="item.drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="item.drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -85,8 +85,8 @@
                     <div class="base-pic-list" v-if="item.batchReleaseList.length>0">
                       <div class="base-pic-item" v-if="Util.getType(item.batchReleaseList[0].attachmentStoragePath)">
                         <div @click="watchBatchRelease(item.batchReleaseList)">
-                          <img
-                            :src="item.batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="item.batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -110,8 +110,8 @@
                       <div class="base-pic-item"
                            v-if="Util.getType(item.importCertificateList[0].attachmentStoragePath)">
                         <div @click="watchImportCertificate(item.importCertificateList)">
-                          <img
-                            :src="item.importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="item.importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -132,8 +132,8 @@
                     <div class="base-pic-list" v-if="item.customsPassList.length>0">
                       <div class="base-pic-item" v-if="Util.getType(item.customsPassList[0].attachmentStoragePath)">
                         <div @click="watchCustomsPass(item.customsPassList)">
-                          <img
-                            :src="item.customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="item.customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -179,6 +179,7 @@
   import attachmentShow from './attachmentShow.vue';
   import attachmentLists from './../../../common/attachmentList.vue';
   import Util from '@/tools/utils';
+
   export default {
     components: {
       attachmentShow, attachmentLists
@@ -196,7 +197,7 @@
         default: -1
       }
     },
-    data () {
+    data() {
       return {
         drugControlReportIdList: {},
         batchReleaseIdList: {},
@@ -232,13 +233,13 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         this.batchNumbers = [];
         if (val === 4) this.queryBatchNumbers();
       }
     },
     methods: {
-      watchDrugControlReport (item) {
+      watchDrugControlReport(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -248,7 +249,7 @@
           });
         }
       },
-      watchBatchRelease (item) {
+      watchBatchRelease(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -258,7 +259,7 @@
           });
         }
       },
-      watchImportCertificate (item) {
+      watchImportCertificate(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -268,7 +269,7 @@
           });
         }
       },
-      watchCustomsPass (item) {
+      watchCustomsPass(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -278,7 +279,7 @@
           });
         }
       },
-      isShow (item) {
+      isShow(item) {
         return item.drugControlReportList.length || item.batchReleaseList.length ||
           item.importCertificateList.length || item.customsPassList.length;
       },
@@ -326,7 +327,7 @@
         });
         this.isShowFileList = true;
       },
-      queryBatchNumbers () {// 查询
+      queryBatchNumbers() {// 查询
         if (!this.currentOrder.id) return;
         http.get('/erp-batch/order/' + this.currentOrder.id).then(res => {
           this.batchNumbers = res.data;

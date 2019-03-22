@@ -30,8 +30,6 @@
     display: block;
   }
 
-
-
   .ml15 {
     margin-left: 40px;
   }
@@ -102,12 +100,15 @@
             </el-form-item>
             <el-form-item :label="`${titleAry[type][2]}来源:`" v-show="form.advancePaymentFlag">
               <div :style="{'line-height': payPendingMoney - form.amount < 0 ? '24px' : 'inherit' }">
-                <el-tag type="primary">预{{titleAry[type][2]}}</el-tag>￥{{payPendingMoney | formatMoney}}
+                <el-tag type="primary">预{{titleAry[type][2]}}</el-tag>
+                ￥{{payPendingMoney | formatMoney}}
               </div>
               <div style="line-height: 24px" v-if="payPendingMoney - form.amount < 0">
                 <el-tag type="primary">
-                 <span v-show="!form.payType">其他</span> <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
-                </el-tag>￥{{(form.amount-payPendingMoney) | formatMoney}}
+                  <span v-show="!form.payType">其他</span>
+                  <dict :dict-group="'PaymentMethod'" :dict-key="form.payType"></dict>
+                </el-tag>
+                ￥{{(form.amount-payPendingMoney) | formatMoney}}
               </div>
             </el-form-item>
 
@@ -121,8 +122,10 @@
           </el-form>
         </div>
         <div class="hide-content show-content">
-          <pay-detail ref="payDetail" :selectPayments="selectPayments" :type="type" :titleAry="titleAry" @orgChange="orgChange"
-                      :factoryId="form.orgId" :amount="form.amount" :index="index" :defaultIndex="defaultIndex"></pay-detail>
+          <pay-detail ref="payDetail" :selectPayments="selectPayments" :type="type" :titleAry="titleAry"
+                      @orgChange="orgChange"
+                      :factoryId="form.orgId" :amount="form.amount" :index="index"
+                      :defaultIndex="defaultIndex"></pay-detail>
         </div>
       </div>
     </div>
@@ -130,7 +133,7 @@
 </template>
 
 <script>
-  import { POVPayment, CDCReceipt, PaymentPending } from '../../../../../resources';
+  import {CDCReceipt, PaymentPending, POVPayment} from '../../../../../resources';
   import utils from '../../../../../tools/utils';
   import payDetail from './payDetail.vue';
 
@@ -176,7 +179,7 @@
       PaymentMethod: function () {
         return this.$getDict('PaymentMethod');
       },
-      productListSet () {
+      productListSet() {
         let {titleAry, type} = this;
         return [
           {name: `可选${titleAry[type][2]}明细`, key: 1},
@@ -187,7 +190,7 @@
     },
     watch: {
       selectPayments: {
-        handler (val) {
+        handler(val) {
           let amount = 0;
           val.forEach(i => {
             amount += Number(i.payment);
@@ -202,7 +205,7 @@
         },
         deep: true
       },
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.form = {
           type: '1',
           payType: '',
@@ -217,7 +220,7 @@
         this.selectPayments = [];
         this.$refs['addForm'].resetFields();
       },
-      payPendingMoney (val) {
+      payPendingMoney(val) {
         this.form.advancePaymentFlag = !!val;
       }
     },
@@ -234,13 +237,13 @@
         this.logisticsList = [];
         this.form.relationList = [];
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.form.amount = utils.autoformatDecimalPoint(this.form.amount);
       },
       doClose: function () {
         this.$emit('close');
       },
-      payTypeChange (val) {
+      payTypeChange(val) {
         if (val) {
           let o1 = this.$store.state.user.userCompanyAddress;
           let o2 = this.$refs.payDetail.searchCondition.orgId;
@@ -254,11 +257,11 @@
           });
         }
       },
-      orgChange () {
+      orgChange() {
         this.payPendingMoney = 0;
         this.payTypeChange(true);
       },
-      advancePaymentFlagChange (val) {
+      advancePaymentFlagChange(val) {
         this.form.payType = '';
         this.payTypeChange(val);
       },
@@ -277,14 +280,14 @@
           });
           return;
         }
-        isQualified = this.selectPayments.some(s => s.payment && s.payment > (s.billAmount - s.prepaidAccounts));
+        isQualified = this.selectPayments.some(s => s.payment && s.payment > s.billAmount);
         if (isQualified) {
           this.$notify.info({
             message: `${title}明细中，存在本次${title}金额大于待${title}金额的明细，请调整后，再进行保存`
           });
           return;
         }
-        isQualified = this.selectPayments.some(s => s.payment < 0 && s.payment < (s.billAmount - s.prepaidAccounts));
+        isQualified = this.selectPayments.some(s => s.payment < 0 && s.payment < s.billAmount);
         if (isQualified) {
           this.$notify.info({
             message: `${title}明细中，存在本次${title}金额小于待${title}金额的明细，请调整后，再进行保存`

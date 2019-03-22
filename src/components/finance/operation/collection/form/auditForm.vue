@@ -183,15 +183,15 @@
                 </span>
           </oms-row>
           <div class="detail-title">
-            <span>{{`${titleAry[type][2]}明细`}}:</span>
-            <span v-show="!form.detailList.length">无</span>
-            <span v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
+            <span>{{`${titleAry[type][2]}明细`}}</span>
+            <span v-show="!form.detailList.length">：无</span>
+            <span class="pull-right" v-show="form.detailList.length">(共{{ form.detailList.length }}条)</span>
           </div>
-          <ul class="show-list invoice-list"
+          <ul class="show-list invoice-list clearfix"
               v-show="form.detailList.length">
             <li class="show-item" style="background: #f1f1f1">
               <el-row type="flex">
-                <el-col :span="form.status==='0'?6:8">货品名称</el-col>
+                <el-col :span="form.status==='0'?6:8">疫苗名称</el-col>
                 <el-col :span="2">数量</el-col>
                 <el-col :span="form.status==='0'?5:6">订单号</el-col>
                 <el-col :span="4">发生时间</el-col>
@@ -215,13 +215,17 @@
                 </el-col>
               </el-row>
             </li>
+            <li class="text-right is-total" v-show="form.status==='2'">
+              <span>合计数量:{{total.count}}</span>
+              <span class="ml-15">合计本次收款金额:¥{{total.paidMoney | formatMoney}}</span>
+            </li>
           </ul>
           <oms-row :span="4" label="审核意见" v-show="form.status ==='0' || form.status ==='-1'">
             <oms-input type="textarea"
                        v-model="form.auditOpinion" placeholder="请输入审核意见"
                        :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
           </oms-row>
-          <oms-row :span="form.status ==='0' || form.status ==='-1' ? 4 : 2" class="mt-10">
+          <oms-row label="" :span="form.status ==='0' || form.status ==='-1' ? 4 : 2" class="mt-10">
             <div v-if="type===1">
               <perm :label="perms[1]" v-show="form.status === '0'">
                 <el-button plain :disabled="doing" type="success" @click="audited('通过审核')">审核通过</el-button>
@@ -283,7 +287,7 @@
           <!--v-show="form.detailList.length">-->
           <!--<li class="show-item" style="background: #f1f1f1">-->
           <!--<el-row type="flex">-->
-          <!--<el-col :span="form.status==='0'?6:8">货品名称</el-col>-->
+          <!--<el-col :span="form.status==='0'?6:8">疫苗名称</el-col>-->
           <!--<el-col :span="2">数量</el-col>-->
           <!--<el-col :span="form.status==='0'?5:6">订单号</el-col>-->
           <!--<el-col :span="4">发生时间</el-col>-->
@@ -385,6 +389,14 @@
         let {type, formItem} = this;
         let {status} = formItem;
         return type === 1 && status === '0' || type === 2 && (status === '-1' || status === '1');
+      },
+      total() {
+        return this.form.detailList.reduce((pre, next) => {
+          return {
+            count: Number(pre.count) + Number(next.count),
+            paidMoney: Number(pre.paidMoney) + Number(next.paidMoney)
+          };
+        }, {count: 0, paidMoney: 0}) || {};
       }
     },
     watch: {

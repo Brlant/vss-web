@@ -79,7 +79,7 @@
       <div class="order-list clearfix">
         <h2>合计信息</h2>
         <el-row class="order-list-header t-head" style="margin:0">
-          <el-col :span="8">货品名称</el-col>
+          <el-col :span="8">疫苗名称</el-col>
           <el-col :span="4">批号</el-col>
           <el-col :span="6">生产厂商</el-col>
           <el-col :span="3">生产日期</el-col>
@@ -131,7 +131,7 @@
 
         <el-row class="order-list-header t-head" style="margin:0">
           <el-col :span="8">追溯码</el-col>
-          <el-col :span="8">货品名称</el-col>
+          <el-col :span="8">疫苗名称</el-col>
           <el-col :span="5">批号</el-col>
           <el-col :span="3">包装类型</el-col>
         </el-row>
@@ -164,7 +164,8 @@
       <div class="text-center" v-show="(traceCodes.length || pager.currentPage !== 1) && !loadingData">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
                        :current-page="pager.currentPage"
-                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize" layout="total ,sizes, prev, pager, next, jumper"
+                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize"
+                       layout="total ,sizes, prev, pager, next, jumper"
                        :total="pager.count">
         </el-pagination>
       </div>
@@ -172,7 +173,7 @@
   </div>
 </template>
 <script>
-  import { http } from '@/resources';
+  import {http} from '@/resources';
   import utils from '@/tools/utils';
 
   export default {
@@ -190,7 +191,7 @@
       },
       type: String
     },
-    data () {
+    data() {
       return {
         loadingData: false,
         showSearch: true,
@@ -210,25 +211,25 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         this.filters.code = '';
         if (val !== 8) return;
         this.getTraceCodes(1);
       },
-      'filters.code' () {
+      'filters.code'() {
         this.filterTraceCodes(1);
       }
     },
     methods: {
-      handleSizeChange (val) {
+      handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
         this.filterTraceCodes(1);
       },
-      handleCurrentChange (val) {
+      handleCurrentChange(val) {
         this.filterTraceCodes(val);
       },
-      getCurrentList (pageNo) {
+      getCurrentList(pageNo) {
         this.loadingData = true;
         this.pager.currentPage = pageNo;
         const {pager} = this;
@@ -241,13 +242,13 @@
           this.loadingData = false;
         }, 100);
       },
-      filterTraceCodes (pageNo) {
+      filterTraceCodes(pageNo) {
         let code = this.filters.code;
         const curTraceCodes = this.totalTraceCodes.filter(f => !code || code && f.code.includes(code));
         this.pager.count = curTraceCodes.length;
         this.getCurrentList(pageNo);
       },
-      getTraceCodes (pageNo) {
+      getTraceCodes(pageNo) {
         if (pageNo === 1) {
           this.pager.count = 0;
         }

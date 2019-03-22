@@ -4,7 +4,7 @@
         暂无公告
       </div>
       <el-row v-else="" v-for="(item, index) in noticeList" :key="item.noticeId" type="flex" :gutter="15"
-              class="list-item"
+              class="list-item list-item--pointer"
               :class="formatRowClass(item)"
               @click.native="openDetail(item.noticeId)">
         <el-col :span="20">

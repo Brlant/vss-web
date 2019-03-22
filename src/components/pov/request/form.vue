@@ -30,8 +30,6 @@
     display: block;
   }
 
-
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -161,7 +159,7 @@
                     </div>
                     <div class="clearfix">
                       <!--<span class="select-other-info pull-left"><span-->
-                        <!--v-show="item.goodsNo">货品编号:</span>{{item.goodsNo}}</span>-->
+                      <!--v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}</span>-->
                       <span class="select-other-info pull-left"><span
                         v-show="item.sellPrice">销售价格:￥{{ item.sellPrice
                         }}</span>
@@ -185,7 +183,8 @@
                            @blur="changeNumber">
                   <template slot="append">
                     <span v-if="product.fixInfo">
-                        <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
+                        <dict :dict-group="'measurementUnit'"
+                              :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                     </span>
                   </template>
                 </oms-input>
@@ -284,14 +283,16 @@
 </template>
 
 <script>
-  import { Address, cerpAction, http, pullSignal, VaccineRights } from '@/resources';
+  import {Address, cerpAction, http, pullSignal, VaccineRights} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '@/components/sale/order/material.vue';
+  import OrderMixin from '@/mixins/orderMixin';
 
   export default {
     name: 'addForm',
     loading: false,
     components: {materialPart},
+    mixins: [OrderMixin],
     props: {
       index: Number,
       currentOrder: Object
@@ -299,8 +300,8 @@
     data: function () {
       return {
         pickerOptions0: {
-          disabledDate (time) {
-            return new Date(time).getTime() < Date.now();
+          disabledDate: time => {
+            return time.getTime() < this.$moment().subtract(1, 'days');
           }
         },
         loading: false,
@@ -374,7 +375,7 @@
       }
     },
     watch: {
-      index (val) {
+      index(val) {
         if (!val) return;
         this.form = {
           detailDtoList: [],
@@ -401,18 +402,18 @@
       }
     },
     methods: {
-      filterGoods (query) {
+      filterGoods(query) {
         this.filterProductList = this.totalFilterProductList.filter(f => f.orgGoodsNameAcronymy.indexOf(query) !== -1 ||
           f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1 || f.orgGoodsNamePhonetic.indexOf(query) !== -1);
       },
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail;
       },
-      editOrderInfo () {
+      editOrderInfo() {
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
           return {
             amount: m.applyCount,
@@ -442,7 +443,7 @@
         });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
-      addOrderInfo () {
+      addOrderInfo() {
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
           return {
             amount: m.applyCount,
@@ -469,13 +470,13 @@
         });
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       changeTime: function (date) {// 格式化时间
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      changeType (isEdited) {
+      changeType(isEdited) {
         this.product = {
           'amount': null,
           'measurementUnit': '',
@@ -499,7 +500,7 @@
         this.totalFilterProductList = [];
         this.filterProductList = [];
       },
-      changeOrg (isEdited) {
+      changeOrg(isEdited) {
         if (isEdited === 'edit') return;
         this.form.warehouseId = '';
         // 以前去默认仓库地址
@@ -525,7 +526,7 @@
           });
         });
       },
-      queryOnCDCs () {
+      queryOnCDCs() {
         cerpAction.queryOnCDCs().then(res => {
           this.cdcs = res.data;
           this.filterProduct();
@@ -538,13 +539,18 @@
           });
         });
       },
-      filterProduct () {
+      filterProduct() {
         this.showCdcs = this.cdcs.filter(f => f.level === this.form.type + 1);
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
-      searchWarehouses (isEdit) {
+      searchWarehouses(isEdit) {
         let user = this.$store.state.user;
-        Address.queryAddress(user.userCompanyAddress, {deleteFlag: false, orgId: user.userCompanyAddress, auditedStatus: '1', status: 0}).then(res => {
+        Address.queryAddress(user.userCompanyAddress, {
+          deleteFlag: false,
+          orgId: user.userCompanyAddress,
+          auditedStatus: '1',
+          status: 0
+        }).then(res => {
           this.warehouses = res.data || [];
           if (isEdit === 'edit') return;
           // 以前去默认仓库地址
@@ -556,7 +562,7 @@
           });
         });
       },
-      changeRemark (form) {
+      changeRemark(form) {
         if (!this.form.remark) {
           this.form.remark = form.count + form.name;
         } else {
@@ -617,6 +623,8 @@
                   return false;
                 }
               });
+              // 近效期提醒
+              // this.checkGoodsRegistrationValid(item.orgGoodsDto.goodsDto.goodsApprovalNOValidity);
               this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
             }
           });
@@ -687,11 +695,11 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
       },
-      editItem (item) {
+      editItem(item) {
         this.filterProductList.push({
           orgGoodsId: item.orgGoodsId,
           goodsName: item.orgGoodsName
@@ -782,7 +790,7 @@
           }
         });
       },
-      resetForm () {
+      resetForm() {
         this.$refs['orderGoodsForm'].resetFields();
         this.$refs['orderAddForm'].resetFields();
         this.form.detailDtoList = [];

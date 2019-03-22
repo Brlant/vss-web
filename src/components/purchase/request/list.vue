@@ -38,7 +38,8 @@
         <div class="status-item" :class="{'active':key==activeStatus}" style="width: 100px"
              v-for="(item,key) in requestType" @click="checkStatus(item, key)">
           <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span></div>
+          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
         </div>
         <span class="pull-right" style="margin-top: 8px">
            <perm label="cargo-signal-add">
@@ -157,7 +158,7 @@
                      style="margin-top: 10px">
                 <thead>
                 <tr>
-                  <th style="width: 240px">货品名称</th>
+                  <th style="width: 240px">疫苗名称</th>
                   <th>规格</th>
                   <th>单价</th>
                   <th>申请数量</th>
@@ -219,7 +220,7 @@
 </template>
 <script>
   import utils from '../../../tools/utils';
-  import { pullSignal } from '@/resources';
+  import {pullSignal} from '@/resources';
   import addForm from './form.vue';
 
   export default {
@@ -266,11 +267,11 @@
         height = (height - 20) + 'px';
         return height;
       },
-      user () {
+      user() {
         return this.$store.state.user;
       }
     },
-    mounted () {
+    mounted() {
       this.getOrgsList(1);
     },
     watch: {
@@ -282,14 +283,14 @@
         },
         deep: true
       },
-      user (val) {
+      user(val) {
         if (val.userCompanyAddress) {
           this.getOrgsList(1);
         }
       }
     },
     methods: {
-      scrollLoadingData (event) {
+      scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
       resetRightBox: function () {
@@ -332,7 +333,7 @@
           this.queryCount();
         });
       },
-      queryCount () {
+      queryCount() {
         let params = Object.assign({}, {
           cdcId: this.user.userCompanyAddress
         }, this.filters);
@@ -359,11 +360,11 @@
         this.currentItem = item;
         this.getDetail();
       },
-      checkStatus (item, key) {
+      checkStatus(item, key) {
         this.activeStatus = key;
         this.filters.status = item.status;
       },
-      formatStatus (index) {
+      formatStatus(index) {
         let status = -1;
         for (let key in this.requestType) {
           if (this.requestType[key].status === index) {
@@ -372,7 +373,7 @@
         }
         return status;
       },
-      cancel () {
+      cancel() {
         this.$confirm('是否取消"' + this.currentOrder.id + '" 申请单?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -392,7 +393,7 @@
           });
         });
       },
-      audited () {
+      audited() {
         this.$confirm('是否审核通过"' + this.currentOrder.id + '" 申请单?', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
@@ -412,19 +413,19 @@
           });
         });
       },
-      add () {
+      add() {
         this.showRight = true;
         this.index = 1;
       },
-      editOrder (item) {
+      editOrder(item) {
         this.index = 2;
         this.showRight = true;
       },
-      addOrder (item) {
+      addOrder(item) {
         this.index = 3;
         this.showRight = true;
       },
-      onSubmit () {
+      onSubmit() {
         this.getOrgsList();
       }
     }

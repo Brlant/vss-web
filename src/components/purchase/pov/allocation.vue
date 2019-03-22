@@ -16,6 +16,7 @@
   .mb5 {
     margin-bottom: 5px;
   }
+
   .order-list-item {
     cursor: pointer;
   }
@@ -27,7 +28,8 @@
         <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/sale/allocation')">返回销售分配
         </el-button>
         <perm label="submit-allocation-plan" v-show="!$route.query.type">
-          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0" :disabled="doing">提交分配方案</el-button>
+          <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0" :disabled="doing">提交分配方案
+          </el-button>
         </perm>
       </div>
       <div class="order-list clearfix ">
@@ -69,7 +71,7 @@
                   </el-tooltip>
                 </div>
                 <div>
-                  <el-tooltip class="item" effect="dark" content="货品规格" placement="right">
+                  <el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">
                     <span style="font-size: 12px;">{{ item.specification }}</span>
                   </el-tooltip>
                 </div>
@@ -150,7 +152,8 @@
     </div>
 
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <allot-form :currentItem="currentItem" :TotalAllocationList="allocationList" @updateItem="showPart" @change="change" :status="status" @close="resetRightBox"></allot-form>
+      <allot-form :currentItem="currentItem" :TotalAllocationList="allocationList" @updateItem="showPart"
+                  @change="change" :status="status" @close="resetRightBox"></allot-form>
     </page-right>
     <page-right :show="showOrderForm" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
@@ -161,7 +164,7 @@
   </div>
 </template>
 <script>
-  import { demandAssignment, OrgGoods } from '@/resources';
+  import {demandAssignment, OrgGoods} from '@/resources';
   import allotForm from './form.vue';
   import orderForm from '../contract/form/InForm.vue';
 
@@ -170,7 +173,7 @@
       allotForm,
       orderForm
     },
-    data () {
+    data() {
       return {
         loadingData: false,
         allocationList: [],
@@ -190,11 +193,11 @@
         doing: false
       };
     },
-    mounted () {
+    mounted() {
       this.queryAllocationList();
     },
     methods: {
-      queryAllocationList (pageNo) { // 得到需求分配列表
+      queryAllocationList(pageNo) { // 得到需求分配列表
         this.allocationList = [];
         this.status = -1;
         if (!this.$route.query.id) return;
@@ -205,19 +208,19 @@
           this.loadingData = false;
         });
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showRight = false;
         this.showOrderForm = false;
         this.defaultIndex = -1;
         this.purchase = {};
         this.vaccineType = '';
       },
-      showPart (item) {
+      showPart(item) {
         this.currentItem = item;
         this.currentItemId = item.orgGoodsId;
         this.showRight = true;
       },
-      showOrderFormPart (item) {
+      showOrderFormPart(item) {
         OrgGoods.queryOneGoods(item.orgGoodsId).then(res => {
           this.vaccineType = res.data.orgGoodsDto.goodsDto.vaccineSign;
           this.currentItem = item;
@@ -230,14 +233,14 @@
           this.defaultIndex = 1;
         });
       },
-      change (item, count) {
+      change(item, count) {
         this.allocationList.forEach(i => {
           if (i.orgGoodsId === item.orgGoodsId) {
             i.resultAmount = i.inventoryQuantity - count;
           }
         });
       },
-      goTo (item) {
+      goTo(item) {
         OrgGoods.queryOneGoods(item.orgGoodsId).then(res => {
           let type = res.data.orgGoodsDto.goodsDto.vaccineSign;
           if (type === '1') {
@@ -260,7 +263,7 @@
         });
 //        this.$router.push('/purchase/order/add');
       },
-      submit () {
+      submit() {
         let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
         if (isNotNormal) {
           this.$notify.info({

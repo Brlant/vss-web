@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -154,7 +153,7 @@
             <table class="table" v-loading="detailLoading">
               <thead>
               <tr>
-                <th style="width: 280px">货品名称</th>
+                <th style="width: 280px">疫苗名称</th>
                 <th>订单号</th>
                 <th>{{type === 1 ? '待付款' : '待收款'}}金额</th>
                 <th>发生时间</th>
@@ -184,6 +183,12 @@
                 <template slot="prepend">¥</template>
               </oms-input>
             </el-form-item>
+            <perm label="advance-payable-attachment-upload">
+              <el-form-item label="附件">
+                <oms-upload :fileList="attachmentList" @change="changeFiles"
+                            :formData="{ objectId: form.id, objectType: 'advancePayable'}"></oms-upload>
+              </el-form-item>
+            </perm>
             <el-form-item>
               <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
             </el-form-item>
@@ -195,12 +200,14 @@
 </template>
 
 <script>
-  import { erpOrder, PaymentPending } from '../../../../../resources';
+  import {erpOrder, PaymentPending} from '../../../../../resources';
   import utils from '@/tools/utils';
   import methodsMixin from '@/mixins/methodsMixin';
+  import Perm from '@/components/common/perm';
 
   export default {
     name: 'addForm',
+    components: {Perm},
     loading: false,
     props: {
       defaultIndex: Number,
@@ -228,14 +235,15 @@
         index: 0,
         orderDetailList: [],
         detailLoading: false,
-        createTimes: []
+        createTimes: [],
+        attachmentList: []
       };
     },
     computed: {
       PaymentMethod: function () {
         return this.$getDict('PaymentMethod');
       },
-      tabList () {
+      tabList() {
         let {type, title} = this;
         let billWay = type === 1 ? '付款' : '收款';
         return [
@@ -243,7 +251,7 @@
           {name: `${title}金额`, key: 1}
         ];
       },
-      totalMoney () {
+      totalMoney() {
         return this.orderDetailList.reduce(
           (pre, next) => {
             return {
@@ -255,13 +263,13 @@
       }
     },
     watch: {
-      defaultIndex (val) {
+      defaultIndex(val) {
         this.resetForm();
         this.filterOrg();
         this.index = 0;
         this.orderDetailList = [];
       },
-      totalMoney (val) {
+      totalMoney(val) {
         this.form.amount = val.unitPrice || 0.00;
       }
     },
@@ -269,16 +277,25 @@
       this.filterOrg();
     },
     methods: {
+      changeFiles: function (fileList) {
+        let ids = [];
+        fileList.forEach(file => {
+          ids.push(file.attachmentId);
+        });
+        this.form.attachmentIdList = ids;
+      },
       resetForm: function () {// 重置表单
         this.$refs['addForm'].resetFields();
+        this.form.attachmentIdList = [];
+        this.attachmentList = [];
       },
-      formatPrice () {// 格式化单价，保留两位小数
+      formatPrice() {// 格式化单价，保留两位小数
         this.form.amount = utils.autoformatDecimalPoint(this.form.amount);
       },
       doClose: function () {
         this.$emit('close');
       },
-      orgIdChange (val) {
+      orgIdChange(val) {
         this.orderDetailList = [];
         if (!val) return;
         let params = {
@@ -291,8 +308,8 @@
         let orgId = this.$store.state.user.userCompanyAddress;
         params.orgId = this.type === 1 ? val : orgId;
         params.transactOrgId = this.type === 1 ? orgId : val;
-        params.createStartTime = this.formatTime(this.createTimes && this.createTimes[0] || '');
-        params.createEndTime = this.formatTime(this.createTimes && this.createTimes[1] || '');
+        params.createStartTime = this.$formatAryTime(this.createTimes, 0);
+        params.createEndTime = this.$formatAryTime(this.createTimes, 1);
         this.detailLoading = true;
         erpOrder.query(params).then(res => {
           let ary = [];
@@ -310,7 +327,13 @@
       formatTime: function (date) {
         return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
-      createTimeChange () {
+      createTimeChange() {
+        if (!this.form.orgId) {
+          return this.$notify.info({message: `请选择${this.title}单位`});
+        }
+        this.orgIdChange(this.form.orgId);
+      },
+      searchInOrder() {
         if (!this.form.orgId) {
           return this.$notify.info({message: `请选择${this.title}单位`});
         }
@@ -333,6 +356,7 @@
               money: m.unitPrice * m.amount
             };
           });
+          form.attachmentIdList = this.form.attachmentIdList;
           this.doing = true;
           PaymentPending.save(this.type, form).then(res => {
             this.resetForm();

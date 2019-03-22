@@ -91,7 +91,8 @@
         <h2 class="clearfix right-title" style="font-size: 16px">{{ title }}</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit" :disabled="doing" :loading="doing">{{ doing ? '正在授权' : '保存并发布' }}
+            <el-button type="success" @click="onSubmit" :disabled="doing" :loading="doing">{{ doing ? '正在授权' : '保存并发布'
+              }}
             </el-button>
           </li>
         </ul>
@@ -129,7 +130,7 @@
     props: {
       formItem: Object,
     },
-    data () {
+    data() {
       return {
         form: {
           povList: [],
@@ -150,7 +151,7 @@
     },
     watch: {
       formItem: {
-        handler (val) {
+        handler(val) {
           if (val) {
             this.currentItem = Object.assign({}, val);
             this.title = '公告授权';
@@ -160,7 +161,7 @@
       }
     },
     methods: {
-      renderFunc (h, option) {
+      renderFunc(h, option) {
         return (
           <span title={option.subordinateName}>{option.subordinateName}</span>
         );
@@ -194,14 +195,14 @@
         });
         this.orgList = Object.assign([], dataList);
       },
-      filterMethod (query, item) {
+      filterMethod(query, item) {
         if (!query) return true;
         return item.subordinateName && item.subordinateName.indexOf(query) > -1 ||
           item.subordinateNameAcronymy && item.subordinateNameAcronymy.indexOf(query) > -1 ||
           item.subordinateNamePhonetic && item.subordinateNamePhonetic.indexOf(query) > -1 ||
           item.subordinateCode && item.subordinateCode.indexOf(query) > -1;
       },
-      onSubmit () {
+      onSubmit() {
         this.$refs['d-form'].validate((valid) => {
           if (!valid) {
             return false;

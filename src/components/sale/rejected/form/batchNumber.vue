@@ -44,7 +44,8 @@
             </td>
             <td>
               {{ bm.batchNumber }}
-              <el-tag v-show="bm.inEffectiveFlag" type="warning">近效期</el-tag>
+              <goods-status-tag :item="bm" :form="form"/>
+              <!--<el-tag v-show="bm.inEffectiveFlag" type="warning">近效期</el-tag>-->
             </td>
             <td>{{ bm.productionDate | date }}</td>
             <td>{{ bm.expirationDate | date }}</td>
@@ -68,13 +69,13 @@
       product: {},
       productList: {
         type: Array,
-        default () {
+        default() {
           return [];
         }
       },
       editItemProduct: {}
     },
-    data () {
+    data() {
       return {
         batchNumbers: [],
         isHasBatchNumberInfo: false,
@@ -84,31 +85,31 @@
       };
     },
     computed: {
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       }
     },
     watch: {
-      'product.orgGoodsId' () {
+      'product.orgGoodsId'() {
         this.initBatchNumber();
         this.queryBatchNumber();
       },
       batchNumbers: {
-        handler () {
+        handler() {
           this.setIsHasBatchNumberInfo();
         },
         deep: true
       }
     },
     methods: {
-      initBatchNumber () {
+      initBatchNumber() {
         this.batchNumbers = [];
         if (!this.product.orgGoodsId || !this.productList.length) {
           return;
         }
         let ary = this.productList.filter(f => f.orgGoodsDto.id === this.product.orgGoodsId);
         if (!ary.length) return [];
-        // 主货品
+        // 主疫苗
         this.batchNumbers.push({
           orgGoodsId: ary[0].orgGoodsDto.id,
           orgGoodsName: ary[0].orgGoodsDto.name,
@@ -116,7 +117,7 @@
           isMainly: true,
           lots: []
         });
-        // 组合货品
+        // 组合疫苗
         ary[0].list.forEach(i => {
           this.batchNumbers.push({
             orgGoodsId: i.accessory,
@@ -128,10 +129,10 @@
         });
       },
       /**
-       * 组合货品，得到多个API接口
+       * 组合疫苗，得到多个API接口
        * @returns {any[]}
        */
-      getAPIAry () {
+      getAPIAry() {
         return this.batchNumbers.map(m => {
           let params = {
             goodsId: m.goodsId
@@ -140,9 +141,9 @@
         });
       },
       /**
-       * 如果有组合货品，并发查询批号信息
+       * 如果有组合疫苗，并发查询批号信息
        */
-      queryBatchNumber () {
+      queryBatchNumber() {
         if (!this.batchNumbers.length) return;
         this.doing = true;
         axios.all(this.batchNumbers.map(m => {
@@ -165,9 +166,9 @@
         );
       },
       /**
-       * 编辑货品时，重设对应批号信息
+       * 编辑疫苗时，重设对应批号信息
        */
-      editBatchNumbers () {
+      editBatchNumbers() {
         if (!this.editItemProduct.batchNumberId) return;
         this.batchNumbers.forEach(i => {
           if (i.orgGoodsId === this.editItemProduct.orgGoodsId) {
@@ -186,7 +187,7 @@
        * 全选
        * @param item
        */
-      checkItemAll (item) {
+      checkItemAll(item) {
         item.lots.forEach(l => {
           l.isChecked = item.isCheckedAll;
         });
@@ -195,18 +196,18 @@
        * 输入数量校验
        * @param item
        */
-      isChangeValue (item, product) {
+      isChangeValue(item, product) {
         if (product.isMainly) {
           item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         }
         item.isChecked = item.productCount > 0;
       },
-      setIsHasBatchNumberInfo () {
+      setIsHasBatchNumberInfo() {
         let batchNumbers = this.batchNumbers || [];
         this.isHasBatchNumberInfo = !batchNumbers.length || batchNumbers.length && batchNumbers.every(s => !s.lots.length);
         this.$emit('setIsHasBatchNumberInfo', this.isHasBatchNumberInfo);
       },
-      checkPass () {
+      checkPass() {
         if (this.isHasBatchNumberInfo) {
           this.$notify.info({
             duration: 2000,
@@ -218,7 +219,7 @@
         if (!isChecked) {
           this.$notify.info({
             duration: 2000,
-            message: '请选择货品批号'
+            message: '请选择疫苗批号'
           });
           return false;
         }
@@ -269,7 +270,7 @@
         //   if (!isPassed) {
         //     this.$notify.warning({
         //       duration: 2000,
-        //       message: '组合货品数量比例不匹配'
+        //       message: '组合疫苗数量比例不匹配'
         //     });
         //     return false;
         //   }

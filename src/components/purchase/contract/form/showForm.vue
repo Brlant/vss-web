@@ -25,10 +25,10 @@
       left: $leftWidth;
     }
   }
+
   .el-form .el-select {
     display: block;
   }
-
 
   .order-product-box {
     position: relative;
@@ -73,7 +73,6 @@
   .combinatioon-product {
     color: #777
   }
-
 
   .productItem-info {
     float: left;
@@ -136,7 +135,8 @@
         <h3>{{currentPartName}}</h3>
 
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-          <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false" label-width="160px" style="padding-right: 20px">
+          <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
+                   label-width="160px" style="padding-right: 20px">
             <el-form-item label="合同名称">
               {{form.purchaseContractName}}
             </el-form-item>
@@ -179,20 +179,20 @@
               {{form.remark}}
             </el-form-item>
             <el-form-item label-width="120px">
-              <el-button type="primary" @click="index++">查看货品</el-button>
+              <el-button type="primary" @click="index++">查看疫苗</el-button>
             </el-form-item>
           </el-form>
         </div>
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
 
           <div class="product-list-detail">
-            <h3 style="background: #13ce66;color: #fff">已选货品</h3>
+            <h3 style="background: #13ce66;color: #fff">已选疫苗</h3>
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 300px">货品名称</th>
-                <th>货品单价</th>
-                <th>货品数量</th>
+                <th style="width: 300px">疫苗名称</th>
+                <th>疫苗单价</th>
+                <th>疫苗数量</th>
                 <th>金额</th>
               </tr>
               </thead>
@@ -259,7 +259,7 @@
             'goodsDto': {}
           }
         },
-        accessoryList: [], // 组合货品列表
+        accessoryList: [], // 组合疫苗列表
         searchProductList: [],
         filterProductList: [],
         form: {
@@ -270,7 +270,7 @@
           'customerId': '',
           'bizType': '1-0',
           'type': this.type,
-          'logisticsProviderId': '',
+          'logisticsProviderName': '',
           'transportationCondition': '0',
           'transportationMeansId': '1',
           'transportationAddress': '',
@@ -289,7 +289,7 @@
         index: 0,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '查看货品', key: 1}
+          {name: '查看疫苗', key: 1}
         ],
         saveKey: 'inOrderForm',
         showContent: {
@@ -358,7 +358,7 @@
           });
         });
       },
-      resetForm () {
+      resetForm() {
         this.form = {
           'purchaseContractNo': '',
           'purchaseContractName': '',
@@ -367,7 +367,7 @@
           'customerId': '',
           'bizType': '1-0',
           'type': this.type,
-          'logisticsProviderId': '',
+          'logisticsProviderName': '',
           'transportationCondition': '0',
           'transportationMeansId': '1',
           'transportationAddress': '',
@@ -409,7 +409,7 @@
           });
         });
       },
-      exportExcel () {
+      exportExcel() {
         this.isPrinting = true;
         this.$http.get(`/contract-print/${this.orderId}`).then(res => {
           utils.download(res.data.url, '采购合同');

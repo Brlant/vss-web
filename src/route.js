@@ -52,6 +52,11 @@ export const route = [
             meta: {moduleId: 'sale', title: '二类苗销售订单', perm: 'second-vaccine-sales-order', type: '2'}
           },
           {
+            path: '/sale/no/feedback/:id',
+            component: resolve => require(['./components/sale/feedback/list.vue'], resolve),
+            meta: {moduleId: 'sale', title: '未反馈订单', perm: 'no-feedback-order-manager'}
+          },
+          {
             path: '/sale/pov/:id',
             component: resolve => require(['./components/common/parent-route.vue'], resolve),
             meta: {moduleId: 'sale', title: '接种点要货需求', perm: 'demand-assignment'},
@@ -93,12 +98,12 @@ export const route = [
               {
                 path: '',
                 component: resolve => require(['./components/purchase/wave/list.vue'], resolve),
-                meta: {moduleId: 'sale', title: '销售分配', perm: ''}
+                meta: {moduleId: 'sale', title: '销售分配', perm: 'cerp-create-wave'}
               },
               {
                 path: '/sale/allocation/task',
                 component: resolve => require(['./components/purchase/pov/allocation.vue'], resolve),
-                meta: {moduleId: 'sale', title: '销售分配', perm: ''}
+                meta: {moduleId: 'sale', title: '销售分配', perm: 'cerp-create-wave'}
               }
             ]
           },
@@ -109,6 +114,11 @@ export const route = [
           }
         ]
       },
+      // {
+      //   path: '/sale/no/feedback',
+      //   component: resolve => require(['./components/sale/feedback/list.vue'], resolve),
+      //   meta: {moduleId: 'sale', title: '未反馈订单', perm: 'second-vaccine-sales-order'}
+      // },
       {
         path: '/pov',
         component: resolve => require(['./components/common/parent-route.vue'], resolve),
@@ -128,6 +138,31 @@ export const route = [
             path: '/pov/record',
             component: resolve => require(['./components/pov/record/list.vue'], resolve),
             meta: {moduleId: 'pov', title: '注射记录', perm: 'injection-task-manager'}
+          },
+          {
+            path: '/pov/subordinate/record',
+            component: resolve => require(['./components/pov/record/subordinate/list.vue'], resolve),
+            meta: {moduleId: 'pov', title: '下属单位注射记录', perm: 'subordinate-injection-task-manager'}
+          },
+          {
+            path: '/pov/inoculate/info',
+            component: resolve => require(['./components/pov/inoculate/info'], resolve),
+            meta: {moduleId: 'pov', title: '接种者档案', perm: 'query-inoculator-info'}
+          },
+          {
+            path: '/pov/inoculate/task',
+            component: resolve => require(['./components/pov/inoculate/injection'], resolve),
+            meta: {moduleId: 'pov', title: '接种任务', perm: 'query-injection-task'}
+          },
+          {
+            path: '/pov/inoculate/console',
+            component: resolve => require(['./components/pov/inoculate/platform'], resolve),
+            meta: {moduleId: 'pov', title: '接种台', perm: 'query-vaccination-task'}
+          },
+          {
+            path: '/pov/inoculate/vaccine/each',
+            component: resolve => require(['./components/pov/inoculate/vaccine-each'], resolve),
+            meta: {moduleId: 'pov', title: '多人份剂次时效记录', perm: 'query-multi-person-aging'}
           }
         ]
       },
@@ -169,12 +204,12 @@ export const route = [
               {
                 path: '',
                 component: resolve => require(['./components/store/inventory/list.vue'], resolve),
-                meta: {moduleId: 'store', title: '库存盘点'}
+                meta: {moduleId: 'store', title: '库存盘点', perm: 'erp-stock-inventory-query'}
               },
               {
                 path: '/store/inventory/detail',
                 component: resolve => require(['./components/store/inventory/details.vue'], resolve),
-                meta: {moduleId: 'store', title: '库存盘点'}
+                meta: {moduleId: 'store', title: '库存盘点', perm: 'erp-stock-inventory-query'}
               }
             ]
           },
@@ -186,7 +221,7 @@ export const route = [
           {
             path: '/store/bad/:id',
             component: resolve => require(['./components/store/breakage-order/list.vue'], resolve),
-            meta: {moduleId: 'store', title: '报损出库', perm: 'breakage-order'}
+            meta: {moduleId: 'store', title: '报损', perm: 'breakage-order'}
           }
         ]
       },
@@ -276,7 +311,7 @@ export const route = [
           // {
           //   path: '/finance/sale',
           //   component: resolve => require(['./components/finance/bad/list.vue'], resolve),
-          //   meta: {moduleId: 'finance', title: '库存货品调价', perm: 'show'}
+          //   meta: {moduleId: 'finance', title: '库存疫苗调价', perm: 'show'}
           // }
         ]
       },
@@ -482,7 +517,7 @@ export const route = [
           {
             path: '/report/allotation',
             component: resolve => require(['./components/report/allotation.vue'], resolve),
-            meta: {moduleId: 'report', title: '出货货品统计表', perm: 'first-vaccine-distribution-manager'}
+            meta: {moduleId: 'report', title: '出货疫苗统计表', perm: 'first-vaccine-distribution-manager'}
           },
           {
             path: '/report/pov/two/repertory',
@@ -536,6 +571,7 @@ export const basicRoutes = [
   {path: '/404', component: () => import('./components/error_404.vue')},
   {path: '/500', component: () => import('./components/error_500.vue')},
   {path: '/login', component: () => import('./components/login.vue')},
+  {path: '/wx/login', component: () => import('./components/wx-login.vue')},
   {path: '/forget', component: () => import('./components/forget.vue')},
   {path: '/code/:id', component: () => import('./components/resetpwd.vue')}
 ];

@@ -4,19 +4,19 @@
   </transition>
 </template>
 <script>
-  import { route } from '@/route';
+  import {route} from '@/route';
 
   export default {
     watch: {
-      $route () {
+      $route() {
         this.goPath();
       }
     },
-    mounted () {
+    mounted() {
       this.goPath();
     },
     methods: {
-      goPath () {
+      goPath() {
         let children = [];
         let path = this.$route.path.replace(/\/$/, '');
         let isHas = route[0].children.some(s => {

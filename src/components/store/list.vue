@@ -27,8 +27,8 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="货主货品" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索货主货品" :remote-method="filterOrgGoods"
+              <oms-form-row label="货主疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
@@ -39,7 +39,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
@@ -102,11 +102,17 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主货品名称"  min-width="200" :sortable="true"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商"  min-width="160"  :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true"></el-table-column>
+        <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
         <el-table-column label="业务库存" align="center">
+          <el-table-column prop="qualifiedBizServings" label="剂次库存" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedBizServings}}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
                            width="100">
             <template slot-scope="scope">
@@ -129,6 +135,12 @@
 
 
         <el-table-column label="实物库存" align="center">
+          <el-table-column prop="qualifiedActualServings" label="剂次库存" :render-header="formatHeader" :sortable="true"
+                           width="100">
+            <template slot-scope="scope">
+              <span>{{scope.row.qualifiedActualServings}}</span>
+            </template>
+          </el-table-column>
           <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
                            width="100">
             <template slot-scope="scope">
@@ -147,7 +159,7 @@
               <span>{{scope.row.transitCount}}</span>
             </template>
           </el-table-column>
-          <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader"  :sortable="true"
+          <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader" :sortable="true"
                            width="100">
             <template slot-scope="scope">
               <span>{{scope.row.totalCount}}</span>
@@ -254,7 +266,7 @@
         },
         deep: true
       },
-      showSearch (val) {
+      showSearch(val) {
         window.localStorage.setItem(this.$route.path, val);
       }
     },
@@ -272,11 +284,13 @@
         this.loadingData = true;
         erpStock.query(params).then(res => {
           res.data.forEach(i => {
-             i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
+            i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
           });
           this.batches = res.data;
           this.loadingData = false;
-          setTimeout(() => {this.fixedHeight = Math.abs(this.fixedHeight - 1);}, 100);
+          setTimeout(() => {
+            this.fixedHeight = Math.abs(this.fixedHeight - 1);
+          }, 100);
         });
       },
       formatHeader(h, col) {
@@ -285,17 +299,17 @@
         let title = '';
         switch (property) {
           case 'qualifiedCount': {
-            content = '仓库内真实合格货品数量';
+            content = '仓库内真实合格疫苗数量';
             title = '合格';
             break;
           }
           case 'unqualifiedCount': {
-            content = '仓库内真实不合格货品数量';
+            content = '仓库内真实不合格疫苗数量';
             title = '不合格';
             break;
           }
           case 'transitCount': {
-            content = '在运输中的货品数量';
+            content = '在运输中的疫苗数量';
             title = '在途库存';
             break;
           }
@@ -317,6 +331,16 @@
           case 'undeterminedCount': {
             content = '仓库内质量状态待确定而不允许销售的库存数';
             title = '业务停销';
+            break;
+          }
+          case 'qualifiedActualServings': {
+            content = '合格库存x人份';
+            title = '剂次';
+            break;
+          }
+          case 'qualifiedBizServings': {
+            content = '合格库存x人份';
+            title = '剂次';
             break;
           }
         }

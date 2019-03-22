@@ -48,7 +48,8 @@
                 </perm>
               </div>
               <oms-row label="一类疫苗费用模式" :span="10">{{ setModel}}</oms-row>
-              <oms-row label="一类疫苗物流费用" :span="10" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{ cost.price}}
+              <oms-row label="一类疫苗物流费用" :span="10" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{
+                cost.price}}
               </oms-row>
               <oms-row label="一类疫苗物流费用比例" :span="10" v-if="cost.model==='1'">{{ cost.price * 100 }}<span
                 v-if="cost.price">%</span>
@@ -79,7 +80,8 @@
                 </perm>
               </div>
               <oms-row label="二类疫苗费用模式" :span="10">{{ setSecondModel}}</oms-row>
-              <oms-row label="二类疫苗物流费用" :span="10" v-if="secondCost.model==='0'"><span v-if="secondCost.price">￥</span>{{ secondCost.price
+              <oms-row label="二类疫苗物流费用" :span="10" v-if="secondCost.model==='0'"><span v-if="secondCost.price">￥</span>{{
+                secondCost.price
                 }}
               </oms-row>
               <oms-row label="二类疫苗物流费用比例" :span="10" v-if="secondCost.model==='1'">{{ secondCost.price * 100}}<span
@@ -101,7 +103,7 @@
 <script>
   import addForm from './form.vue';
   import secondForm from './secondForm.vue';
-  import { http } from '../../../resources';
+  import {http} from '../../../resources';
   import utils from '../../../tools/utils';
 
   export default {
@@ -109,7 +111,7 @@
       addForm,
       secondForm
     },
-    data () {
+    data() {
       return {
         loadingData: true,
         cost: {},
@@ -123,7 +125,7 @@
         secondModel: ''
       };
     },
-    mounted () {
+    mounted() {
       this.queryCosts();
     },
     computed: {
@@ -149,7 +151,7 @@
       }
     },
     methods: {
-      queryCosts () {
+      queryCosts() {
         this.cost = {};
         this.loadingData = true;
         http.get('/logistics-cost/municipal').then(res => {
@@ -184,12 +186,12 @@
         this.secondform.price = utils.autoformatDecimalPoint(this.secondform.price.toString());
         this.showSecondItemRight = true;
       },
-      resetRightBox () {
+      resetRightBox() {
         this.showItemRight = false;
         this.showSecondItemRight = false;
         this.queryCosts();
       },
-      add () {
+      add() {
         this.action = 'add';
         this.showItemRight = true;
       },

@@ -30,7 +30,6 @@
     display: block;
   }
 
-
   .order-product-box {
     position: relative;
     border-radius: 10px;
@@ -144,7 +143,7 @@
             </el-form-item>
             <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <oms-input type="text" v-model="form.logisticsProviderId" placeholder="请输入物流商名称"></oms-input>
+              <oms-input type="text" v-model="form.logisticsProviderName" placeholder="请输入物流商名称"></oms-input>
             </el-form-item>
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
@@ -165,7 +164,7 @@
                            v-for="item in transportationConditionList"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流中心">
+            <el-form-item label="物流中心" prop="logisticsCentreId">
               <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
                 <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
               </el-select>
@@ -193,7 +192,7 @@
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
             <el-form-item label-width="120px">
-              <el-button type="primary" @click="index++">添加货品</el-button>
+              <el-button type="primary" @click="index++">添加疫苗</el-button>
             </el-form-item>
           </el-form>
         </div>
@@ -203,7 +202,8 @@
             <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
               <el-form-item label="产品" prop="orgGoodsId">
                 <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true" :loading="loading"
+                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
+                           :loading="loading"
                            popper-class="order-good-selects"
                            @change="getGoodDetail">
                   <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
@@ -221,7 +221,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsNo">货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                        v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.procurementPrice">采购价格:￥{{ item.orgGoodsDto.procurementPrice
@@ -257,7 +257,7 @@
                       <goods-info-part :product-info="product"></goods-info-part>
                     </el-col>
                     <el-col :span="10">
-                      <span v-show="accessoryList.length">【组合货品】</span>
+                      <span v-show="accessoryList.length">【组合疫苗】</span>
                       <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
                        <span style="margin-right: 10px">{{acce.name}}</span>
                       <span style="margin-right: 10px"
@@ -277,14 +277,14 @@
           </div>
 
           <div class="product-list-detail">
-            <h3 style="background: #13ce66;color: #fff">已选货品</h3>
+            <h3 style="background: #13ce66;color: #fff">已选疫苗</h3>
             <table class="table">
               <thead>
               <tr>
-                <th style="width: 240px">货品名称</th>
+                <th style="width: 240px">疫苗名称</th>
                 <th>规格</th>
-                <th>货品单价</th>
-                <th>货品数量</th>
+                <th>疫苗单价</th>
+                <th>疫苗数量</th>
                 <th>金额</th>
                 <th>操作</th>
               </tr>
@@ -343,7 +343,7 @@
 </template>
 
 <script>
-  import { Address, BaseInfo, http, LogisticsCenter, PurchaseContract } from './../../../../resources';
+  import {Address, BaseInfo, http, LogisticsCenter, PurchaseContract} from './../../../../resources';
   import utils from '@/tools/utils';
   import OrderMixin from '@/mixins/orderMixin';
 
@@ -369,7 +369,7 @@
             'goodsDto': {}
           }
         },
-        accessoryList: [], // 组合货品列表
+        accessoryList: [], // 组合疫苗列表
         searchProductList: [],
         filterProductList: [],
         form: {
@@ -380,7 +380,7 @@
           'customerId': '',
           'bizType': '1-0',
           'type': this.type,
-          'logisticsProviderId': '',
+          'logisticsProviderName': '',
           'transportationCondition': '0',
           'transportationMeansId': '1',
           'transportationAddress': '',
@@ -413,8 +413,11 @@
           pickUpAddress: [
             {required: true, message: '请选择提货地址', trigger: 'change'}
           ],
-          logisticsProviderId: [
+          logisticsProviderName: [
             {required: true, message: '请选择物流商', trigger: 'change'}
+          ],
+          logisticsCentreId: [
+            {required: true, message: '请选择物流中心', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'change'}
@@ -444,7 +447,7 @@
         index: 0,
         productListSet: [
           {name: '基本信息', key: 0},
-          {name: '货品信息', key: 1}
+          {name: '疫苗信息', key: 1}
         ],
         orgList: [],
         customerList: [],
@@ -492,13 +495,13 @@
         });
         return totalMoney;
       },
-      orgLevel () {
+      orgLevel() {
         return this.$store.state.orgLevel;
       },
-      user () {
+      user() {
         return this.$store.state.user.userCompanyAddress;
       },
-      showTitle () {
+      showTitle() {
         let title = '新增';
         if (this.action === 'edit') {
           title = '编辑';
@@ -521,7 +524,7 @@
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       },
-      action (val) {
+      action(val) {
         this.index = 0;
         if (this.$store.state.user.userCompanyAddress && val === 'add') {
           BaseInfo.queryBaseInfo(this.$store.state.user.userCompanyAddress).then(res => {
@@ -536,7 +539,7 @@
             'customerId': '',
             'bizType': '1-0',
             'type': this.type,
-            'logisticsProviderId': '',
+            'logisticsProviderName': '',
             'transportationCondition': '0',
             'transportationMeansId': '1',
             'transportationAddress': '',
@@ -569,7 +572,7 @@
           this.filterAddress(this.form.warehouseAddress);
         }
       },
-      orderId (val) {
+      orderId(val) {
         if (val) {
           this.orderId = val;
         }
@@ -579,16 +582,16 @@
       this.currentPartName = this.productListSet[0].name;
     },
     methods: {
-      filterAddressLabel (item) {
+      filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
       },
-      setDefaultValue () {
+      setDefaultValue() {
         this.form.transportationCondition = '0';
         this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
         this.form.purchaseContractName = '';
       },
-      createOrderInfo () {
+      createOrderInfo() {
         this.form.purchaseContractName = '';
         this.form.detailDtoList = [];
         let orgGoodsId = this.purchase.id;
@@ -620,7 +623,7 @@
           });
         });
       },
-      editOrderInfo () {
+      editOrderInfo() {
         if (!this.orderId) return;
         PurchaseContract.queryContractDetail(this.orderId).then(res => {
 //          this.currentOrder = res.data;
@@ -640,7 +643,7 @@
           });
         });
       },
-      changeNumber () {
+      changeNumber() {
         this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       autoSave: function () {
@@ -659,7 +662,7 @@
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.supplierId = '';
         this.form.actualConsignee = '';
-        this.form.logisticsProviderId = '';
+        this.form.logisticsProviderName = '';
         this.form.logisticsCentreId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
@@ -692,7 +695,7 @@
           keyWord: query,
           relation: '1'
         };
-        BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
+        BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
         });
       },
@@ -700,10 +703,10 @@
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           this.logisticsList = [];
-          this.form.logisticsProviderId = '';
+          this.form.logisticsProviderName = '';
           return;
         }
-        BaseInfo.queryOrgByValidReation(orgId, {keyWord: query, relation: '3'}).then(res => {
+        BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
           this.logisticsList = res.data;
         });
       },
@@ -715,7 +718,7 @@
           this.LogisticsCenter = res.data;
         });
       },
-      filterAddress () {
+      filterAddress() {
         Address.queryAddress(this.form.orgId, {
           deleteFlag: false,
           orgId: this.$store.state.user.userCompanyAddress,
@@ -766,7 +769,7 @@
       changeTransportationMeans: function () {// 物流方式改变
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.pickUpAddress = '';
-          this.form.logisticsProviderId = '';
+          this.form.logisticsProviderName = '';
           this.form.supplierId = '';
         }
       },
@@ -848,7 +851,7 @@
         });
         this.filterProductList = arr;
       },
-      getGoodDetail: function (OrgGoodsId) {// 选货品
+      getGoodDetail: function (OrgGoodsId) {// 选疫苗
         if (!OrgGoodsId) {
           this.product = {
             'amount': null,
@@ -883,7 +886,7 @@
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
-      addProduct: function () {// 货品加入到合同
+      addProduct: function () {// 疫苗加入到合同
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,
@@ -943,11 +946,11 @@
         this.deleteItem(item);
         this.searchProduct();
       },
-      deleteItem (item) {
+      deleteItem(item) {
         this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
         this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
       },
-      editItem (item) {
+      editItem(item) {
         this.filterProductList.push({
           orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
           list: []

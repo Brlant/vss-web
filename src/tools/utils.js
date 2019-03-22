@@ -1,6 +1,6 @@
 import {Address} from '@dtop/dtop-web-common';
 
-function funDownload (content, filename) {
+function funDownload(content, filename) {
   // 创建隐藏的可下载链接
   let eleLink = document.createElement('a');
   eleLink.download = filename;
@@ -69,7 +69,7 @@ export default {
   },
   outBreakageOrderType: {
     0: {'title': '待确认', state: '0', num: ''},
-    1: {'title': '待审单', state: '1', num: ''},
+    1: {'title': '待复核', state: '1', num: ''},
     2: {'title': '执行中', state: '2', num: ''},
     // 3: {'title': '待收货', state: '3', num: ''},
     4: {'title': '已完成', state: '4', num: ''},
@@ -103,7 +103,7 @@ export default {
     1: {'title': '未生效', availabilityStatus: false, num: ''}
   },
   receiptType: {
-    0: {'title': '待收货', state: '10', num: ''},
+    0: {'title': '待收货', state: '11', num: ''},
     1: {'title': '已完成', state: '8', num: ''}
   },
   firmType: {
@@ -128,6 +128,21 @@ export default {
     2: {'title': '正常', status: 1, num: ''},
     3: {'title': '异常', status: 2, num: ''}
   },
+  assginOutAndPovType: {
+    0: {'title': '待确认', state: '0', num: ''},
+    1: {'title': '待复核', state: '1', num: ''},
+    2: {'title': '执行中', state: '2', num: ''},
+    // 3: {'title': '待收货', state: '3', num: ''},
+    4: {'title': '已完成', state: '4', num: ''},
+    5: {'title': '已取消', state: '5', num: ''},
+    7: {'title': '待收货', state: '10', num: ''},
+    8: {'title': '已完成', state: '8', num: ''}
+  },
+  injectionType: {
+    0: {'title': '未接种', status: '0', num: ''},
+    1: {'title': '已接种', status: '1', num: ''},
+    2: {'title': '已取消', status: '2', num: ''}
+  },
   packageType: ['第一级包装', '第二级包装', '第三级包装', '第四级包装',
     '第五级包装', '第六级包装', '第七级包装', '第八级包装', '第九级包装', '第十级包装'],
   /**
@@ -141,14 +156,16 @@ export default {
     let _address = '';
     this.address.forEach(p => {
       if (province === p.value) {
+        _address += p.label;
         if (!p.children) return;
         p.children.forEach(c => {
           if (!c.children) return;
           if (city === c.value) {
+            _address += ('/' + c.label);
             if (!c.children) return;
             c.children.forEach(r => {
               if (region === r.value) {
-                _address += p.label + '/' + c.label + '/' + r.label;
+                _address += ('/' + r.label);
               }
               return false;
             });
@@ -164,7 +181,7 @@ export default {
    * 实时动态强制更改用户录入
    * @param th
    */
-  format2DecimalPoint (val) {
+  format2DecimalPoint(val) {
     let th = val.toString();
     const regStrs = [
       ['^0(\\d+)$', '$1'], // 禁止录入整数部分两位以上，但首位为0
@@ -268,7 +285,7 @@ export default {
     if (cls.replace(/\s/g, '').length === 0) return false;
     return new RegExp(' ' + cls + ' ').test(' ' + elem.className + ' ');
   },
-  getPos (e) { // 这是一个 获取鼠标位置的函数
+  getPos(e) { // 这是一个 获取鼠标位置的函数
     let oEvent = e || event;
     return {
       x: oEvent.clientX + document.documentElement.scrollLeft || document.body.scrollLeft,
@@ -303,11 +320,11 @@ export default {
     }
     return label;
   },
-  changeTotalNumber (amount, smallPacking) {
+  changeTotalNumber(amount, smallPacking) {
     if (!smallPacking) return;
     if (amount < 0) {
       this.$notify.info({
-        message: '货品数量不能小于0, 已帮您调整为0'
+        message: '疫苗数量不能小于0, 已帮您调整为0'
       });
       return 0;
     }
@@ -320,28 +337,28 @@ export default {
     isMultiple = ri === 0;
     if (isMultiple) {
       this.$notify.info({
-        message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${integer}`
+        message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${integer}`
       });
       return integer;
     }
     let re = integer + smallPacking - ri;
     this.$notify.info({
-      message: `数量${amount}不是最小包装的倍数，无法添加货品，已帮您调整为${re}`
+      message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${re}`
     });
     return re;
   },
-  isCheckPackage (count) {
+  isCheckPackage(count) {
     if (!count || count < 0) {
       this.$notify({
         duration: 2000,
-        title: '货品资料不足',
-        message: '货品无最小包装单位，请补充资料，或者选择其他货品',
+        title: '疫苗资料不足',
+        message: '疫苗无最小包装单位，请补充资料，或者选择其他疫苗',
         type: 'error'
       });
     }
     return count > 0;
   },
-  download (src, fileName) {
+  download(src, fileName) {
     let $a = document.createElement('a');
     $a.setAttribute('href', src);
     $a.setAttribute('download', fileName);
@@ -353,7 +370,7 @@ export default {
     fileLink.click();
     body.removeChild($a);
   },
-  downloadXml (src, fileName) {
+  downloadXml(src, fileName) {
     this.$http({
       url: src,
       timeout: 1000000,
@@ -362,7 +379,7 @@ export default {
       funDownload(res.data, fileName);
     });
   },
-  getCurrentHeight (vm, defaultHeight = 400) {
+  getCurrentHeight(vm, defaultHeight = 400) {
     if (vm) {
       let obj = vm.$el.getBoundingClientRect();
       let height = document.documentElement.clientHeight - obj.y;
@@ -376,7 +393,7 @@ export default {
    * 得到附件类型 1 图片 0 非图片
    * @returns {string}
    */
-  getType (attachmentStoragePath) {
+  getType(attachmentStoragePath) {
     let type = '';
     let url = attachmentStoragePath;
     let images = ['jpg', 'png', 'gif', 'jpeg'];
@@ -396,7 +413,7 @@ export default {
   }
 };
 
-export function getMousePos (event) {
+export function getMousePos(event) {
   let e = event || window.event;
   let scrollX = document.documentElement.scrollLeft || document.body.scrollLeft;
   let scrollY = document.documentElement.scrollTop || document.body.scrollTop;

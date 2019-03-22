@@ -48,7 +48,7 @@
     props: {
       currentItem: Object
     },
-    data () {
+    data() {
       return {
         currentOrder: {},
         index: 0,
@@ -59,7 +59,7 @@
       };
     },
     methods: {
-      close () {
+      close() {
         this.$emit('close');
       }
     }

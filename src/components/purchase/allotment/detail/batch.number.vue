@@ -74,8 +74,8 @@
                       <div class="base-pic-item"
                            v-if="Util.getType(item.attachmentMap.drugControlReports[0].attachmentStoragePath)">
                         <div @click="watchDrugControlReport(item.attachmentMap.drugControlReports)">
-                          <img
-                            :src="item.attachmentMap.drugControlReports[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="item.attachmentMap.drugControlReports[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -97,8 +97,8 @@
                       <div class="base-pic-item"
                            v-if="Util.getType(item.attachmentMap.batchReleases[0].attachmentStoragePath)">
                         <div @click="watchBatchRelease(item.attachmentMap.batchReleases)">
-                          <img
-                            :src="item.attachmentMap.batchReleases[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="item.attachmentMap.batchReleases[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -122,8 +122,8 @@
                       <div class="base-pic-item"
                            v-if="Util.getType(item.attachmentMap.importCertificates[0].attachmentStoragePath)">
                         <div @click="watchImportCertificate(item.attachmentMap.importCertificates)">
-                          <img
-                            :src="item.attachmentMap.importCertificates[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="item.attachmentMap.importCertificates[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -145,8 +145,8 @@
                       <div class="base-pic-item"
                            v-if="Util.getType(item.attachmentMap.customsPass[0].attachmentStoragePath)">
                         <div @click="watchCustomsPass(item.attachmentMap.customsPass)">
-                          <img
-                            :src="item.attachmentMap.customsPass[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'">
+                          <compressed-img
+                            :src="item.attachmentMap.customsPass[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -209,7 +209,7 @@
         default: -1
       }
     },
-    data () {
+    data() {
       return {
         drugControlReportIdList: {},
         batchReleaseIdList: {},
@@ -244,13 +244,13 @@
       };
     },
     watch: {
-      index (val) {
+      index(val) {
         this.batchNumbers = [];
         if (val === 4) this.queryBatchNumbers();
       }
     },
     methods: {
-      watchDrugControlReport (item) {
+      watchDrugControlReport(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -260,7 +260,7 @@
           });
         }
       },
-      watchBatchRelease (item) {
+      watchBatchRelease(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -270,7 +270,7 @@
           });
         }
       },
-      watchImportCertificate (item) {
+      watchImportCertificate(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -280,7 +280,7 @@
           });
         }
       },
-      watchCustomsPass (item) {
+      watchCustomsPass(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {
             currentId: item[0].attachmentId,
@@ -290,7 +290,7 @@
           });
         }
       },
-      isShow (item) {
+      isShow(item) {
         return item.attachmentMap.drugControlReports.length || item.attachmentMap.batchReleases.length ||
           item.attachmentMap.importCertificates.length || item.attachmentMap.customsPass.length;
       },
@@ -338,7 +338,7 @@
         });
         this.isShowFileList = true;
       },
-      queryBatchNumbers () {// 查询
+      queryBatchNumbers() {// 查询
         if (!this.currentOrder.id) return;
         http.get('/receipt/order/' + this.currentOrder.id).then(res => {
           this.batchNumbers = res.data;

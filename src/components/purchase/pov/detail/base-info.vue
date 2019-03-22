@@ -30,9 +30,10 @@
   .content-body {
     margin: 20px 0;
   }
+
   .relation-no {
     cursor: pointer;
-    color: #409EFF * 0.8;
+    color: #337ecc;
     &:hover {
       color: #409EFF;
     }
@@ -84,7 +85,7 @@
     <table class="table table-hover" style="margin-top: 10px">
       <thead>
       <tr>
-        <th>货品名称</th>
+        <th>疫苗名称</th>
         <th>规格</th>
         <th>单价</th>
         <th>申请数量</th>
@@ -118,7 +119,8 @@
       </tr>
       <tr>
         <th colspan="6" class="text-right">
-          <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>;
+          <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
+          ;
           <total-count property="applyMoney" :showIcon="true" title="合计金额"
                        :list="currentOrder.detailDtoList"></total-count>
         </th>
@@ -128,7 +130,7 @@
   </div>
 </template>
 <script>
-  import { pullSignal } from '@/resources';
+  import {pullSignal} from '@/resources';
 
   export default {
     props: {
@@ -141,7 +143,7 @@
       };
     },
     watch: {
-      currentItem () {
+      currentItem() {
         this.getDetail();
       }
     },
