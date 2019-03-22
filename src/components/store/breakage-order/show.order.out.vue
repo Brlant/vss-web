@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-  $leftWidth: 180px;
+  $leftWidth: 220px;
   .content-part {
     .content-left {
       width: $leftWidth;
@@ -53,7 +53,7 @@
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm
               :label="'breakage-order-export-scrap-stock' " v-show="currentOrder.state > 0">
-              <el-button type="primary" plain @click="exportScrapStockInfo" style="width: 160px;padding: 10px 10px"
+              <el-button type="primary" plain @click="exportScrapStockInfo" style="width: 200px;padding: 10px 10px"
                          :loading="printing">
                 {{printing ? '正在导出' : '导出待报废库存登记表'}}
               </el-button>
@@ -63,7 +63,7 @@
             <perm
               :label="'breakage-order-export-scrap-stock-transport' " v-show="currentOrder.state > 0">
               <el-button type="primary" plain @click="exportScrapStockTransportInfo"
-                         style="width: 160px;padding: 10px 10px" :loading="printingTransport">
+                         style="width: 200px; padding: 10px 10px" :loading="printingTransport">
                 {{printingTransport ? '正在导出' : '导出待报废疫苗转运单'}}
               </el-button>
             </perm>
@@ -72,7 +72,7 @@
             <perm
               :label="'breakage-order-export-scrap-stock-tag' " v-show="currentOrder.state > 0">
               <el-button type="primary" plain @click="exportScarpVaccineTag"
-                         style="width: 170px;padding: 10px 10px" :loading="printingTransport">
+                         style="width: 200px;padding: 10px 10px" :loading="printingTransport">
                 {{printingTransport ? '正在导出' : '导出待报废疫苗专用标签'}}
               </el-button>
             </perm>
