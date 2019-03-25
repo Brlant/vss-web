@@ -99,12 +99,15 @@
                 {{item.birthCertificateNumber}}
               </el-col>
               <el-col :span="4" class="opera-btn">
-                <perm label="add-inoculator-info">
+                <perm label="edit-inoculator-info">
                   <span @click.stop.prevent="editItem(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-edit"></i></a>
                     编辑
                   </span>
+
+                </perm>
+                <perm label="edit-inoculator-info">
                   <span @click.stop.prevent="deleteItem(item)">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-delete"></i></a>删除
