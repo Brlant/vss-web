@@ -24,22 +24,24 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row label="姓名" :span="8">
-                <oms-input type="text" v-model="searchCondition.inoculatorName" placeholder="请输入姓名"></oms-input>
+                <oms-input type="text" v-model.trim="searchCondition.inoculatorName" placeholder="请输入姓名"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row label="接种证编号" :span="8">
-                <oms-input type="text" v-model="searchCondition.inoculatorNumber" placeholder="请输入接种证编号"></oms-input>
+                <oms-input type="text" v-model.trim="searchCondition.inoculatorNumber"
+                           placeholder="请输入接种证编号"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row label="身份证号" :span="8">
-                <oms-input type="text" v-model="searchCondition.inoculatorCardNumber" placeholder="请输入身份证号"></oms-input>
+                <oms-input type="text" v-model.trim="searchCondition.inoculatorCardNumber"
+                           placeholder="请输入身份证号"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row label="出生证号" :span="8">
-                <oms-input type="text" v-model="searchCondition.birthCertificateNumber"
+                <oms-input type="text" v-model.trim="searchCondition.birthCertificateNumber"
                            placeholder="请输入出生证号"></oms-input>
               </oms-form-row>
             </el-col>

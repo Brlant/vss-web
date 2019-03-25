@@ -9,7 +9,7 @@
     <el-form ref="form" :model="form" label-width="100px" :rules="rules"
              @submit.prevent="onSubmit('form')" onsubmit="return false">
       <el-form-item label="姓名" prop="inoculatorName">
-        <oms-input type="text" v-model="form.inoculatorName" placeholder="请输入姓名"></oms-input>
+        <oms-input type="text" v-model.trim="form.inoculatorName" placeholder="请输入姓名"></oms-input>
       </el-form-item>
       <el-form-item label="性别" prop="inoculatorSex">
         <el-radio-group v-model="form.inoculatorSex">
@@ -23,13 +23,13 @@
         </el-date-picker>
       </el-form-item>
       <el-form-item label="接种证编号">
-        <oms-input type="text" v-model="form.inoculatorNumber" placeholder="请输入接种证编号"></oms-input>
+        <oms-input type="text" v-model.trim="form.inoculatorNumber" placeholder="请输入接种证编号"></oms-input>
       </el-form-item>
-      <el-form-item label="身份证">
-        <oms-input type="text" v-model="form.inoculatorCardNumber" placeholder="请输入身份证"></oms-input>
+      <el-form-item label="身份证" prop="inoculatorCardNumber">
+        <oms-input type="text" v-model.trim="form.inoculatorCardNumber" placeholder="请输入身份证"></oms-input>
       </el-form-item>
       <el-form-item label="出生证号">
-        <oms-input type="text" v-model="form.birthCertificateNumber" placeholder="请输入出生证号"></oms-input>
+        <oms-input type="text" v-model.trim="form.birthCertificateNumber" placeholder="请输入出生证号"></oms-input>
       </el-form-item>
       <el-form-item label-width="100px">
         <el-button type="primary" @click="onSubmit('form')" native-type="submit" :disabled="doing">保存</el-button>
@@ -52,6 +52,18 @@
       }
     },
     data: function () {
+      let checkCardNumber = (rule, value, callback) => {
+        if (value === '') {
+          callback();
+        } else {
+          let re = /(^\d{15}$)|(^\d{18}$)|(^\d{17}(\d|X|x)$)/;
+          if (!re.test(value)) {
+            callback(new Error('请输入正确的身份证'));
+          } else {
+            callback();
+          }
+        }
+      };
       return {
         form: {
           inoculatorName: '',
@@ -75,7 +87,7 @@
             {required: true, message: '请输入接种证编号', trigger: 'blur'}
           ],
           inoculatorCardNumber: [
-            {required: true, message: '请输入身份证', trigger: 'blur'}
+            {validator: checkCardNumber, trigger: 'blur'}
           ],
           birthCertificateNumber: [
             {required: true, message: '请输入出生证号', trigger: 'blur'}
