@@ -207,7 +207,10 @@
     computed: {},
     methods: {
       queryBatchNumbers(query) {
-        if (!this.searchCondition.vaccineId) return;
+        if (!this.searchCondition.vaccineId) {
+          this.$notify.info('请先选择疫苗');
+          return;
+        }
         this.queryBatchNumberList({
           keyWord: query
         });
