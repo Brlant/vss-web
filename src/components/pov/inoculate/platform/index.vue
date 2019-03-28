@@ -370,6 +370,7 @@
       showItem(item) {
         this.currentItemId = item.id;
         this.loading = true;
+        this.currentItem = {};
         inoculateTask.queryDetail(item.id).then(res => {
           this.loading = false;
           this.currentItem = res.data;
