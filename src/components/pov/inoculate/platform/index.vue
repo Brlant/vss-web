@@ -143,6 +143,9 @@
         </div>
       </div>
       <div class="d-table-right" v-loading="loading">
+        <div v-if="!currentItem.inoculatorInfoDto" class="empty-info">
+          暂无信息
+        </div>
         <section v-if="currentItem.inoculatorInfoDto">
           <h2>受种者信息</h2>
           <oms-row class="row-mg" label="姓名" :span="5">
