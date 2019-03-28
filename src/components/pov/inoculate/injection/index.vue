@@ -19,8 +19,8 @@
                  v-show="showSearch">
           <el-row>
             <el-col :span="9">
-              <oms-form-row :span="8" label="接种者登记编号">
-                <oms-input placeholder="请输入接种者登记编号" type="text" v-model="searchCondition.inoculatorNumber"></oms-input>
+              <oms-form-row :span="8" label="受种者登记编号">
+                <oms-input placeholder="请输入受种者登记编号" type="text" v-model="searchCondition.inoculatorNumber"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="9">
@@ -80,7 +80,7 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header">
           <el-col :span="3">登记编号</el-col>
-          <el-col :span="2">姓名</el-col>
+          <el-col :span="2">受种者</el-col>
           <el-col :span="5">疫苗名称</el-col>
           <el-col :span="3">批号</el-col>
           <el-col :span="4">时间</el-col>

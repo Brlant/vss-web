@@ -101,7 +101,7 @@
         return this.$store.state.user;
       },
       title() {
-        return (this.form.id ? '编辑' : '新增') + '接种者档案';
+        return (this.form.id ? '编辑' : '新增') + '受种者档案';
       }
     },
     watch: {

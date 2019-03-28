@@ -103,7 +103,7 @@ Vue.prototype.$http = http;
 // 多人份剂次时效管理
 export const multiAging = resource('/multi-person-aging', http);
 
-// 接种者档案
+// 受种者档案
 export const inoculateInfo = resource('/inoculator-info', http);
 
 // 接种任务

@@ -36,7 +36,7 @@
     <el-form ref="form" :model="form" label-width="100px" :rules="rules"
              @submit.prevent="onSubmit('form')" onsubmit="return false">
       <h2>基本信息</h2>
-      <el-form-item label="接种者" prop="inoculatorInfoId">
+      <el-form-item label="受种者" prop="inoculatorInfoId">
         <el-select v-model="form.inoculatorInfoId" filterable remote :remote-method="queryPersons"
                    placeholder="请输入名称/身份证号/出生证号搜索" @click.native.once="queryPersonList('')"
                    clearable popper-class="good-selects">
@@ -195,7 +195,7 @@
         },
         rules: {
           inoculatorInfoId: [
-            {required: true, message: '请选择接种者', trigger: 'change'}
+            {required: true, message: '请选择受种者', trigger: 'change'}
           ],
           inoculatorNumber: [
             {required: true, message: '请输入登记编号', trigger: ['blur', 'change']}

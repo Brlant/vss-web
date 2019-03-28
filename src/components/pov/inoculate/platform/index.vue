@@ -144,7 +144,7 @@
       </div>
       <div class="d-table-right" v-loading="loading">
         <section v-if="currentItem.inoculatorInfoDto">
-          <h2>接种者信息</h2>
+          <h2>受种者信息</h2>
           <oms-row class="row-mg" label="姓名" :span="5">
             {{currentItem.inoculatorInfoDto.inoculatorName}}
             <span class="col-label">性别：</span>{{currentItem.inoculatorInfoDto.inoculatorSex}}

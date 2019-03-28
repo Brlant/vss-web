@@ -147,7 +147,7 @@ export const route = [
           {
             path: '/pov/inoculate/info',
             component: resolve => require(['./components/pov/inoculate/info'], resolve),
-            meta: {moduleId: 'pov', title: '接种者档案', perm: 'query-inoculator-info'}
+            meta: {moduleId: 'pov', title: '受种者档案', perm: 'query-inoculator-info'}
           },
           {
             path: '/pov/inoculate/task',
