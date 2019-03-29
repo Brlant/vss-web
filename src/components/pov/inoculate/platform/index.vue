@@ -224,11 +224,11 @@
             </el-col>
             <el-col :span="12" v-if="currentItem.injectionTaskDto.maximumOfPeople > 1">
               <oms-row label="是否新开瓶" label-width="90px">
-                <el-radio-group v-model="form.newInoculationStatus" @change="newInoculationStatusChange"
-                                :disabled="validating">
-                  <el-radio :label="1">是</el-radio>
-                  <el-radio :label="0">否</el-radio>
-                </el-radio-group>
+                <el-switch
+                  v-model="form.newInoculationStatus"
+                  active-text="是" :disabled="validating"
+                  inactive-text="否" @change="newInoculationStatusChange">
+                </el-switch>
               </oms-row>
             </el-col>
           </oms-row>
