@@ -6,13 +6,6 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <perm label="add-inoculator-info">
-              <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-           <a href="#" class="btn-circle" @click.prevent=""><i
-             class="el-icon-t-plus"></i> </a>添加
-            </span>
-          </perm>
-
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
