@@ -227,6 +227,7 @@
                 <el-switch
                   v-model="form.newInoculationStatus"
                   active-text="是" :disabled="validating"
+                  :active-value="1" :inactive-value="0"
                   inactive-text="否" @change="newInoculationStatusChange">
                 </el-switch>
               </oms-row>
