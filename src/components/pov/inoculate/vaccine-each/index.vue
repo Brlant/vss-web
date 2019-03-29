@@ -80,7 +80,7 @@
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in dataList" @click.prevent="showItem(item)"
-               :class="[{'active':currentItem.id===item.id}]">
+               :class="[{'active':currentItem.multiPersonAgingId===item.multiPersonAgingId}]">
             <el-row>
               <el-col :span="6">
                 {{item.vaccineName}}
