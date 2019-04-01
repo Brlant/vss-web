@@ -37,8 +37,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货厂商" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg"
+              <oms-form-row label="供货单位" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg"
                            @click.native="filterOrg('')"
                            :clearable="true"
                            v-model="searchCondition.factoryId" popperClass="good-selects">

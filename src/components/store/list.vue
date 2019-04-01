@@ -42,7 +42,7 @@
                         v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.saleFirmName">供货厂商:</span>{{ org.saleFirmName }}
+                        v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
                       </span>
                     </div>
                   </el-option>

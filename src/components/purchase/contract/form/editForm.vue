@@ -118,7 +118,7 @@
             <el-form-item label="物流方式">
               <dict :dict-group="'transportationMeans'" :dict-key="currentItem.transportationMeansId"></dict>
             </el-form-item>
-            <el-form-item label="供货厂商">
+            <el-form-item label="供货单位">
               {{currentItem.supplierName}}
             </el-form-item>
             <el-form-item label="物流商"

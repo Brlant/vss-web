@@ -3,7 +3,7 @@
     <el-row class="list-item" type="flex"
             :gutter="15">
       <el-col :span="8">
-        供货厂商
+        供货单位
       </el-col>
       <el-col :span="4">
         证照类型

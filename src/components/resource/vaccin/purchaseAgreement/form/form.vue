@@ -14,7 +14,7 @@
                 v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
             <span class="select-other-info pull-left"><span
-              v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+              v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
               </span>
             <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -23,7 +23,7 @@
         </el-option>
       </el-select>
     </el-form-item>
-    <el-form-item label="供货厂商" v-if="form.orgGoodsId&&salesFirmName">
+    <el-form-item label="供货单位" v-if="form.orgGoodsId&&salesFirmName">
       {{salesFirmName}}
     </el-form-item>
     <el-form-item label="采购单价" prop="unitPrice">
@@ -151,7 +151,7 @@
         };
         Vaccine.query(params).then(res => {
           this.goodsList = res.data.list;
-          // 设置供货厂商id
+          // 设置供货单位id
           this.form.orgGoodsId && this.goodsList.forEach(val => {
             if (val.orgGoodsDto.id === this.form.orgGoodsId) {
               this.salesFirmName = val.orgGoodsDto.salesFirmName;

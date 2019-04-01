@@ -120,8 +120,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货厂商" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row label="供货单位" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.supplyCompanyId" popperClass="good-selects" style="width: 100%">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
@@ -157,7 +157,7 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header">
           <el-col :span="8">疫苗名称</el-col>
-          <el-col :span="6">供货厂商</el-col>
+          <el-col :span="6">供货单位</el-col>
           <el-col :span="6">生产企业</el-col>
           <el-col :span="2">采购单价</el-col>
           <el-col :span="2">协议采购数量</el-col>
@@ -300,7 +300,7 @@
         if (!orgId) {
           return;
         }
-        // 查询供货厂商
+        // 查询供货单位
         let params = {
           keyWord: query,
           relation: '1'

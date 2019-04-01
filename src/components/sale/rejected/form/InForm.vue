@@ -18,10 +18,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -35,15 +37,18 @@
     border-radius: 10px;
     font-size: 12px;
     line-height: 26px;
+
     .product-info-fix {
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
       margin-bottom: 10px;
     }
+
     &:hover {
       border-color: #aaa
     }
+
     .product-remove {
       position: absolute;
       right: 0;
@@ -54,10 +59,12 @@
       text-align: center;
       cursor: pointer;
       color: #666;
+
       &:hover {
         color: #333
       }
     }
+
     .order-goods-info {
       .col-label {
         padding-top: 4px;
@@ -108,8 +115,14 @@
         <h3>{{currentPartName}}</h3>
 
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
+
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
+            <el-form-item label="订单类型">
+              <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
+                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" @change="changeTransportationMeans"
@@ -235,7 +248,7 @@
                           }}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                         <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -425,6 +438,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
+          goodsType: 0,
           'orgId': '',
           'customerId': '',
           'bizType': '1-1',
@@ -594,9 +608,28 @@
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
       this.filterLogisticsCenter();
+      this.form.goodsType = this.orgLevel === 1 ? 0 : 1;
 //      this.initForm();
     },
     methods: {
+      changeVaccineType(val) {
+        this.product = {
+          'amount': null,
+          'entrustment': false,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.accessoryList = [];
+        this.editItemProduct = {};
+        this.searchProduct();
+      },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
@@ -868,6 +901,7 @@
         let params = {
           cdcId: this.form.orgId,
           povId: this.form.supplierId,
+          vaccineType: this.form.goodsType + 1,
           keyWord: query
         };
         let rTime = Date.now();

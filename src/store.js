@@ -24,7 +24,11 @@ const state = {
   isShowGoodsList: false,
   windowSize: {width: 1000, height: 500},
   requestingDictAry: [],
-  breakageOrgType: [1, 2, 3]
+  breakageOrgType: [1, 2, 3],
+  vaccineType: [
+    {key: 0, label: '一类疫苗'},
+    {key: 1, label: '二类疫苗'}
+  ]
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {

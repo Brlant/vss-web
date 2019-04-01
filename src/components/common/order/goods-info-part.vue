@@ -38,7 +38,7 @@
       </el-col>
     </el-row>
 
-    <!--<oms-row label="供货厂商" :span="4">-->
+    <!--<oms-row label="供货单位" :span="4">-->
     <!--{{productInfo.fixInfo.salesFirmName}}-->
     <!--</oms-row>-->
   </div>

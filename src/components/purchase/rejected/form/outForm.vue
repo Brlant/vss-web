@@ -18,10 +18,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -38,15 +40,18 @@
     border-radius: 10px;
     font-size: 12px;
     line-height: 26px;
+
     .product-info-fix {
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
       margin-bottom: 20px;
     }
+
     &:hover {
       border-color: #aaa
     }
+
     .product-remove {
       position: absolute;
       right: 0;
@@ -57,10 +62,12 @@
       text-align: center;
       cursor: pointer;
       color: #666;
+
       &:hover {
         color: #333
       }
     }
+
     .order-goods-info {
       .col-label {
         padding-top: 4px;
@@ -115,6 +122,11 @@
         <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                  label-width="160px" style="padding-right: 20px">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
+            <el-form-item label="订单类型">
+              <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
+                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" placeholder="请选择物流方式"
@@ -124,8 +136,8 @@
                            v-show="(item.key !== '2' || item.key==='2' && form.bizType!=='2-2') && item.key !== '4'"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="供货厂商" prop="customerId">
-              <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="供货单位" prop="customerId">
+              <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -142,9 +154,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="供货厂商仓库"
+            <el-form-item label="供货单位仓库"
                           v-show="showContent.isShowOtherContent">
-              <el-select placeholder="请选择供货厂商仓库" v-model="form.transportationAddress" filterable clearable
+              <el-select placeholder="请选择供货单位仓库" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -244,7 +256,7 @@
                         <!--}}</span>-->
                         <!--</span>-->
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                         <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -435,6 +447,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
+          goodsType: 0,
           'orgId': '',
           'customerId': '',
           'bizType': '2-1',
@@ -469,7 +482,7 @@
             {required: true, message: '请选择货主', trigger: 'change'}
           ],
           customerId: [
-            {required: true, message: '请选择供货厂商', trigger: 'change'}
+            {required: true, message: '请选择供货单位', trigger: 'change'}
           ],
           bizType: [
             {required: true, message: '请选择业务类型', trigger: 'change'}
@@ -532,10 +545,10 @@
         isStorageData: true, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
-          isShowCustomerId: true, // 是否显示供货厂商
+          isShowCustomerId: true, // 是否显示供货单位
           expectedTimeLabel: '预计出库时间'
         },
-        warehouses: [], // 供货厂商仓库列表
+        warehouses: [], // 供货单位仓库列表
         batchNumbers: [], // 疫苗批号列表
         selectBatchNumbers: [], // 已经选择的疫苗批号
         changeTotalNumber: utils.changeTotalNumber,
@@ -621,8 +634,12 @@
 //        this.form.orgAddress = this.form.orgAddress
 //          ? this.form.orgAddress : window.localStorage.getItem('orgAddress');
 //      }
+      this.form.goodsType = this.orgLevel === 1 ? 0 : 1;
     },
     methods: {
+      changeVaccineType() {
+        this.clearForm();
+      },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
@@ -914,6 +931,7 @@
         let params = {
           keyWord: query,
           factoryId: this.form.customerId,
+          vaccineType: this.form.goodsType + 1,
           logisticsCentreId: this.form.logisticsCentreId // 查询货品传入物流中心
         };
         let rTime = Date.now();

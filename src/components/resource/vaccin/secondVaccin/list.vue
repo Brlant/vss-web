@@ -233,7 +233,7 @@
                   <goods-row label="采购价格" :span="12">
                     <span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="供货厂商" :span="12">
+                  <goods-row label="供货单位" :span="12">
                     {{ data.salesFirmName }}
                   </goods-row>
                   <goods-row label="销售价格" :span="12">

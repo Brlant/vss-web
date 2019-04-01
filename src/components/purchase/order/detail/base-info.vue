@@ -18,7 +18,7 @@
           <oms-row label="货主" :span="span">
             {{currentOrder.orgName}}
           </oms-row>
-          <oms-row label="供货厂商" :span="span">
+          <oms-row label="供货单位" :span="span">
             {{currentOrder.supplierName}}
           </oms-row>
           <oms-row label="物流商" :span="span"
@@ -109,7 +109,7 @@
               <!--</el-tooltip>-->
               <!--</div>-->
               <div>
-                <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
+                <el-tooltip class="item" effect="dark" content="供货单位" placement="right">
                   <span>{{ item.salesFirmName }}</span>
                 </el-tooltip>
               </div>
