@@ -167,7 +167,7 @@
                           v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                       <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -301,6 +301,9 @@
                 </div>
               </el-col>
               <el-col :span="3">
+                <div class="f-grey">
+                  <dict dict-group="orderGoodsType" :dict-key="'' + item.goodsType"></dict>
+                </div>
                 <div class="vertical-center">
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>

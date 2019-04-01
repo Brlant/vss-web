@@ -143,8 +143,11 @@
         </div>
       </div>
       <div class="d-table-right" v-loading="loading">
+        <div v-if="!currentItem.inoculatorInfoDto" class="empty-info">
+          暂无信息
+        </div>
         <section v-if="currentItem.inoculatorInfoDto">
-          <h2>接种者信息</h2>
+          <h2>受种者信息</h2>
           <oms-row class="row-mg" label="姓名" :span="5">
             {{currentItem.inoculatorInfoDto.inoculatorName}}
             <span class="col-label">性别：</span>{{currentItem.inoculatorInfoDto.inoculatorSex}}
@@ -221,11 +224,12 @@
             </el-col>
             <el-col :span="12" v-if="currentItem.injectionTaskDto.maximumOfPeople > 1">
               <oms-row label="是否新开瓶" label-width="90px">
-                <el-radio-group v-model="form.newInoculationStatus" @change="newInoculationStatusChange"
-                                :disabled="validating">
-                  <el-radio :label="1">是</el-radio>
-                  <el-radio :label="0">否</el-radio>
-                </el-radio-group>
+                <el-switch
+                  v-model="form.newInoculationStatus"
+                  active-text="是" :disabled="validating"
+                  :active-value="1" :inactive-value="0"
+                  inactive-text="否" @change="newInoculationStatusChange">
+                </el-switch>
               </oms-row>
             </el-col>
           </oms-row>
@@ -370,6 +374,7 @@
       showItem(item) {
         this.currentItemId = item.id;
         this.loading = true;
+        this.currentItem = {};
         inoculateTask.queryDetail(item.id).then(res => {
           this.loading = false;
           this.currentItem = res.data;

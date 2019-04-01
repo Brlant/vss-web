@@ -53,6 +53,9 @@
           <oms-row label="业务类型">
             <dict :dict-group="'bizInType'" :dict-key="currentOrder.bizType"></dict>
           </oms-row>
+          <oms-row label="订单类型">
+            <dict dict-group="orderGoodsType" :dict-key="'' + currentOrder.goodsType"></dict>
+          </oms-row>
           <oms-row label="下单时间">
             <span class="goods-span">{{currentOrder.createTime | minute}}</span>
           </oms-row>
@@ -84,7 +87,7 @@
             <td class="text-center">疫苗</td>
             <td class="text-center">规格</td>
             <td class="text-center">生产/有效日期</td>
-            <!--<td class="text-center">供货厂商</td>-->
+            <!--<td class="text-center">供货单位</td>-->
             <!--<td>批号</td>-->
             <!--<td style="width: 80px">生产日期</td>-->
             <!--<td style="width: 80px">有效期</td>-->
@@ -100,9 +103,9 @@
               <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
                           effect="light" placement="right">
                 <compressed-img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:w_80,h_80,m_2' "
-                     class="product-img"/>
+                                class="product-img"/>
                 <compressed-img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
-                     class="product-img"/>
+                                class="product-img"/>
               </el-tooltip>
               <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
                 <img :src="'../../../../static/img/userpic.png'" class="product-img">
@@ -126,7 +129,7 @@
               <!--</el-tooltip>-->
               <!--</div>-->
               <div>
-                <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
+                <el-tooltip class="item" effect="dark" content="供货单位" placement="right">
                   <span>{{ item.salesFirmName }}</span>
                 </el-tooltip>
               </div>

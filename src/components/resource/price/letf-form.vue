@@ -120,7 +120,7 @@
                     <span class="select-other-info pull-left"><span
                       v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName  }}</span>
                     <span class="select-other-info pull-left"><span
-                      v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}</span>
+                      v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}</span>
                   </div>
                 </el-option>
               </el-select>

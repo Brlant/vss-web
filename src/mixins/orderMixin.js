@@ -16,6 +16,9 @@ export default {
     },
     isShowCheckBox() {
       return this.filters.state === '6' || this.filters.state === '1';
+    },
+    vaccineTypeList() {
+      return this.$store.state.vaccineType;
     }
   },
   watch: {

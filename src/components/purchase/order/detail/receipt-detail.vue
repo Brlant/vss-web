@@ -205,7 +205,7 @@
             </td>
             <td colspan="1" class="t-head">生产厂商</td>
             <td colspan="3">{{item.factoryName}}</td>
-            <td colspan="1" class="t-head">供货厂商</td>
+            <td colspan="1" class="t-head">供货单位</td>
             <td colspan="3">{{item.salesFirmName}}</td>
           </tr>
           <tr>
@@ -343,7 +343,7 @@
                 </td>
                 <td colspan="1" class="t-head">生产厂商</td>
                 <td colspan="3">{{item.factoryName}}</td>
-                <td colspan="1" class="t-head">供货厂商</td>
+                <td colspan="1" class="t-head">供货单位</td>
                 <td colspan="3">{{item.salesFirmName}}</td>
               </tr>
               <tr>

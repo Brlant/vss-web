@@ -134,8 +134,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货厂商" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row label="供货单位" :span="6">
+                <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.transactOrgId" popperClass="good-selects"
                            @click.native.once="filterOrg('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -169,7 +169,7 @@
                           v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                       <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -245,7 +245,7 @@
             货主/订单号
           </el-col>
           <el-col :span="3">业务类型</el-col>
-          <el-col :span="filters.state === '6' ? 5: 6">供货厂商</el-col>
+          <el-col :span="filters.state === '6' ? 5: 6">供货单位</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="4">状态</el-col>
           <el-col :span="3" v-if="filters.state === '6'">操作</el-col>

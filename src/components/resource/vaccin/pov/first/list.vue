@@ -209,7 +209,7 @@
                     <goods-row label="储存条件" :span="8">
                       <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                     </goods-row>
-                    <goods-row label="供货厂商" :span="8">
+                    <goods-row label="供货单位" :span="8">
                       {{ data.salesFirmName }}
                     </goods-row>
                     <goods-row label="是否组合" :span="8" v-show="data.goodsIsCombination">

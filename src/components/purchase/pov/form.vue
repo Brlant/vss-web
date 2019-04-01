@@ -59,7 +59,7 @@
                 </el-col>
                 <el-col :span="12">
                   <oms-row label="规格" :span="4">{{currentItem.specification}}</oms-row>
-                  <oms-row label="供货厂商" :span="4">{{currentItem.saleFactory}}</oms-row>
+                  <oms-row label="供货单位" :span="4">{{currentItem.saleFactory}}</oms-row>
                 </el-col>
               </el-row>
               <div class="order-list clearfix ">

@@ -235,7 +235,7 @@
                           }}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                         <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -433,6 +433,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
+          goodsType: this.vaccineType - 1,
           'orgId': '',
           'customerId': '',
           'bizType': '2-0',
@@ -601,6 +602,9 @@
           this.filterPOV();
           this.filterAddress();
         }
+      },
+      vaccineType(val) {
+        this.form.goodsType = val - 1;
       }
 //      form: {
 //        handler: 'autoSave',

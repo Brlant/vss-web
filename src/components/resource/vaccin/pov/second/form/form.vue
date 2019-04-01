@@ -123,8 +123,8 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <!--<el-form-item label="供货厂商" prop="salesFirm">-->
-      <!--<el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg" @click.native="filterOrg('')"-->
+      <!--<el-form-item label="供货单位" prop="salesFirm">-->
+      <!--<el-select filterable remote placeholder="请输入名称搜供货单位" :remote-method="filterOrg" @click.native="filterOrg('')"-->
       <!--:clearable="true" v-model="form.salesFirmId" @change="setSalesFirm(form.salesFirmId)"-->
       <!--popperClass="good-selects">-->
       <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
@@ -139,10 +139,10 @@
       <!--</el-option>-->
       <!--</el-select>-->
       <!--</el-form-item>-->
-      <el-form-item label="供货厂商ID">
+      <el-form-item label="供货单位ID">
         {{form.salesFirm}}
       </el-form-item>
-      <el-form-item label="供货厂商名称">
+      <el-form-item label="供货单位名称">
         {{form.salesFirmName}}
       </el-form-item>
       <el-form-item label="疫苗编号" prop="goodsNo">
@@ -208,7 +208,7 @@
                   v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                  v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
               </span>
                 <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -268,7 +268,7 @@
             {required: true, message: '请输入疫苗编号', trigger: 'blur'}
           ],
           salesFirm: [
-            {required: true, message: '请选择供货厂商', trigger: 'change'}
+            {required: true, message: '请选择供货单位', trigger: 'change'}
           ],
           storageConditionId: [
             {required: true, message: '请选择储存条件', trigger: 'blur'}
@@ -417,7 +417,7 @@
         if (!orgId) {
           return;
         }
-        // 查询供货厂商
+        // 查询供货单位
         let params = {
           keyWord: query,
           relation: '1'

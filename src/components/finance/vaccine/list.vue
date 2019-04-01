@@ -34,7 +34,7 @@
                         v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
+                        v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                       </span>
                       <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -45,7 +45,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货厂商" :span="5">
+              <oms-form-row label="供货单位" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索厂商" :remote-method="filterFactory"
                            @click.native="filterFactory('')"
                            :clearable="true"

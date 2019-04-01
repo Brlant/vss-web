@@ -181,7 +181,7 @@ Vue.prototype.$formatAryTime = function (ary, index, str = 'YYYY-MM-DD') {
 
 if (process.env.NODE_ENV === 'production') {
   Raven
-    .config('http://62f56ceea555483fab3d6238ff4a80d0@f-log.cdcerp.net/3', {
+    .config('https://62f56ceea555483fab3d6238ff4a80d0@f-log.cdcerp.net/3', {
       serverName: 'vss'
     })
     .addPlugin(RavenVue, Vue)
