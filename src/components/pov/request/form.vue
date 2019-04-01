@@ -8,10 +8,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -35,15 +37,18 @@
     border-radius: 10px;
     font-size: 12px;
     line-height: 26px;
+
     .product-info-fix {
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
       margin-bottom: 20px;
     }
+
     &:hover {
       border-color: #aaa
     }
+
     .product-remove {
       position: absolute;
       right: 0;
@@ -54,10 +59,12 @@
       text-align: center;
       cursor: pointer;
       color: #666;
+
       &:hover {
         color: #333
       }
     }
+
     .order-goods-info {
       .col-label {
         padding-top: 4px;
@@ -106,8 +113,7 @@
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="订单类型" prop="type">
               <el-radio-group v-model.number="form.type" @change="changeType">
-                <el-radio :label="0">一类疫苗</el-radio>
-                <el-radio :label="1">二类疫苗</el-radio>
+                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="疾控中心" prop="cdcId">
@@ -372,6 +378,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      vaccineTypeList() {
+        return this.$store.state.vaccineType;
       }
     },
     watch: {
@@ -540,7 +549,7 @@
         });
       },
       filterProduct() {
-        this.showCdcs = this.cdcs.filter(f => f.level === this.form.type + 1);
+        this.showCdcs = this.cdcs;
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
       searchWarehouses(isEdit) {

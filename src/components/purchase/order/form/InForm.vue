@@ -116,6 +116,11 @@
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
+            <el-form-item label="订单类型">
+              <el-radio-group v-model.number="form.vaccineType" @change="changeVaccineType">
+                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" @change="changeTransportationMeans"
@@ -410,6 +415,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
+          vaccineType: this.vaccineType,
           'orgId': '',
           'customerId': '',
           'bizType': '1-0',
@@ -575,6 +581,9 @@
 //      },
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
+      },
+      vaccineType(val) {
+        this.form.vaccineType = val;
       }
     },
     mounted: function () {
