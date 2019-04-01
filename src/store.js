@@ -19,7 +19,7 @@ const state = {
   bodyHeight: 0,
   orgLevel: '',
   prints: [],
-  logisticsCentreId: '6320790940790948456',
+  logisticsCentreId: '',
   bottomLoading: false,
   isShowGoodsList: false,
   windowSize: {width: 1000, height: 500},
