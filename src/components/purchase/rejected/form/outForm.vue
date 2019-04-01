@@ -931,7 +931,7 @@
         let params = {
           keyWord: query,
           factoryId: this.form.customerId,
-          goodsType: this.form.goodsType,
+          vaccineType: this.form.goodsType + 1,
           logisticsCentreId: this.form.logisticsCentreId // 查询货品传入物流中心
         };
         let rTime = Date.now();

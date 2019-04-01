@@ -901,7 +901,7 @@
         let params = {
           cdcId: this.form.orgId,
           povId: this.form.supplierId,
-          goodsType: this.form.goodsType,
+          vaccineType: this.form.goodsType + 1,
           keyWord: query
         };
         let rTime = Date.now();
