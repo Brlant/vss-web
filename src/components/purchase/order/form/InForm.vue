@@ -893,7 +893,7 @@
         });
       },
       searchProduct: function (query) {
-        if (this.orgLevel === 1) {
+        if (this.vaccineType === '1') {
           if (!this.form.supplierId) {
             this.searchProductList = [];
             this.filterProductList = [];
