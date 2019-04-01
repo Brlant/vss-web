@@ -87,7 +87,7 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header">
           <el-col :span="6">
-            <el-checkbox v-model="checkAll" @change="checkAllChange" v-show="filters.status !== '2'"/>
+            <el-checkbox v-model="checkAll" @change="checkAllChange" v-show="filters.status === '0'"/>
             疫苗名称
           </el-col>
           <el-col :span="6">追溯码</el-col>
@@ -112,7 +112,7 @@
                :class="[{'active':currentItem.multiPersonAgingId===item.multiPersonAgingId}]">
             <el-row>
               <el-col :span="6" class="flex-col">
-                <div @click.stop="" v-show="filters.status !== '2'">
+                <div @click.stop="" v-show="filters.status === '0'">
                   <el-checkbox v-model="item.checked"/>
                 </div>
                 <div>{{item.vaccineName}}</div>
