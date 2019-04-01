@@ -264,9 +264,9 @@
         let cParams = Object.assign({}, params, {status: null});
         multiAging.queryStateNum(cParams).then(res => {
           let data = res.data;
-          this.injectionType[0].num = this.obtionStatusNum(data['waiting']);
-          this.injectionType[1].num = this.obtionStatusNum(data['after']);
-          this.injectionType[2].num = this.obtionStatusNum(data['scrap']);
+          this.vaccineEachList[0].num = this.obtionStatusNum(data['waiting']);
+          this.vaccineEachList[1].num = this.obtionStatusNum(data['after']);
+          this.vaccineEachList[2].num = this.obtionStatusNum(data['scrap']);
         });
       },
       obtionStatusNum: function (num) {
