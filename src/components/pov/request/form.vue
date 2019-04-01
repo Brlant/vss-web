@@ -519,13 +519,17 @@
             this.form.warehouseId = i.addressId;
           }
         });
+        this.searchProduct();
       },
       searchProduct: function () {
         this.searchProductList = [];
         if (!this.form.cdcId) return;
         let rTime = Date.now();
         this.requestTime = rTime;
-        VaccineRights.queryVaccineByPov(this.$store.state.user.userCompanyAddress, {cdcId: this.form.cdcId}).then(res => {
+        VaccineRights.queryVaccineByPov(this.$store.state.user.userCompanyAddress, {
+          cdcId: this.form.cdcId,
+          vaccineType: this.form.type + 1
+        }).then(res => {
           if (this.requestTime > rTime) {
             return;
           }
