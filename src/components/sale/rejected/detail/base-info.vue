@@ -87,7 +87,7 @@
             <td class="text-center">疫苗</td>
             <td class="text-center">规格</td>
             <td class="text-center">生产/有效日期</td>
-            <!--<td class="text-center">供货厂商</td>-->
+            <!--<td class="text-center">供货单位</td>-->
             <!--<td>批号</td>-->
             <!--<td style="width: 80px">生产日期</td>-->
             <!--<td style="width: 80px">有效期</td>-->
@@ -129,7 +129,7 @@
               <!--</el-tooltip>-->
               <!--</div>-->
               <div>
-                <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
+                <el-tooltip class="item" effect="dark" content="供货单位" placement="right">
                   <span>{{ item.salesFirmName }}</span>
                 </el-tooltip>
               </div>

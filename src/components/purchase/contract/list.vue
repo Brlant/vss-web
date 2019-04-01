@@ -118,8 +118,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货厂商" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索供货厂商" :remote-method="filterOrg"
+              <oms-form-row label="供货单位" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg"
                            @click.native="filterOrg('')"
                            :clearable="true"
                            v-model="searchCondition.transactOrgId" popperClass="good-selects">
@@ -170,7 +170,7 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header">
           <el-col :span="4">编号/合同名称</el-col>
-          <el-col :span="8">供货厂商</el-col>
+          <el-col :span="8">供货单位</el-col>
           <el-col :span="4">创建时间</el-col>
           <el-col :span="4">关联采购订单</el-col>
           <el-col :span="4">操作</el-col>

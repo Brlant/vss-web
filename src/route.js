@@ -387,7 +387,7 @@ export const route = [
           {
             path: '/resource/firm',
             component: resolve => require(['./components/resource/firm/list.vue'], resolve),
-            meta: {moduleId: 'resource', title: '疫苗供货厂商资料', perm: 'manufacturer-manager'}
+            meta: {moduleId: 'resource', title: '疫苗供货单位资料', perm: 'manufacturer-manager'}
           },
           {
             path: '/resource/bidder',

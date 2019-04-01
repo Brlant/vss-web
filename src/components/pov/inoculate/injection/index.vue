@@ -39,7 +39,7 @@
                           v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left">
-                          <span v-show="item.saleFirmName">供货厂商:</span>{{ item.saleFirmName }}
+                          <span v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
                         </span>
                     </div>
                   </el-option>

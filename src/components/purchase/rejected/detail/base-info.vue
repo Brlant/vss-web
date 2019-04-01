@@ -27,10 +27,10 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="供货厂商" :span="span">
+            <oms-row label="供货单位" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
-            <oms-row label="供货厂商仓库" :span="span">
+            <oms-row label="供货单位仓库" :span="span">
               {{ getWarehouseAdress(currentOrder)}}
             </oms-row>
             <oms-row label="运输条件" :span="span">
@@ -127,7 +127,7 @@
               <!--</el-tooltip>-->
               <!--</div>-->
               <div>
-                <el-tooltip class="item" effect="dark" content="供货厂商" placement="right">
+                <el-tooltip class="item" effect="dark" content="供货单位" placement="right">
                   <span>{{ item.salesFirmName }}</span>
                 </el-tooltip>
               </div>

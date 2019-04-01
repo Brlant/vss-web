@@ -35,7 +35,7 @@
       <div class="order-list clearfix ">
         <el-row class="order-list-header">
           <el-col :span="status === 0 ? 4 : 6">疫苗</el-col>
-          <el-col :span="status === 0 ? 4 : 6">供货厂商</el-col>
+          <el-col :span="status === 0 ? 4 : 6">供货单位</el-col>
           <el-col :span="status === 0 ? 2 : 4">需求数</el-col>
           <el-col :span="status === 0 ? 2 : 4">库存数</el-col>
           <el-col :span="3" v-show="status === 0">库存差额</el-col>
