@@ -12,6 +12,12 @@
     cursor: pointer;
   }
 
+  .advanced-query-form {
+    .el-row {
+      display: flex;
+      align-items: center;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
@@ -81,7 +87,7 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header">
           <el-col :span="6">
-            <el-checkbox v-model="checkAll" @change="checkAllChange"/>
+            <el-checkbox v-model="checkAll" @change="checkAllChange" v-show="filters.status !== '2'"/>
             疫苗名称
           </el-col>
           <el-col :span="6">追溯码</el-col>
@@ -106,7 +112,7 @@
                :class="[{'active':currentItem.multiPersonAgingId===item.multiPersonAgingId}]">
             <el-row>
               <el-col :span="6" class="flex-col">
-                <div @click.stop="">
+                <div @click.stop="" v-show="filters.status !== '2'">
                   <el-checkbox v-model="item.checked"/>
                 </div>
                 <div>{{item.vaccineName}}</div>
@@ -126,6 +132,7 @@
               </el-col>
               <el-col :span="2">
                 {{getStatusTitle(item.recordStatus)}}
+                <el-tag type="warning" v-show="item.type">已失效</el-tag>
               </el-col>
             </el-row>
           </div>
