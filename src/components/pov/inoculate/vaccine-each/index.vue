@@ -18,12 +18,12 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span>
+          <perm label="scrap-multi-person-aging">
             <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addScrap">
                <a href="#" class="btn-circle" @click.prevent=""><i
                  class="el-icon-t-remove"></i> </a>批量报废
             </span>
-          </span>
+          </perm>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -106,7 +106,9 @@
                :class="[{'active':currentItem.multiPersonAgingId===item.multiPersonAgingId}]">
             <el-row>
               <el-col :span="6" class="flex-col">
-                <el-checkbox v-model="item.checked"/>
+                <div @click.stop="">
+                  <el-checkbox v-model="item.checked"/>
+                </div>
                 <div>{{item.vaccineName}}</div>
               </el-col>
               <el-col :span="6">
@@ -285,7 +287,9 @@
         return title;
       },
       addScrap() {
-        let checkList = this.dataList.filter(f => f.checked);
+        let checkList = this.dataList.filter(f => f.checked).map(m => ({
+          multiPersonAgingId: m.multiPersonAgingId
+        }));
         if (!checkList.length) {
           return this.$notify.info({
             message: '请选择记录'
@@ -296,7 +300,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.post('', checkList).then(res => {
+          this.$http.post('/multi-person-aging/scrap-multi-person-aging', checkList).then(res => {
             this.$notify.success({
               message: '报废完成'
             });
