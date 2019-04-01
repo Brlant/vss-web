@@ -155,12 +155,12 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流中心" prop="logisticsCentreId" v-if="isEntrustWarehouse">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"
-                         @change="changeLogisticsCenterId">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
-              </el-select>
-            </el-form-item>
+            <!--<el-form-item label="物流中心" prop="logisticsCentreId" v-if="isEntrustWarehouse">-->
+            <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"-->
+            <!--@change="changeLogisticsCenterId">-->
+            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
+            <!--</el-select>-->
+            <!--</el-form-item>-->
             <el-form-item label="运输条件" prop="transportationCondition" v-if="form.transportationMeansId === '0'">
               <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationCondition">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
@@ -611,7 +611,7 @@
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
       // 默认物流中心
-      this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
+      // this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       this.filterLogisticsCenter();
     },
     methods: {
@@ -753,14 +753,13 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.orgId || !this.form.logisticsCentreId) {
+        if (!this.form.orgId) {
           this.searchProductList = [];
           this.filterProductList = [];
           return;
         }
         let params = {
-          keyWord: query,
-          logisticsCentreId: this.form.logisticsCentreId // 查询货品传入物流中心
+          keyWord: query
         };
         let rTime = Date.now();
         this.requestTime = rTime;
