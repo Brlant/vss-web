@@ -22,12 +22,12 @@ export const route = [
           {
             path: '/purchase/order/one/class/:id',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '采购订单', perm: 'purchasing-order', type: '1'}
+            meta: {moduleId: 'purchase', title: '一类苗采购订单', perm: 'purchasing-order', type: '1'}
           },
           {
             path: '/purchase/order/two/class/:id',
             component: resolve => require(['./components/purchase/order/list.vue'], resolve),
-            meta: {moduleId: 'purchase', title: '采购订单', perm: 'second-vaccine-purchasing-order', type: '2'}
+            meta: {moduleId: 'purchase', title: '二类苗采购订单', perm: 'second-vaccine-purchasing-order', type: '2'}
           },
           {
             path: '/purchase/rejected/:id',

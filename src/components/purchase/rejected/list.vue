@@ -269,6 +269,9 @@
                 </div>
               </el-col>
               <el-col :span="filters.state === '0' ? 3: 5">
+                <div class="f-grey">
+                  <dict dict-group="orderGoodsType" :dict-key="'' + item.goodsType"></dict>
+                </div>
                 <div>
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>

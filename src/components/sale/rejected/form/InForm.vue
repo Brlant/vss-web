@@ -608,11 +608,27 @@
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
       this.filterLogisticsCenter();
+      this.form.goodsType = this.orgLevel === 1 ? 0 : 1;
 //      this.initForm();
     },
     methods: {
       changeVaccineType(val) {
-
+        this.product = {
+          'amount': null,
+          'entrustment': false,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.accessoryList = [];
+        this.editItemProduct = {};
+        this.searchProduct();
       },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
@@ -885,6 +901,7 @@
         let params = {
           cdcId: this.form.orgId,
           povId: this.form.supplierId,
+          goodsType: this.form.goodsType,
           keyWord: query
         };
         let rTime = Date.now();

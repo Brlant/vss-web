@@ -18,10 +18,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -38,15 +40,18 @@
     border-radius: 10px;
     font-size: 12px;
     line-height: 26px;
+
     .product-info-fix {
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
       margin-bottom: 20px;
     }
+
     &:hover {
       border-color: #aaa
     }
+
     .product-remove {
       position: absolute;
       right: 0;
@@ -57,10 +62,12 @@
       text-align: center;
       cursor: pointer;
       color: #666;
+
       &:hover {
         color: #333
       }
     }
+
     .order-goods-info {
       .col-label {
         padding-top: 4px;
@@ -627,10 +634,11 @@
 //        this.form.orgAddress = this.form.orgAddress
 //          ? this.form.orgAddress : window.localStorage.getItem('orgAddress');
 //      }
+      this.form.goodsType = this.orgLevel === 1 ? 0 : 1;
     },
     methods: {
       changeVaccineType() {
-
+        this.clearForm();
       },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
@@ -923,6 +931,7 @@
         let params = {
           keyWord: query,
           factoryId: this.form.customerId,
+          goodsType: this.form.goodsType,
           logisticsCentreId: this.form.logisticsCentreId // 查询货品传入物流中心
         };
         let rTime = Date.now();
