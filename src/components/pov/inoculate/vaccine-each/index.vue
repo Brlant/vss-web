@@ -1,4 +1,16 @@
 <style lang="scss" scoped="">
+  .flex-col {
+    display: flex;
+    align-items: center;
+
+    .el-checkbox {
+      margin-right: 5px;
+    }
+  }
+
+  .order-list-item, .cursor-span {
+    cursor: pointer;
+  }
 
 </style>
 <template>
@@ -6,6 +18,12 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
+          <span>
+            <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addScrap">
+               <a href="#" class="btn-circle" @click.prevent=""><i
+                 class="el-icon-t-remove"></i> </a>批量报废
+            </span>
+          </span>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -52,12 +70,24 @@
           </el-row>
         </el-form>
       </div>
+      <div class="order-list-status container" style="margin-bottom:20px">
+        <div :class="{'active':key===activeStatus}" @click="changeStatus(item,key)" class="status-item"
+             v-for="(item,key) in vaccineEachList">
+          <div :class="['b_color_'+key]" class="status-bg"></div>
+          <div><i class="el-icon-caret-right" v-if="key===activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          </div>
+        </div>
+      </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="6">疫苗名称</el-col>
+          <el-col :span="6">
+            <el-checkbox v-model="checkAll" @change="checkAllChange"/>
+            疫苗名称
+          </el-col>
           <el-col :span="6">追溯码</el-col>
           <el-col :span="6">时间</el-col>
-          <el-col :span="6">剂次</el-col>
+          <el-col :span="4">剂次</el-col>
+          <el-col :span="2">状态</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -72,11 +102,12 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item order-list-item-bg" v-for="item in dataList" @click.prevent="showItem(item)"
+          <div class="order-list-item order-list-item-bg" v-for="item in dataList" @click="showItem(item)"
                :class="[{'active':currentItem.multiPersonAgingId===item.multiPersonAgingId}]">
             <el-row>
-              <el-col :span="6">
-                {{item.vaccineName}}
+              <el-col :span="6" class="flex-col">
+                <el-checkbox v-model="item.checked"/>
+                <div>{{item.vaccineName}}</div>
               </el-col>
               <el-col :span="6">
                 {{item.reviewCodeDetail}}
@@ -86,10 +117,13 @@
                 <div>失效：{{item.failureTime | time}}</div>
                 <div>最后使用：{{item.lastTime | time}}</div>
               </el-col>
-              <el-col :span="6">
+              <el-col :span="4">
                 <div>最大使用：{{item.maximumOfPeople}}</div>
                 <div>当前使用：{{item.nowNumber}}</div>
                 <div>剩余使用：{{item.remainingNumber}}</div>
+              </el-col>
+              <el-col :span="2">
+                {{getStatusTitle(item.recordStatus)}}
               </el-col>
             </el-row>
           </div>
@@ -108,6 +142,7 @@
 <script>
   import {multiAging} from '@/resources';
   import methods from '../mixin/methods';
+  import utils from '@/tools/utils';
 
   export default {
     mixins: [methods],
@@ -116,19 +151,26 @@
         loadingData: false,
         showSearch: true,
         dataList: [],
-        filters: {},
+        filters: {
+          status: '0',
+          vaccineId: '',
+          reviewCodeDetail: ''
+        },
         searchCondition: {
           vaccineId: '',
           reviewCodeDetail: ''
         },
+        activeStatus: '0',
         currentItem: {},
+        vaccineEachList: utils.vaccineEachList,
         form: {},
         defaultIndex: 0,
         pager: {
           currentPage: 1,
           count: 0,
           pageSize: 20
-        }
+        },
+        checkAll: false
       };
     },
     mounted() {
@@ -136,6 +178,16 @@
     },
     computed: {},
     methods: {
+      checkAllChange(val) {
+        this.dataList.forEach(i => {
+          i.checked = val;
+        });
+      },
+      changeStatus: function (item, key) {// 订单分类改变
+        this.activeStatus = key;
+        this.filters.status = item.status;
+        this.queryList(1);
+      },
       searchInOrder: function () {// 搜索
         this.searchCondition.createStartTime = this.$formatAryTime(this.expectedTime, 0);
         this.searchCondition.createEndTime = this.$formatAryTime(this.expectedTime, 1);
@@ -183,7 +235,7 @@
         });
       },
       showItem(item) {
-        // this.currentItem = item;
+        item.checked = !item.checked;
       },
       formChange() {
         this.resetRightBox();
@@ -194,12 +246,66 @@
         let params = Object.assign({
           pageNo: pageNo,
           pageSize: this.pager.pageSize
-        }, this.filters);
+        }, this.filters, {
+          recordStatus: this.filters.status
+        });
         this.loadingData = true;
         multiAging.query(params).then(res => {
+          res.data.list.forEach(i => {
+            i.checked = false;
+          });
           this.dataList = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
+        });
+        this.queryStatusNum(params);
+      },
+      queryStatusNum: function (params) {
+        let cParams = Object.assign({}, params, {status: null});
+        multiAging.queryStateNum(cParams).then(res => {
+          let data = res.data;
+          this.injectionType[0].num = this.obtionStatusNum(data['waiting']);
+          this.injectionType[1].num = this.obtionStatusNum(data['after']);
+          this.injectionType[2].num = this.obtionStatusNum(data['scrap']);
+        });
+      },
+      obtionStatusNum: function (num) {
+        if (typeof num !== 'number') {
+          return 0;
+        }
+        return num;
+      },
+      getStatusTitle: function (status) {
+        let title = '';
+        for (let key in this.vaccineEachList) {
+          if (status === this.vaccineEachList[key].status * 1) {
+            title = this.vaccineEachList[key].title;
+          }
+        }
+        return title;
+      },
+      addScrap() {
+        let checkList = this.dataList.filter(f => f.checked);
+        if (!checkList.length) {
+          return this.$notify.info({
+            message: '请选择记录'
+          });
+        }
+        this.$confirm('是否报废这些记录', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post('', checkList).then(res => {
+            this.$notify.success({
+              message: '报废完成'
+            });
+            this.queryList();
+          }).catch((e) => {
+            this.$notify.error({
+              message: e.response && e.response.data.msg || '无法报废'
+            });
+          });
         });
       }
     }
