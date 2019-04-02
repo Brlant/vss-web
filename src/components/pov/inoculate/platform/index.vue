@@ -372,6 +372,8 @@
         });
       },
       showItem(item) {
+        this.validSign = null;
+        this.errorDetail = {};
         this.currentItemId = item.id;
         this.loading = true;
         this.currentItem = {};
