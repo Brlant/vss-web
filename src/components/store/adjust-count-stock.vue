@@ -201,36 +201,11 @@
         <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
         <el-table-column prop="warehouseAddress" label="仓库" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
-        <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.availableCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="undeterminedCount" label="锁定库存" :render-header="formatHeader" :sortable="true"
-                         width="110">
-          <template slot-scope="scope">
-            <span>{{scope.row.undeterminedCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true"
-                         width="120">
-          <template slot-scope="scope">
-            <span>{{scope.row.qualifiedCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.transitCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="unqualifiedCount" label="实际不合格库存" :render-header="formatHeader" :sortable="true"
-                         width="140">
-          <template slot-scope="scope">
-            <span>{{scope.row.unqualifiedCount}}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="availableCount" label="可用库存" :sortable="true" width="100"></el-table-column>
+        <el-table-column prop="transitCount" label="在途库存" :sortable="true" width="100"></el-table-column>
+        <el-table-column prop="qualifiedActualCount" label="实际合格库存" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="stockUnqualifiedActualCount" label="实际不合格库存" :sortable="true"
+                         width="140"></el-table-column>
         <el-table-column prop="unqualifiedCount" label="调整时间" :sortable="true" width="100">
           <template slot-scope="scope">
             <span>{{scope.row.createTime | time}}</span>
