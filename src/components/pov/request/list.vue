@@ -124,7 +124,7 @@
               </h2>
               <div class="content-body clearfix">
                 <el-row>
-                  <el-col :span="8">
+                  <el-col :span="11">
                     <oms-row label="要货申请编号">
                       {{currentOrder.id }}
                     </oms-row>
@@ -137,8 +137,11 @@
                     <oms-row label="接种点仓库">
                       {{currentOrder.warehouseAddress}}
                     </oms-row>
+                    <oms-row label="疾控中心">
+                      {{currentOrder.cdcName}}
+                    </oms-row>
                   </el-col>
-                  <el-col :span="16">
+                  <el-col :span="13">
                     <oms-row label="申请人">
                       {{currentOrder.applyManName}}
                     </oms-row>
