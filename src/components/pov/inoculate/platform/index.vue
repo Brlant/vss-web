@@ -277,10 +277,11 @@
             </oms-row>
             <perm label="confirm-vaccination-task">
               <oms-row class="row-mg flex-row" label="" :span="5" v-if="validSign">
-                <el-button type="primary" @click="confirmTask(0)" :doing="doing">确认接种</el-button>
-                <el-button type="primary" @click="confirmTask(1)" :doing="doing"
-                           v-if="currentItem.injectionTaskDto.maximumOfPeople === 1">新开瓶接种
+                <el-button class="el-button-large" type="primary" @click="confirmTask(0)" :doing="doing">确认接种
                 </el-button>
+                <!--<el-button type="primary" @click="confirmTask(1)" :doing="doing"-->
+                <!--v-if="currentItem.injectionTaskDto.maximumOfPeople === 1">新开瓶接种-->
+                <!--</el-button>-->
               </oms-row>
             </perm>
           </div>

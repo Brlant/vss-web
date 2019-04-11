@@ -271,6 +271,9 @@
             factoryName: '',
             list: []
           };
+          this.orgGoodsList = [];
+          this.personList = [];
+          this.batchNumberList = [];
         }
         this.$nextTick(() => {
           this.$refs['form'].clearValidate();

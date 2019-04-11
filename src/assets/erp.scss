@@ -1098,6 +1098,11 @@ $borderColor: rgba(82, 82, 82, 0.23);
 
 .app-body {
 
+  .el-button.el-button-large {
+    padding: 15px 20px;
+    font-size: 20px;
+  }
+
   .el-table thead {
     color: #1f323d;
   }
