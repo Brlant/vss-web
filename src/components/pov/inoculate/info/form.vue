@@ -31,6 +31,9 @@
       <el-form-item label="出生证号">
         <oms-input type="text" v-model.trim="form.birthCertificateNumber" placeholder="请输入出生证号"></oms-input>
       </el-form-item>
+      <el-form-item label="备注">
+        <oms-input type="textarea" v-model.trim="form.inoculatorRemarks" placeholder="请输入备注"></oms-input>
+      </el-form-item>
       <el-form-item label-width="100px">
         <el-button type="primary" @click="onSubmit('form')" native-type="submit" :disabled="doing">保存</el-button>
         <el-button @click="doClose">取消</el-button>
@@ -71,7 +74,8 @@
           inoculatorBirthday: '',
           inoculatorNumber: '',
           inoculatorCardNumber: '',
-          birthCertificateNumber: ''
+          birthCertificateNumber: '',
+          inoculatorRemarks: ''
         },
         rules: {
           inoculatorName: [
@@ -115,7 +119,8 @@
             inoculatorBirthday: '',
             inoculatorNumber: '',
             inoculatorCardNumber: '',
-            birthCertificateNumber: ''
+            birthCertificateNumber: '',
+            inoculatorRemarks: ''
           };
         }
         this.$nextTick(() => {

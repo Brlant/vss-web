@@ -62,15 +62,16 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="追溯码" :span="8">
-                <oms-input type="text" v-model="searchCondition.reviewCodeDetail" placeholder="请输入追溯码"></oms-input>
+            <el-col :span="7">
+              <oms-form-row label="追溯码" :span="6">
+                <oms-input type="text" v-model.trim="searchCondition.reviewCodeDetail" placeholder="请输入追溯码"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="5">
+            <el-col :span="7">
+              <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <el-button type="primary" plain @click="exportExcel">导出Excel</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -316,6 +317,22 @@
             this.$notify.error({
               message: e.response && e.response.data.msg || '无法报废'
             });
+          });
+        });
+      },
+      exportExcel() {
+        let params = Object.assign({}, this.filters, {
+          recordStatus: this.filters.status
+        });
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
+        this.$http.get('/multi-person-aging/export', {params}).then(res => {
+          utils.download(res.data.path, '多人份剂次时效记录');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
       }
