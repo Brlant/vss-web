@@ -107,12 +107,12 @@
                   </span>
 
                 </perm>
-                <perm label="edit-inoculator-info">
-                  <span @click.stop.prevent="deleteItem(item)">
-                        <a href="#" class="btn-circle" @click.prevent=""><i
-                          class="el-icon-t-delete"></i></a>删除
-                  </span>
-                </perm>
+                <!--<perm label="edit-inoculator-info">-->
+                <!--<span @click.stop.prevent="deleteItem(item)">-->
+                <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
+                <!--class="el-icon-t-delete"></i></a>删除-->
+                <!--</span>-->
+                <!--</perm>-->
               </el-col>
             </el-row>
           </div>
