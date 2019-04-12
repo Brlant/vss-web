@@ -71,7 +71,7 @@
               <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                <el-button type="primary" plain @click="exportExcel">导出Excel</el-button>
+                <el-button type="success" plain @click="exportExcel">导出Excel</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
