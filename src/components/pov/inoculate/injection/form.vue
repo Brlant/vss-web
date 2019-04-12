@@ -81,7 +81,7 @@
              @submit.prevent="onSubmit('form')" onsubmit="return false">
       <h2>疫苗信息</h2>
       <el-form-item label="疫苗" prop="vaccineId">
-        <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsList"
+        <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsListNew"
                    placeholder="请输入名称搜索疫苗"
                    clearable popper-class="order-good-selects"
                    @change="orgGoodsIdChange">
@@ -285,7 +285,7 @@
           this.personList = [];
           this.batchNumberList = [];
           this.queryPersonList();
-          this.queryOrgGoodsList();
+          this.queryOrgGoodsListNew();
           this.queryBatchNumbers();
         }
         this.$nextTick(() => {
@@ -295,6 +295,14 @@
       }
     },
     methods: {
+      queryOrgGoodsListNew(query) {
+        const params = {
+          keyWord: query
+        };
+        this.$http.get('/injection-task/goods', {params}).then(res => {
+          this.orgGoodsList = res.data.list;
+        });
+      },
       queryPersons(query) {
         this.form.inoculatorNumber = query;
         this.queryPersonList(query);
