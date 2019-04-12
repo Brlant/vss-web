@@ -178,8 +178,8 @@
             <el-row>
               <el-col :span="12">
                 <oms-row class="row-mg" label="登记编号" :span="span">{{currentItem.injectionTaskDto.inoculatorNumber}}
-                  <el-tag type="success" v-show="currentItem.injectionTaskDto.payCostType === 1">已缴费</el-tag>
-                  <el-tag type="warning" v-show="currentItem.injectionTaskDto.payCostType === 0">未缴费</el-tag>
+                  <!--<el-tag type="success" v-show="currentItem.injectionTaskDto.payCostType === 1">已缴费</el-tag>-->
+                  <!--<el-tag type="warning" v-show="currentItem.injectionTaskDto.payCostType === 0">未缴费</el-tag>-->
                 </oms-row>
               </el-col>
               <el-col :span="12">
@@ -195,9 +195,9 @@
                 <oms-row class="row-mg" label="规格" :span="10">{{currentItem.injectionTaskDto.specification}}</oms-row>
               </el-col>
               <el-col :span="12">
-                <!--<oms-row class="row-mg" label="是否新开瓶" :span="10">-->
-                <!--{{currentItem.injectionTaskDto.newInoculationStatus === 1 ? '是' : '否'}}-->
-                <!--</oms-row>-->
+                <oms-row class="row-mg" label="疫苗种类" :span="10">
+                  <dict dict-group="orderGoodsType" :dict-key="'' + currentItem.injectionTaskDto.vaccineSign"></dict>
+                </oms-row>
               </el-col>
             </el-row>
             <oms-row class="row-mg" label="接种途径" :span="5">

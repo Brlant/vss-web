@@ -38,7 +38,7 @@
       <h2>基本信息</h2>
       <el-form-item label="受种者" prop="inoculatorInfoId">
         <el-select v-model="form.inoculatorInfoId" filterable remote :remote-method="queryPersons"
-                   placeholder="请输入名称/身份证号/出生证号搜索" @click.native.once="queryPersonList('')"
+                   placeholder="请输入名称/身份证号/出生证号搜索"
                    clearable popper-class="good-selects">
           <el-option v-for="item in personList" :key="item.id" :label="item.inoculatorName" :value="item.id">
             <div>
@@ -60,12 +60,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="是否缴费" label-width="80px">
-            <el-radio-group v-model="form.payCostType">
-              <el-radio :label="1">已缴</el-radio>
-              <el-radio :label="0">未缴</el-radio>
-            </el-radio-group>
-          </el-form-item>
+          <!--<el-form-item label="是否缴费" label-width="80px">-->
+          <!--<el-radio-group v-model="form.payCostType">-->
+          <!--<el-radio :label="1">已缴</el-radio>-->
+          <!--<el-radio :label="0">未缴</el-radio>-->
+          <!--</el-radio-group>-->
+          <!--</el-form-item>-->
         </el-col>
         <!--<el-col :span="7">-->
         <!--<el-form-item label="是否新开瓶" label-width="90px">-->
@@ -82,7 +82,7 @@
       <h2>疫苗信息</h2>
       <el-form-item label="疫苗" prop="vaccineId">
         <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsList"
-                   placeholder="请输入名称搜索疫苗" @click.native.once="queryOrgGoodsList('')"
+                   placeholder="请输入名称搜索疫苗"
                    clearable popper-class="order-good-selects"
                    @change="orgGoodsIdChange">
           <el-option v-for="item in orgGoodsList" :key="item.id" :label="item.goodsName"
@@ -96,6 +96,9 @@
               </span>
               <span class="select-other-info pull-left">
                 <span v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
+              </span>
+              <span class="select-other-info pull-left">
+                  <dict dict-group="orderGoodsType" :dict-key="'' + item.vaccineSign"></dict>
               </span>
             </div>
           </el-option>
@@ -116,13 +119,18 @@
         </el-select>
       </el-form-item>
       <el-row class="info" v-show="form.vaccineId&& form.batchNumberId">
-        <el-col :span="10" v-show="form.factoryName">
+        <el-col :span="12" v-show="form.factoryName">
           <el-form-item label="生产厂商">{{form.factoryName}}</el-form-item>
         </el-col>
-        <el-col :span="8" v-show="form.specifications">
+        <el-col :span="12" v-show="form.vaccineSign">
+          <el-form-item label="疫苗种类">
+            <dict dict-group="orderGoodsType" :dict-key="'' + form.vaccineSign"></dict>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-show="form.specifications">
           <el-form-item label="规格">{{form.specifications}}</el-form-item>
         </el-col>
-        <el-col :span="6" v-show="form.qualifiedBizServings">
+        <el-col :span="12" v-show="form.qualifiedBizServings">
           <el-form-item label="剩余剂次">
             <span>{{form.qualifiedBizServings}}</span>
           </el-form-item>
@@ -130,18 +138,19 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="接种部位" prop="inoculationPosition">
-            <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
+          <el-form-item label="接种途径" prop="inoculationChannel">
+            <el-select type="text" v-model="form.inoculationChannel" placeholder="请选择接种途径"
+                       @change="inoculationChannelChange">
               <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in inoculationPositionList"></el-option>
+                         v-for="item in inoculationChannelList"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="接种途径" prop="inoculationChannel">
-            <el-select type="text" v-model="form.inoculationChannel" placeholder="请选择接种途径">
+          <el-form-item label="接种部位" prop="inoculationPosition">
+            <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
               <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in inoculationChannelList"></el-option>
+                         v-for="item in inoculationPositionList"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -253,7 +262,8 @@
           this.$http.get('/org/goods/' + this.form.orgGoodsId).then(res => {
             this.form = Object.assign({}, this.form, {
               specifications: res.data.orgGoodsDto.goodsDto.specifications,
-              factoryName: res.data.orgGoodsDto.goodsDto.factoryName
+              factoryName: res.data.orgGoodsDto.goodsDto.factoryName,
+              vaccineSign: res.data.orgGoodsDto.goodsDto.vaccineSign
             });
           });
         } else {
@@ -274,6 +284,9 @@
           this.orgGoodsList = [];
           this.personList = [];
           this.batchNumberList = [];
+          this.queryPersonList();
+          this.queryOrgGoodsList();
+          this.queryBatchNumbers();
         }
         this.$nextTick(() => {
           this.$refs['form'].clearValidate();
@@ -327,10 +340,11 @@
         this.form.orgGoodsName = item.goodsName;
         this.queryBatchNumbers('', true);
         this.$http.get('/org/goods/' + this.form.orgGoodsId).then(res => {
-          this.form.inoculationPosition = res.data.orgGoodsDto.goodsDto.propertyMap.inoculationPosition;
+          // this.form.inoculationPosition = res.data.orgGoodsDto.goodsDto.propertyMap.inoculationPosition;
           this.form.inoculationChannel = res.data.orgGoodsDto.goodsDto.propertyMap.inoculationChannel;
           this.form.specifications = res.data.orgGoodsDto.goodsDto.specifications;
           this.form.factoryName = res.data.orgGoodsDto.goodsDto.factoryName;
+          this.form.vaccineSign = res.data.orgGoodsDto.goodsDto.vaccineSign;
         });
       },
       batchNumberChange(val) {
@@ -377,6 +391,9 @@
           this.form.list.push(item);
           this.injectionType = 1;
         });
+      },
+      inoculationChannelChange() {
+        this.form.inoculationPosition = '';
       },
       deleteItem(item) {
         this.form.list = this.form.list.filter(f => f !== item);
