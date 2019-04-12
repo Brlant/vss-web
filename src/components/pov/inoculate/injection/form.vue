@@ -7,7 +7,7 @@
 
   .mini-form {
     .el-form-item {
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
   }
 
@@ -338,14 +338,11 @@
         let item = this.orgGoodsList.find(f => f.goodsId === val);
         this.form.orgGoodsId = item.id;
         this.form.orgGoodsName = item.goodsName;
+        this.form.inoculationChannel = item.inoculationChannel;
+        this.form.specifications = item.specifications;
+        this.form.factoryName = item.factoryName;
+        this.form.vaccineSign = item.vaccineSign;
         this.queryBatchNumbers('', true);
-        this.$http.get('/org/goods/' + this.form.orgGoodsId).then(res => {
-          // this.form.inoculationPosition = res.data.orgGoodsDto.goodsDto.propertyMap.inoculationPosition;
-          this.form.inoculationChannel = res.data.orgGoodsDto.goodsDto.propertyMap.inoculationChannel;
-          this.form.specifications = res.data.orgGoodsDto.goodsDto.specifications;
-          this.form.factoryName = res.data.orgGoodsDto.goodsDto.factoryName;
-          this.form.vaccineSign = res.data.orgGoodsDto.goodsDto.vaccineSign;
-        });
       },
       batchNumberChange(val) {
         this.form.qualifiedBizServings = '';
