@@ -116,8 +116,8 @@
                 <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="疾控中心" prop="cdcId">
-              <el-select placeholder="请选择疾控" v-model="form.cdcId" clearable @change="changeOrg">
+            <el-form-item label="供货单位" prop="cdcId">
+              <el-select placeholder="请选择供货单位" v-model="form.cdcId" clearable @change="changeOrg">
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
               </el-select>
@@ -347,7 +347,7 @@
             {required: true, type: 'number', message: '请选择疫苗标志', trigger: 'change'}
           ],
           cdcId: [
-            {required: true, message: '请选择疾控', trigger: 'change'}
+            {required: true, message: '请选择供货单位', trigger: 'change'}
           ],
           demandTime: [
             {required: true, message: '请选择到货需求日期', trigger: 'change'}
@@ -544,7 +544,7 @@
           this.cdcs = res.data;
           this.filterProduct();
           this.searchProduct();
-          // 得到疾控中心后,再得到地址
+          // 得到供货单位后,再得到地址
           this.showCdcs.forEach(i => {
             if (i.orgId === this.form.cdcId) {
               this.form.warehouseId = i.addressId;

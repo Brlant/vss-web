@@ -79,6 +79,9 @@
               <oms-row label="要货申请编号">
                 {{currentOrder.id }}
               </oms-row>
+              <oms-row label="供货单位">
+                {{currentOrder.cdcName}}
+              </oms-row>
               <oms-row label="申请时间">
                 {{currentOrder.applyTime | time}}
               </oms-row>
@@ -87,9 +90,6 @@
               </oms-row>
               <oms-row label="接种点仓库">
                 {{currentOrder.warehouseAddress}}
-              </oms-row>
-              <oms-row label="疾控中心">
-                {{currentOrder.cdcName}}
               </oms-row>
               <el-row>
                 <oms-row label="备注">{{ currentOrder.remark }}</oms-row>

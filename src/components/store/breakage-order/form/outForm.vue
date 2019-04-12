@@ -133,8 +133,8 @@
                            v-for="item in breakageType"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="上级疾控中心" prop="customerId" v-if="!isSelfBreakage">
-              <el-select placeholder="请选择上级疾控中心" v-model="form.customerId" clearable @change="customerIdChange">
+            <el-form-item label="上级供货单位" prop="customerId" v-if="!isSelfBreakage">
+              <el-select placeholder="请选择上级供货单位" v-model="form.customerId" clearable @change="customerIdChange">
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in customerList">
                 </el-option>
               </el-select>
@@ -445,7 +445,7 @@
             {required: true, message: '请选择货主', trigger: 'change'}
           ],
           customerId: [
-            {required: true, message: '请选择上级疾控中心', trigger: 'change'}
+            {required: true, message: '请选择上级供货单位', trigger: 'change'}
           ],
           bizType: [
             {required: true, message: '请选择业务类型', trigger: 'change'}
@@ -643,7 +643,7 @@
       },
       editOrderInfo() {
         if (!this.orderId) return;
-        // 查询疾控中心
+        // 查询供货单位
         this.queryOnCDCs();
         InWork.queryOrderDetail(this.orderId).then(res => {
           res.data.detailDtoList.forEach(f => {
@@ -694,7 +694,7 @@
         this.form.transportationMeansId = '';
         this.form.logisticsCentreId = '';
       },
-      customerIdChange() { // 改变上级疾控中心
+      customerIdChange() { // 改变上级供货单位
         this.warehouses = [];
         this.form.transportationAddress = '';
         this.searchWarehouses();
@@ -730,7 +730,7 @@
           this.transportationAddressChange(this.form.orgAddress);
         });
       },
-      queryOnCDCs() { // 查询上级疾控中心
+      queryOnCDCs() { // 查询上级供货单位
         cerpAction.queryOnCDCs().then(res => {
           this.customerList = res.data;
         });
