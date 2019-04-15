@@ -196,7 +196,7 @@
               </el-col>
               <el-col :span="12">
                 <oms-row class="row-mg" label="疫苗种类" :span="10">
-                  <dict dict-group="orderGoodsType" :dict-key="'' + currentItem.injectionTaskDto.vaccineSign"></dict>
+                  <dict dict-group="vaccineSign" :dict-key="'' + currentItem.injectionTaskDto.vaccineSign"></dict>
                 </oms-row>
               </el-col>
             </el-row>

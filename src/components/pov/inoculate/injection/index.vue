@@ -117,7 +117,7 @@
                 <div class="font-gray">{{item.specification}}</div>
               </el-col>
               <el-col :span="2">
-                <dict dict-group="orderGoodsType" :dict-key="'' + item.vaccineSign"></dict>
+                <dict dict-group="vaccineSign" :dict-key="'' + item.vaccineSign"></dict>
               </el-col>
               <el-col :span="2">
                 {{item.batchNumber}}

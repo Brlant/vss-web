@@ -98,7 +98,7 @@
                 <span v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
               </span>
               <span class="select-other-info pull-left">
-                  <dict dict-group="orderGoodsType" :dict-key="'' + item.vaccineSign"></dict>
+                  <dict dict-group="vaccineSign" :dict-key="'' + item.vaccineSign"></dict>
               </span>
             </div>
           </el-option>
@@ -124,7 +124,7 @@
         </el-col>
         <el-col :span="12" v-show="form.vaccineSign">
           <el-form-item label="疫苗种类">
-            <dict dict-group="orderGoodsType" :dict-key="'' + form.vaccineSign"></dict>
+            <dict dict-group="vaccineSign" :dict-key="'' + form.vaccineSign"></dict>
           </el-form-item>
         </el-col>
         <el-col :span="12" v-show="form.specifications">
