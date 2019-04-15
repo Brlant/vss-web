@@ -220,11 +220,14 @@
               </el-col>
               <el-col :span="5">
                 <el-row>
-                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)">
-                    生成Word
-                  </el-button>
-                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportExcelFile(item.id)">
-                    生成Excel
+                  <!--<el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)">-->
+                    <!--生成Word-->
+                  <!--</el-button>-->
+                  <!--<el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportExcelFile(item.id)">-->
+                    <!--生成Excel-->
+                  <!--</el-button>-->
+                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportAccountingVoucher(item.id)">
+                    导出财务收款单
                   </el-button>
                 </el-row>
               </el-col>
@@ -380,6 +383,31 @@
           moduleId: '/collection/operation'
         });
         this.$http.get('/bill-receivable/' + id + '/export', {params}).then(res => {
+          utils.download(res.data.path);
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/collection/operation'
+          });
+        }).catch(error => {
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/collection/operation'
+          });
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      exportAccountingVoucher: function (id) {
+        if (!id) {
+          return;
+        }
+        let params = Object.assign({}, this.filterRights);
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: '/collection/operation'
+        });
+        this.$http.get('/cdc-bill' + id + '/export', {params}).then(res => {
           utils.download(res.data.path);
           this.$store.commit('initPrint', {
             isPrinting: false,
