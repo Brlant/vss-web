@@ -82,7 +82,7 @@
       <h2>疫苗信息</h2>
       <el-form-item label="疫苗" prop="vaccineId">
         <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsListNew"
-                   placeholder="请输入名称搜索疫苗"
+                   placeholder="请输入名称/疫苗编号搜索疫苗"
                    clearable popper-class="order-good-selects"
                    @change="orgGoodsIdChange">
           <el-option v-for="item in orgGoodsList" :key="item.id" :label="item.goodsName"
@@ -105,7 +105,8 @@
         </el-select>
       </el-form-item>
       <el-form-item label="批号" prop="batchNumberId">
-        <el-select v-model="form.batchNumberId" filterable remote :remote-method="queryBatchNumbers" placeholder="请选择批号"
+        <el-select v-model="form.batchNumberId" filterable remote :remote-method="queryBatchNumbers"
+                   placeholder="请输入名称搜索批号"
                    clearable popper-class="good-selects" @change="batchNumberChange"
                    @click.native.once="queryBatchNumbers('')">
           <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
