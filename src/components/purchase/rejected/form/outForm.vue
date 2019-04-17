@@ -184,12 +184,12 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流中心" prop="logisticsCentreId">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"
-                         @change="changeLogisticsCenterId">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
-              </el-select>
-            </el-form-item>
+            <!--<el-form-item label="物流中心" prop="logisticsCentreId">-->
+            <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"-->
+            <!--@change="changeLogisticsCenterId">-->
+            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
+            <!--</el-select>-->
+            <!--</el-form-item>-->
             <el-form-item label="是否合格">
               <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                          v-model="form.qualifiedFlag" @change="clearForm"></el-switch>
@@ -648,7 +648,7 @@
         this.form.transportationMeansId = '1';
         this.form.transportationCondition = '0';
         // 默认物流中心
-        this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
+        // this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       },
       autoSave: function () {
         if (!this.form.id) {
@@ -923,7 +923,7 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.customerId || !this.form.logisticsCentreId) {
+        if (!this.form.customerId) {
           this.searchProductList = [];
           this.filterProductList = [];
           return;
@@ -931,8 +931,7 @@
         let params = {
           keyWord: query,
           factoryId: this.form.customerId,
-          vaccineType: this.form.goodsType + 1,
-          logisticsCentreId: this.form.logisticsCentreId // 查询货品传入物流中心
+          vaccineType: this.form.goodsType + 1
         };
         let rTime = Date.now();
         this.requestTime = rTime;

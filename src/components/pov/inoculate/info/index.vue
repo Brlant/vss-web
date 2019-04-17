@@ -59,10 +59,11 @@
           <el-col :span="2">姓名</el-col>
           <el-col :span="2">性别</el-col>
           <el-col :span="3">生日</el-col>
-          <el-col :span="4">接种证编号</el-col>
-          <el-col :span="5">身份证</el-col>
-          <el-col :span="4">出生证号</el-col>
-          <el-col :span="4">操作</el-col>
+          <el-col :span="3">接种证编号</el-col>
+          <el-col :span="3">身份证</el-col>
+          <el-col :span="3">出生证号</el-col>
+          <el-col :span="4">备注</el-col>
+          <el-col :span="2">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -89,30 +90,32 @@
               <el-col :span="3">
                 {{item.inoculatorBirthday | date}}
               </el-col>
-              <el-col :span="4">
+              <el-col :span="3">
                 {{item.inoculatorNumber}}
               </el-col>
-              <el-col :span="5">
+              <el-col :span="3">
                 {{item.inoculatorCardNumber}}
               </el-col>
-              <el-col :span="4">
+              <el-col :span="3">
                 {{item.birthCertificateNumber}}
               </el-col>
-              <el-col :span="4" class="opera-btn">
+              <el-col :span="4">
+                {{item.inoculatorRemarks}}
+              </el-col>
+              <el-col :span="2" class="opera-btn">
                 <perm label="edit-inoculator-info">
                   <span @click.stop.prevent="editItem(item)">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-edit"></i></a>
                     编辑
                   </span>
-
                 </perm>
-                <perm label="edit-inoculator-info">
-                  <span @click.stop.prevent="deleteItem(item)">
-                        <a href="#" class="btn-circle" @click.prevent=""><i
-                          class="el-icon-t-delete"></i></a>删除
-                  </span>
-                </perm>
+                <!--<perm label="edit-inoculator-info">-->
+                <!--<span @click.stop.prevent="deleteItem(item)">-->
+                <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
+                <!--class="el-icon-t-delete"></i></a>删除-->
+                <!--</span>-->
+                <!--</perm>-->
               </el-col>
             </el-row>
           </div>

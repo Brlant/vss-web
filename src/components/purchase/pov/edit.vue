@@ -75,9 +75,12 @@
             </el-col>
           </el-row>
           <el-row v-else="">
-            <el-col :span="8">
+            <el-col :span="11">
               <oms-row label="要货申请编号">
                 {{currentOrder.id }}
+              </oms-row>
+              <oms-row label="供货单位">
+                {{currentOrder.cdcName}}
               </oms-row>
               <oms-row label="申请时间">
                 {{currentOrder.applyTime | time}}
@@ -92,7 +95,7 @@
                 <oms-row label="备注">{{ currentOrder.remark }}</oms-row>
               </el-row>
             </el-col>
-            <el-col :span="16">
+            <el-col :span="13">
               <oms-row label="申请人">
                 {{currentOrder.applyManName}}
               </oms-row>

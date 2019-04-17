@@ -12,18 +12,24 @@
     cursor: pointer;
   }
 
+  .advanced-query-form {
+    .el-row {
+      display: flex;
+      align-items: center;
+    }
+  }
 </style>
 <template>
   <div class="order-page">
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <span>
+          <perm label="scrap-multi-person-aging">
             <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addScrap">
                <a href="#" class="btn-circle" @click.prevent=""><i
                  class="el-icon-t-remove"></i> </a>批量报废
             </span>
-          </span>
+          </perm>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -56,15 +62,16 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="追溯码" :span="8">
-                <oms-input type="text" v-model="searchCondition.reviewCodeDetail" placeholder="请输入追溯码"></oms-input>
+            <el-col :span="7">
+              <oms-form-row label="追溯码" :span="6">
+                <oms-input type="text" v-model.trim="searchCondition.reviewCodeDetail" placeholder="请输入追溯码"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="5">
+            <el-col :span="7">
+              <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <el-button type="success" plain @click="exportExcel">导出Excel</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -81,7 +88,7 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header">
           <el-col :span="6">
-            <el-checkbox v-model="checkAll" @change="checkAllChange"/>
+            <el-checkbox v-model="checkAll" @change="checkAllChange" v-show="filters.status === '0'"/>
             疫苗名称
           </el-col>
           <el-col :span="6">追溯码</el-col>
@@ -106,7 +113,9 @@
                :class="[{'active':currentItem.multiPersonAgingId===item.multiPersonAgingId}]">
             <el-row>
               <el-col :span="6" class="flex-col">
-                <el-checkbox v-model="item.checked"/>
+                <div @click.stop="" v-show="filters.status === '0'">
+                  <el-checkbox v-model="item.checked"/>
+                </div>
                 <div>{{item.vaccineName}}</div>
               </el-col>
               <el-col :span="6">
@@ -124,6 +133,7 @@
               </el-col>
               <el-col :span="2">
                 {{getStatusTitle(item.recordStatus)}}
+                <el-tag type="warning" v-show="item.type">已失效</el-tag>
               </el-col>
             </el-row>
           </div>
@@ -264,9 +274,9 @@
         let cParams = Object.assign({}, params, {status: null});
         multiAging.queryStateNum(cParams).then(res => {
           let data = res.data;
-          this.injectionType[0].num = this.obtionStatusNum(data['waiting']);
-          this.injectionType[1].num = this.obtionStatusNum(data['after']);
-          this.injectionType[2].num = this.obtionStatusNum(data['scrap']);
+          this.vaccineEachList[0].num = this.obtionStatusNum(data['waiting']);
+          this.vaccineEachList[1].num = this.obtionStatusNum(data['after']);
+          this.vaccineEachList[2].num = this.obtionStatusNum(data['scrap']);
         });
       },
       obtionStatusNum: function (num) {
@@ -285,7 +295,9 @@
         return title;
       },
       addScrap() {
-        let checkList = this.dataList.filter(f => f.checked);
+        let checkList = this.dataList.filter(f => f.checked).map(m => ({
+          multiPersonAgingId: m.multiPersonAgingId
+        }));
         if (!checkList.length) {
           return this.$notify.info({
             message: '请选择记录'
@@ -296,7 +308,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          this.$http.post('', checkList).then(res => {
+          this.$http.post('/multi-person-aging/scrap-multi-person-aging', checkList).then(res => {
             this.$notify.success({
               message: '报废完成'
             });
@@ -305,6 +317,22 @@
             this.$notify.error({
               message: e.response && e.response.data.msg || '无法报废'
             });
+          });
+        });
+      },
+      exportExcel() {
+        let params = Object.assign({}, this.filters, {
+          recordStatus: this.filters.status
+        });
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
+        this.$http.get('/multi-person-aging/export', {params}).then(res => {
+          utils.download(res.data.path, '多人份剂次时效记录');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
           });
         });
       }

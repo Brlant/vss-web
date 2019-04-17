@@ -57,12 +57,6 @@ http.interceptors.response.use(response => {
   let noticeTipKey = 'noticeError';
   let notice = window.localStorage.getItem(noticeTipKey);
   let response = error.response;
-
-  if (notice === '1' && response.status !== 401) {
-    return Promise.reject(error);
-  } else {
-    window.localStorage.setItem(noticeTipKey, '1');
-  }
   if (!response || response.status === 500) {
     Notification.warning({
       message: '服务器太久没有响应, 请重试',
@@ -70,6 +64,11 @@ http.interceptors.response.use(response => {
         window.localStorage.removeItem(noticeTipKey);
       }
     });
+  }
+  if (notice === '1' && response.status !== 401) {
+    return Promise.reject(error);
+  } else {
+    window.localStorage.setItem(noticeTipKey, '1');
   }
   if (response.status === 401) { //  Unauthorized, redirect to login
     let lastUrl = window.localStorage.getItem('lastUrl');

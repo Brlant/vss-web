@@ -137,7 +137,7 @@
           pageSize: 15
         },
         filters: {
-          status: '11'
+          status: '6'
         },
         activeStatus: 0,
         currentOrderId: '',

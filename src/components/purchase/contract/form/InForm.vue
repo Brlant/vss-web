@@ -164,11 +164,11 @@
                            v-for="item in transportationConditionList"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流中心" prop="logisticsCentreId">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
-              </el-select>
-            </el-form-item>
+            <!--<el-form-item label="物流中心" prop="logisticsCentreId">-->
+            <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">-->
+            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
+            <!--</el-select>-->
+            <!--</el-form-item>-->
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
               <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
@@ -386,7 +386,7 @@
           'transportationAddress': '',
           'importedFlag': '',
           'orgRelation': '',
-          'logisticsCentreId': this.$store.state.logisticsCentreId,
+          'logisticsCentreId': '',
           'expectedTime': '',
           'detailDtoList': [],
           'supplierId': '',
@@ -545,7 +545,7 @@
             'transportationAddress': '',
             'importedFlag': '',
             'orgRelation': '',
-            'logisticsCentreId': this.$store.state.logisticsCentreId,
+            'logisticsCentreId': '',
             'expectedTime': '',
             'detailDtoList': [],
             'supplierId': '',
@@ -588,7 +588,7 @@
       },
       setDefaultValue() {
         this.form.transportationCondition = '0';
-        this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
+        // this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
         this.form.purchaseContractName = '';
       },
       createOrderInfo() {

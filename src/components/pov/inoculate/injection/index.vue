@@ -82,10 +82,11 @@
           <el-col :span="3">登记编号</el-col>
           <el-col :span="2">受种者</el-col>
           <el-col :span="5">疫苗名称</el-col>
-          <el-col :span="3">批号</el-col>
+          <el-col :span="2">疫苗种类</el-col>
+          <el-col :span="2">批号</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="3">状态</el-col>
-          <el-col :span="4">操作</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -105,8 +106,8 @@
             <el-row>
               <el-col :span="3">
                 {{item.inoculatorNumber}}
-                <el-tag type="success" v-show="item.payCostType === 1">已缴费</el-tag>
-                <el-tag type="warning" v-show="item.payCostType === 0">未缴费</el-tag>
+                <!--<el-tag type="success" v-show="item.payCostType === 1">已缴费</el-tag>-->
+                <!--<el-tag type="warning" v-show="item.payCostType === 0">未缴费</el-tag>-->
               </el-col>
               <el-col :span="2">
                 {{item.inoculatorName}}
@@ -115,7 +116,10 @@
                 <div>{{item.orgGoodsName}}</div>
                 <div class="font-gray">{{item.specification}}</div>
               </el-col>
-              <el-col :span="3">
+              <el-col :span="2">
+                <dict dict-group="vaccineSign" :dict-key="'' + item.vaccineSign"></dict>
+              </el-col>
+              <el-col :span="2">
                 {{item.batchNumber}}
               </el-col>
               <el-col :span="4">
@@ -126,7 +130,7 @@
               <el-col :span="3">
                 {{getStatusTitle(item.status)}}
               </el-col>
-              <el-col :span="4" class="opera-btn">
+              <el-col :span="3" class="opera-btn">
                 <div v-show="activeStatus === '0'">
                   <perm label="edit-vaccination-task">
                       <span @click.stop.prevent="editItem(item)">

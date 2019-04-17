@@ -11,6 +11,7 @@
   .opera-btn-group {
     margin-left: 0;
     margin-right: 0;
+
     .title {
       color: red;
     }
@@ -19,6 +20,24 @@
   .is-flex {
     display: flex;
     align-items: center;
+  }
+
+  .adjust-const-stock-detail {
+
+  }
+</style>
+<style lang="scss">
+  .adjust-const-stock-detail {
+    h3 {
+      background: #fff;
+      margin: 50px 0 0;
+      padding: 5px;
+      text-align: center;
+    }
+
+    .el-table__row {
+      cursor: auto;
+    }
   }
 </style>
 <template>
@@ -175,7 +194,33 @@
         </el-table-column>
       </el-table>
     </div>
-
+    <div class="container adjust-const-stock-detail">
+      <h3>操作明细</h3>
+      <el-table :data="operateList" class="header-list store" border v-loading="loadingLog"
+                :header-row-class-name="'headerClass'" :max-height="bodyHeight" style="width: 100%">
+        <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
+        <el-table-column prop="warehouseAddress" label="仓库" :sortable="true" width="110"></el-table-column>
+        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
+        <el-table-column prop="availableCount" label="可用库存" :sortable="true" width="100"></el-table-column>
+        <el-table-column prop="transitCount" label="在途库存" :sortable="true" width="100"></el-table-column>
+        <el-table-column prop="qualifiedActualCount" label="实际合格库存" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="stockUnqualifiedActualCount" label="实际不合格库存" :sortable="true"
+                         width="140"></el-table-column>
+        <el-table-column prop="unqualifiedCount" label="调整时间" :sortable="true" width="100">
+          <template slot-scope="scope">
+            <span>{{scope.row.createTime | time}}</span>
+          </template>
+        </el-table-column>
+      </el-table>
+      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+        <el-pagination
+          :total="pager.count" :pageSize="pager.pageSize"
+          @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :page-sizes="[pager.pageSize,20,50,100]" layout="sizes, prev, pager, next, jumper"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
+    </div>
     <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <detail :currentItem="currentItem" @close="resetRightBox"></detail>
     </page-right>
@@ -215,7 +260,7 @@
         pager: {
           currentPage: 1,
           count: 0,
-          pageSize: 20
+          pageSize: 10
         },
         currentItemId: '',
         currentItem: {},
@@ -239,12 +284,15 @@
           unqualifiedCount: '',
           undeterminedCount: ''
         },
-        doing: false
+        doing: false,
+        operateList: [],
+        loadingLog: false
       };
     },
     mounted() {
       // this.getBatches(1);
       this.queryOrgWarehouse();
+      this.queryOperateList(1);
     },
     computed: {
       orgLevel() {
@@ -275,6 +323,26 @@
       }
     },
     methods: {
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        this.queryOperateList(1);
+      },
+      handleCurrentChange(val) {
+        this.queryOperateList(val);
+      },
+      queryOperateList(pageNo) {
+        this.pager.currentPage = pageNo;
+        let params = {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize,
+        };
+        this.loadingLog = true;
+        this.$http.get('/erp-stock/adjust/log', {params}).then(res => {
+          this.loadingLog = false;
+          this.operateList = res.data.list;
+          this.pager.count = res.data.count;
+        });
+      },
       isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expiryDate);
@@ -508,6 +576,7 @@
               message: '调整库存成功'
             });
             this.getBatches(1);
+            this.queryOperateList(1);
             this.form = {
               availableCount: '',
               qualifiedCount: '',

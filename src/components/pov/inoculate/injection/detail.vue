@@ -63,6 +63,9 @@
           <h2>接种任务</h2>
           <oms-row label="登记编号" :span="span">{{currentItem.injectionTaskDto.inoculatorNumber}}</oms-row>
           <oms-row label="疫苗名称" :span="span">{{currentItem.injectionTaskDto.orgGoodsName}}</oms-row>
+          <oms-row label="疫苗种类" :span="span">
+            <dict dict-group="vaccineSign" :dict-key="'' + currentItem.injectionTaskDto.vaccineSign"></dict>
+          </oms-row>
           <oms-row label="规格" :span="span">{{currentItem.injectionTaskDto.specification}}</oms-row>
           <oms-row label="生产厂商" :span="span">{{currentItem.injectionTaskDto.origin}}</oms-row>
           <oms-row label="批号" :span="span">{{currentItem.injectionTaskDto.batchNumber}}</oms-row>
@@ -80,9 +83,9 @@
           <oms-row label="登记完成时间" :span="span" v-show="currentItem.injectionTaskDto.actualTime">
             {{currentItem.injectionTaskDto.actualTime | time}}
           </oms-row>
-          <oms-row label="是否缴费" :span="span">
-            {{currentItem.injectionTaskDto.payCostType === 1 ? '已缴费' : '未交费'}}
-          </oms-row>
+          <!--<oms-row label="是否缴费" :span="span">-->
+          <!--{{currentItem.injectionTaskDto.payCostType === 1 ? '已缴费' : '未交费'}}-->
+          <!--</oms-row>-->
           <oms-row label="是否新开瓶" :span="span">
             {{currentItem.injectionTaskDto.newInoculationStatus === 1 ? '是' : '否'}}
           </oms-row>

@@ -140,11 +140,11 @@
                            v-for="item in transportationConditionList"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流中心" prop="logisticsCentreId">
-              <el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">
-                <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>
-              </el-select>
-            </el-form-item>
+            <!--<el-form-item label="物流中心" prop="logisticsCentreId">-->
+            <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true">-->
+            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
+            <!--</el-select>-->
+            <!--</el-form-item>-->
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
               <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress"
                          filterable :clearable="true" @change="transportationAddressChange">
@@ -620,8 +620,8 @@
         let oldForm = window.localStorage.getItem(this.saveKey);
         if (oldForm) {
           this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-          this.form.logisticsCentreId = this.form.logisticsCentreId
-            ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
+          // this.form.logisticsCentreId = this.form.logisticsCentreId
+          //   ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
       },
       resetForm: function () {// 重置表单

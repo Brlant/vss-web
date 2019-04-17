@@ -116,7 +116,7 @@
         </h2>
         <div class="d-table-col-wrap" :style="'height:'+ bodyHeight  + 'px'" @scroll="$scrollLoadingData">
           <div class="search-left-box" v-show="showSearch">
-            <oms-input v-model="filters.keyword" placeholder="输入接种证/身份证搜索" :showFocus="showSearch"></oms-input>
+            <oms-input v-model="filters.keyword" placeholder="输入登记编号搜索" :showFocus="showSearch"></oms-input>
           </div>
           <div v-if="!leftList.length" class="empty-info">
             暂无信息
@@ -143,138 +143,148 @@
         </div>
       </div>
       <div class="d-table-right" v-loading="loading">
-        <div v-if="!currentItem.inoculatorInfoDto" class="empty-info">
-          暂无信息
-        </div>
-        <section v-if="currentItem.inoculatorInfoDto">
-          <h2>受种者信息</h2>
-          <oms-row class="row-mg" label="姓名" :span="5">
-            {{currentItem.inoculatorInfoDto.inoculatorName}}
-            <span class="col-label">性别：</span>{{currentItem.inoculatorInfoDto.inoculatorSex}}
-            <span class="col-label">生日：</span>{{currentItem.inoculatorInfoDto.inoculatorBirthday | date}}
-          </oms-row>
-          <oms-row class="row-mg" label="接种证编号" :span="5"
-                   v-show="currentItem.inoculatorInfoDto.inoculateCode">{{currentItem.inoculatorInfoDto.inoculateCode}}
-          </oms-row>
-          <oms-row class="row-mg" label="身份证" :span="5"
-                   v-show="currentItem.inoculatorInfoDto.inoculatorCardNumber">
-            {{currentItem.inoculatorInfoDto.inoculatorCardNumber}}
-          </oms-row>
-          <oms-row class="row-mg" label="出生证号" :span="5"
-                   v-show="currentItem.inoculatorInfoDto.birthCertificateNumber">
-            {{currentItem.inoculatorInfoDto.birthCertificateNumber}}
-          </oms-row>
-        </section>
-        <section v-if="currentItem.injectionTaskDto">
-          <h2>
-            接种任务
-          </h2>
-          <el-row>
-            <el-col :span="12">
-              <oms-row class="row-mg" label="登记编号" :span="span">{{currentItem.injectionTaskDto.inoculatorNumber}}
-                <el-tag type="success" v-show="currentItem.injectionTaskDto.payCostType === 1">已缴费</el-tag>
-                <el-tag type="warning" v-show="currentItem.injectionTaskDto.payCostType === 0">未缴费</el-tag>
-              </oms-row>
-            </el-col>
-            <el-col :span="12">
-              <oms-row class="row-mg" label="登记时间" :span="span">{{currentItem.injectionTaskDto.registrationTime | time}}
-              </oms-row>
-            </el-col>
-          </el-row>
-          <oms-row class="row-mg" label="疫苗名称" :span="5">{{currentItem.injectionTaskDto.orgGoodsName}}</oms-row>
-          <oms-row class="row-mg" label="生产厂商" :span="5">{{currentItem.injectionTaskDto.origin}}</oms-row>
-          <el-row>
-            <el-col :span="12">
-              <oms-row class="row-mg" label="规格" :span="10">{{currentItem.injectionTaskDto.specification}}</oms-row>
-            </el-col>
-            <el-col :span="12">
-              <!--<oms-row class="row-mg" label="是否新开瓶" :span="10">-->
-              <!--{{currentItem.injectionTaskDto.newInoculationStatus === 1 ? '是' : '否'}}-->
-              <!--</oms-row>-->
-            </el-col>
-          </el-row>
-          <oms-row class="row-mg" label="接种途径" :span="5">
-            <dict :dict-group="'inoculationChannel'" :dict-key="currentItem.injectionTaskDto.inoculationChannel"></dict>
-          </oms-row>
-          <oms-row class="row-mg flex-row flex-row-col" label="批号" :span="5">
-            <el-col :span="12">
-              <el-select class="is-large" v-model="form.batchNumberId" filterable remote
-                         :remote-method="queryBatchNumbers"
-                         placeholder="请选择批号" @change="batchNumberIdChange"
-                         clearable popper-class="order-good-selects" :disabled="validating">
-                <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
-                           :value="item.batchNumberId">
-                  <div>{{item.batchNumber}}</div>
-                  <div class="font-gray">剩余剂次：{{item.qualifiedBizServings}}</div>
-                </el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="12">
-              <oms-row label="剩余剂次" :span="14" v-show="form.batchNumberId && form.qualifiedBizServings">
-                {{form.qualifiedBizServings}}
-              </oms-row>
-            </el-col>
-          </oms-row>
-          <oms-row class="row-mg flex-row flex-row-col" label="接种部位" :span="5">
-            <el-col :span="12">
-              <el-select style="width: 100%" type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in inoculationPositionList"></el-option>
-              </el-select>
-            </el-col>
-            <el-col :span="12" v-if="currentItem.injectionTaskDto.maximumOfPeople > 1">
-              <oms-row label="是否新开瓶" label-width="90px">
-                <el-switch
-                  v-model="form.newInoculationStatus"
-                  active-text="是" :disabled="validating"
-                  :active-value="1" :inactive-value="0"
-                  inactive-text="否" @change="newInoculationStatusChange">
-                </el-switch>
-              </oms-row>
-            </el-col>
-          </oms-row>
-          <oms-row class="row-mg flex-row" label="追溯码" :span="5">
-            <el-col :span="12">
-              <oms-input v-model="form.actualCode" placeholder="请输入追溯码" @blur="validCode"
-                         :disabled="validating"></oms-input>
-            </el-col>
-            <el-col :span="12">
-              <!--<div class="valid-sign" :class="{success: validSign, error: !validSign}">-->
-              <!--<span v-if="validSign">-->
-              <!--<i class="el-icon-success"></i>-->
-              <!--<span>追溯码校验成功</span>-->
-              <!--</span>-->
-              <!--<span v-else>-->
-              <!--<i class="el-icon-error"></i>-->
-              <!--<span>追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败</span>-->
-              <!--</span>-->
-              <!--</div>-->
-            </el-col>
-          </oms-row>
-          <oms-row class="row-mg" label="" :span="5" v-if="validating">
-            <el-button :loading="validating" type="success">正在校验追溯码</el-button>
-          </oms-row>
-          <oms-row class="row-mg flex-row" label="" :span="5" v-if="typeof validSign === 'boolean'">
 
-            <div class="valid-sign" :class="{success: validSign, error: !validSign}">
+        <section>
+          <h2>受种者信息</h2>
+          <div v-if="!currentItem.inoculatorInfoDto" class="empty-info mini">
+            暂无信息
+          </div>
+          <div v-else>
+            <oms-row class="row-mg" label="姓名" :span="5">
+              {{currentItem.inoculatorInfoDto.inoculatorName}}
+              <span class="col-label">性别：</span>{{currentItem.inoculatorInfoDto.inoculatorSex}}
+              <span class="col-label">生日：</span>{{currentItem.inoculatorInfoDto.inoculatorBirthday | date}}
+            </oms-row>
+            <oms-row class="row-mg" label="接种证编号" :span="5"
+                     v-show="currentItem.inoculatorInfoDto.inoculateCode">
+              {{currentItem.inoculatorInfoDto.inoculateCode}}
+            </oms-row>
+            <oms-row class="row-mg" label="身份证" :span="5"
+                     v-show="currentItem.inoculatorInfoDto.inoculatorCardNumber">
+              {{currentItem.inoculatorInfoDto.inoculatorCardNumber}}
+            </oms-row>
+            <oms-row class="row-mg" label="出生证号" :span="5"
+                     v-show="currentItem.inoculatorInfoDto.birthCertificateNumber">
+              {{currentItem.inoculatorInfoDto.birthCertificateNumber}}
+            </oms-row>
+          </div>
+        </section>
+        <section>
+          <h2>接种任务</h2>
+          <div v-if="!currentItem.injectionTaskDto" class="empty-info mini">
+            暂无信息
+          </div>
+          <div v-else>
+            <el-row>
+              <el-col :span="12">
+                <oms-row class="row-mg" label="登记编号" :span="span">{{currentItem.injectionTaskDto.inoculatorNumber}}
+                  <!--<el-tag type="success" v-show="currentItem.injectionTaskDto.payCostType === 1">已缴费</el-tag>-->
+                  <!--<el-tag type="warning" v-show="currentItem.injectionTaskDto.payCostType === 0">未缴费</el-tag>-->
+                </oms-row>
+              </el-col>
+              <el-col :span="12">
+                <oms-row class="row-mg" label="登记时间" :span="span">{{currentItem.injectionTaskDto.registrationTime |
+                  time}}
+                </oms-row>
+              </el-col>
+            </el-row>
+            <oms-row class="row-mg" label="疫苗名称" :span="5">{{currentItem.injectionTaskDto.orgGoodsName}}</oms-row>
+            <oms-row class="row-mg" label="生产厂商" :span="5">{{currentItem.injectionTaskDto.origin}}</oms-row>
+            <el-row>
+              <el-col :span="12">
+                <oms-row class="row-mg" label="规格" :span="10">{{currentItem.injectionTaskDto.specification}}</oms-row>
+              </el-col>
+              <el-col :span="12">
+                <oms-row class="row-mg" label="疫苗种类" :span="10">
+                  <dict dict-group="vaccineSign" :dict-key="'' + currentItem.injectionTaskDto.vaccineSign"></dict>
+                </oms-row>
+              </el-col>
+            </el-row>
+            <oms-row class="row-mg" label="接种途径" :span="5">
+              <dict :dict-group="'inoculationChannel'"
+                    :dict-key="currentItem.injectionTaskDto.inoculationChannel"></dict>
+            </oms-row>
+            <oms-row class="row-mg flex-row flex-row-col" label="批号" :span="5">
+              <el-col :span="12">
+                <el-select class="is-large" v-model="form.batchNumberId" filterable remote
+                           :remote-method="queryBatchNumbers"
+                           placeholder="请选择批号" @change="batchNumberIdChange"
+                           clearable popper-class="order-good-selects" :disabled="validating">
+                  <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
+                             :value="item.batchNumberId">
+                    <div>{{item.batchNumber}}</div>
+                    <div class="font-gray">剩余剂次：{{item.qualifiedBizServings}}</div>
+                  </el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="12">
+                <oms-row label="剩余剂次" :span="14" v-show="form.batchNumberId && form.qualifiedBizServings">
+                  {{form.qualifiedBizServings}}
+                </oms-row>
+              </el-col>
+            </oms-row>
+            <oms-row class="row-mg flex-row flex-row-col" label="接种部位" :span="5">
+              <el-col :span="12">
+                <el-select style="width: 100%" type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
+                  <el-option :value="item.key" :key="item.key" :label="item.label"
+                             v-for="item in inoculationPositionList"></el-option>
+                </el-select>
+              </el-col>
+              <el-col :span="12" v-if="currentItem.injectionTaskDto.maximumOfPeople > 1">
+                <oms-row label="是否新开瓶" label-width="90px">
+                  <el-switch
+                    v-model="form.newInoculationStatus"
+                    active-text="是" :disabled="validating"
+                    :active-value="1" :inactive-value="0"
+                    inactive-text="否" @change="newInoculationStatusChange">
+                  </el-switch>
+                </oms-row>
+              </el-col>
+            </oms-row>
+            <oms-row class="row-mg flex-row" label="追溯码" :span="5">
+              <el-col :span="12">
+                <oms-input v-model="form.actualCode" placeholder="请输入追溯码" @blur="validCode"
+                           :disabled="validating"></oms-input>
+              </el-col>
+              <el-col :span="12">
+                <!--<div class="valid-sign" :class="{success: validSign, error: !validSign}">-->
+                <!--<span v-if="validSign">-->
+                <!--<i class="el-icon-success"></i>-->
+                <!--<span>追溯码校验成功</span>-->
+                <!--</span>-->
+                <!--<span v-else>-->
+                <!--<i class="el-icon-error"></i>-->
+                <!--<span>追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败追溯码校验失败</span>-->
+                <!--</span>-->
+                <!--</div>-->
+              </el-col>
+            </oms-row>
+            <oms-row class="row-mg" label="" :span="5" v-if="validating">
+              <el-button :loading="validating" type="success">正在校验追溯码</el-button>
+            </oms-row>
+            <oms-row class="row-mg flex-row" label="" :span="5" v-if="typeof validSign === 'boolean'">
+
+              <div class="valid-sign" :class="{success: validSign, error: !validSign}">
               <span v-if="validSign">
                 <i class="el-icon-success"></i>
                   <span>追溯码校验成功</span>
               </span>
-              <span v-else="">
+                <span v-else="">
                 <i class="el-icon-error"></i>
                   <span>{{errorDetail.title}}</span>
                 </span>
-            </div>
-          </oms-row>
-          <perm label="confirm-vaccination-task">
-            <oms-row class="row-mg flex-row" label="" :span="5" v-if="validSign">
-              <el-button type="primary" @click="confirmTask(0)" :doing="doing">确认接种</el-button>
-              <el-button type="primary" @click="confirmTask(1)" :doing="doing"
-                         v-if="currentItem.injectionTaskDto.maximumOfPeople === 1">新开瓶接种
-              </el-button>
+              </div>
             </oms-row>
-          </perm>
+            <perm label="confirm-vaccination-task">
+              <oms-row class="row-mg flex-row" label="" :span="5" v-if="validSign">
+                <el-button class="el-button-large" type="primary" @click="confirmTask(0)" :doing="doing">确认接种
+                </el-button>
+                <!--<el-button type="primary" @click="confirmTask(1)" :doing="doing"-->
+                <!--v-if="currentItem.injectionTaskDto.maximumOfPeople === 1">新开瓶接种-->
+                <!--</el-button>-->
+              </oms-row>
+            </perm>
+          </div>
         </section>
       </div>
     </div>
@@ -372,6 +382,8 @@
         });
       },
       showItem(item) {
+        this.validSign = null;
+        this.errorDetail = {};
         this.currentItemId = item.id;
         this.loading = true;
         this.currentItem = {};

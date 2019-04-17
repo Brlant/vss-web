@@ -103,7 +103,7 @@ export default {
     1: {'title': '未生效', availabilityStatus: false, num: ''}
   },
   receiptType: {
-    0: {'title': '待收货', state: '11', num: ''},
+    0: {'title': '待收货', state: '6', num: ''},
     1: {'title': '已完成', state: '8', num: ''}
   },
   firmType: {

@@ -7,7 +7,7 @@
 
   .mini-form {
     .el-form-item {
-      margin-bottom: 0px;
+      margin-bottom: 0;
     }
   }
 
@@ -38,8 +38,8 @@
       <h2>基本信息</h2>
       <el-form-item label="受种者" prop="inoculatorInfoId">
         <el-select v-model="form.inoculatorInfoId" filterable remote :remote-method="queryPersons"
-                   placeholder="请输入名称/身份证号/出生证号搜索" @click.native.once="queryPersonList('')"
-                   clearable popper-class="good-selects">
+                   placeholder="请输入名称/身份证号/出生证号搜索"
+                   clearable popper-class="good-selects" @clear="queryPersons('')">
           <el-option v-for="item in personList" :key="item.id" :label="item.inoculatorName" :value="item.id">
             <div>
               <span>{{item.inoculatorName}}</span>
@@ -60,12 +60,12 @@
           </el-form-item>
         </el-col>
         <el-col :span="10">
-          <el-form-item label="是否缴费" label-width="80px">
-            <el-radio-group v-model="form.payCostType">
-              <el-radio :label="1">已缴</el-radio>
-              <el-radio :label="0">未缴</el-radio>
-            </el-radio-group>
-          </el-form-item>
+          <!--<el-form-item label="是否缴费" label-width="80px">-->
+          <!--<el-radio-group v-model="form.payCostType">-->
+          <!--<el-radio :label="1">已缴</el-radio>-->
+          <!--<el-radio :label="0">未缴</el-radio>-->
+          <!--</el-radio-group>-->
+          <!--</el-form-item>-->
         </el-col>
         <!--<el-col :span="7">-->
         <!--<el-form-item label="是否新开瓶" label-width="90px">-->
@@ -81,10 +81,10 @@
              @submit.prevent="onSubmit('form')" onsubmit="return false">
       <h2>疫苗信息</h2>
       <el-form-item label="疫苗" prop="vaccineId">
-        <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsList"
-                   placeholder="请输入名称搜索疫苗" @click.native.once="queryOrgGoodsList('')"
+        <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsListNew"
+                   placeholder="请输入名称/疫苗编号搜索疫苗"
                    clearable popper-class="order-good-selects"
-                   @change="orgGoodsIdChange">
+                   @change="orgGoodsIdChange" @clear="queryOrgGoodsListNew('')">
           <el-option v-for="item in orgGoodsList" :key="item.id" :label="item.goodsName"
                      :value="item.goodsId">
             <div style="overflow: hidden">
@@ -97,32 +97,40 @@
               <span class="select-other-info pull-left">
                 <span v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
               </span>
+              <span class="select-other-info pull-left">
+                  <dict dict-group="vaccineSign" :dict-key="'' + item.vaccineSign"></dict>
+              </span>
             </div>
           </el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="批号" prop="batchNumberId">
-        <el-select v-model="form.batchNumberId" filterable remote :remote-method="queryBatchNumbers" placeholder="请选择批号"
-                   clearable popper-class="good-selects" @change="batchNumberChange"
-                   @click.native.once="queryBatchNumbers('')">
+        <el-select v-model="form.batchNumberId" filterable remote :remote-method="queryBatchNumbers"
+                   placeholder="请输入名称搜索批号" @clear="queryBatchNumbers('')"
+                   clearable popper-class="good-selects" @change="batchNumberChange">
           <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
                      :value="item.batchNumberId">
             <div>{{item.batchNumber}}</div>
             <div class="font-gray">
-              <span>剩余剂次：{{item.qualifiedBizServings}}</span>
-              <span class="ml-15">有效期：{{item.expiryDate | date}}</span>
+              <span v-show="item.qualifiedBizServings">剩余剂次：{{item.qualifiedBizServings}}</span>
+              <span class="ml-15" v-show="item.expiryDate">有效期：{{item.expiryDate | date}}</span>
             </div>
           </el-option>
         </el-select>
       </el-form-item>
       <el-row class="info" v-show="form.vaccineId&& form.batchNumberId">
-        <el-col :span="10" v-show="form.factoryName">
+        <el-col :span="12" v-show="form.factoryName">
           <el-form-item label="生产厂商">{{form.factoryName}}</el-form-item>
         </el-col>
-        <el-col :span="8" v-show="form.specifications">
+        <el-col :span="12" v-show="form.vaccineSign">
+          <el-form-item label="疫苗种类">
+            <dict dict-group="vaccineSign" :dict-key="'' + form.vaccineSign"></dict>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-show="form.specifications">
           <el-form-item label="规格">{{form.specifications}}</el-form-item>
         </el-col>
-        <el-col :span="6" v-show="form.qualifiedBizServings">
+        <el-col :span="12" v-show="form.qualifiedBizServings">
           <el-form-item label="剩余剂次">
             <span>{{form.qualifiedBizServings}}</span>
           </el-form-item>
@@ -130,18 +138,19 @@
       </el-row>
       <el-row>
         <el-col :span="12">
-          <el-form-item label="接种部位" prop="inoculationPosition">
-            <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
+          <el-form-item label="接种途径" prop="inoculationChannel">
+            <el-select type="text" v-model="form.inoculationChannel" placeholder="请选择接种途径"
+                       @change="inoculationChannelChange">
               <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in inoculationPositionList"></el-option>
+                         v-for="item in inoculationChannelList"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
         <el-col :span="12">
-          <el-form-item label="接种途径" prop="inoculationChannel">
-            <el-select type="text" v-model="form.inoculationChannel" placeholder="请选择接种途径">
+          <el-form-item label="接种部位" prop="inoculationPosition">
+            <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
               <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in inoculationChannelList"></el-option>
+                         v-for="item in inoculationPositionList"></el-option>
             </el-select>
           </el-form-item>
         </el-col>
@@ -248,14 +257,12 @@
               id: this.formItem.orgGoodsId
             }
           ];
-          this.form = Object.assign({}, this.formItem);
-          this.form.list = [];
-          this.$http.get('/org/goods/' + this.form.orgGoodsId).then(res => {
-            this.form = Object.assign({}, this.form, {
-              specifications: res.data.orgGoodsDto.goodsDto.specifications,
-              factoryName: res.data.orgGoodsDto.goodsDto.factoryName
-            });
+          this.form = Object.assign({}, this.formItem, {
+            specifications: this.formItem.specification,
+            factoryName: this.formItem.origin,
+            vaccineSign: this.formItem.vaccineSign
           });
+          this.form.list = [];
         } else {
           this.form = {
             inoculatorInfoId: '',
@@ -271,6 +278,12 @@
             factoryName: '',
             list: []
           };
+          this.orgGoodsList = [];
+          this.personList = [];
+          this.batchNumberList = [];
+          this.queryPersonList();
+          this.queryOrgGoodsListNew();
+          this.queryBatchNumbers();
         }
         this.$nextTick(() => {
           this.$refs['form'].clearValidate();
@@ -279,6 +292,14 @@
       }
     },
     methods: {
+      queryOrgGoodsListNew(query) {
+        const params = {
+          keyWord: query
+        };
+        this.$http.get('/injection-task/goods', {params}).then(res => {
+          this.orgGoodsList = res.data.list;
+        });
+      },
       queryPersons(query) {
         this.form.inoculatorNumber = query;
         this.queryPersonList(query);
@@ -322,13 +343,11 @@
         let item = this.orgGoodsList.find(f => f.goodsId === val);
         this.form.orgGoodsId = item.id;
         this.form.orgGoodsName = item.goodsName;
+        this.form.inoculationChannel = item.inoculationChannel;
+        this.form.specifications = item.specifications;
+        this.form.factoryName = item.factoryName;
+        this.form.vaccineSign = item.vaccineSign;
         this.queryBatchNumbers('', true);
-        this.$http.get('/org/goods/' + this.form.orgGoodsId).then(res => {
-          this.form.inoculationPosition = res.data.orgGoodsDto.goodsDto.propertyMap.inoculationPosition;
-          this.form.inoculationChannel = res.data.orgGoodsDto.goodsDto.propertyMap.inoculationChannel;
-          this.form.specifications = res.data.orgGoodsDto.goodsDto.specifications;
-          this.form.factoryName = res.data.orgGoodsDto.goodsDto.factoryName;
-        });
       },
       batchNumberChange(val) {
         this.form.qualifiedBizServings = '';
@@ -374,6 +393,9 @@
           this.form.list.push(item);
           this.injectionType = 1;
         });
+      },
+      inoculationChannelChange() {
+        this.form.inoculationPosition = '';
       },
       deleteItem(item) {
         this.form.list = this.form.list.filter(f => f !== item);
