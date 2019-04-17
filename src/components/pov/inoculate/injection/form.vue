@@ -244,7 +244,7 @@
           this.orgGoodsList = [
             {
               goodsId: this.formItem.vaccineId,
-              goodsName: this.formItem.goodsName,
+              goodsName: this.formItem.orgGoodsName,
               id: this.formItem.orgGoodsId
             }
           ];
