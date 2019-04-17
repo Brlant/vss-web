@@ -39,7 +39,7 @@
       <el-form-item label="受种者" prop="inoculatorInfoId">
         <el-select v-model="form.inoculatorInfoId" filterable remote :remote-method="queryPersons"
                    placeholder="请输入名称/身份证号/出生证号搜索"
-                   clearable popper-class="good-selects">
+                   clearable popper-class="good-selects" @clear="queryPersons('')">
           <el-option v-for="item in personList" :key="item.id" :label="item.inoculatorName" :value="item.id">
             <div>
               <span>{{item.inoculatorName}}</span>
@@ -84,7 +84,7 @@
         <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsListNew"
                    placeholder="请输入名称/疫苗编号搜索疫苗"
                    clearable popper-class="order-good-selects"
-                   @change="orgGoodsIdChange">
+                   @change="orgGoodsIdChange" @clear="queryOrgGoodsListNew('')">
           <el-option v-for="item in orgGoodsList" :key="item.id" :label="item.goodsName"
                      :value="item.goodsId">
             <div style="overflow: hidden">
@@ -106,15 +106,14 @@
       </el-form-item>
       <el-form-item label="批号" prop="batchNumberId">
         <el-select v-model="form.batchNumberId" filterable remote :remote-method="queryBatchNumbers"
-                   placeholder="请输入名称搜索批号"
-                   clearable popper-class="good-selects" @change="batchNumberChange"
-                   @click.native.once="queryBatchNumbers('')">
+                   placeholder="请输入名称搜索批号" @clear="queryBatchNumbers('')"
+                   clearable popper-class="good-selects" @change="batchNumberChange">
           <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
                      :value="item.batchNumberId">
             <div>{{item.batchNumber}}</div>
             <div class="font-gray">
-              <span>剩余剂次：{{item.qualifiedBizServings}}</span>
-              <span class="ml-15">有效期：{{item.expiryDate | date}}</span>
+              <span v-show="item.qualifiedBizServings">剩余剂次：{{item.qualifiedBizServings}}</span>
+              <span class="ml-15" v-show="item.expiryDate">有效期：{{item.expiryDate | date}}</span>
             </div>
           </el-option>
         </el-select>
@@ -258,15 +257,12 @@
               id: this.formItem.orgGoodsId
             }
           ];
-          this.form = Object.assign({}, this.formItem);
-          this.form.list = [];
-          this.$http.get('/org/goods/' + this.form.orgGoodsId).then(res => {
-            this.form = Object.assign({}, this.form, {
-              specifications: res.data.orgGoodsDto.goodsDto.specifications,
-              factoryName: res.data.orgGoodsDto.goodsDto.factoryName,
-              vaccineSign: res.data.orgGoodsDto.goodsDto.vaccineSign
-            });
+          this.form = Object.assign({}, this.formItem, {
+            specifications: this.formItem.specification,
+            factoryName: this.formItem.origin,
+            vaccineSign: this.formItem.vaccineSign
           });
+          this.form.list = [];
         } else {
           this.form = {
             inoculatorInfoId: '',
