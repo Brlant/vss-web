@@ -182,7 +182,14 @@ Vue.prototype.$formatAryTime = function (ary, index, str = 'YYYY-MM-DD') {
 if (process.env.NODE_ENV === 'production') {
   Raven
     .config('https://62f56ceea555483fab3d6238ff4a80d0@f-log.cdcerp.net/3', {
-      serverName: 'vss'
+      serverName: 'vss',
+      shouldSendCallback: (date) => {// 过滤错误日志
+        let filterArray = ['Request failed with status code 401', 'Request failed with status code 502'];
+        if (date && date.hasOwnProperty('exception') && date.exception.hasOwnProperty('values') && filterArray.indexOf(date.exception.values[0].value) > -1) {
+          return false;
+        }
+        return date;
+      }
     })
     .addPlugin(RavenVue, Vue)
     .install();
