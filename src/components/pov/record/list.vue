@@ -181,7 +181,7 @@
           pageSize: this.pager.pageSize
         }, this.filters);
         this.loadingData = true;
-        this.$http.get('/injection-task', {params}).then(res => {
+        this.$http.get('/injection-task/injection-task-query', {params}).then(res => {
           this.CDCs = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
