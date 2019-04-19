@@ -38,7 +38,7 @@
       <h2>基本信息</h2>
       <el-form-item label="受种者" prop="inoculatorInfoId">
         <el-select v-model="form.inoculatorInfoId" filterable remote :remote-method="queryPersons"
-                   placeholder="请输入名称/身份证号/出生证号搜索"
+                   placeholder="请输入姓名或身份证号或接种证编号或出生证号进行搜索"
                    clearable popper-class="good-selects" @clear="queryPersons('')">
           <el-option v-for="item in personList" :key="item.id" :label="item.inoculatorName" :value="item.id">
             <div>
@@ -82,7 +82,7 @@
       <h2>疫苗信息</h2>
       <el-form-item label="疫苗" prop="vaccineId">
         <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsListNew"
-                   placeholder="请输入名称/疫苗编号搜索疫苗"
+                   placeholder="请输入名称或疫苗编号搜索疫苗"
                    clearable popper-class="order-good-selects"
                    @change="orgGoodsIdChange" @clear="queryOrgGoodsListNew('')">
           <el-option v-for="item in orgGoodsList" :key="item.id" :label="item.goodsName"
