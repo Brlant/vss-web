@@ -318,11 +318,11 @@
       </div>
     </div>
     <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-      <el-pagination
+      <el-cu-pagination
         layout="prev, pager, next"
         :total="pager.count" :pageSize="pager.pageSize" @current-change="getOrderList"
         :current-page="pager.currentPage">
-      </el-pagination>
+      </el-cu-pagination>
     </div>
     <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">

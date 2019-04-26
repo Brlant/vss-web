@@ -123,12 +123,12 @@
 
       </div>
       <div class="text-center" v-show="(traceCodes.length || pager.currentPage !== 1) && !loadingData">
-        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
-                       :current-page="pager.currentPage"
-                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize"
-                       layout="sizes, prev, pager, next, jumper"
-                       :total="pager.count">
-        </el-pagination>
+        <el-cu-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                          :current-page="pager.currentPage"
+                          :page-sizes="[10,20,50,100]" :page-size="pager.pageSize"
+                          layout="sizes, prev, pager, next, jumper"
+                          :total="pager.count">
+        </el-cu-pagination>
       </div>
     </div>
   </div>

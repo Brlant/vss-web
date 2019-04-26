@@ -169,12 +169,12 @@
         </el-table-column>
       </el-table>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
-        <el-pagination
+        <el-cu-pagination
           layout="sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
           :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
           :page-sizes="[10,20,50,100]"
           :current-page="pager.currentPage">
-        </el-pagination>
+        </el-cu-pagination>
       </div>
     </div>
   </div>
