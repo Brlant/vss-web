@@ -1,6 +1,6 @@
-
 stages:
   - test
+  - build
   - deploy
 
 # 变量
@@ -16,3 +16,8 @@ before_script:
 lint:
   stage: test
   script: npm run lint
+
+# 编译
+local-build:
+  stage: build
+  script: npm run build
