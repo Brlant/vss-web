@@ -10,6 +10,12 @@ export default {
       this.showSearch = showSearch;
     }
   },
+  computed: {
+    vaccineSignList() {
+      let ary = this.$getDict('orderGoodsType') || [];
+      return ary.filter(f => f.key < 2);
+    }
+  },
   watch: {
     showSearch(val) {
       window.localStorage.setItem(this.$route.path, val);
