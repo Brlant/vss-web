@@ -79,15 +79,8 @@
         <el-form class="advanced-query-form clearfix"
                  style="padding-top: 10px; background: #fff; padding: 10px 10px 10px;">
           <el-row>
-            <el-col :span="10">
-              <oms-form-row label="时间" :span="4">
-                <el-date-picker v-model="bizDateAry" type="datetimerange" :default-time="['00:00:00', '23:59:59']"
-                                placeholder="请选择日期">
-                </el-date-picker>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="7">
-              <oms-form-row label="收款单位" :span="5">
+            <el-col :span="12">
+              <oms-form-row label="收款单位" :span="4">
                 <el-select filterable remote placeholder="请输入名称搜索收款单位" :remote-method="filterOrg" :clearable="true"
                            v-model="searchWord.receiptOrgId" popperClass="good-selects"
                            @click.native.once="filterOrg('')">
@@ -107,19 +100,35 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="7">
-              <oms-form-row label="" :span="1">
+            <el-col :span="12">
+              <oms-form-row label="" :span="2">
                 <el-button native-type="reset" @click="resetExportForm">重置</el-button>
-                <perm label="accounts-payable-unpaid-info-export">
-                  <el-button :plain="true" type="success" @click="exportUnPayment" :disabled="isLoading">
-                    导出未付账款
-                  </el-button>
-                </perm>
                 <perm label="accounts-payable-paid-info-export">
                   <el-button :plain="true" type="success" @click="exportPayment" :disabled="isLoading">
                     导出已付账款
                   </el-button>
                 </perm>
+                <perm label="accounts-payable-unpaid-info-export">
+                  <el-button :plain="true" type="success" @click="exportUnPayment" :disabled="isLoading">
+                    按单位导出未付账款
+                  </el-button>
+                </perm>
+                <perm label="accounts-payable-month-unpaid-info-export">
+                  <el-button :plain="true" type="success" @click="exportMonthUnPayment" :disabled="isLoading">
+                    按月导出未付账款
+                  </el-button>
+                </perm>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="12">
+              <oms-form-row label="时间" :span="4">
+                <el-date-picker v-model="bizDateAry" type="datetimerange" :default-time="['00:00:00', '23:59:59']"
+                                placeholder="请选择日期">
+                </el-date-picker>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="12">
+              <oms-form-row label="" :span="6">
               </oms-form-row>
             </el-col>
           </el-row>
@@ -140,9 +149,9 @@
                 <i class="el-icon-t-search"></i>
               </a>
               <!--<perm label="accounts-payable-export">-->
-                <!--<el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">-->
-                  <!--导出Excel-->
-                <!--</el-button>-->
+              <!--<el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">-->
+              <!--导出Excel-->
+              <!--</el-button>-->
               <!--</perm>-->
               <perm label="accounts-payable-export">
                 <a href="#" class="btn-circle" @click.stop.prevent="exportFile" :disabled="isLoading">
@@ -466,6 +475,24 @@
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/finance/pay'});
         this.$http.get('/accounts-payable/export/paid-info', {params}).then(res => {
           utils.download(res.data.path, '未付账款表');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/finance/pay'});
+        }).catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/finance/pay'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      exportMonthUnPayment: function () {
+        this.searchWord.createStartTime = this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.searchWord.createEndTime = this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss');
+        let params = Object.assign({}, this.searchWord);
+        this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/finance/pay'});
+        this.$http.get('/accounts-payable/export/month-unpaid-info', {params}).then(res => {
+          utils.download(res.data.path, '未付账款按月汇总表');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/finance/pay'});
         }).catch(error => {
