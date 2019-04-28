@@ -101,6 +101,13 @@
               </oms-form-row>
             </el-col>
             <el-col :span="12">
+              <oms-form-row label="时间" :span="4">
+                <el-date-picker v-model="bizDateAry" type="datetimerange" :default-time="['00:00:00', '23:59:59']"
+                                placeholder="请选择日期">
+                </el-date-picker>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="12">
               <oms-form-row label="" :span="2">
                 <el-button native-type="reset" @click="resetExportForm">重置</el-button>
                 <perm label="accounts-payable-paid-info-export">
@@ -118,13 +125,6 @@
                     按月导出未付账款
                   </el-button>
                 </perm>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="12">
-              <oms-form-row label="时间" :span="4">
-                <el-date-picker v-model="bizDateAry" type="datetimerange" :default-time="['00:00:00', '23:59:59']"
-                                placeholder="请选择日期">
-                </el-date-picker>
               </oms-form-row>
             </el-col>
             <el-col :span="12">
