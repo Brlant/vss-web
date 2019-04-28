@@ -8,10 +8,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -35,15 +37,18 @@
     border-radius: 10px;
     font-size: 12px;
     line-height: 26px;
+
     .product-info-fix {
       background: #f6f6f6;
       margin-top: 10px;
       padding: 5px;
       margin-bottom: 20px;
     }
+
     &:hover {
       border-color: #aaa
     }
+
     .product-remove {
       position: absolute;
       right: 0;
@@ -54,10 +59,12 @@
       text-align: center;
       cursor: pointer;
       color: #666;
+
       &:hover {
         color: #333
       }
     }
+
     .order-goods-info {
       .col-label {
         padding-top: 4px;
@@ -106,12 +113,11 @@
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="订单类型" prop="type">
               <el-radio-group v-model.number="form.type" @change="changeType">
-                <el-radio :label="0">一类疫苗</el-radio>
-                <el-radio :label="1">二类疫苗</el-radio>
+                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="疾控中心" prop="cdcId">
-              <el-select placeholder="请选择疾控" v-model="form.cdcId" clearable @change="changeOrg">
+            <el-form-item label="供货单位" prop="cdcId">
+              <el-select placeholder="请选择供货单位" v-model="form.cdcId" clearable @change="changeOrg">
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
               </el-select>
@@ -165,7 +171,7 @@
                         }}</span>
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.supplyCompanyName">供货厂商:</span>{{ item.supplyCompanyName }}</span>
+                        v-show="item.supplyCompanyName">供货单位:</span>{{ item.supplyCompanyName }}</span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}</span>
                     </div>
@@ -341,7 +347,7 @@
             {required: true, type: 'number', message: '请选择疫苗标志', trigger: 'change'}
           ],
           cdcId: [
-            {required: true, message: '请选择疾控', trigger: 'change'}
+            {required: true, message: '请选择供货单位', trigger: 'change'}
           ],
           demandTime: [
             {required: true, message: '请选择到货需求日期', trigger: 'change'}
@@ -372,6 +378,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      vaccineTypeList() {
+        return this.$store.state.vaccineType;
       }
     },
     watch: {
@@ -510,13 +519,17 @@
             this.form.warehouseId = i.addressId;
           }
         });
+        this.searchProduct();
       },
       searchProduct: function () {
         this.searchProductList = [];
         if (!this.form.cdcId) return;
         let rTime = Date.now();
         this.requestTime = rTime;
-        VaccineRights.queryVaccineByPov(this.$store.state.user.userCompanyAddress, {cdcId: this.form.cdcId}).then(res => {
+        VaccineRights.queryVaccineByPov(this.$store.state.user.userCompanyAddress, {
+          cdcId: this.form.cdcId,
+          vaccineType: this.form.type + 1
+        }).then(res => {
           if (this.requestTime > rTime) {
             return;
           }
@@ -531,7 +544,7 @@
           this.cdcs = res.data;
           this.filterProduct();
           this.searchProduct();
-          // 得到疾控中心后,再得到地址
+          // 得到供货单位后,再得到地址
           this.showCdcs.forEach(i => {
             if (i.orgId === this.form.cdcId) {
               this.form.warehouseId = i.addressId;
@@ -540,7 +553,7 @@
         });
       },
       filterProduct() {
-        this.showCdcs = this.cdcs.filter(f => f.level === this.form.type + 1);
+        this.showCdcs = this.cdcs;
         this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
       },
       searchWarehouses(isEdit) {
