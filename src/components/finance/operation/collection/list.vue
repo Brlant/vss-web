@@ -260,7 +260,7 @@
   import utils from '@/tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import {CDCReceipt, POVPayment} from '@/resources';
+  import { CDCReceipt, POVPayment } from '@/resources';
   import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
@@ -407,7 +407,7 @@
           isPrinting: true,
           moduleId: '/collection/operation'
         });
-        this.$http.get('/cdc-bill' + id + '/export', {params}).then(res => {
+        this.$http.get('/cdc-bill/' + id + '/export', {params}).then(res => {
           utils.download(res.data.path);
           this.$store.commit('initPrint', {
             isPrinting: false,
