@@ -21,7 +21,7 @@ module.exports = {
   },
   transpileDependencies: ['@dtop'],
   configureWebpack: {
-    plugins: process.env.NODE_ENV === 'production' ? [
+    plugins: [
       new CopyWebpackPlugin([
         {
           from: path.resolve(__dirname, 'static'),
@@ -29,6 +29,6 @@ module.exports = {
           ignore: ['.*']
         }
       ])
-    ] : []
+    ]
   }
 };
