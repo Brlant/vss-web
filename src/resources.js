@@ -403,6 +403,25 @@ export const material = resource('/material', http, {});
 // erp订单
 export const vaccineBills = resource('/factory-reconciliation', http, {});
 
+// 收货信息
+export const receiptApi = resource('/receipt', http, {
+  batchReceipt(obj) {
+    return http.post('erp-order/receipt/batch', obj);
+  },
+  changeReceipt(obj) {
+    return http.post('/receipt/order-detail/change', obj);
+  },
+  queryHistoryInfo(detailId) {
+    return http.get(`/receipt/order-detail/${detailId}/history`);
+  },
+  checkPass(checkId) {
+    return http.post(`/receipt/audit/${checkId}/success`);
+  },
+  checkNoPass(checkId) {
+    return http.post(`/receipt/audit/${checkId}/fail`);
+  }
+});
+
 // erp订单
 export const erpOrder = resource('/erp-order', http, {
   queryStateNum(params) {
