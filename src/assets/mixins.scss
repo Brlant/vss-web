@@ -34,6 +34,6 @@ $font-size-base: 14px;
 $font-size-small: 12px;
 
 $activeColor: $primary-color;
-$activeHoverColor: #4dbeff;
+$activeHoverColor: lighten($activeColor, 10%);
 $activeColorFont: #fff;
 $tableHeaderColor: #dfebf8;
