@@ -64,6 +64,7 @@ http.interceptors.response.use(response => {
         window.localStorage.removeItem(noticeTipKey);
       }
     });
+    return Promise.reject(error);
   }
   if (notice === '1' && response.status !== 401) {
     return Promise.reject(error);
