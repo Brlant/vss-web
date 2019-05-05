@@ -922,9 +922,9 @@
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        if (this.vaccineType === '1') {
-          params.vaccineType = undefined;
-        }
+        // if (this.vaccineType === '1') {
+        //   params.vaccineType = undefined;
+        // }
         http.get('pov-sale-group/valid/org-goods', {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
