@@ -220,15 +220,15 @@
               </el-col>
               <el-col :span="5">
                 <el-row>
-                  <!--<el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)">-->
-                    <!--生成Word-->
-                  <!--</el-button>-->
-                  <!--<el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportExcelFile(item.id)">-->
-                    <!--生成Excel-->
-                  <!--</el-button>-->
-                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportAccountingVoucher(item.id)">
-                    导出财务收款单
+                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)">
+                    生成Word
                   </el-button>
+                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportExcelFile(item.id)">
+                    生成Excel
+                  </el-button>
+                  <!--<el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportAccountingVoucher(item.id)">-->
+                  <!--导出财务收款单-->
+                  <!--</el-button>-->
                 </el-row>
               </el-col>
             </el-row>
