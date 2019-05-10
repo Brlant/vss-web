@@ -187,7 +187,6 @@
             <!--v-model="form.importedFlag"></el-switch>-->
             <!--</el-form-item>-->
             <el-form-item :label="showContent.expectedTimeLabel"
-                          :prop=" showContent.isShowOtherContent?'expectedTime':'' "
                           v-show="showContent.isShowOtherContent">
               <el-date-picker v-model="form.expectedTime" placeholder="请选择预计入库时间" format="yyyy-MM-dd"
                               value-format="timestamp" :picker-options="pickerOptions">
