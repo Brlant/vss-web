@@ -13,7 +13,7 @@
     "@dtop/dtop-web-common": "git+https://g.sinopharm-bio.com/dtop/dtop-web-common.git#V2.1.1",
     "axios": "^0.16.2",
     "babel-polyfill": "^6.26.0",
-    "element-ui": "^2.6.1",
+    "element-ui": "2.6.1",
     "moment": "^2.24.0",
     "qs": "^6.6.0",
     "raven-js": "^3.27.0",
