@@ -407,7 +407,7 @@
           row.orgTypeList.forEach(value1 => {
             if (value1 === value.key) {
               str = str + '/' + value.title;
-            };
+            }
           });
         });
         return str.substring(1, str.length);
