@@ -221,6 +221,9 @@
                   <!--<goods-row label="疫苗标志" :span="8">-->
                   <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
                   <!--</goods-row>-->
+                  <goods-row label="疫苗种类" :span="12">
+                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsVaccineSign"></dict>
+                  </goods-row>
                   <goods-row label="储存条件" :span="12">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
@@ -396,9 +399,9 @@
                     {{ data.goodsDto.propertyMap.instructionsCount
                     }}
                   </goods-row>
-                  <!--<goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">-->
-                  <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
-                  <!--</goods-row>-->
+                  <goods-row label="疫苗种类" :span="12" v-if="data.goodsDto.typeId==='1'">
+                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
+                  </goods-row>
                 </el-col>
               </el-row>
               <div class="border-show"></div>

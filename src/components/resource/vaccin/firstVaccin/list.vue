@@ -230,6 +230,9 @@
                   <goods-row label="储存条件" :span="8">
                     <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
                   </goods-row>
+                  <goods-row label="疫苗种类" :span="8">
+                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsVaccineSign"></dict>
+                  </goods-row>
                   <!--<goods-row label="中标价格" :span="8">-->
                   <!--<span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}-->
                   <!--</goods-row>-->
@@ -390,6 +393,9 @@
                   <!--<goods-row label="疫苗标志" :span="12" v-if="data.goodsDto.typeId==='1'">-->
                   <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
                   <!--</goods-row>-->
+                  <goods-row label="疫苗种类" :span="12" v-if="data.goodsDto.typeId==='1'">
+                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
+                  </goods-row>
                   <goods-row label="最小销售单位" :span="12">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
                   </goods-row>
