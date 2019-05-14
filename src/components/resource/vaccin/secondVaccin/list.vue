@@ -202,10 +202,12 @@
                 </el-col>
               </el-row>
               <el-row>
-                <el-col :span="12" style="padding-left:50px;">
-                  <div class="base-pic-item" @click="handlePreview(data.goodsDto.photoId)">
-                    <compressed-img
-                      :src="data.goodsDto.photo?data.goodsDto.photo+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
+                <el-col :span="12" style="padding-left:50px;text-align: center">
+                  <div :class="{'base-pic-item':data.photoUrl,'base-pic-item-normal':!data.photoUrl} "
+                       @click="handlePreview(data.photoId)">
+                    <compressed-img v-if="data.photoUrl"
+                                    :src="data.photoUrl?data.photoUrl+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
+                    <img src="/static/img/userpic.png" v-else>
                   </div>
                 </el-col>
                 <el-col :span="12">
