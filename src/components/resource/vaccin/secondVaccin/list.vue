@@ -204,11 +204,11 @@
               <el-row>
                 <el-col :span="12" style="padding-left:50px;text-align: center">
                   <div :class="{'base-pic-item':data.photoUrl,'base-pic-item-normal':!data.photoUrl} "
-                       @click="handlePreview(data.photoId)">
-                    <compressed-img v-if="data.photoUrl"
+                       @click="handlePreview(data.photoId)" v-if="data.photoUrl">
+                    <compressed-img
                                     :src="data.photoUrl?data.photoUrl+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
-                    <img src="/static/img/userpic.png" v-else>
                   </div>
+                  <div v-else>无产品图片</div>
                 </el-col>
                 <el-col :span="12">
                   <goods-row label="疫苗编号" :span="12">
