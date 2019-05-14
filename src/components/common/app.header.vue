@@ -291,7 +291,7 @@
                     <a class="btn-wechat" href="#" @click.stop.prevent="unbind" v-if="weChatInfo.nickname">(解绑)</a>
                   </div>
                   <div class="text-right clearfix">
-                    <router-link to="/resetpsw">重置密码</router-link>
+                    <router-link style="float: left; margin-top: 2px" to="/resetpsw">重置密码</router-link>
                     <a href="#" @click.stop.prevent="logout">退出</a>
                   </div>
                 </div>
@@ -344,7 +344,7 @@
 </template>
 
 <script>
-  import {Auth, cerpAction} from '../../resources';
+  import { Auth, cerpAction } from '../../resources';
   import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import CusTabs from '@/components/common/cus-tabs/tabs.vue';
