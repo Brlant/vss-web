@@ -44,5 +44,9 @@ module.exports = {
   transpileDependencies: ['@dtop'],
   configureWebpack: {
     plugins: plugins
+  },
+  chainWebpack: config => {
+    // 移除 prefetch 插件
+    config.plugins.delete('prefetch');
   }
 };
