@@ -1,8 +1,6 @@
 import Vue from 'vue';
 import router from './routers';
 import tinyVue from './lib/tinyVue';
-import moment from 'moment';
-import 'moment/locale/zh-cn';
 import './assets/element-variables.scss';
 import './assets/dtop-variables.scss';
 import '../static/css/oms.css';
@@ -10,7 +8,7 @@ import '../static/fonts/iconfont.css';
 import Raven from 'raven-js';
 import RavenVue from 'raven-js/plugins/vue';
 import '@/assets/erp.scss';
-
+import moment from 'dayjs';
 import Vuex from 'vuex';
 import store from './store';
 
@@ -21,10 +19,10 @@ import {initViewPort} from '@dtop/dtop-web-common';
 // 初始化视口宽度
 initViewPort(router);
 
-Vue.use(require('vue-moment'), {moment});
 Vue.use(tinyVue);
 Vue.use(Vuex);
 
+Vue.prototype.$moment = moment;
 Vue.component(omsCostTime.name, omsCostTime);
 Vue.filter('thousandth', function (val) {
   if (!val) return '';
