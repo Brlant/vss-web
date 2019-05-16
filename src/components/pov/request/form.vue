@@ -116,12 +116,15 @@
                 <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="供货单位" prop="cdcId">
+            <el-form-item label="供货单位" prop="cdcId" v-if="showCdcs.length > 1">
               <el-select placeholder="请选择供货单位" v-model="form.cdcId" clearable @change="changeOrg"
                          @visible-change="visibleChange">
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
               </el-select>
+            </el-form-item>
+            <el-form-item label="供货单位" prop="cdcId" v-else-if="form.cdcName">
+              {{form.cdcName}}
             </el-form-item>
             <el-form-item label="接种点仓库" prop="warehouseId">
               <el-select placeholder="请选择接种点仓库" v-model="form.warehouseId" filterable clearable>
@@ -574,7 +577,10 @@
       },
       filterProduct() {
         this.showCdcs = this.cdcs;
-        this.form.cdcId = this.showCdcs.length ? this.showCdcs[0].orgId : '';
+        if (this.showCdcs.length === 1) {
+          this.form.cdcId = this.showCdcs[0].orgId;
+          this.form.cdcName = this.showCdcs[0].orgName;
+        }
       },
       searchWarehouses(isEdit) {
         let user = this.$store.state.user;
@@ -764,6 +770,7 @@
           // 传给后台疫苗标志
           saveData.goodsType = saveData.type;
           delete saveData.type;
+          delete saveData.cdcName;
           saveData.detailDtoList.forEach(item => {
             item.price = item.unitPrice;
             item.applyCount = item.amount;
