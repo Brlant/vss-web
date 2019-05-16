@@ -117,7 +117,8 @@
               </el-radio-group>
             </el-form-item>
             <el-form-item label="供货单位" prop="cdcId">
-              <el-select placeholder="请选择供货单位" v-model="form.cdcId" clearable @change="changeOrg">
+              <el-select placeholder="请选择供货单位" v-model="form.cdcId" clearable @change="changeOrg"
+                         @visible-change="visibleChange">
                 <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in showCdcs">
                 </el-option>
               </el-select>
@@ -367,7 +368,8 @@
         requestTime: '',
         doing: false,
         totalFilterProductList: [],
-        editItemProduct: {}
+        editItemProduct: {},
+        oldCdcId: ''
       };
     },
     computed: {
@@ -395,6 +397,7 @@
           cdcId: '',
           type: 0
         };
+        this.oldCdcId = '';
         this.queryOnCDCs();
         this.currentList = [];
         if (val === 2) {
@@ -486,20 +489,7 @@
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
       },
       changeType(isEdited) {
-        this.product = {
-          'amount': null,
-          'measurementUnit': '',
-          'orgGoodsId': '',
-          'packingCount': null,
-          'specificationsId': '',
-          'fixInfo': {
-            'goodsDto': {}
-          },
-          'unitPrice': null
-        };
-        this.accessoryList = [];
-        this.currentList = [];
-        this.form.detailDtoList = [];
+        this.clearGoodsList();
         this.$refs['orderAddForm'].clearValidate();
         this.$refs['orderGoodsForm'].resetFields();
         this.form.remark = '';
@@ -519,7 +509,37 @@
             this.form.warehouseId = i.addressId;
           }
         });
+        if (this.form.detailDtoList.length) {
+          if (this.oldCdcId !== this.form.cdcId) {
+            this.$confirm('修改供货单位, 会清空已经选择的货品，是否修改？', '', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(() => {
+              this.clearGoodsList();
+            });
+          }
+        }
         this.searchProduct();
+      },
+      clearGoodsList() {
+        this.product = {
+          'amount': null,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.accessoryList = [];
+        this.currentList = [];
+        this.form.detailDtoList = [];
+      },
+      visibleChange(val) {
+        this.oldCdcId = this.from.cdcId;
       },
       searchProduct: function () {
         this.searchProductList = [];
