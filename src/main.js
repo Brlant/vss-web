@@ -9,6 +9,7 @@ import Raven from 'raven-js';
 import RavenVue from 'raven-js/plugins/vue';
 import '@/assets/erp.scss';
 import moment from 'dayjs';
+import 'dayjs/locale/zh-cn';
 import Vuex from 'vuex';
 import store from './store';
 
@@ -22,6 +23,7 @@ initViewPort(router);
 Vue.use(tinyVue);
 Vue.use(Vuex);
 
+moment.locale('zh-cn');
 Vue.prototype.$moment = moment;
 Vue.component(omsCostTime.name, omsCostTime);
 Vue.filter('thousandth', function (val) {
