@@ -261,7 +261,7 @@
               </el-dropdown-menu>
             </el-dropdown>-->
             <span v-show="level > 1 ">
-              <el-tag v-show="level" type="success" class="tag-title">{{ filterLevel(level) }}</el-tag>
+              <!--<el-tag v-show="level" type="success" class="tag-title">{{ filterLevel(level) }}</el-tag>-->
               <span class="org-title">{{orgName}}</span>
             </span>
             <el-dropdown trigger="click">
@@ -344,7 +344,7 @@
 </template>
 
 <script>
-  import { Auth, cerpAction } from '../../resources';
+  import {Auth, cerpAction} from '../../resources';
   import logo_pic from '../../assets/img/epi-logo-header.png';
   import omsUploadPicture from './upload.user.picture.vue';
   import CusTabs from '@/components/common/cus-tabs/tabs.vue';
