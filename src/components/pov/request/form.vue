@@ -542,7 +542,7 @@
         this.form.detailDtoList = [];
       },
       visibleChange(val) {
-        this.oldCdcId = this.from.cdcId;
+        this.oldCdcId = this.form.cdcId;
       },
       searchProduct: function () {
         this.searchProductList = [];
