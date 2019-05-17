@@ -513,13 +513,21 @@
           }
         });
         if (this.form.detailDtoList.length) {
-          if (this.oldCdcId !== this.form.cdcId) {
+          // 清空cdcId判断
+          if (!this.form.cdcId) {
+            this.clearGoodsList();
+          }
+          if (this.form.cdcId && this.oldCdcId && this.oldCdcId !== this.form.cdcId) {
+            let oldId = this.oldCdcId;
             this.$confirm('修改供货单位, 会清空已经选择的货品，是否修改？', '', {
               confirmButtonText: '确定',
               cancelButtonText: '取消',
               type: 'warning'
             }).then(() => {
               this.clearGoodsList();
+            }).catch(() => {
+              this.form.cdcId = oldId;
+              this.oldCdcId = oldId;
             });
           }
         }
