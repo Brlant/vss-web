@@ -198,9 +198,22 @@
        */
       isChangeValue(item, product) {
         if (product.isMainly) {
-          item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
+          let newAmount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
+          if (item.productCount !== newAmount) {
+            this.$confirm(`数量${item.productCount}不是最小包装的倍数，是否调整为${newAmount}`, '', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              type: 'warning'
+            }).then(res => {
+              item.productCount = newAmount;
+              item.isChecked = item.productCount > 0;
+            }).catch(() => {
+              item.isChecked = item.productCount > 0;
+            });
+          }
+        } else {
+          item.isChecked = item.productCount > 0;
         }
-        item.isChecked = item.productCount > 0;
       },
       setIsHasBatchNumberInfo() {
         let batchNumbers = this.batchNumbers || [];

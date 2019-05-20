@@ -486,7 +486,16 @@
         }
       },
       changeNumber() {
-        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+        let newAmount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+        if (this.product.amount !== newAmount) {
+          this.$confirm(`数量${this.product.amount}不是最小包装的倍数，是否调整为${newAmount}`, '', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(res => {
+            this.product.amount = newAmount;
+          });
+        }
       },
       changeTime: function (date) {// 格式化时间
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
