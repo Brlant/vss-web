@@ -267,6 +267,15 @@
               item.isChecked = item.productCount > 0;
               // this.autoSelectBatchWhenIsCombination(item, product);
             });
+          } else {
+            if (item.productCount > item.count) {
+              this.$notify.warning({
+                duration: 2000,
+                message: '输入的产品数量大于可用库存'
+              });
+            }
+            item.isChecked = item.productCount > 0;
+            // this.autoSelectBatchWhenIsCombination(item, product);
           }
         } else {
           if (item.productCount > item.count) {

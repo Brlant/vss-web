@@ -689,6 +689,13 @@
               });
             }
           });
+        } else {
+          if (this.product.amount > this.amount) {
+            this.$notify.warning({
+              duration: 2000,
+              message: '输入的产品数量大于接种点的库存数量'
+            });
+          }
         }
       },
       autoSave: function () {

@@ -210,6 +210,8 @@
             }).catch(() => {
               item.isChecked = item.productCount > 0;
             });
+          } else {
+            item.isChecked = item.productCount > 0;
           }
         } else {
           item.isChecked = item.productCount > 0;
