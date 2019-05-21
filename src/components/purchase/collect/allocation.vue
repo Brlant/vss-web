@@ -69,6 +69,9 @@
                     <span style="font-size: 12px;">{{ item.specification }}</span>
                   </el-tooltip>
                 </div>
+                <div style="font-size: 12px;color:#999">
+                  最小包装数量: {{item.smallPackCount}}
+                </div>
               </el-col>
               <el-col :span="6" class="pt">
                 <span>
@@ -122,6 +125,7 @@
 </template>
 <script>
   import {OrgGoods, procurementCollect} from '@/resources';
+  import utils from '@/tools/utils';
 
   export default {
     data() {
@@ -141,7 +145,8 @@
         defaultIndex: -1,
         purchase: {},
         vaccineType: '',
-        doing: false
+        doing: false,
+        changeTotalNumber: utils.changeTotalNumber
       };
     },
     mounted() {
@@ -210,6 +215,23 @@
         if (!item.purchaseQuantity) {
           item.purchaseQuantity = 0;
         }
+        let newAmount = this.changeTotalNumber(item.purchaseQuantity, item.smallPackCount);
+        if (item.purchaseQuantity !== newAmount) {
+          this.$confirm(`数量${item.purchaseQuantity}不是最小包装的倍数，是否调整为${newAmount}`, '', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(res => {
+            item.purchaseQuantity = newAmount;
+            this.saveValid(item);
+          }).catch(() => {
+            this.saveValid(item);
+          });
+        } else {
+          this.saveValid(item);
+        }
+      },
+      saveValid(item) {
         let obj = {
           id: item.list[0].detailId,
           procurementCount: item.purchaseQuantity
