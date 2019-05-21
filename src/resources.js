@@ -822,6 +822,9 @@ export const Vaccine = resource('/vaccine-info', http, {
   },
   queryStateNum(params) {
     return http.get('/vaccine-info/count', {params});
+  },
+  queryVaccineByOrg(params) {
+    return http.get('accounts-payable/org-goods', {params});
   }
 });
 

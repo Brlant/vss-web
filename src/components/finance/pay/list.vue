@@ -239,22 +239,22 @@
                   <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                              :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
-                    <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
-                               :label="item.orgGoodsDto.name"
-                               :value="item.orgGoodsDto.id">
+                    <el-option v-for="item in goodesList" :key="item.id"
+                               :label="item.name"
+                               :value="item.id">
                       <div style="overflow: hidden">
-                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                        <span class="pull-left">{{item.name}}</span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.salesFirmName">供货单位:</span>{{ item.salesFirmName }}
                         </span>
-                        <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
-                </span>
+                        <span class="select-other-info pull-left" v-if="item.factoryName">
+                          <span v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
+                        </span>
                       </div>
                     </el-option>
                   </el-select>
@@ -615,29 +615,12 @@
         this.resetRightBox();
       },
       searchProduct(keyWord) {
-        let level = this.$store.state.orgLevel;
-        if (level !== 3) {
-          let params = Object.assign({}, {
-            keyWord: keyWord,
-            salesFirm: this.currentItem.remitteeId
-          });
-          let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-          Vaccine[api](params).then(res => {
-            this.goodesList = res.data.list;
-          });
-        } else {
-          let o1 = this.$store.state.user.userCompanyAddress;
-          let o2 = this.currentItem.remitteeId;
-          if (!o1 || !o2) return;
-          let params = {
-            povId: o1,
-            cdcId: o2,
-            keyWord: keyWord
-          };
-          this.$http.get('/erp-stock/bill/goods-list', {params}).then(res => {
-            this.goodesList = res.data.list;
-          });
-        }
+        let params = {
+          keyWord: keyWord
+        };
+        Vaccine.queryVaccineByOrg(params).then(res => {
+          this.goodesList = res.data.list;
+        });
       },
       getDetail: function (pageNo) {
         this.payDetails = [];
