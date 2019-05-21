@@ -349,9 +349,6 @@
         }
         return tilet;
       },
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      },
       user() {
         return this.$store.state.user;
       },

@@ -118,7 +118,7 @@
 
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="订单类型">
+            <el-form-item label="订单类型" prop="goodsType">
               <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
                 <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
               </el-radio-group>
@@ -310,9 +310,9 @@
                 <th style="width: 260px">疫苗名称</th>
                 <th>规格</th>
                 <th>批号</th>
-                <th v-show="orgLevel === 2">疫苗单价</th>
+                <th>疫苗单价</th>
                 <th>数量</th>
-                <th v-show="orgLevel === 2">金额</th>
+                <th>金额</th>
                 <th style="width: 70px">操作</th>
               </tr>
               </thead>
@@ -335,7 +335,7 @@
                   <!--<el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>-->
                   <goods-status-tag :item="product" :form="form"/>
                 </td>
-                <td class="ar" v-show="orgLevel === 2">
+                <td class="ar">
                   <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>
                   <span v-if="!Number(product.unitPrice)">-</span>
                 </td>
@@ -343,7 +343,7 @@
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar" v-show="orgLevel === 2">
+                <td class="ar">
                   <span
                     v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
                   <span v-if="!Number(product.unitPrice)">-</span>
@@ -359,7 +359,7 @@
                   </div>
                 </td>
               </tr>
-              <tr v-show="orgLevel === 2">
+              <tr>
                 <td colspan="5" align="right">
                   <total-count property="amount" :list="form.detailDtoList"></total-count>
                 </td>
@@ -439,7 +439,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
-          goodsType: 0,
+          goodsType: '',
           'orgId': '',
           'customerId': '',
           'bizType': '1-1',
@@ -460,6 +460,9 @@
           transportationAddress: ''
         },
         rules: {
+          goodsType: [
+            {required: true, message: '请选择订单类型', trigger: 'change'},
+          ],
           orderNo: [
             {required: true, message: '请输入货主订单编号', trigger: 'blur'},
             {validator: checkOrderNumber}
@@ -565,9 +568,6 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
-      },
-      orgLevel() {
-        return this.$store.state.orgLevel;
       }
     },
     watch: {
@@ -609,7 +609,6 @@
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
       this.filterLogisticsCenter();
-      this.form.goodsType = this.orgLevel === 1 ? 0 : 1;
 //      this.initForm();
     },
     methods: {

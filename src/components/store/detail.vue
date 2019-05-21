@@ -116,11 +116,6 @@
         this.queryStoreDetails();
       }
     },
-    computed: {
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      }
-    },
     methods: {
       queryStoreDetails() {
         this.storeDetails = [];

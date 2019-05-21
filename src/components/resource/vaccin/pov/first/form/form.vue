@@ -30,9 +30,11 @@
     border-radius: 5px;
     width: 240px;
     padding: 4px;
+
     &:hover {
       border-color: #cccccc;
     }
+
     &:focus {
       outline: none;
     }
@@ -75,15 +77,18 @@
     margin-left: 20px;
     margin-bottom: 10px;
     float: left;
+
     .scope-span {
       position: relative;
       top: 10px;
     }
+
     .scope-icon {
       position: relative;
       top: 10px;
       right: -28px;
       color: #ffffff;
+
       &:hover {
         color: rgb(200, 0, 0)
       }
@@ -97,8 +102,8 @@
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
         <el-select placeholder="请选择疫苗种类" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
-                   :clearable="true" @change="getOmsGoods" popper-class="good-selects"
-                   @clear="getOmsGoods">
+                   :clearable="true" @change="getGoodsType(form.goodsId)" popper-class="good-selects"
+                   @clear="setUsedStatus">
           <el-option :label="item.orgGoodsDto.goodsDto.name" :value="item.orgGoodsDto.goodsDto.id"
                      :key="item.orgGoodsDto.goodsDto.id" v-for="item in goodsList">
             <div style="overflow: hidden">
@@ -123,8 +128,8 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <!--<el-form-item label="供货单位" prop="salesFirm">-->
-      <!--<el-select filterable remote placeholder="请输入名称搜供货单位" :remote-method="filterOrg" @click.native="filterOrg('')"-->
+      <!--<el-form-item label="供货厂商" prop="salesFirm">-->
+      <!--<el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg" @click.native="filterOrg('')"-->
       <!--:clearable="true" v-model="form.salesFirmId" @change="setSalesFirm(form.salesFirmId)"-->
       <!--popperClass="good-selects">-->
       <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
@@ -139,10 +144,10 @@
       <!--</el-option>-->
       <!--</el-select>-->
       <!--</el-form-item>-->
-      <el-form-item label="供货单位ID">
+      <el-form-item label="供货厂商ID">
         {{form.salesFirm}}
       </el-form-item>
-      <el-form-item label="供货单位名称">
+      <el-form-item label="供货厂商名称">
         {{form.salesFirmName}}
       </el-form-item>
       <el-form-item label="疫苗编号" prop="goodsNo">
@@ -208,7 +213,7 @@
                   v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
+                  v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
               </span>
                 <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -268,7 +273,7 @@
             {required: true, message: '请输入疫苗编号', trigger: 'blur'}
           ],
           salesFirm: [
-            {required: true, message: '请选择供货单位', trigger: 'change'}
+            {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
           storageConditionId: [
             {required: true, message: '请选择储存条件', trigger: 'blur'}
@@ -414,7 +419,7 @@
         if (!orgId) {
           return;
         }
-        // 查询供货单位
+        // 查询供货厂商
         let params = {
           keyWord: query,
           relation: '1'

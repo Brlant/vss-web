@@ -109,6 +109,11 @@
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="contractForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
+            <el-form-item label="合同类型" prop="goodsType">
+              <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
+                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item label="合同名称">
               <oms-input type="text" v-model="form.purchaseContractName" placeholder="请输入采购合同名称"></oms-input>
             </el-form-item>
@@ -374,6 +379,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
+          goodsType: '',
           'purchaseContractNo': '',
           'purchaseContractName': '',
           'availabilityStatus': true,
@@ -396,6 +402,9 @@
           'supplierName': ''
         },
         rules: {
+          goodsType: [
+            {required: true, message: '请选择合同类型', trigger: 'change'},
+          ],
           purchaseContractName: [
             {required: true, message: '请输入采购合同名称', trigger: 'blur'}
           ],
@@ -496,9 +505,6 @@
         });
         return totalMoney;
       },
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      },
       user() {
         return this.$store.state.user.userCompanyAddress;
       },
@@ -533,6 +539,7 @@
             this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
           });
           this.form = {
+            goodsType: '',
             'purchaseContractNo': '',
             'purchaseContractName': '',
             'availabilityStatus': true,
@@ -583,6 +590,24 @@
       this.currentPartName = this.productListSet[0].name;
     },
     methods: {
+      changeVaccineType(val) {
+        this.product = {
+          'amount': null,
+          'entrustment': false,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.accessoryList = [];
+        this.editItemProduct = {};
+        this.searchProduct();
+      },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
@@ -807,7 +832,7 @@
         });
       },
       searchProduct: function (query) {
-        if (this.orgLevel === 1) {
+        if (this.form.goodsType === 0) {
           if (!this.form.supplierId) {
             this.searchProductList = [];
             return;

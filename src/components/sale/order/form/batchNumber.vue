@@ -14,7 +14,7 @@
       <div class="product-list-detail" v-for="item in batchNumbers">
         <h3 class="goods-title">
           <span class="pull-left">批号信息({{item.orgGoodsName}}<el-tag v-show="!item.isMainly">组合</el-tag>)</span>
-          <span class="pull-right" v-if="orgLevel === 2 && orderType">单价: ¥{{product.unitPrice}}</span>
+          <span class="pull-right" v-if="product.unitPrice">单价: ¥{{product.unitPrice}}</span>
         </h3>
         <table class="table">
           <thead>
@@ -90,11 +90,6 @@
         isCheckPackage: utils.isCheckPackage,
         doing: false
       };
-    },
-    computed: {
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      }
     },
     watch: {
       'product.orgGoodsId'() {

@@ -358,7 +358,7 @@
 
 </template>
 <script>
-  import { BaseInfo, pay, Vaccine } from '@/resources';
+  import {BaseInfo, pay, Vaccine} from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.in.vue';
@@ -442,9 +442,6 @@
       },
       user() {
         return this.$store.state.user;
-      },
-      level() {
-        return this.$store.state.orgLevel;
       }
     },
     mounted() {
