@@ -158,6 +158,12 @@
           <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in storageCondition"></el-option>
         </el-select>
       </el-form-item>
+      <el-form-item label="疫苗种类" prop="goodsVaccineSign">
+        <el-select placeholder="请选择疫苗种类" v-model="form.goodsVaccineSign" clearable>
+          <el-option :label="item.label" :value="item.key" :key="item.key"
+                     v-for="item in  vaccineSignList"></el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item label="标准单价" prop="unitPrice">
         <oms-input type="text" v-model="form.unitPrice" placeholder="请输入标准单价" @blur="formatPrice">
           <template slot="prepend">¥</template>
@@ -282,6 +288,9 @@
           storageConditionId: [
             {required: true, message: '请选择储存条件', trigger: 'blur'}
           ],
+          goodsVaccineSign: [
+            {required: true, message: '请选择疫苗种类', trigger: 'change'}
+          ],
           name: [
             {required: true, message: '请输入疫苗名称', trigger: 'blur'}
           ],
@@ -345,6 +354,9 @@
       },
       user() {
         return this.$store.state.user;
+      },
+      vaccineSignList() {
+        return this.$getDict('vaccineSign');
       }
     },
     watch: {
