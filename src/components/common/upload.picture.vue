@@ -1,19 +1,21 @@
 <template>
   <div>
-    <el-upload
+    <oms-el-upload
       class="avatar-uploader"
       :action="uploadUrl"
       :show-file-list="false"
-      name="upfile"
+      name="file"
       :on-success="handleAvatarSuccess"
       :on-error="error"
+      :on-remove="handleRemove"
       :before-upload="beforeAvatarUpload"
       :on-change="changePhoto"
-      :on-remove="handleRemove"
-      :data="uploadData">
-      <img v-if="imageUrl" :src="imageUrl" class="avatar">
-      <i v-else="" class="el-icon-plus avatar-uploader-icon"></i>
-    </el-upload>
+      :data="uploadData"
+      :formData="formData"
+    >
+      <img v-if="imageUrl" :src="imageUrl" slot="trigger" class="avatar">
+      <i v-else="" class="el-icon-plus avatar-uploader-icon" slot="trigger"></i>
+    </oms-el-upload>
   </div>
 </template>
 
@@ -47,11 +49,15 @@
 </style>
 
 <script>
-  import {http, OmsAttachment} from '../../resources';
+  import {OmsAttachment} from '../../resources';
+  import OmsElUpload from './upload/src/index.vue';
 
   export default {
-    props: ['photoUrl'],
+    props: ['photoUrl', 'formData'],
     name: 'omsPhotoUpload',
+    components: {
+      OmsElUpload
+    },
     data() {
       return {
         imageUrl: this.photoUrl,
@@ -102,17 +108,6 @@
           });
           return false;
         }
-        let data = {objectId: '', objectType: '', fileName: file.name};
-        return http.post('/qingstor/pre', data).then(res => {
-          this.uploadUrl = res.data.apiUrl;
-          this.uploadData = {
-            policy: res.data.policy,
-            access_key_id: res.data.accessKeyId,
-            signature: res.data.signature,
-            key: res.data.key,
-            redirect: res.data.redirect
-          };
-        });
       },
       error(err) {
         this.$notify.error({
@@ -123,4 +118,3 @@
     }
   };
 </script>
-

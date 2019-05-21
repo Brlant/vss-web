@@ -150,6 +150,9 @@
       <el-form-item label="疫苗名称" prop="name">
         <oms-input type="text" v-model="form.name" placeholder="请输入疫苗名称"></oms-input>
       </el-form-item>
+      <el-form-item label="产品图片">
+        <oms-upload-picture :photoUrl="form.photoUrl" @change="changPhoto"></oms-upload-picture>
+      </el-form-item>
       <el-form-item label="储存条件">
         <el-select placeholder="请选择储存条件" v-model="form.storageConditionId">
           <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in storageCondition"></el-option>
@@ -242,8 +245,12 @@
 <script>
   import {BaseInfo, SuccessfulBidder, Vaccine} from '@/resources';
   import utils from '@/tools/utils';
+  import omsUploadPicture from '@/components/common/upload.picture.vue';
 
   export default {
+    components: {
+      omsUploadPicture
+    },
     data: function () {
       return {
         form: {
@@ -257,7 +264,10 @@
           goodsNo: '',
           bidPrice: null,
           valuationFlag: false,
-          storageConditionId: ''
+          storageConditionId: '',
+          goodsVaccineSign: '',
+          photoId: '',
+          photoUrl: ''
         },
         rules: {
           goodsId: [
@@ -379,7 +389,9 @@
             valuationFlag: false,
             storageConditionId: '',
             inventoryLowerLimit: null,
-            inventoryUpperLimit: null
+            inventoryUpperLimit: null,
+            photoId: '',
+            photoUrl: ''
           };
           this.otherGoodsList = [];
         }
@@ -398,6 +410,13 @@
       }
     },
     methods: {
+      changPhoto: function (photo) {
+        if (photo) {
+          this.photo = photo;
+          this.form.photoId = this.photo.attachmentId;
+          this.form.photoUrl = this.photo.url;
+        }
+      },
       setSalesFirm: function (id) {
         if (id) {
           this.orgList.forEach(val => {

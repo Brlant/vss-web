@@ -98,12 +98,12 @@
           <tr v-for="(item, index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
             <td width="10">{{index + 1}}</td>
             <td width="80">
-              <el-tooltip v-if="item.orgGoodsDto.goodsDto.photo" popperClass="el-tooltip" class="item"
+              <el-tooltip v-if="$formatPhotoUrl(item)" popperClass="el-tooltip" class="item"
                           effect="light" placement="right">
-                <compressed-img :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_80,w_80,m_2' "
-                     class="product-img"/>
-                <compressed-img slot="content" :src="item.orgGoodsDto.goodsDto.photo +'?image&action=resize:h_200,m_2' "
-                     class="product-img"/>
+                <compressed-img :src="$formatPhotoUrl(item) +'?image&action=resize:h_80,w_80,m_2' "
+                                class="product-img"/>
+                <compressed-img slot="content" :src="$formatPhotoUrl(item) +'?image&action=resize:h_200,m_2' "
+                                class="product-img"/>
               </el-tooltip>
               <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
                 <img :src="'../../../../static/img/userpic.png'" class="product-img">
