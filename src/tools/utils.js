@@ -328,9 +328,9 @@ export default {
   changeTotalNumber(amount, smallPacking) {
     if (!smallPacking) return;
     if (amount < 0) {
-      this.$notify.info({
-        message: '疫苗数量不能小于0, 已帮您调整为0'
-      });
+      // this.$notify.info({
+      //   message: '疫苗数量不能小于0, 已帮您调整为0'
+      // });
       return 0;
     }
     let number = Number(amount);
@@ -341,15 +341,15 @@ export default {
     let ri = integer % smallPacking;
     isMultiple = ri === 0;
     if (isMultiple) {
-      this.$notify.info({
-        message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${integer}`
-      });
+      // this.$notify.info({
+      //   message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${integer}`
+      // });
       return integer;
     }
     let re = integer + smallPacking - ri;
-    this.$notify.info({
-      message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${re}`
-    });
+    // this.$notify.info({
+    //   message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${re}`
+    // });
     return re;
   },
   isCheckPackage(count) {

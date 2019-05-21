@@ -179,6 +179,10 @@ Vue.prototype.$formatAryTime = function (ary, index, str = 'YYYY-MM-DD') {
   return Array.isArray(ary) && ary[index] ? this.$moment(ary[index]).format(str) : '';
 };
 
+Vue.prototype.$formatPhotoUrl = function (item) {
+  return item.orgGoodsDto.photoUrl || item.orgGoodsDto.goodsDto.photo;
+};
+
 if (process.env.NODE_ENV === 'production') {
   Raven
     .config('https://62f56ceea555483fab3d6238ff4a80d0@f-log.cdcerp.net/3', {

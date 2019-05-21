@@ -702,7 +702,16 @@
         }
       },
       changeNumber() {
-        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+        let newAmount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+        if (this.product.amount !== newAmount) {
+          this.$confirm(`数量${this.product.amount}不是最小包装的倍数，是否调整为${newAmount}`, '', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(res => {
+            this.product.amount = newAmount;
+          });
+        }
       },
       formatPrice() {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
