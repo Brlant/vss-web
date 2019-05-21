@@ -212,7 +212,7 @@
                 </div>
               </div>
               <oms-form-row label="" :span="4">
-                <el-button type="primary" @click="addProduct">添加疫苗</el-button>
+                <el-button type="primary" @click="addProduct" @mousedown.native="mousedownAdd">添加疫苗</el-button>
               </oms-form-row>
             </div>
 
@@ -287,11 +287,13 @@
   import {Address, BaseInfo, cerpAction, http, pullSignal, VaccineRights} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '@/components/sale/order/material.vue';
+  import addGoodsMixin from '@/mixins/addGoodsMixin';
 
   export default {
     name: 'addForm',
     loading: false,
     components: {materialPart},
+    mixins: [addGoodsMixin],
     props: {
       index: Number,
       currentOrder: Object
@@ -494,7 +496,12 @@
             type: 'warning'
           }).then(res => {
             this.product.amount = newAmount;
+            this.setAddProduct();
+          }).catch(() => {
+            this.setAddProduct();
           });
+        } else {
+          this.setAddProduct();
         }
       },
       changeTime: function (date) {// 格式化时间
@@ -669,6 +676,8 @@
         });
       },
       addProduct: function () {// 疫苗加入到订单
+        // 重置添加按钮点击状态
+        this.resetIsClickForm();
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             message: '请选择疫苗'

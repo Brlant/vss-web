@@ -285,10 +285,10 @@
                 </div>
                 <batch-number-part ref="batchNumberPart" :form="form" :product="product"
                                    :productList="filterProductList"
-                                   :editItemProduct="editItemProduct"
+                                   :editItemProduct="editItemProduct" @addProduct="setAddProduct"
                                    @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"></batch-number-part>
                 <oms-form-row label="" :span="4">
-                  <el-button type="primary" @click="addProduct">加入订单</el-button>
+                  <el-button type="primary" @click="addProduct" @mousedown.native="mousedownAdd">加入订单</el-button>
                 </oms-form-row>
               </div>
 
@@ -382,12 +382,13 @@
   import utils from '@/tools/utils';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
+  import addGoodsMixin from '@/mixins/addGoodsMixin';
 
   export default {
     name: 'addForm',
     loading: false,
     components: {batchNumberPart},
-    mixins: [OrderMixin],
+    mixins: [OrderMixin, addGoodsMixin],
     props: {
       type: {
         'type': String,
@@ -681,6 +682,7 @@
                 message: '输入的产品数量大于接种点的库存数量'
               });
             }
+            this.setAddProduct();
           }).catch(() => {
             if (this.product.amount > this.amount) {
               this.$notify.warning({
@@ -688,6 +690,7 @@
                 message: '输入的产品数量大于接种点的库存数量'
               });
             }
+            this.setAddProduct();
           });
         } else {
           if (this.product.amount > this.amount) {
@@ -696,6 +699,7 @@
               message: '输入的产品数量大于接种点的库存数量'
             });
           }
+          this.setAddProduct();
         }
       },
       autoSave: function () {
@@ -1001,6 +1005,8 @@
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
       addProduct: function () {// 疫苗加入到订单
+        // 重置添加按钮点击状态
+        this.resetIsClickForm();
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,

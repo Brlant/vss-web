@@ -256,11 +256,11 @@
                   <batch-number-part ref="batchNumberPart" :form="form" :product="product"
                                      :productList="filterProductList"
                                      :editItemProduct="editItemProduct"
-                                     :formCopy="formCopy"
+                                     :formCopy="formCopy" @addProduct="setAddProduct"
                                      @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"></batch-number-part>
 
                   <oms-form-row label-width="160px" :span="4" :label="''">
-                    <el-button type="primary" @click="addProduct">加入订单</el-button>
+                    <el-button type="primary" @click="addProduct" @mousedown.native="mousedownAdd">加入订单</el-button>
                   </oms-form-row>
                 </div>
               </el-form>
@@ -355,12 +355,13 @@
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
+  import addGoodsMixin from '@/mixins/addGoodsMixin';
 
   export default {
     name: 'addForm',
     loading: false,
     components: {materialPart, batchNumberPart},
-    mixins: [OrderMixin],
+    mixins: [OrderMixin, addGoodsMixin],
     props: {
       type: {
         type: String,
@@ -823,6 +824,8 @@
         this.filterProductList = arr;
       },
       addProduct: function () {// 疫苗加入到订单
+        // 重置添加按钮点击状态
+        this.resetIsClickForm();
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,

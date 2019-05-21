@@ -652,7 +652,12 @@
             type: 'warning'
           }).then(res => {
             this.product.amount = newAmount;
+            this.setAddProduct();
+          }).catch(() => {
+            this.setAddProduct();
           });
+        } else {
+          this.setAddProduct();
         }
       },
       autoSave: function () {
@@ -896,6 +901,8 @@
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
       addProduct: function () {// 疫苗加入到合同
+        // 重置添加按钮点击状态
+        this.resetIsClickForm();
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,
