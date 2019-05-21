@@ -31,9 +31,6 @@
     computed: {
       user() {
         return this.$store.state.user;
-      },
-      level() {
-        return this.$store.state.orgLevel;
       }
     },
     watch: {
