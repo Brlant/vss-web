@@ -19,6 +19,9 @@
 
   .order-list-item {
     cursor: pointer;
+    display: flex;
+    align-items: center;
+    padding-right: 0;
   }
 </style>
 <template>
@@ -56,90 +59,88 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
-               :class="[{'active':currentItemId==item.orgGoodsId}]" @click.prevent="showPart(item)">
-            <el-row>
-              <el-col :span="status === 0 ? 4 : 6" class="R pt">
-                <div>
-                  <el-tooltip class="item" effect="dark" content="疫苗名称" placement="right">
-                    <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
-                  </el-tooltip>
-                </div>
-                <div>
-                  <el-tooltip class="item" effect="dark" content="生产厂商" placement="right">
-                    <span style="font-size: 12px;color:#999">{{ item.productFactory }}</span>
-                  </el-tooltip>
-                </div>
-                <div>
-                  <el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">
-                    <span style="font-size: 12px;">{{ item.specification }}</span>
-                  </el-tooltip>
-                </div>
-              </el-col>
-              <el-col :span="status === 0 ? 4 : 6" class="pt">
+          <el-row class="order-list-item order-list-item-bg" v-for="item in allocationList"
+                  :class="[{'active':currentItemId==item.orgGoodsId}]" @click.prevent="showPart(item)">
+            <el-col :span="status === 0 ? 4 : 6" class="R pt">
+              <div>
+                <el-tooltip class="item" effect="dark" content="疫苗名称" placement="right">
+                  <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
+                </el-tooltip>
+              </div>
+              <div>
+                <el-tooltip class="item" effect="dark" content="生产厂商" placement="right">
+                  <span style="font-size: 12px;color:#999">{{ item.productFactory }}</span>
+                </el-tooltip>
+              </div>
+              <div>
+                <el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">
+                  <span style="font-size: 12px;">{{ item.specification }}</span>
+                </el-tooltip>
+              </div>
+            </el-col>
+            <el-col :span="status === 0 ? 4 : 6" class="pt">
                 <span>
                   {{ item.saleFactory }}
                 </span>
-              </el-col>
-              <el-col :span="status === 0 ? 2 : 4" class="pt">
+            </el-col>
+            <el-col :span="status === 0 ? 2 : 4" class="pt">
                 <span>
                   {{ item.requiredQuantity }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
-              </el-col>
-              <el-col :span="status === 0 ? 2 : 4" class="pt">
+            </el-col>
+            <el-col :span="status === 0 ? 2 : 4" class="pt">
                 <span>
                   {{ item.inventoryQuantity }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
-              </el-col>
-              <el-col :span="3" class="pt" v-show="status === 0">
+            </el-col>
+            <el-col :span="3" class="pt" v-show="status === 0">
                 <span>
                   {{ item.balanceAmount }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
-              </el-col>
-              <el-col :span="3" class="pt" v-show="status === 0">
+            </el-col>
+            <el-col :span="3" class="pt" v-show="status === 0">
                 <span>
                   {{ item.resultAmount }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
-              </el-col>
-              <el-col :span="2" class="pt" v-show="status === 0">
+            </el-col>
+            <el-col :span="2" class="pt" v-show="status === 0">
                 <span v-show="item.resultAmount>-1 ">
                   <i class="el-icon-t-correct color-blue"></i>
                   正常
                 </span>
-                <span v-show="item.resultAmount<0 ">
+              <span v-show="item.resultAmount<0 ">
                   <i class="el-icon-t-warning color-red"></i>
                   库存不足
                 </span>
-              </el-col>
-              <el-col :span="4" class="opera-btn">
-                <div class="mb5">
+            </el-col>
+            <el-col :span="4" class="opera-btn">
+              <div class="mb5">
                     <span @click.prevent="showPart(item)" v-show="status === 0 ">
                       <a href="#" class="btn-circle" @click.prevent=""><i
                         class="el-icon-t-detail"></i></a>
                     要货单位分配明细
                     </span>
-                </div>
-                <div class="mb5">
+              </div>
+              <div class="mb5">
                   <span @click.prevent="showPart(item)" v-show="status === 1 ">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-detail"></i></a>
                   查看详情
                 </span>
-                </div>
-                <!--<div>-->
-                <!--<span @click.prevent="showOrderFormPart(item)" v-show="$route.query.type">-->
-                <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
-                <!--class="el-icon-t-link"></i></a>-->
-                <!--生成采购合同-->
-                <!--</span>-->
-                <!--</div>-->
-              </el-col>
-            </el-row>
-          </div>
+              </div>
+              <!--<div>-->
+              <!--<span @click.prevent="showOrderFormPart(item)" v-show="$route.query.type">-->
+              <!--<a href="#" class="btn-circle" @click.prevent=""><i-->
+              <!--class="el-icon-t-link"></i></a>-->
+              <!--生成采购合同-->
+              <!--</span>-->
+              <!--</div>-->
+            </el-col>
+          </el-row>
         </div>
       </div>
       <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
