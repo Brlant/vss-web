@@ -118,27 +118,27 @@
                   <div v-show="status === 0">
                     <el-row
                       style="height: 45px;background: #f1f1f1;margin-left: -5px;margin-right: -5px;margin-top: 10px">
-                      <el-col :span="12" align="right" style="padding-right: 57px">
+                      <el-col :span="11" align="right" style="padding-right: 57px">
                        <span style="font-size: 16px">最小包装数量
                         {{ currentItem.smallPackCount }}
                        <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                       </el-col>
                       <el-col :span="4">
-                      <span style="font-size: 16px">需求总计
+                      <span style="font-size: 16px">需求数
                         {{ currentItem.requiredQuantity }}
                        <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                       </el-col>
                       <el-col :span="4">
-                      <span style="font-size: 16px">库存数量
+                      <span style="font-size: 16px">库存数
                         {{ currentItem.inventoryQuantity }}
                         <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                       </el-col>
-                      <el-col :span="4">
+                      <el-col :span="5">
                         <el-tooltip class="item" effect="dark" content="库存数量减去已经分配的数量" placement="right">
-                        <span style="font-size: 16px">剩余差额 <span>
+                        <span style="font-size: 16px">调配后库存差额 <span>
                           {{ currentItem.resultAmount}}
                          <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                         </span></span>
