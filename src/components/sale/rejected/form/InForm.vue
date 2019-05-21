@@ -921,7 +921,7 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.supplierId || !this.form.orgId) {
+        if (!this.form.supplierId || !this.form.orgId || typeof this.form.goodsType !== 'number') {
           this.searchProductList = [];
           this.filterProductList = [];
           return;

@@ -938,7 +938,7 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.customerId) {
+        if (!this.form.customerId || typeof this.form.goodsType !== 'number') {
           this.searchProductList = [];
           this.filterProductList = [];
           return;
