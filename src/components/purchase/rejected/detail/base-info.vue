@@ -140,11 +140,11 @@
               <span>{{ item.orgGoodsDto.goodsDto.specifications }}</span>
             </td>
             <!--<td width="80px" class="R">{{ item.batchNumber || '无' }}</td>-->
-            <td class="text-center">
+            <td class="text-center" style="width: 85px">
               <div>{{ item.productionDate | date }}</div>
               <div>{{ item.expiryDate | date }}</div>
             </td>
-            <td width="100px" class="text-center">
+            <td width="70px" class="text-center">
               {{item.amount}}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
@@ -152,7 +152,7 @@
               <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
               <span v-if="!item.unitPrice">-</span>
             </td>
-            <td class="text-center" v-show="orgLevel === 2">
+            <td width="80px" class="text-center" v-show="orgLevel === 2">
             <span v-if="item.unitPrice">
             <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
             </span>
