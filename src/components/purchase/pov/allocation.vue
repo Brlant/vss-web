@@ -59,7 +59,7 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <el-row class="order-list-item order-list-item-bg" v-for="item in allocationList"
+          <el-row class="order-list-item order-list-item-bg" v-for="item in allocationList" :key="item.orgGoodsId"
                   :class="[{'active':currentItemId==item.orgGoodsId}]" @click.prevent="showPart(item)">
             <el-col :span="status === 0 ? 4 : 6" class="R pt">
               <div>
