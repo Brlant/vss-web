@@ -240,17 +240,17 @@
                              :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
                     <el-option v-for="item in goodesList" :key="item.id"
-                               :label="item.name"
+                               :label="item.goodsName"
                                :value="item.id">
                       <div style="overflow: hidden">
-                        <span class="pull-left">{{item.name}}</span>
+                        <span class="pull-left">{{item.goodsName}}</span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
                           v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.salesFirmName">供货单位:</span>{{ item.salesFirmName }}
+                          v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
                         </span>
                         <span class="select-other-info pull-left" v-if="item.factoryName">
                           <span v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
@@ -316,7 +316,7 @@
                   {{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100" v-if="level !== 3">
+              <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100">
                 <template slot-scope="scope">
                   {{ scope.row.invoiceId ? '是' : '否' }}
                 </template>
@@ -616,10 +616,11 @@
       },
       searchProduct(keyWord) {
         let params = {
-          keyWord: keyWord
+          keyWord: keyWord,
+          salesFirm: this.currentItem.remitteeId
         };
         Vaccine.queryVaccineByOrg(params).then(res => {
-          this.goodesList = res.data.list;
+          this.goodesList = res.data;
         });
       },
       getDetail: function (pageNo) {

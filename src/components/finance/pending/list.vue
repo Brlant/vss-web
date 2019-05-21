@@ -335,15 +335,6 @@
         this.getDetail();
         this.resetRightBox();
       },
-      searchProduct(keyWord) {
-        let params = Object.assign({}, {
-          keyWord: keyWord,
-          salesFirm: this.currentItem.remitteeId
-        });
-        Vaccine.query(params).then(res => {
-          this.goodesList = res.data.list;
-        });
-      },
       getDetail: function (pageNo) {
         this.payDetails = [];
         if (!this.currentItem.id) return;
