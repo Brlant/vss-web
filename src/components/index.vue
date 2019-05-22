@@ -61,7 +61,7 @@
 </style>
 <template>
   <div class="app-body full-width" :style="'padding-left:'+bodyLeft">
-    <app-header :to-route="toRoute" v-if="userType" :level="level"></app-header>
+    <app-header :to-route="toRoute" v-if="userType"></app-header>
     <div class="main-body">
       <el-scrollbar :style="{height: '100%'}" class="main-body__el-scrollbar">
         <transition name="scale" mode="out-in" appear>
@@ -99,8 +99,7 @@
       transitionName: 'slide-left',
       toRoute: {},
       loading: true,
-      isPermission: false,
-      level: ''
+      isPermission: false
     }),
     computed: {
       userType: function () {
@@ -147,14 +146,6 @@
           this.$notify.error({
             message: error.response.data && error.response.data.msg || '绑定市疾控出错'
           });
-        });
-      },
-      queryLevel() {
-        cerpAction.queryLevel().then(res => {
-          this.level = res.data;
-          window.localStorage.setItem('logLevel', res.data);
-          this.$store.commit('initOrgLevel', res.data);
-          this.isPermission = res.data === 0;
         });
       },
       queryWeChat() {

@@ -260,8 +260,7 @@
                 </el-dropdown-item>
               </el-dropdown-menu>
             </el-dropdown>-->
-            <span v-show="level > 1 ">
-              <!--<el-tag v-show="level" type="success" class="tag-title">{{ filterLevel(level) }}</el-tag>-->
+            <span>
               <span class="org-title">{{orgName}}</span>
             </span>
             <el-dropdown trigger="click">
@@ -353,7 +352,7 @@
     components: {
       omsUploadPicture, CusTabs
     },
-    props: ['toRoute', 'level'],
+    props: ['toRoute'],
     data() {
       return {
         activeId: this.getGroupId(),
@@ -439,9 +438,6 @@
       changeSkin: function (skin) {
         this.skin = skin;
         window.localStorage.setItem('skin', JSON.stringify(skin));
-      },
-      filterLevel(level) {
-        return level === 1 ? '市疾控' : level === 2 ? '区疾控' : level === 3 ? '接种点' : '';
       },
       unbind() {
         this.$confirm('是否解除绑定的微信？', '', {
