@@ -789,8 +789,8 @@ export const pullSignal = resource('/pull-signal', http, {
   audit(key) {
     return http.put(`/pull-signal/audit/${key}`);
   },
-  cancel(key) {
-    return http.put(`/pull-signal/cancel/${key}`);
+  cancel(key, data) {
+    return http.put(`/pull-signal/cancel/${key}`, data);
   },
   queryCount(params) {
     return http.get('/pull-signal/count', {params});
@@ -863,6 +863,19 @@ export const cerpAccess = resource('', http, {
     // return http.put(`/erp-access/bind/pov/${id}`, {params: {cdcId}});
     return http({
       url: `/erp-access/bind/pov/${id}`,
+      method: 'put',
+      params: {
+        cdcId
+      },
+      paramsSerializer: function (params) {
+        return qs.stringify(params);
+      }
+    });
+  },
+  bindChildPov(cdcId, id) { // 绑定pov
+    // return http.put(`/erp-access/bind/pov/${id}`, {params: {cdcId}});
+    return http({
+      url: `erp-access/cdc/bind/pov/${id}`,
       method: 'put',
       params: {
         cdcId
