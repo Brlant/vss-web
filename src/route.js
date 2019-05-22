@@ -543,6 +543,21 @@ export const route = [
             path: '/report/receive',
             component: () => import('./components/report/receive.vue'),
             meta: {moduleId: 'report', title: '各单位领苗汇总表', perm: 'each-year-vaccine-manager'}
+          },
+          {
+            path: '/report/quality-acceptance',
+            component: () => import('./components/report/quality-acceptance-record.vue'),
+            meta: {moduleId: 'report', title: '疫苗质量验收记录表', perm: 'vaccine-quality-check-record-manager'}
+          },
+          {
+            path: '/report/vaccine-biz-record',
+            component: () => import('./components/report/vaccine-biz-record.vue'),
+            meta: {moduleId: 'report', title: '疫苗出入库记录表', perm: 'vaccine-biz-record-manager'}
+          },
+          {
+            path: '/report/material-stock',
+            component: () => import('./components/report/material-stock.vue'),
+            meta: {moduleId: 'report', title: '物料进销存汇总表', perm: 'materia-stock-manager'}
           }
         ]
       },
