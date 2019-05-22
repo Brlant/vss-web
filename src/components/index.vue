@@ -129,7 +129,6 @@
       let user = this.$store.state.user;
       this.queryWeChat();
       this.queryBaseInfo(user);
-      this.queryLevel();
       window.addEventListener('resize', (e) => {
         this.setBodyHeight();
       });
@@ -139,7 +138,6 @@
       queryRoles() {
         cerpAccess.bindMunicipal().then(() => {
           this.loading = false;
-          this.queryLevel();
           this.$emit('login');
         }).catch((error) => {
           this.loading = true;

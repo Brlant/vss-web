@@ -236,8 +236,8 @@
             <div>
               <el-form class="payForm" ref="payForm" onsubmit="return false" label-width="80px">
                 <el-form-item label="疫苗">
-                  <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                             :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
+                  <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索产品"
+                             @focus="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
                     <el-option v-for="item in goodesList" :key="item.id"
                                :label="item.goodsName"
