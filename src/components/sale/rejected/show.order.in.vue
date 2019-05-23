@@ -130,22 +130,43 @@
         });
       },
       review() {
-        this.$confirm('是否审单通过', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          http.put(`/erp-order/${this.orderId}/check`).then(() => {
-            this.$notify.success({
-              message: '审单通过成功'
-            });
-            this.transformState('7');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '审单通过失败'
+        let isValid = this.currentOrder.detailDtoList.every(s => !s.orgGoodsDto.goodsDto
+          || s.amount % s.orgGoodsDto.goodsDto.smallPacking === 0);
+        if (!isValid) {
+          this.$confirm('订单明细存在非最小包装倍数数量，请确定是否审单通过？', '', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            http.put(`/erp-order/${this.orderId}/check`).then(() => {
+              this.$notify.success({
+                message: '审单通过成功'
+              });
+              this.transformState('7');
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '审单通过失败'
+              });
             });
           });
-        });
+        } else {
+          this.$confirm('是否审单通过', '', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            http.put(`/erp-order/${this.orderId}/check`).then(() => {
+              this.$notify.success({
+                message: '审单通过成功'
+              });
+              this.transformState('7');
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '审单通过失败'
+              });
+            });
+          });
+        }
       },
       showPart(item) {
         this.index = item.key;

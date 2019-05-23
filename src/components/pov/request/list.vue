@@ -115,7 +115,7 @@
                         <i class="el-icon-t-print"></i>{{printing ? '正在导出' : '导出'}}
                       </el-button>
                     </perm>
-                    <perm label="pull-signal-cancel" style="margin-left: 10px" v-show="currentOrder.status === 0">
+                    <perm label="pull-signal-cancel" v-show="currentOrder.status === 0">
                       <el-button @click="cancel()"><i
                         class="el-icon-t-verify"></i>取消</el-button>
                     </perm>
