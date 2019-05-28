@@ -110,21 +110,25 @@
             <el-col :span="12">
               <oms-form-row label="" :span="2">
                 <el-button native-type="reset" @click="resetExportForm">重置</el-button>
-                <perm label="accounts-payable-paid-info-export">
-                  <el-button :plain="true" type="success" @click="exportPayment" :disabled="isLoading">
-                    导出已付账款
-                  </el-button>
-                </perm>
+                <div style="padding: 0 10px; display: inline-block">
+                  <perm label="accounts-payable-paid-info-export">
+                    <el-button :plain="true" type="success" @click="exportPayment" :disabled="isLoading">
+                      导出已付账款
+                    </el-button>
+                  </perm>
+                </div>
                 <perm label="accounts-payable-unpaid-info-export">
                   <el-button :plain="true" type="success" @click="exportUnPayment" :disabled="isLoading">
                     按单位导出未付账款
                   </el-button>
                 </perm>
-                <perm label="accounts-payable-month-unpaid-info-export">
-                  <el-button :plain="true" type="success" @click="exportMonthUnPayment" :disabled="isLoading">
-                    按月导出未付账款
-                  </el-button>
-                </perm>
+                <div style="padding: 0 10px; display: inline-block">
+                  <perm label="accounts-payable-month-unpaid-info-export">
+                    <el-button :plain="true" type="success" @click="exportMonthUnPayment" :disabled="isLoading">
+                      按月导出未付账款
+                    </el-button>
+                  </perm>
+                </div>
               </oms-form-row>
             </el-col>
             <el-col :span="12">
@@ -354,7 +358,7 @@
 
 </template>
 <script>
-  import {BaseInfo, pay, Vaccine} from '@/resources';
+  import { BaseInfo, pay, Vaccine } from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.in.vue';
