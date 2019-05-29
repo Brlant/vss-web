@@ -207,14 +207,18 @@
             }).then(res => {
               item.productCount = newAmount;
               item.isChecked = item.productCount > 0;
+              this.$emit('addProduct');
             }).catch(() => {
               item.isChecked = item.productCount > 0;
+              this.$emit('addProduct');
             });
           } else {
             item.isChecked = item.productCount > 0;
+            this.$emit('addProduct');
           }
         } else {
           item.isChecked = item.productCount > 0;
+          this.$emit('addProduct');
         }
       },
       setIsHasBatchNumberInfo() {

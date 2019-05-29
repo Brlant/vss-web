@@ -17,6 +17,7 @@
 
   .pov-info {
     margin-bottom: 20px;
+
     .font-bold {
       font-size: 14px;
     }
@@ -36,10 +37,12 @@
     .content-left {
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -164,6 +167,7 @@
 <script>
   import {pullSignal} from '@/resources';
   import axios from 'axios';
+  import utils from '@/tools/utils';
 
   export default {
     props: {
@@ -174,7 +178,8 @@
       return {
         loading: false,
         currentOrder: {},
-        doing: false
+        doing: false,
+        changeTotalNumber: utils.changeTotalNumber
       };
     },
     watch: {
@@ -220,12 +225,24 @@
           });
           return;
         }
-        if (row.actualCount % row.smallPackCount !== 0) {
-          this.$notify.info({
-            message: '疫苗' + row.goodsName + '，输入的分配数量不是散件倍数, 请调整'
+        let newAmount = this.changeTotalNumber(row.actualCount, row.smallPackCount);
+        if (row.actualCount !== newAmount) {
+          this.$confirm(`数量${row.actualCount}不是最小包装的倍数，确认后会对后续操作产生严重影响！
+          选择“是”修改数量为${newAmount}，选择“否”确认数量${row.actualCount}`, '', {
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            type: 'warning'
+          }).then(res => {
+            row.actualCount = newAmount;
+            this.saveValid(row);
+          }).catch(() => {
+            this.saveValid(row);
           });
-          return;
+        } else {
+          this.saveValid(row);
         }
+      },
+      saveValid(row) {
         this.$http.get('/org/goods/' + row.orgGoodsId).then(res => {
           let combinationGoodsList = res.data.list;
           if (!combinationGoodsList.length) return;
@@ -249,13 +266,13 @@
         //   });
         //   return;
         // }
-        let valid = this.currentOrder.detailDtoList.some(s => s.actualCount % s.smallPackCount !== 0);
-        if (valid) {
-          this.$notify.info({
-            message: '存在分配数量不是散件倍数的明细，请进行调整'
-          });
-          return;
-        }
+        // let valid = this.currentOrder.detailDtoList.some(s => s.actualCount % s.smallPackCount !== 0);
+        // if (valid) {
+        //   this.$notify.info({
+        //     message: '存在分配数量不是散件倍数的明细，请进行调整'
+        //   });
+        //   return;
+        // }
         let ary = this.currentOrder.detailDtoList.map(m => {
           return {
             detailId: m.id,

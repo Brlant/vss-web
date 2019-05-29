@@ -134,23 +134,46 @@
         if (this.currentOrder.expectedTime < createTime) {
           return this.$notify.info('预计出库时间小于下单时间，请修改');
         }
-        this.$confirm('是否确认订单', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
-            this.$notify.success({
-              message: '确认订单成功'
-            });
-            this.transformState('1');
-            this.$emit('close');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response.data && error.response.data.msg || '确认订单失败'
+
+        let isValid = this.currentOrder.detailDtoList.every(s => !s.orgGoodsDto.goodsDto
+          || s.amount % s.orgGoodsDto.goodsDto.smallPacking === 0);
+        if (!isValid) {
+          this.$confirm('订单明细存在非最小包装倍数数量，请确定是否确认订单？', '', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
+              this.$notify.success({
+                message: '确认订单成功'
+              });
+              this.transformState('1');
+              this.$emit('close');
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '确认订单失败'
+              });
             });
           });
-        });
+        } else {
+          this.$confirm('是否确认订单', '', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
+              this.$notify.success({
+                message: '确认订单成功'
+              });
+              this.transformState('1');
+              this.$emit('close');
+            }).catch(error => {
+              this.$notify.error({
+                message: error.response.data && error.response.data.msg || '确认订单失败'
+              });
+            });
+          });
+        }
       },
       review() {
         this.$confirm('是否审单通过', '', {

@@ -269,7 +269,7 @@
                   </el-row>
                 </div>
                 <oms-form-row label="" :span="4">
-                  <el-button type="primary" @click="addProduct">加入合同</el-button>
+                  <el-button type="primary" @click="addProduct" @mousedown.native="mousedownAdd">加入合同</el-button>
                 </oms-form-row>
               </div>
 
@@ -346,12 +346,13 @@
   import {Address, BaseInfo, http, LogisticsCenter, PurchaseContract} from './../../../../resources';
   import utils from '@/tools/utils';
   import OrderMixin from '@/mixins/orderMixin';
+  import addGoodsMixin from '@/mixins/addGoodsMixin';
 
   export default {
     name: 'addForm',
     loading: false,
     props: ['action', 'type', 'orderId'],
-    mixins: [OrderMixin],
+    mixins: [OrderMixin, addGoodsMixin],
     data: function () {
       return {
         loading: false,
@@ -652,7 +653,12 @@
             type: 'warning'
           }).then(res => {
             this.product.amount = newAmount;
+            this.setAddProduct();
+          }).catch(() => {
+            this.setAddProduct();
           });
+        } else {
+          this.setAddProduct();
         }
       },
       autoSave: function () {
@@ -896,6 +902,8 @@
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
       },
       addProduct: function () {// 疫苗加入到合同
+        // 重置添加按钮点击状态
+        this.resetIsClickForm();
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,

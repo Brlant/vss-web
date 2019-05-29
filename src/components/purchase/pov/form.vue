@@ -163,6 +163,7 @@
 </template>
 <script>
   import {demandAssignment} from '@/resources';
+  import utils from '@/tools/utils';
 
   export default {
     props: {
@@ -175,7 +176,8 @@
         loadingData: false,
         allocationList: [],
         currentItemId: '',
-        index: -1
+        index: -1,
+        changeTotalNumber: utils.changeTotalNumber,
       };
     },
     watch: {
@@ -212,12 +214,24 @@
           });
           return;
         }
-        if (item.actualCount % this.currentItem.smallPackCount !== 0) {
-          this.$notify.info({
-            message: '分配数量不是散件倍数，请进行调整'
+        let newAmount = this.changeTotalNumber(item.actualCount, this.currentItem.smallPackCount);
+        if (item.actualCount !== newAmount) {
+          this.$confirm(`数量${item.actualCount}不是最小包装的倍数，确认后会对后续操作产生严重影响！
+          选择“是”修改数量为${newAmount}，选择“否”确认数量${item.actualCount}`, '', {
+            confirmButtonText: '是',
+            cancelButtonText: '否',
+            type: 'warning'
+          }).then(res => {
+            item.actualCount = newAmount;
+            this.save(item);
+          }).catch(() => {
+            this.save(item);
           });
-          return;
+        } else {
+          this.save(item);
         }
+      },
+      save(item) {
         let list = [];
         list.push(item);
         demandAssignment.allotVaccine(list).then(() => {

@@ -257,6 +257,7 @@
               }
               item.isChecked = item.productCount > 0;
               // this.autoSelectBatchWhenIsCombination(item, product);
+              this.$emit('addProduct');
             }).catch(() => {
               if (item.productCount > item.count) {
                 this.$notify.warning({
@@ -266,6 +267,7 @@
               }
               item.isChecked = item.productCount > 0;
               // this.autoSelectBatchWhenIsCombination(item, product);
+              this.$emit('addProduct');
             });
           } else {
             if (item.productCount > item.count) {
@@ -276,6 +278,7 @@
             }
             item.isChecked = item.productCount > 0;
             // this.autoSelectBatchWhenIsCombination(item, product);
+            this.$emit('addProduct');
           }
         } else {
           if (item.productCount > item.count) {
@@ -286,6 +289,7 @@
           }
           item.isChecked = item.productCount > 0;
           // this.autoSelectBatchWhenIsCombination(item, product);
+          this.$emit('addProduct');
         }
       },
       /**

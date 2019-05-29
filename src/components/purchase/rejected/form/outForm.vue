@@ -294,11 +294,11 @@
                   <batch-number-part ref="batchNumberPart" :form="form" :product="product"
                                      :productList="filterProductList"
                                      :editItemProduct="editItemProduct"
-                                     :formCopy="formCopy" order-type="2-1"
+                                     :formCopy="formCopy" order-type="2-1" @addProduct="setAddProduct"
                                      @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"
                   ></batch-number-part>
                   <oms-form-row label-width="160px" :span="4" :label="''">
-                    <el-button type="primary" @click="addProduct">加入订单</el-button>
+                    <el-button type="primary" @click="addProduct" @mousedown.native="mousedownAdd">加入订单</el-button>
                   </oms-form-row>
                 </div>
 
@@ -391,6 +391,7 @@
   import utils from '@/tools/utils';
   import batchNumberPart from '@/components/sale/order/form/batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
+  import addGoodsMixin from '@/mixins/addGoodsMixin';
 
   export default {
     name: 'addForm',
@@ -398,7 +399,7 @@
     components: {
       batchNumberPart
     },
-    mixins: [OrderMixin],
+    mixins: [OrderMixin, addGoodsMixin],
     props: {
       type: {
         type: String,
@@ -726,7 +727,12 @@
             type: 'warning'
           }).then(res => {
             this.product.amount = newAmount;
+            this.setAddProduct();
+          }).catch(() => {
+            this.setAddProduct();
           });
+        } else {
+          this.setAddProduct();
         }
       },
       formatPrice() {// 格式化单价，保留两位小数
@@ -1020,6 +1026,8 @@
         this.isHasBatchNumberInfo = val;
       },
       addProduct: function () {// 疫苗加入到订单
+        // 重置添加按钮点击状态
+        this.resetIsClickForm();
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             duration: 2000,
