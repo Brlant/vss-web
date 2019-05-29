@@ -319,13 +319,13 @@
               <table class="table">
                 <thead>
                 <tr>
-                  <th style="width: 300px">疫苗名称</th>
+                  <th style="width: 240px">疫苗名称</th>
                   <th>规格</th>
                   <th>批号</th>
-                  <th v-show="orgLevel === 2">单价</th>
-                  <th>数量</th>
-                  <th v-show="orgLevel === 2">金额</th>
-                  <th>操作</th>
+                  <th style="width: 60px" v-show="orgLevel === 2">单价</th>
+                  <th style="width: 60px">数量</th>
+                  <th style="width: 60px" v-show="orgLevel === 2">金额</th>
+                  <th style="width: 60px">操作</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -345,15 +345,15 @@
                     {{ product.no ? product.no : '无' }}
                     <goods-status-tag :item="product" :form="form"/>
                   </td>
-                  <td class="ar" v-show="orgLevel === 2">
+                  <td v-show="orgLevel === 2">
                     <span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>
                     <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
-                  <td>{{product.amount}} <span v-show="product.measurementUnit">（<dict
+                  <td>{{product.amount}} <span v-show="product.measurementUnit">(<dict
                     :dict-group="'measurementUnit'"
-                    :dict-key="product.measurementUnit"></dict>）</span>
+                    :dict-key="product.measurementUnit"></dict>)</span>
                   </td>
-                  <td class="ar" v-show="orgLevel === 2"><span
+                  <td v-show="orgLevel === 2"><span
                     v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney }}</span>
                     <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
