@@ -115,6 +115,11 @@
         <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                  label-width="160px" style="padding-right: 20px">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
+            <el-form-item label="货品类型" prop="goodsType">
+              <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
+                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item label="仓库地址" prop="orgAddress">
               <el-select placeholder="请选择仓库地址" v-model="form.orgAddress" filterable :clearable="true"
                          @change="transportationAddressChange">
@@ -411,6 +416,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
+          goodsType: '',
           'orgId': '',
           'customerId': '',
           'bizType': '2-4',
@@ -434,6 +440,9 @@
           'remark': ''
         },
         rules: {
+          goodsType: [
+            {required: true, message: '请选择货品类型', trigger: 'change'},
+          ],
           orderNo: [
             {required: true, message: '请输入货主订单编号', trigger: 'blur'},
             {validator: checkOrderNumber}
@@ -616,6 +625,10 @@
       this.filterLogisticsCenter();
     },
     methods: {
+      changeVaccineType(val) {
+        this.resetProductForm();
+        this.form.detailDtoList = [];
+      },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item) + `（${this.storeType[item.warehouseType]}）`;
@@ -754,13 +767,14 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.orgId) {
+        if (!this.form.orgId || typeof this.form.goodsType !== 'number') {
           this.searchProductList = [];
           this.filterProductList = [];
           return;
         }
         let params = {
-          keyWord: query
+          keyWord: query,
+          vaccineType: this.form.goodsType + 1,
         };
         let rTime = Date.now();
         this.requestTime = rTime;

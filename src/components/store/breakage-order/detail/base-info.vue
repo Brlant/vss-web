@@ -44,6 +44,9 @@
             </oms-row>
           </el-col>
           <el-col :span="12">
+            <oms-row label="货品类型">
+              <dict dict-group="orderGoodsType" :dict-key="'' + currentOrder.goodsType"></dict>
+            </oms-row>
             <oms-row label="业务类型">
               <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
             </oms-row>

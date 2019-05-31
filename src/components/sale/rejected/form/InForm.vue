@@ -629,6 +629,7 @@
         this.$refs['orderGoodsAddForm'].resetFields();
         this.accessoryList = [];
         this.editItemProduct = {};
+        this.form.detailDtoList = [];
         this.searchProduct();
       },
       filterAddressLabel(item) {
