@@ -91,7 +91,14 @@
                   {{ item.goodsName }}
                 </div>
                 <div>
-                  {{ item.specification }}
+                  <el-tooltip class="item" effect="dark" content="规格" placement="right">
+                    <span class="font-gray">{{ item.specification }}</span>
+                  </el-tooltip>
+                </div>
+                <div>
+                  <el-tooltip class="item" effect="dark" content="生产厂商" placement="right">
+                    <span class="font-gray">{{item.origin}}</span>
+                  </el-tooltip>
                 </div>
               </el-col>
               <el-col :span="4" class="R pt10">
