@@ -216,7 +216,7 @@
         }
         let newAmount = this.changeTotalNumber(item.actualCount, this.currentItem.smallPackCount);
         if (item.actualCount !== newAmount) {
-          this.$confirm(`数量${item.actualCount}不是最小包装的倍数，确认后会对后续操作产生严重影响！
+          this.$confirm(`疫苗"${this.currentItem.goodsName}"数量${item.actualCount}不是最小包装的倍数，确认后会对后续操作产生严重影响！
           选择“是”修改数量为${newAmount}，选择“否”确认数量${item.actualCount}`, '', {
             confirmButtonText: '是',
             cancelButtonText: '否',
