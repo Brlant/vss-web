@@ -667,7 +667,7 @@
       changeNumber() {
         let newAmount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
         if (this.product.amount !== newAmount) {
-          this.$confirm(`数量${this.product.amount}不是最小包装的倍数，是否调整为${newAmount}`, '', {
+          this.$confirm(`疫苗"${this.product.fixInfo.name}"数量${this.product.amount}不是最小包装的倍数，是否调整为${newAmount}`, '', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
             type: 'warning'
