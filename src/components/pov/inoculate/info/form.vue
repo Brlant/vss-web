@@ -138,6 +138,12 @@
             this.doing = false;
             return false;
           }
+          if (!this.form.inoculatorNumber && !this.form.inoculatorCardNumber && !this.form.birthCertificateNumber) {
+            this.doing = false;
+            return this.$notify({
+              message: '请输入接种证编号或身份证或出生证号'
+            });
+          }
           this.doing = true;
           let formData = JSON.parse(JSON.stringify(this.form));
           if (!formData.id) {
