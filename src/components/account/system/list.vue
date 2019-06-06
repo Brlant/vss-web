@@ -18,6 +18,7 @@
       line-height: 24px;
       font-weight: normal;
     }
+
     ul {
       margin: 10px 0;
 
@@ -30,6 +31,7 @@
         font-size: 12px;
       }
     }
+
     .group-list {
 
       border: 1px solid #eee;
@@ -59,6 +61,11 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
+                  <perm label="erp-system-access-permission-export">
+                    <a href="#" class="btn-circle" @click.stop.prevent="exportRoleInfo">
+                        <i class="el-icon-t-export"></i>
+                    </a>
+                  </perm>
                   <perm label="access-role-add">
                     <a href="#" class="btn-circle" @click.stop.prevent="addType"><i class="el-icon-t-plus"></i> </a>
                   </perm>
@@ -191,6 +198,7 @@
   import {Access} from '@/resources';
   import roleForm from './form/form.vue';
   import roleMixin from '@/mixins/roleMixin';
+  import utils from '@/tools/utils';
 
   export default {
     components: {roleForm},
@@ -265,6 +273,36 @@
       }
     },
     methods: {
+      exportRoleInfo() {
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: this.$route.path,
+          text: '拼命导出中'
+        });
+        let params = {
+          objectId: 'cerp-system', type: 0
+        };
+        this.$http.get('/access/statement/permission/export', {params}).then(res => {
+          utils.download(res.data.path);
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: this.$route.path,
+            text: '拼命导出中'
+          });
+        }).catch(error => {
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: this.$route.path,
+            text: '拼命导出中'
+          });
+          this.$notify({
+            duration: 2000,
+            title: '无法打印',
+            message: error.response.data.msg,
+            type: 'error'
+          });
+        });
+      },
       getMore: function () {
         this.getPageList(this.pager.currentPage + 1, true);
       },
