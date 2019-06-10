@@ -109,11 +109,6 @@
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
           <el-form ref="contractForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="合同类型" prop="goodsType">
-              <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
-                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
             <el-form-item label="合同名称">
               <oms-input type="text" v-model="form.purchaseContractName" placeholder="请输入采购合同名称"></oms-input>
             </el-form-item>
@@ -590,24 +585,6 @@
       this.currentPartName = this.productListSet[0].name;
     },
     methods: {
-      changeVaccineType(val) {
-        this.product = {
-          'amount': null,
-          'entrustment': false,
-          'measurementUnit': '',
-          'orgGoodsId': '',
-          'packingCount': null,
-          'specificationsId': '',
-          'fixInfo': {
-            'goodsDto': {}
-          },
-          'unitPrice': null
-        };
-        this.$refs['orderGoodsAddForm'].resetFields();
-        this.accessoryList = [];
-        this.editItemProduct = {};
-        this.searchProduct();
-      },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + this.getWarehouseAdress(item);
@@ -832,46 +809,25 @@
         });
       },
       searchProduct: function (query) {
-        if (this.form.goodsType === 0) {
-          if (!this.form.supplierId) {
-            this.searchProductList = [];
-            return;
-          }
-          let params = {
-            keyWord: query
-          };
-          let rTime = Date.now();
-          this.requestTime = rTime;
-          http.get(`/vaccine-info/${this.form.supplierId}/first-vaccine/valid`, {params: params}).then(res => {
-            if (this.requestTime > rTime) {
-              return;
-            }
-            this.searchProductList = res.data.list;
-            this.$nextTick(function () {
-              this.filterProducts();
-            });
-          });
-        } else {
-          if (!this.form.supplierId) {
-            this.searchProductList = [];
-            return;
-          }
-          let params = {
-            keyWord: query,
-            factoryId: this.form.supplierId
-          };
-          let rTime = Date.now();
-          this.requestTime = rTime;
-          http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-            if (this.requestTime > rTime) {
-              return;
-            }
-            this.searchProductList = res.data.list;
-            this.$nextTick(function () {
-              this.filterProducts();
-            });
-          });
+        if (!this.form.supplierId) {
+          this.searchProductList = [];
+          return;
         }
+        let params = {
+          keyWord: query,
+          factoryId: this.form.supplierId
+        };
+        let rTime = Date.now();
+        this.requestTime = rTime;
+        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
+          this.searchProductList = res.data.list;
+          this.$nextTick(function () {
+            this.filterProducts();
+          });
+        });
       },
       filterProducts: function () {
         let arr = [];
