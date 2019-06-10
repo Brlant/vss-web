@@ -61,7 +61,8 @@
                 </el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 <perm label="vaccine-month-settlement-manager-export">
-                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading"
+                             style="margin-left: 10px">
                     导出Excel
                   </el-button>
                 </perm>

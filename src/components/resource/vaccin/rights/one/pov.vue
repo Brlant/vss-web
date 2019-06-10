@@ -109,7 +109,8 @@
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                   <perm label="first-vaccine-authorization-delete">
-                    <el-button plain type="warning" @click="onceCancelRights">一键取消所有授权</el-button>
+                    <el-button plain type="warning" @click="onceCancelRights" style="margin-left: 10px">一键取消所有授权
+                    </el-button>
                   </perm>
                 </el-form-item>
               </el-form>

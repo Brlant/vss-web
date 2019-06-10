@@ -58,7 +58,9 @@
               <oms-form-row label="" :span="3">
                 <el-button type="primary" @click="Search" :disabled="isLoading">查询</el-button>
                 <perm label="each-year-vaccine-manager-export">
-                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">导出Excel</el-button>
+                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading"
+                             style="margin-left: 10px">导出Excel
+                  </el-button>
                 </perm>
               </oms-form-row>
             </el-col>
@@ -68,18 +70,18 @@
       <el-table :data="reportList" border class="header-list">
         <el-table-column prop="transactOrgName" label="领苗单位" width="340" align="center"></el-table-column>
         <el-table-column prop="eachCount" label="总计领苗数量" width="120" :sortable="true" align="center"></el-table-column>
-        <el-table-column prop="jan" label="1月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="feb" label="2月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="mar" label="3月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="apr" label="4月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="may" label="5月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="jun" label="6月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="jul" label="7月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="aug" label="8月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="sep" label="9月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="oct" label="10月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="nov" label="11月份" width="80" align="center"></el-table-column>
-        <el-table-column prop="dec" label="12月份" width="80" align="center"></el-table-column>
+        <el-table-column prop="jan" label="1月份" align="center"></el-table-column>
+        <el-table-column prop="feb" label="2月份" align="center"></el-table-column>
+        <el-table-column prop="mar" label="3月份" align="center"></el-table-column>
+        <el-table-column prop="apr" label="4月份" align="center"></el-table-column>
+        <el-table-column prop="may" label="5月份" align="center"></el-table-column>
+        <el-table-column prop="jun" label="6月份" align="center"></el-table-column>
+        <el-table-column prop="jul" label="7月份" align="center"></el-table-column>
+        <el-table-column prop="aug" label="8月份" align="center"></el-table-column>
+        <el-table-column prop="sep" label="9月份" align="center"></el-table-column>
+        <el-table-column prop="oct" label="10月份" align="center"></el-table-column>
+        <el-table-column prop="nov" label="11月份" align="center"></el-table-column>
+        <el-table-column prop="dec" label="12月份" align="center"></el-table-column>
       </el-table>
     </div>
   </div>
