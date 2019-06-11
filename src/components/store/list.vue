@@ -87,6 +87,15 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row label="显示历史库存" :span="8" style="height: 36px">
+                <el-switch
+                  v-model="searchWord.showFlag"
+                  active-text="是"
+                  inactive-text="否">
+                </el-switch>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -209,13 +218,15 @@
           factoryId: '',
           batchNumberId: '',
           orgGoodsId: '',
-          nearTermDays: ''
+          nearTermDays: '',
+          showFlag: false
         },
         searchWord: {
           factoryId: '',
           batchNumberId: '',
           orgGoodsId: '',
-          nearTermDays: ''
+          nearTermDays: '',
+          showFlag: false
         },
         factories: [], // 厂商列表
         orgList: [], // 货主列表,
@@ -417,7 +428,8 @@
           factoryId: '',
           batchNumberId: '',
           orgGoodsId: '',
-          nearTermDays: ''
+          nearTermDays: '',
+          showFlag: false
         };
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
