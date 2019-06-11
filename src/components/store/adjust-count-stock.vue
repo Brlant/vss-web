@@ -106,7 +106,7 @@
             </el-col>
             <el-col :span="12">
               <el-col :span="12" v-show="searchWord.orgGoodsId">
-                <oms-form-row class="is-flex" label="散件包装数量:" :span="10">
+                <oms-form-row class="is-flex" label="最小包装规格:" :span="10">
                   <div>{{smallPackCount}}</div>
                 </oms-form-row>
               </el-col>
@@ -309,7 +309,7 @@
           }
         });
         return count;
-      },
+      }
     },
     watch: {
       filters: {
@@ -479,8 +479,8 @@
         let params = Object.assign({}, {
           keyWord: query
         });
-        Vaccine.query(params).then(res => {
-          this.goodesList = res.data.list;
+        http.get('/erp-stock/pov/all-goods', {params}).then(res => {
+          this.orgGoods = res.data.list;
         });
       },
       orgGoodsChange(val) {
