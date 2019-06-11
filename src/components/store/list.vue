@@ -90,8 +90,8 @@
               <oms-form-row label="" :span="3" style="height: 36px">
                 <el-switch
                   v-model="searchWord.showFlag"
-                  active-text="显示历史库存"
-                  inactive-text="不显示历史库存">
+                  active-text="显示历史"
+                  inactive-text="不显示历史">
                 </el-switch>
               </oms-form-row>
             </el-col>
