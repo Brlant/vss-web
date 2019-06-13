@@ -258,6 +258,19 @@
       omsUploadPicture
     },
     data: function () {
+      let checkGoodsCode = (rule, value, callback) => {
+        if (value === '') {
+          callback(new Error('请输入疫苗编号'));
+        } else {
+          Vaccine.checkGoodsCode({code: value, goodsId: this.form.goodsId, orgId: this.form.orgId}).then(val => {
+            if (!val.data['codeCheck']) {
+              callback(new Error('输入的疫苗编号已存在,请重新输入'));
+            } else {
+              callback();
+            }
+          });
+        }
+      };
       return {
         form: {
           name: '',
@@ -289,7 +302,8 @@
             {required: true, message: '请选择储存条件', trigger: 'blur'}
           ],
           goodsVaccineSign: [
-            {required: true, message: '请选择疫苗种类', trigger: 'change'}
+            {required: true, message: '请选择疫苗种类', trigger: 'change'},
+            {validator: checkGoodsCode, trigger: 'blur'}
           ],
           name: [
             {required: true, message: '请输入疫苗名称', trigger: 'blur'}
