@@ -30,9 +30,11 @@
     border-radius: 5px;
     width: 240px;
     padding: 4px;
+
     &:hover {
       border-color: #cccccc;
     }
+
     &:focus {
       outline: none;
     }
@@ -74,6 +76,7 @@
     margin: 5px;
     padding: 10px;
     font-size: 12px;
+
     img {
       width: 100%;
       height: 100%;
@@ -99,12 +102,14 @@
 
   .lot-load {
     text-align: center;
+
     .el-button {
       border: none;
       color: #666;
       background: 0 0;
       padding-left: 0;
       padding-right: 0;
+
       &:hover {
         color: #333
       }
@@ -637,11 +642,15 @@
             }
           });
           item.orgGoodsDto.status = true;
-          Vaccine.update(item.orgGoodsDto.id, item).then(() => {
+          Vaccine.start(item.orgGoodsDto.id).then(() => {
             this.getGoodsList(1);
             this.$notify.success({
               title: '成功',
               message: '已成功启用疫苗"' + item.orgGoodsDto.name + '"'
+            });
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '启用疫苗失败'
             });
           });
         });
