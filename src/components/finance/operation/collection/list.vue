@@ -220,15 +220,20 @@
               </el-col>
               <el-col :span="5">
                 <el-row>
-                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)">
-                    生成Word
-                  </el-button>
-                  <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportExcelFile(item.id)">
-                    生成Excel
-                  </el-button>
-                  <!--<el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportAccountingVoucher(item.id)">-->
-                  <!--导出财务收款单-->
-                  <!--</el-button>-->
+                  <perm label="cdc-payment-receivable-export">
+                    <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportFile(item.id)">
+                      生成Word
+                    </el-button>
+                    <el-button :plain="true" type="success" size="mini" @click.prevent.stop="exportExcelFile(item.id)">
+                      生成Excel
+                    </el-button>
+                  </perm>
+                  <perm label="cdc-payment-cs-receivable-export">
+                    <el-button :plain="true" type="success" size="mini"
+                               @click.prevent.stop="exportAccountingVoucher(item.id)">
+                      生成Word
+                    </el-button>
+                  </perm>
                 </el-row>
               </el-col>
             </el-row>
@@ -260,7 +265,7 @@
   import utils from '@/tools/utils';
   import auditForm from './form/auditForm.vue';
   import addForm from './form/addForm.vue';
-  import { CDCReceipt, POVPayment } from '@/resources';
+  import {CDCReceipt, POVPayment} from '@/resources';
   import methodsMixin from '@/mixins/methodsMixin';
 
   export default {
@@ -407,7 +412,7 @@
           isPrinting: true,
           moduleId: '/collection/operation'
         });
-        this.$http.get('/cdc-bill/' + id + '/export', {params}).then(res => {
+        this.$http.get('/bill-receivable/' + id + '/cs/export', {params}).then(res => {
           utils.download(res.data.path);
           this.$store.commit('initPrint', {
             isPrinting: false,
