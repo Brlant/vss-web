@@ -1050,6 +1050,12 @@ $borderColor: rgba(82, 82, 82, 0.23);
     .el-table__row {
       cursor: pointer;
     }
+
+    &.no-pointer {
+      .el-table__row {
+        cursor: auto;
+      }
+    }
   }
 }
 

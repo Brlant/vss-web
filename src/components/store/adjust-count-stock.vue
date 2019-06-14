@@ -143,6 +143,11 @@
           </el-row>
           <el-row>
             <el-col :span="12">
+              <oms-form-row label="备注" :span="4">
+                <el-input type="input" v-model.number="form.remark"></el-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="12">
               <oms-form-row label="" :span="4">
                 <el-button type="primary" @click="onSubmit" :disabled="doing">调整库存</el-button>
               </oms-form-row>
@@ -196,7 +201,7 @@
     </div>
     <div class="container adjust-const-stock-detail">
       <h3>操作明细</h3>
-      <el-table :data="operateList" class="header-list store" border v-loading="loadingLog"
+      <el-table :data="operateList" class="header-list store no-pointer" border v-loading="loadingLog"
                 :header-row-class-name="'headerClass'" :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
         <el-table-column prop="warehouseAddress" label="仓库" :sortable="true" width="110"></el-table-column>
@@ -211,6 +216,7 @@
             <span>{{scope.row.createTime | time}}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="remark" label="备注" width="100"></el-table-column>
       </el-table>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
