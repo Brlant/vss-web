@@ -191,6 +191,7 @@
   import {http} from '@/resources';
   import attachmentShow from './attachmentShow.vue';
   import attachmentLists from './../../../common/attachmentList.vue';
+  import Util from '@/tools/utils';
 
   export default {
     components: {
@@ -240,7 +241,8 @@
           customsPassIds: []
         },
         currentItem: {},
-        isShowFileList: true
+        isShowFileList: true,
+        Util
       };
     },
     watch: {
