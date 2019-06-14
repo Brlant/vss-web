@@ -183,6 +183,14 @@ Vue.prototype.$formatPhotoUrl = function (item) {
   return item.orgGoodsDto.photoUrl || item.orgGoodsDto.goodsDto.photo;
 };
 
+Vue.prototype.$formatOrgPhotoUrl = function (item) {
+  return item.photoUrl || item.goodsDto.photo;
+};
+
+Vue.prototype.$formatOrgPhotoId = function (item) {
+  return item.photoId || item.goodsDto.photoId;
+};
+
 if (process.env.NODE_ENV === 'production') {
   Raven
     .config('https://62f56ceea555483fab3d6238ff4a80d0@f-log.cdcerp.net/3', {
