@@ -396,12 +396,9 @@
       },
       searchProduct(keyWord) {
         let params = Object.assign({}, {
-          keyWord: keyWord,
-          orgId: this.$store.state.user['userCompanyAddress']
+          keyWord: keyWord
         });
-        let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
+        Vaccine.query(params).then(res => {
           this.goodesList = res.data.list;
         });
       },

@@ -374,6 +374,7 @@
         searchProductList: [],
         filterProductList: [],
         form: {
+          goodsType: '',
           'purchaseContractNo': '',
           'purchaseContractName': '',
           'availabilityStatus': true,
@@ -396,6 +397,9 @@
           'supplierName': ''
         },
         rules: {
+          goodsType: [
+            {required: true, message: '请选择合同类型', trigger: 'change'},
+          ],
           purchaseContractName: [
             {required: true, message: '请输入采购合同名称', trigger: 'blur'}
           ],
@@ -496,9 +500,6 @@
         });
         return totalMoney;
       },
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      },
       user() {
         return this.$store.state.user.userCompanyAddress;
       },
@@ -533,6 +534,7 @@
             this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
           });
           this.form = {
+            goodsType: '',
             'purchaseContractNo': '',
             'purchaseContractName': '',
             'availabilityStatus': true,
@@ -807,46 +809,25 @@
         });
       },
       searchProduct: function (query) {
-        if (this.orgLevel === 1) {
-          if (!this.form.supplierId) {
-            this.searchProductList = [];
-            return;
-          }
-          let params = {
-            keyWord: query
-          };
-          let rTime = Date.now();
-          this.requestTime = rTime;
-          http.get(`/vaccine-info/${this.form.supplierId}/first-vaccine/valid`, {params: params}).then(res => {
-            if (this.requestTime > rTime) {
-              return;
-            }
-            this.searchProductList = res.data.list;
-            this.$nextTick(function () {
-              this.filterProducts();
-            });
-          });
-        } else {
-          if (!this.form.supplierId) {
-            this.searchProductList = [];
-            return;
-          }
-          let params = {
-            keyWord: query,
-            factoryId: this.form.supplierId
-          };
-          let rTime = Date.now();
-          this.requestTime = rTime;
-          http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-            if (this.requestTime > rTime) {
-              return;
-            }
-            this.searchProductList = res.data.list;
-            this.$nextTick(function () {
-              this.filterProducts();
-            });
-          });
+        if (!this.form.supplierId) {
+          this.searchProductList = [];
+          return;
         }
+        let params = {
+          keyWord: query,
+          factoryId: this.form.supplierId
+        };
+        let rTime = Date.now();
+        this.requestTime = rTime;
+        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
+          this.searchProductList = res.data.list;
+          this.$nextTick(function () {
+            this.filterProducts();
+          });
+        });
       },
       filterProducts: function () {
         let arr = [];

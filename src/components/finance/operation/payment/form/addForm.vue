@@ -243,9 +243,6 @@
     computed: {
       PaymentMethod: function () {
         return this.$getDict('PaymentMethod');
-      },
-      orgLevel() {
-        return this.$store.state.orgLevel;
       }
     },
     watch: {

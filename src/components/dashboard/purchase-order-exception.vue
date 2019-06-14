@@ -1,5 +1,5 @@
 <template>
-  <card-box title="采购订单异常" v-if="level !== 3">
+  <card-box title="采购订单异常" v-show="orderList.length">
     <div v-if="!orderList.length" class="no-info">
       暂无异常订单
     </div>
@@ -29,11 +29,6 @@
     mounted() {
       this.getOrderList();
     },
-    computed: {
-      level() {
-        return this.$store.state.orgLevel;
-      }
-    },
     watch: {
       level() {
         this.getOrderList();
@@ -41,7 +36,6 @@
     },
     methods: {
       getOrderList: function () {
-        if (this.level === 3) return;
         let param = Object.assign({}, this.filters, {
           pageNo: 1,
           pageSize: 5,
@@ -54,7 +48,7 @@
       },
       goToOrderUrl(item) {
         if (!item.id) return;
-        if (this.level === 1) {
+        if (item.goodsType === 0) {
           this.$router.push(`purchase/order/one/class/${item.id}`);
         } else {
           this.$router.push(`purchase/order/two/class/${item.id}`);

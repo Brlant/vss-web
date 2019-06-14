@@ -210,7 +210,7 @@
         let cdcId = this.cdcItem.subordinateId;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/account/pov', text: '正在绑定'});
         this.doing = true;
-        cerpAccess.bindPov(cdcId, this.orgId).then(() => {
+        cerpAccess.bindChildPov(cdcId, this.orgId).then(() => {
           this.doing = false;
           this.$notify.success({
             message: '绑定接种点成功'

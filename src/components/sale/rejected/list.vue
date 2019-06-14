@@ -201,7 +201,7 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8" v-show="orgLevel === 1 ">
+            <el-col :span="8">
               <oms-form-row label="单位区域代码" :span="7">
                 <oms-input type="text" v-model="searchCondition.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
               </oms-form-row>
@@ -451,9 +451,6 @@
       },
       bizInTypes: function () {
         return this.$getDict('bizInType');
-      },
-      orgLevel() {
-        return this.$store.state.orgLevel;
       }
     },
     watch: {
@@ -558,12 +555,9 @@
       },
       searchProduct(keyWord) {
         let params = Object.assign({}, {
-          keyWord: keyWord,
-          orgId: this.$store.state.user['userCompanyAddress']
+          keyWord: keyWord
         });
-        let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
+        Vaccine.query(params).then(res => {
           this.goodesList = res.data.list;
         });
       },

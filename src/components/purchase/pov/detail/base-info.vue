@@ -152,8 +152,7 @@
     },
     methods: {
       goTo() {
-        let level = this.$store.state.orgLevel;
-        let url = level === 1 ? '/sale/order/one/class/' : '/sale/order/two/class/';
+        let url = this.currentOrder.goodsType === 0 ? '/sale/order/one/class/' : '/sale/order/two/class/';
         this.$router.push(url + this.currentOrder.orderId);
       },
       getDetail: function () {

@@ -223,9 +223,6 @@
 //      this.getBatches(1);
     },
     computed: {
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      },
       bizTypeList() {
         let inType = JSON.parse(JSON.stringify(this.$getDict('bizInType') || []));
         let outType = JSON.parse(JSON.stringify(this.$getDict('bizOutType') || []));
