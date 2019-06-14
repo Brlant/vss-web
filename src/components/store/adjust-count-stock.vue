@@ -247,12 +247,14 @@
         filters: {
           batchNumberId: '',
           orgGoodsId: '',
-          warehouseId: ''
+          warehouseId: '',
+          showFlag: true
         },
         searchWord: {
           batchNumberId: '',
           orgGoodsId: '',
-          warehouseId: ''
+          warehouseId: '',
+          showFlag: true
         },
         factories: [], // 厂商列表
         orgList: [], // 货主列表,
@@ -458,7 +460,8 @@
         let temp = {
           batchNumberId: '',
           orgGoodsId: '',
-          warehouseId: ''
+          warehouseId: '',
+          showFlag: true
         };
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
