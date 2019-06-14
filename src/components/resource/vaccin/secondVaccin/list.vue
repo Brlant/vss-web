@@ -208,10 +208,11 @@
               </el-row>
               <el-row>
                 <el-col :span="12" style="padding-left:50px;text-align: center">
-                  <div :class="{'base-pic-item':data.photoUrl,'base-pic-item-normal':!data.photoUrl} "
-                       @click="handlePreview(data.photoId)" v-if="data.photoUrl">
+                  <div
+                    :class="{'base-pic-item':$formatOrgPhotoUrl(data),'base-pic-item-normal':!$formatOrgPhotoUrl(data)} "
+                    @click="handlePreview($formatOrgPhotoId(data))" v-if="$formatOrgPhotoUrl(data)">
                     <compressed-img
-                      :src="data.photoUrl?data.photoUrl+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
+                      :src="$formatOrgPhotoUrl(data)?$formatOrgPhotoUrl(data)+'?image&action=resize:w_380,m_0':'/static/img/userpic.png' "/>
                   </div>
                   <div v-else>无产品图片</div>
                 </el-col>

@@ -558,6 +558,11 @@ export const route = [
             path: '/report/material-stock',
             component: () => import('./components/report/material-stock.vue'),
             meta: {moduleId: 'report', title: '物料进销存汇总表', perm: 'materia-stock-manager'}
+          },
+          {
+            path: '/report/trend',
+            component: () => import('./components/report/use-trend.vue'),
+            meta: {moduleId: 'report', title: '疫苗使用趋势表', perm: 'vaccine-trend-manager'}
           }
         ]
       },
