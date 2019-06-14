@@ -236,25 +236,25 @@
             <div>
               <el-form class="payForm" ref="payForm" onsubmit="return false" label-width="80px">
                 <el-form-item label="疫苗">
-                  <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                             :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
+                  <el-select v-model="searchCondition.orgGoodsId" filterable placeholder="请输入名称搜索产品"
+                             @focus="searchProduct('')" :clearable="true"
                              popper-class="good-selects">
-                    <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
-                               :label="item.orgGoodsDto.name"
-                               :value="item.orgGoodsDto.id">
+                    <el-option v-for="item in goodesList" :key="item.id"
+                               :label="item.goodsName"
+                               :value="item.id">
                       <div style="overflow: hidden">
-                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                        <span class="pull-left">{{item.goodsName}}</span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
+                          v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
                         </span>
-                        <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
-                </span>
+                        <span class="select-other-info pull-left" v-if="item.factoryName">
+                          <span v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
+                        </span>
                       </div>
                     </el-option>
                   </el-select>
@@ -316,7 +316,7 @@
                   {{ (scope.row.billAmount - scope.row.prepaidAccounts) | formatMoney}}
                 </template>
               </el-table-column>
-              <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100" v-if="level !== 3">
+              <el-table-column prop="invoceId" label="发票已到" :sortable="true" width="100">
                 <template slot-scope="scope">
                   {{ scope.row.invoiceId ? '是' : '否' }}
                 </template>
@@ -358,7 +358,7 @@
 
 </template>
 <script>
-  import { BaseInfo, pay, Vaccine } from '@/resources';
+  import {BaseInfo, pay, Vaccine} from '@/resources';
   import addForm from './right-form.vue';
   import leftForm from './letf-form.vue';
   import showDetail from './show.order.in.vue';
@@ -442,9 +442,6 @@
       },
       user() {
         return this.$store.state.user;
-      },
-      level() {
-        return this.$store.state.orgLevel;
       }
     },
     mounted() {
@@ -618,29 +615,13 @@
         this.resetRightBox();
       },
       searchProduct(keyWord) {
-        let level = this.$store.state.orgLevel;
-        if (level !== 3) {
-          let params = Object.assign({}, {
-            keyWord: keyWord,
-            salesFirm: this.currentItem.remitteeId
-          });
-          let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-          Vaccine[api](params).then(res => {
-            this.goodesList = res.data.list;
-          });
-        } else {
-          let o1 = this.$store.state.user.userCompanyAddress;
-          let o2 = this.currentItem.remitteeId;
-          if (!o1 || !o2) return;
-          let params = {
-            povId: o1,
-            cdcId: o2,
-            keyWord: keyWord
-          };
-          this.$http.get('/erp-stock/bill/goods-list', {params}).then(res => {
-            this.goodesList = res.data.list;
-          });
-        }
+        let params = {
+          keyWord: keyWord,
+          salesFirm: this.currentItem.remitteeId
+        };
+        Vaccine.queryVaccineByOrg(params).then(res => {
+          this.goodesList = res.data;
+        });
       },
       getDetail: function (pageNo) {
         this.payDetails = [];

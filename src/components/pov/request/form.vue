@@ -144,7 +144,8 @@
                 :picker-options="pickerOptions0" value-format="timestamp">
               </el-date-picker>
             </el-form-item>
-            <material-part @changeRemark="changeRemark" v-if="form.type === 0"></material-part>
+            <material-part @changeRemark="changeRemark" :orgId="form.cdcId" type="pov"
+                           v-if="form.type === 0"></material-part>
             <el-form-item label="备注" class="clearfix">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>

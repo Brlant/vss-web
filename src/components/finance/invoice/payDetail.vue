@@ -233,9 +233,7 @@
           keyWord: keyWord,
           salesFirm: this.factoryId
         });
-        let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
+        Vaccine.query(params).then(res => {
           this.goodesList = res.data.list;
         });
       },

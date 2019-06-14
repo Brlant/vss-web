@@ -104,6 +104,11 @@
         <div class="hide-content show-content">
           <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                    label-width="160px" style="padding-right: 20px">
+            <el-form-item label="订单类型" prop="type">
+              <el-radio-group v-model.number="form.type" @change="changeType">
+                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item label="接种点" prop="povId">
               <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV" :clearable="true"
                          v-model="form.povId" @change="povChange"
@@ -139,7 +144,7 @@
                 value-format="timestamp">
               </el-date-picker>
             </el-form-item>
-            <material-part @changeRemark="changeRemark" v-if="type === 1"></material-part>
+            <material-part @changeRemark="changeRemark" v-if="form.type === 0"></material-part>
             <el-form-item label="备注" class="clearfix">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
                          :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
@@ -332,14 +337,14 @@
           povId: '',
           demandTime: '',
           cdcId: '',
-          type: 1
+          type: ''
         },
         rules: {
           warehouseId: [
             {required: true, message: '请选择接种点仓库', trigger: 'change'}
           ],
           type: [
-            {required: true, type: 'number', message: '请选择疫苗标志', trigger: 'change'}
+            {required: true, type: 'number', message: '请选择疫苗种类', trigger: 'change'}
           ],
           povId: [
             {required: true, message: '请选择接种点', trigger: 'change'}
@@ -374,9 +379,8 @@
         });
         return totalMoney;
       },
-      type() {
-        let level = this.$store.state.orgLevel;
-        return level === 1 ? 1 : 2;
+      vaccineTypeList() {
+        return this.$store.state.vaccineType;
       }
     },
     watch: {
@@ -389,7 +393,7 @@
           povId: '',
           demandTime: '',
           cdcId: '',
-          type: 1
+          type: ''
         };
         // this.searchWarehouses();
         // this.queryOnCDCs();
@@ -442,7 +446,7 @@
             id: currentOrder.id,
             povId: currentOrder.povId,
             demandTime: currentOrder.demandTime,
-            type: Number(currentOrder.vaccineSign),
+            type: Number(currentOrder.goodsType),
             warehouseId: currentOrder.warehouseId,
             detailDtoList: []
           };
@@ -470,7 +474,7 @@
         this.form = {
           povId: this.currentOrder.povId,
           demandTime: this.currentOrder.demandTime,
-          type: Number(this.currentOrder.vaccineSign),
+          type: Number(this.currentOrder.goodsType),
           warehouseId: this.currentOrder.warehouseId,
           detailDtoList: []
         };

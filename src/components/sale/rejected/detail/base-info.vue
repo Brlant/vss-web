@@ -92,8 +92,8 @@
             <!--<td style="width: 80px">生产日期</td>-->
             <!--<td style="width: 80px">有效期</td>-->
             <td class="text-center">数量</td>
-            <td class="text-center" v-show="orgLevel === 2">单价</td>
-            <td class="text-center" v-show="orgLevel === 2">金额</td>
+            <td class="text-center">单价</td>
+            <td class="text-center">金额</td>
           </tr>
           </thead>
           <tbody>
@@ -158,11 +158,11 @@
               {{item.amount}}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
-            <td width="80px" class="text-center" v-show="orgLevel === 2">
+            <td width="80px" class="text-center">
               <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
               <span v-if="!item.unitPrice">-</span>
             </td>
-            <td class="text-center" v-show="orgLevel === 2">
+            <td class="text-center">
               <span v-if="item.unitPrice">
               <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
               </span>
@@ -173,7 +173,7 @@
             <td colspan="6" align="right">
               <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
             </td>
-            <td colspan="2" align="right" v-show="orgLevel === 2">
+            <td colspan="2" align="right">
               <span style="font-weight:600;"
                     v-show="currentOrder.totalAmount">合计金额: ¥  {{ currentOrder.totalAmount | formatMoney}}</span>
             </td>
@@ -200,11 +200,6 @@
       return {
         span: 8
       };
-    },
-    computed: {
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      }
     },
     methods: {
       getCurrentOrderStatus: function (state) {// 获取订单状态

@@ -56,8 +56,8 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="12">
-              <oms-form-row :label="orgLevel===3?'被授权疫苗':'货主疫苗'" :span="4" :isRequire="true">
-                <el-select filterable remote :placeholder="orgLevel===3?'请输入名称或编号搜索被授权疫苗':'请输入名称或编号搜索货主疫苗'"
+              <oms-form-row label="货主疫苗" :span="4" :isRequire="true">
+                <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗"
                            :remote-method="filterOrgGoods"
                            :clearable="true"
                            v-model="searchWord.orgGoodsId" popper-class="good-selects"
@@ -106,7 +106,7 @@
             </el-col>
             <el-col :span="12">
               <el-col :span="12" v-show="searchWord.orgGoodsId">
-                <oms-form-row class="is-flex" label="散件包装数量:" :span="10">
+                <oms-form-row class="is-flex" label="最小包装规格:" :span="10">
                   <div>{{smallPackCount}}</div>
                 </oms-form-row>
               </el-col>
@@ -142,6 +142,11 @@
             </el-col>
           </el-row>
           <el-row>
+            <el-col :span="12">
+              <oms-form-row label="备注" :span="4">
+                <el-input type="input" v-model.number="form.remark"></el-input>
+              </oms-form-row>
+            </el-col>
             <el-col :span="12">
               <oms-form-row label="" :span="4">
                 <el-button type="primary" @click="onSubmit" :disabled="doing">调整库存</el-button>
@@ -196,7 +201,7 @@
     </div>
     <div class="container adjust-const-stock-detail">
       <h3>操作明细</h3>
-      <el-table :data="operateList" class="header-list store" border v-loading="loadingLog"
+      <el-table :data="operateList" class="header-list store no-pointer" border v-loading="loadingLog"
                 :header-row-class-name="'headerClass'" :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
         <el-table-column prop="warehouseAddress" label="仓库" :sortable="true" width="110"></el-table-column>
@@ -211,6 +216,7 @@
             <span>{{scope.row.createTime | time}}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="remark" label="备注" width="100"></el-table-column>
       </el-table>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
@@ -228,7 +234,7 @@
 </template>
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import {Address, BaseInfo, erpStock, http} from '@/resources';
+  import {Address, BaseInfo, erpStock, http, Vaccine} from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
   import OmsRow from '@dtop/dtop-web-common/packages/row';
@@ -247,12 +253,14 @@
         filters: {
           batchNumberId: '',
           orgGoodsId: '',
-          warehouseId: ''
+          warehouseId: '',
+          showFlag: true
         },
         searchWord: {
           batchNumberId: '',
           orgGoodsId: '',
-          warehouseId: ''
+          warehouseId: '',
+          showFlag: true
         },
         factories: [], // 厂商列表
         orgList: [], // 货主列表,
@@ -295,9 +303,6 @@
       this.queryOperateList(1);
     },
     computed: {
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      },
       bodyHeight: function () {
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = height - 110;
@@ -312,7 +317,7 @@
           }
         });
         return count;
-      },
+      }
     },
     watch: {
       filters: {
@@ -458,7 +463,8 @@
         let temp = {
           batchNumberId: '',
           orgGoodsId: '',
-          warehouseId: ''
+          warehouseId: '',
+          showFlag: true
         };
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
@@ -479,25 +485,12 @@
         });
       },
       filterOrgGoods(query) {
-        let level = this.$store.state.orgLevel;
-        if (level === 3) {
-          let params = Object.assign({}, {
-            keyWord: query
-          });
-          http.get('/erp-stock/pov/all-goods', {params}).then(res => {
-            this.orgGoods = res.data.list;
-          });
-        } else {
-          let orgId = this.$store.state.user.userCompanyAddress;
-          let params = Object.assign({}, {
-            deleteFlag: false,
-            orgId: orgId,
-            keyWord: query
-          });
-          http.get('/erp-stock/goods', {params}).then(res => {
-            this.orgGoods = res.data.list;
-          });
-        }
+        let params = Object.assign({}, {
+          keyWord: query
+        });
+        http.get('/erp-stock/pov/all-goods', {params}).then(res => {
+          this.orgGoods = res.data.list;
+        });
       },
       orgGoodsChange(val) {
         this.searchWord.batchNumberId = '';

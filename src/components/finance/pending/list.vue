@@ -335,17 +335,6 @@
         this.getDetail();
         this.resetRightBox();
       },
-      searchProduct(keyWord) {
-        let params = Object.assign({}, {
-          keyWord: keyWord,
-          salesFirm: this.currentItem.remitteeId
-        });
-        let level = this.$store.state.orgLevel;
-        let api = level === 1 ? 'queryFirstVaccine' : 'querySecondVaccine';
-        Vaccine[api](params).then(res => {
-          this.goodesList = res.data.list;
-        });
-      },
       getDetail: function (pageNo) {
         this.payDetails = [];
         if (!this.currentItem.id) return;

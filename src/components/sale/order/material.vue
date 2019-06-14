@@ -5,6 +5,7 @@
         width: 120px;
       }
     }
+
     .el-input-group__append, .el-input-group__prepend {
       width: auto;
       background: #ffffff;
@@ -31,6 +32,10 @@
   import {material} from '@/resources';
 
   export default {
+    props: {
+      orgId: String,
+      type: String
+    },
     data() {
       return {
         form: {
@@ -46,6 +51,11 @@
         return this.$getDict('materialUnit');
       }
     },
+    watch: {
+      orgId() {
+        this.queryMaterials();
+      }
+    },
     mounted() {
       this.queryMaterials();
     },
@@ -56,9 +66,18 @@
           keyword: query,
           pageSize: 100
         };
-        material.query(params).then(res => {
-          this.materials = res.data.list;
-        });
+        this.materials = [];
+        if (!this.type) {
+          material.query(params).then(res => {
+            this.materials = res.data.list;
+          });
+        } else {
+          if (!this.orgId) return;
+          params.orgId = this.orgId;
+          this.$http.get('/material/superior', {params}).then(res => {
+            this.materials = res.data.list;
+          });
+        }
       },
       add() {
         if (!this.form.count) {

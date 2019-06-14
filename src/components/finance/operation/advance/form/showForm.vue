@@ -248,9 +248,6 @@
         const status = billInfo.status;
         return type === 1 && status === '0' || type === 2 && (status === '1' || status === '3');
       },
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      },
       totalMoney() {
         return this.list.reduce(
           (pre, next) => ({

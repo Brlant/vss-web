@@ -595,7 +595,7 @@
           type: 'warning'
         }).then(() => {
           if (this.filters.status === 1) {
-            pullSignal.cancel(item.id).then(() => {
+            pullSignal.cancel(item.id, {cancelFlag: 0}).then(() => {
               this.$notify.success({
                 message: '已成功取消需求单'
               });

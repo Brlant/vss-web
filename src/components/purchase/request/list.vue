@@ -379,7 +379,7 @@
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-          pullSignal.cancel(this.currentOrder.id).then(() => {
+          pullSignal.cancel(this.currentOrder.id, {cancelFlag: 1}).then(() => {
             this.$notify.success({
               message: '已成功取消申请单'
             });

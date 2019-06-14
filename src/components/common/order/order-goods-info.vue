@@ -75,8 +75,9 @@
           <dict :dict-group="'measurementUnit'" v-if="product.orgGoodsDto.goodsDto"
                 :dict-key="product.orgGoodsDto.goodsDto.measurementUnit"></dict>
         </td>
-        <td align="left" v-show="level !== 1">
+        <td align="left">
           <span v-if="product.unitPrice">￥{{product.unitPrice}}</span>
+          <span v-else>-</span>
         </td>
       </tr>
       </tbody>
@@ -93,9 +94,6 @@
     computed: {
       isShowbatch() {
         return this.orderItem.type === '1' || (this.orderItem.type === '0' && this.orderItem.bizType === '1-1') || this.showBatch;
-      },
-      level() {
-        return this.$store.state.orgLevel;
       },
       isShowGoodsList() {
         return this.$store.state.isShowGoodsList;

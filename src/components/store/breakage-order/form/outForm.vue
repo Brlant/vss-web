@@ -568,9 +568,6 @@
       breakageOrgType() { // 单位类型 0疾控 1pov
         return this.$store.state.breakageOrgType;
       },
-      orgType() { // 当前单位类型
-        return this.$store.state.orgLevel;
-      },
       breakageReason() { // 报损原因
         return this.$getDict('breakageReason');
       },

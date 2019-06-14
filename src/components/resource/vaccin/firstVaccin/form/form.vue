@@ -331,9 +331,6 @@
         }
         return tilet;
       },
-      orgLevel() {
-        return this.$store.state.orgLevel;
-      },
       user() {
         return this.$store.state.user;
       },
@@ -449,7 +446,6 @@
         }
       },
       getOmsGoods: function (keyWord) {// 得到单位疫苗列表
-//        if (this.orgLevel === 1) {
         let params = {
           keyWord: keyWord,
           vaccineSign: '1',
@@ -470,25 +466,6 @@
           }
           this.getGoodsType(this.form.goodsId);
         });
-//        } else {
-//          let params = {
-//            keyWord: keyWord,
-//            availabilityStatus: true
-//          };
-//          SuccessfulBidder.queryInfo(params).then(res => {
-//            this.goodsList = res.data;
-//            if (this.action === 'edit') {
-//              let isExist = this.goodsList.some(item => this.form.goodsDto.id === item.id);
-//              if (!isExist) {
-//                this.goodsList.push({
-//                  id: this.form.goodsDto.id,
-//                  name: this.form.goodsDto.name
-//                });
-//              }
-//            }
-//            this.getGoodsType(this.form.goodsId);
-//          });
-//        }
       },
       queryCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {

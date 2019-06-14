@@ -102,51 +102,52 @@
              onsubmit="return false">
       <el-form-item label="疫苗种类" prop="goodsId">
         <el-select placeholder="请选择疫苗种类" v-model="form.goodsId" filterable remote :remote-method="getOmsGoods"
-                   :clearable="true" @change="getOmsGoods" popper-class="good-selects"
-                   @clear="getOmsGoods">
-          <el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in goodsList">
+                   :clearable="true" @change="getGoodsType(form.goodsId)" popper-class="good-selects"
+                   @clear="setUsedStatus">
+          <el-option :label="item.orgGoodsDto.goodsDto.name" :value="item.orgGoodsDto.goodsDto.id"
+                     :key="item.orgGoodsDto.goodsDto.id" v-for="item in goodsList">
             <div style="overflow: hidden">
-              <span class="pull-left">{{item.name}}</span>
+              <span class="pull-left">{{item.orgGoodsDto.goodsDto!=null?item.orgGoodsDto.goodsDto.name:''}}</span>
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="item.code">疫苗编号:</span>{{item.code}}
+                  v-show="item.orgGoodsDto.goodsDto&&item.orgGoodsDto.goodsDto.code">疫苗编号:</span>{{item.orgGoodsDto.goodsDto!=null?item.orgGoodsDto.goodsDto.code:''}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.specifications">疫苗规格:</span>{{item.specifications}}
+                v-show="item.orgGoodsDto.goodsDto&&item.orgGoodsDto.goodsDto.specifications">疫苗规格:</span>{{item.orgGoodsDto.goodsDto!=null?item.orgGoodsDto.goodsDto.specifications:''}}
                 </span>
               <span class="select-other-info pull-left"><span
-                v-show="item.approvalNumber">批准文号:</span>{{item.approvalNumber}}
+                v-show="item.orgGoodsDto.goodsDto&&item.orgGoodsDto.goodsDto.approvalNumber">批准文号:</span>{{item.orgGoodsDto.goodsDto!=null?item.orgGoodsDto.goodsDto.approvalNumber:''}}
                 </span>
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
+                v-show="item.orgGoodsDto.goodsDto&&item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto!=null?item.orgGoodsDto.goodsDto.factoryName :''}}
               </span>
             </div>
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="供货单位" prop="salesFirm">
-        <el-select filterable remote placeholder="请输入名称搜供货单位" :remote-method="filterOrg" @click.native="filterOrg('')"
-                   :clearable="true" v-model="form.salesFirmId" @change="setSalesFirm(form.salesFirmId)"
-                   popperClass="good-selects">
-          <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-            <div style="overflow: hidden">
-              <span class="pull-left" style="clear: right">{{org.name}}</span>
-            </div>
-            <div style="overflow: hidden">
-              <span class="select-other-info pull-left">
-                <span>系统代码:</span>{{org.manufacturerCode}}
-              </span>
-            </div>
-          </el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="供货单位ID">
+      <!--<el-form-item label="供货厂商" prop="salesFirm">-->
+      <!--<el-select filterable remote placeholder="请输入名称搜供货厂商" :remote-method="filterOrg" @click.native="filterOrg('')"-->
+      <!--:clearable="true" v-model="form.salesFirmId" @change="setSalesFirm(form.salesFirmId)"-->
+      <!--popperClass="good-selects">-->
+      <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">-->
+      <!--<div style="overflow: hidden">-->
+      <!--<span class="pull-left" style="clear: right">{{org.name}}</span>-->
+      <!--</div>-->
+      <!--<div style="overflow: hidden">-->
+      <!--<span class="select-other-info pull-left">-->
+      <!--<span>系统代码:</span>{{org.manufacturerCode}}-->
+      <!--</span>-->
+      <!--</div>-->
+      <!--</el-option>-->
+      <!--</el-select>-->
+      <!--</el-form-item>-->
+      <el-form-item label="供货厂商ID">
         {{form.salesFirm}}
       </el-form-item>
-      <el-form-item label="供货单位名称">
+      <el-form-item label="供货厂商名称">
         {{form.salesFirmName}}
       </el-form-item>
       <el-form-item label="疫苗编号" prop="goodsNo">
@@ -155,18 +156,9 @@
       <el-form-item label="疫苗名称" prop="name">
         <oms-input type="text" v-model="form.name" placeholder="请输入疫苗名称"></oms-input>
       </el-form-item>
-      <el-form-item label="产品图片">
-        <oms-upload-picture :photoUrl="form.photoUrl" @change="changPhoto"></oms-upload-picture>
-      </el-form-item>
       <el-form-item label="储存条件">
         <el-select placeholder="请选择储存条件" v-model="form.storageConditionId">
           <el-option :label="item.label" :value="item.key" :key="item.key" v-for="item in storageCondition"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="疫苗种类" prop="goodsVaccineSign">
-        <el-select placeholder="请选择疫苗种类" v-model="form.goodsVaccineSign" clearable>
-          <el-option :label="item.label" :value="item.key" :key="item.key"
-                     v-for="item in  vaccineSignList"></el-option>
         </el-select>
       </el-form-item>
       <el-form-item label="标准单价" prop="unitPrice">
@@ -189,12 +181,12 @@
           <template slot="prepend">￥</template>
         </oms-input>
       </el-form-item>
-      <el-form-item label="库存上限">
-        <oms-input type="number" :min="0" v-model.number="form.inventoryUpperLimit" placeholder="请输入库存上限"></oms-input>
-      </el-form-item>
-      <el-form-item label="库存下限">
-        <oms-input type="number" :min="0" v-model.number="form.inventoryLowerLimit" placeholder="请输入库存下限"></oms-input>
-      </el-form-item>
+      <!--<el-form-item label="库存上限" prop="inventoryUpperLimit">-->
+      <!--<oms-input type="number" :min="0" v-model.number="form.inventoryUpperLimit" placeholder="请输入库存上限"></oms-input>-->
+      <!--</el-form-item>-->
+      <!--<el-form-item label="库存下限" prop="inventoryLowerLimit">-->
+      <!--<oms-input type="number" :min="0" v-model.number="form.inventoryLowerLimit" placeholder="请输入库存下限"></oms-input>-->
+      <!--</el-form-item>-->
       <el-form-item label="是否计价">
         <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                    v-model="form.valuationFlag"></el-switch>
@@ -221,7 +213,7 @@
                   v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
+                  v-show="item.orgGoodsDto.salesFirmName">供货厂商:</span>{{ item.orgGoodsDto.salesFirmName }}
               </span>
                 <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
@@ -254,29 +246,11 @@
   </div>
 </template>
 <script>
-  import {BaseInfo, SuccessfulBidder, Vaccine} from '@/resources';
+  import {BaseInfo, Vaccine, VaccineRights} from '@/resources';
   import utils from '@/tools/utils';
-  import omsUploadPicture from '@/components/common/upload.picture.vue';
 
   export default {
-    components: {
-      omsUploadPicture
-    },
     data: function () {
-      let checkGoodsCode = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入疫苗编号'));
-        } else {
-          let orgId = this.$store.state.user.userCompanyAddress;
-          Vaccine.checkGoodsCode({code: value, goodsId: this.form.goodsId, orgId: orgId}).then(val => {
-            if (!val.data['codeCheck']) {
-              callback(new Error('输入的疫苗编号已存在,请重新输入'));
-            } else {
-              callback();
-            }
-          });
-        }
-      };
       return {
         form: {
           name: '',
@@ -289,27 +263,20 @@
           goodsNo: '',
           bidPrice: null,
           valuationFlag: false,
-          storageConditionId: '',
-          goodsVaccineSign: '',
-          photoId: '',
-          photoUrl: ''
+          storageConditionId: ''
         },
         rules: {
           goodsId: [
             {required: true, message: '请选择疫苗种类', trigger: 'change'}
           ],
           goodsNo: [
-            {required: true, message: '请输入疫苗编号', trigger: 'blur'},
-            {validator: checkGoodsCode, trigger: 'blur'}
+            {required: true, message: '请输入疫苗编号', trigger: 'blur'}
           ],
           salesFirm: [
-            {required: true, message: '请选择供货单位', trigger: 'change'}
+            {required: true, message: '请选择供货厂商', trigger: 'change'}
           ],
           storageConditionId: [
             {required: true, message: '请选择储存条件', trigger: 'blur'}
-          ],
-          goodsVaccineSign: [
-            {required: true, message: '请选择疫苗种类', trigger: 'change'}
           ],
           name: [
             {required: true, message: '请输入疫苗名称', trigger: 'blur'}
@@ -371,9 +338,6 @@
       },
       user() {
         return this.$store.state.user;
-      },
-      vaccineSignList() {
-        return this.$getDict('vaccineSign');
       }
     },
     watch: {
@@ -397,8 +361,8 @@
           this.selectGoodsList = this.form.combinationList;
 //          this.otherGoodsList = [];
 //          this.getCombinationGoods();
-          this.getOmsGoods(val.goodsDto.name);
-//          this.filterOrg(val.salesFirmName);
+          this.getOmsGoods(val.name);
+          this.filterOrg(val.salesFirmName);
         } else {
 //          this.queryCombinationGoods();
           this.getOmsGoods();
@@ -418,9 +382,7 @@
             valuationFlag: false,
             storageConditionId: '',
             inventoryLowerLimit: null,
-            inventoryUpperLimit: null,
-            photoId: '',
-            photoUrl: ''
+            inventoryUpperLimit: null
           };
           this.otherGoodsList = [];
         }
@@ -439,12 +401,8 @@
       }
     },
     methods: {
-      changPhoto: function (photo) {
-        if (photo) {
-          this.photo = photo;
-          this.form.photoId = this.photo.attachmentId;
-          this.form.photoUrl = this.photo.url;
-        }
+      setUsedStatus: function () {
+        this.usedStatus = true;
       },
       setSalesFirm: function (id) {
         if (id) {
@@ -461,7 +419,7 @@
         if (!orgId) {
           return;
         }
-        // 查询供货单位
+        // 查询供货厂商
         let params = {
           keyWord: query,
           relation: '1'
@@ -477,15 +435,13 @@
         }
       },
       getOmsGoods: function (keyWord) {// 得到单位疫苗列表
-        let params = {
+        let params = Object.assign({}, {
           keyWord: keyWord,
-          availabilityStatus: true
-        };
-        SuccessfulBidder.queryInfo(params).then(res => {
-          this.goodsList = res.data;
-          // this.getGoodsType(this.form.goodsId);
+          type: '2'
         });
-//        }
+        VaccineRights.queryPovVaccineByType(params).then(res => {
+          this.goodsList = res.data.list;
+        });
       },
       queryCombinationGoods: function (keyWord) {// 获取其他组合疫苗列表
         let params = Object.assign({}, {
@@ -507,6 +463,30 @@
           let list = JSON.parse(JSON.stringify(res.data.list));
           this.filterSelectGoodsList(list);
         });
+      },
+      getGoodsType: function (id) {
+        if (!id) {
+          this.goodsType = '';
+          return;
+        }
+        this.goodsList.forEach(item => {
+          if (id === item.id) {
+            this.goodsType = item.typeId;
+          }
+        });
+        if (this.usedStatus) {
+          this.goodsList.forEach(val => {
+            if (val.id === id && id) {
+              let factoryId = val.factoryId;
+              if (factoryId) {
+                BaseInfo.queryBaseInfo(factoryId).then(res => {
+                  this.orgList = [];
+                  this.orgList.push(res.data.orgDto);
+                });
+              }
+            }
+          });
+        }
       },
       filtersCombinationGoods() {// 过滤已有的单位疫苗和本身
         let array = [];
