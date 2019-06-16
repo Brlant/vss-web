@@ -64,10 +64,11 @@
               </el-row>
               <div class="order-list clearfix ">
                 <el-row class="order-list-header">
-                  <el-col :span="10">接种点</el-col>
+                  <el-col :span="8">要货单位</el-col>
+                  <el-col :span="4">现有库存</el-col>
                   <el-col :span="4">需求数</el-col>
                   <el-col :span="4">要货时间</el-col>
-                  <el-col :span="6">分配数量</el-col>
+                  <el-col :span="4">分配数量</el-col>
                 </el-row>
                 <el-row v-if="loadingData">
                   <el-col :span="24">
@@ -85,8 +86,14 @@
                   <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
                        :class="[{'active':currentItemId==item.id}]" style="max-height: 500px;overflow-y: auto">
                     <el-row>
-                      <el-col :span="10" class="R">
+                      <el-col :span="8" class="R">
                         <span>{{ item.povName }}</span>
+                      </el-col>
+                      <el-col :span="4">
+                      <span>
+                        {{ item.currentStock }}
+                        <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
+                      </span>
                       </el-col>
                       <el-col :span="4">
                       <span>
@@ -95,7 +102,7 @@
                       </span>
                       </el-col>
                       <el-col :span="4">{{ item.applyTime | minute }}</el-col>
-                      <el-col :span="6">
+                      <el-col :span="4">
                         <span v-show="status === 1 ">{{item.actualCount}}</span>
                         <perm label="demand-assignment-update">
                           <el-input v-show="status === 0 " v-model.number="item.actualCount"
@@ -111,28 +118,27 @@
                   <div v-show="status === 0">
                     <el-row
                       style="height: 45px;background: #f1f1f1;margin-left: -5px;margin-right: -5px;margin-top: 10px">
-                      <el-col :span="8"></el-col>
-                      <el-col :span="4">
+                      <el-col :span="11" align="right" style="padding-right: 57px">
                        <span style="font-size: 16px">最小包装数量
                         {{ currentItem.smallPackCount }}
                        <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                       </el-col>
                       <el-col :span="4">
-                      <span style="font-size: 16px">需求总计
+                      <span style="font-size: 16px">需求数
                         {{ currentItem.requiredQuantity }}
                        <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                       </el-col>
                       <el-col :span="4">
-                      <span style="font-size: 16px">库存数量
+                      <span style="font-size: 16px">库存数
                         {{ currentItem.inventoryQuantity }}
                         <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                       </span>
                       </el-col>
-                      <el-col :span="4">
+                      <el-col :span="5">
                         <el-tooltip class="item" effect="dark" content="库存数量减去已经分配的数量" placement="right">
-                        <span style="font-size: 16px">剩余差额 <span>
+                        <span style="font-size: 16px">调配后库存差额 <span>
                           {{ currentItem.resultAmount}}
                          <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                         </span></span>
