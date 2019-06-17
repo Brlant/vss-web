@@ -777,6 +777,8 @@
             });
             return false;
           }
+          // 传给后台疫苗标志
+          saveData.goodsType = saveData.type;
           delete saveData.type;
           saveData.detailDtoList.forEach(item => {
             item.price = item.unitPrice;
