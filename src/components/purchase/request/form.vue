@@ -557,7 +557,7 @@
       },
       searchProduct: function () {
         this.searchProductList = [];
-        if (!this.form.povId) return;
+        if (!this.form.povId || !Number.isInteger(this.form.type)) return;
         let rTime = Date.now();
         this.requestTime = rTime;
         VaccineRights.queryVaccineByPov(this.form.povId, {cdcId: this.$store.state.user.userCompanyAddress}).then(res => {
@@ -777,6 +777,8 @@
             });
             return false;
           }
+          // 传给后台疫苗标志
+          saveData.goodsType = saveData.type;
           delete saveData.type;
           saveData.detailDtoList.forEach(item => {
             item.price = item.unitPrice;
