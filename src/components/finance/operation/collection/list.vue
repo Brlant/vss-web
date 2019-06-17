@@ -230,7 +230,7 @@
                   </perm>
                   <perm label="cdc-payment-cs-receivable-export">
                     <el-button :plain="true" type="success" size="mini"
-                               @click.prevent.stop="exportAccountingVoucher(item.id)">
+                               @click.prevent.stop="exportAccountingVoucher(item.id)" style="margin-left: 10px">
                       生成Word
                     </el-button>
                   </perm>
