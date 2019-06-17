@@ -560,7 +560,12 @@
         if (!this.form.povId || !Number.isInteger(this.form.type)) return;
         let rTime = Date.now();
         this.requestTime = rTime;
-        VaccineRights.queryVaccineByPov(this.form.povId, {cdcId: this.$store.state.user.userCompanyAddress}).then(res => {
+        VaccineRights.queryVaccineByPov(this.form.povId,
+          {
+            cdcId: this.$store.state.user.userCompanyAddress,
+            vaccineType: this.form.type + 1
+          }
+        ).then(res => {
           if (this.requestTime > rTime) {
             return;
           }
