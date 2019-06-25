@@ -7,7 +7,7 @@
   <div class="order-page">
     <div class="container">
       <div class="d-table">
-        <div class="d-table-left" v-show="isShowLeft">
+        <div class="d-table-left">
           <h2 class="header">
           <span class="pull-right">
               <a href="#" class="btn-circle" @click.prevent="showTypeSearch=!showTypeSearch"><i
@@ -25,7 +25,7 @@
             <div v-else>
               <ul class="show-list">
                 <li v-for="item in cdcs" :keys="item.id" class="list-item" @click="showType(item)"
-                    :class="{'active':item.id==cdcItem.id}">
+                    :class="{'active':item.id===cdcItem.id}">
                   <div class="minor-part" v-show="item.subordinateCode">
                     系统代码{{item.subordinateCode }}
                   </div>
@@ -114,7 +114,7 @@
               </div>
             </div>
           </div>
-          <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+          <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && povs.length">
             <el-pagination
               layout="prev, pager, next"
               :total="pager.count" :pageSize="pager.pageSize" @current-change="getPovPage"
@@ -144,6 +144,7 @@
         },
         isShowLeft: true,
         cdcs: [],
+        cdcsCopy: {},
         cdcItem: {},
         orgList: [], // 货主列表,
         showOrgList: [],
@@ -153,7 +154,6 @@
           count: 0,
           pageSize: 15
         },
-        level: window.localStorage.getItem('logLevel'),
         doing: false
       };
     },
@@ -167,16 +167,7 @@
       }
     },
     mounted() {
-      if (this.level === '2') {
-        this.isShowLeft = false;
-        if (!this.$store.state.user.userCompanyAddress) return;
-        this.cdcItem = {
-          subordinateId: this.$store.state.user.userCompanyAddress
-        };
-        this.getPovPage(1);
-      } else {
-        this.getCDCPage();
-      }
+      this.getCDCPage();
     },
     watch: {
       filterPOVs: {
@@ -186,8 +177,15 @@
         deep: true
       },
       filterCDCs: {
-        handler: function () {
-          this.getCDCPage();
+        handler: function (val) {
+          this.povs = [];
+          this.cdcItem = {};
+          let list = this.cdcsCopy.filter(f => !val.keyWord || f.subordinateName.includes(val.keyWord));
+          this.cdcs = JSON.parse(JSON.stringify(list));
+          if (this.cdcs.length) {
+            this.cdcItem = this.cdcs[0];
+            this.getPovPage(1);
+          }
         },
         deep: true
       },
@@ -243,12 +241,13 @@
       getCDCPage() { // 得到疾控列表
         let params = Object.assign({
           pageNo: 1,
-          pageSize: 20
+          pageSize: -1
         }, this.filterCDCs);
         this.loadingData = true;
         cerpAction.queryCount(params).then(res => {
           if (params.keyWord !== this.filterCDCs.keyWord) return;
-          this.cdcs = res.data.list;
+          this.cdcsCopy = JSON.parse(JSON.stringify(res.data));
+          this.cdcs = res.data;
           this.cdcItem = this.cdcs.length && this.cdcs[0];
           this.loadingData = false;
           this.getPovPage(1);
@@ -271,7 +270,8 @@
       },
       showType(item) {
         this.cdcItem = item;
-        this.getPovPage();
+        this.orgId = '';
+        this.getPovPage(1);
       },
       deleteItem(item) {
         this.$confirm('是否删除接种点 "' + item.subordinateName + '"?', '', {
