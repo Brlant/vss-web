@@ -143,26 +143,6 @@ export const route = [
             path: '/pov/subordinate/record',
             component: () => import('./components/pov/record/subordinate/list.vue'),
             meta: {moduleId: 'pov', title: '下属单位注射记录', perm: 'subordinate-injection-task-manager'}
-          },
-          {
-            path: '/pov/inoculate/info',
-            component: () => import('./components/pov/inoculate/info'),
-            meta: {moduleId: 'pov', title: '受种者档案', perm: 'query-inoculator-info'}
-          },
-          {
-            path: '/pov/inoculate/task',
-            component: () => import('./components/pov/inoculate/injection'),
-            meta: {moduleId: 'pov', title: '接种任务', perm: 'query-injection-task'}
-          },
-          {
-            path: '/pov/inoculate/console',
-            component: () => import('./components/pov/inoculate/platform'),
-            meta: {moduleId: 'pov', title: '接种台', perm: 'query-vaccination-task'}
-          },
-          {
-            path: '/pov/inoculate/vaccine/each',
-            component: () => import('./components/pov/inoculate/vaccine-each'),
-            meta: {moduleId: 'pov', title: '多人份剂次时效记录', perm: 'query-multi-person-aging'}
           }
         ]
       },
