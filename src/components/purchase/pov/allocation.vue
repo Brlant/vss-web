@@ -51,7 +51,7 @@
             <oms-loading :loading="loadingData"></oms-loading>
           </el-col>
         </el-row>
-        <el-row v-else-if="allocationList.length == 0">
+        <el-row v-else-if="!allocationList || allocationList && allocationList.length == 0">
           <el-col :span="24">
             <div class="empty-info">
               暂无信息
