@@ -111,7 +111,6 @@
                 </oms-form-row>
               </el-col>
               <el-col :span="12">
-
               </el-col>
             </el-col>
           </el-row>
@@ -142,12 +141,17 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="12">
+            <el-col :span="8">
+              <oms-form-row label="业务不合格库存" :span="8">
+                <el-input type="number" v-model.number="form.unqualifiedBizCount"></el-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="10">
               <oms-form-row label="备注" :span="4">
                 <el-input type="input" v-model.number="form.remark"></el-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="6">
               <oms-form-row label="" :span="4">
                 <el-button type="primary" @click="onSubmit" :disabled="doing">调整库存</el-button>
               </oms-form-row>
@@ -174,6 +178,12 @@
             <span>{{scope.row.undeterminedCount}}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="unqualifiedBizCount" label="业务不合格库存" :render-header="formatHeader" :sortable="true"
+                         width="80">
+          <template slot-scope="scope">
+            <span>{{scope.row.unqualifiedBizCount}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true"
                          width="120">
           <template slot-scope="scope">
@@ -192,7 +202,7 @@
             <span>{{scope.row.unqualifiedCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
+        <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.expiryDate | date}}</span>
           </template>
@@ -207,6 +217,7 @@
         <el-table-column prop="warehouseAddress" label="仓库" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :sortable="true" width="100"></el-table-column>
+        <el-table-column prop="unqualifiedBizCount" label="业务不合格库存" :sortable="true" width="80"></el-table-column>
         <el-table-column prop="transitCount" label="在途库存" :sortable="true" width="100"></el-table-column>
         <el-table-column prop="qualifiedActualCount" label="实际合格库存" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="stockUnqualifiedActualCount" label="实际不合格库存" :sortable="true"
@@ -378,16 +389,21 @@
             break;
           }
           case 5: {
+            content = '用于不合格品退货订单控制';
+            title = '业务不合格库存';
+            break;
+          }
+          case 6: {
             content = '仓库内真实合格疫苗数量';
             title = '实际合格库存';
             break;
           }
-          case 6: {
+          case 7: {
             content = '在运输中的疫苗数量';
             title = '在途库存';
             break;
           }
-          case 7: {
+          case 8: {
             content = '仓库内真实不合格疫苗数量';
             title = '实际不合格库存';
             break;
