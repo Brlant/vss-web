@@ -1,6 +1,19 @@
 import {Access} from '@/resources';
 import menuTree from '@/components/account/system/menu';
 
+const getOrgTree = (list, permissions) => {
+  list.forEach((i, index) => {
+    if (!permissions.some(s => s.id === i.id)) {
+      list.splice(index, 1);
+      return;
+    }
+    if (i.children) {
+      getOrgTree(i.children, permissions);
+    }
+  });
+};
+
+
 export default {
   mounted() {
 
@@ -10,15 +23,17 @@ export default {
       return new Promise((resolve, reject) => {
         let menu = this.$store.state.allMenuList;
         if (noCache === false && menu && menu.length) {
-          resolve(menu);
+          resolve({data: menu});
         } else {
           let userId = this.$store.state.user.userCompanyAddress;
           if (!userId) {
             reject('no user');
           } else {
             Access.getRoleMenus(userId).then(res => {
-              this.$store.commit('initPermList', JSON.parse(JSON.stringify(res)));
-              resolve(res);
+              let newMenu = JSON.parse(JSON.stringify(menuTree));
+              getOrgTree(newMenu, res.data);
+              this.$store.commit('initPermList', newMenu);
+              resolve({data: newMenu});
               let getParentIds = (menus, parentsIds) => {
                 menus.forEach(i => {
                   if (i.children) {
@@ -32,7 +47,7 @@ export default {
                 getParentIds(menus, parentIds);
                 this.$store.commit('initMenuParentIds', parentIds);
               };
-              setParentIds(res.data);
+              setParentIds(newMenu);
             });
           }
         }

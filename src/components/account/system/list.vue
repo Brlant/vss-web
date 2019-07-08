@@ -310,7 +310,7 @@
         this.$scrollLoadingData(event);
       },
       getMenuList: function (cache = true) {
-        this.getRoleMenus(cache).then(res => {
+        this.getOmsRoleMenus(cache).then(res => {
           this.menuList = res.data;
         });
       },
