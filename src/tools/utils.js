@@ -352,6 +352,34 @@ export default {
     // });
     return re;
   },
+
+  changeTipTotalNumber(amount, smallPacking) {
+    if (!smallPacking) return;
+    if (amount < 0) {
+      this.$notify.info({
+        message: '疫苗数量不能小于0, 已帮您调整为0'
+      });
+      return 0;
+    }
+    let number = Number(amount);
+    let remainder = number % smallPacking;
+    let isMultiple = remainder === 0;
+    if (isMultiple) return number;
+    let integer = parseInt(number, 10) + 1;
+    let ri = integer % smallPacking;
+    isMultiple = ri === 0;
+    if (isMultiple) {
+      this.$notify.info({
+        message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${integer}`
+      });
+      return integer;
+    }
+    let re = integer + smallPacking - ri;
+    this.$notify.info({
+      message: `数量${amount}不是最小包装的倍数，无法添加疫苗，已帮您调整为${re}`
+    });
+    return re;
+  },
   isCheckPackage(count) {
     if (!count || count < 0) {
       this.$notify({
