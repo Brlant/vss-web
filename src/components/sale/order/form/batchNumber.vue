@@ -86,7 +86,7 @@
       return {
         batchNumbers: [],
         isHasBatchNumberInfo: false,
-        changeTotalNumber: utils.changeTotalNumber,
+        changeTotalNumber: utils.changeTipTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         doing: false
       };
@@ -248,57 +248,16 @@
        */
       isChangeValue(item, product) {
         if (product.isMainly) {
-          let newAmount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
-          if (item.productCount !== newAmount) {
-            this.$confirm(`疫苗"${this.product.fixInfo.name}"数量${item.productCount}不是最小包装的倍数，确认后会对后续操作产生严重影响!
-            选择“是”修改数量为${newAmount}，选择“否”确认数量${item.productCount}`, '', {
-              confirmButtonText: '是',
-              cancelButtonText: '否',
-              type: 'warning'
-            }).then(res => {
-              item.productCount = newAmount;
-              if (item.productCount > item.count) {
-                this.$notify.warning({
-                  duration: 2000,
-                  message: '输入的产品数量大于可用库存'
-                });
-              }
-              item.isChecked = item.productCount > 0;
-              this.autoSelectBatchWhenIsCombination(item, product);
-              this.$emit('addProduct');
-            }).catch(() => {
-              if (item.productCount > item.count) {
-                this.$notify.warning({
-                  duration: 2000,
-                  message: '输入的产品数量大于可用库存'
-                });
-              }
-              item.isChecked = item.productCount > 0;
-              this.autoSelectBatchWhenIsCombination(item, product);
-              this.$emit('addProduct');
-            });
-          } else {
-            if (item.productCount > item.count) {
-              this.$notify.warning({
-                duration: 2000,
-                message: '输入的产品数量大于可用库存'
-              });
-            }
-            item.isChecked = item.productCount > 0;
-            this.autoSelectBatchWhenIsCombination(item, product);
-            this.$emit('addProduct');
-          }
-        } else {
-          if (item.productCount > item.count) {
-            this.$notify.warning({
-              duration: 2000,
-              message: '输入的产品数量大于可用库存'
-            });
-          }
-          item.isChecked = item.productCount > 0;
-          this.autoSelectBatchWhenIsCombination(item, product);
-          this.$emit('addProduct');
+          item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
         }
+        if (item.productCount > item.count) {
+          this.$notify.warning({
+            duration: 2000,
+            message: '输入的产品数量大于可用库存'
+          });
+        }
+        item.isChecked = item.productCount > 0;
+        this.autoSelectBatchWhenIsCombination(item, product);
       },
       /**
        * 自动选出组合疫苗的批号
