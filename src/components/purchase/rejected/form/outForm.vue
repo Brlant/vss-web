@@ -389,7 +389,7 @@
 <script>
   import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
   import utils from '@/tools/utils';
-  import batchNumberPart from '@/components/sale/order/form/batchNumber';
+  import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
   import addGoodsMixin from '@/mixins/addGoodsMixin';
 
