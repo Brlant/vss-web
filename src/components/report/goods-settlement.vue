@@ -180,7 +180,7 @@
           keyWord: query
         });
         Vaccine.query(params).then(res => {
-          this.goodesList = res.data.list;
+          this.orgGoods = res.data.list;
         });
       },
       formatTime: function (date, str = 'YYYY-MM-DD') {
