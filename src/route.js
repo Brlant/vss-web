@@ -386,42 +386,6 @@ export const route = [
         ]
       },
       {
-        path: '/pov',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'pov', title: '接种点业务', icon: 'vaccine', perm: 'pov-business'},
-        children: [
-          {
-            path: '/pov/receipt',
-            component: () => import('./components/pov/receipt/list.vue'),
-            meta: {moduleId: 'pov', title: '采购订单', perm: 'pov-receipt-manager'}
-          }
-        ]
-      },
-      {
-        path: '/file',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'file', title: '批号文件管理', icon: 'validity', perm: 'vaccine-batch-process'},
-        children: [
-          {
-            path: '/file/vaccine',
-            component: () => import('./components/files/vaccineBatch/index.vue'),
-            meta: {moduleId: 'file', title: '疫苗批号文件', perm: 'vaccine-batch-process'}
-          }
-        ]
-      },
-      {
-        path: '/account',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'account', title: '单位账户管理', icon: 'user', perm: 'erp-bind-account-manager'},
-        children: [
-          {
-            path: '/account/log',
-            component: () => import('./components/common/log/list.vue'),
-            meta: {topMould: 'permission', title: '系统日志', perm: 'erp-system-log'}
-          }
-        ]
-      },
-      {
         path: '/resource',
         component: () => import('./components/common/parent-route.vue'),
         meta: {moduleId: 'resource', title: '资料管理', icon: 'firm', perm: 'material-manager'},
