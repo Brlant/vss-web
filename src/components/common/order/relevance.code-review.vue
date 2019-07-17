@@ -267,7 +267,7 @@
         }, this.filters);
         this.loadingData = true;
         // this.currentOrder.orderNo = '201805250001'; // 201805250001
-        http.get(`/code/${this.currentOrder.orderNo}/trace-code`, {params}).then(res => {
+        http.get(`/vss-code/${this.currentOrder.orderNo}/trace-code`, {params}).then(res => {
           this.traceCodes = res.data.list;
           // 设置分页数
           this.pager.count = this.pager.currentPage * this.pager.pageSize + (this.traceCodes.length === this.pager.pageSize ? 1 : 0);

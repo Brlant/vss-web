@@ -36,7 +36,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'http://vss.cdcerp.net',
+        target: 'http://192.168.2.193:8081',
         changOrigin: true
       }
     }

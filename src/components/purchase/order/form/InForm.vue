@@ -608,7 +608,6 @@
             id: res.data.orgGoodsDto.salesFirm,
             name: res.data.orgGoodsDto.salesFirmName
           });
-
           this.form.supplierId = res.data.orgGoodsDto.salesFirm;
           this.$nextTick(() => {
             this.filterProductList.push({

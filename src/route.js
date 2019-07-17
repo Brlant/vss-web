@@ -370,11 +370,6 @@ export const route = [
             meta: {moduleId: 'resource', title: '疫苗供货单位资料', perm: 'manufacturer-manager'}
           },
           {
-            path: '/resource/bidder',
-            component: () => import('./components/resource/bidder/list.vue'),
-            meta: {moduleId: 'resource', title: '中标疫苗', perm: 'successful-bidder-vaccine'}
-          },
-          {
             path: '/resource/first-vaccin/list',
             component: () => import('./components/resource/vaccin/firstVaccin/list.vue'),
             meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
@@ -384,11 +379,6 @@ export const route = [
             component: () => import('./components/resource/vaccin/secondVaccin/list.vue'),
             meta: {moduleId: 'resource', title: '疫苗产品资料', perm: 'second-vaccine-info'}
           },
-          // {
-          //   path: '/resource/pov/first-vaccin/list',
-          //   component: () => import('./components/resource/vaccin/pov/first/list.vue'),
-          //   meta: {moduleId: 'resource', title: '被授权一类疫苗', perm: 'pov-first-authorization-vaccine'}
-          // },
           {
             path: '/resource/pov/second-vaccin/list',
             component: () => import('./components/resource/vaccin/pov/second/list.vue'),
@@ -408,39 +398,6 @@ export const route = [
             path: '/resource/material',
             component: () => import('./components/resource/material/list.vue'),
             meta: {moduleId: 'resource', title: '物料管理', perm: 'supplies-manager'}
-          }
-        ]
-      },
-      // {
-      //   path: '/trace',
-      //   component: () => import('./components/trace/list.vue'),
-      //   meta: {moduleId: 'report', title: '追溯管理', icon: 'trace', perm: 'show'},
-      //   children: []
-      // },
-      {
-        path: '/vaccine/select',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'store', title: '疫苗遴选', icon: 'store', perm: 'vaccine-selection'},
-        children: [
-          {
-            path: '/purchase/agreement',
-            component: () => import('./components/resource/vaccin/purchaseAgreement/list.vue'),
-            meta: {moduleId: 'resource', title: '区二类疫苗采购目录', perm: 'purchase-agreement'}
-          },
-          {
-            path: '/sale/vaccin/price',
-            component: () => import('./components/resource/price/list.vue'),
-            meta: {moduleId: 'resource', title: '二类疫苗销售价格', perm: 'sale-price-group'}
-          },
-          {
-            path: '/sale/one/vaccin/pov',
-            component: () => import('./components/resource/vaccin/rights/one/pov.vue'),
-            meta: {moduleId: 'resource', title: '一类疫苗接种点授权', perm: 'first-vaccine-authorization'}
-          },
-          {
-            path: '/sale/two/vaccin/pov',
-            component: () => import('./components/resource/vaccin/rights/two/pov.vue'),
-            meta: {moduleId: 'resource', title: '二类疫苗接种点授权', perm: 'second-vaccine-authorization'}
           }
         ]
       },

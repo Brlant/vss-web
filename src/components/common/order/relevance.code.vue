@@ -262,7 +262,7 @@
         }, this.filters);
         this.loadingData = true;
         // this.currentOrder.orderNo = '201805250001'; // 201805250001
-        http.get(`/code/${this.currentOrder.orderNo}/trace-code/list`, {params}).then(res => {
+        http.get(`/vss-code/${this.currentOrder.orderNo}/trace-code/list`, {params}).then(res => {
           this.totalTraceCodes = res.data.list;
           this.filterTraceCodes(1);
           this.totalInfoList = res.data.statisticsList;

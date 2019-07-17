@@ -485,21 +485,7 @@ export const invoiceManage = resource('/invoice/', http, {
     return http.post('/invoice/request', obj);
   }
 });
-/**
- *
- * @type {the}
- */
-export const BriceGroupPov = resource('/pov-sale-group/', http, {});
 
-/**
- *
- * @type {the}
- */
-export const BriceGroup = resource('/sale-price-group/', http, {
-  querySum(params) {
-    return http.get('sale-price-group/count', {params});
-  }
-});
 
 /**
  * 库存波次
@@ -571,16 +557,6 @@ export const Address = resource('/binding-warehouse', http, {
   },
   queryStateNum: (params) => {
     return http.get('/binding-warehouse/count', {params});
-  }
-});
-
-// 疫苗采购协议对象
-export const PurchaseAgreement = resource('/purchase-agreement', http, {
-  queryValidVaccin(params) {
-    return http.get('/purchase-agreement/valid/pager', {params});
-  },
-  queryStateNum: (params) => {
-    return http.get('/purchase-agreement/count', {params});
   }
 });
 
