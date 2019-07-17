@@ -33,6 +33,11 @@ export const route = [
             path: '/purchase/rejected/:id',
             component: () => import('./components/purchase/rejected/list.vue'),
             meta: {moduleId: 'purchase', title: '采购退货', perm: 'return-manager'}
+          },
+          {
+            path: '/pov/request',
+            component: () => import('./components/pov/request/list.vue'),
+            meta: {moduleId: 'pov', title: '要货申请', perm: 'pull-signal'}
           }
         ]
       },
@@ -59,17 +64,17 @@ export const route = [
           {
             path: '/sale/pov/:id',
             component: () => import('./components/common/parent-route.vue'),
-            meta: {moduleId: 'sale', title: '接种点要货需求', perm: 'demand-assignment'},
+            meta: {moduleId: 'sale', title: '要货需求', perm: 'demand-assignment'},
             children: [
               {
                 path: '',
                 component: () => import('./components/purchase/pov/list.vue'),
-                meta: {moduleId: 'sale', title: '接种点要货需求', perm: 'demand-assignment-query'}
+                meta: {moduleId: 'sale', title: '要货需求', perm: 'demand-assignment-query'}
               },
               {
                 path: '/sale/allocation/pov',
                 component: () => import('./components/purchase/pov/allocation.vue'),
-                meta: {moduleId: 'sale', title: '接种点要货需求', perm: 'demand-assignment-update'}
+                meta: {moduleId: 'sale', title: '要货需求', perm: 'demand-assignment-update'}
               }
             ]
           },
@@ -111,28 +116,6 @@ export const route = [
             path: '/sale/rejected/:id',
             component: () => import('./components/sale/rejected/list.vue'),
             meta: {moduleId: 'sale', title: '销售退货', perm: 'sales-return'}
-          }
-        ]
-      },
-      // {
-      //   path: '/sale/no/feedback',
-      //   component: () => import('./components/sale/feedback/list.vue'),
-      //   meta: {moduleId: 'sale', title: '未反馈订单', perm: 'second-vaccine-sales-order'}
-      // },
-      {
-        path: '/pov',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'pov', title: '接种点业务', icon: 'vaccine', perm: 'pov-business'},
-        children: [
-          {
-            path: '/pov/request',
-            component: () => import('./components/pov/request/list.vue'),
-            meta: {moduleId: 'pov', title: '要货申请', perm: 'pull-signal'}
-          },
-          {
-            path: '/pov/receipt',
-            component: () => import('./components/pov/receipt/list.vue'),
-            meta: {moduleId: 'pov', title: '采购订单', perm: 'pov-receipt-manager'}
           },
           {
             path: '/pov/record',
@@ -146,6 +129,11 @@ export const route = [
           }
         ]
       },
+      // {
+      //   path: '/sale/no/feedback',
+      //   component: () => import('./components/sale/feedback/list.vue'),
+      //   meta: {moduleId: 'sale', title: '未反馈订单', perm: 'second-vaccine-sales-order'}
+      // },
       {
         path: '/store',
         component: () => import('./components/common/parent-route.vue'),
@@ -296,112 +284,6 @@ export const route = [
         ]
       },
       {
-        path: '/file',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'file', title: '批号文件管理', icon: 'validity', perm: 'vaccine-batch-process'},
-        children: [
-          {
-            path: '/file/vaccine',
-            component: () => import('./components/files/vaccineBatch/index.vue'),
-            meta: {moduleId: 'file', title: '疫苗批号文件', perm: 'vaccine-batch-process'}
-          }
-        ]
-      },
-      {
-        path: '/account',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'account', title: '单位账户管理', icon: 'user', perm: 'erp-bind-account-manager'},
-        children: [
-          {
-            path: '/account/cdc',
-            component: () => import('./components/account/cdc/county-cdc.vue'),
-            meta: {moduleId: 'account', title: '管理区疾控', perm: 'erp-bind-cdc'}
-          },
-          {
-            path: '/account/citypov',
-            component: () => import('./components/account/pov/city-pov.vue'),
-            meta: {moduleId: 'account', title: '市疾控绑定接种点', perm: 'erp-bind-city-pov'}
-          },
-          {
-            path: '/account/pov',
-            component: () => import('./components/account/pov/list.vue'),
-            meta: {moduleId: 'account', title: '绑定下属接种点', perm: 'erp-bind-pov-manager'}
-          },
-          {
-            path: '/account/management',
-            component: () => import('./components/account/management/list.vue'),
-            meta: {moduleId: 'account', title: '账号分配', perm: 'erp-account-manager', type: 0}
-          },
-          {
-            path: '/account/role',
-            component: () => import('./components/account/role/role.vue'),
-            meta: {moduleId: 'account', title: '角色管理', perm: 'access-role-manager'}
-          },
-          {
-            path: '/account/system',
-            component: () => import('./components/account/system/list.vue'),
-            meta: {moduleId: 'account', title: '系统角色管理', perm: 'erp-system-manager'}
-          },
-          {
-            path: '/account/user',
-            component: () => import('./components/account/user/list.vue'),
-            meta: {moduleId: 'account', title: '用户管理', perm: 'erp-user-manager'}
-          },
-          {
-            path: '/account/log',
-            component: () => import('./components/common/log/list.vue'),
-            meta: {topMould: 'permission', title: '系统日志', perm: 'erp-system-log'}
-          },
-          {
-            path: '/account/system/management',
-            component: () => import('./components/account/management/list.vue'),
-            meta: {moduleId: 'account', title: '系统账号管理', perm: 'erp-system-account-manager', type: 1}
-          }
-        ]
-      },
-      {
-        path: '/resource',
-        component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'resource', title: '资料管理', icon: 'firm', perm: 'material-manager'},
-        children: [
-          {
-            path: '/resource/firm',
-            component: () => import('./components/resource/firm/list.vue'),
-            meta: {moduleId: 'resource', title: '疫苗供货单位资料', perm: 'manufacturer-manager'}
-          },
-          {
-            path: '/resource/first-vaccin/list',
-            component: () => import('./components/resource/vaccin/firstVaccin/list.vue'),
-            meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
-          },
-          {
-            path: '/resource/second-vaccin/list',
-            component: () => import('./components/resource/vaccin/secondVaccin/list.vue'),
-            meta: {moduleId: 'resource', title: '疫苗产品资料', perm: 'second-vaccine-info'}
-          },
-          {
-            path: '/resource/pov/second-vaccin/list',
-            component: () => import('./components/resource/vaccin/pov/second/list.vue'),
-            meta: {moduleId: 'resource', title: '被授权疫苗', perm: 'pov-second-authorization-vaccine'}
-          },
-          {
-            path: '/resource/store',
-            component: () => import('./components/resource/store/list.vue'),
-            meta: {moduleId: 'resource', title: '仓库管理', perm: 'binding-warehouse'}
-          },
-          {
-            path: '/logistics/cost',
-            component: () => import('./components/resource/logistics/cost.vue'),
-            meta: {moduleId: 'resource', title: '物流费管理', perm: 'cerp-logistics-cost'}
-          },
-          {
-            path: '/resource/material',
-            component: () => import('./components/resource/material/list.vue'),
-            meta: {moduleId: 'resource', title: '物料管理', perm: 'supplies-manager'}
-          }
-        ]
-      },
-      {
         path: '/report',
         component: () => import('./components/common/parent-route.vue'),
         meta: {moduleId: 'report', title: '报表管理', icon: 'report', perm: 'report-form-manager'},
@@ -504,14 +386,80 @@ export const route = [
         ]
       },
       {
-        path: '/information',
+        path: '/pov',
         component: () => import('./components/common/parent-route.vue'),
-        meta: {moduleId: 'information', title: '信息发布', icon: 'publish-info', perm: 'erp-information-manager'},
+        meta: {moduleId: 'pov', title: '接种点业务', icon: 'vaccine', perm: 'pov-business'},
         children: [
           {
-            path: '/notice',
-            component: () => import('./components/information/notice/list.vue'),
-            meta: {moduleId: 'information', title: '信息发布', perm: 'notice-watch'}
+            path: '/pov/receipt',
+            component: () => import('./components/pov/receipt/list.vue'),
+            meta: {moduleId: 'pov', title: '采购订单', perm: 'pov-receipt-manager'}
+          }
+        ]
+      },
+      {
+        path: '/file',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'file', title: '批号文件管理', icon: 'validity', perm: 'vaccine-batch-process'},
+        children: [
+          {
+            path: '/file/vaccine',
+            component: () => import('./components/files/vaccineBatch/index.vue'),
+            meta: {moduleId: 'file', title: '疫苗批号文件', perm: 'vaccine-batch-process'}
+          }
+        ]
+      },
+      {
+        path: '/account',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'account', title: '单位账户管理', icon: 'user', perm: 'erp-bind-account-manager'},
+        children: [
+          {
+            path: '/account/log',
+            component: () => import('./components/common/log/list.vue'),
+            meta: {topMould: 'permission', title: '系统日志', perm: 'erp-system-log'}
+          }
+        ]
+      },
+      {
+        path: '/resource',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'resource', title: '资料管理', icon: 'firm', perm: 'material-manager'},
+        children: [
+          {
+            path: '/resource/firm',
+            component: () => import('./components/resource/firm/list.vue'),
+            meta: {moduleId: 'resource', title: '疫苗供货单位资料', perm: 'manufacturer-manager'}
+          },
+          {
+            path: '/resource/first-vaccin/list',
+            component: () => import('./components/resource/vaccin/firstVaccin/list.vue'),
+            meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
+          },
+          {
+            path: '/resource/second-vaccin/list',
+            component: () => import('./components/resource/vaccin/secondVaccin/list.vue'),
+            meta: {moduleId: 'resource', title: '疫苗产品资料', perm: 'second-vaccine-info'}
+          },
+          {
+            path: '/resource/pov/second-vaccin/list',
+            component: () => import('./components/resource/vaccin/pov/second/list.vue'),
+            meta: {moduleId: 'resource', title: '被授权疫苗', perm: 'pov-second-authorization-vaccine'}
+          },
+          {
+            path: '/resource/store',
+            component: () => import('./components/resource/store/list.vue'),
+            meta: {moduleId: 'resource', title: '仓库管理', perm: 'binding-warehouse'}
+          },
+          {
+            path: '/logistics/cost',
+            component: () => import('./components/resource/logistics/cost.vue'),
+            meta: {moduleId: 'resource', title: '物流费管理', perm: 'cerp-logistics-cost'}
+          },
+          {
+            path: '/resource/material',
+            component: () => import('./components/resource/material/list.vue'),
+            meta: {moduleId: 'resource', title: '物料管理', perm: 'supplies-manager'}
           }
         ]
       }
