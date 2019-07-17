@@ -20,11 +20,11 @@
     <div v-show="index===1">
       <el-form ref="payForm" :model="searchCondition" label-width="100px">
         <el-form-item :label="`${titleAry[type][3]}`" prop="orgId"
-                      :rules="{required: true, message: '请选择接种点', blur: 'change'}">
+                      :rules="{required: true, message:  `请选择${titleAry[type][3]}`, blur: 'change'}">
           <el-select filterable remote :placeholder="`请输入名称搜索${titleAry[type][3]}`" :remote-method="filterOrg"
                      :clearable="true"
                      v-model="searchCondition.orgId" popper-class="good-selects" @change="orgChange"
-                     @click.native.once="filterOrg('')" @blur="">
+                     @click.native.once="filterOrg('')">
             <div v-if="type === 2">
               <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                 <div style="overflow: hidden">
@@ -252,14 +252,16 @@
         this.orgList = [];
         this.resetSearchForm();
         this.orgChange(false);
+        this.filterOrg();
+        this.$refs.payForm && this.$refs.payForm.clearValidate();
       },
       defaultIndex() {
         this.payments = [];
         this.goodesList = [];
         this.searchCondition.orgId = '';
-        this.orgList = [];
         this.resetSearchForm();
         this.orgChange(false);
+        this.$refs.payForm && this.$refs.payForm.clearValidate();
       },
       filterRights: {
         handler: function () {
