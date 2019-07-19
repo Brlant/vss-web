@@ -207,6 +207,9 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <order-push-search v-model="searchCondition.pushStatus"/>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -402,7 +405,8 @@
           thirdPartyNumber: '',
           orgAreaCode: '',
           orgGoodsId: '',
-          deleteFlag: false
+          deleteFlag: false,
+          pushStatus: ''
         },
         searchCondition: {
           searchType: 1,
@@ -416,7 +420,8 @@
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          pushStatus: ''
         },
         expectedTime: '',
         createTimes: '',
@@ -498,7 +503,8 @@
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          pushStatus: ''
         };
         this.expectedTime = '';
         this.createTimes = '';

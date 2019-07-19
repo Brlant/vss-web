@@ -159,17 +159,9 @@
             </el-col>
           </el-row>
           <el-row>
-            <!--<el-col :span="8">-->
-            <!--<oms-form-row label="预计出库时间" :span="6">-->
-            <!--<el-col :span="24">-->
-            <!--<el-date-picker-->
-            <!--v-model="expectedTime"-->
-            <!--type="daterange"-->
-            <!--placeholder="请选择" format="yyyy-MM-dd">-->
-            <!--</el-date-picker>-->
-            <!--</el-col>-->
-            <!--</oms-form-row>-->
-            <!--</el-col>-->
+            <el-col :span="8">
+              <order-push-search v-model="searchCondition.pushStatus"/>
+            </el-col>
             <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
@@ -325,7 +317,8 @@
           orgAreaCode: '',
           deleteFlag: false,
           expectedStartTime: '',
-          expectedEndTime: ''
+          expectedEndTime: '',
+          pushStatus: ''
         },
         searchCondition: {
           searchType: 1,
@@ -339,7 +332,8 @@
           orgAreaCode: '',
           thirdPartyNumber: '',
           expectedStartTime: '',
-          expectedEndTime: ''
+          expectedEndTime: '',
+          pushStatus: ''
         },
         createdTime: '',
         expectedTime: '',
@@ -432,7 +426,8 @@
           orgGoodsId: '',
           orgAreaCode: '',
           expectedStartTime: '',
-          expectedEndTime: ''
+          expectedEndTime: '',
+          pushStatus: ''
         };
         this.createdTime = '';
         this.expectedTime = '';

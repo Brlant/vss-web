@@ -179,7 +179,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8" v-show="vaccineType === '1'">
+            <el-col :span="8">
               <oms-form-row label="单位区域代码" :span="7">
                 <oms-input type="text" v-model="searchCondition.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
               </oms-form-row>
@@ -195,14 +195,11 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="8" v-if="vaccineType !== '1'">
-              <oms-form-row label="" :span="5">
-                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
-                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-              </oms-form-row>
-            </el-col>
           </el-row>
-          <el-row v-if="vaccineType === '1'">
+          <el-row>
+            <el-col :span="8">
+              <order-push-search v-model="searchCondition.pushStatus"/>
+            </el-col>
             <el-col :span="8">
               <oms-form-row label="" :span="5">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
@@ -381,7 +378,8 @@
           thirdPartyNumber: '',
           orgGoodsId: '',
           orgAreaCode: '',
-          deleteFlag: false
+          deleteFlag: false,
+          pushStatus: ''
         },
         searchCondition: {
           searchType: 1,
@@ -393,7 +391,8 @@
           transactOrgId: '',
           thirdPartyNumber: '',
           orgGoodsId: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          pushStatus: ''
         },
         expectedTime: '',
         orgType: utils.inOrderType,
@@ -492,7 +491,8 @@
           transactOrgId: '',
           thirdPartyNumber: '',
           orgGoodsId: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          pushStatus: ''
         };
         this.expectedTime = '';
         Object.assign(this.searchCondition, temp);

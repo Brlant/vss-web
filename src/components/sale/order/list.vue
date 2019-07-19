@@ -199,10 +199,13 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8" v-show="vaccineType === '1' ">
+            <el-col :span="8">
               <oms-form-row label="单位区域代码" :span="7">
                 <oms-input type="text" v-model="searchCondition.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
               </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <order-push-search v-model="searchCondition.pushStatus"/>
             </el-col>
             <el-col :span="8">
               <oms-form-row label="" :span="3">
@@ -370,7 +373,8 @@
           orgAreaCode: '',
           deleteFlag: false,
           expectedStartTime: '',
-          expectedEndTime: ''
+          expectedEndTime: '',
+          pushStatus: ''
         },
         searchCondition: {
           searchType: 1,
@@ -384,7 +388,8 @@
           orgAreaCode: '',
           thirdPartyNumber: '',
           expectedStartTime: '',
-          expectedEndTime: ''
+          expectedEndTime: '',
+          pushStatus: ''
         },
         createdTime: '',
         expectedTime: '',
@@ -476,7 +481,8 @@
           orgGoodsId: '',
           orgAreaCode: '',
           expectedStartTime: '',
-          expectedEndTime: ''
+          expectedEndTime: '',
+          pushStatus: ''
         };
         this.createdTime = '';
         this.expectedTime = '';

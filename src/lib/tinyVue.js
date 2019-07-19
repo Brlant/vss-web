@@ -103,6 +103,7 @@ import relevanceCodeReview from '@/components/common/order/relevance.code-review
 import goodsStatusTag from '@/components/common/order/goods-status-tag';
 import CardBox from '@/components/common/card-box';
 import orderPushStatus from '@/components/common/order/order-push-status';
+import orderPushSearch from '@/components/common/order/order-push-search';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
   Pagination,
@@ -199,7 +200,8 @@ const tinyVue = [
   compressedImg,
   goodsStatusTag,
   TnInputAutoComplete,
-  orderPushStatus
+  orderPushStatus,
+  orderPushSearch
 ];
 
 const install = function (Vue, opts = {}) {
