@@ -240,8 +240,10 @@
 <script>
   import {BaseInfo, Goods, Vaccine} from '@/resources';
   import utils from '@/tools/utils';
+  import omsUploadPicture from '@/components/common/upload.user.picture.vue';
 
   export default {
+    components: {omsUploadPicture},
     data: function () {
       return {
         form: {
