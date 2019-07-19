@@ -941,7 +941,7 @@
             if (this.requestTime > rTime) {
               return;
             }
-            this.searchProductList = res.data.list;
+            this.searchProductList = res.data;
             this.$nextTick(function () {
               this.filterProducts();
             });
