@@ -272,6 +272,7 @@
                   <div>
                     <div class="f-grey">
                       {{item.orderNo }}
+
                     </div>
                     <div>
                       {{item.orgName }}
@@ -309,6 +310,7 @@
               <el-col :span="4">
                 <div>
                   {{getOrderStatus(item)}}
+                  <order-push-status :status="item.pushStatus"/>
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn" v-if="filters.state === '6'">

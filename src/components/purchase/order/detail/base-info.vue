@@ -36,6 +36,7 @@
           </oms-row>
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
+            <order-push-status :status="currentOrder.pushStatus"/>
           </oms-row>
         </el-col>
         <el-col :span="12">

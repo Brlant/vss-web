@@ -102,6 +102,7 @@ import orderGoodsInfo from '@/components/common/order/order-goods-info';
 import relevanceCodeReview from '@/components/common/order/relevance.code-review.vue';
 import goodsStatusTag from '@/components/common/order/goods-status-tag';
 import CardBox from '@/components/common/card-box';
+import orderPushStatus from '@/components/common/order/order-push-status';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
   Pagination,
@@ -197,7 +198,8 @@ const tinyVue = [
   relevanceCodeReview,
   compressedImg,
   goodsStatusTag,
-  TnInputAutoComplete
+  TnInputAutoComplete,
+  orderPushStatus
 ];
 
 const install = function (Vue, opts = {}) {

@@ -324,6 +324,7 @@
               <el-col :span="3">
                 <div class="vertical-center">
                   {{getOrderStatus(item)}}
+                  <order-push-status :status="item.pushStatus"/>
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn">

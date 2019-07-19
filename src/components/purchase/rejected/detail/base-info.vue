@@ -65,6 +65,7 @@
             </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
+              <order-push-status :status="currentOrder.pushStatus"/>
             </oms-row>
             <oms-row label="退货原因" v-show="currentOrder.returnReason">
               {{ currentOrder.returnReason }}

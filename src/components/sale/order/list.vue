@@ -290,6 +290,7 @@
               <el-col :span="2">
                 <div class="vertical-center">
                   {{getOrderStatus(item)}}
+                  <order-push-status :status="item.pushStatus"/>
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn" v-if="filters.state < 4">
