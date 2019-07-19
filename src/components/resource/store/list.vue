@@ -33,11 +33,11 @@
         <div class="d-table-col-wrap" :style="'height:'+bodyHeight">
           <h2 class="header">
           <span class="pull-right">
-            <perm label="binding-warehouse-add">
-              <a href="#" class="btn-circle" @click.stop.prevent="addType">
-                <i class="el-icon-t-plus"></i>
-              </a>
-            </perm>
+            <!--<perm label="binding-warehouse-add">-->
+            <!--<a href="#" class="btn-circle" @click.stop.prevent="addType">-->
+            <!--<i class="el-icon-t-plus"></i>-->
+            <!--</a>-->
+            <!--</perm>-->
           </span>
             仓库地址
           </h2>
@@ -71,20 +71,20 @@
           <div v-else>
             <h2 class="clearfix">
                 <span class="pull-right">
-                  <el-button-group>
-                    <perm label="binding-warehouse-update">
-                      <el-button @click="edit()" v-show="data.status==='0'"><i
-                        class="el-icon-t-edit"></i>编辑</el-button>
-                    </perm>
-                    <perm label="binding-warehouse-forbid">
-                      <el-button @click="remove()" v-show="data.status==='0'||data.status==='1'"><i
-                        class="el-icon-t-stop"></i>停用</el-button>
-                    </perm>
-                    <perm label="binding-warehouse-start">
-                      <el-button @click="start()" v-show="data.status==='2'||data.status==='3'"><i
-                        class="el-icon-t-start"></i>启用</el-button>
-                    </perm>
-                  </el-button-group>
+                  <!--<el-button-group>-->
+                  <!--<perm label="binding-warehouse-update">-->
+                  <!--<el-button @click="edit()" v-show="data.status==='0'"><i-->
+                  <!--class="el-icon-t-edit"></i>编辑</el-button>-->
+                  <!--</perm>-->
+                  <!--<perm label="binding-warehouse-forbid">-->
+                  <!--<el-button @click="remove()" v-show="data.status==='0'||data.status==='1'"><i-->
+                  <!--class="el-icon-t-stop"></i>停用</el-button>-->
+                  <!--</perm>-->
+                  <!--<perm label="binding-warehouse-start">-->
+                  <!--<el-button @click="start()" v-show="data.status==='2'||data.status==='3'"><i-->
+                  <!--class="el-icon-t-start"></i>启用</el-button>-->
+                  <!--</perm>-->
+                  <!--</el-button-group>-->
                 </span>
             </h2>
             <div class="page-main-body">

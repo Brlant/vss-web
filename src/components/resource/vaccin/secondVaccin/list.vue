@@ -132,11 +132,11 @@
         <div class="d-table-left">
           <h2 class="header">
                 <span class="pull-right">
-                  <perm label="second-vaccine-info-add">
-                      <a href="#" class="btn-circle" @click.stop.prevent="addType">
-                        <i class="el-icon-t-plus"></i>
-                      </a>
-                  </perm>
+                  <!--<perm label="second-vaccine-info-add">-->
+                  <!--<a href="#" class="btn-circle" @click.stop.prevent="addType">-->
+                  <!--<i class="el-icon-t-plus"></i>-->
+                  <!--</a>-->
+                  <!--</perm>-->
                     <a href="#" class="btn-circle" @click.prevent="searchType"><i
                       class="el-icon-t-search"></i> </a>
                 </span>
@@ -182,19 +182,19 @@
           <div class="d-table-col-wrap" :style="'height:'+bodyHeight + 'px'" v-else>
             <h2 class="clearfix">
             <span class="pull-right">
-                 <el-button-group>
-                  <perm label="second-vaccine-info-update">
-                    <el-button @click="edit"><i class="el-icon-t-edit"></i> 编辑</el-button>
-                    </perm>
-                   <perm label="second-vaccine-info-start">
-                    <el-button @click="enableRelation" v-show="data.status == '0'"><i
-                      class="el-icon-t-start"></i> 启用</el-button>
-                   </perm>
-                   <perm label="second-vaccine-info-stop">
-                    <el-button @click="forbid" v-show="data.status == '1' "><i
-                      class="el-icon-t-stop"></i> 停用</el-button>
-                   </perm>
-                </el-button-group>
+                 <!--<el-button-group>-->
+              <!--<perm label="second-vaccine-info-update">-->
+              <!--<el-button @click="edit"><i class="el-icon-t-edit"></i> 编辑</el-button>-->
+              <!--</perm>-->
+              <!--<perm label="second-vaccine-info-start">-->
+              <!--<el-button @click="enableRelation" v-show="data.status == '0'"><i-->
+              <!--class="el-icon-t-start"></i> 启用</el-button>-->
+              <!--</perm>-->
+              <!--<perm label="second-vaccine-info-stop">-->
+              <!--<el-button @click="forbid" v-show="data.status == '1' "><i-->
+              <!--class="el-icon-t-stop"></i> 停用</el-button>-->
+              <!--</perm>-->
+              <!--</el-button-group>-->
             </span>
             </h2>
             <div class="page-main-body min-row">

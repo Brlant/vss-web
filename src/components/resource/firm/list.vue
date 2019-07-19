@@ -142,10 +142,10 @@
           <h2 class="header" style="overflow: hidden">
             厂商资料
             <span class="pull-right">
-                   <perm label="manufacturer-add">
-                      <a href="#" class="btn-circle" @click.stop.prevent="addType"><i
-                        class="el-icon-t-plus"></i> </a>
-                   </perm>
+                   <!--<perm label="manufacturer-add">-->
+              <!--<a href="#" class="btn-circle" @click.stop.prevent="addType"><i-->
+              <!--class="el-icon-t-plus"></i> </a>-->
+              <!--</perm>-->
                       <a href="#" class="btn-circle" @click.prevent="searchType"><i
                         class="el-icon-t-search"></i> </a>
                 </span>
@@ -202,19 +202,19 @@
                 <!--v-show="businessRelationItem.status == '1' "><i-->
                 <!--class="el-icon-t-start"></i>启用</a>-->
                 <!--</perm>-->
-                <el-button-group>
-                  <perm label="manufacturer-update">
-                    <el-button @click="edit"><i class="el-icon-t-edit"></i>编辑</el-button>
-                  </perm>
-                  <perm label="manufacturer-stop">
-                      <el-button @click="forbid" v-show="businessRelationItem.status  == '0' "><i
-                        class="el-icon-t-stop"></i>停用</el-button>
-                  </perm>
-                  <perm label="manufacturer-start">
-                        <el-button @click="enableRelation" v-show="businessRelationItem.status == '1' "><i
-                          class="el-icon-t-start"></i>启用</el-button>
-                  </perm>
-                </el-button-group>
+                <!--<el-button-group>-->
+                <!--<perm label="manufacturer-update">-->
+                <!--<el-button @click="edit"><i class="el-icon-t-edit"></i>编辑</el-button>-->
+                <!--</perm>-->
+                <!--<perm label="manufacturer-stop">-->
+                <!--<el-button @click="forbid" v-show="businessRelationItem.status  == '0' "><i-->
+                <!--class="el-icon-t-stop"></i>停用</el-button>-->
+                <!--</perm>-->
+                <!--<perm label="manufacturer-start">-->
+                <!--<el-button @click="enableRelation" v-show="businessRelationItem.status == '1' "><i-->
+                <!--class="el-icon-t-start"></i>启用</el-button>-->
+                <!--</perm>-->
+                <!--</el-button-group>-->
               </span>
             </h2>
             <div class="page-main-body">

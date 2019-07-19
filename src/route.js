@@ -383,19 +383,9 @@ export const route = [
             meta: {moduleId: 'resource', title: '疫苗供货单位资料', perm: 'manufacturer-manager'}
           },
           {
-            path: '/resource/first-vaccin/list',
-            component: () => import('./components/resource/vaccin/firstVaccin/list.vue'),
-            meta: {moduleId: 'resource', title: '一类疫苗产品资料', perm: 'first-vaccine-info'}
-          },
-          {
             path: '/resource/second-vaccin/list',
             component: () => import('./components/resource/vaccin/secondVaccin/list.vue'),
             meta: {moduleId: 'resource', title: '疫苗产品资料', perm: 'second-vaccine-info'}
-          },
-          {
-            path: '/resource/pov/second-vaccin/list',
-            component: () => import('./components/resource/vaccin/pov/second/list.vue'),
-            meta: {moduleId: 'resource', title: '被授权疫苗', perm: 'pov-second-authorization-vaccine'}
           },
           {
             path: '/resource/store',
