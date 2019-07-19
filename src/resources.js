@@ -50,13 +50,48 @@ function twoRequest(response) {
   });
 }
 
+
+function isNewReturnType(data) {
+  let keys = Object.keys(data);
+  if (keys.length !== 3) return false;
+  return ['code', 'data', 'msg'].every(e => keys.includes(e));
+}
+
 http.interceptors.response.use(response => {
-  // twoRequest(response);
-  return response;
+  if (isNewReturnType(response.data)) {
+    switch (response.data.code) {
+      case 200 :
+        return response.data;
+      case 401:
+        window.location.href = '#/login';
+        return response;
+      case 403:
+        Notification.error({
+          message: '您没有权限请求信息，请联系管理员。',
+          onClose: function () {
+            window.localStorage.removeItem('noticeError');
+          }
+        });
+        return response;
+      case 400:
+        Notification.error({
+          message: response.data.msg
+        });
+        return response;
+    }
+  } else {
+    return response;
+  }
 }, error => {
   let noticeTipKey = 'noticeError';
   let notice = window.localStorage.getItem(noticeTipKey);
   let response = error.response;
+
+  if (notice === '1' && response.status !== 401) {
+    return Promise.reject(error);
+  } else {
+    window.localStorage.setItem(noticeTipKey, '1');
+  }
   if (!response || response.status === 500) {
     Notification.warning({
       message: '服务器太久没有响应, 请重试',
@@ -65,11 +100,6 @@ http.interceptors.response.use(response => {
       }
     });
     return Promise.reject(error);
-  }
-  if (notice === '1' && response.status !== 401) {
-    return Promise.reject(error);
-  } else {
-    window.localStorage.setItem(noticeTipKey, '1');
   }
   if (response.status === 401) { //  Unauthorized, redirect to login
     let lastUrl = window.localStorage.getItem('lastUrl');
@@ -89,7 +119,7 @@ http.interceptors.response.use(response => {
 
   if (response.status === 502) {
     Notification.error({
-      message: '网络异常',
+      message: '系统请求失败',
       onClose: function () {
         window.localStorage.removeItem(noticeTipKey);
       }
