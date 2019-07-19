@@ -150,11 +150,6 @@ export const route = [
             meta: {moduleId: 'store', title: '即时库存监管', perm: 'cerp-stock-regulatory'}
           },
           {
-            path: '/store/regulation/pov',
-            component: () => import('./components/store/repertory-pov.vue'),
-            meta: {moduleId: 'store', title: '接种点库存监管', perm: 'cerp-stock-pov-regulatory'}
-          },
-          {
             path: '/store/adjust/count',
             component: () => import('./components/store/adjust-count-stock.vue'),
             meta: {moduleId: 'store', title: '库存数量调整', perm: 'cerp-stock-adjust'}
@@ -189,7 +184,7 @@ export const route = [
           {
             path: '/store/bad/:id',
             component: () => import('./components/store/breakage-order/list.vue'),
-            meta: {moduleId: 'store', title: '报损', perm: 'breakage-order'}
+            meta: {moduleId: 'store', title: '报损出库', perm: 'breakage-order'}
           }
         ]
       },
@@ -232,17 +227,9 @@ export const route = [
             path: '/collection/operation',
             component: () => import('./components/finance/operation/collection/list.vue'),
             meta: {
-              moduleId: 'finance', title: 'CDC收款作业', perm: 'cdc-payment-receivable', type: 2,
+              moduleId: 'finance', title: '收款作业', perm: 'cdc-payment-receivable', type: 2,
               perms: ['cdc-payment-receivable-add', 'cdc-payment-receivable-audit',
                 'cdc-payment-receivable-review', 'cdc-payment-receivable-cancel']
-            }
-          },
-          {
-            path: '/collection/pov',
-            component: () => import('./components/finance/operation/collection/list.vue'),
-            meta: {
-              moduleId: 'finance', title: 'POV付款作业', perm: 'pov-payment-payable', type: 1,
-              perms: ['pov-payment-payable-add', 'pov-payment-payable-audit', 'pov-payment-payable-cancel']
             }
           },
           {

@@ -20,7 +20,7 @@
     <div v-show="index===1">
       <el-form ref="payForm" :model="searchCondition" label-width="100px">
         <el-form-item :label="`${titleAry[type][3]}`" prop="orgId"
-                      :rules="{required: true, message: '请选择接种点', blur: 'change'}">
+                      :rules="{required: true, message: '请选择收货单位', blur: 'change'}">
           <el-select filterable remote :placeholder="`请输入名称搜索${titleAry[type][3]}`" :remote-method="filterOrg"
                      :clearable="true"
                      v-model="searchCondition.orgId" popper-class="good-selects" @change="orgChange"

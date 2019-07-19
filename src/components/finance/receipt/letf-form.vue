@@ -98,8 +98,8 @@
         <div class="hide-content show-content">
           <el-form ref="d-form" :rules="rules" :model="form"
                    label-width="160px" style="padding-right: 20px">
-            <el-form-item label="选择接种点" prop="povId">
-              <el-select placeholder="请选择接种点" v-model="form.payerId" filterable remote clearable
+            <el-form-item label="选择收货单位" prop="povId">
+              <el-select placeholder="请选择收货单位" v-model="form.payerId" filterable remote clearable
                          @click.native="queryPOVs('')"
                          :remote-method="queryPOVs">
                 <el-option :label="item.subordinateName" :value="item.subordinateId" :key="item.id"
@@ -123,7 +123,7 @@
           payerId: ''
         },
         rules: {
-          payerId: {required: true, message: '请选择接种点', trigger: 'change'}
+          payerId: {required: true, message: '请选择收货单位', trigger: 'change'}
         },
         povs: [], // 订单列表
         doing: false

@@ -196,7 +196,7 @@
         <el-row class="order-list-header">
           <el-col :span="8">货主/订单号</el-col>
           <el-col :span="4">报损方式</el-col>
-          <!--<el-col :span="5">接种点</el-col>-->
+          <!--<el-col :span="5">收货单位</el-col>-->
           <el-col :span="5">时间</el-col>
           <el-col :span="2">状态</el-col>
           <el-col :span="5" class="opera-btn" v-if="filters.state < 4 ">操作</el-col>

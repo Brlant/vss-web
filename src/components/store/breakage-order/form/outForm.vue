@@ -526,7 +526,7 @@
           isShowCustomerId: true, // 是否显示POV
           expectedTimeLabel: '预计出库时间'
         },
-        warehouses: [], // 接种点收货地址列表
+        warehouses: [], // 收货单位收货地址列表
         batchNumbers: [], // 疫苗批号列表
         selectBatchNumbers: [], // 已经选择的疫苗批号
         changeTotalNumber: utils.changeTotalNumber,

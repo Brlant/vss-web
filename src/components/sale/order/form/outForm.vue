@@ -124,8 +124,8 @@
                            v-show="(item.key !== '2' || item.key==='2' && form.bizType!=='2-2') && item.key !== '4'"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="接种点" prop="customerId">
-              <el-select filterable remote placeholder="请输入名称搜索接种点" :remote-method="filterPOV" :clearable="true"
+            <el-form-item label="收货单位" prop="customerId">
+              <el-select filterable remote placeholder="请输入名称搜索收货单位" :remote-method="filterPOV" :clearable="true"
                          v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -139,9 +139,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="接种点收货地址" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
+            <el-form-item label="收货单位收货地址" :prop=" showContent.isShowOtherContent?'transportationAddress':'' "
                           v-show="showContent.isShowOtherContent" :clearable="true">
-              <el-select placeholder="请选择接种点收货地址" v-model="form.transportationAddress" filterable clearable
+              <el-select placeholder="请选择收货单位收货地址" v-model="form.transportationAddress" filterable clearable
                          @change="changeWarehouseAdress" :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -468,7 +468,7 @@
             {required: true, message: '请选择货主', trigger: 'change'}
           ],
           customerId: [
-            {required: true, message: '请选择接种点', trigger: 'change'}
+            {required: true, message: '请选择收货单位', trigger: 'change'}
           ],
           bizType: [
             {required: true, message: '请选择业务类型', trigger: 'change'}
@@ -477,7 +477,7 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择接种点收货地址', trigger: 'change'}
+            {required: true, message: '请选择收货单位收货地址', trigger: 'change'}
           ],
           logisticsProviderName: [
             {required: true, message: '请选择物流商', trigger: 'change'}
@@ -537,7 +537,7 @@
           isShowCustomerId: true, // 是否显示POV
           expectedTimeLabel: '预计出库时间'
         },
-        warehouses: [], // 接种点收货地址列表
+        warehouses: [], // 收货单位收货地址列表
         batchNumbers: [], // 疫苗批号列表
         selectBatchNumbers: [], // 已经选择的疫苗批号
         changeTotalNumber: utils.changeTotalNumber,
@@ -741,7 +741,7 @@
         if (!orgId) return;
         let params = {
           keyWord: query,
-          relation: '0'
+          relation: '2'
         };
         BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;

@@ -1,5 +1,5 @@
 <template>
-  <card-box title="接种点要货需求" v-if="requirementList.length">
+  <card-box title="要货需求" v-if="requirementList.length">
     <el-row class="list-item list-item--pointer" v-for="(item, index) in requirementList" :key="item.id"
             type="flex"
             :gutter="15"

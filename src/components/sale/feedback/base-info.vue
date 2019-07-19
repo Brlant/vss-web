@@ -27,10 +27,10 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row :label="isInOrder ? '供货单位' : '接种点'" :span="span">
+            <oms-row :label="isInOrder ? '供货单位' : '收货单位'" :span="span">
               {{currentOrder[isInOrder ? 'supplierName' : 'customerName']}}
             </oms-row>
-            <oms-row :label="isInOrder ? '供货单位订单号' : '接种点订单号'" :span="span" v-show="currentOrder.thirdPartyNumber">
+            <oms-row :label="isInOrder ? '供货单位订单号' : '收货单位订单号'" :span="span" v-show="currentOrder.thirdPartyNumber">
               {{currentOrder.thirdPartyNumber}}
             </oms-row>
             <oms-row label="运输条件" :span="span">
@@ -171,7 +171,7 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择接种点收货地址', trigger: 'change'}
+            {required: true, message: '请选择收货单位收货地址', trigger: 'change'}
           ],
           orgAddress: [
             {required: true, message: '请选择疾控发货地址', trigger: 'change'}

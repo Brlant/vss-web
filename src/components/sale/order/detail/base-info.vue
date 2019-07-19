@@ -28,7 +28,7 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="接种点" :span="span">
+            <oms-row label="收货单位" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
             <oms-row label="物流中心" :span="span">
@@ -57,8 +57,8 @@
                          v-for="item in transportationMeansList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="接种点收货地址" prop="transportationAddress">
-            <el-select placeholder="请选择接种点收货地址" v-model="currentOrder.transportationAddress"
+          <el-form-item label="收货单位收货地址" prop="transportationAddress">
+            <el-select placeholder="请选择收货单位收货地址" v-model="currentOrder.transportationAddress"
                        @change="changeWarehouseAdress"
                        filterable clearable>
               <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
@@ -113,10 +113,10 @@
             <oms-row label="货主" :span="span">
               {{currentOrder.orgName}}
             </oms-row>
-            <oms-row label="接种点" :span="span">
+            <oms-row label="收货单位" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
-            <oms-row label="接种点收货地址" :span="span">
+            <oms-row label="收货单位收货地址" :span="span">
               {{currentOrder.warehouseAddress}}
             </oms-row>
             <oms-row label="物流中心" :span="span">
@@ -276,7 +276,7 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择接种点收货地址', trigger: 'change'}
+            {required: true, message: '请选择收货单位收货地址', trigger: 'change'}
           ],
           orgAddress: [
             {required: true, message: '请选择疾控发货地址', trigger: 'change'}

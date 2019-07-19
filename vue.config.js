@@ -30,13 +30,13 @@ if (process.env.NODE_ENV === 'production') {
 module.exports = {
   devServer: {
     open: true,
-    port: '8006',
+    port: '8018',
     https: false,
     hotOnly: false,
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'http://192.168.2.193:8081',
+        target: 'https://vss.cnvss.net/',
         changOrigin: true
       }
     }

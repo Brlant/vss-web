@@ -97,8 +97,8 @@
                 </oms-form-row>
               </el-col>
               <el-col :span="8">
-                <oms-form-row label="接种点" :span="4">
-                  <el-select placeholder="请输入名称搜索接种点" v-model="searchCondition.keyword" filterable remote
+                <oms-form-row label="收货单位" :span="4">
+                  <el-select placeholder="请输入名称搜索收货单位" v-model="searchCondition.keyword" filterable remote
                              :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
                              popperClass="good-selects">
                     <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -598,7 +598,7 @@
         if (!orgId) return;
         let params = {
           keyWord: query,
-          relation: '0'
+          relation: '2'
         };
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;

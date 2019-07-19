@@ -52,8 +52,8 @@
         <el-form class="advanced-query-form" :model="searchWord" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="接种点" :span="4">
-                <el-select placeholder="请输入名称搜索接种点" v-model="searchWord.povId" filterable remote
+              <oms-form-row label="收货单位" :span="4">
+                <el-select placeholder="请输入名称搜索收货单位" v-model="searchWord.povId" filterable remote
                            :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
                            popperClass="good-selects">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -131,9 +131,9 @@
           <el-col :span="5">
             <el-checkbox @change="checkAll" v-model="isCheckAll" v-show="filters.status === 1 || filters.status === 11">
             </el-checkbox>
-            接种点要货申请编号
+            收货单位要货申请编号
           </el-col>
-          <el-col :span="6">接种点</el-col>
+          <el-col :span="6">收货单位</el-col>
           <el-col :span="3">到货需求日期</el-col>
           <el-col :span="5">时间</el-col>
           <el-col :span="5">操作</el-col>
@@ -373,7 +373,7 @@
         if (!orgId) return;
         let params = {
           keyWord: query,
-          relation: '0'
+          relation: '2'
         };
         BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
@@ -486,7 +486,7 @@
         }, filters);
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/sale/pov/list'});
         this.$http.get('/pull-signal/export', {params}).then(res => {
-          utils.download(res.data.path, '接种点要货需求');
+          utils.download(res.data.path, '要货需求');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/sale/pov/list'});
         }).catch(error => {
@@ -511,7 +511,7 @@
         });
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/sale/pov/list'});
         this.$http.get('/pull-signal/export', {params}).then(res => {
-          utils.download(res.data.path, '接种点要货需求');
+          utils.download(res.data.path, '要货需求');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/sale/pov/list'});
         }).catch(error => {

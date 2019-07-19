@@ -126,8 +126,8 @@
             <el-form-item label="供货单位" prop="cdcId" v-else-if="form.cdcName">
               {{form.cdcName}}
             </el-form-item>
-            <el-form-item label="接种点仓库" prop="warehouseId">
-              <el-select placeholder="请选择接种点仓库" v-model="form.warehouseId" filterable clearable>
+            <el-form-item label="收货单位仓库" prop="warehouseId">
+              <el-select placeholder="请选择收货单位仓库" v-model="form.warehouseId" filterable clearable>
                 <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">-->
                 <!--</el-option>-->
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
@@ -347,7 +347,7 @@
         },
         rules: {
           warehouseId: [
-            {required: true, message: '请选择接种点仓库', trigger: 'change'}
+            {required: true, message: '请选择收货单位仓库', trigger: 'change'}
           ],
           type: [
             {required: true, type: 'number', message: '请选择疫苗标志', trigger: 'change'}

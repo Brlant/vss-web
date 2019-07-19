@@ -91,7 +91,7 @@
               <oms-row label="到货需求日期">
                 {{currentOrder.demandTime | date }}
               </oms-row>
-              <oms-row label="接种点仓库">
+              <oms-row label="收货单位仓库">
                 {{currentOrder.warehouseAddress}}
               </oms-row>
               <el-row>

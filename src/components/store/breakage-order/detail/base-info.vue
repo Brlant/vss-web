@@ -195,7 +195,7 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择接种点收货地址', trigger: 'change'}
+            {required: true, message: '请选择收货单位收货地址', trigger: 'change'}
           ],
           orgAddress: [
             {required: true, message: '请选择疾控发货地址', trigger: 'change'}
