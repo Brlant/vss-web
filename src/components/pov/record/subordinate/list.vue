@@ -47,8 +47,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="收货单位名称" :span="7">
-                <el-select filterable remote placeholder="请输入收货单位名称查询"
+              <oms-form-row label="接种单位名称" :span="7">
+                <el-select filterable remote placeholder="请输入接种单位名称查询"
                            :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
                            v-model="searchCondition.povId" @click.native.once="filterProvide('')"
                            popperClass="good-selects">
@@ -79,7 +79,7 @@
         <el-row class="order-list-header">
           <el-col :span="4">接种时间</el-col>
           <el-col :span="6">接种疫苗</el-col>
-          <el-col :span="5">收货单位名称</el-col>
+          <el-col :span="5">接种单位名称</el-col>
           <el-col :span="4">批号</el-col>
           <el-col :span="4">追溯码</el-col>
           <el-col :span="1">来源</el-col>
