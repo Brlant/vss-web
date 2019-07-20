@@ -149,7 +149,7 @@
             </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
-              <order-push-status :status="currentOrder.pushStatus"/>
+              <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
             </oms-row>
           </el-col>
         </el-row>

@@ -40,7 +40,7 @@
           </oms-row>
           <oms-row label="订单状态" :span="span">
             {{ getCurrentOrderStatus(currentOrder.state) }}
-            <order-push-status :status="currentOrder.pushStatus"/>
+            <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
           </oms-row>
           <oms-row label="来自销售订单" :span="span"
                    v-show="currentOrder.thirdPartyNumber && currentOrder.transportationMeansId === '4'">

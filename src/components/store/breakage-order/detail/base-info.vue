@@ -65,7 +65,7 @@
             </oms-row>
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
-              <order-push-status :status="currentOrder.pushStatus"/>
+              <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
             </oms-row>
             <!--<oms-row :label="getTimeTitle(currentOrder)" v-show="currentOrder.expectedTime">-->
             <!--<span class="goods-span">{{currentOrder.expectedTime | date}}</span>-->
