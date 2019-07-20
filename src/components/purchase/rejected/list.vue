@@ -516,7 +516,6 @@
         this.queryStatusNum(param);
       },
       refreshOrder() {
-        this.currentOrderId = '';
         this.getOrderList(this.pager.currentPage);
       },
       searchProduct(keyWord) {
@@ -618,10 +617,13 @@
         // });
       },
       showItem: function (order) {
-        this.currentOrderId = order.id;
-        this.state = order.state;
-        this.showDetail = true;
-        this.$router.push(`/purchase/rejected/${order.id}`);
+        this.currentOrderId = '';
+        this.$nextTick(() => {
+          this.currentOrderId = order.id;
+          this.state = order.state;
+          this.showDetail = true;
+          this.$router.push(`/purchase/rejected/${order.id}`);
+        });
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;
