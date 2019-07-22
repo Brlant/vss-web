@@ -237,15 +237,15 @@
       </el-row>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="filters.state === '6' ? 5: 7">
+          <el-col :span="5">
             <el-checkbox v-model="checkAll" @change="checkAllOrder" v-show="isShowCheckBox"/>
             货主/订单号
           </el-col>
           <el-col :span="3">业务类型</el-col>
-          <el-col :span="filters.state === '6' ? 5: 6">供货单位</el-col>
+          <el-col :span="5">供货单位</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="4">状态</el-col>
-          <el-col :span="3" v-if="filters.state === '6'">操作</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -290,7 +290,7 @@
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>
               </el-col>
-              <el-col :span="filters.state === '6' ? 5: 6" class="pt10">
+              <el-col :span="5" class="pt10">
                 <div class="f-grey" v-show="item.thirdPartyNumber">来源订单号：{{item.thirdPartyNumber }}</div>
                 <div>{{item.transactOrgName }}</div>
               </el-col>
@@ -310,13 +310,22 @@
                   <order-push-status :status="item.pushStatus" :msg="item.pushMessage"/>
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state === '6'">
-                <perm :label="vaccineType === '1'?'purchasing-order-edit': 'second-vaccine-purchasing-order-edit' ">
+              <el-col :span="3" class="opera-btn">
+                <perm :label="vaccineType === '1'?'purchasing-order-edit': 'second-vaccine-purchasing-order-edit' "
+                      v-show="filters.state === '6'">
                    <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
                   编辑
                 </span>
+                </perm>
+                <perm :label="vaccineType === '1' ? 'pov-receipt' : 'second-vaccine-pov-receipt'"
+                      v-show="filters.state === '10'">
+                  <span @click.stop="showPart(item)">
+                    <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
+                      class="el-icon-t-receipt"></i></a>
+                    收货
+                  </span>
                 </perm>
               </el-col>
             </el-row>
@@ -345,6 +354,9 @@
                 :action="action"
                 @close="resetRightBox" :vaccineType="vaccineType"></add-form>
     </page-right>
+    <page-right :show="showReceiptRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <receipt-info :orderId="currentOrderId" :showRight="showReceiptRight" @close="resetRightBox"></receipt-info>
+    </page-right>
   </div>
 </template>
 <script>
@@ -353,10 +365,11 @@
   import addForm from './form/InForm.vue';
   import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
+  import receiptInfo from './form/receipt';
 
   export default {
     components: {
-      showForm, addForm
+      showForm, addForm, receiptInfo
     },
     data: function () {
       return {
@@ -364,6 +377,7 @@
         showItemRight: false,
         showDetail: false,
         showSearch: false,
+        showReceiptRight: false,
         orderList: [],
         filters: {
           type: 0,
@@ -503,6 +517,7 @@
         this.showItemRight = false;
         this.defaultIndex = 0;
         this.action = '';
+        this.showReceiptRight = false;
         // this.getOrderList(this.pager.currentPage);
         this.$router.push('list');
       },
@@ -634,6 +649,14 @@
           this.state = order.state;
           this.showDetail = true;
           this.$router.push(`${order.id}`);
+        });
+      },
+      showPart(item) {
+        this.currentOrderId = '';
+        this.$nextTick(() => {
+          this.currentItem = item;
+          this.currentOrderId = item.id;
+          this.showReceiptRight = true;
         });
       },
       changeStatus: function (item, key) {// 订单分类改变

@@ -54,7 +54,7 @@
         <th v-show="isShowbatch">批号</th>
         <th v-show="isShowbatch">有效期</th>
         <th>数量</th>
-        <th v-show="level !== 1">单价</th>
+        <th>单价</th>
       </tr>
       </thead>
       <tbody>
