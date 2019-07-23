@@ -9,7 +9,7 @@ export default {
       }
       let params = {keyWord: query};
       if (this.type === 2) {
-        params.relation = '0';
+        params.relation = '2';
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
         });
