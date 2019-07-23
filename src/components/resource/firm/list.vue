@@ -126,16 +126,16 @@
 <template>
   <div>
     <div>
-      <div class="order-list-status container" style="margin-bottom:20px">
-        <div class="status-item"
-             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
-             v-for="(item,key) in firmType"
-             @click="changeStatus(item,key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}
-            <span class="status-num">{{item.num}}</span></div>
-        </div>
-      </div>
+      <!--      <div class="order-list-status container" style="margin-bottom:20px">-->
+      <!--        <div class="status-item"-->
+      <!--             :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"-->
+      <!--             v-for="(item,key) in firmType"-->
+      <!--             @click="changeStatus(item,key)">-->
+      <!--          <div class="status-bg" :class="['b_color_'+key]"></div>-->
+      <!--          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}-->
+      <!--            <span class="status-num">{{item.num}}</span></div>-->
+      <!--        </div>-->
+      <!--      </div>-->
       <div class="container d-table">
 
         <div class="d-table-left">
@@ -401,11 +401,11 @@
 
 </template>
 <script>
-  import {BaseInfo, Vendor} from '@/resources';
-  import utils from '@/tools/utils';
-  import photoShow from './photo/photo.show.vue';
+    import {BaseInfo, Vendor} from '@/resources';
+    import utils from '@/tools/utils';
+    import photoShow from './photo/photo.show.vue';
 
-  export default {
+    export default {
     components: {photoShow},
     data: function () {
       return {
@@ -547,7 +547,7 @@
             this.getBusinessRelationItem(this.currentItem.id);
           }
           this.typePager.totalPage = res.data.totalPage;
-          this.queryStatusNum(params);
+            // this.queryStatusNum(params);
           this.loadingListData = false;
         });
       },

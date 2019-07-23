@@ -119,15 +119,15 @@
 <template>
   <div>
     <div class="container">
-      <div class="order-list-status container">
-        <div class="status-item" :class="{'active':key==activeStatus,'item-right':item.type===0} "
-             v-for="(item,key) in vaccineType"
-             @click="changeType(key,item)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span
-            class="status-num">{{item.num}}</span></div>
-        </div>
-      </div>
+      <!--      <div class="order-list-status container">-->
+      <!--        <div class="status-item" :class="{'active':key==activeStatus,'item-right':item.type===0} "-->
+      <!--             v-for="(item,key) in vaccineType"-->
+      <!--             @click="changeType(key,item)">-->
+      <!--          <div class="status-bg" :class="['b_color_'+key]"></div>-->
+      <!--          <div class="status-title"><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span-->
+      <!--            class="status-num">{{item.num}}</span></div>-->
+      <!--        </div>-->
+      <!--      </div>-->
       <div class="d-table">
         <div class="d-table-left">
           <h2 class="header">
@@ -457,13 +457,13 @@
   </div>
 </template>
 <script>
-  import goodsPart from './form/form.vue';
-  import {Vaccine} from '@/resources';
-  import goodsRow from './goods.row.vue';
-  import utils from '@/tools/utils';
-  import attachmentLists from './../../../common/attachmentList.vue';
+    import goodsPart from './form/form.vue';
+    import {Vaccine} from '@/resources';
+    import goodsRow from './goods.row.vue';
+    import utils from '@/tools/utils';
+    import attachmentLists from './../../../common/attachmentList.vue';
 
-  export default {
+    export default {
     components: {
       goodsPart, goodsRow, attachmentLists
     },
@@ -574,7 +574,7 @@
             this.currentItem = Object.assign({orgGoodsDto: {}, list: []}, this.orgGoodsList[0]);
           }
           this.typePager.totalPage = res.data.totalPage;
-          this.queryStatusNum(params);
+            // this.queryStatusNum(params);
           this.queryOrgGoods();
         });
       },
