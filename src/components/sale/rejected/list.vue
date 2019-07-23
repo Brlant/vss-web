@@ -132,8 +132,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="收货单位" :span="4">
-                <el-select filterable remote placeholder="请输入名称搜索收货单位" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row label="退货单位" :span="4">
+                <el-select filterable remote placeholder="请输入名称搜索退货单位" :remote-method="filterOrg" :clearable="true"
                            v-model="searchCondition.transactOrgId" popperClass="good-selects"
                            @click.native.once="filterOrg('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -253,7 +253,7 @@
             货主/订单号
           </el-col>
           <el-col :span="3">业务类型</el-col>
-          <el-col :span="5">收货单位</el-col>
+          <el-col :span="5">退货单位</el-col>
           <el-col :span="5">时间</el-col>
           <el-col :span="3">状态</el-col>
           <el-col :span="3">操作</el-col>

@@ -131,8 +131,8 @@
                            v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="收货单位" prop="supplierId">
-              <el-select filterable remote placeholder="请输入名称搜索收货单位" :remote-method="filterOrg" :clearable="true"
+            <el-form-item label="退货单位" prop="supplierId">
+              <el-select filterable remote placeholder="请输入名称搜索退货单位" :remote-method="filterOrg" :clearable="true"
                          v-model="form.supplierId" @change="changeSupplier" popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
@@ -472,7 +472,7 @@
             {validator: checkOrderNumber}
           ],
           supplierId: [
-            {required: true, message: '请选择收货单位', trigger: 'change'}
+            {required: true, message: '请选择退货单位', trigger: 'change'}
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
@@ -680,7 +680,7 @@
             if (this.product.amount > this.amount) {
               this.$notify.warning({
                 duration: 2000,
-                message: '输入的产品数量大于收货单位的库存数量'
+                message: '输入的产品数量大于退货单位的库存数量'
               });
             }
             this.setAddProduct();
@@ -688,7 +688,7 @@
             if (this.product.amount > this.amount) {
               this.$notify.warning({
                 duration: 2000,
-                message: '输入的产品数量大于收货单位的库存数量'
+                message: '输入的产品数量大于退货单位的库存数量'
               });
             }
             this.setAddProduct();
@@ -697,7 +697,7 @@
           if (this.product.amount > this.amount) {
             this.$notify.warning({
               duration: 2000,
-              message: '输入的产品数量大于收货单位的库存数量'
+              message: '输入的产品数量大于退货单位的库存数量'
             });
           }
           this.setAddProduct();
