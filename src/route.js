@@ -145,11 +145,6 @@ export const route = [
             meta: {moduleId: 'store', title: '即时库存', perm: 'cerp-stock-query'}
           },
           {
-            path: '/store/regulation',
-            component: () => import('./components/store/repertory-regulation.vue'),
-            meta: {moduleId: 'store', title: '即时库存监管', perm: 'cerp-stock-regulatory'}
-          },
-          {
             path: '/store/adjust/count',
             component: () => import('./components/store/adjust-count-stock.vue'),
             meta: {moduleId: 'store', title: '库存数量调整', perm: 'cerp-stock-adjust'}
