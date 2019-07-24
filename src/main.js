@@ -12,7 +12,7 @@ import moment from 'dayjs';
 import 'dayjs/locale/zh-cn';
 import Vuex from 'vuex';
 import store from './store';
-
+import VueAMap from 'vue-amap';
 import omsCostTime from './components/common/timeCost.vue';
 import App from './components/App.vue';
 
@@ -22,6 +22,7 @@ initViewPort(router);
 
 Vue.use(tinyVue);
 Vue.use(Vuex);
+Vue.use(VueAMap);
 
 moment.locale('zh-cn');
 Vue.prototype.$moment = moment;
@@ -206,6 +207,16 @@ if (process.env.NODE_ENV === 'production') {
     .addPlugin(RavenVue, Vue)
     .install();
 }
+
+window.$mapInit = function () {
+  if (window.AMap) return;
+  VueAMap.initAMapApiLoader({
+    key: 'b551e033d09a45de75ebbc1170025c20',
+    plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.Geocoder'],
+    uiVersion: '1.0',
+    v: '1.4.4'
+  });
+};
 
 new Vue({
   router,

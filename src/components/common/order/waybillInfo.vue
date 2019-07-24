@@ -6,17 +6,14 @@
       border-radius: 5px;
       padding: 0 20px 10px;
     }
-
     .title {
       padding: 4px;
       background: #eef2f3;
       text-align: center;
     }
-
     .oms-col, .oms-row {
       font-size: 14px;
     }
-
     .order-list-header {
       background: #eef1f6;
       min-height: 30px;
@@ -47,16 +44,95 @@
             <chart-line-hand ref="vhDevTempLineHand" class="mt-10" :dataList="item.handOverList"
                              :devInfo="item"></chart-line-hand>
           </div>
-          <div v-show="!item.handOverList.length" class="ml-15">暂无数据</div>
+          <div v-show="!item.handOverList.length">暂无数据</div>
           <hr class="hr"/>
         </template>
+        <h2>设备信息</h2>
+        <el-row>
+          <div class="order-list clearfix" style="padding-top: 10px">
+            <el-row class="order-list-header">
+              <el-col :span="8">名称</el-col>
+              <el-col :span="8">编码</el-col>
+              <el-col :span="8" v-show="!item.arriveTime">最新数据</el-col>
+            </el-row>
+            <div v-if="!item.devList || (item.devList && !item.devList.length)" class="empty-type-info mini">暂无数据</div>
+            <div v-else class="order-list-body flex-list-dom">
+              <div class="order-list-item no-pointer order-list-item-bg" :key="index"
+                   v-for="(item, index) in item.devList">
+                <el-row>
+                  <el-col :span="8">{{item.devName}}</el-col>
+                  <el-col :span="8">{{item.devCode}}</el-col>
+                  <el-col :span="8" v-show="!item.arriveTime">
+                    <el-tooltip effect="dark" :content="formatTime(item.recordDate)" placement="top">
+                      <span>{{$formatDevData(item, $formatDevType(item))}}</span>
+                    </el-tooltip>
+                  </el-col>
+                </el-row>
+              </div>
+              <chart-line ref="devTempLine" class="mt-10"
+                          :dataList="item.tempDataList" :devInfo="item"></chart-line>
+            </div>
+          </div>
+        </el-row>
+        <hr class="hr"/>
+        <!--        <h2>车辆信息</h2>-->
+        <!--        <el-row>-->
+        <!--          <div v-if="!item.vehicleDevList || (item.vehicleDevList && !item.vehicleDevList.length)"-->
+        <!--               class="empty-type-info mini">-->
+        <!--            暂无信息-->
+        <!--          </div>-->
+        <!--          <div v-else>-->
+        <!--            <h3>车牌号:{{item.plateNumber}}</h3>-->
+        <!--            <div class="order-list clearfix" style="padding-top: 10px">-->
+        <!--              <el-row class="order-list-header">-->
+        <!--                <el-col :span="6">名称</el-col>-->
+        <!--                <el-col :span="6">编码</el-col>-->
+        <!--                <el-col :span="6">类型</el-col>-->
+        <!--                <el-col :span="6" v-show="!item.arriveTime">最新数据</el-col>-->
+        <!--              </el-row>-->
+        <!--              <div v-if="!item.vehicleDevList.length" class="empty-type-info mini">暂无数据</div>-->
+        <!--              <div v-else class="order-list-body flex-list-dom">-->
+        <!--                <div class="order-list-item no-pointer order-list-item-bg" :key="index"-->
+        <!--                     v-for="(item, index) in item.vehicleDevList">-->
+        <!--                  <el-row>-->
+        <!--                    <el-col :span="6">{{item.relationName}}</el-col>-->
+        <!--                    <el-col :span="6">{{item.devCode}}</el-col>-->
+        <!--                    <el-col :span="6">{{tempTypeList[item.devType]}}</el-col>-->
+        <!--                    <el-col :span="6" v-show="!item.arriveTime">-->
+        <!--                      <el-tooltip effect="dark" :content="formatTime(item.recordDate)" placement="top">-->
+        <!--                        <span>{{$formatDevData(item, $formatDevType(item))}}</span>-->
+        <!--                      </el-tooltip>-->
+        <!--                    </el-col>-->
+        <!--                  </el-row>-->
+        <!--                </div>-->
+        <!--              </div>-->
+        <!--            </div>-->
+        <!--            <chart-line ref="vhDevTempLine" class="mt-10" :dataList="item.vehicleDevtempDataList"-->
+        <!--                        :devInfo="item"></chart-line>-->
+        <!--          </div>-->
+        <!--        </el-row>-->
+        <!--        <hr class="hr"/>-->
+        <h2>
+          <span>配送轨迹</span>
+          <span @click="showBigMap(item)" class="des-btn">
+            <a href="#" class="btn-circle" @click.prevent="">
+                 <i class="el-icon-zoom-in"></i></a>查看大图
+          </span>
+        </h2>
+        <div>
+          <map-path :points="item.points" :vid="item.orderCode" :mapStyle="{
+          height: '300px', width: '600px',margin: '0 auto'}"></map-path>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+  import ChartLine from './ccs/chart-line';
   import ChartLineHand from './ccs/chart-line-hand';
+  import MapPath from './tms/map-path';
+  import qs from 'qs';
 
   export default {
     props: {
@@ -64,12 +140,13 @@
       index: Number,
       showBigMap: Function
     },
-    components: {ChartLineHand},
+    components: {ChartLine, MapPath, ChartLineHand},
     data: function () {
       return {
         loadingData: false,
         waybillInfos: [],
-        showIndex: -1
+        showIndex: -1,
+        tempTypeList: ['有线温度计', '无线温度计', '冷柜温度计', '车头温度计', '湿度计']
       };
     },
     watch: {
@@ -84,6 +161,7 @@
     methods: {
       queryWaybillInfo() {
         this.showIndex = 1;
+        // this.currentOrder.id = 'FUNoAEWFMjnSXXULMF4'; // FUNoAEWFMjnSXXULMF4 // UwcT0WA04cbefCQGO9Z
         this.$http.get(`/order-monitor/${this.currentOrder.id}/waybill`).then(res => {
           res.data.devDtoList.forEach(dto => {
             dto.devList = [];
@@ -92,26 +170,130 @@
             dto.vehicleDevtempDataList = [];
             dto.points = [];
             dto.handOverList = [];
-            // 交接数据
+            //交接数据
             this.queryHandOverList(dto);
+            // 设备
+            this.queryDevList(dto);
+            // 车辆设备
+            // this.queryVehicleDevList(dto);
           });
           this.loadingData = false;
           this.waybillInfos = res.data.devDtoList;
+          this.queryWayBillPath(this.waybillInfos);
         }).catch(() => {
           this.loadingData = false;
+        });
+      },
+      // 查询设备列表
+      queryDevList(dto) {
+        if (!dto.devCodes || dto.devCodes && !dto.devCodes.length) return;
+        let params = {
+          devCodes: dto.devCodes
+        };
+        this.$http({
+          url: '/order-monitor/dev',
+          params,
+          paramsSerializer(params) {
+            return qs.stringify(params, {indices: false});
+          }
+        }).then(res => {
+          dto.devList = res.data.currentList;
+          dto.tempDataList = [];
+          dto.devList.forEach(i => this.queryDevTempData(i, dto));
+        }).catch(() => {
+        });
+      },
+      // 查询设备列表的温度数据
+      queryDevTempData(item, dto) {
+        let params = Object.assign({
+          devCode: item.devCode,
+          devId: item.ccsDevId,
+          valType: '1'
+        }, this.getTimeParams(dto.departTime, dto.arriveTime));
+        this.$http.get('/order-monitor/gainDeviceReportDatas', {params}).then(res => {
+          dto.tempDataList.push({
+            name: item.devName,
+            tempData: res.data.ccsDevDataRecordDTOList || []
+          });
+        });
+      },
+      // 查询车辆设备信息
+      queryVehicleDevList(dto) {
+        if (!dto.plateNumber) return;
+        this.$http.get('/order-monitor/ccsMonitordev', {params: {monitordevCode: dto.plateNumber}})
+          .then(res => {
+            let list = res.data.currentList || [];
+            if (!list.length) return;
+            this.$http.get(`/order-monitor/ccsMonitordev/${list[0].id}`)
+              .then(res1 => {
+                res1.data.devs.forEach((i, index) => {
+                  i.relationName = res1.data.relationNames && res1.data.relationNames[index] || '';
+                });
+                dto.vehicleDevList = res1.data.devs;
+                dto.vehicleDevtempDataList = [];
+                dto.vehicleDevList.forEach(i => {
+                  this.queryVhDevInfo(i, dto);
+                });
+              }).catch(() => {
+            });
+          }).catch(() => {
+        });
+      },
+      // 查询车辆设备的温度数据
+      queryVhDevInfo(item, dto) {
+        let params = Object.assign({
+          devCode: item.devCode,
+          devId: item.ccsDevId,
+          valType: '1'
+        }, this.getTimeParams(dto.departTime, dto.arriveTime));
+        this.$http.get('/order-monitor/gainDeviceReportDatas', {params})
+          .then(res => {
+            dto.vehicleDevtempDataList.push({
+              name: item.relationName,
+              tempData: res.data.ccsDevDataRecordDTOList || []
+            });
+          });
+      },
+      queryWayBillPath(waybillInfos) {
+        this.$http.get(`/order-track/${this.currentOrder.id}/track/list`).then(res => {
+          waybillInfos.forEach(i => {
+            let ary = res.data && res.data.filter(f => f.waybillNo === i.orderCode) || [];
+            i.points = ary.length && ary[0].logDtos.map(m => ({
+              lnglat: [m.longitude, m.latitude],
+              time: this.$moment(m.positioningTime).format('YYYY-MM-DD HH:mm:ss'),
+              name: this.currentOrder.warehouseAddress
+            })) || [];
+          });
+        }).catch(() => {
         });
       },
       queryHandOverList(dto) {
         if (!dto.arriveTime) return;
         this.$http.get(`/order-monitor/handover-data/${dto.orderCode}`).then(res => {
-          // 取最后一条数据
-          let item = res.data.pop();
-          dto.handOverList = item && [item] || [];
+          dto.handOverList = res.data;
         }).catch(() => {
         });
       },
       formatTime(time, str = 'YYYY-MM-DD HH:mm:ss') {
         return time ? this.$moment(time).format(str) : '';
+      },
+      getTimeParams(startTime, arriveTime) {
+        let {formatTime} = this;
+        const start = 30 * 60 * 1000;
+        const tm = 10 * 60 * 1000;
+        return {
+          startTime: formatTime(startTime - start),
+          endTime: formatTime(arriveTime ? arriveTime + tm : Date.now())
+        };
+      },
+      $formatDevData(item, type) {
+        let unit = ['', '℃', '%', 'V'];
+        let prop = ['', 'temperature', 'humidity', 'voltage'];
+        if (!item[prop[type]]) return '';
+        return item[prop[type]].toFixed(2) + unit[type];
+      },
+      $formatDevType(item) {
+        return item.devType === '4' ? '2' : '1';
       }
     }
   };
