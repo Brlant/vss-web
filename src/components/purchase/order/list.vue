@@ -263,13 +263,12 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.state === '6' ? 5: 7">
+              <el-col :span="5">
                 <div v-show="isShowCheckBox" class="flex-layout" @click.stop="item.checked = !item.checked">
                   <el-checkbox v-model="item.checked" class="mr-5"/>
                   <div>
                     <div class="f-grey">
                       {{item.orderNo }}
-
                     </div>
                     <div>
                       {{item.orgName }}
