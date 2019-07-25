@@ -112,6 +112,10 @@
       }
     },
     mounted: function () {
+      this.$http.get('/vss/querySystemTitle').then(res => {
+        document.title = res.data + '疫苗供应链管理系统';
+        this.$store.commit('initSysTitle', res.data);
+      });
       // 不鉴权的路径, 直接显示返回路径对应的页面
       let path = window.location.hash.slice(1);
       let valid = basicRoutes.some(i => path === i.path || /code\/(\w+)?$/.test(path));
