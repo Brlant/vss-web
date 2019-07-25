@@ -29,7 +29,7 @@ const state = {
     {key: 0, label: '一类疫苗'},
     {key: 1, label: '二类疫苗'}
   ],
-  sysTitle: ''
+  sysTitle: '疫苗供应链管理系统'
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {

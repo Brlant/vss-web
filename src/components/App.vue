@@ -113,8 +113,9 @@
     },
     mounted: function () {
       this.$http.get('/vss/querySystemTitle').then(res => {
-        document.title = res.data + '疫苗供应链管理系统';
-        this.$store.commit('initSysTitle', res.data);
+        let title = res.data || '疫苗供应链管理系统';
+        document.title = title;
+        this.$store.commit('initSysTitle', title);
       });
       // 不鉴权的路径, 直接显示返回路径对应的页面
       let path = window.location.hash.slice(1);
