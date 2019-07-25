@@ -29,7 +29,7 @@ const state = {
     {key: 0, label: '一类疫苗'},
     {key: 1, label: '二类疫苗'}
   ],
-  sysTitle: '上海市'
+  sysTitle: ''
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
