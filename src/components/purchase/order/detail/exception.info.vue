@@ -70,7 +70,8 @@
               <oms-row :span="4" label="异常备注" class="mb-15">{{exception.description}}</oms-row>
               <!--<oms-row :span="4" label="客户意见" class="mb-15">{{exception.dealDescriptionOrg}} </oms-row>-->
 
-              <oms-row :span="4" label="异常原因附件" v-if="exception.reasonAttachments.length" class="mb-15">
+              <oms-row :span="4" label="异常原因附件"
+                       v-if="exception.reasonAttachments &&exception.reasonAttachments.length" class="mb-15">
                 <attachment-show :orderAttachment="exception.reasonAttachments"
                                  :attachmentRight="exceptionReasonRight"
                                  attachmentClass="exception-attachment"
@@ -323,7 +324,7 @@
           objectId: exc.id
         };
         this.doing = true;
-        http.put('/quality-exception/' + exc.id, object).then(() => {
+        http.put('/order-exception/' + exc.id, object).then(() => {
           this.doing = false;
           this.form.attachmentIdList = [];
           exc.dealDescriptionOrg = exc.dealDescription;

@@ -59,7 +59,7 @@
   import basicInfo from './detail/base-info.vue';
   import receiptDetail from './detail/receipt-detail.vue';
   import batchNumbers from './detail/batch.number.vue';
-  import exceptionInfo from './detail/exception.info.vue';
+  import exceptionInfo from '../../purchase/order/detail/exception.info.vue';
   import orderAttachment from '@/components/common/order/in.order.attachment.vue';
   import log from '@/components/common/order.log.vue';
   import {http, InWork} from '@/resources';
