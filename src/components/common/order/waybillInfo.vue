@@ -129,12 +129,11 @@
 </template>
 
 <script>
-    import ChartLine from './ccs/chart-line';
-    import ChartLineHand from './ccs/chart-line-hand';
-    import MapPath from './tms/map-path';
-    import qs from 'qs';
+  import ChartLine from './ccs/chart-line';
+  import ChartLineHand from './ccs/chart-line-hand';
+  import MapPath from './tms/map-path';
 
-    export default {
+  export default {
     props: {
       currentOrder: Object,
       index: Number,
@@ -163,8 +162,8 @@
         this.showIndex = 1;
         // this.currentOrder.id = 'FUNoAEWFMjnSXXULMF4'; // FUNoAEWFMjnSXXULMF4 // UwcT0WA04cbefCQGO9Z
           this.$http.get(`/logistics-monitor/${this.currentOrder.id}/waybill`).then(res => {
-          res.data.devDtoList.forEach(dto => {
-            dto.devList = [];
+            res.data.forEach(dto => {
+              dto.devList = dto.devCodeList;
             dto.tempDataList = [];
             dto.vehicleDevList = [];
             dto.vehicleDevtempDataList = [];
@@ -173,32 +172,13 @@
             //交接数据
             this.queryHandOverList(dto);
             // 设备
-            this.queryDevList(dto);
+              dto.devList.forEach(i => this.queryDevTempData(i, dto));
           });
           this.loadingData = false;
-          this.waybillInfos = res.data.devDtoList;
+            this.waybillInfos = res.data;
           this.queryWayBillPath(this.waybillInfos);
         }).catch(() => {
           this.loadingData = false;
-        });
-      },
-      // 查询设备列表
-      queryDevList(dto) {
-        if (!dto.devCodes || dto.devCodes && !dto.devCodes.length) return;
-        let params = {
-          devCodes: dto.devCodes
-        };
-        this.$http({
-            url: '/logistics-monitor/dev',
-          params,
-          paramsSerializer(params) {
-            return qs.stringify(params, {indices: false});
-          }
-        }).then(res => {
-          dto.devList = res.data.currentList;
-          dto.tempDataList = [];
-          dto.devList.forEach(i => this.queryDevTempData(i, dto));
-        }).catch(() => {
         });
       },
       // 查询设备列表的温度数据
@@ -214,21 +194,6 @@
             tempData: res.data.ccsDevDataRecordDTOList || []
           });
         });
-      },
-      // 查询车辆设备的温度数据
-      queryVhDevInfo(item, dto) {
-        let params = Object.assign({
-          devCode: item.devCode,
-          devId: item.ccsDevId,
-          valType: '1'
-        }, this.getTimeParams(dto.departTime, dto.arriveTime));
-          this.$http.get('/logistics-monitor/gainDeviceReportDatas', {params})
-          .then(res => {
-            dto.vehicleDevtempDataList.push({
-              name: item.relationName,
-              tempData: res.data.ccsDevDataRecordDTOList || []
-            });
-          });
       },
       queryWayBillPath(waybillInfos) {
           this.$http.get(`/logistics-monitor/${this.currentOrder.id}/track/list`).then(res => {

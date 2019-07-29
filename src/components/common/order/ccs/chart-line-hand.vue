@@ -107,7 +107,7 @@
               name: `${i.devNo}`,
               type: 'line',
               showSymbol: true,
-              data: i.dataDtoList.map(m => {
+              data: i.list.map(m => {
                 return {
                   name: m.collectionTime,
                   value: [m.collectionTime, m.value]
