@@ -129,12 +129,12 @@
 </template>
 
 <script>
-  import ChartLine from './ccs/chart-line';
-  import ChartLineHand from './ccs/chart-line-hand';
-  import MapPath from './tms/map-path';
-  import qs from 'qs';
+    import ChartLine from './ccs/chart-line';
+    import ChartLineHand from './ccs/chart-line-hand';
+    import MapPath from './tms/map-path';
+    import qs from 'qs';
 
-  export default {
+    export default {
     props: {
       currentOrder: Object,
       index: Number,
@@ -162,7 +162,7 @@
       queryWaybillInfo() {
         this.showIndex = 1;
         // this.currentOrder.id = 'FUNoAEWFMjnSXXULMF4'; // FUNoAEWFMjnSXXULMF4 // UwcT0WA04cbefCQGO9Z
-        this.$http.get(`/order-monitor/${this.currentOrder.id}/waybill`).then(res => {
+          this.$http.get(`/logistics-monitor/${this.currentOrder.id}/waybill`).then(res => {
           res.data.devDtoList.forEach(dto => {
             dto.devList = [];
             dto.tempDataList = [];
@@ -174,8 +174,6 @@
             this.queryHandOverList(dto);
             // 设备
             this.queryDevList(dto);
-            // 车辆设备
-            // this.queryVehicleDevList(dto);
           });
           this.loadingData = false;
           this.waybillInfos = res.data.devDtoList;
@@ -191,7 +189,7 @@
           devCodes: dto.devCodes
         };
         this.$http({
-          url: '/order-monitor/dev',
+            url: '/logistics-monitor/dev',
           params,
           paramsSerializer(params) {
             return qs.stringify(params, {indices: false});
@@ -210,33 +208,11 @@
           devId: item.ccsDevId,
           valType: '1'
         }, this.getTimeParams(dto.departTime, dto.arriveTime));
-        this.$http.get('/order-monitor/gainDeviceReportDatas', {params}).then(res => {
+          this.$http.get('/logistics-monitor/gainDeviceReportDatas', {params}).then(res => {
           dto.tempDataList.push({
             name: item.devName,
             tempData: res.data.ccsDevDataRecordDTOList || []
           });
-        });
-      },
-      // 查询车辆设备信息
-      queryVehicleDevList(dto) {
-        if (!dto.plateNumber) return;
-        this.$http.get('/order-monitor/ccsMonitordev', {params: {monitordevCode: dto.plateNumber}})
-          .then(res => {
-            let list = res.data.currentList || [];
-            if (!list.length) return;
-            this.$http.get(`/order-monitor/ccsMonitordev/${list[0].id}`)
-              .then(res1 => {
-                res1.data.devs.forEach((i, index) => {
-                  i.relationName = res1.data.relationNames && res1.data.relationNames[index] || '';
-                });
-                dto.vehicleDevList = res1.data.devs;
-                dto.vehicleDevtempDataList = [];
-                dto.vehicleDevList.forEach(i => {
-                  this.queryVhDevInfo(i, dto);
-                });
-              }).catch(() => {
-            });
-          }).catch(() => {
         });
       },
       // 查询车辆设备的温度数据
@@ -246,7 +222,7 @@
           devId: item.ccsDevId,
           valType: '1'
         }, this.getTimeParams(dto.departTime, dto.arriveTime));
-        this.$http.get('/order-monitor/gainDeviceReportDatas', {params})
+          this.$http.get('/logistics-monitor/gainDeviceReportDatas', {params})
           .then(res => {
             dto.vehicleDevtempDataList.push({
               name: item.relationName,
@@ -255,7 +231,7 @@
           });
       },
       queryWayBillPath(waybillInfos) {
-        this.$http.get(`/order-track/${this.currentOrder.id}/track/list`).then(res => {
+          this.$http.get(`/logistics-monitor/${this.currentOrder.id}/track/list`).then(res => {
           waybillInfos.forEach(i => {
             let ary = res.data && res.data.filter(f => f.waybillNo === i.orderCode) || [];
             i.points = ary.length && ary[0].logDtos.map(m => ({
@@ -269,7 +245,7 @@
       },
       queryHandOverList(dto) {
         if (!dto.arriveTime) return;
-        this.$http.get(`/order-monitor/handover-data/${dto.orderCode}`).then(res => {
+          this.$http.get(`/logistics-monitor/handover-data/${dto.orderCode}`).then(res => {
           dto.handOverList = res.data;
         }).catch(() => {
         });
