@@ -221,7 +221,7 @@
               <el-col :span="4" class="opera-btn">
                 <div>
                   <perm label="purchasing-contract-edit">
-                    <span @click.stop.prevent="createOrder(item)" v-if="!item.used">
+                    <span @click.stop.prevent="createOrder(item)" v-if="!item.used && item.availabilityStatus">
                       <a href="#" class="btn-circle" @click.prevent=""><i class="el-icon-t-wave"></i></a>
                       批量生成采购订单
                     </span>
