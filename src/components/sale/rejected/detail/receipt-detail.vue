@@ -75,29 +75,14 @@
         <td colspan="2" class="t-head">批号</td>
         <td colspan="3" class="t-head">生产日期</td>
         <td colspan="3" class="t-head">有效期</td>
-        <td colspan="3" class="t-head">整件数量</td>
-        <td colspan="3" class="t-head">散件数量</td>
+        <td colspan="6" class="t-head">散件数量</td>
       </tr>
       <tr v-for="batchNumber in item.batchNumbers" :key="batchNumber.id"
           v-if="item.batchNumbers && item.batchNumbers.length > 0">
         <td colspan="2">{{ batchNumber.no }}</td>
         <td colspan="3">{{ batchNumber.productionDate | date }}</td>
         <td colspan="3">{{ batchNumber.expiryDate | date }}</td>
-        <td colspan="3">
-          <div v-show="batchNumber.largePackageCount || batchNumber.largeNonconformityCount">
-            <div v-show="batchNumber.largePackageCount">
-              <el-tag type="success">合格</el-tag>
-              {{ batchNumber.largePackageCount}}
-              <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.largeUnit"></dict>
-            </div>
-            <div style="padding: 5px 0" v-show="batchNumber.largeNonconformityCount">
-              <el-tag type="warning">不合格</el-tag>
-              {{ batchNumber.largeNonconformityCount}}
-              <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.largeUnit"></dict>
-            </div>
-          </div>
-        </td>
-        <td colspan="3">
+        <td colspan="6">
           <div v-show="batchNumber.smallPackageCount || batchNumber.smallNonconformityCount">
             <div v-show="batchNumber.smallPackageCount">
               <el-tag type="success">合格</el-tag>

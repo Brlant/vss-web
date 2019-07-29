@@ -44,7 +44,7 @@
     <div v-else>
       <div v-for="exception in exceptionDtoList" :key="exception.id" @click="setItem(exception)">
         <div v-if="exception.flag">
-          <bg-box class="bg-box-all" :title="exception.item.name" type="white">
+          <bg-box class="bg-box-all" :title="exception.exceptionName" type="white">
             <div class="clearfix">
 
               <!--<oms-row :span="4" label="异常环节" class="mb-15">-->
@@ -53,9 +53,6 @@
               <!--</oms-row>-->
               <el-col :span="12" class="mb-15">
                 <oms-row :span="8" label="异常环节">{{ getOrderStatus(exception.link) }}</oms-row>
-              </el-col>
-              <el-col :span="12" class="mb-15">
-                <oms-row :span="8" label="未处理是否放行">{{ exception.item.canRelease ? '是' : '否' }}</oms-row>
               </el-col>
               <el-col :span="12" class="mb-15">
                 <oms-row :span="8" label="创建人">{{exception.creatorName}}</oms-row>
@@ -73,7 +70,8 @@
               <oms-row :span="4" label="异常备注" class="mb-15">{{exception.description}}</oms-row>
               <!--<oms-row :span="4" label="客户意见" class="mb-15">{{exception.dealDescriptionOrg}} </oms-row>-->
 
-              <oms-row :span="4" label="异常原因附件" v-if="exception.reasonAttachments.length" class="mb-15">
+              <oms-row :span="4" label="异常原因附件"
+                       v-if="exception.reasonAttachments &&exception.reasonAttachments.length" class="mb-15">
                 <attachment-show :orderAttachment="exception.reasonAttachments"
                                  :attachmentRight="exceptionReasonRight"
                                  attachmentClass="exception-attachment"
@@ -185,13 +183,15 @@
                                  attachmentClass="exception-attachment"
                                  @refreshAttachment="queryAllExceptionList"></attachment-show>
               </oms-row>
-              <oms-row :span="4" label="拒收复核附件" v-if="exception.reviewAttachments.length" class="mb-15">
+              <oms-row :span="4" label="拒收复核附件" v-if="exception.reviewAttachments && exception.reviewAttachments.length"
+                       class="mb-15">
                 <attachment-show :orderAttachment="exception.reviewAttachments"
                                  :attachmentRight="reviewReasonRight"
                                  attachmentClass="exception-attachment"
                                  @refreshAttachment="queryAllExceptionList"></attachment-show>
               </oms-row>
-              <oms-row :span="4" label="客户反馈附件" v-if="exception.feedBackAttachments.length" class="mb-15">
+              <oms-row :span="4" label="客户反馈附件"
+                       v-if="exception.feedBackAttachments && exception.feedBackAttachments.length" class="mb-15">
                 <attachment-show :orderAttachment="exception.feedBackAttachments"
                                  :attachmentRight="feedBackReasonRight"
                                  attachmentClass="exception-attachment"
@@ -324,7 +324,7 @@
           objectId: exc.id
         };
         this.doing = true;
-        http.put('/quality-exception/' + exc.id, object).then(() => {
+        http.put('/order-exception/' + exc.id, object).then(() => {
           this.doing = false;
           this.form.attachmentIdList = [];
           exc.dealDescriptionOrg = exc.dealDescription;

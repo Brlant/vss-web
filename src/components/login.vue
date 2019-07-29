@@ -11,8 +11,7 @@
       <div class="bg-logo"></div>
       <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part-s clearfix">
-        <div class="m-logo">上海市疫苗供应链管理系统</div>
-        <div class="e-logo">Vaccine Supply Chain Management System</div>
+        <div class="m-logo">{{$store.state.sysTitle}}</div>
       </div>
       <el-card class="box-card ">
         <div style="padding:0 20px">

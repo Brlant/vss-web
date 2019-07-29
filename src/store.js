@@ -28,7 +28,8 @@ const state = {
   vaccineType: [
     {key: 0, label: '一类疫苗'},
     {key: 1, label: '二类疫苗'}
-  ]
+  ],
+  sysTitle: '疫苗供应链管理系统'
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');
 if (bodyLeft) {
@@ -141,6 +142,9 @@ const mutations = {
   },
   initRequestingDictAry(state, data) {
     state.requestingDictAry = data;
+  },
+  initSysTitle(state, data) {
+    state.sysTitle = data;
   }
 };
 
