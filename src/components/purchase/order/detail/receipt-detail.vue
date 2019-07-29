@@ -241,19 +241,20 @@
             <!--              </div>-->
             <!--            </td>-->
             <td colspan="4">
-              <div v-show="batchNumber.smallPackageCount || batchNumber.smallNonconformityCount">
-                <div v-show="batchNumber.smallPackageCount">
-                  <el-tag type="success">合格</el-tag>
-                  {{ batchNumber.smallPackageCount}}
-                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.smallUnit"></dict>
-                </div>
-                <div style="padding: 5px 0 " v-show="batchNumber.smallNonconformityCount">
-                  <el-tag type="warning">不合格</el-tag>
-                  <el-tag type="success" v-show="batchNumber.smallPackageFlag === true">入库</el-tag>
-                  <el-tag type="success" v-show="batchNumber.smallPackageFlag === false">拒收</el-tag>
-                  {{ batchNumber.smallNonconformityCount}}
-                  <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.smallUnit"></dict>
-                </div>
+              <div v-show="batchNumber.smallPackageCount">
+                <el-tag type="success">合格</el-tag>
+                {{ batchNumber.smallPackageCount}}
+                <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
+              </div>
+              <div style="padding: 5px 0 " v-show="batchNumber.smallNonconformityCount">
+                <el-tag type="danger">不合格</el-tag>
+                {{ batchNumber.smallNonconformityCount}}
+                <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
+              </div>
+              <div style="padding: 5px 0 " v-show="batchNumber.refuseCount">
+                <el-tag type="warning"></el-tag>
+                {{ batchNumber.refuseCount}}
+                <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
               </div>
             </td>
             <td colspan="2">
@@ -361,36 +362,21 @@
                 </td>
                 <td colspan="2">{{ batchNumber.productionDate | date }}</td>
                 <td colspan="2">{{ batchNumber.expiryDate | date }}</td>
-                <!--                <td colspan="3">-->
-                <!--                  <div v-show="batchNumber.largePackageCount || batchNumber.largeNonconformityCount">-->
-                <!--                    <div v-show="batchNumber.largePackageCount">-->
-                <!--                      <el-tag type="success">合格</el-tag>-->
-                <!--                      {{ batchNumber.largePackageCount}}-->
-                <!--                      <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.largeUnit"></dict>-->
-                <!--                    </div>-->
-                <!--                    <div style="padding: 5px 0 " v-show="batchNumber.largeNonconformityCount">-->
-                <!--                      <el-tag type="warning">不合格</el-tag>-->
-                <!--                      <el-tag type="success" v-show="batchNumber.largePackageFlag === true">入库</el-tag>-->
-                <!--                      <el-tag type="success" v-show="batchNumber.largePackageFlag === false">拒收</el-tag>-->
-                <!--                      {{ batchNumber.largeNonconformityCount}}-->
-                <!--                      <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.largeUnit"></dict>-->
-                <!--                    </div>-->
-                <!--                  </div>-->
-                <!--                </td>-->
                 <td colspan="4">
-                  <div v-show="batchNumber.smallPackageCount || batchNumber.smallNonconformityCount">
                     <div v-show="batchNumber.smallPackageCount">
                       <el-tag type="success">合格</el-tag>
                       {{ batchNumber.smallPackageCount}}
-                      <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.smallUnit"></dict>
+                      <dict :dict-group="'measurementUnit'" :dict-key="h.orgGoodsDto.goodsDto.measurementUnit"></dict>
                     </div>
                     <div style="padding: 5px 0 " v-show="batchNumber.smallNonconformityCount">
-                      <el-tag type="warning">不合格</el-tag>
-                      <el-tag type="success" v-show="batchNumber.smallPackageFlag === true">入库</el-tag>
-                      <el-tag type="success" v-show="batchNumber.smallPackageFlag === false">拒收</el-tag>
+                      <el-tag type="danger">不合格</el-tag>
                       {{ batchNumber.smallNonconformityCount}}
-                      <dict :dict-group="'shipmentPackingUnit'" :dict-key="batchNumber.smallUnit"></dict>
+                      <dict :dict-group="'measurementUnit'" :dict-key="h.orgGoodsDto.goodsDto.measurementUnit"></dict>
                     </div>
+                  <div style="padding: 5px 0 " v-show="batchNumber.refuseCount">
+                    <el-tag type="warning"></el-tag>
+                    {{ batchNumber.refuseCount}}
+                    <dict :dict-group="'measurementUnit'" :dict-key="h.orgGoodsDto.goodsDto.measurementUnit"></dict>
                   </div>
                 </td>
                 <td colspan="2">
