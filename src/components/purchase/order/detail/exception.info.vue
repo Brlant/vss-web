@@ -67,7 +67,7 @@
                 <oms-row :span="8" label="确认时间">{{exception.verifyTime | time}}
                 </oms-row>
               </el-col>
-              <oms-row :span="4" label="异常备注" class="mb-15">{{exception.description}}</oms-row>
+              <oms-row :span="4" label="异常备注" class="mb-15 clearfix">{{exception.description}}</oms-row>
               <!--<oms-row :span="4" label="客户意见" class="mb-15">{{exception.dealDescriptionOrg}} </oms-row>-->
 
               <oms-row :span="4" label="异常原因附件"
