@@ -57,7 +57,7 @@
                          v-for="item in transportationMeansList"></el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="收货单位收货地址" prop="transportationAddress">
+          <el-form-item label="收货地址" prop="transportationAddress">
             <el-select placeholder="请选择收货单位收货地址" v-model="currentOrder.transportationAddress"
                        @change="changeWarehouseAdress"
                        filterable clearable>
@@ -116,7 +116,7 @@
             <oms-row label="收货单位" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
-            <oms-row label="收货单位收货地址" :span="span">
+            <oms-row label="收货地址" :span="span">
               {{currentOrder.warehouseAddress}}
             </oms-row>
             <oms-row label="物流中心" :span="span">

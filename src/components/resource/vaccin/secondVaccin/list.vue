@@ -639,7 +639,7 @@
             }
           });
           item.orgGoodsDto.status = true;
-          Vaccine.start(item.orgGoodsDto.id).then(() => {
+          Vaccine.update(item.orgGoodsDto.id, item).then(() => {
             this.getGoodsList(1);
             this.$notify.success({
               title: '成功',
