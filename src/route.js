@@ -184,6 +184,18 @@ export const route = [
         ]
       },
       {
+        path: '/file',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'file', title: '批号文件管理', icon: 'validity', perm: 'vaccine-batch-process'},
+        children: [
+          {
+            path: '/file/vaccine',
+            component: () => import('./components/files/vaccineBatch/index.vue'),
+            meta: {moduleId: 'file', title: '疫苗批号文件', perm: 'vaccine-batch-process'}
+          }
+        ]
+      },
+      {
         path: '/finance',
         component: () => import('./components/common/parent-route.vue'),
         meta: {moduleId: 'finance', title: '财务管理', icon: 'finance', perm: 'financial-manager'},
