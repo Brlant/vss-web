@@ -220,7 +220,7 @@
                 </div>
               </div>
               <oms-form-row label="" :span="4">
-                <el-button type="primary" @click="addProduct" @mousedown.native="mousedownAdd">添加疫苗</el-button>
+                <el-button type="primary" @click="addProduct">添加疫苗</el-button>
               </oms-form-row>
             </div>
 
@@ -368,7 +368,7 @@
           ]
 
         },
-        changeTotalNumber: utils.changeTotalNumber,
+        changeTotalNumber: utils.changeTipTotalNumber,
         isCheckPackage: utils.isCheckPackage,
         requestTime: '',
         doing: false,
@@ -488,22 +488,7 @@
 //        this.form = JSON.parse(JSON.stringify(this.currentOrder));
       },
       changeNumber() {
-        let newAmount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
-        if (this.product.amount !== newAmount) {
-          this.$confirm(`疫苗"${this.product.fixInfo.name}"数量${this.product.amount}不是最小包装的倍数，确认后会对后续操作产生严重影响！
-          选择“是”修改数量为${newAmount}，选择“否”确认数量${this.product.amount}`, '', {
-            confirmButtonText: '是',
-            cancelButtonText: '否',
-            type: 'warning'
-          }).then(res => {
-            this.product.amount = newAmount;
-            this.setAddProduct();
-          }).catch(() => {
-            this.setAddProduct();
-          });
-        } else {
-          this.setAddProduct();
-        }
+        this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
       },
       changeTime: function (date) {// 格式化时间
         this.form.demandTime = date ? this.$moment(date).format('YYYY-MM-DD') : '';
@@ -695,8 +680,6 @@
         });
       },
       addProduct: function () {// 疫苗加入到订单
-        // 重置添加按钮点击状态
-        this.resetIsClickForm();
         if (!this.product.orgGoodsId) {
           this.$notify.info({
             message: '请选择疫苗'
