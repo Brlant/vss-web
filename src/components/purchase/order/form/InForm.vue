@@ -848,21 +848,6 @@
             auditedStatus: '1', status: 0
           }).then(res => {
             this.supplierWarehouses = res.data;
-
-            // let defaultStore = res.data.filter(item => item.default);
-            // this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
-            // 以前去默认仓库地址
-            // 现在业务关系中维护地址
-            if (isEdit) return;
-            this.orgList.forEach(i => {
-              if (i.id === val) {
-                if (i.orgRelationList.length) {
-                  this.form.pickUpAddress = i.orgRelationList[0].addressId; // contactPerson
-                  this.form.actualConsignee = i.orgRelationList[0].contactPerson;
-                }
-              }
-            });
-            // *************************//
           });
         }
         this.searchProduct();

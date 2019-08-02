@@ -845,21 +845,6 @@
           deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0
         }).then(res => {
           this.warehouses = res.data || [];
-          // let fs = this.warehouses.filter(i => i.default)[0];
-          // this.form.transportationAddress = fs && fs.id || '';
-          // 以前去默认仓库地址
-          // 现在业务关系中维护地址
-          if (isEdit) return;
-          this.orgList.forEach(i => {
-            if (i.id === orgId) {
-              this.form.transportationAddress = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
-              if (i.orgRelationList.length) {
-                this.form.actualConsignee = i.orgRelationList[0].contactPerson;
-                this.form.consigneePhone = i.orgRelationList[0].contactPersonPhone;
-              }
-            }
-          });
-          // *************************//
         });
       },
       filterAddress(isStorageData) {

@@ -507,13 +507,6 @@
       changeOrg(isEdited) {
         if (isEdited === 'edit') return;
         this.form.warehouseId = '';
-        // 以前去默认仓库地址
-        // 现在业务关系中维护地址
-        this.showCdcs.forEach(i => {
-          if (i.orgId === this.form.cdcId) {
-            this.form.warehouseId = i.addressId;
-          }
-        });
         if (this.form.detailDtoList.length) {
           // 清空cdcId判断
           if (!this.form.cdcId) {
@@ -577,12 +570,6 @@
           this.cdcs = res.data;
           this.filterProduct();
           this.searchProduct();
-          // 得到供货单位后,再得到地址
-          this.showCdcs.forEach(i => {
-            if (i.orgId === this.form.cdcId) {
-              this.form.warehouseId = i.addressId;
-            }
-          });
         });
       },
       filterProduct() {
@@ -601,14 +588,6 @@
           status: 0
         }).then(res => {
           this.warehouses = res.data || [];
-          if (isEdit === 'edit') return;
-          // 以前去默认仓库地址
-          // 现在业务关系中维护地址
-          this.showCdcs.forEach(i => {
-            if (i.orgId === this.form.cdcId) {
-              this.form.warehouseId = i.addressId;
-            }
-          });
         });
       },
       changeRemark(form) {

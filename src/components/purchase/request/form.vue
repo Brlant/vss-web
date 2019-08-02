@@ -596,19 +596,6 @@
           status: 0
         }).then(res => {
           this.warehouses = res.data || [];
-          // let fs = this.warehouses.filter(i => i.default)[0];
-          // if (fs) {
-          //   this.form.warehouseId = fs.id;
-          // }
-          // 以前去默认仓库地址
-          // 现在业务关系中维护地址
-          if (isEdited) return;
-          this.orgList.forEach(i => {
-            if (i.id === val) {
-              this.form.warehouseId = i.orgRelationList.length ? i.orgRelationList[0].addressId : '';
-            }
-          });
-          // *************************//
         });
       },
       filterProducts: function () {
