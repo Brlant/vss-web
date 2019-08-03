@@ -35,11 +35,22 @@
                      :currentOrder="currentOrder"
                      objectType="other" @refreshAttachment="queryAttachmentList"></attachment-show>
 
+    <div class="text-center" style="margin-bottom: 20px">
+      <el-button :plain="true" type="success" @click="exportZip"
+                 v-if="accessory.followDocuments.length>0||
+                   accessory.wayBills.length>0||
+                   accessory.transitTemperatureFroms.length>0||
+                   accessory.warehouseTemperatureFroms.length>0||
+                   accessory.others.length>0">
+        一键导出附件
+      </el-button>
+    </div>
   </div>
 </template>
 <script>
   import {http} from '@/resources';
   import attachmentShow from './attachmentShow.vue';
+  import utils from '@/tools/utils';
 
   export default {
     components: {
@@ -99,6 +110,30 @@
       }
     },
     methods: {
+      exportZip: function () {
+        this.$store.commit('initPrint', {
+          isPrinting: true,
+          moduleId: '/platform/in/' + this.currentOrder.id,
+          text: '正在导出'
+        });
+
+        http.get('/order-attachment/order/' + this.currentOrder.id + '/zip', {}).then(res => {
+          utils.download(res.data.path, '订单附件Zip');
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/platform/in/' + this.currentOrder.id
+          });
+
+        }).catch(error => {
+          this.$store.commit('initPrint', {
+            isPrinting: false,
+            moduleId: '/platform/in/' + this.currentOrder.id
+          });
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
       queryAttachmentList: function () {// 附件管理
         if (!this.currentOrder.id) return;
         this.loadingData = true;
