@@ -12,8 +12,8 @@
                      objectType="transitTemperatureFrom"
                      :attachmentRight="{
         watch: 'erp-warehouse-temperature-watch',
-        download: '',
-        upload: '',
+        download: 'erp-warehouse-temperature-watch',
+        upload: 'erp-warehouse-temperature-watch',
         remove: ''
       }"
                      @refreshAttachment="queryAttachmentList"></attachment-show>
