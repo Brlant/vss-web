@@ -13,7 +13,7 @@
                      :attachmentRight="{
         watch: 'erp-warehouse-temperature-watch',
         download: 'erp-warehouse-temperature-watch',
-        upload: 'erp-warehouse-temperature-watch',
+        upload: '',
         remove: ''
       }"
                      @refreshAttachment="queryAttachmentList"></attachment-show>
