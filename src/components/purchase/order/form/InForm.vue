@@ -848,21 +848,6 @@
             auditedStatus: '1', status: 0
           }).then(res => {
             this.supplierWarehouses = res.data;
-
-            // let defaultStore = res.data.filter(item => item.default);
-            // this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
-            // 以前去默认仓库地址
-            // 现在业务关系中维护地址
-            if (isEdit) return;
-            this.orgList.forEach(i => {
-              if (i.id === val) {
-                if (i.orgRelationList.length) {
-                  this.form.pickUpAddress = i.orgRelationList[0].addressId; // contactPerson
-                  this.form.actualConsignee = i.orgRelationList[0].contactPerson;
-                }
-              }
-            });
-            // *************************//
           });
         }
         this.searchProduct();
@@ -904,49 +889,26 @@
         });
       },
       searchProduct: function (query) {
-        if (this.vaccineType === '1') {
-          if (!this.form.supplierId) {
-            this.searchProductList = [];
-            this.filterProductList = [];
-            return;
-          }
-          let params = {
-            vaccineType: this.vaccineType,
-            keyWord: query
-          };
-          let rTime = Date.now();
-          this.requestTime = rTime;
-          http.get(`/vaccine-info/${this.form.supplierId}/first-vaccine/valid`, {params: params}).then(res => {
-            if (this.requestTime > rTime) {
-              return;
-            }
-            this.searchProductList = res.data.list;
-            this.$nextTick(function () {
-              this.filterProducts();
-            });
-          });
-        } else {
-          if (!this.form.supplierId) {
-            this.searchProductList = [];
-            return;
-          }
-          let params = {
-            vaccineType: this.vaccineType,
-            keyWord: query,
-            factoryId: this.form.supplierId
-          };
-          let rTime = Date.now();
-          this.requestTime = rTime;
-          http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-            if (this.requestTime > rTime) {
-              return;
-            }
-            this.searchProductList = res.data;
-            this.$nextTick(function () {
-              this.filterProducts();
-            });
-          });
+        if (!this.form.supplierId) {
+          this.searchProductList = [];
+          return;
         }
+        let params = {
+          vaccineType: this.vaccineType,
+          keyWord: query,
+          factoryId: this.form.supplierId
+        };
+        let rTime = Date.now();
+        this.requestTime = rTime;
+        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+          if (this.requestTime > rTime) {
+            return;
+          }
+          this.searchProductList = res.data;
+          this.$nextTick(function () {
+            this.filterProducts();
+          });
+        });
       },
       filterProducts: function () {
         let arr = [];

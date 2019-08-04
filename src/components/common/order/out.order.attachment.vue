@@ -12,7 +12,7 @@
                      objectType="transitTemperatureFrom"
                      :attachmentRight="{
         watch: 'erp-warehouse-temperature-watch',
-        download: '',
+        download: 'erp-warehouse-temperature-watch',
         upload: '',
         remove: ''
       }"
