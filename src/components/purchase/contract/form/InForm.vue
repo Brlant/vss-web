@@ -672,7 +672,7 @@
       initForm: function () {// 根据缓存，回设form
         let oldForm = window.localStorage.getItem(this.saveKey);
         if (oldForm && this.action === 'add') {
-          this.form = Object.assign({}, this.form, JSON.parse(oldForm));
+          this.form = Object.assign({}, this.form, JSON.parse(oldForm), {purchaseContractName: ''});
         }
       },
       resetForm: function () {// 重置表单
