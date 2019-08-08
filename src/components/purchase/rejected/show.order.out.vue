@@ -59,7 +59,7 @@
                       v-show="index === 0"></cancel-order>
         <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"
                            perm="return-manager-upload-data-operate"/>
-
+        <order-push-log :currentOrder="currentOrder" :index="index" v-show="index === 15"></order-push-log>
       </div>
     </div>
   </div>
@@ -71,9 +71,10 @@
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
   import customerFeedback from '@/components/common/order/customer-feedback.vue';
+  import OrderPushLog from '@/components/common/order/order-push-log';
 
   export default {
-    components: {basicInfo, log, orderAttachment, relevanceCode, customerFeedback},
+    components: {basicInfo, log, orderAttachment, relevanceCode, customerFeedback, OrderPushLog},
     props: {
       orderId: {
         type: String
@@ -112,6 +113,7 @@
         if (perms.includes('return-manager-upload-data')) {
           menu.push({name: '反馈信息', key: 12});
         }
+        menu.push({name: '推送日志', key: 15});
         return menu;
       }
     },
