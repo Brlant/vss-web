@@ -220,23 +220,8 @@
                   <goods-row label="疫苗名称" :span="12">
                     {{ data.name}}
                   </goods-row>
-                  <!--<goods-row label="疫苗分类" :span="8">-->
-                  <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
-                  <!--</goods-row>-->
-                  <!--<goods-row label="疫苗标志" :span="8">-->
-                  <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
-                  <!--</goods-row>-->
                   <goods-row label="疫苗种类" :span="12">
                     <dict :dict-group="'vaccineSign'" :dict-key="data.goodsVaccineSign"></dict>
-                  </goods-row>
-                  <goods-row label="储存条件" :span="12">
-                    <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
-                  </goods-row>
-                  <goods-row label="标准单价" :span="12">
-                    <span v-if="data.unitPrice">¥</span> {{ data.unitPrice | formatMoney}}
-                  </goods-row>
-                  <goods-row label="中标价格" :span="12">
-                    <span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="采购价格" :span="12">
                     <span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}
@@ -246,18 +231,6 @@
                   </goods-row>
                   <goods-row label="销售价格" :span="12">
                     <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
-                  </goods-row>
-                  <goods-row label="库存上限" :span="12">
-                    {{ data.inventoryUpperLimit }}
-                  </goods-row>
-                  <goods-row label="库存下限" :span="12">
-                    {{ data.inventoryLowerLimit }}
-                  </goods-row>
-                  <goods-row label="是否组合" :span="12" v-show="data.goodsIsCombination">
-                    {{ data.goodsIsCombination | formatStatus}}
-                  </goods-row>
-                  <goods-row label="是否计价" :span="12" v-show="data.valuationFlag">
-                    {{ data.valuationFlag | formatStatus}}
                   </goods-row>
                 </el-col>
               </el-row>
@@ -279,10 +252,40 @@
                   <goods-row label="剂型" :span="12">
                     <dict :dict-group="'dosageForm'" :dict-key="data.goodsDto.dosageForm"></dict>
                   </goods-row>
+                  <goods-row label="货品来源" :span="12">
+                    <dict :dict-group="'importation'" :dict-key="data.goodsDto.importation"></dict>
+                  </goods-row>
                   <goods-row label="基本单位" :span="12">
                     <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"></dict>
                   </goods-row>
-                  <goods-row label="批准文号" :span="12">{{ data.goodsDto.approvalNumber }}</goods-row>
+                  <goods-row label="质量标准" :span="12">{{data.goodsDto.qualityStandard}}</goods-row>
+                  <goods-row label="注册证号" :span="12" v-if="data.goodsDto.importation!=='1'">
+                    {{data.goodsDto.registrationNumber}}
+                  </goods-row>
+                  <goods-row label="注册证号有效期" :span="12" v-if="data.goodsDto.importation!=='1'">
+                    {{data.goodsDto.registrationNOValidity | date}}
+                  </goods-row>
+                  <goods-row label="批准文号" :span="12">
+                    {{ data.goodsDto.approvalNumber }}
+                  </goods-row>
+                  <goods-row label="批准文号有效期" :span="12">
+                    {{ data.goodsDto.goodsApprovalNOValidity | date }}
+                  </goods-row>
+                  <goods-row label="有效期" :span="12">
+                    {{ data.goodsDto.expiryNumber }} {{ data.goodsDto.expiryUnit | formExpiryUnit}}
+                  </goods-row>
+                  <goods-row label="厂家认证体系" :span="12">
+                    {{ data.goodsDto.certificationMark }}
+                  </goods-row>
+                  <goods-row label="证照有效期" :span="12">
+                    {{ data.goodsDto.licenceValidityDate | date }}
+                  </goods-row>
+                  <goods-row label="EAN条形码" :span="12">
+                    {{ data.goodsDto.eanCode}}
+                  </goods-row>
+                  <goods-row label="备注" :span="12">
+                    {{ data.goodsDto.remark}}
+                  </goods-row>
                 </el-col>
                 <el-col :span="12">
                   <goods-row label="存储类别" :span="12">
@@ -495,6 +498,16 @@
     mounted() {
       this.$emit('loaded');
       this.getGoodsList(1);
+    },
+    filters: {
+      formExpiryUnit: function (value) {
+        let array = {
+          0: '年',
+          1: '月',
+          2: '日'
+        };
+        return array[value];
+      }
     },
     watch: {
       'typeTxt': function () {
