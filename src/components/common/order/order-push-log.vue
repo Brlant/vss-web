@@ -19,7 +19,7 @@
                style="margin-left: 0;margin-right: 0">
             <el-row>
               <el-col :span="5" class="R pt10">
-                <span>{{ item.pushType }}</span>
+                <span>{{ pushTypes[item.pushType] }}</span>
               </el-col>
               <el-col :span="10" class="pt">
                 <div style="max-height: 100px;overflow: auto">
@@ -65,7 +65,20 @@
         logList: [],
         packageType: utils.packageType,
         doing: false,
-        totalInfoList: []
+        totalInfoList: [],
+        pushTypes: {
+          'usage-trace': '使用记录',
+          'biz-trace': '业务追溯',
+          'cancel-order': '取消订单',
+          'transport-order': '订单运输完成',
+          'push-oms': '推送OMS',
+          'reject-order': '拒收订单',
+          'push-wms': '推送WMS',
+          'wms-complete': '上下架完成',
+          'push-exception': '订单异常推送',
+          'stop-reject': '订单取消拒收',
+          'push-file': '推送订单相关文件'
+        }
       };
     },
     watch: {
