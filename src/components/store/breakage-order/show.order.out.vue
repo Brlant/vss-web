@@ -91,6 +91,7 @@
                                v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
+        <order-push-log :currentOrder="currentOrder" :index="index" v-show="index === 15"></order-push-log>
       </div>
     </div>
   </div>
@@ -103,9 +104,10 @@
   import orderAttachment from './breakage-order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
   import utils from '@/tools/utils';
+  import OrderPushLog from '@/components/common/order/order-push-log';
 
   export default {
-    components: {basicInfo, log, receipt, orderAttachment, relevanceCode},
+    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, OrderPushLog},
     props: {
       orderId: {
         type: String
@@ -148,6 +150,7 @@
           menu.push({name: '复核追溯码', key: 9});
         }
         menu.push({name: '操作日志', key: 2});
+        menu.push({name: '推送日志', key: 15});
         return menu;
       }
     },

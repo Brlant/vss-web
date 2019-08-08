@@ -56,6 +56,7 @@
                                v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
+        <order-push-log :currentOrder="currentOrder" :index="index" v-show="index === 15"></order-push-log>
       </div>
     </div>
   </div>
@@ -69,10 +70,11 @@
   import {erpOrder, http, InWork} from '@/resources';
   import orderAttachment from '@/components/common/order/in.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
+  import OrderPushLog from '@/components/common/order/order-push-log';
 
   export default {
     components: {
-      basicInfo, receiptDetail, log, batchNumbers, exceptionInfo, orderAttachment, relevanceCode
+      basicInfo, receiptDetail, log, batchNumbers, exceptionInfo, orderAttachment, relevanceCode, OrderPushLog
     },
     props: {
       orderId: {
@@ -117,6 +119,8 @@
           menu.push({name: '复核追溯码', key: 9});
         }
         menu.push({name: '操作日志', key: 2});
+        menu.push({name: '推送日志', key: 15});
+
         return menu;
       }
     },

@@ -67,6 +67,7 @@
         <waybill-info :currentOrder="currentOrder" :index="index" v-show="index === 11"></waybill-info>
         <customer-feedback :orderId="currentOrder.id" :index="index" v-show="index === 12"
                            :perm="vaccineType === '1' ? 'sales-order-upload-data-operate' : 'second-vaccine-sales-order-upload-data-operate'"/>
+        <order-push-log :currentOrder="currentOrder" :index="index" v-show="index === 15"></order-push-log>
       </div>
     </div>
   </div>
@@ -80,9 +81,10 @@
   import relevanceCode from '@/components/common/order/relevance.code.vue';
   import customerFeedback from '@/components/common/order/customer-feedback.vue';
   import WaybillInfo from '@/components/common/order/waybillInfo';
+  import OrderPushLog from '@/components/common/order/order-push-log';
 
   export default {
-    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, customerFeedback, WaybillInfo},
+    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, customerFeedback, WaybillInfo, OrderPushLog},
     props: {
       orderId: {
         type: String
@@ -134,6 +136,7 @@
         if (perms.includes(this.vaccineType === '1' ? 'sales-order-upload-data' : 'second-vaccine-sales-order-upload-data')) {
           menu.push({name: '反馈信息', key: 12});
         }
+        menu.push({name: '推送日志', key: 15});
         return menu;
       }
     },
