@@ -72,8 +72,8 @@
             <perm
               :label="'breakage-order-export-scrap-stock-tag' " v-show="currentOrder.state > 0">
               <el-button type="primary" plain @click="exportScarpVaccineTag"
-                         style="width: 200px;padding: 10px 10px" :loading="printingTransport">
-                {{printingTransport ? '正在导出' : '导出待报废疫苗专用标签'}}
+                         style="width: 200px;padding: 10px 10px" :loading="printingTag">
+                {{printingTag ? '正在导出' : '导出待报废疫苗专用标签'}}
               </el-button>
             </perm>
           </li>

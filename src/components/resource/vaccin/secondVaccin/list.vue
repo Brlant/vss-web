@@ -220,44 +220,17 @@
                   <goods-row label="疫苗名称" :span="12">
                     {{ data.name}}
                   </goods-row>
-                  <!--<goods-row label="疫苗分类" :span="8">-->
-                  <!--<dict :dict-group="'typeId'" :dict-key="data.goodsDto.typeId"></dict>-->
-                  <!--</goods-row>-->
-                  <!--<goods-row label="疫苗标志" :span="8">-->
-                  <!--<dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>-->
-                  <!--</goods-row>-->
                   <goods-row label="疫苗种类" :span="12">
                     <dict :dict-group="'vaccineSign'" :dict-key="data.goodsVaccineSign"></dict>
-                  </goods-row>
-                  <goods-row label="储存条件" :span="12">
-                    <dict :dict-group="'storageCondition'" :dict-key="data.storageConditionId"></dict>
-                  </goods-row>
-                  <goods-row label="标准单价" :span="12">
-                    <span v-if="data.unitPrice">¥</span> {{ data.unitPrice | formatMoney}}
-                  </goods-row>
-                  <goods-row label="中标价格" :span="12">
-                    <span v-if="data.bidPrice">¥</span> {{ data.bidPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="采购价格" :span="12">
                     <span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="供货单位" :span="12">
-                    {{ data.salesFirmName }}
-                  </goods-row>
                   <goods-row label="销售价格" :span="12">
                     <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="库存上限" :span="12">
-                    {{ data.inventoryUpperLimit }}
-                  </goods-row>
-                  <goods-row label="库存下限" :span="12">
-                    {{ data.inventoryLowerLimit }}
-                  </goods-row>
-                  <goods-row label="是否组合" :span="12" v-show="data.goodsIsCombination">
-                    {{ data.goodsIsCombination | formatStatus}}
-                  </goods-row>
-                  <goods-row label="是否计价" :span="12" v-show="data.valuationFlag">
-                    {{ data.valuationFlag | formatStatus}}
+                  <goods-row label="供货单位" :span="12">
+                    {{ data.salesFirmName }}
                   </goods-row>
                 </el-col>
               </el-row>
@@ -279,10 +252,73 @@
                   <goods-row label="剂型" :span="12">
                     <dict :dict-group="'dosageForm'" :dict-key="data.goodsDto.dosageForm"></dict>
                   </goods-row>
+                  <goods-row label="货品来源" :span="12">
+                    <dict :dict-group="'importation'" :dict-key="data.goodsDto.importation"></dict>
+                  </goods-row>
                   <goods-row label="基本单位" :span="12">
                     <dict :dict-group="'measurementUnit'" :dict-key="data.goodsDto.measurementUnit"></dict>
                   </goods-row>
-                  <goods-row label="批准文号" :span="12">{{ data.goodsDto.approvalNumber }}</goods-row>
+                  <goods-row label="质量标准" :span="12">{{data.goodsDto.qualityStandard}}</goods-row>
+                  <goods-row label="注册证号" :span="12" v-if="data.goodsDto.importation!=='1'">
+                    {{data.goodsDto.registrationNumber}}
+                  </goods-row>
+                  <goods-row label="注册证号有效期" :span="12" v-if="data.goodsDto.importation!=='1'">
+                    {{data.goodsDto.registrationNOValidity | date}}
+                  </goods-row>
+                  <goods-row label="批准文号" :span="12">
+                    {{ data.goodsDto.approvalNumber }}
+                  </goods-row>
+                  <goods-row label="批准文号有效期" :span="12">
+                    {{ data.goodsDto.goodsApprovalNOValidity | date }}
+                  </goods-row>
+                  <goods-row label="有效期" :span="12">
+                    {{ data.goodsDto.expiryNumber }} {{ data.goodsDto.expiryUnit | formExpiryUnit}}
+                  </goods-row>
+                  <goods-row label="厂家认证体系" :span="12">
+                    {{ data.goodsDto.certificationMark }}
+                  </goods-row>
+                  <goods-row label="证照有效期" :span="12">
+                    {{ data.goodsDto.licenceValidityDate | date }}
+                  </goods-row>
+                  <goods-row label="备注" :span="12">
+                    {{ data.goodsDto.remark}}
+                  </goods-row>
+                  <goods-row label="化学名" :span="12"
+                             v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
+                    {{ data.goodsDto.propertyMap.chemicalName }}
+                  </goods-row>
+                  <goods-row label="器械生产许可证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
+                    {{ data.goodsDto.propertyMap.productionLicense }}
+                  </goods-row>
+                  <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
+                    {{ data.goodsDto.propertyMap.productionLicenseValidity | date }}
+                  </goods-row>
+                  <goods-row label="厂家备案凭证号" :span="12"
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
+                    {{ data.goodsDto.propertyMap.recordNumber
+                    }}
+                  </goods-row>
+                  <goods-row label="注册证书/备案凭证号" :span="12"
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
+                    {{ data.goodsDto.propertyMap.registrationRecordNumber }}
+                  </goods-row>
+                  <goods-row label="备案凭证号有效期" :span="12"
+                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
+                    {{ data.goodsDto.propertyMap.goodsRecordNOValidity | date }}
+                  </goods-row>
+                  <goods-row label="人份" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
+                    {{ data.goodsDto.propertyMap.personPortion }}
+                  </goods-row>
+                  <goods-row label="最小销售单位" :span="12">
+                    <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
+                  </goods-row>
+                  <goods-row label="是否近效期管理" :span="12"
+                             v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
+                    {{ data.goodsDto.propertyMap.lastMaintenanceFlag | formatStatus }}
+                  </goods-row>
+                  <goods-row label="近效期管理时间" :span="12" v-if="data.goodsDto.propertyMap.lastMaintenanceFlag">
+                    {{ data.goodsDto.propertyMap.lastMaintenanceDays }} 天
+                  </goods-row>
                 </el-col>
                 <el-col :span="12">
                   <goods-row label="存储类别" :span="12">
@@ -322,93 +358,6 @@
                   </span>
                 </el-col>
               </el-row>
-
-              <div class="border-show"></div>
-              <el-row>
-                <el-col :span="6" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='0'">
-                  [ 药品专用 ]
-                </el-col>
-                <el-col :span="6" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='1'">
-                  [ 疾控专用 ]
-                </el-col>
-                <el-col :span="6" class="text-right" style="font-size: 12px"
-                        v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
-                  [ 器械专用 ]
-                </el-col>
-                <el-col :span="6" class="text-right" style="font-size: 12px" v-if="data.goodsDto.typeId==='3'">
-                  [ 化妆品专用 ]
-                </el-col>
-              </el-row>
-              <el-row>
-                <el-col :span="12" v-if="data.goodsDto.typeId!=='4'">
-                  <goods-row label="化学名" :span="12"
-                             v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.chemicalName }}
-                  </goods-row>
-                  <goods-row label="器械生产许可证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
-                    {{ data.goodsDto.propertyMap.productionLicense }}
-                  </goods-row>
-                  <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
-                    {{ data.goodsDto.propertyMap.productionLicenseValidity | date }}
-                  </goods-row>
-                  <goods-row label="厂家备案凭证号" :span="12"
-                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.recordNumber
-                    }}
-                  </goods-row>
-                  <goods-row label="注册证书/备案凭证号" :span="12"
-                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.registrationRecordNumber }}
-                  </goods-row>
-                  <goods-row label="备案凭证号有效期" :span="12"
-                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.goodsRecordNOValidity | date }}
-                  </goods-row>
-                  <goods-row label="人份" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
-                    {{ data.goodsDto.propertyMap.personPortion }}
-                  </goods-row>
-                  <goods-row label="最小销售单位" :span="12">
-                    <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
-                  </goods-row>
-                  <goods-row label="是否近效期管理" :span="12"
-                             v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.lastMaintenanceFlag | formatStatus }}
-                  </goods-row>
-                  <goods-row label="近效期管理时间" :span="12" v-if="data.goodsDto.propertyMap.lastMaintenanceFlag">
-                    {{ data.goodsDto.propertyMap.lastMaintenanceDays }} 天
-                  </goods-row>
-                </el-col>
-                <el-col :span="12" v-if="data.goodsDto.typeId!=='4'">
-                  <goods-row label="是否打印药检报告" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
-                    {{ data.goodsDto.propertyMap.drugTestingSign | formatStatus }}
-                  </goods-row>
-                  <goods-row label="OTC标志" :span="12" v-if="data.goodsDto.typeId==='0'">
-                    {{ data.goodsDto.propertyMap.goodsOtc | formatStatus}}
-                  </goods-row>
-                  <goods-row label="毒麻标志" :span="12" v-if="data.goodsDto.typeId==='0'">
-                    {{ data.goodsDto.propertyMap.poisonFlaxSign | formatStatus}}
-                  </goods-row>
-                  <goods-row label="运动员慎用" :span="12" v-if="data.goodsDto.typeId==='0'">
-                    {{data.goodsDto.propertyMap.athletesCaution | formatStatus}}
-                  </goods-row>
-                  <goods-row label="养护标志" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
-                    {{ data.goodsDto.propertyMap.maintenanceSign | formatStatus }}
-                  </goods-row>
-                  <goods-row label="养护周期" :span="12" v-if="data.goodsDto.propertyMap.maintenanceSign">
-                    {{ data.goodsDto.propertyMap.maintenanceCycle }} 天
-                  </goods-row>
-                  <goods-row label="稀释液数量" :span="12" v-if="data.goodsDto.typeId==='1'">
-                    {{ data.goodsDto.propertyMap.diluentCount }}
-                  </goods-row>
-                  <goods-row label="接种资料数量" :span="12" v-if="data.goodsDto.typeId==='1'">
-                    {{ data.goodsDto.propertyMap.instructionsCount
-                    }}
-                  </goods-row>
-                  <goods-row label="疫苗种类" :span="12" v-if="data.goodsDto.typeId==='1'">
-                    <dict :dict-group="'vaccineSign'" :dict-key="data.goodsDto.vaccineSign"></dict>
-                  </goods-row>
-                </el-col>
-              </el-row>
               <div class="border-show"></div>
               <el-row>
                 <el-col :span="6" class="text-right" style="font-size: 12px">
@@ -421,24 +370,6 @@
                   <attachment-lists attachmentIdList="" :objectId="data.goodsDto.id"
                                     :objectType="'goodsDocument'"
                                     :permission="'goods-attachment-download'"></attachment-lists>
-                </el-col>
-              </el-row>
-              <div class="border-show" v-show="combinationList.length>0"></div>
-              <el-row v-show="combinationList.length>0">
-                <el-col :span="6" class="text-right" style="font-size: 12px">
-                  [ 组合明细 ]
-                </el-col>
-              </el-row>
-              <el-row v-for="(item, index) in combinationList" :key="item.id">
-                <el-col :span="12">
-                  <goods-row label="组合疫苗名称" :span="12">
-                    {{ item.name}}
-                  </goods-row>
-                </el-col>
-                <el-col :span="12">
-                  <goods-row label="组合疫苗比例" :span="12">
-                    {{ item.proportion }}
-                  </goods-row>
                 </el-col>
               </el-row>
             </div>
@@ -495,6 +426,16 @@
     mounted() {
       this.$emit('loaded');
       this.getGoodsList(1);
+    },
+    filters: {
+      formExpiryUnit: function (value) {
+        let array = {
+          0: '年',
+          1: '月',
+          2: '日'
+        };
+        return array[value];
+      }
     },
     watch: {
       'typeTxt': function () {
