@@ -223,11 +223,11 @@
                   <goods-row label="疫苗种类" :span="12">
                     <dict :dict-group="'vaccineSign'" :dict-key="data.goodsVaccineSign"></dict>
                   </goods-row>
-                  <goods-row label="采购价格" :span="12">
-                    <span v-if="data.procurementPrice">¥</span> {{ data.procurementPrice | formatMoney}}
+                  <goods-row label="采购价格" :span="12" v-if="data.procurementPrice !== null">
+                    <span>¥</span> {{ data.procurementPrice | formatMoney}}
                   </goods-row>
-                  <goods-row label="销售价格" :span="12">
-                    <span v-if="data.procurementPrice">¥</span> {{ data.sellPrice | formatMoney}}
+                  <goods-row label="销售价格" :span="12" v-if="data.sellPrice !== null">
+                    <span>¥</span> {{ data.sellPrice | formatMoney}}
                   </goods-row>
                   <goods-row label="供货单位" :span="12">
                     {{ data.salesFirmName }}
