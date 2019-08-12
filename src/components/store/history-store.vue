@@ -27,6 +27,18 @@
         <el-form class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
+              <oms-form-row label="备份日期" :span="5" isRequire>
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="searchWord.date"
+                    type="date"
+                    value-format="timestamp"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="货主疫苗" :span="5">
                 <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="filterOrgGoods"
                            :clearable="true"
@@ -88,110 +100,103 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="" :span="3" style="height: 36px">
-                <el-switch
-                  v-model="searchWord.showFlag"
-                  active-text="显示历史"
-                  inactive-text="不显示历史">
-                </el-switch>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                <el-button :plain="true" type="success" @click="exportFile">
-                  导出Excel
-                </el-button>
               </oms-form-row>
             </el-col>
           </el-row>
         </el-form>
       </div>
-      <el-table :data="batches" class="header-list store border-black" border @row-click="showDetail"
-                :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
-                :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
-                show-summary :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
+      <div>
+        <oms-loading v-if="loadingData" :loading="loadingData"></oms-loading>
+        <div class="empty-info" v-else-if="!batches.length">暂无数据</div>
+        <el-table :data="batches" v-else class="header-list store border-black" border @row-click="showDetail"
+                  :header-row-class-name="'headerClass'" :summary-method="getSummaries"
+                  :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
+                  show-summary :max-height="bodyHeight" style="width: 100%" v-show="batches.length">
+          <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true"></el-table-column>
+          <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
+          <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
-        <el-table-column label="业务库存" align="center">
-          <!--<el-table-column prop="qualifiedBizServings" label="剂次库存" :render-header="formatHeader" :sortable="true"-->
-          <!--width="100">-->
-          <!--<template slot-scope="scope">-->
-          <!--<span>{{scope.row.qualifiedBizServings}}</span>-->
-          <!--</template>-->
-          <!--</el-table-column>-->
-          <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
-                           width="100">
-            <template slot-scope="scope">
-              <span>{{scope.row.availableCount}}</span>
-            </template>
+          <el-table-column label="业务库存" align="center">
+            <!--<el-table-column prop="qualifiedBizServings" label="剂次库存" :render-header="formatHeader" :sortable="true"-->
+            <!--width="100">-->
+            <!--<template slot-scope="scope">-->
+            <!--<span>{{scope.row.qualifiedBizServings}}</span>-->
+            <!--</template>-->
+            <!--</el-table-column>-->
+            <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.availableCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="unqualifiedBizCount" label="不合格" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.unqualifiedBizCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="undeterminedCount" label="业务停销" :render-header="formatHeader" :sortable="true"
+                             width="110">
+              <template slot-scope="scope">
+                <span>{{scope.row.undeterminedCount}}</span>
+              </template>
+            </el-table-column>
           </el-table-column>
-          <el-table-column prop="unqualifiedBizCount" label="不合格" :render-header="formatHeader" :sortable="true"
-                           width="100">
-            <template slot-scope="scope">
-              <span>{{scope.row.unqualifiedBizCount}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="undeterminedCount" label="业务停销" :render-header="formatHeader" :sortable="true"
-                           width="110">
-            <template slot-scope="scope">
-              <span>{{scope.row.undeterminedCount}}</span>
-            </template>
-          </el-table-column>
-        </el-table-column>
-
-
-        <el-table-column label="实物库存" align="center">
-          <!--<el-table-column prop="qualifiedActualServings" label="剂次库存" :render-header="formatHeader" :sortable="true"-->
-          <!--width="100">-->
-          <!--<template slot-scope="scope">-->
-          <!--<span>{{scope.row.qualifiedActualServings}}</span>-->
-          <!--</template>-->
-          <!--</el-table-column>-->
-          <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
-                           width="100">
-            <template slot-scope="scope">
-              <span>{{scope.row.qualifiedCount}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="unqualifiedCount" label="不合格" :render-header="formatHeader" :sortable="true"
-                           width="100">
-            <template slot-scope="scope">
-              <span>{{scope.row.unqualifiedCount}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
-                           width="100">
-            <template slot-scope="scope">
-              <span>{{scope.row.transitCount}}</span>
-            </template>
-          </el-table-column>
-          <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader" :sortable="true"
-                           width="100">
-            <template slot-scope="scope">
-              <span>{{scope.row.totalCount}}</span>
-            </template>
-          </el-table-column>
-        </el-table-column>
 
 
-        <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
-          <template slot-scope="scope">
-            <span>{{ scope.row.expiryDate | date}}</span>
-          </template>
-        </el-table-column>
-      </el-table>
+          <el-table-column label="实物库存" align="center">
+            <!--<el-table-column prop="qualifiedActualServings" label="剂次库存" :render-header="formatHeader" :sortable="true"-->
+            <!--width="100">-->
+            <!--<template slot-scope="scope">-->
+            <!--<span>{{scope.row.qualifiedActualServings}}</span>-->
+            <!--</template>-->
+            <!--</el-table-column>-->
+            <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.qualifiedCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="unqualifiedCount" label="不合格" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.unqualifiedCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.transitCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.totalCount}}</span>
+              </template>
+            </el-table-column>
+          </el-table-column>
 
-      <!--<div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">-->
-      <!--<el-pagination-->
-      <!--layout="prev, pager, next"-->
-      <!--:total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"-->
-      <!--:current-page="pager.currentPage">-->
-      <!--</el-pagination>-->
-      <!--</div>-->
+
+          <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
+            <template slot-scope="scope">
+              <span>{{ scope.row.expiryDate | date}}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+
+      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && batches.length">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
     </div>
 
     <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
@@ -202,7 +207,7 @@
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
   import {BaseInfo, erpStock, http} from '@/resources';
-  import detail from './detail.vue';
+  import detail from './history-store-detail';
   import utils from '@/tools/utils';
   import validMixin from '@/mixins/vaildMixin';
 
@@ -211,7 +216,7 @@
     mixins: [validMixin],
     data() {
       return {
-        loadingData: true,
+        loadingData: false,
         showSearch: true,
         showDetailPart: false,
         batches: [],
@@ -220,14 +225,14 @@
           batchNumberId: '',
           orgGoodsId: '',
           nearTermDays: '',
-          showFlag: false
+          date: ''
         },
         searchWord: {
           factoryId: '',
           batchNumberId: '',
           orgGoodsId: '',
           nearTermDays: '',
-          showFlag: false
+          date: ''
         },
         factories: [], // 厂商列表
         orgList: [], // 货主列表,
@@ -255,11 +260,6 @@
       };
     },
     mounted() {
-      this.getBatches(1);
-      let showSearch = JSON.parse(window.localStorage.getItem(this.$route.path));
-      if (typeof showSearch === 'boolean') {
-        this.showSearch = showSearch;
-      }
     },
     computed: {
       bodyHeight: function () {
@@ -269,12 +269,6 @@
       }
     },
     watch: {
-      filters: {
-        handler: function () {
-          this.getBatches(1);
-        },
-        deep: true
-      },
       showSearch(val) {
         window.localStorage.setItem(this.$route.path, val);
       }
@@ -291,15 +285,10 @@
         this.batches = [];
         let params = Object.assign({}, this.filters);
         this.loadingData = true;
-        erpStock.query(params).then(res => {
-          res.data.forEach(i => {
-            i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
-          });
-          this.batches = res.data;
+        erpStock.queryHistory(params).then(res => {
+          this.batches = res.data.list;
+          this.pager.count = res.data.count;
           this.loadingData = false;
-          setTimeout(() => {
-            this.fixedHeight = Math.abs(this.fixedHeight - 1);
-          }, 100);
         });
       },
       formatHeader(h, col) {
@@ -389,7 +378,9 @@
         this.showDetailPart = false;
       },
       searchInOrder: function () {// 搜索
+        if (!this.searchWord.date) return this.$notify.info({message: '请选择备份日期'});
         Object.assign(this.filters, this.searchWord);
+        this.getBatches(1);
       },
       getSummaries(param) {
         const {columns, data} = param;
@@ -427,10 +418,11 @@
           batchNumberId: '',
           orgGoodsId: '',
           nearTermDays: '',
-          showFlag: false
+          date: ''
         };
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
+        this.batches = [];
       },
       filterFactory(query) { // 生产厂商
         let orgId = this.$store.state.user.userCompanyAddress;
