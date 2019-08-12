@@ -65,7 +65,8 @@
                   <el-option :value="org.id" :key="org.id" :label="org.goodsName"
                              v-for="org in orgGoods">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{org.goodsName}}</span>
+                      <span class="pull-left">{{org.goodsName}}<el-tag style="float: none" type="danger"
+                                                                       v-show="!org.status">停用</el-tag></span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
@@ -245,7 +246,7 @@
 </template>
 <script type="text/jsx">
   //  import order from '../../../tools/orderList';
-  import {Address, BaseInfo, erpStock, http, Vaccine} from '@/resources';
+  import {Address, BaseInfo, erpStock, http} from '@/resources';
   import detail from './detail.vue';
   import utils from '@/tools/utils';
   import OmsRow from '@dtop/dtop-web-common/packages/row';

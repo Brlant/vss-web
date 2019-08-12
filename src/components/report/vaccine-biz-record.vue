@@ -22,7 +22,8 @@
                              :value="item.orgGoodsDto.goodsId"
                              v-for="item in orgGoods">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      <span class="pull-left">{{item.orgGoodsDto.name}}<el-tag style="float: none" type="danger"
+                                                                               v-show="!item.orgGoodsDto.status">停用</el-tag></span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
@@ -95,7 +96,7 @@
 </template>
 
 <script>
-  import {BaseInfo, Vaccine} from '@/resources';
+  import {Vaccine} from '@/resources';
   import utils from '@/tools/utils';
   import ReportMixin from '@/mixins/reportMixin';
 

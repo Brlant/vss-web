@@ -32,7 +32,10 @@
                   <el-option :value="org.goodsId" :key="org.id" :label="org.goodsName"
                              v-for="org in orgList">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{org.goodsName}}</span>
+                      <span class="pull-left">
+                        {{org.goodsName}}
+                        <el-tag style="float: none" type="danger" v-show="!org.status">停用</el-tag>
+                      </span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span

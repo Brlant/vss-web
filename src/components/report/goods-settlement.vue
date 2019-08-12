@@ -31,7 +31,8 @@
                              :label="item.orgGoodsDto.name"
                              :value="item.orgGoodsDto.id">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                      <span class="pull-left">{{item.orgGoodsDto.name}}<el-tag style="float: none" type="danger"
+                                                                               v-show="!item.orgGoodsDto.status">停用</el-tag></span>
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
