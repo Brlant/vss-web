@@ -172,6 +172,11 @@ export const route = [
             ]
           },
           {
+            path: '/store/history',
+            component: () => import('./components/store/history-store.vue'),
+            meta: {moduleId: 'store', title: '历史库存查询', perm: 'cerp-stock-query-history'}
+          },
+          {
             path: '/store/allotment/:id',
             component: () => import('./components/purchase/allotment/list.vue'),
             meta: {moduleId: 'purchase', title: '调拨入库', perm: 'allocating-order-manager'}

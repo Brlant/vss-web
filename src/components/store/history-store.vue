@@ -1,0 +1,481 @@
+<style lang="scss" scoped="">
+
+  .order-list-item {
+    cursor: pointer;
+  }
+
+  .header-list {
+    overflow: hidden;
+  }
+
+  .opera-btn-group {
+    margin-left: 0;
+    margin-right: 0;
+  }
+</style>
+<template>
+  <div class="order-page">
+    <div class="container">
+      <div class="opera-btn-group" :class="{up:!showSearch}">
+        <div class="opera-icon">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
+            <i class="el-icon-arrow-up"></i>
+            <span v-show="showSearch">收起筛选</span>
+            <span v-show="!showSearch">展开筛选</span>
+          </span>
+        </div>
+        <el-form class="advanced-query-form" onsubmit="return false">
+          <el-row>
+            <el-col :span="8">
+              <oms-form-row label="备份日期" :span="5" isRequire>
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="searchWord.date"
+                    type="date"
+                    value-format="timestamp"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="货主疫苗" :span="5">
+                <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="filterOrgGoods"
+                           :clearable="true"
+                           v-model="searchWord.orgGoodsId" popper-class="good-selects"
+                           @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
+                  <el-option :value="org.id" :key="org.id" :label="org.goodsName"
+                             v-for="org in orgGoods">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{org.goodsName}}<el-tag style="float: none" type="danger"
+                                                                       v-show="!org.status">停用</el-tag></span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="批号" :span="5">
+                <el-select v-model="searchWord.batchNumberId" filterable clearable remote
+                           :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号">
+                  <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
+                             :label="item.batchNumber">
+                    {{ item.batchNumber }}
+                    <!--<el-tag v-show="isNewBatch(item.createTime)" style="height: 20px">新</el-tag>-->
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="生产厂商" :span="5">
+                <el-select filterable remote placeholder="请输入名称生产厂商" :remote-method="filterFactory" :clearable="true"
+                           v-model="searchWord.factoryId" popperClass="good-selects"
+                           @click.native.once="filterFactory('')">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码:</span>{{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="近效期天数" :span="6">
+                <oms-input type="number" v-model.number="searchWord.nearTermDays" :min="0" placeholder="请输入近效期天数">
+                  <template slot="append">天</template>
+                </oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="" :span="3">
+                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
+      <div>
+        <oms-loading v-if="loadingData" :loading="loadingData"></oms-loading>
+        <div class="empty-info" v-else-if="!batches.length">暂无数据</div>
+        <el-table :data="batches" v-else class="header-list store border-black" border @row-click="showDetail"
+                  :header-row-class-name="'headerClass'" :summary-method="getSummaries"
+                  :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
+                  show-summary :max-height="bodyHeight" style="width: 100%" v-show="batches.length">
+          <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true"></el-table-column>
+          <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
+          <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
+
+          <el-table-column label="业务库存" align="center">
+            <!--<el-table-column prop="qualifiedBizServings" label="剂次库存" :render-header="formatHeader" :sortable="true"-->
+            <!--width="100">-->
+            <!--<template slot-scope="scope">-->
+            <!--<span>{{scope.row.qualifiedBizServings}}</span>-->
+            <!--</template>-->
+            <!--</el-table-column>-->
+            <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.availableCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="unqualifiedBizCount" label="不合格" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.unqualifiedBizCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="undeterminedCount" label="业务停销" :render-header="formatHeader" :sortable="true"
+                             width="110">
+              <template slot-scope="scope">
+                <span>{{scope.row.undeterminedCount}}</span>
+              </template>
+            </el-table-column>
+          </el-table-column>
+
+
+          <el-table-column label="实物库存" align="center">
+            <!--<el-table-column prop="qualifiedActualServings" label="剂次库存" :render-header="formatHeader" :sortable="true"-->
+            <!--width="100">-->
+            <!--<template slot-scope="scope">-->
+            <!--<span>{{scope.row.qualifiedActualServings}}</span>-->
+            <!--</template>-->
+            <!--</el-table-column>-->
+            <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.qualifiedCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="unqualifiedCount" label="不合格" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.unqualifiedCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.transitCount}}</span>
+              </template>
+            </el-table-column>
+            <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.totalCount}}</span>
+              </template>
+            </el-table-column>
+          </el-table-column>
+
+
+          <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
+            <template slot-scope="scope">
+              <span>{{ scope.row.expiryDate | date}}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+      </div>
+
+
+      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData && batches.length">
+        <el-pagination
+          layout="prev, pager, next"
+          :total="pager.count" :pageSize="pager.pageSize" @current-change="getBatches"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
+    </div>
+
+    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <detail :currentItem="currentItem" @close="resetRightBox"></detail>
+    </page-right>
+  </div>
+</template>
+<script type="text/jsx">
+  //  import order from '../../../tools/orderList';
+  import {BaseInfo, erpStock, http} from '@/resources';
+  import detail from './history-store-detail';
+  import utils from '@/tools/utils';
+  import validMixin from '@/mixins/vaildMixin';
+
+  export default {
+    components: {detail},
+    mixins: [validMixin],
+    data() {
+      return {
+        loadingData: false,
+        showSearch: true,
+        showDetailPart: false,
+        batches: [],
+        filters: {
+          factoryId: '',
+          batchNumberId: '',
+          orgGoodsId: '',
+          nearTermDays: '',
+          date: ''
+        },
+        searchWord: {
+          factoryId: '',
+          batchNumberId: '',
+          orgGoodsId: '',
+          nearTermDays: '',
+          date: ''
+        },
+        factories: [], // 厂商列表
+        orgList: [], // 货主列表,
+        orgGoods: [],
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 20
+        },
+        currentItemId: '',
+        currentItem: {},
+        totalInfo: {},
+        statusTitle: [
+          '已过期',
+          '即将到期',
+          '正常'
+        ],
+        statusType: [
+          'danger',
+          'warning',
+          'primary'
+        ],
+        batchNumberList: [],
+        fixedHeight: 0
+      };
+    },
+    mounted() {
+    },
+    computed: {
+      bodyHeight: function () {
+        let height = parseInt(this.$store.state.bodyHeight, 10);
+        height = height - 110;
+        return height + this.fixedHeight + (this.showSearch ? 0 : 150);
+      }
+    },
+    watch: {
+      showSearch(val) {
+        window.localStorage.setItem(this.$route.path, val);
+      }
+    },
+    methods: {
+      isValid(item) {
+        let a = this.$moment();
+        let b = this.$moment(item.expiryDate);
+        let days = b.diff(a, 'days');
+        return a < b ? days > 90 ? 2 : 1 : 0;
+      },
+      getBatches() { // 得到波次列表
+        this.totalInfo = {};
+        this.batches = [];
+        let params = Object.assign({}, this.filters);
+        this.loadingData = true;
+        erpStock.queryHistory(params).then(res => {
+          this.batches = res.data.list;
+          this.pager.count = res.data.count;
+          this.loadingData = false;
+        });
+      },
+      formatHeader(h, col) {
+        let property = col.column.property;
+        let content = '';
+        let title = '';
+        switch (property) {
+          case 'qualifiedCount': {
+            content = '仓库内真实合格疫苗数量';
+            title = '合格';
+            break;
+          }
+          case 'unqualifiedCount': {
+            content = '仓库内真实不合格疫苗数量';
+            title = '不合格';
+            break;
+          }
+          case 'transitCount': {
+            content = '在运输中的疫苗数量';
+            title = '在途库存';
+            break;
+          }
+          case 'totalCount': {
+            content = '用于计算资产';
+            title = '库存总数';
+            break;
+          }
+          case 'availableCount': {
+            content = '用于出库订单的控制，表明可销售的数量';
+            title = '合格';
+            break;
+          }
+          case 'unqualifiedBizCount': {
+            content = '用于不合格品退货订单控制';
+            title = '不合格';
+            break;
+          }
+          case 'undeterminedCount': {
+            content = '仓库内质量状态待确定而不允许销售的库存数';
+            title = '业务停销';
+            break;
+          }
+          case 'qualifiedActualServings': {
+            content = '合格库存x人份';
+            title = '剂次';
+            break;
+          }
+          case 'qualifiedBizServings': {
+            content = '合格库存x人份';
+            title = '剂次';
+            break;
+          }
+        }
+        return (
+          <el-tooltip effect="dark" content={content} placement="top">
+            <span>{title}</span>
+          </el-tooltip>
+        );
+      },
+      formatRowClass(data) {
+        if (this.isValid(data.row) === 1) {
+          return 'effective-row';
+        }
+        if (this.isValid(data.row) === 0) {
+          return 'danger-row';
+        }
+      },
+      exportFile: function () {
+        let params = Object.assign({}, this.filters, this.searchWord);
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: '/store/request'});
+        this.$http.get('/erp-stock/export', {params}).then(res => {
+          utils.download(res.data.path, '即时库存查询');
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/store/request'});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/store/request'});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      showDetail(item) {
+        this.currentItemId = item.id;
+        this.currentItem = item;
+        this.showDetailPart = true;
+      },
+      resetRightBox() {
+        this.showDetailPart = false;
+      },
+      searchInOrder: function () {// 搜索
+        if (!this.searchWord.date) return this.$notify.info({message: '请选择备份日期'});
+        Object.assign(this.filters, this.searchWord);
+        this.getBatches(1);
+      },
+      getSummaries(param) {
+        const {columns, data} = param;
+        const sums = [];
+        columns.forEach((column, index) => {
+          if (index === 0) {
+            sums[index] = '合计';
+            return;
+          }
+          if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' &&
+            column.property !== 'transitCount' && column.property !== 'unqualifiedCount'
+            && column.property !== 'undeterminedCount' && column.property !== 'totalCount' && column.property !== 'unqualifiedBizCount') {
+            sums[index] = '';
+            return;
+          }
+          const values = data.map(item => Number(item[column.property]));
+          if (!values.every(value => isNaN(value))) {
+            sums[index] = values.reduce((prev, curr) => {
+              const value = Number(curr);
+              if (!isNaN(value)) {
+                return prev + curr;
+              } else {
+                return prev;
+              }
+            }, 0);
+          } else {
+            sums[index] = '';
+          }
+        });
+        return sums;
+      },
+      resetSearchForm: function () {// 重置表单
+        let temp = {
+          factoryId: '',
+          batchNumberId: '',
+          orgGoodsId: '',
+          nearTermDays: '',
+          date: ''
+        };
+        Object.assign(this.searchWord, temp);
+        Object.assign(this.filters, temp);
+        this.batches = [];
+      },
+      filterFactory(query) { // 生产厂商
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) {
+          return;
+        }
+        // 过滤来源单位
+        let params = {
+          keyWord: query,
+          orgRelationTypeList: ['Manufacture', 'Supplier']
+        };
+        BaseInfo.queryByOrgRelationTypeList(params).then(res => {
+          this.factories = res.data.list;
+        });
+      },
+      filterOrgGoods(query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        let params = Object.assign({}, {
+          deleteFlag: false,
+          orgId: orgId,
+          keyWord: query
+        });
+        http.get('/erp-stock/goods', {params}).then(res => {
+          this.orgGoods = res.data.list;
+        });
+      },
+      orgGoodsChange(val) {
+        this.searchWord.batchNumberId = '';
+        this.batchNumberList = [];
+        this.filterBatchNumber();
+      },
+      filterBatchNumber(query) {
+        if (!this.searchWord.orgGoodsId) return;
+
+        let goodsId = '';
+        this.orgGoods.forEach(i => {
+          if (i.id === this.searchWord.orgGoodsId) {
+            goodsId = i.goodsId;
+          }
+        });
+        if (!goodsId) return;
+        this.$http.get('/batch-number/pager', {
+          params: {
+            keyWord: query,
+            goodsId
+          }
+        }).then(res => {
+          this.batchNumberList = res.data.list;
+        });
+      },
+      formatTime(date) {
+        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+      }
+    }
+  };
+</script>

@@ -619,7 +619,14 @@ export const outWork = resource('/outbound/count', http, {
  * erp库存批次
  * @type {the}
  */
-export const erpStock = resource('/erp-stock', http, {});
+export const erpStock = resource('/erp-stock', http, {
+  queryHistory(params) {
+    return http.get('/erp-stock/history', {params});
+  },
+  queryHistoryDetail(infoId, stockId) {
+    return http.get(`/erp-stock/history/${infoId}/stock/${stockId}/detail`);
+  }
+});
 
 /**
  * 物流费用
