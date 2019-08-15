@@ -250,7 +250,6 @@ export default {
    * @param th
    */
   autoformatDecimalPoint: function (v) {
-    if (!v) return v;
     v = v.replace(/[^0-9\.]*/g, '');
     if (v === '') {
       v = '0.00';
@@ -327,7 +326,6 @@ export default {
     return label;
   },
   changeTotalNumber(amount, smallPacking) {
-  debugger
     if (!smallPacking) return;
     if (amount < 0) {
       // this.$notify.info({
