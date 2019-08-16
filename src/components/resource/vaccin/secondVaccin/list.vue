@@ -559,7 +559,7 @@
             }
           });
           item.orgGoodsDto.status = false;
-          Vaccine.update(item.orgGoodsDto.id, item).then(() => {
+          Vaccine.stopVaccineInfo(item.orgGoodsDto.id, {}).then(() => {
             this.getGoodsList(1);
             this.$notify.success({
               title: '成功',
@@ -582,7 +582,7 @@
             }
           });
           item.orgGoodsDto.status = true;
-          Vaccine.update(item.orgGoodsDto.id, item).then(() => {
+          Vaccine.startVaccineInfo(item.orgGoodsDto.id, {}).then(() => {
             this.getGoodsList(1);
             this.$notify.success({
               title: '成功',

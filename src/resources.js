@@ -851,6 +851,12 @@ export const Vaccine = resource('/vaccine-info', http, {
   start: (id) => {
     return http.put('/vaccine-info/start/' + id, {});
   },
+  startVaccineInfo: (id) => {
+    return http.put('/vaccine-info/' + id + '/start', {});
+  },
+  stopVaccineInfo: (id) => {
+    return http.put('/vaccine-info/' + id + '/stop', {});
+  },
   queryVaccineByOrg(params) {
     return http.get('accounts-payable/org-goods', {params});
   }
