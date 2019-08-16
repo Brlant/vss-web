@@ -565,6 +565,13 @@
               title: '成功',
               message: '已成功停用疫苗"' + item.orgGoodsDto.name + '"'
             });
+          }).catch(error => {
+            let e = error.response;
+            if (e.status === 400) {
+              this.$notify.info({
+                message: error.response.data.msg
+              });
+            }
           });
         });
       },
