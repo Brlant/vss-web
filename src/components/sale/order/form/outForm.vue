@@ -836,9 +836,11 @@
         this.searchProduct();
       },
       searchWarehouses(orgId, isEdit) {
-        if (!orgId) {
+        if (this.isStorageData) {
           this.warehouses = [];
           this.form.transportationAddress = '';
+        }
+        if (!orgId) {
           return;
         }
         Address.queryAddress(orgId, {
