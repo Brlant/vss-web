@@ -277,7 +277,9 @@
             <el-row>
               <el-col :span="5">
                 <div class="flex-layout" v-show="isShowCheckBox" @click.stop="item.checked = !item.checked">
-                  <el-checkbox v-model="item.checked" class="mr-5"/>
+                  <span @click.stop="" style="margin-right: 5px">
+                     <el-checkbox v-model="item.checked" class="mr-5"/>
+                  </span>
                   <div>
                     <div class="f-grey">
                       {{item.orderNo }}
