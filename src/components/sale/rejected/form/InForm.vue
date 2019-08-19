@@ -663,7 +663,7 @@
           this.changeTransportationMeans(this.form.transportationMeansId);
           // ******
           this.$nextTick(() => {
-            this.isStorageData = true;
+            this.isStorageData = false;
           });
         });
       },

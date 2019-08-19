@@ -690,7 +690,7 @@
           this.changeTransportationMeans(this.form.transportationMeansId);
           // ******
           this.$nextTick(() => {
-            this.isStorageData = true;
+            this.isStorageData = false;
           });
         });
       },
@@ -836,7 +836,7 @@
         this.searchProduct();
       },
       searchWarehouses(orgId, isEdit) {
-        if (this.isStorageData) {
+        if (!this.isStorageData) {
           this.warehouses = [];
           this.form.transportationAddress = '';
         }

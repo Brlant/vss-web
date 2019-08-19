@@ -147,8 +147,8 @@
             </el-form-item>
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
-                          v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' " :clearable="true">
-              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable>
+                          v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
+              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in supplierWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -557,21 +557,21 @@
             'pickUpAddress': ''
           };
           this.initForm();
-          if (this.form.supplierName && this.form.supplierId) {
-            this.orgList = [
-              {
-                name: this.form.supplierName,
-                id: this.form.supplierId
-              }
-            ];
-          }
-          this.filterOrg(this.form.supplierName);
-          this.filterLogisticsCenter();
+          // if (this.form.supplierName && this.form.supplierId) {
+          //   this.orgList = [
+          //     {
+          //       name: this.form.supplierName,
+          //       id: this.form.supplierId
+          //     }
+          //   ];
+          // }
+          // this.filterOrg(this.form.supplierName);
+          // this.filterLogisticsCenter();
           this.filterAddress();
         } else if (this.orderId && val === 'edit') {
           this.editOrderInfo();
           this.filterOrg(this.form.supplierName);
-          this.filterLogisticsCenter(this.form.logisticsProviderName);
+          // this.filterLogisticsCenter(this.form.logisticsProviderName);
           this.filterAddress(this.form.warehouseAddress);
         }
       },
@@ -642,7 +642,7 @@
           this.form.detailDtoList = res.data.detailDtoList;
           // ******
           this.$nextTick(() => {
-            this.isStorageData = true;
+            this.isStorageData = false;
           });
         });
       },
@@ -673,7 +673,12 @@
       initForm: function () {// 根据缓存，回设form
         let oldForm = window.localStorage.getItem(this.saveKey);
         if (oldForm && this.action === 'add') {
-          this.form = Object.assign({}, this.form, JSON.parse(oldForm), {purchaseContractName: ''});
+          this.form = Object.assign({}, this.form, JSON.parse(oldForm), {
+            purchaseContractName: '',
+            supplierId: '',
+            supplierName: '',
+            pickUpAddress: ''
+          });
         }
       },
       resetForm: function () {// 重置表单
