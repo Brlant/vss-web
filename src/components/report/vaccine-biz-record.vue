@@ -11,8 +11,8 @@
         </div>
         <el-form class="advanced-query-form">
           <el-row>
-            <el-col :span="7">
-              <oms-form-row :span="4" label="货主疫苗">
+            <el-col :span="8">
+              <oms-form-row :span="5" label="货主疫苗">
                 <el-select :clearable="true" :remote-method="filterOrgGoods" @click.native.once="filterOrgGoods('')"
                            filterable
                            placeholder="请输入名称搜索货主疫苗"
@@ -40,7 +40,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="5">
+            <el-col :span="8">
               <oms-form-row :span="6" label="批号">
                 <el-select :remoteMethod="filterBatchNumber" @click.native.once="filterBatchNumber('')" clearable
                            filterable
@@ -62,8 +62,8 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="4">
-              <oms-form-row :span="3" label="">
+            <el-col :span="8">
+              <oms-form-row :span="5" label="">
                 <el-button :disabled="loadingData" @click="search" type="primary">
                   查询
                 </el-button>
