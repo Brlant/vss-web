@@ -663,11 +663,12 @@
           this.changeTransportationMeans(this.form.transportationMeansId);
           // ******
           this.$nextTick(() => {
-            this.isStorageData = true;
+            this.isStorageData = false;
           });
         });
       },
       changeNumber() {
+        if (!this.product.amount) return;
         let newAmount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
         if (this.product.amount !== newAmount) {
           this.$confirm(`疫苗"${this.product.fixInfo.name}"数量${this.product.amount}不是最小包装的倍数，确认后会对后续操作产生严重影响!

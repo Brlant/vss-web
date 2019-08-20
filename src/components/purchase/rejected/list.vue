@@ -253,7 +253,9 @@
             <el-row>
               <el-col :span="filters.state === '0' ? 5: 6">
                 <div v-show="isShowCheckBox" class="flex-layout" @click.stop="item.checked = !item.checked">
-                  <el-checkbox v-model="item.checked" class="mr-5"/>
+                 <span @click.stop="" style="margin-right: 5px">
+                     <el-checkbox v-model="item.checked" class="mr-5"/>
+                  </span>
                   <div>
                     <div class="f-grey">
                       {{item.orderNo }}
