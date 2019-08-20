@@ -470,23 +470,8 @@
         if (!this.currentOrder.id) return;
         this.doing = true;
         http.get(`/receipt/order/${this.currentOrder.id}`).then(res => {
-          let ary = [];
-          let set = new Set();
-          this.currentOrder && this.currentOrder.detailDtoList.forEach(i => set.add(i.orgGoodsId));
-          [...set].forEach(i => {
-            let children = this.currentOrder.detailDtoList.filter(g => g.orgGoodsId === i);
-            // 拷贝一份订单详情，再累加其值
-            children = JSON.parse(JSON.stringify(children));
-            if (children.length === 1) {
-              ary.push(children[0]);
-            } else {
-              let amount = 0;
-              children.forEach(i => (amount += i.amount));
-              children[0].amount = amount;
-              ary.push(children[0]);
-            }
-          });
-          // ary = JSON.parse(JSON.stringify(ary));
+          if (!res.data.length) return;
+          let ary = JSON.parse(JSON.stringify(this.currentOrder.detailDtoList));
           ary.forEach(i => {
             i.reHistories = [];
             i.showHistories = false;
@@ -495,17 +480,27 @@
             i.transportTemperatureFlag = null;
             i.arrivalDate = '';
           });
-          this.goodsDetails = ary;
-          this.goodsDetails.forEach(i => {
-            i.batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
-            if (i.batchNumbers.length) {
-              i.factoryName = i.batchNumbers[0].factoryName;
-              i.sentAddress = i.batchNumbers[0].sentAddress;
-              i.transportTemperatureFlag = i.batchNumbers[0].transportTemperatureFlag;
-              i.arrivalDate = i.batchNumbers[0].arrivalDate;
-              i.plateNumberDtos = i.batchNumbers[0].plateNumberDtos || [];
-            }
+          let goodsDetails = [];
+          ary.forEach(i => {
+            let batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
+            let obj = {};
+            batchNumbers.forEach(i => {
+              obj[i.orderReceiptId] = '';
+            });
+            Object.keys(obj).forEach(k => {
+              let newItem = JSON.parse(JSON.stringify(i));
+              newItem.batchNumbers = batchNumbers.filter(f => f.orderReceiptId + '' === k);
+              if (newItem.batchNumbers.length) {
+                newItem.factoryName = newItem.batchNumbers[0].factoryName;
+                newItem.sentAddress = newItem.batchNumbers[0].sentAddress;
+                newItem.transportTemperatureFlag = newItem.batchNumbers[0].transportTemperatureFlag;
+                newItem.arrivalDate = newItem.batchNumbers[0].arrivalDate;
+                newItem.plateNumberDtos = newItem.batchNumbers[0].plateNumberDtos || [];
+              }
+              goodsDetails.push(newItem);
+            });
           });
+          this.goodsDetails = goodsDetails;
         }).then(() => {
           http.get(`/order-sample/order/${this.currentOrder.id}`).then(res => {
             this.doing = false;
