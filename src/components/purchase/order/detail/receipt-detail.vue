@@ -156,12 +156,12 @@
         <oms-row label="货主">
           {{ currentOrder.orgName }}
         </oms-row>
-        <oms-row label="车牌号">
-          {{ plateNumberTitle }}
-        </oms-row>
-        <oms-row label="订单始发地">
-          {{ currentOrder.sentAddress }}
-        </oms-row>
+        <!--        <oms-row label="车牌号">-->
+        <!--          {{ plateNumberTitle }}-->
+        <!--        </oms-row>-->
+        <!--        <oms-row label="订单始发地">-->
+        <!--          {{ currentOrder.sentAddress }}-->
+        <!--        </oms-row>-->
       </el-col>
       <el-col :span="12">
         <oms-row label="业务类型">
@@ -170,13 +170,13 @@
         <oms-row label="来源单位">
           {{currentOrder.supplierName}}
         </oms-row>
-        <oms-row label="在途温度">
-          <el-tag type="success" v-show="currentOrder.transportTemperatureFlag !== false">合格</el-tag>
-          <el-tag type="warning" v-show="currentOrder.transportTemperatureFlag === false">不合格</el-tag>
-        </oms-row>
-        <oms-row label="到货时间">
-          {{ currentOrder.arrivalDate |time }}
-        </oms-row>
+        <!--        <oms-row label="在途温度">-->
+        <!--          <el-tag type="success" v-show="currentOrder.transportTemperatureFlag !== false">合格</el-tag>-->
+        <!--          <el-tag type="warning" v-show="currentOrder.transportTemperatureFlag === false">不合格</el-tag>-->
+        <!--        </oms-row>-->
+        <!--        <oms-row label="到货时间">-->
+        <!--          {{ currentOrder.arrivalDate |time }}-->
+        <!--        </oms-row>-->
       </el-col>
     </el-row>
     <hr class="hr"/>
@@ -207,6 +207,21 @@
             <td colspan="3">{{item.factoryName}}</td>
             <td colspan="1" class="t-head">供货单位</td>
             <td colspan="3">{{item.salesFirmName}}</td>
+          </tr>
+          <tr>
+            <td class="t-head" colspan="3">到货时间</td>
+            <td class="t-head" colspan="3">在途温度</td>
+            <td class="t-head" colspan="3">订单始发地</td>
+            <td class="t-head" colspan="5">车牌号</td>
+          </tr>
+          <tr>
+            <td colspan="3">{{item.arrivalDate |time}}</td>
+            <td colspan="3">
+              <el-tag type="success" v-show="item.transportTemperatureFlag !== false">合格</el-tag>
+              <el-tag type="warning" v-show="item.transportTemperatureFlag === false">不合格</el-tag>
+            </td>
+            <td colspan="3">{{item.sentAddress}}</td>
+            <td colspan="5">{{item.plateNumberDtos.map(m => m.plateNumber).join('，')}}</td>
           </tr>
           <tr>
             <td colspan="4" class="t-head">批号</td>
@@ -441,12 +456,12 @@
         this.goodsDetails = [];
         if (!this.currentOrder.detailDtoList) return;
         this.getGoodsDetails();
-        this.getPlateNumber();
+        // this.getPlateNumber();
       },
       isFormReceipt(val) {
         if (val) {
           this.getGoodsDetails();
-          this.getPlateNumber();
+          // this.getPlateNumber();
         }
       }
     },
@@ -475,12 +490,20 @@
           ary.forEach(i => {
             i.reHistories = [];
             i.showHistories = false;
+            i.sentAddress = '';
+            i.plateNumberDtos = [];
+            i.transportTemperatureFlag = null;
+            i.arrivalDate = '';
           });
           this.goodsDetails = ary;
           this.goodsDetails.forEach(i => {
             i.batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
             if (i.batchNumbers.length) {
               i.factoryName = i.batchNumbers[0].factoryName;
+              i.sentAddress = i.batchNumbers[0].sentAddress;
+              i.transportTemperatureFlag = i.batchNumbers[0].transportTemperatureFlag;
+              i.arrivalDate = i.batchNumbers[0].arrivalDate;
+              i.plateNumberDtos = i.batchNumbers[0].plateNumberDtos || [];
             }
           });
         }).then(() => {
