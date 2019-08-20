@@ -77,7 +77,7 @@
           'wms-complete': '上下架完成',
           'push-exception': '订单异常推送',
           'stop-reject': '订单取消拒收',
-          'push-file': '推送订单相关文件'
+          'push-file': '推送订单'
         }
       };
     },
