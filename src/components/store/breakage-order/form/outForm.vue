@@ -470,7 +470,7 @@
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
+            {required: true, message: '请选择发货地址', trigger: 'change'}
           ],
           logisticsCentreId: [
             {required: true, message: '请选择物流中心', trigger: 'change'}

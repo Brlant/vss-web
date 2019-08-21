@@ -199,7 +199,7 @@
             {required: true, message: '请选择收货单位收货地址', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
+            {required: true, message: '请选择发货地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
