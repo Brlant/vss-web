@@ -626,7 +626,7 @@
     methods: {
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
-        return name + this.getWarehouseAdress(item);
+        return name + item.detail;
       },
       setDefaultValue() {
         this.form.transportationMeansId = '0';
@@ -876,7 +876,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail;
+        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
       },
       checkLicence: function (val) {// 检查货主/单位证照是否过期
         if (!val || !this.action) return;
