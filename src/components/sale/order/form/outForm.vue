@@ -155,12 +155,8 @@
             <el-form-item label="收货人联系电话" v-show="showContent.isShowOtherContent">
               <oms-input type="text" placeholder="请输入收货人联系电话" :maxlength="50" v-model="form.consigneePhone"></oms-input>
             </el-form-item>
-            <!--<el-form-item label="是否同批号">-->
-            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
-            <!--v-model="form.sameBatchNumber"></el-switch>-->
-            <!--</el-form-item>-->
-            <el-form-item label="疾控发货地址" prop="orgAddress">
-              <el-select placeholder="请选择疾控发货地址" v-model="form.orgAddress" filterable :clearable="true"
+            <el-form-item label="发货地址" prop="orgAddress">
+              <el-select placeholder="请选择发货地址" v-model="form.orgAddress" filterable :clearable="true"
                          @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenterAddressList">
@@ -169,22 +165,15 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item label="物流中心" prop="logisticsCentreId">-->
-            <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"-->
-            <!--@change="changeLogisticsCenterId">-->
-            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
-            <!--</el-select>-->
-            <!--</el-form-item>-->
+            <el-form-item label="物流商">
+              <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
+            </el-form-item>
             <el-form-item label="运输条件" prop="transportationCondition">
               <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationCondition">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
                            v-for="item in transportationConditionList"></el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item label="是否进口">-->
-            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
-            <!--v-model="form.importedFlag"></el-switch>-->
-            <!--</el-form-item>-->
             <el-form-item :label="'预计送货时间'"
                           :prop=" showContent.isShowOtherContent?'expectedTime':'' "
                           v-show="showContent.isShowOtherContent">
@@ -372,7 +361,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
@@ -606,22 +595,10 @@
       vaccineType(val) {
         this.form.goodsType = val - 1;
       }
-//      form: {
-//        handler: 'autoSave',
-//        deep: true
-//      }
     },
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
-//      this.filterAddress();
-//      let oldForm = window.localStorage.getItem(this.saveKey);
-//      if (oldForm) {
-//        this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-//        this.form.orgAddress = this.form.orgAddress
-//          ? this.form.orgAddress : window.localStorage.getItem('orgAddress');
-//      }
     },
     methods: {
       filterAddressLabel(item) {
@@ -729,22 +706,6 @@
         };
         BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
-        });
-      },
-      changeLogisticsCenterId() {// 物流中心改变时, 重置货品列表
-        this.$refs['orderGoodsAddForm'].resetFields();
-        this.accessoryList = [];
-        this.batchNumbers = [];
-        this.form.detailDtoList = [];
-        this.product.orgGoodsId = '';
-        this.searchProduct();
-      },
-      filterLogisticsCenter: function () {// 过滤物流中心
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
         });
       },
       bizTypeChange: function (val) {// 业务类型改变时
