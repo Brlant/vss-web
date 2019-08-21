@@ -313,7 +313,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork} from '@/resources';
   import utils from '@/tools/utils';
   import OrderMixin from '@/mixins/orderMixin';
   import addGoodsMixin from '@/mixins/addGoodsMixin';
@@ -511,8 +511,6 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
-//        this.filterOrg();
-//        this.filterLogistics();
         this.searchProduct();
 
         this.checkLicence(this.form.orgId);
@@ -528,18 +526,12 @@
           this.filterAddress();
         }
       },
-//      form: {
-//        handler: 'autoSave',
-//        deep: true
-//      },
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       }
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
-//      this.initForm();
     },
     methods: {
       filterAddressLabel(item) {
@@ -675,35 +667,12 @@
           this.form.supplierId = '';
           return;
         }
-//        let relation = '';
-//        if (bizType === '0') relation = '0';
-//        if (bizType === '1') relation = '1';
-//        if (!relation) return;
         let params = {
           keyWord: query,
           relation: '1'
         };
         BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
-        });
-      },
-      filterLogistics: function (query) {// 过滤物流商
-        let orgId = this.form.orgId;
-        if (!orgId) {
-          this.logisticsList = [];
-          this.form.logisticsProviderName = '';
-          return;
-        }
-        BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
-          this.logisticsList = res.data;
-        });
-      },
-      filterLogisticsCenter: function () {// 过滤物流中心
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
         });
       },
       filterAddress(isStorageData) {
@@ -806,7 +775,6 @@
         if (isEdit) return;
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.pickUpAddress = '';
-          this.form.logisticsProviderName = '';
           this.form.supplierId = '';
         }
         this.form.pickUpAddress = '';
