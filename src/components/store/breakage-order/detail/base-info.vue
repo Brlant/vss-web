@@ -42,6 +42,12 @@
             <oms-row label="仓库地址" :span="span">
               <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
             </oms-row>
+            <oms-row label="物流商" :span="span">
+              <span class="goods-span">{{currentOrder.logisticsProviderName}}</span>
+            </oms-row>
+            <oms-row label="收货地址" :span="span" v-show="currentOrder.warehouseAddress">
+              <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
+            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="货品类型">
@@ -71,11 +77,6 @@
             <!--<span class="goods-span">{{currentOrder.expectedTime | date}}</span>-->
             <!--</oms-row>-->
           </el-col>
-        </el-row>
-        <el-row style="margin-bottom:0" v-show="currentOrder.warehouseAddress">
-          <oms-row label="收货地址" :span="4">
-            <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
-          </oms-row>
         </el-row>
         <el-row v-show="currentOrder.remark">
           <oms-row label="报损原因" :span="4">{{ currentOrder.remark }}</oms-row>
