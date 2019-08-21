@@ -88,8 +88,8 @@
               value-format="timestamp">
             </el-date-picker>
           </el-form-item>
-          <el-form-item label="疾控发货地址" prop="orgAddress">
-            <el-select placeholder="请选择疾控发货地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
+          <el-form-item label="发货地址" prop="orgAddress">
+            <el-select placeholder="请选择发货地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
               <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                          v-for="item in LogisticsCenter">
                 <span class="pull-left">{{ item.name }}</span>
@@ -154,7 +154,7 @@
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
-          <oms-row label="疾控发货地址" :span="4">
+          <oms-row label="发货地址" :span="4">
             <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
           </oms-row>
         </el-row>
@@ -280,7 +280,7 @@
             {required: true, message: '请选择收货单位收货地址', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
+            {required: true, message: '请选择发货地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}

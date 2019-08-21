@@ -159,8 +159,8 @@
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
-            <el-form-item label="疾控发货地址" prop="orgAddress">
-              <el-select placeholder="请选择疾控发货地址" v-model="form.orgAddress" filterable :clearable="true"
+            <el-form-item label="发货地址" prop="orgAddress">
+              <el-select placeholder="请选择发货地址" v-model="form.orgAddress" filterable :clearable="true"
                          @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenterAddressList">
@@ -482,7 +482,7 @@
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
+            {required: true, message: '请选择发货地址', trigger: 'change'}
           ],
           logisticsCentreId: [
             {required: true, message: '请选择物流中心', trigger: 'change'}
