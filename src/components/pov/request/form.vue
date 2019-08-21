@@ -425,10 +425,10 @@
       },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
-        return name + this.getWarehouseAdress(item);
+        return name + item.detail;
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail;
+        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
       },
       editOrderInfo() {
         let orgDetailGoods = this.currentOrder.detailDtoList.map(m => {
