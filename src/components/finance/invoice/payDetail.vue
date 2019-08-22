@@ -56,7 +56,7 @@
           placeholder="请选择">
         </el-date-picker>
       </el-form-item>
-      <el-form-item>
+      <el-form-item style="margin-left: 10px">
         <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
       </el-form-item>
     </el-form>
