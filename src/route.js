@@ -261,11 +261,6 @@ export const route = [
             }
           },
           {
-            path: '/finance/org',
-            component: () => import('./components/finance/logistics/list.vue'),
-            meta: {moduleId: 'finance', title: '物流商对账', perm: 'logistics-vendor-reconciliation'}
-          },
-          {
             path: '/finance/supplier',
             component: () => import('./components/finance/vaccine/list.vue'),
             meta: {moduleId: 'finance', title: '疫苗厂商入库明细', perm: 'vaccine-vendor-reconciliation'}
@@ -403,11 +398,6 @@ export const route = [
             path: '/resource/store',
             component: () => import('./components/resource/store/list.vue'),
             meta: {moduleId: 'resource', title: '仓库管理', perm: 'binding-warehouse'}
-          },
-          {
-            path: '/logistics/cost',
-            component: () => import('./components/resource/logistics/cost.vue'),
-            meta: {moduleId: 'resource', title: '物流费管理', perm: 'cerp-logistics-cost'}
           },
           {
             path: '/resource/material',
