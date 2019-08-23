@@ -88,6 +88,14 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row label="疫苗种类" :span="6" style="height: 36px">
+                <el-radio-group v-model="searchWord.vaccineType" size="small">
+                  <el-radio-button label="1">一类疫苗</el-radio-button>
+                  <el-radio-button label="2">二类疫苗</el-radio-button>
+                </el-radio-group>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="3" style="height: 36px">
                 <el-switch
                   v-model="searchWord.showFlag"
@@ -112,7 +120,18 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true">
+        </el-table-column>
+        <el-table-column prop="orgGoodsCode" label="疫苗编码" min-width="120" :sortable="true">
+          <template slot-scope="scope"><span>{{scope.row.orgGoodsCode}}</span></template>
+        </el-table-column>
+        <el-table-column prop="factoryName" label="疫苗种类" min-width="120" :sortable="true">
+          <template slot-scope="scope">
+            <dict dict-group="vaccineSign" :dict-key="scope.row.vaccineType"></dict>
+          </template>
+        </el-table-column>
+        <el-table-column prop="goodsGenericName" label="疫苗主档通用名称" min-width="200" :sortable="true">
+        </el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
@@ -220,14 +239,16 @@
           batchNumberId: '',
           orgGoodsId: '',
           nearTermDays: '',
-          showFlag: false
+          showFlag: false,
+          vaccineType: ''
         },
         searchWord: {
           factoryId: '',
           batchNumberId: '',
           orgGoodsId: '',
           nearTermDays: '',
-          showFlag: false
+          showFlag: false,
+          vaccineType: ''
         },
         factories: [], // 厂商列表
         orgList: [], // 货主列表,
@@ -427,7 +448,8 @@
           batchNumberId: '',
           orgGoodsId: '',
           nearTermDays: '',
-          showFlag: false
+          showFlag: false,
+          vaccineType: ''
         };
         Object.assign(this.searchWord, temp);
         Object.assign(this.filters, temp);
