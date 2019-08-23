@@ -587,7 +587,7 @@
     methods: {
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
-        return name + this.getWarehouseAdress(item);
+        return name + item.detail;
       },
       setDefaultValue() {
         this.form.transportationCondition = '0';
@@ -754,7 +754,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail;
+        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
       },
       changeSupplier: function (val, isEdit) {// 业务单位改变
         this.form.supplierName = this.orgList.filter(f => f.id === val)[0] && this.orgList.filter(f => f.id === val)[0].name;

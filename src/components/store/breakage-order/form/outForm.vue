@@ -466,7 +466,7 @@
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
+            {required: true, message: '请选择发货地址', trigger: 'change'}
           ],
           logisticsCentreId: [
             {required: true, message: '请选择物流中心', trigger: 'change'}
@@ -621,10 +621,10 @@
       },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
-        return name + this.getWarehouseAdress(item) + `（${this.storeType[item.warehouseType]}）`;
+        return name + item.detail + `（${this.storeType[item.warehouseType]}）`;
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail;
+        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
       },
       getTitle() {
         return `${this.defaultIndex === 2 ? '编辑' : '添加'}报损`;
