@@ -174,7 +174,7 @@
             {required: true, message: '请选择收货单位收货地址', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
+            {required: true, message: '请选择发货地址', trigger: 'change'}
           ],
           transportationCondition: [
             {required: true, message: '请选择运输条件', trigger: 'blur'}
@@ -236,7 +236,7 @@
     methods: {
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
-        return name + this.getWarehouseAdress(item);
+        return name + item.detail;
       },
       getTimeTitle: function (item) {
         return item.transportationMeansId === '0' ? item.bizType === '2-1' ? '预计出库' : '预计送货'
@@ -244,7 +244,7 @@
             : item.transportationMeansId === '2' ? '预计发货' : '';
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail;
+        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
       },
       changeRemark(form) {
         if (!this.currentOrder.remark) {

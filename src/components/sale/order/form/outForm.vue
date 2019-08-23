@@ -159,8 +159,8 @@
             <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
             <!--v-model="form.sameBatchNumber"></el-switch>-->
             <!--</el-form-item>-->
-            <el-form-item label="疾控发货地址" prop="orgAddress">
-              <el-select placeholder="请选择疾控发货地址" v-model="form.orgAddress" filterable :clearable="true"
+            <el-form-item label="发货地址" prop="orgAddress">
+              <el-select placeholder="请选择发货地址" v-model="form.orgAddress" filterable :clearable="true"
                          @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenterAddressList">
@@ -482,7 +482,7 @@
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控发货地址', trigger: 'change'}
+            {required: true, message: '请选择发货地址', trigger: 'change'}
           ],
           logisticsCentreId: [
             {required: true, message: '请选择物流中心', trigger: 'change'}
@@ -626,7 +626,7 @@
     methods: {
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
-        return name + this.getWarehouseAdress(item);
+        return name + item.detail;
       },
       setDefaultValue() {
         this.form.transportationMeansId = '0';
@@ -876,7 +876,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail;
+        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
       },
       checkLicence: function (val) {// 检查货主/单位证照是否过期
         if (!val || !this.action) return;
