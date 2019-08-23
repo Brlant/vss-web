@@ -167,14 +167,7 @@
             <el-form-item label="实际收货人" v-show="showContent.isShowOtherContent">
               <oms-input type="text" placeholder="请输入实际收货人" :maxlength="50" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
-            <!--<el-form-item label="是否同批号">-->
-            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
-            <!--v-model="form.sameBatchNumber"></el-switch>-->
-            <!--</el-form-item>-->
             <el-form-item label="疾控仓库地址" prop="orgAddress">
-              <!--<el-select placeholder="请选择物流中心" v-model="form.orgAddress" filterable :clearable="true">-->
-              <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
-              <!--</el-select>-->
               <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true"
                          @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
@@ -184,12 +177,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item label="物流中心" prop="logisticsCentreId">-->
-            <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"-->
-            <!--@change="changeLogisticsCenterId">-->
-            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
-            <!--</el-select>-->
-            <!--</el-form-item>-->
+            <el-form-item label="物流商">
+              <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
+            </el-form-item>
             <el-form-item label="是否合格">
               <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                          v-model="form.qualifiedFlag" @change="clearForm"></el-switch>
@@ -200,10 +190,6 @@
                            v-for="item in transportationConditionList"></el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item label="是否进口">-->
-            <!--<el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"-->
-            <!--v-model="form.importedFlag"></el-switch>-->
-            <!--</el-form-item>-->
             <el-form-item :label="'预计出库时间'"
                           :prop=" showContent.isShowOtherContent?'expectedTime':'' "
                           v-show="showContent.isShowOtherContent">
@@ -266,14 +252,6 @@
                   </el-select>
                 </el-form-item>
                 <div v-show="product.orgGoodsId">
-                  <!--<el-form-item label="产品数量" class="productItem-info" :prop=" batchNumbers.length ? '' : 'amount' "-->
-                  <!--v-show="batchNumbers.length === 0 ">-->
-                  <!--<oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">-->
-                  <!--<template slot="append" style="width: 30px">-->
-                  <!--<dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>-->
-                  <!--</template>-->
-                  <!--</oms-input>-->
-                  <!--</el-form-item>-->
                   <div class="product-info-fix clearfix">
                     <el-row>
                       <el-col :span="14">
@@ -387,7 +365,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork} from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
@@ -620,21 +598,10 @@
           this.filterAddress();
         }
       }
-//      form: {
-//        handler: 'autoSave',
-//        deep: true
-//      }
     },
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
-//      let oldForm = window.localStorage.getItem(this.saveKey);
-//      if (oldForm) {
-//        this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-//        this.form.orgAddress = this.form.orgAddress
-//          ? this.form.orgAddress : window.localStorage.getItem('orgAddress');
-//      }
     },
     methods: {
       changeVaccineType() {
@@ -647,13 +614,6 @@
       setDefaultValue() {
         this.form.transportationMeansId = '1';
         this.form.transportationCondition = '0';
-        // 默认物流中心
-        // this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
-      },
-      autoSave: function () {
-        if (!this.form.id) {
-          window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
-        }
       },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
@@ -768,22 +728,6 @@
           this.orgList = res.data;
         });
       },
-      changeLogisticsCenterId() {// 物流中心改变时, 重置货品列表
-        this.$refs['orderGoodsAddForm'].resetFields();
-        this.accessoryList = [];
-        this.batchNumbers = [];
-        this.form.detailDtoList = [];
-        this.product.orgGoodsId = '';
-        this.searchProduct();
-      },
-      filterLogisticsCenter: function () {// 过滤物流中心
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
-        });
-      },
       bizTypeChange: function (val) {// 业务类型改变时
         if (!this.isStorageData) {// 有缓存时，不重置表单
           let orgId = this.form.orgId;
@@ -888,11 +832,6 @@
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.actualConsignee = ''; // 仓库改变时, 设置实际收货人
         }
-        // this.warehouses.forEach(item => {
-        //   if (val === item.id) {
-        //     this.form.actualConsignee = item.contact;
-        //   }
-        // });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;

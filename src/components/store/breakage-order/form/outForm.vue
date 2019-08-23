@@ -130,7 +130,9 @@
                 </el-option>
               </el-select>
             </el-form-item>
-
+            <el-form-item label="物流商">
+              <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
+            </el-form-item>
             <el-form-item label="报损方式" prop="customerChannel">
               <el-select type="text" placeholder="请选择报损方式" v-model="form.customerChannel"
                          @change="customerChannelChange">
@@ -160,12 +162,6 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <!--<el-form-item label="物流中心" prop="logisticsCentreId" v-if="isEntrustWarehouse">-->
-            <!--<el-select placeholder="请选择物流中心" v-model="form.logisticsCentreId" filterable :clearable="true"-->
-            <!--@change="changeLogisticsCenterId">-->
-            <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
-            <!--</el-select>-->
-            <!--</el-form-item>-->
             <el-form-item label="运输条件" prop="transportationCondition" v-if="form.transportationMeansId === '0'">
               <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationCondition">
                 <el-option :value="item.key" :key="item.key" :label="item.label"
@@ -355,7 +351,7 @@
 </template>
 
 <script>
-  import {Address, cerpAction, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import {Address, cerpAction, erpOrder, http, InWork} from '@/resources';
   import utils from '@/tools/utils';
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
@@ -617,9 +613,6 @@
 
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      // 默认物流中心
-      // this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
-      this.filterLogisticsCenter();
     },
     methods: {
       changeVaccineType(val) {
@@ -678,14 +671,6 @@
         this.resetProductForm();
         this.form.detailDtoList = [];
       },
-      changeLogisticsCenterId() {// 改变物流中心
-        this.$refs['orderGoodsAddForm'].resetFields();
-        this.accessoryList = [];
-        this.batchNumbers = [];
-        this.form.detailDtoList = [];
-        this.product.orgGoodsId = '';
-        this.searchProduct();
-      },
       customerChannelChange() { // 改变报损方式
         this.form.customerId = '';
         this.form.remark = '';
@@ -701,22 +686,10 @@
         if (val !== '0') return;
         this.searchWarehouses();
       },
-      orgAddressChange() { // 改变仓库地址
-        this.form.transportationMeansId = '';
-        this.form.logisticsCentreId = '';
-      },
       customerIdChange() { // 改变上级供货单位
         this.warehouses = [];
         this.form.transportationAddress = '';
         this.searchWarehouses();
-      },
-      filterLogisticsCenter: function () {// 查询物流中心
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
-        });
       },
       searchWarehouses() { // 查询收货地址
         let orgId = this.isSelfBreakage ? this.$store.state.user.userCompanyAddress : this.form.customerId;
@@ -809,8 +782,6 @@
                 return false;
               }
             });
-            // 近效期提醒
-            // this.checkGoodsRegistrationValid(item.orgGoodsDto.goodsDto.goodsApprovalNOValidity);
           }
         });
         this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);

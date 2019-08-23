@@ -31,11 +31,6 @@
             <oms-row label="收货单位" :span="span">
               {{currentOrder.customerName}}
             </oms-row>
-            <oms-row label="物流中心" :span="span">
-              <span class="goods-span">
-                {{currentOrder.centreName}}
-              </span>
-            </oms-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -97,6 +92,9 @@
               </el-option>
             </el-select>
           </el-form-item>
+          <el-form-item label="物流商">
+            <oms-input v-model="currentOrder.logisticsProviderName" placeholder="请输入物流商"></oms-input>
+          </el-form-item>
           <material-part @changeRemark="changeRemark" v-if="vaccineType === '1'"></material-part>
           <el-form-item label="备注" class="clearfix">
             <oms-input type="textarea" v-model="currentOrder.remark" placeholder="请输入备注信息"
@@ -119,9 +117,9 @@
             <oms-row label="收货地址" :span="span">
               {{currentOrder.warehouseAddress}}
             </oms-row>
-            <oms-row label="物流中心" :span="span">
+            <oms-row label="物流商" :span="span">
               <span class="goods-span">
-                {{currentOrder.centreName}}
+                {{currentOrder.logisticsProviderName}}
               </span>
             </oms-row>
             <oms-row label="实际收货人" :span="span">
@@ -384,7 +382,7 @@
           }
         });
       },
-      filterLogisticsCenter: function () {// 过滤物流中心
+      filterLogisticsCenter: function () {// 过滤物流商
         let param = {
           deleteFlag: false
         };

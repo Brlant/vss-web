@@ -39,8 +39,8 @@
             <oms-row label="疾控仓库地址" :span="span">
               <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
             </oms-row>
-            <oms-row label="物流中心" :span="span">
-              {{currentOrder.centreName}}
+            <oms-row label="物流商" :span="span">
+              {{currentOrder.logisticsProviderName}}
             </oms-row>
           </el-col>
           <el-col :span="12">
@@ -253,7 +253,7 @@
           this.warehouses = res.data || [];
         });
       },
-      filterLogisticsCenter: function () {// 过滤物流中心
+      filterLogisticsCenter: function () {// 过滤物流商
         let param = {
           deleteFlag: false
         };

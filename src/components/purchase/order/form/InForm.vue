@@ -175,7 +175,7 @@
             <!--</el-form-item>-->
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
               <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress"
-                         filterable :clearable="true">
+                         filterable :clearable="true" @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
@@ -350,7 +350,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork} from '@/resources';
   import utils from '@/tools/utils';
   import OrderMixin from '@/mixins/orderMixin';
   import addGoodsMixin from '@/mixins/addGoodsMixin';
@@ -550,7 +550,6 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
-        this.filterLogistics();
         this.checkLicence(this.form.orgId);
         if (this.purchase.id) {
           this.filterOrg();
@@ -568,10 +567,6 @@
           this.filterAddress();
         }
       },
-//      form: {
-//        handler: 'autoSave',
-//        deep: true
-//      },
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       },
@@ -581,8 +576,6 @@
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
-//      this.initForm();
     },
     methods: {
       filterAddressLabel(item) {
@@ -623,21 +616,11 @@
             this.accessoryList = res.data.list;
             this.product.amount = Math.abs(this.purchase.count);
           });
-//          this.$nextTick(() => {
-//            this.form.detailDtoList.push({
-//              amount: Math.abs(this.purchase.count),
-//              orgGoodsId: orgGoodsId,
-//              orgGoodsName: res.data.orgGoodsDto.name,
-//              unitPrice: res.data.orgGoodsDto.procurementPrice,
-//              measurementUnit: res.data.orgGoodsDto.goodsDto.measurementUnit
-//            });
-//          });
         });
       },
       editOrderInfo() {
         if (!this.orderId) return;
         InWork.queryOrderDetail(this.orderId).then(res => {
-//          this.currentOrder = res.data;
           this.resetForm();
           this.isStorageData = true;
           res.data.detailDtoList.forEach(f => {
@@ -680,25 +663,13 @@
           this.setAddProduct();
         }
       },
-      autoSave: function () {
-        if (!this.form.id) {
-          window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
-        }
-      },
-      initForm: function () {// 根据缓存，回设form
-        let oldForm = window.localStorage.getItem(this.saveKey);
-        if (oldForm) {
-          this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-          // this.form.logisticsCentreId = this.form.logisticsCentreId
-          //   ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
-        }
-      },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.supplierId = '';
         this.form.actualConsignee = '';
         this.form.logisticsProviderName = '';
+        this.form.logisticsProvider = '';
         this.form.logisticsCentreId = '';
         this.form.remark = '';
         this.form.detailDtoList = [];
@@ -730,35 +701,12 @@
           this.form.supplierId = '';
           return;
         }
-//        let relation = '';
-//        if (bizType === '0') relation = '0';
-//        if (bizType === '1') relation = '1';
-//        if (!relation) return;
         let params = {
           keyWord: query,
           relation: '1'
         };
         BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
-        });
-      },
-      filterLogistics: function (query) {// 过滤物流商
-        let orgId = this.form.orgId;
-        if (!orgId) {
-          this.logisticsList = [];
-          this.form.logisticsProviderName = '';
-          return;
-        }
-        BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
-          this.logisticsList = res.data;
-        });
-      },
-      filterLogisticsCenter: function () {// 过滤物流中心
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
         });
       },
       filterAddress(isStorageData) {
@@ -770,8 +718,9 @@
           this.cdcWarehouses = res.data;
           if (isStorageData) return;
           let defaultStore = res.data.filter(item => item.default);
-          this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
-          // this.transportationAddressChange(this.form.transportationAddress);
+          if (!defaultStore.length) return;
+          this.form.transportationAddress = defaultStore[0].id;
+          this.transportationAddressChange(this.form.transportationAddress);
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
@@ -869,7 +818,6 @@
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.form.pickUpAddress = '';
           this.form.actualConsignee = '';
-          this.form.logisticsProviderName = '';
           this.form.supplierId = '';
         }
       },

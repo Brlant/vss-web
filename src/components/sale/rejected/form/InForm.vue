@@ -148,11 +148,6 @@
             </el-form-item>
             <el-form-item label="物流商"
                           v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <!--<el-select filterable remote placeholder="请输入名称搜索物流商" :remote-method="filterLogistics"-->
-              <!--:clearable="true"-->
-              <!--v-model="form.logisticsProviderName">-->
-              <!--<el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in logisticsList"></el-option>-->
-              <!--</el-select>-->
               <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
             </el-form-item>
             <el-form-item label="提货地址" v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
@@ -291,13 +286,6 @@
                   <el-button type="primary" @click="addProduct" @mousedown.native="mousedownAdd">加入订单</el-button>
                 </oms-form-row>
               </div>
-
-              <!--<el-form-item label="单价" class="productItem-info" prop="unitPrice">-->
-              <!--<oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"-->
-              <!--@blur="formatPrice">-->
-              <!--<template slot="prepend">¥</template>-->
-              <!--</oms-input>-->
-              <!--</el-form-item>-->
             </el-form>
           </div>
 
@@ -378,7 +366,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork, LogisticsCenter} from '@/resources';
+  import {Address, BaseInfo, erpOrder, http, InWork} from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
@@ -584,7 +572,6 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.orgId = user.userCompanyAddress;
-        this.filterLogistics();
         this.checkLicence(this.form.orgId);
         if (val === 2) {
           this.editOrderInfo();
@@ -598,18 +585,12 @@
         }
         this.filterAddress();
       },
-//      form: {
-//        handler: 'autoSave',
-//        deep: true
-//      },
       transportationMeansList: function (val) {
         this.currentTransportationMeans = val.slice();
       }
     },
     mounted: function () {
       this.currentPartName = this.productListSet[0].name;
-      this.filterLogisticsCenter();
-//      this.initForm();
     },
     methods: {
       changeVaccineType(val) {
@@ -638,7 +619,6 @@
       setDefaultValue() {
         this.form.transportationMeansId = '2';
         this.form.transportationCondition = '0';
-        // this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       },
       editOrderInfo() {
         if (!this.orderId) return;
@@ -704,19 +684,6 @@
           this.setAddProduct();
         }
       },
-      autoSave: function () {
-        if (!this.form.id) {
-          window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
-        }
-      },
-      initForm: function () {// 根据缓存，回设form
-        let oldForm = window.localStorage.getItem(this.saveKey);
-        if (oldForm) {
-          this.form = Object.assign({}, this.form, JSON.parse(oldForm));
-          // this.form.logisticsCentreId = this.form.logisticsCentreId
-          //   ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
-        }
-      },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
         this.$refs['orderGoodsAddForm'].resetFields();
@@ -734,13 +701,6 @@
       formatPrice: function () {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
-      changeExpectedTime: function (date) {// 格式化时间
-        if (!date) {
-          this.form.expectedTime = '';
-          return;
-        }
-        this.form.expectedTime = this.$moment(date).format('YYYY-MM-DD');
-      },
       setIndexValue: function (value) {// 左侧显示页切换
         this.index = value;
       },
@@ -756,25 +716,6 @@
         };
         BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
           this.orgList = res.data;
-        });
-      },
-      filterLogistics: function (query) {// 过滤物流商
-        let orgId = this.form.orgId;
-        if (!orgId) {
-          this.logisticsList = [];
-          this.form.logisticsProviderName = '';
-          return;
-        }
-        BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
-          this.logisticsList = res.data;
-        });
-      },
-      filterLogisticsCenter: function () {// 过滤物流中心
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
         });
       },
       filterAddress(isStorageData) {
@@ -1156,7 +1097,6 @@
       onSubmit: function () {// 提交表单
         if (!this.checkHasOrderNotAdded(this.product)) return;
         let self = this;
-        // this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;
