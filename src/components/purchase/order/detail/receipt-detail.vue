@@ -156,12 +156,12 @@
         <oms-row label="货主">
           {{ currentOrder.orgName }}
         </oms-row>
-        <oms-row label="车牌号">
-          {{ plateNumberTitle }}
-        </oms-row>
-        <oms-row label="订单始发地">
-          {{ currentOrder.sentAddress }}
-        </oms-row>
+        <!--        <oms-row label="车牌号">-->
+        <!--          {{ plateNumberTitle }}-->
+        <!--        </oms-row>-->
+        <!--        <oms-row label="订单始发地">-->
+        <!--          {{ currentOrder.sentAddress }}-->
+        <!--        </oms-row>-->
       </el-col>
       <el-col :span="12">
         <oms-row label="业务类型">
@@ -170,13 +170,13 @@
         <oms-row label="来源单位">
           {{currentOrder.supplierName}}
         </oms-row>
-        <oms-row label="在途温度">
-          <el-tag type="success" v-show="currentOrder.transportTemperatureFlag !== false">合格</el-tag>
-          <el-tag type="warning" v-show="currentOrder.transportTemperatureFlag === false">不合格</el-tag>
-        </oms-row>
-        <oms-row label="到货时间">
-          {{ currentOrder.arrivalDate |time }}
-        </oms-row>
+        <!--        <oms-row label="在途温度">-->
+        <!--          <el-tag type="success" v-show="currentOrder.transportTemperatureFlag !== false">合格</el-tag>-->
+        <!--          <el-tag type="warning" v-show="currentOrder.transportTemperatureFlag === false">不合格</el-tag>-->
+        <!--        </oms-row>-->
+        <!--        <oms-row label="到货时间">-->
+        <!--          {{ currentOrder.arrivalDate |time }}-->
+        <!--        </oms-row>-->
       </el-col>
     </el-row>
     <hr class="hr"/>
@@ -207,6 +207,21 @@
             <td colspan="3">{{item.factoryName}}</td>
             <td colspan="1" class="t-head">供货单位</td>
             <td colspan="3">{{item.salesFirmName}}</td>
+          </tr>
+          <tr>
+            <td class="t-head" colspan="3">到货时间</td>
+            <td class="t-head" colspan="3">在途温度</td>
+            <td class="t-head" colspan="3">订单始发地</td>
+            <td class="t-head" colspan="5">车牌号</td>
+          </tr>
+          <tr>
+            <td colspan="3">{{item.arrivalDate |time}}</td>
+            <td colspan="3">
+              <el-tag type="success" v-show="item.transportTemperatureFlag !== false">合格</el-tag>
+              <el-tag type="warning" v-show="item.transportTemperatureFlag === false">不合格</el-tag>
+            </td>
+            <td colspan="3">{{item.sentAddress}}</td>
+            <td colspan="5">{{item.plateNumberDtos.map(m => m.plateNumber).join('，')}}</td>
           </tr>
           <tr>
             <td colspan="4" class="t-head">批号</td>
@@ -441,12 +456,12 @@
         this.goodsDetails = [];
         if (!this.currentOrder.detailDtoList) return;
         this.getGoodsDetails();
-        this.getPlateNumber();
+        // this.getPlateNumber();
       },
       isFormReceipt(val) {
         if (val) {
           this.getGoodsDetails();
-          this.getPlateNumber();
+          // this.getPlateNumber();
         }
       }
     },
@@ -455,34 +470,37 @@
         if (!this.currentOrder.id) return;
         this.doing = true;
         http.get(`/receipt/order/${this.currentOrder.id}`).then(res => {
-          let ary = [];
-          let set = new Set();
-          this.currentOrder && this.currentOrder.detailDtoList.forEach(i => set.add(i.orgGoodsId));
-          [...set].forEach(i => {
-            let children = this.currentOrder.detailDtoList.filter(g => g.orgGoodsId === i);
-            // 拷贝一份订单详情，再累加其值
-            children = JSON.parse(JSON.stringify(children));
-            if (children.length === 1) {
-              ary.push(children[0]);
-            } else {
-              let amount = 0;
-              children.forEach(i => (amount += i.amount));
-              children[0].amount = amount;
-              ary.push(children[0]);
-            }
-          });
-          // ary = JSON.parse(JSON.stringify(ary));
+          if (!res.data.length) return;
+          let ary = JSON.parse(JSON.stringify(this.currentOrder.detailDtoList));
           ary.forEach(i => {
             i.reHistories = [];
             i.showHistories = false;
+            i.sentAddress = '';
+            i.plateNumberDtos = [];
+            i.transportTemperatureFlag = null;
+            i.arrivalDate = '';
           });
-          this.goodsDetails = ary;
-          this.goodsDetails.forEach(i => {
-            i.batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
-            if (i.batchNumbers.length) {
-              i.factoryName = i.batchNumbers[0].factoryName;
-            }
+          let goodsDetails = [];
+          ary.forEach(i => {
+            let batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
+            let obj = {};
+            batchNumbers.forEach(i => {
+              obj[i.orderReceiptId] = '';
+            });
+            Object.keys(obj).forEach(k => {
+              let newItem = JSON.parse(JSON.stringify(i));
+              newItem.batchNumbers = batchNumbers.filter(f => f.orderReceiptId + '' === k);
+              if (newItem.batchNumbers.length) {
+                newItem.factoryName = newItem.batchNumbers[0].factoryName;
+                newItem.sentAddress = newItem.batchNumbers[0].sentAddress;
+                newItem.transportTemperatureFlag = newItem.batchNumbers[0].transportTemperatureFlag;
+                newItem.arrivalDate = newItem.batchNumbers[0].arrivalDate;
+                newItem.plateNumberDtos = newItem.batchNumbers[0].plateNumberDtos || [];
+              }
+              goodsDetails.push(newItem);
+            });
           });
+          this.goodsDetails = goodsDetails;
         }).then(() => {
           http.get(`/order-sample/order/${this.currentOrder.id}`).then(res => {
             this.doing = false;

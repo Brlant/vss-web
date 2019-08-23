@@ -63,7 +63,7 @@
 </template>
 <script>
   import basicInfo from './detail/base-info.vue';
-  import receiptDetail from './detail/receipt-detail.vue';
+  import receiptDetail from '@/components/purchase/order/detail/receipt-detail';
   import log from '@/components/common/order.log.vue';
   import batchNumbers from '../../purchase/order/detail/batch.number.vue';
   import exceptionInfo from '../../purchase/order/detail/exception.info.vue';

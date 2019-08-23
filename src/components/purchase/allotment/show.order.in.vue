@@ -58,7 +58,7 @@
 </template>
 <script>
   import basicInfo from './detail/base-info.vue';
-  import receiptDetail from '../order/detail/receipt-detail';
+  import receiptDetail from '@/components/purchase/order/detail/receipt-detail';
   import batchNumbers from './detail/batch.number.vue';
   import exceptionInfo from '../../purchase/order/detail/exception.info.vue';
   import orderAttachment from '@/components/common/order/in.order.attachment.vue';
