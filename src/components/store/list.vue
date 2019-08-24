@@ -121,6 +121,11 @@
                 :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                 show-summary :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true">
+          <template slot-scope="scope">
+            <el-tooltip class="item" effect="dark" :content="`orgGoodsId[${scope.row.orgGoodsId}]`" placement="right">
+              <span>{{scope.row.goodsName}}</span>
+            </el-tooltip>
+          </template>
         </el-table-column>
         <el-table-column prop="orgGoodsCode" label="疫苗编码" min-width="120" :sortable="true">
           <template slot-scope="scope"><span>{{scope.row.orgGoodsCode}}</span></template>
@@ -130,7 +135,7 @@
             <dict dict-group="vaccineSign" :dict-key="scope.row.vaccineType"></dict>
           </template>
         </el-table-column>
-        <el-table-column prop="goodsGenericName" label="疫苗主档通用名称" min-width="200" :sortable="true">
+        <el-table-column prop="platformGoodsName" label="疫苗主档通用名称" min-width="200" :sortable="true">
         </el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>

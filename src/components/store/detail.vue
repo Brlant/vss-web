@@ -44,6 +44,12 @@
           <el-col :span="12">
             <oms-row label="货主" :span="span">{{ currentItem.orgName }}</oms-row>
             <oms-row label="货主疫苗名称" :span="span">{{currentItem.goodsName }}</oms-row>
+            <oms-row label="疫苗编码" :span="span">{{currentItem.orgGoodsCode }}</oms-row>
+            <oms-row label="疫苗种类" :span="span">
+              <dict dict-group="vaccineSign" :dict-key="currentItem.vaccineType"></dict>
+            </oms-row>
+            <oms-row label="疫苗主档通用名称" :span="span">{{currentItem.platformGoodsName }}</oms-row>
+
             <oms-row label="生产厂商" :span="span">{{ currentItem.factoryName }}</oms-row>
             <oms-row label="批号" :span="span">{{ currentItem.batchNumber }}</oms-row>
             <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
