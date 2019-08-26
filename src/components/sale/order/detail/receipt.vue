@@ -51,8 +51,7 @@
       <tr v-for="item in details">
         <td colspan="3">
           <div>
-            <el-tooltip class="item" effect="dark"
-                        :content="`货主疫苗编码:${item.orgGoodsDto.goodsNo} 货主疫苗ID:${item.orgGoodsId}`" placement="right">
+            <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
               <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
             </el-tooltip>
           </div>
