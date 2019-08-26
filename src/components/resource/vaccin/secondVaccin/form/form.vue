@@ -215,7 +215,7 @@
               </div>
               <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.orgGoodsDto.goodsDto.code">平台疫苗编号:</span>{{item.orgGoodsDto.goodsDto.code}}
+                v-show="item.orgGoodsDto.goodsDto.code">疫苗主档编号:</span>{{item.orgGoodsDto.goodsDto.code}}
               </span>
                 <span class="select-other-info pull-left"><span
                   v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
