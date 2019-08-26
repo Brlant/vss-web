@@ -48,8 +48,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="平台疫苗" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索平台疫苗" :remote-method="filterVaccine"
+              <oms-form-row label="疫苗主档" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索疫苗主档" :remote-method="filterVaccine"
                            :clearable="true" @change="goodsChange" @click.native.once="filterVaccine('')"
                            v-model="searchWord.goodsId" popper-class="good-selects">
                   <el-option :value="vaccine.goodsId" :key="vaccine.goodsId"
@@ -121,7 +121,7 @@
                 show-summary :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="orgName" label="货主" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="goodsName" label="货主疫苗名称" min-width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="platformGoodsName" label="平台疫苗名称" min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="platformGoodsName" label="疫苗主档名称" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column label="业务库存" align="center">

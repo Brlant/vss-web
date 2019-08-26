@@ -44,7 +44,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="平台疫苗" :span="5">
+              <oms-form-row label="疫苗主档" :span="5">
                 <el-select filterable remote placeholder="请输入名称搜索疫苗" :remote-method="filterVaccine"
                            :clearable="true"
                            v-model="searchWord.goodsId" popper-class="good-selects">
@@ -144,7 +144,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="orgGoodsName" label="货主疫苗" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="goodsName" label="平台疫苗" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="goodsName" label="疫苗主档" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="specification" label="规格" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true"
                          width="120"></el-table-column>
