@@ -113,10 +113,10 @@
         <!--        <hr class="hr"/>-->
         <h2>
           <span>配送轨迹</span>
-          <span @click="showBigMap(item)" class="des-btn">
-            <a href="#" class="btn-circle" @click.prevent="">
-                 <i class="el-icon-zoom-in"></i></a>查看大图
-          </span>
+          <!--          <span @click="showBigMap(item)" class="des-btn">-->
+          <!--            <a href="#" class="btn-circle" @click.prevent="">-->
+          <!--                 <i class="el-icon-zoom-in"></i></a>查看大图-->
+          <!--          </span>-->
         </h2>
         <div>
           <map-path :points="item.points" :vid="item.waybillNumber" :mapStyle="{
