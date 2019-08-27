@@ -52,7 +52,6 @@
         <el-row>
           <div class="order-list clearfix" style="padding-top: 10px">
             <el-row class="order-list-header">
-              <el-col :span="8">名称</el-col>
               <el-col :span="8">编码</el-col>
               <el-col :span="8" v-show="!item.completeTime">最新数据</el-col>
             </el-row>
@@ -61,7 +60,6 @@
               <div class="order-list-item no-pointer order-list-item-bg" :key="index"
                    v-for="(item, index) in item.devList">
                 <el-row>
-                  <el-col :span="8">{{item.devName}}</el-col>
                   <el-col :span="8">{{item.devCode}}</el-col>
                   <el-col :span="8" v-show="!item.completeTime">
                     <el-tooltip effect="dark" :content="formatTime(item.recordDate)" placement="top">
@@ -188,10 +186,10 @@
           devCode: item.devCode,
           devId: item.ccsDevId,
           valType: '1'
-        }, this.getTimeParams(dto.departTime, dto.completeTime));
+        }, this.getTimeParams(dto.shipmentTime, dto.completeTime));
           this.$http.get('/logistics-monitor/gainDeviceReportDatas', {params}).then(res => {
           dto.tempDataList.push({
-            name: item.devName,
+            name: item.devCode,
             tempData: res.data.ccsDevDataRecordDTOList || []
           });
         });
