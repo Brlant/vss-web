@@ -106,7 +106,9 @@
                @click.prevent="showDetail(item)">
             <el-row>
               <el-col :span="5" class="pt">
-                <span>{{ item.goodsName }}</span>
+                <el-tooltip class="item" effect="dark" :content="`疫苗主档ID:${item.goodsId}`" placement="right">
+                  <span>{{ item.goodsName }}</span>
+                </el-tooltip>
               </el-col>
               <el-col :span="3" class="pt">
                 <span>{{ item.specification }}</span>
