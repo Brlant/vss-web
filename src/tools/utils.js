@@ -130,13 +130,11 @@ export default {
   },
   assginOutAndPovType: {
     0: {'title': '待确认', state: '0', num: ''},
-    1: {'title': '待复核', state: '1', num: ''},
+    1: {'title': '待审单', state: '1', num: ''},
     2: {'title': '执行中', state: '2', num: ''},
-    // 3: {'title': '待收货', state: '3', num: ''},
+    3: {'title': '待收货', state: '3', num: ''},
     4: {'title': '已完成', state: '4', num: ''},
-    5: {'title': '已取消', state: '5', num: ''},
-    7: {'title': '待收货', state: '10', num: ''},
-    8: {'title': '已完成', state: '8', num: ''}
+    5: {'title': '已取消', state: '5', num: ''}
   },
   injectionType: {
     0: {'title': '未接种', status: '0', num: ''},
