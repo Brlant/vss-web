@@ -113,10 +113,10 @@
         <!--        <hr class="hr"/>-->
         <h2>
           <span>配送轨迹</span>
-          <span @click="showBigMap(item)" class="des-btn">
-            <a href="#" class="btn-circle" @click.prevent="">
-                 <i class="el-icon-zoom-in"></i></a>查看大图
-          </span>
+          <!--          <span @click="showBigMap(item)" class="des-btn">-->
+          <!--            <a href="#" class="btn-circle" @click.prevent="">-->
+          <!--                 <i class="el-icon-zoom-in"></i></a>查看大图-->
+          <!--          </span>-->
         </h2>
         <div>
           <map-path :points="item.points" :vid="item.waybillNumber" :mapStyle="{
@@ -199,7 +199,7 @@
           waybillInfos.forEach(i => {
             let ary = res.data && res.data.filter(f => f.waybillNo === i.waybillNumber) || [];
             i.points = ary.length && ary[0].logDtos.map(m => ({
-              lnglat: [m.longitude, m.latitude],
+              lnglat: [m.trackLongitude, m.trackLatitude],
               time: this.$moment(m.positioningTime).format('YYYY-MM-DD HH:mm:ss'),
               name: this.currentOrder.warehouseAddress
             })) || [];
