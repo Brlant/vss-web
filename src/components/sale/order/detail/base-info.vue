@@ -84,7 +84,8 @@
             </el-date-picker>
           </el-form-item>
           <el-form-item label="发货地址" prop="orgAddress">
-            <el-select placeholder="请选择发货地址" v-model="currentOrder.orgAddress" filterable :clearable="true">
+            <el-select placeholder="请选择发货地址" v-model="currentOrder.orgAddress" filterable :clearable="true"
+                       @change="transportationAddressChange">
               <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                          v-for="item in LogisticsCenter">
                 <span class="pull-left">{{ item.name }}</span>
@@ -253,7 +254,7 @@
 </template>
 <script>
   import utils from '@/tools/utils';
-  import {Address, LogisticsCenter} from '@/resources';
+  import {Address} from '@/resources';
   import materialPart from '../material.vue';
 
   export default {
@@ -385,13 +386,15 @@
           }
         });
       },
-      filterLogisticsCenter: function () {// 过滤物流商
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
-        });
+      transportationAddressChange(val) {
+        // 清空物流商
+        this.currentOrder.logisticsProvider = '';
+        this.currentOrder.logisticsProviderName = '';
+        if (!val) return;
+        let item = this.LogisticsCenter.find(f => f.id === val);
+        if (!item) return;
+        this.currentOrder.logisticsProviderName = item.warehouseSourceFirmName;
+        this.currentOrder.logisticsProvider = item.warehouseSourceFirm;
       },
       filterAddress() {
         Address.queryAddress(this.currentOrder.orgId, {
