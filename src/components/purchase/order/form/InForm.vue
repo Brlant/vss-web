@@ -496,7 +496,7 @@
         doing: false,
         isSupplierOrOrg: false, // 是不是货主或业务单位
         saveKey: 'inOrderForm',
-        isStorageData: true, // 判断是不是缓存数据
+        isStorageData: false, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
           isShowSupplierId: true, // 是否显示来源单位

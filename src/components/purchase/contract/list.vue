@@ -452,7 +452,6 @@
 //        this.$router.push(`${order.id}`);
       },
       editContract(item) {
-        this.action = 'edit';
         if (item.used) {
           this.showEditItemRight = true;
           this.editOrderId = item.id;
@@ -461,6 +460,7 @@
           this.showItemRight = true;
           this.currentOrderId = item.id;
         }
+        this.action = 'edit';
       },
       showContract(item) {
         this.action = 'watch';

@@ -463,7 +463,7 @@
         doing: false,
         isSupplierOrOrg: false, // 是不是货主或业务单位
         saveKey: 'contractForm',
-        isStorageData: true, // 判断是不是缓存数据
+        isStorageData: false, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
           isShowSupplierId: true, // 是否显示来源单位
@@ -570,8 +570,6 @@
           this.filterAddress();
         } else if (this.orderId && val === 'edit') {
           this.editOrderInfo();
-          this.filterOrg(this.form.supplierName);
-          // this.filterLogisticsCenter(this.form.logisticsProviderName);
           this.filterAddress(this.form.warehouseAddress);
         }
       },
@@ -636,6 +634,14 @@
           res.data.detailDtoList.forEach(f => {
             f.orgGoodsName = f.name;
           });
+          if (this.form.supplierName && this.form.supplierId) {
+            this.orgList = [
+              {
+                name: this.form.supplierName,
+                id: this.form.supplierId
+              }
+            ];
+          }
           // ******2.0变化
           this.changeSupplier(this.form.supplierId, true);
           this.changeTransportationMeans(this.form.transportationMeansId);
