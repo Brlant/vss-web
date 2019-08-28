@@ -519,7 +519,7 @@
         doing: false,
         isSupplierOrOrg: false,
         saveKey: 'outOrderForm',
-        isStorageData: true, // 判断是不是缓存数据
+        isStorageData: false, // 判断是不是缓存数据
         showContent: {
           isShowOtherContent: true, // 是否显示物流类型
           isShowCustomerId: true, // 是否显示POV
