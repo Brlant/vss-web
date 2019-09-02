@@ -66,7 +66,7 @@
               <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-                <perm label="batch-file-attachment-download" class="ml-15">
+                <perm label="batchNumber-zip-export" class="ml-15">
                   <el-button native-type="reset" @click="batchDownloadZip" v-show="batches.length">批量下载附件</el-button>
                 </perm>
               </oms-form-row>
