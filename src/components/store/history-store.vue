@@ -111,7 +111,7 @@
       <div>
         <oms-loading v-if="loadingData" :loading="loadingData"></oms-loading>
         <div class="empty-info" v-else-if="!batches.length">暂无数据</div>
-        <el-table :data="batches" v-else class="header-list store border-black" border @row-click="showDetail"
+        <el-table :data="batches" v-else class="header-list store border-black no-pointer" border
                   :header-row-class-name="'headerClass'" :summary-method="getSummaries"
                   :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                   show-summary :max-height="bodyHeight" style="width: 100%" v-show="batches.length">
@@ -286,6 +286,9 @@
         let params = Object.assign({}, this.filters);
         this.loadingData = true;
         erpStock.queryHistory(params).then(res => {
+          res.data.list.forEach(i => {
+            i.totalCount = i.undeterminedCount + i.qualifiedCount + i.transitCount + i.unqualifiedCount;
+          });
           this.batches = res.data.list;
           this.pager.count = res.data.count;
           this.loadingData = false;
