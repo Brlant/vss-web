@@ -89,6 +89,7 @@ $leftWidth: 260px;
   left: 0;
   right: 0;
   overflow: auto;
+
   .content-left {
     width: $leftWidth;
     position: absolute;
@@ -97,6 +98,7 @@ $leftWidth: 260px;
     bottom: 0;
     text-align: left;
     background-color: $dialog-left-bg;
+
     > h2 {
       text-align: center;
       padding: 0;
@@ -112,16 +114,19 @@ $leftWidth: 260px;
       cursor: pointer;
       padding: 10px;
       text-align: center;
+
       span {
         display: inline-block;
         padding: 8px 35px;
       }
+
       &.active {
         span {
           background-color: $activeColor;
           border-radius: 20px;
           color: $activeColorFont
         }
+
         &.active.danger {
           span {
             background-color: #f00;
@@ -142,6 +147,7 @@ $leftWidth: 260px;
       right: 0;
       bottom: 100px;
       overflow: auto;
+
       .dialog-left-item {
         padding: 15px 0;
         background: #fff;
@@ -150,6 +156,7 @@ $leftWidth: 260px;
         border-radius: 8px;
         text-align: center;
         cursor: pointer;
+
         &:hover, &.active {
           background: $activeColor;
           color: #fff;
@@ -163,6 +170,7 @@ $leftWidth: 260px;
       right: 0;
       bottom: 20px;
       text-align: center;
+
       .btn {
         padding: 10px 0;
         background: #fff;
@@ -176,6 +184,7 @@ $leftWidth: 260px;
       }
     }
   }
+
   .content-right {
     > h3 {
       padding: 0;
@@ -193,6 +202,7 @@ $leftWidth: 260px;
       background: #fff;
       z-index: 4;
     }
+
     position: absolute;
     top: 0;
     left: $leftWidth;
@@ -200,9 +210,11 @@ $leftWidth: 260px;
     bottom: 0;
     overflow: auto;
     padding: 75px 20px 0 20px;
+
     .hide-content {
       display: none;
     }
+
     .show-content {
       padding: 0 20px;
       display: block;
@@ -214,16 +226,20 @@ $leftWidth: 260px;
   overflow-x: hidden;
   width: 100%;
   display: flex;
+
   td a:hover {
     color: $activeColor;
   }
+
   .d-table-right {
     flex: 1;
   }
+
   .d-table-warp {
     overflow-y: auto;
     overflow-x: hidden;
   }
+
   .d-table-right {
     overflow: hidden;
   }
@@ -234,13 +250,16 @@ $leftWidth: 260px;
   background: #eeeeee;
   display: table;
   width: 100%;
+
   .d-table-col-wrap {
     overflow: auto;
   }
+
   > div {
     display: table-cell;
     vertical-align: top;
   }
+
   td a:hover {
     color: $activeColor;
   }
@@ -252,6 +271,7 @@ $leftWidth: 260px;
   min-width: 280px;
   background: #fff;
   border: 1px solid #eee;
+
   h2 {
     margin: 0;
     padding: 10px 20px;
@@ -266,23 +286,28 @@ $leftWidth: 260px;
   .d-table-col-wrap {
     padding: 10px 20px;
   }
+
   position: relative;
   font-size: 12px;
   border: 6px solid #eee;
   background: #fff;
   padding: 0;
+
   .table td {
     padding: 13px;
 
   }
+
   > h2 {
     font-size: 13px;
     font-weight: normal;
 
   }
+
   div > h2 {
     font-size: 13px;
     font-weight: normal;
+
     a {
       &:hover {
         color: $activeColor
@@ -310,20 +335,25 @@ $leftWidth: 260px;
   padding: 0 20px;
   line-height: 40px;
   border-bottom: 1px solid #eee;
+
   .hover-show {
     display: none
 
   }
+
   &.active, &:hover {
     background: #f5f5f5;
   }
+
   &.active {
     .hover-show {
       display: block;
+
       a:hover {
         color: $activeColor
       }
     }
+
     a.hover-show:hover {
       color: $activeColor
     }
@@ -339,6 +369,7 @@ $leftWidth: 260px;
   text-align: center;
   display: inline-block;
   cursor: pointer;
+
   &:hover {
     color: #fff;
     background: $activeColor;
@@ -354,6 +385,7 @@ $leftWidth: 260px;
   z-index: 1200;
   overflow: auto;
   background: #fff;
+
   h2 {
     font-size: 16px;
   }
@@ -376,16 +408,19 @@ $leftWidth: 260px;
 .btn-search-toggle {
   cursor: pointer;
   white-space: nowrap;
+
   > input {
     display: none;
     border: none;
     padding: 0;
     margin: 0;
+
     &:hover, &:focus, &:active {
       outline: none;
       border: 0;
     }
   }
+
   &.open > input {
     display: inline-block;
     width: 120px;
@@ -395,6 +430,7 @@ $leftWidth: 260px;
     top: -2px;
     background: none;
   }
+
   border: 1px solid #eee;
   border-radius: 15px;
   line-height: 30px;
@@ -403,10 +439,12 @@ $leftWidth: 260px;
   min-width: 20px;
   text-align: center;
   padding: 0 5px;
+
   &.open:hover {
     background: none;
     color: #333;
   }
+
   &:hover {
     background: $activeColor;
     color: $activeColorFont;
@@ -415,6 +453,7 @@ $leftWidth: 260px;
 
 .page-main-body {
   font-size: 14px;
+
   .el-row {
     margin-bottom: 20px;
     line-height: 20px;
@@ -430,14 +469,18 @@ $leftWidth: 260px;
   textarea {
     border: 0;
   }
+
   border: 1px solid #eee;
+
   .comment-box-submit {
     border-top: 1px solid #eee;
     text-align: right;
+
     button {
       border-radius: 0;
     }
   }
+
   &.quality-check-box {
     .el-input {
       input {
@@ -454,6 +497,7 @@ $leftWidth: 260px;
   height: 50px;
   padding: 10px 0 5px;
   display: flex;
+
   .status-item {
     > div {
       position: absolute;
@@ -463,6 +507,7 @@ $leftWidth: 260px;
       width: 100%;
       transition: 0.3s all;
       padding: 8px;
+
       &.status-bg {
         opacity: 0.3;
         border-radius: 4px;
@@ -474,6 +519,7 @@ $leftWidth: 260px;
         font-size: 18px
       }
     }
+
     width: 70px;
     height: 40px;
     position: relative;
@@ -482,10 +528,12 @@ $leftWidth: 260px;
 
     &.active, &:hover {
       height: 60px;
+
       > div.status-bg {
         opacity: 1;
       }
     }
+
     &.active {
       width: 85px;
     }
@@ -497,6 +545,7 @@ $leftWidth: 260px;
       transform: translateY(-50%);
     }
   }
+
   align-items: center;
 }
 
@@ -522,11 +571,13 @@ $leftWidth: 260px;
 
 .sub-menu {
   padding: 10px 0;
+
   .btn-sub-menu {
     display: inline-block;
     margin-right: 20px;
     padding: 10px 20px;
     border-radius: 20px;
+
     &.active, &:hover {
       background: $activeColor;
       color: $activeColorFont;
@@ -538,16 +589,19 @@ $leftWidth: 260px;
 .show-list {
   .list-item {
     position: relative;
+
     .id-part {
       line-height: 18px;
       font-size: 12px;
       color: #888;
 
     }
+
     line-height: 20px;
     padding-top: 10px;
     padding-bottom: 10px;
     padding-right: 40px;
+
     .hover-show {
       position: absolute;
       top: 50%;
@@ -634,14 +688,17 @@ $leftWidth: 260px;
     margin: 0;
     background: #fff;
   }
+
   // background: #f1f1f1;
   .advanced-query-form {
     background: #fff;
     padding: 20px 20px 10px;
+
     .el-select {
       display: block;
       position: relative;
     }
+
     .el-date-editor.el-input {
       width: 100%;
     }
@@ -674,6 +731,7 @@ $leftWidth: 260px;
 .no-hover {
   &:hover {
     background: transparent !important;
+
     div {
       background: #fff !important;
     }
@@ -688,6 +746,7 @@ $leftWidth: 260px;
     padding-left: 15px;
     margin: 0 -5px 5px -5px;
   }
+
   .order-list-body {
     .order-list-item {
       position: relative;
@@ -702,6 +761,7 @@ $leftWidth: 260px;
       &.pointer {
         cursor: pointer;
       }
+
       .order-list-item-bg {
         position: absolute;
         opacity: 0.3;
@@ -714,17 +774,21 @@ $leftWidth: 260px;
         border-left: 12px solid #f00;
         transition: 0.1s all ease-in-out;
       }
+
       &.order-list-item-bg {
         &:hover, &.active {
           background: $dialog-left-bg;
         }
       }
+
       .el-row {
         position: relative;
         z-index: 3;
+
         .f-grey {
           color: #888
         }
+
         .el-col {
           padding-right: 10px;
         }
@@ -740,6 +804,7 @@ $leftWidth: 260px;
             //background: $order_color_0
             opacity: 1;
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_0
         }
       }
@@ -755,9 +820,11 @@ $leftWidth: 260px;
             //background: $order_color_1
             //box-shadow: 0 0 5px 2px $order_color_1
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_1
         }
       }
+
       &.status-2 {
         .order-list-item-bg {
           border-left-color: $order_color_2
@@ -769,9 +836,11 @@ $leftWidth: 260px;
             //background: $order_color_2
             //box-shadow: 0 0 10px 2px $order_color_2
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_2
         }
       }
+
       &.status-3 {
         .order-list-item-bg {
           border-left-color: $order_color_3
@@ -784,9 +853,11 @@ $leftWidth: 260px;
             //box-shadow: 0 0 5px 2px $order_color_3
             //box-shadow: 2px 0px 5px 2px #0c9
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_3
         }
       }
+
       &.status-4 {
         .order-list-item-bg {
           border-left-color: $order_color_4
@@ -798,9 +869,11 @@ $leftWidth: 260px;
             //background: $order_color_4
             //box-shadow: 0 0 5px 2px $order_color_4
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_4
         }
       }
+
       &.status-5 {
         .order-list-item-bg {
           border-left-color: $order_color_5
@@ -812,9 +885,11 @@ $leftWidth: 260px;
             //background: $order_color_5
             //box-shadow: 0 0 5px 2px $order_color_5
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_5
         }
       }
+
       &.status-6 {
         .order-list-item-bg {
           border-left-color: $order_color_6
@@ -826,9 +901,11 @@ $leftWidth: 260px;
             //background: $order_color_6
             //box-shadow: 0 0 5px 2px $order_color_6
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_6
         }
       }
+
       &.status-7 {
         .order-list-item-bg {
           border-left-color: $order_color_7
@@ -840,9 +917,11 @@ $leftWidth: 260px;
             //background: $order_color_7
             //box-shadow: 0 0 5px 2px $order_color_7
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_7
         }
       }
+
       &.status-8 {
         .order-list-item-bg {
           border-left-color: $order_color_8
@@ -854,9 +933,11 @@ $leftWidth: 260px;
             //background: $order_color_8
             //box-shadow: 0 0 5px 2px $order_color_8
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_8
         }
       }
+
       &.status-9 {
         .order-list-item-bg {
           border-left-color: $order_color_9
@@ -868,9 +949,11 @@ $leftWidth: 260px;
             //background: $order_color_9
             //box-shadow: 0 0 5px 2px $order_color_9
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_9
         }
       }
+
       &.status-10 {
         .order-list-item-bg {
           border-left-color: $order_color_10
@@ -882,9 +965,11 @@ $leftWidth: 260px;
             //background: $order_color_10
             //box-shadow: 0 0 5px 2px $order_color_10
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_10
         }
       }
+
       &.status-11 {
         .order-list-item-bg {
           border-left-color: $order_color_11
@@ -896,6 +981,7 @@ $leftWidth: 260px;
             //background: $order_color_11
             //box-shadow: 0 0 5px 2px $order_color_11
           }
+
           box-shadow: 2px 0px 5px 2px $order_color_11
         }
       }
@@ -916,6 +1002,7 @@ $leftWidth: 260px;
 .opera-btn span:hover {
   color: $activeColor;
   cursor: pointer;
+
   a {
     background: $activeColor;
     color: #fff;
@@ -928,10 +1015,12 @@ $leftWidth: 260px;
     border-top-right-radius: 4px;
     border-bottom-right-radius: 4px;
   }
+
   > span:first-child > .el-button:first-child, > .el-button:first-child {
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
   }
+
   .el-button {
     margin-left: -1px;
     border-radius: 0;
@@ -971,9 +1060,11 @@ $leftWidth: 260px;
 .transfer-list-two .el-transfer-panel {
   width: 320px;
   height: 360px;
+
   .el-transfer-panel__list.is-filterable {
     height: 240px;
   }
+
   .el-transfer-panel__filter .el-input__inner {
     height: 30px;
   }
@@ -982,9 +1073,11 @@ $leftWidth: 260px;
 .transfer-list .el-transfer-panel {
   width: 320px;
   height: 510px;
+
   .el-transfer-panel__list.is-filterable {
     height: 400px;
   }
+
   .el-transfer-panel__filter .el-input__inner {
     height: 30px;
   }
@@ -995,6 +1088,7 @@ $leftWidth: 260px;
     max-height: 200px;
     max-width: 400px;
   }
+
   &.el-tooltip__popper.is-light {
     border: none;
   }
@@ -1004,17 +1098,21 @@ $borderColor: rgba(82, 82, 82, 0.23);
 
 .el-table.border-black.el-table--border.el-table--group {
   border: 1px solid $borderColor;
+
   th, th.is-leaf {
     border-bottom: 1px solid $borderColor;
     border-right: 1px solid $borderColor;
   }
+
   td {
     border-bottom: 1px solid $borderColor;
     border-right: 1px solid $borderColor;
   }
+
   .el-table__footer-wrapper td {
     border-top: 1px solid $borderColor;
   }
+
   .el-table__header {
     .headerClass:first-child {
       .gutter {
@@ -1028,31 +1126,44 @@ $borderColor: rgba(82, 82, 82, 0.23);
 .header-list {
   &.el-table th {
     background-color: #f1f1f1;
+
     div {
       background-color: #f1f1f1;
     }
   }
+
   &.el-table thead.is-group th {
     background: #f1f1f1;
+
     .cell {
       background: #f1f1f1;
     }
   }
+
   &.el-table {
     .cell, & th > div {
       padding-left: 5px;
       padding-right: 5px;
     }
   }
+
   .el-loading-mask {
     z-index: 900;
   }
+
   &.el-table th > .cell {
     line-height: 20px;
   }
+
   &.store {
     .el-table__row {
       cursor: pointer;
+    }
+
+    &.no-pointer {
+      .el-table__row {
+        cursor: auto;
+      }
     }
 
     &.no-pointer {
@@ -1071,6 +1182,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
 .el-loading-mask {
   &.scrollLoading {
     background-color: rgba(255, 255, 255, 0.24);
+
     .el-loading-spinner {
       top: 80%;
     }
@@ -1089,15 +1201,18 @@ $borderColor: rgba(82, 82, 82, 0.23);
     padding-bottom: 4px;
     height: auto;
     line-height: normal;
+
     span {
       line-height: initial !important;
     }
+
     .el-tag {
       line-height: 22px !important;
       height: 22px;
       float: left;
       padding: 0 5px;
     }
+
     .select-other-info {
       line-height: initial;
     }
@@ -1120,45 +1235,56 @@ $borderColor: rgba(82, 82, 82, 0.23);
   .el-table td, .el-table th {
     padding: 4px 0;
   }
+
   .el-tag {
     padding: 0 5px;
     height: 22px;
     line-height: 20px;
   }
+
   .el-tag--small {
     height: 24px;
     padding: 0 8px;
     line-height: 22px;
     color: #00BFFF
   }
+
   .el-button {
     padding: 10px 15px;
   }
+
   .el-button--mini, .el-button--mini.is-round {
     padding: 7px 15px;
   }
+
   .el-button--small, .el-button--small.is-round {
     padding: 7px 9px;
   }
+
   .el-input__inner {
     height: 36px;
     line-height: 1;
   }
+
   .el-form-item {
     margin-bottom: 20px;
+
     .el-select .el-input .el-select__caret {
       line-height: 36px;
       height: 36px;
       vertical-align: middle;
     }
   }
+
   .el-date-editor--daterange.el-input__inner, .el-date-editor--timerange.el-input, .el-date-editor--timerange.el-input__inner {
     max-width: 350px;
     width: 100%;
   }
+
   .el-menu--horizontal .el-menu-item {
     color: inherit;
   }
+
   .el-menu--horizontal .el-submenu .el-submenu__title {
     color: inherit;
   }
@@ -1171,36 +1297,46 @@ $borderColor: rgba(82, 82, 82, 0.23);
     .el-input-group__append, .el-input-group__prepend {
       padding: 0 10px;
     }
+
     .el-input {
       max-width: 250px;
     }
   }
+
   a:focus {
     outline: none;
   }
+
   .el-menu {
     background-color: inherit;
   }
+
   .el-submenu .el-menu-item:hover, .el-submenu__title:hover {
     background-color: #d1dde5;
   }
+
   a:focus {
     outline: none;
   }
+
   .tag-title {
     background: #67c23a;
     color: #fff;
   }
+
   .el-date-editor .el-range-input {
     width: 40%;
   }
+
   .el-transfer__buttons .el-button {
     padding: 10px;
   }
+
   .el-transfer-panel__item.el-checkbox .el-checkbox__label {
     overflow: visible;
     text-overflow: clip;
   }
+
   .el-pagination {
     margin-top: 8px;
   }
@@ -1209,6 +1345,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
     height: 46px;
     line-height: 46px;
   }
+
   .el-button-group {
     font-size: 0;
   }
@@ -1270,6 +1407,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
     display: block;
     position: relative;
   }
+
   .el-date-editor.el-input {
     width: 100%;
   }
@@ -1279,36 +1417,45 @@ $borderColor: rgba(82, 82, 82, 0.23);
   border: 2px solid #eeeeee;
   margin: 10px -5px;
   background: #f1f1f1;
+
   .opera-icon {
     line-height: 30px;
     height: 30px;
     padding: 0 10px;
     border-bottom: 2px solid #eeeeee;
   }
+
   .switching-icon {
     cursor: pointer;
+
     &:hover {
       color: $activeColor;
+
       .btn-circle {
         color: #fff;
         background: $activeColor;
       }
     }
+
     .el-icon-arrow-up {
       transition: all .5s ease-in-out;
     }
   }
+
   &.up {
     .advanced-query-form {
       display: none;
     }
+
     .opera-icon {
       border-bottom: 0;
     }
+
     .el-icon-arrow-up {
       transform: rotate(180deg);
     }
   }
+
   .el-checkbox-warp {
     padding: 10px;
   }
@@ -1317,6 +1464,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
 .product-list-detail {
   margin-top: 20px;
   font-size: 12px;
+
   h3 {
     background: #eee;
     padding: 10px 15px;
@@ -1336,6 +1484,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
 
 .contact-check {
   position: relative;
+
   .el-icon-loading {
     position: absolute;
     top: 0;
@@ -1365,6 +1514,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
 
 .table-product-list {
   font-size: 12px;
+
   > tbody > tr > td, > thead > tr > th {
     padding: 5px;
   }
@@ -1372,13 +1522,17 @@ $borderColor: rgba(82, 82, 82, 0.23);
 
 .table-product {
   margin: 0 -20px 0 -20px;
+
   .table-product-list {
     font-size: 14px;
+
     thead {
       background: $tableHeaderColor;
     }
+
     > tbody > tr:not(:last-child) {
       border-bottom: 1px solid #eee;
+
       &:hover {
         background: $dialog-left-bg;
       }

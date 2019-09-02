@@ -36,7 +36,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'https://vss.cnvss.net/#/',
+        target: 'https://vss.cnvss.net/',
         changOrigin: true
       }
     }
