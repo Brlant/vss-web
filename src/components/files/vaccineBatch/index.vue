@@ -66,16 +66,21 @@
               <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <perm label="batchNumber-zip-export" class="ml-15">
+                  <el-button native-type="reset" @click="batchDownloadZip" v-show="batches.length">批量下载附件</el-button>
+                </perm>
               </oms-form-row>
             </el-col>
           </el-row>
         </el-form>
       </div>
 
-
       <div class="order-list clearfix " v-if="showFlag">
         <el-row class="order-list-header">
-          <el-col :span="5">疫苗名称</el-col>
+          <el-col :span="5">
+            <el-checkbox v-model="checkAll" @change="checkAllChange"></el-checkbox>
+            疫苗名称
+          </el-col>
           <el-col :span="3">疫苗规格</el-col>
           <el-col :span="5">生产厂商</el-col>
           <el-col :span="3">生产日期</el-col>
@@ -100,14 +105,15 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
+        <div v-else="" class="order-list-body flex-list-dom is-checkbox">
           <div class="order-list-item order-list-item-bg" v-for="item in batches"
                :class="[{'active':currentItemId==item.id}]"
                @click.prevent="showDetail(item)">
             <el-row>
-              <el-col :span="5" class="pt">
+              <el-col :span="5" class="pt" @click.native.stop="">
+                <el-checkbox @click.native.stop="" v-model="item.checked" style="padding-right: 5px"></el-checkbox>
                 <el-tooltip class="item" effect="dark" :content="`疫苗主档ID:${item.goodsId}`" placement="right">
-                  <span>{{ item.goodsName }}</span>
+                  <span @click.stop="item.checked = !item.checked">{{ item.goodsName }}</span>
                 </el-tooltip>
               </el-col>
               <el-col :span="3" class="pt">
@@ -152,6 +158,7 @@
   //  import order from '../../../tools/orderList';
   import {BaseInfo} from '../../../resources';
   import detail from './detail.vue';
+  import utils from '@/tools/utils';
 
   export default {
     components: {detail},
@@ -181,7 +188,8 @@
           count: 0,
           pageSize: 10
         },
-        currentItemId: ''
+        currentItemId: '',
+        checkAll: false
       };
     },
     mounted() {
@@ -196,6 +204,30 @@
       }
     },
     methods: {
+      batchDownloadZip() {
+        let list = this.batches.filter(f => f.checked).map(m => m.id);
+        if (!list.length) {
+          return this.$notify.info({
+            message: '请选择批号'
+          });
+        }
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
+        this.$http.post('/batch-number/zip-list', list).then(res => {
+          utils.download(res.data.path, '批号附件');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '下载失败'
+          });
+        });
+      },
+      checkAllChange(val) {
+        this.batches.forEach(i => {
+          i.checked = val;
+        });
+      },
       getBatcheNumbers(pageNo) { // 得到批次列表
         this.batches = [];
         this.pager.currentPage = pageNo;
@@ -205,6 +237,9 @@
           pageSize: this.pager.pageSize
         }, this.filters);
         this.$http.get('/erp-batch', {params}).then(res => {
+          res.data.list.forEach(i => {
+            i.checked = false;
+          });
           this.batches = res.data.list;
           this.loadingData = false;
           this.pager.count = res.data.count;
