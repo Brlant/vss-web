@@ -315,7 +315,7 @@
         if (!orgId) return;
         let params = {
           keyWord: query,
-          relation: '0'
+          relation: '2'
         };
         BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
           this.orgList = res.data;
