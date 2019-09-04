@@ -182,6 +182,11 @@ export const route = [
             meta: {moduleId: 'purchase', title: '调拨入库', perm: 'allocating-order-manager'}
           },
           {
+            path: '/store/allotment/out/:id',
+            component: () => import('./components/store/allotment-out/list.vue'),
+            meta: {moduleId: 'purchase', title: '调拨出库', perm: 'allocating-out-order-manager'}
+          },
+          {
             path: '/store/bad/:id',
             component: () => import('./components/store/breakage-order/list.vue'),
             meta: {moduleId: 'store', title: '报损出库', perm: 'breakage-order'}
