@@ -107,7 +107,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="padding: 0">{{ defaultIndex === 2 ? '编辑采购退货订单' : '新增采购退货订单'}}</h2>
+        <h2 class="clearfix right-title" style="padding: 0">{{ defaultIndex === 2 ? '编辑调拨出库订单' : '新增调拨出库订单'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
@@ -122,11 +122,6 @@
         <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                  label-width="160px" style="padding-right: 20px">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-            <el-form-item label="订单类型" prop="goodsType">
-              <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
-                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
-              </el-radio-group>
-            </el-form-item>
             <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" placeholder="请选择物流方式"
@@ -134,34 +129,6 @@
                 <el-option :value="item.key" :key="item.key" :label="item.label"
                            v-for="item in transportationMeansList"
                            v-show="(item.key !== '2' || item.key==='2' && form.bizType!=='2-2') && item.key !== '4'"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="供货单位" prop="customerId">
-              <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                  <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    <span class="pull-right" style="color: #999" v-if="org.relationList">
-                     <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
-                    </span>
-                  </div>
-                  <div style="overflow: hidden">
-                  <span class="select-other-info pull-left" v-show="org.manufacturerCode">
-                    <span>系统代码:</span>{{org.manufacturerCode}}
-                  </span>
-                  </div>
-                </el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="供货单位仓库"
-                          v-show="showContent.isShowOtherContent">
-              <el-select placeholder="请选择供货单位仓库" v-model="form.transportationAddress" filterable clearable
-                         @change="changeWarehouseAdress">
-                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
-                  <span class="pull-left">{{ item.name }}</span>
-                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
-                </el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="实际收货人" v-show="showContent.isShowOtherContent">
@@ -198,10 +165,6 @@
                 placeholder="请选择日期" format="yyyy-MM-dd"
                 value-format="timestamp" :picker-options="pickerOptions">
               </el-date-picker>
-            </el-form-item>
-            <el-form-item label="退货原因">
-              <oms-input type="textarea" v-model="form.returnReason" placeholder="请输入退货原因"
-                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
             <el-form-item label="备注">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
@@ -429,7 +392,7 @@
           goodsType: '',
           'orgId': '',
           'customerId': '',
-          'bizType': '2-1',
+          'bizType': '2-3',
           'type': this.type,
           'logisticsProviderName': '',
           'transportationCondition': '',
@@ -604,9 +567,6 @@
       this.currentPartName = this.productListSet[0].name;
     },
     methods: {
-      changeVaccineType() {
-        this.clearForm();
-      },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + item.detail;
@@ -867,19 +827,16 @@
         });
       },
       searchProduct: function (query) {
-        if (!this.form.customerId || typeof this.form.goodsType !== 'number') {
-          this.searchProductList = [];
-          this.filterProductList = [];
-          return;
-        }
         let params = {
-          keyWord: query,
-          factoryId: this.form.customerId,
-          vaccineType: this.form.goodsType + 1
+          keyWord: query
         };
         let rTime = Date.now();
         this.requestTime = rTime;
-        http.get('/erp-stock/org-goods', {params: params}).then(res => {
+        // 无论市、区疾控, 调拨入库, 查询疫苗产品资料
+        let url = 'vaccine-info';
+        params.deleteFlag = false;
+        params.status = '1';
+        http.get(url, {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
           }
@@ -1108,12 +1065,13 @@
             delete item.proportion;
           });
           saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
+          saveData.customerId = saveData.orgId;
           this.doing = true;
           if (saveData.id) {
             erpOrder.updateOrder(saveData.id, saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '编辑采购退货成功',
+                message: '编辑调拨出库成功',
                 type: 'success'
               });
               self.$emit('change');
@@ -1124,7 +1082,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '编辑采购退货失败',
+                title: '编辑调拨出库失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
@@ -1133,7 +1091,7 @@
             erpOrder.save(saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '新增采购退货成功',
+                message: '新增调拨出库成功',
                 type: 'success'
               });
               window.localStorage.removeItem(this.saveKey);
@@ -1145,7 +1103,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '新增采购退货失败',
+                title: '新增调拨出库失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
