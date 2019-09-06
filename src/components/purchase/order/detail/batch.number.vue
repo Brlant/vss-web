@@ -45,6 +45,12 @@
       无相关批号信息
     </div>
     <div v-if="batchNumbers.length">
+      <div class="text-center mb-10">
+        <perm label="batchNumber-zip-export" class="ml-15">
+          <el-button type="primary" @click="batchDownloadZip" v-loading="isLoading" :disabled="isLoading">一键导出所有批号附件
+          </el-button>
+        </perm>
+      </div>
       <div class="qp-box" v-for="(item,index) in batchNumbers" @click="currentItem = item">
         <h3>
           批号 {{index + 1}} -
@@ -207,9 +213,9 @@
         batchNumbers: [],
         attachmentRight: {// 附件管理权限
           watch: 'batch-number-manager',
-          download: 'batch-number-download',
+          download: 'batch-number-manager',
           upload: '',
-          remove: 'batch-number-upload'
+          remove: 'batch-number-manager'
         },
         drugControlReport: {
           id: '',
@@ -229,7 +235,8 @@
         },
         currentItem: {},
         isShowFileList: true,
-        Util
+        Util,
+        isLoading: false
       };
     },
     watch: {
@@ -239,6 +246,19 @@
       }
     },
     methods: {
+      batchDownloadZip() {
+        let list = this.batchNumbers.map(m => m.batchNumberId);
+        this.isLoading = true;
+        this.$http.post('/batch-number/zip-list', list).then(res => {
+          this.isLoading = false;
+          Util.download(res.data.path, '批号附件');
+        }).catch(error => {
+          this.isLoading = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '下载失败'
+          });
+        });
+      },
       watchDrugControlReport(item) {
         if (item.length > 0) {
           this.$store.commit('changeAttachment', {

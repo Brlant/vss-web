@@ -220,9 +220,9 @@
         batchNumbers: [],
         attachmentRight: {// 附件管理权限
           watch: 'batch-number-manager',
-          download: 'batch-number-download',
+          download: 'batch-number-manager',
           upload: '',
-          remove: 'batch-number-upload'
+          remove: 'batch-number-manager'
         },
         drugControlReport: {
           id: '',
