@@ -275,6 +275,9 @@
                 </div>
               </el-col>
               <el-col :span="4">
+                <div class="f-grey">
+                  <dict dict-group="orderGoodsType" :dict-key="'' + item.goodsType"></dict>
+                </div>
                 <div>
                   <dict :dict-group="'bizInType'" :dict-key="item.bizType"></dict>
                 </div>

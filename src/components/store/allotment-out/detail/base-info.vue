@@ -41,6 +41,9 @@
             <oms-row label="业务类型">
               <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
             </oms-row>
+            <oms-row label="订单类型">
+              <dict dict-group="orderGoodsType" :dict-key="'' + currentOrder.goodsType"></dict>
+            </oms-row>
             <oms-row label="物流方式">
               <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
