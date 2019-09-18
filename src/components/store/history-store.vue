@@ -103,6 +103,7 @@
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <el-button @click="exportExcel" :plain="true" type="success">导出EXCEL</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -116,6 +117,7 @@
                   :row-class-name="formatRowClass" @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave"
                   show-summary :max-height="bodyHeight" style="width: 100%" v-show="batches.length">
           <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true"></el-table-column>
+          <el-table-column prop="platformGoodsName" label="疫苗通用名称" min-width="200" :sortable="true"></el-table-column>
           <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
           <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
@@ -274,6 +276,20 @@
       }
     },
     methods: {
+      exportExcel() {
+        if (!this.searchWord.date) return this.$notify.info({message: '请选择备份日期'});
+        let params = Object.assign({}, this.searchWord);
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
+        this.$http.get('erp-stock/history/export', {params}).then(res => {
+          utils.download(res.data.path, '历史库存');
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        }).catch(error => {
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
       isValid(item) {
         let a = this.$moment();
         let b = this.$moment(item.expiryDate);
