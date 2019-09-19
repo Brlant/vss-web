@@ -200,7 +200,7 @@
                   [ 产品图片 ]
                 </el-col>
                 <el-col :span="11" class="text-right" style="font-size: 12px">
-                  [ 疫苗信息 ]
+                  [ 货主疫苗信息 ]
                 </el-col>
               </el-row>
               <el-row>
@@ -237,7 +237,7 @@
               <div class="border-show"></div>
               <el-row>
                 <el-col :span="6" class="text-right" style="font-size: 12px">
-                  [ 疫苗标准产品信息 ]
+                  [ 疫苗主档信息 ]
                 </el-col>
                 <el-col :span="11" class="text-right" style="font-size: 12px">
                   [ 包装存储信息 ]
