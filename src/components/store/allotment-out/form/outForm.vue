@@ -122,6 +122,11 @@
         <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
                  label-width="160px" style="padding-right: 20px">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
+            <el-form-item label="订单类型" prop="goodsType">
+              <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
+                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
+              </el-radio-group>
+            </el-form-item>
             <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           v-show="showContent.isShowOtherContent">
               <el-select type="text" v-model="form.transportationMeansId" placeholder="请选择物流方式"
@@ -567,6 +572,11 @@
       this.currentPartName = this.productListSet[0].name;
     },
     methods: {
+      changeVaccineType() {
+        this.searchProductList = [];
+        this.filterProductList = [];
+        this.clearForm();
+      },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + item.detail;
@@ -634,6 +644,7 @@
           // ******
           this.$nextTick(() => {
             this.isStorageData = false;
+            this.$refs.orderAddForm && this.$refs.orderAddForm.clearValidate();
           });
         });
       },
@@ -827,6 +838,7 @@
         });
       },
       searchProduct: function (query) {
+        if (typeof this.form.goodsType !== 'number') return;
         let params = {
           keyWord: query
         };
@@ -835,7 +847,8 @@
         // 无论市、区疾控, 调拨入库, 查询疫苗产品资料
         let url = 'vaccine-info';
         params.deleteFlag = false;
-        params.status = '1';
+        params.status = true;
+        params.goodsVaccineSign = this.form.goodsType + 1;
         http.get(url, {params: params}).then(res => {
           if (this.requestTime > rTime) {
             return;
