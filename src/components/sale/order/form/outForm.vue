@@ -808,6 +808,12 @@
           deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0
         }).then(res => {
           this.warehouses = res.data || [];
+          if (isEdit) return;
+          let defaultStore = res.data.find(item => item.default);
+          if (!defaultStore) return;
+          this.form.transportationAddress = defaultStore.id;
+          this.form.actualConsignee = defaultStore.contact;
+          this.form.consigneePhone = defaultStore.telephone;
         });
       },
       filterAddress(isStorageData) {
