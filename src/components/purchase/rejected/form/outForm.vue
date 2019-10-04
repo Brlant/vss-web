@@ -669,7 +669,7 @@
           this.form = JSON.parse(JSON.stringify(res.data));
           this.formCopy = JSON.parse(JSON.stringify(res.data));
           // ****** 2.0变化
-          this.changeCustomerId(this.form.customerId);
+          this.changeCustomerId(this.form.customerId, true);
           this.changeTransportationMeans(this.form.transportationMeansId);
           // ******
           this.$nextTick(() => {
@@ -804,7 +804,7 @@
           this.showContent.expectedTimeLabel = '';
         }
       },
-      changeCustomerId(val) {// POV改变时
+      changeCustomerId(val, isEdit) {// POV改变时
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.product.orgGoodsId = '';
           this.form.detailDtoList = [];
@@ -813,10 +813,10 @@
           this.batchNumbers = [];
         }
         this.checkLicence(val);
-        this.searchWarehouses(val);
+        this.searchWarehouses(val, isEdit);
         this.searchProduct();
       },
-      searchWarehouses(orgId) {
+      searchWarehouses(orgId, isEdit) {
         if (!this.isStorageData) {
           this.warehouses = [];
           this.form.transportationAddress = '';
@@ -826,6 +826,12 @@
         }
         Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0}).then(res => {
           this.warehouses = res.data || [];
+          if (isEdit) return;
+          let defaultStore = res.data.find(item => item.default);
+          if (!defaultStore) return;
+          this.form.transportationAddress = defaultStore.id;
+          this.form.actualConsignee = defaultStore.contact;
+          this.form.consigneePhone = defaultStore.telephone;
         });
       },
       changeWarehouseAdress: function (val) {
