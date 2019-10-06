@@ -410,7 +410,7 @@
           this.searchWarehouses(true);
         } else if (val === 3) {
           this.addOrderInfo();
-          this.searchWarehouses(true);
+          this.searchWarehouses();
         } else {
           this.searchWarehouses();
           this.resetForm();
@@ -506,7 +506,6 @@
       },
       changeOrg(isEdited) {
         if (isEdited === 'edit') return;
-        this.form.warehouseId = '';
         if (this.form.detailDtoList.length) {
           // 清空cdcId判断
           if (!this.form.cdcId) {
@@ -588,6 +587,10 @@
           status: 0
         }).then(res => {
           this.warehouses = res.data || [];
+          if (isEdit) return;
+          let defaultStore = res.data.find(item => item.default);
+          if (!defaultStore) return;
+          this.form.warehouseId = defaultStore.id;
         });
       },
       changeRemark(form) {
