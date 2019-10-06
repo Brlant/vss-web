@@ -531,10 +531,10 @@
         this.accessoryList = [];
         this.currentList = [];
         this.warehouses = [];
+        this.form.warehouseId = '';
         this.form.detailDtoList = [];
         this.$refs['orderGoodsForm'].resetFields();
         if (!val) {
-          this.form.warehouseId = '';
           return;
         }
         this.searchProduct();
@@ -596,6 +596,10 @@
           status: 0
         }).then(res => {
           this.warehouses = res.data || [];
+          if (isEdited) return;
+          let defaultStore = res.data.find(item => item.default);
+          if (!defaultStore) return;
+          this.form.warehouseId = defaultStore.id;
         });
       },
       filterProducts: function () {
