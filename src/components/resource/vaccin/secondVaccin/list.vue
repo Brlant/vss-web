@@ -214,6 +214,9 @@
                   <div v-else>无产品图片</div>
                 </el-col>
                 <el-col :span="12">
+                  <goods-row label="货主疫苗ID" :span="12">
+                    {{ data.id}}
+                  </goods-row>
                   <goods-row label="疫苗编号" :span="12">
                     {{ data.goodsNo}}
                   </goods-row>
