@@ -184,7 +184,7 @@
       queryDevTempData(item, dto) {
         let params = Object.assign({
           devCode: item.devCode,
-          devId: item.ccsDevId,
+          devId: item.devId,
           valType: '1'
         }, this.getTimeParams(dto.shipmentTime, dto.completeTime));
           this.$http.get('/logistics-monitor/gainDeviceReportDatas', {params}).then(res => {
