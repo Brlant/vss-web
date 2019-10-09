@@ -89,7 +89,7 @@
       uploadData() {
         if (this.loading) return;
         this.loading = true;
-        this.$http.get(`/pov-order/${this.orderId}`).then(() => {
+        this.$http.get(`/pov-upload/${this.orderId}`).then(() => {
           this.query();
         }).catch(e => {
           this.loading = false;
