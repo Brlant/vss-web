@@ -19,7 +19,7 @@
                style="margin-left: 0;margin-right: 0">
             <el-row>
               <el-col :span="5" class="R pt10">
-                <span>{{ pushTypes[item.pushType] }}</span>
+                <span>{{ pushTypes[item.pushType] || item.pushType}}</span>
               </el-col>
               <el-col :span="10" class="pt">
                 <div style="max-height: 100px;overflow: auto">
@@ -77,7 +77,17 @@
           'wms-complete': '上下架完成',
           'push-exception': '订单异常推送',
           'stop-reject': '订单取消拒收',
-          'push-file': '推送订单'
+          'push-file': '推送订单',
+          'receive-cancel': '接收取消订单信息',
+          'receive-transport': '接收订单运输完成信息',
+          'receive-oms': '接收推送OMS消息',
+          'receive-reject': '接收拒收订单信息',
+          'receive-wms': '接收推送WMS信息',
+          'receive-complete': '接收上下架完成信息',
+          'receive-exception': '接收订单异常信息',
+          'receive-stop': '接收订单取消拒收信息',
+          'receive-task': '接收入库任务完成信息',
+          'receive-file': '接收订单相关文件'
         }
       };
     },
