@@ -48,31 +48,31 @@
           <div v-show="!item.handOverList.length">暂无数据</div>
           <hr class="hr"/>
         </template>
-        <h2>设备信息</h2>
-        <el-row>
-          <div class="order-list clearfix" style="padding-top: 10px">
-            <el-row class="order-list-header">
-              <el-col :span="8">编码</el-col>
-              <el-col :span="8" v-show="!item.completeTime">最新数据</el-col>
-            </el-row>
-            <div v-if="!item.devList || (item.devList && !item.devList.length)" class="empty-type-info mini">暂无数据</div>
-            <div v-else class="order-list-body flex-list-dom">
-              <div class="order-list-item no-pointer order-list-item-bg" :key="index"
-                   v-for="(item, index) in item.devList">
-                <el-row>
-                  <el-col :span="8">{{item.devCode}}</el-col>
-                  <el-col :span="8" v-show="!item.completeTime">
-                    <el-tooltip effect="dark" :content="formatTime(item.recordDate)" placement="top">
-                      <span>{{$formatDevData(item, $formatDevType(item))}}</span>
-                    </el-tooltip>
-                  </el-col>
-                </el-row>
-              </div>
-              <chart-line ref="devTempLine" class="mt-10"
-                          :dataList="item.tempDataList" :devInfo="item"></chart-line>
-            </div>
-          </div>
-        </el-row>
+        <!--        <h2>设备信息</h2>-->
+        <!--        <el-row>-->
+        <!--          <div class="order-list clearfix" style="padding-top: 10px">-->
+        <!--            <el-row class="order-list-header">-->
+        <!--              <el-col :span="8">编码</el-col>-->
+        <!--              <el-col :span="8" v-show="!item.completeTime">最新数据</el-col>-->
+        <!--            </el-row>-->
+        <!--            <div v-if="!item.devList || (item.devList && !item.devList.length)" class="empty-type-info mini">暂无数据</div>-->
+        <!--            <div v-else class="order-list-body flex-list-dom">-->
+        <!--              <div class="order-list-item no-pointer order-list-item-bg" :key="index"-->
+        <!--                   v-for="(item, index) in item.devList">-->
+        <!--                <el-row>-->
+        <!--                  <el-col :span="8">{{item.devCode}}</el-col>-->
+        <!--                  <el-col :span="8" v-show="!item.completeTime">-->
+        <!--                    <el-tooltip effect="dark" :content="formatTime(item.recordDate)" placement="top">-->
+        <!--                      <span>{{$formatDevData(item, $formatDevType(item))}}</span>-->
+        <!--                    </el-tooltip>-->
+        <!--                  </el-col>-->
+        <!--                </el-row>-->
+        <!--              </div>-->
+        <!--              <chart-line ref="devTempLine" class="mt-10"-->
+        <!--                          :dataList="item.tempDataList" :devInfo="item"></chart-line>-->
+        <!--            </div>-->
+        <!--          </div>-->
+        <!--        </el-row>-->
         <hr class="hr"/>
         <!--        <h2>车辆信息</h2>-->
         <!--        <el-row>-->
@@ -120,7 +120,7 @@
         </h2>
         <div>
           <map-path :points="item.points" :vid="item.waybillNumber" :mapStyle="{
-          height: '300px', width: '600px',margin: '0 auto'}"></map-path>
+          height: '300px', width: '750px',margin: '0 auto'}"></map-path>
         </div>
       </div>
     </div>
@@ -171,7 +171,7 @@
             //交接数据
             this.queryHandOverList(dto);
             // 设备
-              dto.devList.forEach(i => this.queryDevTempData(i, dto));
+              //   dto.devList.forEach(i => this.queryDevTempData(i, dto));
           });
           this.loadingData = false;
             this.waybillInfos = res.data;
