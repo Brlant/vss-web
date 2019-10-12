@@ -29,6 +29,11 @@
           <el-button type="primary" size="mini" @click="uploadData">推送数据</el-button>
         </perm>
       </div>
+      <div v-show="!isShowPushBtn">
+        <perm label="upload-data-operate-again">
+          <el-button type="primary" size="mini" @click="uploadData">重新推送数据</el-button>
+        </perm>
+      </div>
       <div class="qp-box" v-for="item in detail.list">
         <h3>
           {{ item.calltime }}
