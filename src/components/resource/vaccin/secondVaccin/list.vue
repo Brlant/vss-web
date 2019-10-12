@@ -248,7 +248,6 @@
               </el-row>
               <el-row>
                 <el-col :span="12">
-
                   <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
                   <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
                   <goods-row label="疫苗编号" :span="12">{{ data.goodsDto.code }}</goods-row>
@@ -288,41 +287,11 @@
                   <goods-row label="备注" :span="12">
                     {{ data.goodsDto.remark}}
                   </goods-row>
-                  <goods-row label="化学名" :span="12"
-                             v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.chemicalName }}
-                  </goods-row>
-                  <goods-row label="器械生产许可证号" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
-                    {{ data.goodsDto.propertyMap.productionLicense }}
-                  </goods-row>
-                  <goods-row label="器械生产许可证号有效期" :span="12" v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1">
-                    {{ data.goodsDto.propertyMap.productionLicenseValidity | date }}
-                  </goods-row>
-                  <goods-row label="厂家备案凭证号" :span="12"
-                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.recordNumber
-                    }}
-                  </goods-row>
-                  <goods-row label="注册证书/备案凭证号" :span="12"
-                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.registrationRecordNumber }}
-                  </goods-row>
-                  <goods-row label="备案凭证号有效期" :span="12"
-                             v-if="data.goodsDto.typeId.indexOf('YLQX') !== -1||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.goodsRecordNOValidity | date }}
-                  </goods-row>
-                  <goods-row label="人份" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
+                  <goods-row label="最大注射次数" :span="12" v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'">
                     {{ data.goodsDto.propertyMap.personPortion }}
                   </goods-row>
                   <goods-row label="最小销售单位" :span="12">
                     <dict :dict-group="'minSalesUnit'" :dict-key="data.goodsDto.propertyMap.minSalesUnit"></dict>
-                  </goods-row>
-                  <goods-row label="是否近效期管理" :span="12"
-                             v-if="data.goodsDto.typeId==='0'||data.goodsDto.typeId==='1'||data.goodsDto.typeId==='3'">
-                    {{ data.goodsDto.propertyMap.lastMaintenanceFlag | formatStatus }}
-                  </goods-row>
-                  <goods-row label="近效期管理时间" :span="12" v-if="data.goodsDto.propertyMap.lastMaintenanceFlag">
-                    {{ data.goodsDto.propertyMap.lastMaintenanceDays }} 天
                   </goods-row>
                 </el-col>
                 <el-col :span="12">
@@ -337,12 +306,14 @@
                   </goods-row>
                   <goods-row label="运输温度" :span="12">
                     <span
-                      v-show="data.goodsDto.transportStartTemperature">{{ data.goodsDto.transportStartTemperature}} ℃ - {{ data.goodsDto.transportEndTemperature
+                      v-show="data.goodsDto.transportStartTemperature">{{ data.goodsDto.transportStartTemperature}} ℃ -
+                      {{ data.goodsDto.transportEndTemperature
                       }} ℃</span>
                   </goods-row>
                   <goods-row label="冷藏存储温度" :span="12">
                     <span
-                      v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ - {{ data.goodsDto.storageEndTemperature}} ℃
+                      v-show="data.goodsDto.storageStartTemperature">{{ data.goodsDto.storageStartTemperature}} ℃ -
+                      {{ data.goodsDto.storageEndTemperature}} ℃
                     </span>
                   </goods-row>
                   <span v-for="(packageDto,index) in data.goodsDto.packageDtoList">

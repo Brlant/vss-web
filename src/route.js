@@ -231,6 +231,14 @@ export const route = [
             meta: {moduleId: 'finance', title: '付款作业', perm: 'payment-payable'}
           },
           {
+            path: '/collection/pov',
+            component: resolve => require(['./components/finance/operation/collection/list.vue'], resolve),
+            meta: {
+              moduleId: 'finance', title: 'POV付款作业', perm: 'pov-payment-payable', type: 1,
+              perms: ['pov-payment-payable-add', 'pov-payment-payable-audit', 'pov-payment-payable-cancel']
+            }
+          },
+          {
             path: '/pending/payment',
             component: () => import('./components/finance/pending/list.vue'),
             meta: {moduleId: 'finance', title: '预付款管理', perm: 'cdc-advance-payable', type: 1}
