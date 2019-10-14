@@ -54,7 +54,7 @@
             <div v-loading="loadingData">
               <el-row class="mb-10">
                 <el-col :span="12">
-                  <oms-row label="疫苗" :span="4">{{currentItem.goodsName}}</oms-row>
+                  <oms-row label="货主疫苗" :span="4">{{currentItem.orgGoodsName}}</oms-row>
                   <oms-row label="生产厂商" :span="4">{{currentItem.productFactory}}</oms-row>
                 </el-col>
                 <el-col :span="12">
@@ -65,7 +65,7 @@
               <div class="order-list clearfix ">
                 <el-row class="order-list-header">
                   <el-col :span="8">要货单位</el-col>
-                  <el-col :span="4">现有库存</el-col>
+                  <el-col :span="4">要货单位现有库存</el-col>
                   <el-col :span="4">需求数</el-col>
                   <el-col :span="4">要货时间</el-col>
                   <el-col :span="4">分配数量</el-col>
