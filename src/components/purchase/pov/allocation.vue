@@ -37,7 +37,7 @@
       </div>
       <div class="order-list clearfix ">
         <el-row class="order-list-header">
-          <el-col :span="status === 0 ? 4 : 6">疫苗</el-col>
+          <el-col :span="status === 0 ? 4 : 6">货主疫苗</el-col>
           <el-col :span="status === 0 ? 4 : 6">供货单位</el-col>
           <el-col :span="status === 0 ? 2 : 4">需求数</el-col>
           <el-col :span="status === 0 ? 2 : 4">库存数</el-col>
@@ -63,8 +63,8 @@
                   :class="[{'active':currentItemId==item.orgGoodsId}]" @click.prevent="showPart(item)">
             <el-col :span="status === 0 ? 4 : 6" class="R pt">
               <div>
-                <el-tooltip class="item" effect="dark" content="疫苗名称" placement="right">
-                  <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
+                <el-tooltip class="item" effect="dark" content="货主疫苗名称" placement="right">
+                  <span style="font-size: 14px;line-height: 20px">{{item.orgGoodsName}}</span>
                 </el-tooltip>
               </div>
               <div>
