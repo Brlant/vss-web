@@ -131,9 +131,9 @@
           <el-col :span="5">
             <el-checkbox @change="checkAll" v-model="isCheckAll" v-show="filters.status === 1 || filters.status === 11">
             </el-checkbox>
-            收货单位要货申请编号
+            要货单位要货申请编号
           </el-col>
-          <el-col :span="6">收货单位</el-col>
+          <el-col :span="6">要货单位</el-col>
           <el-col :span="3">到货需求日期</el-col>
           <el-col :span="5">时间</el-col>
           <el-col :span="5">操作</el-col>

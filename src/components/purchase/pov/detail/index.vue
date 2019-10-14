@@ -27,7 +27,7 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">收货单位需求单</h2>
+        <h2 class="clearfix right-title">要货单位需求单</h2>
         <div class="btn-submit-save">
           <el-button @click="close">关闭</el-button>
         </div>

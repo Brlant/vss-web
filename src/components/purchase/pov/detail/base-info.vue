@@ -52,6 +52,9 @@
           <oms-row label="要货申请编号">
             {{currentOrder.id }}
           </oms-row>
+          <oms-row label="要货单位">
+            {{currentOrder.povName }}
+          </oms-row>
           <oms-row label="供货单位">
             {{currentOrder.cdcName}}
           </oms-row>
@@ -61,7 +64,7 @@
           <oms-row label="到货需求日期">
             {{currentOrder.demandTime | date }}
           </oms-row>
-          <oms-row label="收货单位仓库">
+          <oms-row label="要货单位仓库">
             {{currentOrder.warehouseAddress}}
           </oms-row>
         </el-col>
