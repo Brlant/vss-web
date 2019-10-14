@@ -109,8 +109,8 @@
                 <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="收货单位" prop="povId">
-              <el-select filterable remote placeholder="请输入名称搜索收货单位" :remote-method="filterPOV" :clearable="true"
+            <el-form-item label="要货单位" prop="povId">
+              <el-select filterable remote placeholder="请输入名称搜索要货单位" :remote-method="filterPOV" :clearable="true"
                          v-model="form.povId" @change="povChange"
                          popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
@@ -125,8 +125,8 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="收货单位仓库" prop="warehouseId">
-              <el-select placeholder="请选择收货单位仓库" v-model="form.warehouseId" filterable clearable>
+            <el-form-item label="要货单位仓库" prop="warehouseId">
+              <el-select placeholder="请选择要货单位仓库" v-model="form.warehouseId" filterable clearable>
                 <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in warehouses">-->
                 <!--</el-option>-->
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
@@ -341,13 +341,13 @@
         },
         rules: {
           warehouseId: [
-            {required: true, message: '请选择收货单位仓库', trigger: 'change'}
+            {required: true, message: '请选择要货单位仓库', trigger: 'change'}
           ],
           type: [
             {required: true, type: 'number', message: '请选择疫苗种类', trigger: 'change'}
           ],
           povId: [
-            {required: true, message: '请选择收货单位', trigger: 'change'}
+            {required: true, message: '请选择要货单位', trigger: 'change'}
           ],
           demandTime: [
             {required: true, message: '请选择到货需求日期', trigger: 'change'}
