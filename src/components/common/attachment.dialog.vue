@@ -270,7 +270,7 @@
       getType: function () {
         let type = '';
         let url = this.Attachment.attachmentStoragePath;
-        let images = ['jpg', 'png', 'gif', 'jpeg'];
+        let images = ['jpg', 'png', 'gif', 'jpeg', 'jfif'];
         let docs = ['txt', 'doc', 'docx', 'pdf', 'xls', 'xlsx', 'ppt', 'pptx'];
         if (url) {
           // 去除签名
