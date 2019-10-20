@@ -1,4 +1,4 @@
-import {Address} from '@dtop/dtop-web-common';
+import {Address, formatAddress} from '@dtop/dtop-web-common';
 
 function funDownload(content, filename) {
   // 创建隐藏的可下载链接
@@ -155,31 +155,7 @@ export default {
    * @param region
    * @returns {string}
    */
-  formatAddress: function (province, city, region) {
-    let _address = '';
-    this.address.forEach(p => {
-      if (province === p.value) {
-        _address += p.label;
-        if (!p.children) return;
-        p.children.forEach(c => {
-          if (!c.children) return;
-          if (city === c.value) {
-            _address += ('/' + c.label);
-            if (!c.children) return;
-            c.children.forEach(r => {
-              if (region === r.value) {
-                _address += ('/' + r.label);
-              }
-              return false;
-            });
-          }
-          return false;
-        });
-      }
-    });
-    return _address;
-  },
-
+  formatAddress: formatAddress,
   /**
    * 实时动态强制更改用户录入
    * @param th
