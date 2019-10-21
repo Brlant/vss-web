@@ -101,7 +101,7 @@
     <div class="content-part">
       <div class="content-left">
         <h2 class="clearfix right-title" style="padding: 0">
-          {{ defaultIndex === 2 ? '编辑疾控销售退货订单' : '新增疾控销售退货订单'}}</h2>
+          {{ defaultIndex === 2 ? '编辑销售退货订单' : '新增销售退货订单'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
