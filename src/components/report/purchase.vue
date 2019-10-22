@@ -33,8 +33,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货商" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索供货商" :remote-method="filterOrg" :clearable="true"
+              <oms-form-row label="供货单位" :span="5">
+                <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg" :clearable="true"
                            v-model="searchWord.suppliers" popperClass="good-selects" @click.native.once="filterOrg('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
