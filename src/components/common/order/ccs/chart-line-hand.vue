@@ -110,7 +110,7 @@
               data: i.list.map(m => {
                 return {
                   name: m.collectionTime,
-                  value: [m.collectionTime, m.value]
+                  value: [m.collectionTime, m.handoverDataValue]
                 };
               }),
               smooth: true,
