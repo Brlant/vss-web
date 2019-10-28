@@ -720,7 +720,7 @@
           let defaultStore = res.data.filter(item => item.default);
           if (!defaultStore.length) return;
           this.form.transportationAddress = defaultStore[0].id;
-          this.transportationAddressChange(this.form.transportationAddress);
+          // this.transportationAddressChange(this.form.transportationAddress);
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
