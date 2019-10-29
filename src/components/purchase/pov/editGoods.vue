@@ -40,7 +40,7 @@
   <div>
     <div class="content-part">
       <div class="content-right content-padding">
-        <h3>编辑货主疫苗</h3>
+        <h3>修改要货品种</h3>
         <div class="order-page">
           <div class="container">
             <el-form ref="form" :rules="rules" :model="form" @submit.prevent="save"
