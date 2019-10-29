@@ -133,7 +133,7 @@
           };
           this.$http.put('/demand-assignment/goods', data).then(() => {
             this.doing = false;
-            this.$notify.success('编辑成功');
+            this.$notify.success('修改成功');
             this.$emit('refresh');
           }).catch(error => {
             this.doing = false;

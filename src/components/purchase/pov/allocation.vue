@@ -128,7 +128,7 @@
                   <div @click.prevent="editItem(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
-                    编辑货主疫苗
+                    修改要货品种
                   </div>
                 </perm>
               </div>
