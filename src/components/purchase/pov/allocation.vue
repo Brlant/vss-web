@@ -118,12 +118,19 @@
                 </span>
             </el-col>
             <el-col :span="4" class="opera-btn">
-              <div class="mb5">
-                    <span @click.prevent="showPart(item)" v-show="status === 0 ">
-                      <a href="#" class="btn-circle" @click.prevent=""><i
-                        class="el-icon-t-detail"></i></a>
-                    要货单位分配明细
-                    </span>
+              <div class="mb5" v-show="status === 0 ">
+                <span @click.prevent="showPart(item)">
+                  <a href="#" class="btn-circle" @click.prevent=""><i
+                    class="el-icon-t-detail"></i></a>
+                  要货单位分配明细
+                </span>
+                <perm label="demand-assignment-update-org-goods">
+                  <div @click.prevent="editItem(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="el-icon-t-edit"></i></a>
+                    编辑货主疫苗
+                  </div>
+                </perm>
               </div>
               <div class="mb5">
                   <span @click.prevent="showPart(item)" v-show="status === 1 ">
@@ -156,6 +163,10 @@
       <allot-form :currentItem="currentItem" :TotalAllocationList="allocationList" @updateItem="showPart"
                   @change="change" :status="status" @close="resetRightBox"></allot-form>
     </page-right>
+    <page-right :show="showEditGoodsRight" @right-close="resetRightBox" :css="{'width':'700px','padding':0}">
+      <edit-goods :currentItem="currentItem" :show="showEditGoodsRight" @refresh="refresh"
+                  @close="resetRightBox"></edit-goods>
+    </page-right>
     <page-right :show="showOrderForm" class="specific-part-z-index" @right-close="resetRightBox"
                 :css="{'width':'1000px','padding':0}">
       <order-form type="0" :defaultIndex="defaultIndex" :orderId="currentItemId" :purchase="purchase"
@@ -168,11 +179,13 @@
   import {demandAssignment, OrgGoods} from '@/resources';
   import allotForm from './form.vue';
   import orderForm from '../contract/form/InForm.vue';
+  import editGoods from './editGoods';
 
   export default {
     components: {
       allotForm,
-      orderForm
+      orderForm,
+      editGoods
     },
     data() {
       return {
@@ -180,6 +193,7 @@
         allocationList: [],
         showRight: false,
         showOrderForm: false,
+        showEditGoodsRight: false,
         status: -1,
         pager: {
           currentPage: 1,
@@ -212,9 +226,19 @@
       resetRightBox() {
         this.showRight = false;
         this.showOrderForm = false;
+        this.showEditGoodsRight = false;
         this.defaultIndex = -1;
         this.purchase = {};
         this.vaccineType = '';
+      },
+      refresh() {
+        this.resetRightBox();
+        this.queryAllocationList();
+      },
+      editItem(item) {
+        this.currentItem = item;
+        this.currentItemId = item.orgGoodsId;
+        this.showEditGoodsRight = true;
       },
       showPart(item) {
         this.currentItem = item;
