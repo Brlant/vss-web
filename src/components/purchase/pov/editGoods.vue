@@ -51,21 +51,22 @@
                            :clearable="true" popper-class="good-selects">
 
                   <el-option v-for="item in goodsList" :key="item.id"
-                             :label="item.name"
-                             :value="item.id">
+                             :label="item.name" :value="item.id">
                     <div>
                       <div>
                         <span class="pull-left">{{item.name}}</span>
                       </div>
                       <div class="clearfix">
+                         <span class="select-other-info pull-left"><span
+                           v-show="item.specification">规格:</span>{{item.specification}}</span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}</span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.sellPrice">销售价格:￥{{ item.sellPrice
-                        }}</span>
-                        </span>
-                        <span class="select-other-info pull-left"><span
                           v-show="item.salesFirmName">供货厂商:</span>{{ item.salesFirmName }}</span>
+                      </div>
+                      <div class="clearfix">
+                         <span class="select-other-info pull-left">
+                          <span>业务可用库存:</span>{{item. availableCount}}</span>
                       </div>
                     </div>
                   </el-option>
