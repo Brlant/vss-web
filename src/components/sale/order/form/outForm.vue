@@ -702,9 +702,11 @@
         if (!orgId) return;
         let params = {
           keyWord: query,
-          relation: '2'
+          type: '1',
+          vaccineType: this.vaccineType,
+          subjectOrgId: orgId
         };
-        BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
+        BaseInfo.queryOrgByVossAuth(orgId, params).then(res => {
           this.orgList = res.data;
         });
       },
