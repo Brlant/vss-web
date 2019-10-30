@@ -31,6 +31,7 @@
         background: #fff;
         z-index: 2;
       }
+
       left: 0;
     }
   }
@@ -62,9 +63,10 @@
                   <oms-row label="供货单位" :span="4">{{currentItem.saleFactory}}</oms-row>
                 </el-col>
               </el-row>
-              <div class="order-list clearfix ">
+              <div class="order-list clearfix">
                 <el-row class="order-list-header">
-                  <el-col :span="8">要货单位</el-col>
+                  <el-col :span="2">操作</el-col>
+                  <el-col :span="6">要货单位</el-col>
                   <el-col :span="4">要货单位现有库存</el-col>
                   <el-col :span="4">需求数</el-col>
                   <el-col :span="4">要货时间</el-col>
@@ -86,7 +88,17 @@
                   <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
                        :class="[{'active':currentItemId==item.id}]" style="max-height: 500px;overflow-y: auto">
                     <el-row>
-                      <el-col :span="8" class="R">
+                      <el-col :span="2">
+                        <perm label="demand-assignment-update-org-goods">
+                          <el-tooltip content="修改要货品种" placement="bottom">
+                            <span @click.prevent="editItem(item)">
+                                <a href="#" class="btn-circle" @click.prevent=""><i
+                                  class="el-icon-t-edit"></i></a>
+                            </span>
+                          </el-tooltip>
+                        </perm>
+                      </el-col>
+                      <el-col :span="6" class="R">
                         <span>{{ item.povName }}</span>
                       </el-col>
                       <el-col :span="4">
@@ -164,14 +176,31 @@
         </div>
       </div>
     </div>
+    <el-dialog width="500px" title="修改要货品种" :visible.sync="showEditGoodsRight" append-to-body>
+      <oms-row label="要货单位" class="mb-10" :span="6">{{currentGoodsItem.povName}}</oms-row>
+      <el-row class="mb-10">
+        <el-col :span="12">
+          <oms-row label="现有库存" :span="12">{{currentGoodsItem.currentStock}}</oms-row>
+        </el-col>
+        <el-col :span="12">
+          <oms-row label="需求数" :span="12">{{currentGoodsItem.applyCount}}</oms-row>
+        </el-col>
+      </el-row>
+      <oms-row class="mb-10" label="要货时间" :span="6">{{currentGoodsItem.applyTime | time}}</oms-row>
+      <oms-row class="mb-10" label="分配数量" :span="6">{{currentGoodsItem.applyCount}}</oms-row>
+      <edit-goods class="is-no-fix" :currentItem="currentGoodsItem" :show="showEditGoodsRight"
+                  @refresh="refresh"></edit-goods>
+    </el-dialog>
   </div>
 
 </template>
 <script>
   import {demandAssignment} from '@/resources';
   import utils from '@/tools/utils';
+  import editGoods from './editGoods';
 
   export default {
+    components: {editGoods},
     props: {
       currentItem: Object,
       status: Number,
@@ -179,11 +208,13 @@
     },
     data() {
       return {
+        showEditGoodsRight: false,
         loadingData: false,
         allocationList: [],
         currentItemId: '',
         index: -1,
         changeTotalNumber: utils.changeTotalNumber,
+        currentGoodsItem: {}
       };
     },
     watch: {
@@ -193,6 +224,18 @@
       }
     },
     methods: {
+      refresh() {
+        this.showEditGoodsRight = false;
+        this.currentGoodsItem = {};
+        this.$emit('refresh');
+      },
+      editItem(item) {
+        this.currentGoodsItem = Object.assign({}, item, {
+          orgGoodsId: this.currentItem.orgGoodsId,
+          list: [{detailId: item.detailId}]
+        });
+        this.showEditGoodsRight = true;
+      },
       queryAllocationList() { // 得到需求分配列表
         this.allocationList = [];
         this.loadingData = true;
