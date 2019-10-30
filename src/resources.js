@@ -1076,6 +1076,21 @@ export const BaseInfo = resource('/orgs', http, {
     obj.size = -1;
     return http.get('/orgs/' + orgId + '/all-relation/', {params: obj});
   },
+
+  //根据voss销售授权查询单位
+  queryOrgByVossAuth: (orgId, obj) => {
+    let params = {
+      keyWord: obj.keyWord
+    };
+    delete obj.keyWord;
+    return http({
+      method: 'post',
+      url: '/authorization-goods/object-org',
+      params,
+      data: obj
+    });
+  },
+
   // 校验邮箱
   checkEmail: (email, userId) => {
     return http.get('/oms/user/email', {
