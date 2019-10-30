@@ -105,13 +105,16 @@
       };
     },
     watch: {
-      show(val) {
-        this.form.orgGoodsId = '';
-        this.$refs.form && this.$refs.form.clearValidate();
-        this.goodsList = [];
-        if (val) {
-          this.queryGoodsList();
-        }
+      show: {
+        handler(val) {
+          this.form.orgGoodsId = '';
+          this.$refs.form && this.$refs.form.clearValidate();
+          this.goodsList = [];
+          if (val) {
+            this.queryGoodsList();
+          }
+        },
+        immediate: true
       }
     },
     methods: {

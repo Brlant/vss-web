@@ -161,7 +161,7 @@
 
     <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <allot-form :currentItem="currentItem" :TotalAllocationList="allocationList" @updateItem="showPart"
-                  @change="change" :status="status" @close="resetRightBox"></allot-form>
+                  @change="change" :status="status" @close="resetRightBox" @refresh="refresh"></allot-form>
     </page-right>
     <page-right :show="showEditGoodsRight" @right-close="resetRightBox" :css="{'width':'700px','padding':0}">
       <edit-goods :currentItem="currentItem" :show="showEditGoodsRight" @refresh="refresh"
