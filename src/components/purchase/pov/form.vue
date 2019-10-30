@@ -187,7 +187,7 @@
         </el-col>
       </el-row>
       <oms-row class="mb-10" label="要货时间" :span="6">{{currentGoodsItem.applyTime | time}}</oms-row>
-      <oms-row class="mb-10" label="分配数量" :span="6">{{currentGoodsItem.applyCount}}</oms-row>
+      <oms-row class="mb-10" label="分配数量" :span="6">{{currentGoodsItem.actualCount}}</oms-row>
       <edit-goods class="is-no-fix" :currentItem="currentGoodsItem" :show="showEditGoodsRight"
                   @refresh="refresh"></edit-goods>
     </el-dialog>
