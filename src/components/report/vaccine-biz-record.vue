@@ -15,6 +15,7 @@
               <oms-form-row :span="5" label="货主疫苗">
                 <el-select :clearable="true" :remote-method="filterOrgGoods" @click.native.once="filterOrgGoods('')"
                            filterable
+                           @change="goodsChange"
                            placeholder="请输入名称搜索货主疫苗"
                            popper-class="good-selects" remote
                            v-model="searchWord.goodsId">
@@ -212,9 +213,20 @@
         this.bizDateAry = '';
       },
       filterBatchNumber(query) {
-        this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
+        if (!this.searchWord.goodsId) return;
+        this.$http.get('/batch-number/pager', {
+          params: {
+            keyWord: query,
+            goodsId: this.searchWord.goodsId
+          }
+        }).then(res => {
           this.batchNumberList = res.data.list;
         });
+      },
+      goodsChange() {
+        this.searchWord.batchNumberId = '';
+        this.batchNumberList = [];
+        this.filterBatchNumber('');
       },
       filterOrgGoods(query) {
         let params = Object.assign({}, {
