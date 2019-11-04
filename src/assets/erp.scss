@@ -1607,3 +1607,23 @@ $borderColor: rgba(82, 82, 82, 0.23);
     background: #ccc;
   }
 }
+
+.is-no-fix {
+  .content-part {
+    position: unset;
+
+    .content-right {
+      position: unset;
+      padding: 0;
+    }
+
+    h3 {
+      position: unset;
+      display: none;
+    }
+
+    .order-page {
+      padding: 0;
+    }
+  }
+}
