@@ -1142,14 +1142,13 @@
       },
       onSubmit: function () {// 提交表单
         if (!this.checkHasOrderNotAdded(this.product)) return;
-        let self = this;
         // this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;
             return false;
           }
-          let saveData = JSON.parse(JSON.stringify(self.form));
+          let saveData = JSON.parse(JSON.stringify(this.form));
           if (saveData.detailDtoList.length === 0) {
             this.$notify({
               duration: 2000,
@@ -1158,60 +1157,83 @@
             });
             return false;
           }
-          saveData.detailDtoList.forEach(item => {
-            !item.combinationFlag && (item.combinationFlag = item.isCombination);
-            delete item.fixInfo;
-            delete item.mainOrgId;
-            delete item.isCombination;
-            delete item.proportion;
-            delete item.orgGoodsDto;
-            delete item.expirationDate; // 删除有效期
+          let ary = [];
+          let isValid = saveData.detailDtoList.every(s => {
+            let orgGoodsDto = s.fixInfo || s.orgGoodsDto;
+            let valid = !orgGoodsDto.goodsDto || s.amount % orgGoodsDto.goodsDto.smallPacking === 0;
+            if (!valid) {
+              ary.push(`"${orgGoodsDto.name}"`);
+            }
+            return valid;
           });
-          saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
-          this.doing = true;
-          if (saveData.id) {
-            erpOrder.updateOrder(saveData.id, saveData).then(res => {
-              this.$notify({
-                duration: 2000,
-                message: '编辑销售订单成功',
-                type: 'success'
-              });
-              self.$emit('change');
-              this.doing = false;
-              this.$emit('close');
-              this.resetForm();
-            }).catch(error => {
-              this.doing = false;
-              this.$notify({
-                duration: 2000,
-                title: '编辑销售订单失败',
-                message: error.response.data.msg,
-                type: 'error'
-              });
+          if (!isValid) {
+            this.$confirm(`订单明细中货品${ary.join('，')}存在非最小包装倍数数量，请确定是否保存订单？`, '', {
+              confirmButtonText: '确定',
+              cancelButtonText: '取消',
+              customClass: 'packageConfirmClass',
+              type: 'warning'
+            }).then(() => {
+              this.save(saveData);
             });
           } else {
-            erpOrder.save(saveData).then(res => {
-              this.$notify({
-                duration: 2000,
-                message: '新增销售订单成功',
-                type: 'success'
-              });
-              window.localStorage.removeItem(this.saveKey);
-              self.$emit('change', res.data);
-              this.doing = false;
-              this.$emit('close');
-              this.resetForm();
-            }).catch(error => {
-              this.doing = false;
-              this.$notify({
-                duration: 2000,
-                title: '新增销售订单失败',
-                message: error.response.data.msg,
-                type: 'error'
-              });
-            });
+            this.save(saveData);
           }
         });
+      },
+      save(saveData) {
+        saveData.detailDtoList.forEach(item => {
+          !item.combinationFlag && (item.combinationFlag = item.isCombination);
+          delete item.fixInfo;
+          delete item.mainOrgId;
+          delete item.isCombination;
+          delete item.proportion;
+          delete item.orgGoodsDto;
+          delete item.expirationDate; // 删除有效期
+        });
+        saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
+        this.doing = true;
+        if (saveData.id) {
+          erpOrder.updateOrder(saveData.id, saveData).then(res => {
+            this.$notify({
+              duration: 2000,
+              message: '编辑销售订单成功',
+              type: 'success'
+            });
+            this.$emit('change');
+            this.doing = false;
+            this.$emit('close');
+            this.resetForm();
+          }).catch(error => {
+            this.doing = false;
+            this.$notify({
+              duration: 2000,
+              title: '编辑销售订单失败',
+              message: error.response.data.msg,
+              type: 'error'
+            });
+          });
+        } else {
+          erpOrder.save(saveData).then(res => {
+            this.$notify({
+              duration: 2000,
+              message: '新增销售订单成功',
+              type: 'success'
+            });
+            window.localStorage.removeItem(this.saveKey);
+            this.$emit('change', res.data);
+            this.doing = false;
+            this.$emit('close');
+            this.resetForm();
+          }).catch(error => {
+            this.doing = false;
+            this.$notify({
+              duration: 2000,
+              title: '新增销售订单失败',
+              message: error.response.data.msg,
+              type: 'error'
+            });
+          });
+        }
       }
     }
   };
