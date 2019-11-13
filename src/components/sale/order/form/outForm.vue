@@ -1160,6 +1160,8 @@
           let ary = [];
           let isValid = saveData.detailDtoList.every(s => {
             let orgGoodsDto = s.fixInfo || s.orgGoodsDto;
+            // 组合货品不校验包装倍数
+            if (!orgGoodsDto) return true;
             let valid = !orgGoodsDto.goodsDto || s.amount % orgGoodsDto.goodsDto.smallPacking === 0;
             if (!valid) {
               ary.push(`"${orgGoodsDto.name}"`);
