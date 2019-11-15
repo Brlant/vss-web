@@ -175,7 +175,7 @@
             <!--</el-form-item>-->
             <el-form-item label="疾控仓库地址" prop="transportationAddress">
               <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress"
-                         filterable :clearable="true" @change="transportationAddressChange">
+                         filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in cdcWarehouses">
                   <span class="pull-left">{{ item.name }}</span>
