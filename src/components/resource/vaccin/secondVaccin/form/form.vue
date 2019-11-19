@@ -110,7 +110,7 @@
             </div>
             <div style="overflow: hidden">
                 <span class="select-other-info pull-left"><span
-                  v-show="item.code">疫苗编号:</span>{{item.code}}
+                  v-show="item.code">货主货品编号:</span>{{item.code}}
                 </span>
               <span class="select-other-info pull-left"><span
                 v-show="item.specifications">疫苗规格:</span>{{item.specifications}}
@@ -149,8 +149,8 @@
       <el-form-item label="供货单位名称">
         {{form.salesFirmName}}
       </el-form-item>
-      <el-form-item label="疫苗编号" prop="goodsNo">
-        <oms-input type="text" v-model="form.goodsNo" placeholder="请输入疫苗编号"></oms-input>
+      <el-form-item label="货主货品编号" prop="goodsNo">
+        <oms-input type="text" v-model="form.goodsNo" placeholder="请输入货主货品编号"></oms-input>
       </el-form-item>
       <el-form-item label="疫苗名称" prop="name">
         <oms-input type="text" v-model="form.name" placeholder="请输入疫苗名称"></oms-input>
@@ -218,7 +218,7 @@
                 v-show="item.orgGoodsDto.goodsDto.code">疫苗主档编号:</span>{{item.orgGoodsDto.goodsDto.code}}
               </span>
                 <span class="select-other-info pull-left"><span
-                  v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
+                  v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
               </span>
                 <span class="select-other-info pull-left"><span
                   v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -265,12 +265,12 @@
     data: function () {
       let checkGoodsCode = (rule, value, callback) => {
         if (value === '') {
-          callback(new Error('请输入疫苗编号'));
+          callback(new Error('请输入货主货品编号'));
         } else {
           let orgId = this.$store.state.user.userCompanyAddress;
           Vaccine.checkGoodsCode({code: value, goodsId: this.form.goodsId, orgId: orgId}).then(val => {
             if (!val.data['codeCheck']) {
-              callback(new Error('输入的疫苗编号已存在,请重新输入'));
+              callback(new Error('输入的货主货品编号已存在,请重新输入'));
             } else {
               callback();
             }
@@ -299,7 +299,7 @@
             {required: true, message: '请选择疫苗种类', trigger: 'change'}
           ],
           goodsNo: [
-            {required: true, message: '请输入疫苗编号', trigger: 'blur'},
+            {required: true, message: '请输入货主货品编号', trigger: 'blur'},
             {validator: checkGoodsCode, trigger: 'blur'}
           ],
           salesFirm: [

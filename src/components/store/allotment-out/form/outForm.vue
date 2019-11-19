@@ -203,7 +203,7 @@
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <!--<span class="select-other-info pull-left"><span-->
                         <!--v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice-->

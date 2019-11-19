@@ -57,7 +57,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <!--<span class="select-other-info pull-left"><span-->
-                      <!--v-show="vaccine.code">疫苗编号</span>  {{vaccine.code}}-->
+                      <!--v-show="vaccine.code">货主货品编号</span>  {{vaccine.code}}-->
                       <!--</span>-->
                       <span class="select-other-info pull-left"><span
                         v-show="vaccine.specifications">疫苗规格:</span>{{vaccine.specifications}}

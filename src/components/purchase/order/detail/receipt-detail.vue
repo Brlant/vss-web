@@ -196,7 +196,7 @@
               </div>
               <div>
                 <el-tooltip class="item" effect="dark"
-                            :content="`货主疫苗编码:${item.orgGoodsDto.goodsNo} 货主疫苗ID:${item.orgGoodsId}`" placement="right">
+                            :content="`货主货品编号:${item.orgGoodsDto.goodsNo} 货主疫苗ID:${item.orgGoodsId}`" placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.name }}</span>
                 </el-tooltip>
               </div>
