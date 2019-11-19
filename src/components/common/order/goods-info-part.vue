@@ -29,7 +29,7 @@
         <oms-row label="规格" :span="8">
           {{productInfo.fixInfo.goodsDto.specifications}}
         </oms-row>
-        <oms-row label="疫苗编号" :span="8">
+        <oms-row label="货主货品编号" :span="8">
           {{productInfo.fixInfo.goodsNo}}
         </oms-row>
         <oms-row label="批准文号" :span="8">

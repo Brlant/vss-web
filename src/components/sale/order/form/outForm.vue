@@ -217,7 +217,7 @@
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left" v-show="vaccineType==='2'"><span
-                          v-show="item.orgGoodsDto.goodsNo">疫苗编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left" v-show="vaccineType==='2'"><span
                           v-show="item.orgGoodsDto.sellPrice">销售价格:￥{{ item.orgGoodsDto.sellPrice

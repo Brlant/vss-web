@@ -155,7 +155,7 @@
                 <li v-for="item in orgGoodsList" class="list-item" @click="showType(item)" style="padding-left: 10px"
                     :class="{'active':item.orgGoodsDto==currentItem.orgGoodsDto}">
                   <div class="id-part">
-                    <span>疫苗编号{{item.orgGoodsDto.goodsNo}}</span>
+                    <span>货主货品编号{{item.orgGoodsDto.goodsNo}}</span>
                     <el-tag type="primary" style="padding-left: 9px" v-show="item.orgGoodsDto.goodsIsCombination">组合
                     </el-tag>
                     <el-tag type="danger" v-show="item.orgGoodsDto.goodsDto.overdue">注册证照过期</el-tag>
@@ -217,7 +217,7 @@
                   <goods-row label="货主疫苗ID" :span="12">
                     {{ data.id}}
                   </goods-row>
-                  <goods-row label="疫苗编号" :span="12">
+                  <goods-row label="货主货品编号" :span="12">
                     {{ data.goodsNo}}
                   </goods-row>
                   <goods-row label="疫苗名称" :span="12">

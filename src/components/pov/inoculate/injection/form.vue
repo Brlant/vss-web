@@ -82,7 +82,7 @@
       <h2>疫苗信息</h2>
       <el-form-item label="疫苗" prop="vaccineId">
         <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsListNew"
-                   placeholder="请输入名称或疫苗编号搜索疫苗"
+                   placeholder="请输入名称或货主货品编号搜索疫苗"
                    clearable popper-class="order-good-selects"
                    @change="orgGoodsIdChange" @clear="queryOrgGoodsListNew('')">
           <el-option v-for="item in orgGoodsList" :key="item.id" :label="item.goodsName"
@@ -92,7 +92,7 @@
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
+                v-show="item.goodsNo">货主货品编号:</span>{{item.goodsNo}}
               </span>
               <span class="select-other-info pull-left">
                 <span v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}

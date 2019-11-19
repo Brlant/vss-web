@@ -40,7 +40,7 @@
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">疫苗编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
@@ -127,7 +127,7 @@
             </el-tooltip>
           </template>
         </el-table-column>
-        <el-table-column prop="orgGoodsCode" label="疫苗编码" min-width="120" :sortable="true">
+        <el-table-column prop="orgGoodsCode" label="货主货品编号" min-width="120" :sortable="true">
           <template slot-scope="scope"><span>{{scope.row.orgGoodsCode}}</span></template>
         </el-table-column>
         <el-table-column prop="factoryName" label="疫苗种类" min-width="120" :sortable="true">

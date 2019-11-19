@@ -60,7 +60,7 @@
                          <span class="select-other-info pull-left"><span
                            v-show="item.specification">规格:</span>{{item.specification}}</span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}</span>
+                        v-show="item.goodsNo">货主货品编号:</span>{{item.goodsNo}}</span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.salesFirmName">供货厂商:</span>{{ item.salesFirmName }}</span>
                       </div>

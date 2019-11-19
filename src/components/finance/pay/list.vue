@@ -247,7 +247,7 @@
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
+                          v-show="item.goodsNo">货主货品编号:</span>{{item.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
