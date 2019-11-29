@@ -128,7 +128,8 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData" ref="reportTable" :maxHeight="getHeight">
         <el-table-column prop="type" label="出入库类型" :sortable="true" min-width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" min-width="120"></el-table-column>
-        <el-table-column prop="date" label="日期" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="date" label="业务日期" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="date" label="入库/配送日期" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="area" label="区县" :sortable="true" width="100"></el-table-column>
         <el-table-column prop="customerCode" label="关联单位" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="factoryName" label="供/收货单位名称" :sortable="true" min-width="180"></el-table-column>
