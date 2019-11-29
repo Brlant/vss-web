@@ -45,12 +45,23 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="7" class="clearfix">
+            <el-col :span="9">
+              <oms-form-row label="入库/配送日期" :span="6">
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="distributionDate"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="7">
               <oms-form-row label="区县" :span="6">
                 <oms-input type="text" v-model="searchWord.areaCode" placeholder="请输入区县"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="9">
+            <el-col :span="8">
               <oms-form-row label="供/收货单位" :span="6">
                 <el-select filterable remote placeholder="请输入供/收货单位名称查询" :remote-method="filterRelation"
                            :clearable="true" :loading="selectLoading"
@@ -129,7 +140,7 @@
         <el-table-column prop="type" label="出入库类型" :sortable="true" min-width="120"></el-table-column>
         <el-table-column prop="bizType" label="出入库详细" :sortable="true" min-width="120"></el-table-column>
         <el-table-column prop="date" label="业务日期" :sortable="true" min-width="100"></el-table-column>
-        <el-table-column prop="date" label="入库/配送日期" :sortable="true" min-width="100"></el-table-column>
+        <el-table-column prop="distributionDate" label="入库/配送日期" :sortable="true" min-width="150"></el-table-column>
         <el-table-column prop="area" label="区县" :sortable="true" width="100"></el-table-column>
         <el-table-column prop="customerCode" label="关联单位" :sortable="true" min-width="100"></el-table-column>
         <el-table-column prop="factoryName" label="供/收货单位名称" :sortable="true" min-width="180"></el-table-column>
@@ -181,13 +192,16 @@
           customerId: '',
           startTime: '',
           endTime: '',
-          batchNumberId: ''
+          batchNumberId: '',
+          distributionStartTime: '',
+          distributionEndTime: ''
         },
         orgList: [],
         provideList: [],
         orgGoods: [],
         batchNumberList: [],
         bizDateAry: '',
+        distributionDate: '',
         isLoading: false,
         typeList: ['入库', '出库'],
         goodsStatusList: ['不合格', '合格']
@@ -234,6 +248,8 @@
         // }
         this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
         this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
+        this.searchWord.distributionStartTime = this.$formatAryTime(this.distributionDate, 0, 'YYYY-MM-DD 00:00:00');
+        this.searchWord.distributionEndTime = this.$formatAryTime(this.distributionDate, 1, 'YYYY-MM-DD 23:59:59');
         let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
         this.$http({
@@ -248,6 +264,7 @@
             m.bizType = this.showOrderType(m.bizType);
             m.date = this.formatTime(m.date);
             m.expirationDate = this.formatTime(m.expirationDate);
+            m.distributionDate = this.formatTime(m.distributionDate);
             m.goodsStatus = this.goodsStatusList[m.goodsStatus];
             return m;
           });
@@ -329,9 +346,12 @@
           customerId: '',
           startTime: '',
           endTime: '',
-          batchNumberId: ''
+          batchNumberId: '',
+          distributionStartTime: '',
+          distributionEndTime: ''
         };
         this.bizDateAry = '';
+        this.distributionDate = '';
         this.reportList = [];
         this.search();
       },

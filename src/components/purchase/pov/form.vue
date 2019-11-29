@@ -232,7 +232,7 @@
       editItem(item) {
         this.currentGoodsItem = Object.assign({}, item, {
           orgGoodsId: this.currentItem.orgGoodsId,
-          list: [{detailId: item.detailId}]
+          list: [{detailId: item.id}]
         });
         this.showEditGoodsRight = true;
       },
