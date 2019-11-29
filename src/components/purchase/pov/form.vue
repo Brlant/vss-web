@@ -65,8 +65,8 @@
               </el-row>
               <div class="order-list clearfix">
                 <el-row class="order-list-header">
-                  <el-col :span="2">操作</el-col>
-                  <el-col :span="6">要货单位</el-col>
+                  <el-col :span="2" v-show="status === 0">操作</el-col>
+                  <el-col :span="status === 0 ? 6 : 8">要货单位</el-col>
                   <el-col :span="4">要货单位现有库存</el-col>
                   <el-col :span="4">需求数</el-col>
                   <el-col :span="4">要货时间</el-col>
@@ -88,7 +88,7 @@
                   <div class="order-list-item order-list-item-bg" v-for="item in allocationList"
                        :class="[{'active':currentItemId==item.id}]" style="max-height: 500px;overflow-y: auto">
                     <el-row>
-                      <el-col :span="2">
+                      <el-col :span="2" v-show="status === 0">
                         <perm label="demand-assignment-update-org-goods">
                           <el-tooltip content="修改要货品种" placement="bottom">
                             <span @click.prevent="editItem(item)">
@@ -98,7 +98,7 @@
                           </el-tooltip>
                         </perm>
                       </el-col>
-                      <el-col :span="6" class="R">
+                      <el-col :span="status === 0 ? 6 : 8" class="R">
                         <span>{{ item.povName }}</span>
                       </el-col>
                       <el-col :span="4">
