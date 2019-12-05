@@ -150,6 +150,9 @@
               {{ getOrderStatus(currentOrder) }}
               <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
             </oms-row>
+            <oms-row label="取消原因" v-show="currentOrder.erpStatus === '5'">
+              <span class="goods-span">{{currentOrder.cancelReason}}</span>
+            </oms-row>
           </el-col>
         </el-row>
         <el-row style="margin-bottom:0">
