@@ -61,6 +61,9 @@
               {{ getOrderStatus(currentOrder) }}
               <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
             </oms-row>
+            <oms-row label="取消原因" :span="span" v-show="currentOrder.state === '5'">
+              <span class="goods-span">{{currentOrder.cancelReason}}</span>
+            </oms-row>
           </el-col>
         </el-row>
         <el-row v-show="currentOrder.remark">

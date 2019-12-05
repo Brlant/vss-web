@@ -42,6 +42,9 @@
             {{ getCurrentOrderStatus(currentOrder.state) }}
             <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
           </oms-row>
+          <oms-row label="取消原因" :span="span" v-show="currentOrder.erpStatus === '9'">
+            <span class="goods-span">{{currentOrder.cancelReason}}</span>
+          </oms-row>
           <oms-row label="来自销售订单" :span="span"
                    v-show="currentOrder.thirdPartyNumber && currentOrder.transportationMeansId === '4'">
             {{ currentOrder.thirdPartyNumber }}
