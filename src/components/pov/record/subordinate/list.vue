@@ -55,14 +55,14 @@
                            :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
                            v-model="searchCondition.povId" @click.native.once="filterProvide('')"
                            popperClass="good-selects">
-                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                  <el-option :value="org.id" :key="org.id" :label="org.name"
                              v-for="org in provideList">
                     <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{org.subordinateCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
@@ -160,7 +160,7 @@
   </div>
 </template>
 <script>
-  import {cerpAction} from '@/resources';
+  import {BaseInfo} from '@/resources';
 
   export default {
     data() {
@@ -207,14 +207,18 @@
     },
     methods: {
       filterProvide: function (query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
         let params = {
-          keyWord: query
+          keyWord: query,
+          subjectOrgId: orgId
         };
         this.selectLoading = true;
-        cerpAction.queryAllPov(params).then(res => {
-          this.provideList = res.data.list;
+        BaseInfo.queryOrgByVossAuth(orgId, params).then(res => {
+          this.provideList = res.data;
           this.selectLoading = false;
-        });
+        }).catch(() => {
+          this.selectLoading = false;
+        })
       },
       handleSizeChange(val) {
         this.pager.pageSize = val;
