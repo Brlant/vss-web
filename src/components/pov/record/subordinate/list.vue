@@ -55,18 +55,25 @@
                            :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
                            v-model="searchCondition.povId" @click.native.once="filterProvide('')"
                            popperClass="good-selects">
-                  <el-option :value="org.subordinateId" :key="org.subordinateId" :label="org.subordinateName"
+                  <el-option :value="org.id" :key="org.id" :label="org.name"
                              v-for="org in provideList">
                     <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.subordinateName}}</span>
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{org.subordinateCode}}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                     </div>
                   </el-option>
                 </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="追溯码" :span="6">
+                <el-col :span="24">
+                  <el-input v-model="searchCondition.actualCode" placeholder="请输入追溯码"></el-input>
+                </el-col>
               </oms-form-row>
             </el-col>
             <el-col :span="5">
@@ -80,7 +87,7 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <el-col :span="4">接种时间</el-col>
+          <el-col :span="4">接种时间/登记编号</el-col>
           <el-col :span="6">接种疫苗</el-col>
           <el-col :span="5">接种单位名称</el-col>
           <el-col :span="4">批号</el-col>
@@ -104,6 +111,11 @@
             <el-row>
               <el-col :span="4" class="R pt10">
                 {{ item.actualTime | minute}}
+                <div>
+                  <el-tooltip class="item" effect="dark" content="登记编号" placement="right">
+                    <span class="font-gray">{{ item.inoculatorNumber }}</span>
+                  </el-tooltip>
+                </div>
               </el-col>
               <el-col :span="6" class="R pt10">
                 <div>
@@ -148,7 +160,7 @@
   </div>
 </template>
 <script>
-  import {cerpAction} from '@/resources';
+  import {BaseInfo} from '@/resources';
 
   export default {
     data() {
@@ -160,13 +172,15 @@
           actualStartTime: '',
           actualEndTime: '',
           vaccineId: '',
-          povId: ''
+          povId: '',
+          actualCode: ''
         },
         searchCondition: {
           actualStartTime: '',
           actualEndTime: '',
           vaccineId: '',
-          povId: ''
+          povId: '',
+          actualCode: ''
         },
         actualTime: '',
         orgList: [], // 货主列表,
@@ -193,14 +207,18 @@
     },
     methods: {
       filterProvide: function (query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
         let params = {
-          keyWord: query
+          keyWord: query,
+          subjectOrgId: orgId
         };
         this.selectLoading = true;
-        cerpAction.queryAllPov(params).then(res => {
-          this.provideList = res.data.list;
+        BaseInfo.queryOrgByVossAuth(orgId, params).then(res => {
+          this.provideList = res.data;
           this.selectLoading = false;
-        });
+        }).catch(() => {
+          this.selectLoading = false;
+        })
       },
       handleSizeChange(val) {
         this.pager.pageSize = val;
@@ -243,7 +261,8 @@
           actualStartTime: '',
           actualEndTime: '',
           vaccineId: '',
-          povId: ''
+          povId: '',
+          actualCode: ''
         };
         this.actualTime = '';
         Object.assign(this.searchCondition, temp);
