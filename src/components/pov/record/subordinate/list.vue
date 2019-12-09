@@ -87,11 +87,10 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <el-col :span="4">接种时间</el-col>
-          <el-col :span="3">登记编号</el-col>
-          <el-col :span="5">接种疫苗</el-col>
-          <el-col :span="4">接种单位名称</el-col>
-          <el-col :span="3">批号</el-col>
+          <el-col :span="4">接种时间/登记编号</el-col>
+          <el-col :span="6">接种疫苗</el-col>
+          <el-col :span="5">接种单位名称</el-col>
+          <el-col :span="4">批号</el-col>
           <el-col :span="4">追溯码</el-col>
           <el-col :span="1">来源</el-col>
         </el-row>
@@ -112,11 +111,13 @@
             <el-row>
               <el-col :span="4" class="R pt10">
                 {{ item.actualTime | minute}}
+                <div>
+                  <el-tooltip class="item" effect="dark" content="登记编号" placement="right">
+                    <span class="font-gray">{{ item.inoculatorNumber }}</span>
+                  </el-tooltip>
+                </div>
               </el-col>
-              <el-col :span="3" class="R pt10">
-                {{ item.inoculatorNumber}}
-              </el-col>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="6" class="R pt10">
                 <div>
                   {{ item.goodsName }}
                 </div>
@@ -131,10 +132,10 @@
                   </el-tooltip>
                 </div>
               </el-col>
-              <el-col :span="4" class="R pt10">
+              <el-col :span="5" class="R pt10">
                 {{ item.povName }}
               </el-col>
-              <el-col :span="3" class="R pt10">
+              <el-col :span="4" class="R pt10">
                 {{ item.batchNumber }}
               </el-col>
               <el-col :span="4" class="R pt10">
