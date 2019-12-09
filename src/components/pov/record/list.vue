@@ -50,6 +50,13 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row label="追溯码" :span="6">
+                <el-col :span="24">
+                  <el-input v-model="searchCondition.actualCode" placeholder="请输入追溯码"></el-input>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -66,9 +73,10 @@
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
           <el-col :span="4">接种时间</el-col>
-          <el-col :span="9">接种疫苗</el-col>
-          <el-col :span="4">批号</el-col>
-          <el-col :span="6">追溯码</el-col>
+          <el-col :span="3">登记编号</el-col>
+          <el-col :span="8">接种疫苗</el-col>
+          <el-col :span="3">批号</el-col>
+          <el-col :span="5">追溯码</el-col>
           <el-col :span="1">来源</el-col>
         </el-row>
         <el-row v-if="loadingData">
@@ -89,7 +97,10 @@
               <el-col :span="4" class="R pt10">
                 {{ item.actualTime | minute}}
               </el-col>
-              <el-col :span="9" class="R pt10">
+              <el-col :span="3">
+                {{ item.inoculatorNumber }}
+              </el-col>
+              <el-col :span="8" class="R pt10">
                 <div>
                   {{ item.goodsName }}
                 </div>
@@ -104,10 +115,10 @@
                   </el-tooltip>
                 </div>
               </el-col>
-              <el-col :span="4" class="R pt10">
+              <el-col :span="3" class="R pt10">
                 {{ item.batchNumber }}
               </el-col>
-              <el-col :span="6" class="R pt10">
+              <el-col :span="5" class="R pt10">
                 {{ item.actualCode}}
               </el-col>
               <el-col :span="1">
@@ -141,12 +152,14 @@
         filters: {
           actualStartTime: '',
           actualEndTime: '',
-          vaccineId: ''
+          vaccineId: '',
+          actualCode: ''
         },
         searchCondition: {
           actualStartTime: '',
           actualEndTime: '',
-          vaccineId: ''
+          vaccineId: '',
+          actualCode: ''
         },
         actualTime: '',
         orgList: [], // 货主列表,
@@ -210,7 +223,8 @@
         let temp = {
           actualStartTime: '',
           actualEndTime: '',
-          vaccineId: ''
+          vaccineId: '',
+          actualCode: ''
         };
         this.actualTime = '';
         Object.assign(this.searchCondition, temp);
