@@ -67,6 +67,7 @@
 <script>
   import axios from 'axios';
   import utils from '@/tools/utils';
+  import addGoodsMixin from '@/mixins/addGoodsMixin';
 
   export default {
     props: {
@@ -82,6 +83,7 @@
       formCopy: {},
       orderType: String
     },
+    mixins: [addGoodsMixin],
     data() {
       return {
         batchNumbers: [],
@@ -285,17 +287,19 @@
           let comTotalCount = 0;
           ary[0].list.forEach(p => {
             if (p.accessory === i.orgGoodsId) {
-              comTotalCount = Math.ceil(totalCount * p.proportion);
+              comTotalCount =
+                this.getCurrentAccessoryGoodsAmount(totalCount, p.proportion, p.accessoryGoods && p.accessoryGoods.smallPacking);
             }
           });
+          let lots = i.lots.filter(fl => !fl.disabled);
           // 查出近效期的批号
-          let effectiveList = i.lots.filter(fl => fl.inEffectiveFlag);
+          let effectiveList = lots.filter(fl => fl.inEffectiveFlag);
           if (!effectiveList.length) {
-            this.selectBatch(i.lots, 0, 0, comTotalCount);
+            this.selectBatch(lots, 0, 0, comTotalCount);
           } else {
             let c = this.selectBatch(effectiveList, 0, 0, comTotalCount);
             if (c < comTotalCount) {
-              let noEffectiveList = i.lots.filter(fl => !fl.inEffectiveFlag);
+              let noEffectiveList = lots.filter(fl => !fl.inEffectiveFlag);
               this.selectBatch(noEffectiveList, 0, 0, comTotalCount - c);
             }
           }
@@ -409,7 +413,7 @@
                 }
               });
               list.forEach(i => {
-                let amount = Math.ceil(i.proportion * totalCount);
+                let amount = this.getCurrentAccessoryGoodsAmount(totalCount, i.proportion, i.accessoryGoods && i.accessoryGoods.smallPacking);
                 if (i.accessoryTotalCount !== amount) {
                   isPassed = false;
                 }
