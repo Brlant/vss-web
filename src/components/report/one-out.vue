@@ -103,7 +103,7 @@
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/first/out/manager'});
         this.$http.get('/erp-statement/first-vaccine/out-warehouse/export', {params}).then(res => {
-          utils.download(res.data.path, '一类疫苗各区出货统计表');
+          utils.download(res.data.path, '免疫规划疫苗各区出货统计表');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/first/out/manager'});
         }).catch(error => {

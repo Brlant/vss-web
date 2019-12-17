@@ -62,7 +62,7 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.goodsNo">货主货品编号:</span>{{item.goodsNo}}</span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.salesFirmName">供货厂商:</span>{{ item.salesFirmName }}</span>
+                          v-show="item.salesFirmName">供货单位:</span>{{ item.salesFirmName }}</span>
                       </div>
                       <div class="clearfix">
                          <span class="select-other-info pull-left">

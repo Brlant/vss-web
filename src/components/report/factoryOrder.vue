@@ -52,8 +52,8 @@
                              :label="vaccine.name" v-for="vaccine in vaccineList">
                     <div style="overflow: hidden">
                       <span class="pull-left">{{vaccine.name}}</span>
-                      <!--<el-tag type="success" v-if="vaccine.vaccineSign==='1'">一类疫苗</el-tag>-->
-                      <!--<el-tag type="success"  v-if="vaccine.vaccineSign==='2'">二类疫苗</el-tag>-->
+                      <!--<el-tag type="success" v-if="vaccine.vaccineSign==='1'">免疫规划疫苗</el-tag>-->
+                      <!--<el-tag type="success"  v-if="vaccine.vaccineSign==='2'">非免疫规划疫苗</el-tag>-->
                     </div>
                     <div style="overflow: hidden">
                       <!--<span class="select-other-info pull-left"><span-->

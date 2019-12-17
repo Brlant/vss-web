@@ -26,8 +26,8 @@ const state = {
   requestingDictAry: [],
   breakageOrgType: [1, 2, 3],
   vaccineType: [
-    {key: 0, label: '一类疫苗'},
-    {key: 1, label: '二类疫苗'}
+    {key: 0, label: '免疫规划疫苗'},
+    {key: 1, label: '非免疫规划疫苗'}
   ],
   sysTitle: '疫苗供应链管理系统'
 };

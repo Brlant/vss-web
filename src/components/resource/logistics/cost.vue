@@ -47,11 +47,11 @@
                   </span>
                 </perm>
               </div>
-              <oms-row label="一类疫苗费用模式" :span="10">{{ setModel}}</oms-row>
-              <oms-row label="一类疫苗物流费用" :span="10" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{
+              <oms-row label="免疫规划疫苗费用模式" :span="10">{{ setModel}}</oms-row>
+              <oms-row label="免疫规划疫苗物流费用" :span="10" v-if="cost.model==='0'"><span v-if="cost.price">￥</span>{{
                 cost.price}}
               </oms-row>
-              <oms-row label="一类疫苗物流费用比例" :span="10" v-if="cost.model==='1'">{{ cost.price * 100 }}<span
+              <oms-row label="免疫规划疫苗物流费用比例" :span="10" v-if="cost.model==='1'">{{ cost.price * 100 }}<span
                 v-if="cost.price">%</span>
               </oms-row>
             </div>
@@ -79,12 +79,12 @@
                   </span>
                 </perm>
               </div>
-              <oms-row label="二类疫苗费用模式" :span="10">{{ setSecondModel}}</oms-row>
-              <oms-row label="二类疫苗物流费用" :span="10" v-if="secondCost.model==='0'"><span v-if="secondCost.price">￥</span>{{
+              <oms-row label="非免疫规划疫苗费用模式" :span="10">{{ setSecondModel}}</oms-row>
+              <oms-row label="非免疫规划疫苗物流费用" :span="10" v-if="secondCost.model==='0'"><span v-if="secondCost.price">￥</span>{{
                 secondCost.price
                 }}
               </oms-row>
-              <oms-row label="二类疫苗物流费用比例" :span="10" v-if="secondCost.model==='1'">{{ secondCost.price * 100}}<span
+              <oms-row label="非免疫规划疫苗物流费用比例" :span="10" v-if="secondCost.model==='1'">{{ secondCost.price * 100}}<span
                 v-if="secondCost.price">%</span>
               </oms-row>
             </div>

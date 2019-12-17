@@ -22,12 +22,12 @@ export const route = [
           {
             path: '/purchase/order/one/class/:id',
             component: () => import('./components/purchase/order/list.vue'),
-            meta: {moduleId: 'purchase', title: '一类苗采购订单', perm: 'purchasing-order', type: '1'}
+            meta: {moduleId: 'purchase', title: '免疫规划苗采购订单', perm: 'purchasing-order', type: '1'}
           },
           {
             path: '/purchase/order/two/class/:id',
             component: () => import('./components/purchase/order/list.vue'),
-            meta: {moduleId: 'purchase', title: '二类苗采购订单', perm: 'second-vaccine-purchasing-order', type: '2'}
+            meta: {moduleId: 'purchase', title: '非免疫规划苗采购订单', perm: 'second-vaccine-purchasing-order', type: '2'}
           },
           {
             path: '/purchase/rejected/:id',
@@ -49,12 +49,12 @@ export const route = [
           {
             path: '/sale/order/one/class/:id',
             component: () => import('./components/sale/order/list.vue'),
-            meta: {moduleId: 'sale', title: '一类苗销售订单', perm: 'sales-order', type: '1'}
+            meta: {moduleId: 'sale', title: '免疫规划苗销售订单', perm: 'sales-order', type: '1'}
           },
           {
             path: '/sale/order/two/class/:id',
             component: () => import('./components/sale/order/list.vue'),
-            meta: {moduleId: 'sale', title: '二类苗销售订单', perm: 'second-vaccine-sales-order', type: '2'}
+            meta: {moduleId: 'sale', title: '非免疫规划苗销售订单', perm: 'second-vaccine-sales-order', type: '2'}
           },
           {
             path: '/sale/no/feedback/:id',
@@ -328,12 +328,12 @@ export const route = [
           {
             path: '/report/first/out/manager',
             component: () => import('./components/report/one-out.vue'),
-            meta: {moduleId: 'report', title: '一类疫苗各区出货统计表', perm: 'first-vaccine-out-form-manager'}
+            meta: {moduleId: 'report', title: '免疫规划疫苗各区出货统计表', perm: 'first-vaccine-out-form-manager'}
           },
           {
             path: '/report/month/repertory',
             component: () => import('./components/report/month-end-repertory.vue'),
-            meta: {moduleId: 'report', title: '二类疫苗月终库存盘点表', perm: 'month-stock-inventory-form-manager'}
+            meta: {moduleId: 'report', title: '非免疫规划疫苗月终库存盘点表', perm: 'month-stock-inventory-form-manager'}
           },
           {
             path: '/report/logistics',
@@ -363,7 +363,7 @@ export const route = [
           {
             path: '/report/cdc/first-vaccine',
             component: () => import('./components/report/cdc-first-vaccine.vue'),
-            meta: {moduleId: 'report', title: '一类苗领用记录', perm: 'cdc-free-vaccine-sale-manager'}
+            meta: {moduleId: 'report', title: '免疫规划苗领用记录', perm: 'cdc-free-vaccine-sale-manager'}
           },
           {
             path: '/report/receive',

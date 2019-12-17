@@ -222,7 +222,7 @@
             return qs.stringify(params, {indices: false});
           }
         }).then(res => {
-          utils.download(res.data.path, '一类苗领用记录');
+          utils.download(res.data.path, '免疫规划苗领用记录');
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/cdc/first-vaccine'});
         }).catch(error => {

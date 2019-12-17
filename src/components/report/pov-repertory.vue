@@ -164,7 +164,7 @@
           moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`
         });
         this.$http.get('/erp-statement/pov-stock/export', {params}).then(res => {
-          utils.download(res.data.path, '接种单位二类疫苗盘点表');
+          utils.download(res.data.path, '接种单位非免疫规划疫苗盘点表');
           this.isLoading = false;
           this.$store.commit('initPrint', {
             isPrinting: false,

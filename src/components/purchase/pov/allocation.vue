@@ -270,7 +270,7 @@
           let type = res.data.orgGoodsDto.goodsDto.vaccineSign;
           if (type === '1') {
             this.$notify.success({
-              message: '即将跳转到一类苗采购订单'
+              message: '即将跳转到免疫规划苗采购订单'
             });
             this.$router.push({
               path: '/purchase/order/one/class/add',
@@ -278,7 +278,7 @@
             });
           } else {
             this.$notify.success({
-              message: '即将跳转到二类苗采购订单'
+              message: '即将跳转到非免疫规划苗采购订单'
             });
             this.$router.push({
               path: '/purchase/order/two/class/add',

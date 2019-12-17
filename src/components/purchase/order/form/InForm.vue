@@ -587,7 +587,7 @@
         // this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
       },
       getTitle() {
-        return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '一类苗' : '二类苗'}采购订单`;
+        return `${this.defaultIndex === 2 ? '编辑' : '增加'}${this.vaccineType === '1' ? '免疫规划苗' : '非免疫规划苗'}采购订单`;
       },
       createOrderInfo() {
         this.form.detailDtoList = [];
