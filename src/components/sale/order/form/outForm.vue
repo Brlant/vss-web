@@ -255,7 +255,14 @@
                         <goods-info-part :product-info="product"></goods-info-part>
                       </el-col>
                       <el-col :span="10">
-                        <acce-goods-part :accessoryList="accessoryList"/>
+                        <span v-show="accessoryList.length">【组合疫苗】</span>
+                        <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
+                       <span style="margin-right: 10px">{{acce.name}}</span>
+                       <span style="margin-right: 10px"
+                             v-show="acce.sellPrice">销售价格:¥{{ acce.sellPrice | formatMoney }}</span>
+                       <span style="margin-right: 10px" v-show="acce.proportion">比例:{{ acce.proportion }}</span>
+                       <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
+                    </span>
                       </el-col>
                     </el-row>
                   </div>
@@ -359,13 +366,12 @@
   import materialPart from '../material.vue';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
-  import addGoodsMixin from '@/mixins/addGoodsMixin';
 
   export default {
     name: 'addForm',
     loading: false,
     components: {materialPart, batchNumberPart},
-    mixins: [OrderMixin, addGoodsMixin],
+    mixins: [OrderMixin],
     props: {
       type: {
         type: String,
@@ -1015,7 +1021,7 @@
                           }
                         });
                       } else {
-                        let amount = this.getCurrentAccessoryGoodsAmount(totalAmount, m.proportion, m.accessoryGoods && m.accessoryGoods.smallPacking);
+                        let amount = Math.ceil(m.proportion * totalAmount);
                         this.form.detailDtoList.push({
                           no: '',
                           batchNumberId: '',
@@ -1127,7 +1133,7 @@
           });
           this.form.detailDtoList.forEach(f1 => {
             if (f1.mainOrgId === orgGoodsId) {
-              f1.amount = this.getCurrentAccessoryGoodsAmount(amount, f1.proportion, f1.accessoryGoods && f1.accessoryGoods.smallPacking);
+              f1.amount = Math.ceil(f1.proportion * amount);
             }
           });
         } else {

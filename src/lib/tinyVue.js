@@ -104,7 +104,6 @@ import goodsStatusTag from '@/components/common/order/goods-status-tag';
 import CardBox from '@/components/common/card-box';
 import orderPushStatus from '@/components/common/order/order-push-status';
 import orderPushSearch from '@/components/common/order/order-push-search';
-import accessoryGoodsPart from '@/components/common/order/accessory-goods-part';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
   Pagination,
@@ -202,8 +201,7 @@ const tinyVue = [
   goodsStatusTag,
   TnInputAutoComplete,
   orderPushStatus,
-  orderPushSearch,
-  accessoryGoodsPart
+  orderPushSearch
 ];
 
 const install = function (Vue, opts = {}) {
