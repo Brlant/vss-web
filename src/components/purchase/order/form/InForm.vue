@@ -1,7 +1,7 @@
 <style lang="scss" scoped>
   @import "../../../../assets/mixins.scss";
 
-  $leftWidth: 200px;
+  $leftWidth: 240px;
 
   .el-form .el-checkbox__label {
     font-size: 12px;
