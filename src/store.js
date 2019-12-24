@@ -13,7 +13,7 @@ const state = {
   roleList: {},
   menuParentIds: [], // 所有非叶子节点菜单
   attachmentDialog: {attachmentId: 0, open: false, attachmentList: []},
-  bodySize: {left: '200px'},
+  bodySize: {left: '230px'},
   orgName: '',
   weChatInfo: {},
   bodyHeight: 0,
@@ -102,7 +102,7 @@ const mutations = {
     Object.assign(state.bodySize, data);
   },
   changeBodyLeft(state, isSmall) {
-    state.bodySize.left = isSmall ? '64px' : '200px';
+    state.bodySize.left = isSmall ? '64px' : '230px';
     window.localStorage.setItem('bodyLeft', state.bodySize.left);
   },
   initOrgName(state, data) {
