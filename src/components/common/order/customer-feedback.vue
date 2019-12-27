@@ -16,6 +16,10 @@
     border: 1px solid #eee;
     border-radius: 5px;
   }
+
+  .ml-10 {
+    margin-left: 10px;
+  }
 </style>
 <template>
   <div v-loading="loading">
@@ -24,14 +28,26 @@
       <h3 class="title">
         {{detail.signFlag ? '已签收': '未签收'}}
       </h3>
-      <div v-show="isShowPushBtn">
+      <div v-show="isShowPushBtn" class="mb-10" style="display: inline-block">
         <perm :label="perm">
           <el-button type="primary" size="mini" @click="uploadData">推送数据</el-button>
         </perm>
       </div>
-      <div v-show="!isShowPushBtn">
-        <perm label="upload-data-operate-again">
+      <div v-show="!isShowPushBtn" class="mb-10 ml-10">
+        <perm label="upload-data-operate-again" style="display: inline-block">
           <el-button type="primary" size="mini" @click="uploadData">重新推送数据</el-button>
+        </perm>
+      </div>
+      <div class="mb-10 ml-10" style="display: inline-block">
+        <perm :label="perm">
+          <el-button type="primary" size="mini" @click="uploadWDData">推送给市疾控</el-button>
+        </perm>
+      </div>
+      <div class="ml-10" style="display: inline-block">
+        <perm :label="perm">
+          <el-button type="success" size="mini" @click="exportDataExcel" :loading="loadingExcel">
+            {{loadingExcel ? '正在导出' :'导出国家协同平台XML'}}
+          </el-button>
         </perm>
       </div>
       <div class="qp-box" v-for="item in detail.list">
@@ -48,16 +64,20 @@
   </div>
 </template>
 <script>
+  import utils from '@/tools/utils';
+
   export default {
     props: {
       orderId: String,
       index: Number,
-      perm: String
+      perm: String,
+      currentOrder: Object
     },
     data() {
       return {
         detail: null,
-        loading: false
+        loading: false,
+        loadingExcel: false
       };
     },
     computed: {
@@ -100,6 +120,31 @@
           this.loading = false;
           this.$notify.error({
             message: e.response && e.response.data.msg || '无法推送数据'
+          });
+        });
+      },
+      uploadWDData() {
+        if (this.loading) return;
+        this.loading = true;
+        this.$http.get(`/pov-upload/${this.orderId}/new`).then(() => {
+          this.query();
+        }).catch(e => {
+          this.loading = false;
+          this.$notify.error({
+            message: e.response && e.response.data.msg || '无法推送数据'
+          });
+        });
+      },
+      exportDataExcel() {
+        this.loadingExcel = true;
+        let params = {orderId: this.orderId};
+        this.$http.get('erp-order/xtpt/export', {params}).then(res => {
+          this.loadingExcel = false;
+          utils.downloadXml.call(this, res.data.path, `${this.currentOrder.orderNo}_国家协同平台.xml`);
+        }).catch(error => {
+          this.loadingExcel = false;
+          this.$notify.error({
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
           });
         });
       }
