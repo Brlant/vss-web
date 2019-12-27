@@ -53,11 +53,11 @@
       <div class="qp-box" v-for="item in detail.list">
         <h3>
           {{ item.calltime }}
-          <el-tag v-if="item.result === 0" type="success">正常</el-tag>
+          <el-tag v-if="item.result === 0 || item.result === '00'" type="success">正常</el-tag>
           <el-tag v-else type="danger">异常</el-tag>
         </h3>
         <div>
-          {{item.msg}}
+          {{item.jsonData}}
         </div>
       </div>
     </div>
@@ -83,7 +83,7 @@
     computed: {
       isShowPushBtn() {
         // 推送数据条件： 反馈信息不存在 或者最新反馈信息推送异常
-        return !this.detail.list.length || this.detail.list[0].result !== 0;
+        return !this.detail.list.length || this.detail.list[0].result !== 0 || this.detail.list[0].result !== '00';
       }
     },
     watch: {
@@ -101,7 +101,9 @@
           let list = [];
           res.data.list && res.data.list.forEach(i => {
             if (i.json) {
-              list.push(JSON.parse(i.json));
+              let item = JSON.parse(i.json);
+              item.jsonData = i.json;
+              list.push(item);
             }
           });
           this.detail = {
