@@ -67,10 +67,14 @@
   import utils from '@/tools/utils';
 
   export default {
+    name: 'customerFeedback',
     props: {
       orderId: String,
       index: Number,
-      perm: String,
+      perm: {
+        type: String,
+        default: 'sales-order-upload-data-operate'
+      },
       currentOrder: Object
     },
     data() {
