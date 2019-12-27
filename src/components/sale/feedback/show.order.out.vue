@@ -38,7 +38,8 @@
                                v-show="index === 9"></relevance-code-review>
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
-        <customer-feedback :orderId="currentOrder.id" :index="index" perm="show" v-show="index === 12"/>
+        <customer-feedback :currentOrder="currentOrder" :orderId="currentOrder.id" :index="index" perm="show"
+                           v-show="index === 12"/>
 
       </div>
     </div>
@@ -48,7 +49,7 @@
   import basicInfo from './base-info.vue';
   import log from '@/components/common/order.log.vue';
   import receipt from '../order/detail/receipt.vue';
-  import {erpOrder, http, InWork} from '@/resources';
+  import {InWork} from '@/resources';
   import orderAttachment from '@/components/common/order/out.order.attachment.vue';
   import relevanceCode from '@/components/common/order/relevance.code.vue';
   import customerFeedback from '@/components/common/order/customer-feedback.vue';
