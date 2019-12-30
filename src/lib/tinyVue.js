@@ -64,6 +64,7 @@ import ColorPicker from 'element-ui/lib/color-picker';
 import Transfer from 'element-ui/lib/transfer';
 import locale from 'element-ui/lib/locale';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
+import accessoryGoodsPart from '@/components/common/order/accessory-goods-part';
 
 import {
   compressedImg,
@@ -201,7 +202,8 @@ const tinyVue = [
   goodsStatusTag,
   TnInputAutoComplete,
   orderPushStatus,
-  orderPushSearch
+  orderPushSearch,
+  accessoryGoodsPart
 ];
 
 const install = function (Vue, opts = {}) {
