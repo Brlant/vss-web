@@ -75,17 +75,7 @@
 <template>
   <div>
     <div>
-      <div style="margin-bottom: 10px; margin-top: 20px;overflow: hidden">
-       <span class="pull-right">
-           <span class="btn-search-toggle open" v-show="showSearch">
-              <single-input v-model="filters.code" placeholder="请输入追溯码搜索" :showFocus="showSearch"></single-input>
-              <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
-           </span>
-           <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-              <i class="el-icon-t-search"></i>
-           </a>
-      </span>
-      </div>
+      <code-search :currentOrder="currentOrder" :type="type" :index="index" @search="search"/>
       <div class="order-list clearfix" v-loading="loadingData">
 
         <el-row class="order-list-header t-head" style="margin:0">

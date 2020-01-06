@@ -2,7 +2,7 @@
   <el-row class="mt-10">
     <el-col :span="7">
       <oms-form-row :span="5" label="货品">
-        <el-select clearable filterable placeholder="请选择货品" size="mini"
+        <el-select clearable filterable placeholder="请选择货品" size="mini" popperClass="good-selects"
                    v-model="searchCondition.goodsId" @change="goodsIdChange">
           <el-option :key="item.goodsId" :label="item.goodsName" :value="item.goodsId"
                      v-for="item in goodsList">
