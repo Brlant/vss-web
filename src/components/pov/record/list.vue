@@ -24,25 +24,27 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="货主疫苗" :span="6">
-                <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="searchProduct"
+              <oms-form-row label="疫苗主档" :span="6">
+                <el-select filterable remote placeholder="请输入名称或编号搜索疫苗主档" :remote-method="searchProduct"
                            :clearable="true"
                            v-model="searchCondition.vaccineId" popper-class="good-selects"
                            @click.native.once="searchProduct('')">
-                  <el-option :value="org.goodsId" :key="org.id" :label="org.goodsName"
+                  <el-option :value="org.id" :key="org.id" :label="org.name"
                              v-for="org in orgList">
                     <div style="overflow: hidden">
                       <span class="pull-left">
-                        {{org.goodsName}}
-                        <el-tag style="float: none" type="danger" v-show="!org.status">停用</el-tag>
+                        {{org.name}}
                       </span>
                     </div>
                     <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}
+                      <span class="select-other-info pull-left">
+                        <span v-show="org.specifications">规格:</span>{{org.specifications}}
+                      </span>
+                      <span class="select-other-info pull-left">
+                        <span v-show="org.code">货品编号:</span>{{org.code}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
+                        v-show="org.factoryName">生产厂商:</span>{{ org.factoryName }}
                       </span>
                     </div>
                   </el-option>
@@ -205,13 +207,11 @@
         });
       },
       searchProduct(query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
           deleteFlag: false,
-          orgId: orgId,
           keyWord: query
         });
-        this.$http.get('/erp-stock/goods-list', {params}).then(res => {
+        this.$http.get('/goods/main-info-pager', {params}).then(res => {
           this.orgList = res.data.list;
         });
       },
