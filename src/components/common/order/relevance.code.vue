@@ -116,17 +116,8 @@
       </div>
       <div style="margin-bottom: 10px; margin-top: 20px;overflow: hidden">
         <h2 style="display: inline-block">追溯码信息</h2>
-        <span class="pull-right">
-           <span class="btn-search-toggle open" v-show="showSearch">
-              <single-input v-model="filters.code" placeholder="请输入追溯码搜索" :showFocus="showSearch"
-                            style="width: 180px;"></single-input>
-              <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
-           </span>
-           <a href="#" class="btn-circle" @click.stop.prevent="showSearch=(!showSearch)" v-show="!showSearch">
-              <i class="el-icon-t-search"></i>
-           </a>
-      </span>
       </div>
+      <code-search :currentOrder="currentOrder" :type="type" :index="index" @search="search"/>
       <div class="order-list clearfix">
 
         <el-row class="order-list-header t-head" style="margin:0">
@@ -149,6 +140,18 @@
               </el-col>
               <el-col :span="8" class="pt">
                 <span>{{ item.goodsName }}</span>
+                <div class="select-other-info" style="margin-left: 0">
+                  <div>
+                    <el-tooltip content="规格" class="item" effect="dark" placement="right">
+                      <span>{{item.specification}}</span>
+                    </el-tooltip>
+                  </div>
+                  <div>
+                    <el-tooltip content=生产厂商 class="item" effect="dark" placement="right">
+                      <span>{{item.factoryName}}</span>
+                    </el-tooltip>
+                  </div>
+                </div>
               </el-col>
               <el-col :span="5" class="pt">
                 <span>{{ item.batchNumber }}</span>
@@ -175,6 +178,7 @@
 <script>
   import {http} from '@/resources';
   import utils from '@/tools/utils';
+  import codeSearch from './code-search';
 
   export default {
     props: {
@@ -191,6 +195,7 @@
       },
       type: String
     },
+    components: {codeSearch},
     data() {
       return {
         loadingData: false,
@@ -212,15 +217,16 @@
     },
     watch: {
       index(val) {
-        this.filters.code = '';
+        this.filters = {};
         if (val !== 8) return;
         this.getTraceCodes(1);
       },
-      'filters.code'() {
-        this.filterTraceCodes(1);
-      }
     },
     methods: {
+      search(val) {
+        this.filters = Object.assign({}, val);
+        this.getTraceCodes(1);
+      },
       handleSizeChange(val) {
         this.pager.pageSize = val;
         window.localStorage.setItem('currentPageSize', val);
@@ -263,9 +269,9 @@
         this.loadingData = true;
         // this.currentOrder.orderNo = '201805250001'; // 201805250001
         http.get(`/vss-code/${this.currentOrder.orderNo}/trace-code/list`, {params}).then(res => {
-          this.totalTraceCodes = res.data.list;
+          this.totalTraceCodes = res.data.list || [];
           this.filterTraceCodes(1);
-          this.totalInfoList = res.data.statisticsList;
+          this.totalInfoList = res.data.statisticsList || [];
           this.loadingData = false;
         });
       }
