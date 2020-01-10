@@ -24,8 +24,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="货品主档" :span="6">
-                <el-select filterable remote placeholder="请输入名称或编号搜索货品主档" :remote-method="searchProduct"
+              <oms-form-row label="疫苗主档" :span="6">
+                <el-select filterable remote placeholder="请输入名称或编号搜索疫苗主档" :remote-method="searchProduct"
                            :clearable="true"
                            v-model="searchCondition.vaccineId" popper-class="good-selects"
                            @click.native.once="searchProduct('')">
