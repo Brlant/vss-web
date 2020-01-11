@@ -107,7 +107,7 @@
                 </el-date-picker>
               </oms-form-row>
             </el-col>
-            <el-col :span="12">
+            <el-col :span="24">
               <oms-form-row label="" :span="2">
                 <el-button native-type="reset" @click="resetExportForm">重置</el-button>
                 <div style="padding: 0 10px; display: inline-block">
@@ -129,10 +129,6 @@
                     </el-button>
                   </perm>
                 </div>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="12">
-              <oms-form-row label="" :span="6">
               </oms-form-row>
             </el-col>
           </el-row>

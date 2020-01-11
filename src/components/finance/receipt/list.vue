@@ -73,60 +73,77 @@
 <template>
   <div class="pay-part">
     <div class="container">
-      <perm label="accounts-receivable-export">
-        <div class="opera-btn-group" :class="{up:showSearch}">
-          <div class="opera-icon">
+      <div class="opera-btn-group" :class="{up:showSearch}">
+        <div class="opera-icon">
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="!showSearch">收起</span>
             <span v-show="showSearch">展开</span>
           </span>
-          </div>
-          <el-form class="advanced-query-form clearfix"
-                   style="padding-top: 10px; background: #fff; padding: 10px 10px 10px;">
-            <el-row>
-              <el-col :span="8">
-                <oms-form-row label="日期" :span="6">
-                  <el-col :span="30">
-                    <el-date-picker
-                      v-model="bizDateAry"
-                      type="daterange"
-                      placeholder="请选择" format="yyyy-MM-dd">
-                    </el-date-picker>
-                  </el-col>
-                </oms-form-row>
-              </el-col>
-              <el-col :span="8">
-                <oms-form-row label="收货单位" :span="4">
-                  <el-select placeholder="请输入名称搜索收货单位" v-model="searchCondition.keyword" filterable remote
-                             :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
-                             popperClass="good-selects">
-                    <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
-                      <div style="overflow: hidden">
-                        <span class="pull-left" style="clear: right">{{org.name}}</span>
-                      </div>
-                      <div style="overflow: hidden">
+        </div>
+        <el-form class="advanced-query-form clearfix"
+                 style="padding-top: 10px; background: #fff; padding: 10px 10px 10px;">
+          <el-row>
+            <el-col :span="8">
+              <oms-form-row label="日期" :span="6">
+                <el-col :span="30">
+                  <el-date-picker
+                    v-model="bizDateAry"
+                    type="daterange"
+                    placeholder="请选择" format="yyyy-MM-dd">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="收货单位" :span="4">
+                <el-select placeholder="请输入名称搜索收货单位" v-model="searchCondition.keyword" filterable remote
+                           :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
+                           popperClass="good-selects">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
                         <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
-                      </div>
-                    </el-option>
-                  </el-select>
-                </oms-form-row>
-              </el-col>
-              <el-col :span="6">
-                <oms-form-row label="" :span="2">
-                  <perm label="accounts-receivable-export">
-                    <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
-                      导出Excel
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="24">
+              <oms-form-row label="" :span="2">
+                <perm label="accounts-payable-accepted-info-export">
+                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                    导出Excel
+                  </el-button>
+                </perm>
+                <div style="padding: 0 10px; display: inline-block">
+                  <perm label="accounts-payable-paid-info-export">
+                    <el-button :plain="true" type="success" @click="exportPayment" :disabled="isLoading">
+                      导出已收账款
                     </el-button>
                   </perm>
-                </oms-form-row>
-              </el-col>
-            </el-row>
-          </el-form>
-        </div>
-      </perm>
+                </div>
+                <perm label="accounts-payable-unaccepted-info-export">
+                  <el-button :plain="true" type="success" @click="exportUnPayment" :disabled="isLoading">
+                    按单位导出未收账款
+                  </el-button>
+                </perm>
+                <div style="padding: 0 10px; display: inline-block">
+                  <perm label="accounts-payable-month-unaccepted-info-export">
+                    <el-button :plain="true" type="success" @click="exportMonthUnPayment" :disabled="isLoading">
+                      按月导出未收账款
+                    </el-button>
+                  </perm>
+                </div>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+        </el-form>
+      </div>
       <div class="order-list-status container" style="margin-bottom:20px">
         <div class="status-item active"
              v-for="(item,key) in orgType">
@@ -369,8 +386,8 @@
         isLoading: false,
         searchWord: {
           povId: '',
-          demandStartTime: '',
-          demandEndTime: '',
+          createStartTime: '',
+          createEndTime: '',
           orgAreaCode: '',
           id: ''
         },
@@ -447,6 +464,60 @@
       }
     },
     methods: {
+      exportPayment: function () {
+        this.searchCondition.startTime = this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.searchCondition.endTime = this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss');
+        let params = Object.assign({}, this.searchCondition);
+        this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
+        this.$http.get('/accounts-receivable/export/accepted-info', {params}).then(res => {
+          utils.download(res.data.path, '已收账款表');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        }).catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      exportMonthUnPayment: function () {
+        this.searchCondition.createStartTime = this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.searchCondition.createEndTime = this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss');
+        let params = Object.assign({}, this.searchCondition);
+        this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
+        this.$http.get('/accounts-receivable/export/month-unaccepted-info', {params}).then(res => {
+          utils.download(res.data.path, '月未收账款');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        }).catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
+      exportUnPayment: function () {
+        this.searchCondition.createStartTime = this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.searchCondition.createEndTime = this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss');
+        let params = Object.assign({}, this.searchCondition);
+        this.isLoading = true;
+        this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
+        this.$http.get('/accounts-receivable/export/unaccepted-info', {params}).then(res => {
+          utils.download(res.data.path, '单位未收账款表');
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+        }).catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '导出失败'
+          });
+        });
+      },
       scrollLoadingData(event) {
         this.$scrollLoadingData(event);
       },
