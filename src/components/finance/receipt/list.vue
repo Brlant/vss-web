@@ -465,9 +465,11 @@
     },
     methods: {
       exportPayment: function () {
-        this.searchCondition.startTime = this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss');
-        this.searchCondition.endTime = this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss');
-        let params = Object.assign({}, this.searchCondition);
+        let params = {
+          receiptOrgId: this.searchCondition.keyword,
+          startTime: this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss'),
+          endTime: this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss')
+        };
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
         this.$http.get('/accounts-receivable/export/accepted-info', {params}).then(res => {
@@ -483,9 +485,11 @@
         });
       },
       exportMonthUnPayment: function () {
-        this.searchCondition.createStartTime = this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss');
-        this.searchCondition.createEndTime = this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss');
-        let params = Object.assign({}, this.searchCondition);
+        let params = {
+          receiptOrgId: this.searchCondition.keyword,
+          startTime: this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss'),
+          endTime: this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss')
+        };
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
         this.$http.get('/accounts-receivable/export/month-unaccepted-info', {params}).then(res => {
@@ -501,9 +505,11 @@
         });
       },
       exportUnPayment: function () {
-        this.searchCondition.createStartTime = this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss');
-        this.searchCondition.createEndTime = this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss');
-        let params = Object.assign({}, this.searchCondition);
+        let params = {
+          receiptOrgId: this.searchCondition.keyword,
+          startTime: this.$formatAryTime(this.bizDateAry, 0, 'YYYY-MM-DD HH:mm:ss'),
+          endTime: this.$formatAryTime(this.bizDateAry, 1, 'YYYY-MM-DD HH:mm:ss')
+        };
         this.isLoading = true;
         this.$store.commit('initPrint', {isPrinting: true, moduleId: this.$route.path});
         this.$http.get('/accounts-receivable/export/unaccepted-info', {params}).then(res => {
