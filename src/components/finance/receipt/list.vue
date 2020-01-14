@@ -115,6 +115,7 @@
             </el-col>
             <el-col :span="24">
               <oms-form-row label="" :span="2">
+                <el-button @click="resetExportForm" style="margin-right: 10px">重置</el-button>
                 <perm label="accounts-payable-accepted-info-export">
                   <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
                     导出Excel
@@ -464,6 +465,16 @@
       }
     },
     methods: {
+      resetExportForm: function () {
+        this.searchCondition = {
+          keyword: '',
+          orgGoodsId: '',
+          createStartTime: '',
+          createEndTime: '',
+          status: ''
+        };
+        this.bizDateAry = '';
+      },
       exportPayment: function () {
         let params = {
           receiptOrgId: this.searchCondition.keyword,
