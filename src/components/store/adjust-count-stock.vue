@@ -147,6 +147,18 @@
                 <el-input type="number" v-model.number="form.unqualifiedBizCount"></el-input>
               </oms-form-row>
             </el-col>
+            <el-col :span="8">
+              <oms-form-row label="业务人份库存" :span="8">
+                <el-input type="number" v-model.number="form.qualifiedBizServings"></el-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="实际人份库存" :span="8">
+                <el-input type="number" v-model.number="form.qualifiedActualServings"></el-input>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+          <el-row>
             <el-col :span="10">
               <oms-form-row label="备注" :span="4">
                 <el-input type="input" v-model.number="form.remark"></el-input>
@@ -164,8 +176,8 @@
                 :header-row-class-name="'headerClass'" v-loading="loadingData"
                 :row-class-name="formatRowClass" :summary-method="getSummaries" show-summary
                 :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="factoryName" label="生产厂商" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
                          width="100">
@@ -180,7 +192,7 @@
           </template>
         </el-table-column>
         <el-table-column prop="unqualifiedBizCount" label="业务不合格库存" :render-header="formatHeader" :sortable="true"
-                         width="80">
+                         width="140">
           <template slot-scope="scope">
             <span>{{scope.row.unqualifiedBizCount}}</span>
           </template>
@@ -203,6 +215,10 @@
             <span>{{scope.row.unqualifiedCount}}</span>
           </template>
         </el-table-column>
+        <el-table-column prop="qualifiedBizServings" label="业务人份库存" :sortable="true"
+                         width="140"></el-table-column>
+        <el-table-column prop="qualifiedActualServings" label="实际人份库存" :sortable="true"
+                         width="140"></el-table-column>
         <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="100">
           <template slot-scope="scope">
             <span>{{ scope.row.expiryDate | date}}</span>
@@ -214,14 +230,18 @@
       <h3>操作明细</h3>
       <el-table :data="operateList" class="header-list store no-pointer" border v-loading="loadingLog"
                 :header-row-class-name="'headerClass'" :max-height="bodyHeight" style="width: 100%">
-        <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true"></el-table-column>
+        <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="warehouseAddress" label="仓库" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :sortable="true" width="100"></el-table-column>
-        <el-table-column prop="unqualifiedBizCount" label="业务不合格库存" :sortable="true" width="80"></el-table-column>
+        <el-table-column prop="unqualifiedBizCount" label="业务不合格库存" :sortable="true" width="140"></el-table-column>
         <el-table-column prop="transitCount" label="在途库存" :sortable="true" width="100"></el-table-column>
         <el-table-column prop="qualifiedActualCount" label="实际合格库存" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="stockUnqualifiedActualCount" label="实际不合格库存" :sortable="true"
+                         width="140"></el-table-column>
+        <el-table-column prop="qualifiedBizServings" label="业务人份库存" :sortable="true"
+                         width="140"></el-table-column>
+        <el-table-column prop="qualifiedActualServings" label="实际人份库存" :sortable="true"
                          width="140"></el-table-column>
         <el-table-column prop="unqualifiedCount" label="调整时间" :sortable="true" width="100">
           <template slot-scope="scope">
