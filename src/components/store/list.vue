@@ -141,7 +141,7 @@
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
         <el-table-column label="业务库存" align="center">
-          <el-table-column prop="qualifiedBizServings" label="人份库存" :render-header="formatHeader" :sortable="true"
+          <el-table-column prop="qualifiedBizServings" label="人份剂次" :render-header="formatHeader" :sortable="true"
                            width="100">
             <template slot-scope="scope">
               <span>{{scope.row.qualifiedBizServings}}</span>
@@ -169,7 +169,7 @@
 
 
         <el-table-column label="实物库存" align="center">
-          <el-table-column prop="qualifiedActualServings" label="人份库存" :render-header="formatHeader" :sortable="true"
+          <el-table-column prop="qualifiedActualServings" label="人份剂次" :render-header="formatHeader" :sortable="true"
                            width="100">
             <template slot-scope="scope">
               <span>{{scope.row.qualifiedActualServings}}</span>
@@ -370,12 +370,12 @@
           }
           case 'qualifiedActualServings': {
             content = '合格库存x人份';
-            title = '人份库存';
+            title = '人份剂次';
             break;
           }
           case 'qualifiedBizServings': {
             content = '合格库存x人份';
-            title = '人份库存';
+            title = '人份剂次';
             break;
           }
         }

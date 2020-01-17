@@ -148,12 +148,12 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="业务人份库存" :span="8">
+              <oms-form-row label="业务人份剂次" :span="8">
                 <el-input type="number" v-model.number="form.qualifiedBizServings"></el-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="实际人份库存" :span="8">
+              <oms-form-row label="实际人份剂次" :span="8">
                 <el-input type="number" v-model.number="form.qualifiedActualServings"></el-input>
               </oms-form-row>
             </el-col>
@@ -215,9 +215,9 @@
             <span>{{scope.row.unqualifiedCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="qualifiedBizServings" label="业务人份库存" :sortable="true"
+        <el-table-column prop="qualifiedBizServings" label="业务人份剂次" :sortable="true"
                          width="140"></el-table-column>
-        <el-table-column prop="qualifiedActualServings" label="实际人份库存" :sortable="true"
+        <el-table-column prop="qualifiedActualServings" label="实际人份剂次" :sortable="true"
                          width="140"></el-table-column>
         <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="100">
           <template slot-scope="scope">
@@ -239,9 +239,9 @@
         <el-table-column prop="qualifiedActualCount" label="实际合格库存" :sortable="true" width="120"></el-table-column>
         <el-table-column prop="stockUnqualifiedActualCount" label="实际不合格库存" :sortable="true"
                          width="140"></el-table-column>
-        <el-table-column prop="qualifiedBizServings" label="业务人份库存" :sortable="true"
+        <el-table-column prop="qualifiedBizServings" label="业务人份剂次" :sortable="true"
                          width="140"></el-table-column>
-        <el-table-column prop="qualifiedActualServings" label="实际人份库存" :sortable="true"
+        <el-table-column prop="qualifiedActualServings" label="实际人份剂次" :sortable="true"
                          width="140"></el-table-column>
         <el-table-column prop="unqualifiedCount" label="调整时间" :sortable="true" width="100">
           <template slot-scope="scope">

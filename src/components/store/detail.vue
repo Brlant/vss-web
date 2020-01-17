@@ -55,11 +55,11 @@
             <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
           </el-col>
           <el-col :span="12">
-            <oms-row label="业务人份库存" :span="span">{{ currentItem.qualifiedBizServings }}</oms-row>
+            <oms-row label="业务人份剂次" :span="span">{{ currentItem.qualifiedBizServings }}</oms-row>
             <oms-row label="合格业务库存" :span="span">{{ currentItem.availableCount }}</oms-row>
             <oms-row label="不合格业务库存" :span="span">{{ currentItem.unqualifiedBizCount }}</oms-row>
             <oms-row label="业务停销" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
-            <oms-row label="实物人份库存" :span="span">{{ currentItem.qualifiedActualServings }}</oms-row>
+            <oms-row label="实物人份剂次" :span="span">{{ currentItem.qualifiedActualServings }}</oms-row>
             <oms-row label="合格实物库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
             <oms-row label="不合格实物库存" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
             <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
