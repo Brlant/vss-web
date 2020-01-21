@@ -64,7 +64,6 @@ import ColorPicker from 'element-ui/lib/color-picker';
 import Transfer from 'element-ui/lib/transfer';
 import locale from 'element-ui/lib/locale';
 import CollapseTransition from 'element-ui/lib/transitions/collapse-transition';
-import accessoryGoodsPart from '@/components/common/order/accessory-goods-part';
 
 import {
   compressedImg,
@@ -105,6 +104,8 @@ import goodsStatusTag from '@/components/common/order/goods-status-tag';
 import CardBox from '@/components/common/card-box';
 import orderPushStatus from '@/components/common/order/order-push-status';
 import orderPushSearch from '@/components/common/order/order-push-search';
+import accessoryGoodsPart from '@/components/common/order/accessory-goods-part';
+import customerFeedback from '@/components/common/order/customer-feedback.vue';
 // import Upload from 'element-ui/lib/upload';
 const tinyVue = [
   Pagination,
@@ -203,7 +204,8 @@ const tinyVue = [
   TnInputAutoComplete,
   orderPushStatus,
   orderPushSearch,
-  accessoryGoodsPart
+  accessoryGoodsPart,
+  customerFeedback
 ];
 
 const install = function (Vue, opts = {}) {

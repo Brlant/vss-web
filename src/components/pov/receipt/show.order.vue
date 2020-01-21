@@ -47,8 +47,8 @@
         <relevance-code-review :currentOrder="currentOrder" :index="index" type="1"
                                v-show="index === 9"></relevance-code-review>
         <batch-numbers :currentOrder="currentOrder" v-show="index === 4" :index="index"></batch-numbers>
-        <customer-feedback :currentOrder="currentOrder" :orderId="currentOrder.id" :index="index" v-show="index === 12"
-                           perm="pov-order-upload-data-operate"/>
+        <customer-feedback :currentOrder="currentOrder" :orderId="currentOrder.id" :index="index"
+                           v-show="index === 12"/>
       </div>
     </div>
   </div>
@@ -101,7 +101,7 @@
         menu.push({name: '复核追溯码', key: 9});
         menu.push({name: '操作日志', key: 2});
 
-        if (perms.includes('pov-order-upload-data')) {
+        if (perms.includes('sales-order-upload-data')) {
           menu.push({name: '反馈信息', key: 12});
         }
         return menu;

@@ -52,6 +52,8 @@
         <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
                       v-show="index === 0"></cancel-order>
         <order-push-log :currentOrder="currentOrder" :index="index" v-show="index === 15"></order-push-log>
+        <customer-feedback :currentOrder="currentOrder" :orderId="currentOrder.id" :index="index"
+                           v-show="index === 12"/>
       </div>
     </div>
   </div>
@@ -108,6 +110,9 @@
         }
         menu.push({name: '操作日志', key: 2});
         menu.push({name: '推送日志', key: 15});
+        if (perms.includes('sales-order-upload-data')) {
+          menu.push({name: '反馈信息', key: 12});
+        }
         return menu;
       }
     },
