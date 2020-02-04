@@ -194,7 +194,7 @@ Vue.prototype.$formatOrgPhotoId = function (item) {
 
 if (process.env.NODE_ENV === 'production') {
   Raven
-    .config('https://62f56ceea555483fab3d6238ff4a80d0@f-log.cdcerp.net/3', {
+    .config('https://7f0a84a6bb0642018aa4c44ab650c4f3@f-log.sinopharm-bio.com/3', {
       serverName: 'vss',
       shouldSendCallback: (date) => {// 过滤错误日志
         let filterArray = ['Request failed with status code 401', 'Request failed with status code 502'];
