@@ -195,7 +195,7 @@
           val.forEach(i => {
             amount += Number(i.payment);
           });
-          this.form.amount = amount ? utils.autoformatDecimalPoint(amount.toString()) : '';
+          this.form.amount = amount ? utils.autoformatDecimalPoint(amount.toString()) : '0.00';
           this.form.relationList = val.map(m => {
             return {
               reconciliationId: m.id,
