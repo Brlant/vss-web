@@ -122,12 +122,12 @@
           <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
           <el-table-column label="业务库存" align="center">
-            <!--<el-table-column prop="qualifiedBizServings" label="剂次库存" :render-header="formatHeader" :sortable="true"-->
-            <!--width="100">-->
-            <!--<template slot-scope="scope">-->
-            <!--<span>{{scope.row.qualifiedBizServings}}</span>-->
-            <!--</template>-->
-            <!--</el-table-column>-->
+            <el-table-column prop="qualifiedBizServings" label="人份剂次" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.qualifiedBizServings}}</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
                              width="100">
               <template slot-scope="scope">
@@ -150,12 +150,12 @@
 
 
           <el-table-column label="实物库存" align="center">
-            <!--<el-table-column prop="qualifiedActualServings" label="剂次库存" :render-header="formatHeader" :sortable="true"-->
-            <!--width="100">-->
-            <!--<template slot-scope="scope">-->
-            <!--<span>{{scope.row.qualifiedActualServings}}</span>-->
-            <!--</template>-->
-            <!--</el-table-column>-->
+            <el-table-column prop="qualifiedActualServings" label="人份剂次" :render-header="formatHeader" :sortable="true"
+                             width="100">
+              <template slot-scope="scope">
+                <span>{{scope.row.qualifiedActualServings}}</span>
+              </template>
+            </el-table-column>
             <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
                              width="100">
               <template slot-scope="scope">
@@ -352,12 +352,12 @@
           }
           case 'qualifiedActualServings': {
             content = '合格库存x人份';
-            title = '剂次';
+            title = '人份剂次';
             break;
           }
           case 'qualifiedBizServings': {
             content = '合格库存x人份';
-            title = '剂次';
+            title = '人份剂次';
             break;
           }
         }
