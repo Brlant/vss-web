@@ -142,7 +142,7 @@
 
         <el-table-column label="业务库存" align="center">
           <el-table-column prop="qualifiedBizServings" label="人份剂次" :render-header="formatHeader" :sortable="true"
-                           width="100">
+                           width="100" v-if="isBizServing">
             <template slot-scope="scope">
               <span>{{scope.row.qualifiedBizServings}}</span>
             </template>
@@ -170,7 +170,7 @@
 
         <el-table-column label="实物库存" align="center">
           <el-table-column prop="qualifiedActualServings" label="人份剂次" :render-header="formatHeader" :sortable="true"
-                           width="100">
+                           width="100" v-if="isBizServing">
             <template slot-scope="scope">
               <span>{{scope.row.qualifiedActualServings}}</span>
             </template>
@@ -292,6 +292,9 @@
         let height = parseInt(this.$store.state.bodyHeight, 10);
         height = height - 110;
         return height + this.fixedHeight + (this.showSearch ? 0 : 150);
+      },
+      isBizServing() {
+        return this.$route.meta.isBizServing;
       }
     },
     watch: {
@@ -303,6 +306,10 @@
       },
       showSearch(val) {
         window.localStorage.setItem(this.$route.path, val);
+      },
+      isBizServing() {
+        this.resetSearchForm();
+        this.getBatches(1);
       }
     },
     methods: {
