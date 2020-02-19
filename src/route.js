@@ -142,12 +142,12 @@ export const route = [
           {
             path: '/store/request',
             component: () => import('./components/store/list.vue'),
-            meta: {moduleId: 'store', title: '即时库存', perm: 'cerp-stock-query'}
+            meta: {moduleId: 'store', title: '即时库存', perm: 'cerp-stock-query-bizServing'}
           },
           {
             path: '/store/request/bizServing',
             component: () => import('./components/store/list.vue'),
-            meta: {moduleId: 'store', title: '即时库存(含人份)', perm: 'cerp-stock-query-bizServing', isBizServing: true}
+            meta: {moduleId: 'store', title: '即时库存(含人份)', perm: 'cerp-stock-query', isBizServing: true}
           },
           {
             path: '/store/adjust/count',
