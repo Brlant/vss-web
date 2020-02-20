@@ -30,7 +30,7 @@
             <oms-row label="报损方式" :span="span">
               <dict :dict-group="'breakageType'" :dict-key="currentOrder.customerChannel"></dict>
             </oms-row>
-            <oms-row label="上级供货单位" :span="span" v-show="currentOrder.customerChannel === '1'">
+            <oms-row label="去向单位" :span="span" v-show="currentOrder.customerChannel === '1'">
               {{currentOrder.customerName}}
             </oms-row>
             <oms-row label="物流中心" :span="span" v-show="currentOrder.centreName">
