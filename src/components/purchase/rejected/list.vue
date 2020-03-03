@@ -225,15 +225,15 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="filters.state === '0' ? 5: 6">
+          <el-col :span="['0', '1'].includes(filters.state) ? 5: 6">
             <el-checkbox v-model="checkAll" @change="checkAllOrder" v-show="isShowCheckBox"/>
             货主/订单号
           </el-col>
-          <el-col :span="filters.state === '0' ? 3: 5">业务类型</el-col>
+          <el-col :span="['0', '1'].includes(filters.state) ? 3: 5">业务类型</el-col>
           <el-col :span="5">供货单位</el-col>
           <el-col :span="5">时间</el-col>
           <el-col :span="3">状态</el-col>
-          <el-col :span="3" v-if="filters.state === '0'">操作</el-col>
+          <el-col :span="3" v-if="['0', '1'].includes(filters.state)">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -251,7 +251,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.state === '0' ? 5: 6">
+              <el-col :span="['0', '1'].includes(filters.state) ? 5: 6">
                 <div v-show="isShowCheckBox" class="flex-layout" @click.stop="item.checked = !item.checked">
                  <span @click.stop="" style="margin-right: 5px">
                      <el-checkbox v-model="item.checked" class="mr-5"/>
@@ -274,7 +274,7 @@
                   </div>
                 </div>
               </el-col>
-              <el-col :span="filters.state === '0' ? 3: 5">
+              <el-col :span="['0', '1'].includes(filters.state) ? 3: 5">
                 <div class="f-grey">
                   <dict dict-group="orderGoodsType" :dict-key="'' + item.goodsType"></dict>
                 </div>
@@ -295,7 +295,7 @@
                   <order-push-status :status="item.pushStatus" :msg="item.pushMessage"/>
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state === '0' || filters.state === '1' ">
+              <el-col :span="3" class="opera-btn" v-if="['0', '1'].includes(filters.state)">
                 <perm label="return-manager-edit">
                   <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
