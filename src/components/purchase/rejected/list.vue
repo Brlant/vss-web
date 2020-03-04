@@ -225,15 +225,15 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="['0', '1'].includes(filters.state) ? 5: 6">
+          <el-col :span="5">
             <el-checkbox v-model="checkAll" @change="checkAllOrder" v-show="isShowCheckBox"/>
             货主/订单号
           </el-col>
-          <el-col :span="['0', '1'].includes(filters.state) ? 3: 5">业务类型</el-col>
+          <el-col :span="3">业务类型</el-col>
           <el-col :span="5">供货单位</el-col>
           <el-col :span="5">时间</el-col>
           <el-col :span="3">状态</el-col>
-          <el-col :span="3" v-if="['0', '1'].includes(filters.state)">操作</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -251,7 +251,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="['0', '1'].includes(filters.state) ? 5: 6">
+              <el-col :span="5">
                 <div v-show="isShowCheckBox" class="flex-layout" @click.stop="item.checked = !item.checked">
                  <span @click.stop="" style="margin-right: 5px">
                      <el-checkbox v-model="item.checked" class="mr-5"/>
@@ -274,7 +274,7 @@
                   </div>
                 </div>
               </el-col>
-              <el-col :span="['0', '1'].includes(filters.state) ? 3: 5">
+              <el-col :span="3">
                 <div class="f-grey">
                   <dict dict-group="orderGoodsType" :dict-key="'' + item.goodsType"></dict>
                 </div>
@@ -295,12 +295,19 @@
                   <order-push-status :status="item.pushStatus" :msg="item.pushMessage"/>
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="['0', '1'].includes(filters.state)">
-                <perm label="return-manager-edit">
+              <el-col :span="3" class="opera-btn">
+                <perm label="return-manager-edit" v-if="['0', '1'].includes(filters.state)">
                   <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
                   编辑
+                 </span>
+                </perm>
+                <perm label="return-manager-edit" v-if="['2'].includes(filters.state)">
+                  <span @click.stop.prevent="reviewOrder(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="el-icon-t-scan"></i></a>
+                   扫码复核
                  </span>
                 </perm>
               </el-col>
@@ -327,6 +334,10 @@
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showReviewCode" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <review-order :show="showReviewCode" :orderId="currentOrderId" @right-close="resetRightBox"
+                    @refresh="refreshOrder"/>
+    </page-right>
   </div>
 </template>
 <script>
@@ -335,10 +346,11 @@
   import addForm from './form/outForm.vue';
   import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
+  import reviewOrder from '@/components/purchase/scanReview/review.vue';
 
   export default {
     components: {
-      showForm, addForm
+      showForm, addForm, reviewOrder
     },
     data: function () {
       return {
@@ -347,6 +359,7 @@
         showPart: false,
         showDetail: false,
         showSearch: false,
+        showReviewCode: false,
         orderList: [],
         filters: {
           type: 1,
@@ -470,9 +483,15 @@
         this.showItemRight = true;
         this.defaultIndex = 2;
       },
+      reviewOrder(item) {
+        this.action = 'edit';
+        this.showReviewCode = true;
+        this.currentOrderId = item.id;
+      },
       resetRightBox: function () {
         this.showDetail = false;
         this.showItemRight = false;
+        this.showReviewCode = false;
         this.defaultIndex = 0;
         this.action = '';
         this.showPart = false;
