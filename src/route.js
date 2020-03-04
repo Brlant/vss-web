@@ -38,6 +38,11 @@ export const route = [
             path: '/pov/request',
             component: () => import('./components/pov/request/list.vue'),
             meta: {moduleId: 'pov', title: '要货申请', perm: 'pull-signal'}
+          },
+          {
+            path: '/pov/return/request/list',
+            component: () => import('./components/purchase/returnRequest/list.vue'),
+            meta: {moduleId: 'pov', title: '退货申请', perm: 'return-request-query', type: 'pov'}
           }
         ]
       },
@@ -116,6 +121,11 @@ export const route = [
             path: '/sale/rejected/:id',
             component: () => import('./components/sale/rejected/list.vue'),
             meta: {moduleId: 'sale', title: '销售退货', perm: 'sales-return'}
+          },
+          {
+            path: '/cdc/return/request/list',
+            component: () => import('./components/purchase/returnRequest/list.vue'),
+            meta: {moduleId: 'sale', title: '下级单位退货申请', perm: 'sub-unit-return-request-query', type: 'cdc'}
           },
           {
             path: '/pov/record',
