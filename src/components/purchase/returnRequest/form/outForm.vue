@@ -596,11 +596,11 @@
           this.orgList = [
             {
               id: res.data.cdcId,
-              name: res.data.customerName
+              name: res.data.cdcName
             }
           ];
           this.filterAddress(this.isStorageData);
-          this.filterOrg(res.data.customerName);
+          this.filterOrg(res.data.cdcName);
           this.form = JSON.parse(JSON.stringify(res.data));
           this.formCopy = JSON.parse(JSON.stringify(res.data));
           // ****** 2.0变化
