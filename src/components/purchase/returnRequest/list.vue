@@ -243,14 +243,14 @@
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn">
-                <perm label="return-request-query-edit" v-if="pageType === 'pov'">
+                <perm label="return-request-query-edit" v-if="pageType === 'pov' && item.status === '0'">
                   <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
                   编辑
                  </span>
                 </perm>
-                <perm label="sub-unit-return-request-query-edit" v-else>
+                <perm label="sub-unit-return-request-query-edit" v-if="pageType === 'cdc' && item.status === '1'">
                   <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
@@ -313,7 +313,7 @@
         orderList: [],
         filters: {
           type: 1,
-          state: '0',
+          status: '0',
           id: '',
           logisticsProviderName: '',
           demandEndTime: '',
@@ -363,6 +363,13 @@
     },
     mixins: [OrderMixin],
     mounted() {
+      if (this.$route.meta.type === 'pov') {
+        this.filters.status = '0';
+        this.activeStatus = '0';
+      } else {
+        this.filters.status = '1';
+        this.activeStatus = '1';
+      }
       this.getOrderList(1);
     },
     computed: {
@@ -552,7 +559,7 @@
       },
       changeStatus: function (item, key) {// 订单分类改变
         this.activeStatus = key;
-        this.filters.state = item.state;
+        this.filters.status = item.state;
       },
       advancedQuery: function () {
         this.showSearch = !this.showSearch;
