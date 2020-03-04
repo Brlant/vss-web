@@ -36,7 +36,7 @@
             <oms-row label="运输条件" :span="span">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
-            <oms-row label="疾控仓库地址" :span="span">
+            <oms-row label="退货单位仓库地址" :span="10">
               <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
             </oms-row>
             <oms-row label="物流商" :span="span">
