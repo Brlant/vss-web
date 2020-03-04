@@ -24,6 +24,9 @@
             <oms-row label="退后申请单号" :span="span">
               {{currentOrder.id}}
             </oms-row>
+            <oms-row label="退货单位" :span="span">
+              {{currentOrder.povName}}
+            </oms-row>
             <oms-row label="供货单位" :span="span">
               {{currentOrder.cdcName}}
             </oms-row>
@@ -32,6 +35,12 @@
             </oms-row>
             <oms-row label="退货单位仓库地址" :span="10">
               <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
+            </oms-row>
+            <oms-row label="关联采购退货订单" :span="10" v-show="currentOrder.orderNo">
+              {{currentOrder.orderNo}}
+            </oms-row>
+            <oms-row label="关联疾控销售退货订单" :span="10" v-show="currentOrder.orgOrderNo">
+              {{currentOrder.orgOrderNo}}
             </oms-row>
             <oms-row label="是否合格" :span="span">
               <span class="goods-span" v-show="currentOrder.qualityFlag">合格</span>
@@ -59,12 +68,29 @@
               <span class="goods-span">{{currentOrder.applyTime | time}}</span>
             </oms-row>
 
-            <oms-row label="审批人" v-show="currentOrder.auditManName">
-              {{currentOrder.auditManName}}
-            </oms-row>
-            <oms-row label="审批时间" v-show="currentOrder.auditManName">
-              {{currentOrder.auditTime | time}}
-            </oms-row>
+            <div v-if="pageType === 'pov'">
+              <oms-row label="审批人" v-show="currentOrder.auditManName">
+                {{currentOrder.auditManName}}
+              </oms-row>
+              <oms-row label="审批时间" v-show="currentOrder.auditManName">
+                {{currentOrder.auditTime | time}}
+              </oms-row>
+              <oms-row label="上级单位审批人" v-show="currentOrder.orgAuditManName">
+                {{currentOrder.orgAuditManName}}
+              </oms-row>
+              <oms-row label="上级单位审批时间" v-show="currentOrder.auditManName">
+                {{currentOrder.orgAuditTime | time}}
+              </oms-row>
+            </div>
+            <div v-else>
+              <oms-row label="审批人" v-show="currentOrder.orgAuditManName">
+                {{currentOrder.orgAuditManName}}
+              </oms-row>
+              <oms-row label="审批时间" v-show="currentOrder.auditManName">
+                {{currentOrder.orgAuditTime | time}}
+              </oms-row>
+            </div>
+
             <oms-row label="取消原因" v-show="currentOrder.erpStatus === '3'">
               <span class="goods-span">{{currentOrder.cancelReason}}</span>
             </oms-row>
@@ -85,9 +111,10 @@
             <!--<td>批号</td>-->
             <td class="text-center">生产/有效日期</td>
             <!--<td>有效期</td>-->
-            <td class="text-center">数量</td>
+            <td class="text-center">申请退货数量</td>
             <td class="text-center">单价</td>
-            <td class="text-center">金额</td>
+            <td class="text-center">申请金额</td>
+            <td class="text-center">实际退货数量</td>
           </tr>
           </thead>
           <tbody>
@@ -144,18 +171,20 @@
               <div>{{ item.expirationDate | date }}</div>
             </td>
             <td width="70px" class="text-center">
-              {{item.amount}}
+              {{item.applyCount}}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
             <td width="80px" class="text-center">
-              <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
-              <span v-if="!item.unitPrice">-</span>
+              <span v-if="item.price">￥{{item.price | formatMoney}}</span>
+              <span v-if="!item.price">-</span>
             </td>
             <td width="80px" class="text-center">
-            <span v-if="item.unitPrice">
-            <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
-            </span>
-              <span v-if="!item.unitPrice">-</span>
+              <span v-if="item.applyMoney">￥{{item.applyMoney | formatMoney}}</span>
+              <span v-if="!item.applyMoney">-</span>
+            </td>
+            <td width="80px" class="text-center">
+              {{item.actualCount}}
+              <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
           </tr>
           <tr class="text-center">
@@ -220,6 +249,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      pageType() {
+        return this.$route.meta.type;
       }
     },
     watch: {

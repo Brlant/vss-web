@@ -284,6 +284,10 @@
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showEditPart" :css="{'width':'1000px','padding':0}" @right-close="resetRightBox">
+      <edit-count @change="onSubmit" :currentItem="currentItem" :showEditPart="showEditPart"
+                  @close="resetRightBox"></edit-count>
+    </page-right>
   </div>
 </template>
 <script>
@@ -292,15 +296,17 @@
   import addForm from './form/outForm.vue';
   import {BaseInfo, returnRequest, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
+  import editCount from './form/editCount';
 
   export default {
     components: {
-      showForm, addForm
+      showForm, addForm, editCount
     },
     data: function () {
       return {
         loadingData: true,
         showItemRight: false,
+        showEditPart: false,
         showPart: false,
         showDetail: false,
         showSearch: false,
@@ -340,6 +346,7 @@
         orgType: utils[this.$route.meta.type === 'pov' ? 'outReturnRequestType' : 'outCdcReturnRequestType'],
         activeStatus: 0,
         currentOrderId: '',
+        currentItem: {},
         orgList: [], // 来源单位列表
         logisticsList: [], // 物流商列表
         pager: {
@@ -428,12 +435,18 @@
         this.showItemRight = true;
         this.defaultIndex = 2;
       },
+      editCount(item) {
+        this.currentItem = item;
+        this.currentOrderId = item.id;
+        this.showEditPart = true;
+      },
       resetRightBox: function () {
         this.showDetail = false;
         this.showItemRight = false;
         this.defaultIndex = 0;
         this.action = '';
         this.showPart = false;
+        this.showEditPart = false;
       },
       add: function () {
         this.showItemRight = true;
