@@ -243,14 +243,14 @@
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn">
-                <perm label="return-request-query-edit" v-if="pageType === 'pov' && item.status === '0'">
+                <perm label="return-request-query-edit" v-if="pageType === 'pov' && item.status  === 0">
                   <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
                   编辑
                  </span>
                 </perm>
-                <perm label="sub-unit-return-request-query-edit" v-if="pageType === 'cdc' && item.status === '1'">
+                <perm label="sub-unit-return-request-query-edit" v-if="pageType === 'cdc' && item.status === 1">
                   <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
