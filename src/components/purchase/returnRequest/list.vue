@@ -165,8 +165,9 @@
                 <el-col :span="24">
                   <el-date-picker
                     v-model="applyTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
+                    type="datetimerange"
+                    :default-time="['00:00:00', '23:59:59']"
+                    placeholder="请选择">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
@@ -274,6 +275,10 @@
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <show-form :orderId="currentOrderId" :state="state + ''" @refreshOrder="refreshOrder"
                  @close="resetRightBox"></show-form>
+    </page-right>
+    <page-right :show="showItemRight" @right-close="beforeCloseConfirm" :css="{'width':'1000px','padding':0}">
+      <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
+                @close="resetRightBox"></add-form>
     </page-right>
     <page-right :show="showItemRight" @right-close="beforeCloseConfirm" :css="{'width':'1000px','padding':0}">
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
@@ -391,10 +396,10 @@
         return state;
       },
       searchInOrder: function () {// 搜索
-        this.searchCondition.demandStartTime = this.$formatAryTime(this.demandTime, 0);
-        this.searchCondition.demandEndTime = this.$formatAryTime(this.demandTime, 1);
-        this.searchCondition.applyStartTime = this.$formatAryTime(this.applyTime, 0);
-        this.searchCondition.applyEndTime = this.$formatAryTime(this.applyTime, 1);
+        this.searchCondition.demandStartTime = this.$formatAryTime(this.demandTime, 0, 'YYYY-MM-DD 00:00:00');
+        this.searchCondition.demandEndTime = this.$formatAryTime(this.demandTime, 1, 'YYYY-MM-DD 23:59:59');
+        this.searchCondition.applyStartTime = this.$formatAryTime(this.applyTime, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.searchCondition.applyEndTime = this.$formatAryTime(this.applyTime, 1, 'YYYY-MM-DD HH:mm:ss');
         Object.assign(this.filters, this.searchCondition);
       },
       resetSearchForm: function () {// 重置表单
