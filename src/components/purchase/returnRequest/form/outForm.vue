@@ -151,6 +151,12 @@
                            v-for="item in transportationMeansList"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item label="运输条件" prop="transportationConditionId">
+              <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationConditionId">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in transportationConditionList"></el-option>
+              </el-select>
+            </el-form-item>
             <el-form-item label="退货单位仓库地址" prop="warehouseId">
               <el-select placeholder="请选择退货单位仓库地址" v-model="form.warehouseId" filterable :clearable="true"
                          @change="transportationAddressChange">
@@ -400,6 +406,7 @@
           'cdcId': '',
           'type': this.type,
           transportationMeansId: '',
+          transportationConditionId: '',
           transportationAddress: '',
           logisticsCentreId: '',
           importedFlag: false,
@@ -423,6 +430,9 @@
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
+          ],
+          transportationConditionId: [
+            {required: true, message: '请选择运输条件', trigger: 'change'}
           ],
           warehouseId: [
             {required: true, message: '请选择退货单位仓库地址', trigger: 'change'}
@@ -485,6 +495,9 @@
       },
       measurementUnitList() {
         return this.$getDict('measurementUnit');
+      },
+      transportationConditionList() {
+        return this.$getDict('transportationCondition');
       },
       orgRelationList() {
         return this.$getDict('orgRelation');

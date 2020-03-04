@@ -61,6 +61,9 @@
             <oms-row label="物流方式">
               <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
+            <oms-row label="运输条件">
+              <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationConditionId"></dict>
+            </oms-row>
             <oms-row label="申请人">
               <span class="goods-span">{{currentOrder.applyManName}}</span>
             </oms-row>

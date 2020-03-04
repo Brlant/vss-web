@@ -485,7 +485,7 @@
             {required: true, message: '请选择物流中心', trigger: 'change'}
           ],
           transportationCondition: [
-            {required: true, message: '请选择运输条件', trigger: 'blur'}
+            {required: true, message: '请选择运输条件', trigger: 'change'}
           ],
           expectedTime: [
             {required: true, message: '请选择日期', trigger: 'change'}
