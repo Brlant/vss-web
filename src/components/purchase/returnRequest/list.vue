@@ -269,7 +269,7 @@
                  </span>
                 </perm>
                 <perm label="sub-unit-return-request-query-edit" v-if="pageType === 'cdc' && item.status === 1">
-                  <span @click.stop.prevent="editOrder(item)">
+                  <span @click.stop.prevent="editCount(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
                   编辑
