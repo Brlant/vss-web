@@ -55,7 +55,7 @@
           <li class="text-center order-btn" style="margin-top: 10px" v-if="pageType === 'pov'">
             <perm label="return-request-query-audit"
                   v-show="currentOrder.state === '0' || currentOrder.state === '1'">
-              <el-button style="width: 102px" plain @click="cancelOrder">取消申请</el-button>
+              <el-button style="width: 102px" plain @click="cancelOrder">取消退货申请</el-button>
             </perm>
           </li>
         </ul>
@@ -148,19 +148,20 @@
         });
       },
       cancelOrder() {
-        this.$confirm('是否取消订单', '', {
+        this.$confirm('是否取消退货申请', '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
           returnRequest.cancel(this.orderId).then(() => {
             this.$notify.success({
-              message: '删除订单成功'
+              message: '取消成功'
             });
+            this.$emit('refreshOrder');
             this.queryOrderDetail();
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '删除订单失败'
+              message: error.response.data && error.response.data.msg || '取消成功'
             });
           });
         });

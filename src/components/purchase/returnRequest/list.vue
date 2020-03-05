@@ -129,12 +129,30 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="8" v-if="pageType === 'pov'">
               <oms-form-row label="供货单位" :span="6">
                 <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.transactOrgId" popperClass="good-selects"
+                           v-model="searchCondition.cdcId" popperClass="good-selects"
                            @click.native.once="filterOrg('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left">
+                        <span>系统代码:</span>{{org.manufacturerCode}}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8" v-if="pageType === 'cdc'">
+              <oms-form-row label="退货单位" :span="6">
+                <el-select filterable remote placeholder="请输入名称搜索退货单位" :remote-method="filterPOV" :clearable="true"
+                           v-model="searchCondition.povId" popperClass="good-selects"
+                           @click.native.once="filterOrg('')">
+                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in povList">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
                     </div>
@@ -321,7 +339,8 @@
           applyStartTime: '',
           applyEndTime: '',
           transportationMeansId: '',
-          transactOrgId: '',
+          cdcId: '',
+          povId: '',
           thirdPartyNumber: '',
           orgGoodsId: '',
           deleteFlag: false,
@@ -336,7 +355,8 @@
           applyStartTime: '',
           applyEndTime: '',
           transportationMeansId: '',
-          transactOrgId: '',
+          cdcId: '',
+          povId: '',
           orgGoodsId: '',
           thirdPartyNumber: '',
           pushStatus: ''
@@ -349,6 +369,7 @@
         currentItem: {},
         orgList: [], // 来源单位列表
         logisticsList: [], // 物流商列表
+        povList: [],
         pager: {
           currentPage: 1,
           count: 0,
@@ -426,7 +447,8 @@
           applyStartTime: '',
           applyEndTime: '',
           transportationMeansId: '',
-          transactOrgId: '',
+          cdcId: '',
+          povId: '',
           orgGoodsId: '',
           thirdPartyNumber: '',
           pushStatus: ''
@@ -506,12 +528,25 @@
       filterOrg: function (query) {// 过滤供货商
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
-          this.searchCondition.transactOrgId = '';
+          this.searchCondition.cdcId = '';
           this.orgList = [];
           return;
         }
         BaseInfo.queryOrgByReation(orgId, {keyWord: query, relation: '1'}).then(res => {
           this.orgList = res.data;
+        });
+      },
+      filterPOV: function (query) {// 过滤POV
+        let orgId = this.$store.state.user.userCompanyAddress;
+        if (!orgId) return;
+        let params = {
+          keyWord: query,
+          type: '1',
+          vaccineType: this.vaccineType,
+          subjectOrgId: orgId
+        };
+        BaseInfo.queryOrgByVossAuth(orgId, params).then(res => {
+          this.povList = res.data;
         });
       },
       filterLogistics: function (query) {// 过滤物流提供方
@@ -533,12 +568,6 @@
           }
         }
         return status;
-      },
-      orgChange: function () {
-        this.searchCondition.transactOrgId = '';
-        this.orgList = [];
-        this.filterOrg();
-        this.filterLogistics();
       },
       queryStatusNum: function (params) {
         returnRequest[this.pageType === 'pov' ? 'povQueryCount' : 'cdcQueryCount'](params).then(res => {
