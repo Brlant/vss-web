@@ -433,6 +433,18 @@ export const route = [
             meta: {moduleId: 'resource', title: '物料管理', perm: 'supplies-manager'}
           }
         ]
+      },
+      {
+        path: '/sys/setting',
+        component: () => import('./components/common/parent-route.vue'),
+        meta: {moduleId: 'sys', title: '系统设置', icon: 'sys-setting', perm: 'vss-sys-setting'},
+        children: [
+          {
+            path: '/sys/setting/switch',
+            component: () => import('./components/resource/codeSwitch/codeSwitch.vue'),
+            meta: {moduleId: 'sys', title: '扫码开关', perm: 'scan-code-switch'}
+          }
+        ]
       }
     ]
   }
