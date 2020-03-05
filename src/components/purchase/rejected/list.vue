@@ -303,7 +303,7 @@
                   编辑
                  </span>
                 </perm>
-                <perm label="return-manager-edit" v-if="['2'].includes(filters.state)">
+                <perm label="return-manager-batch-review" v-if="['2'].includes(filters.state)">
                   <span @click.stop.prevent="reviewOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-scan"></i></a>

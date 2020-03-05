@@ -43,9 +43,9 @@
                 <span>{{scope.row.code}}</span>
                 <el-tag v-if="!scope.row.errorFlag" type="success">正常</el-tag>
                 <el-tag v-else type="danger">错误</el-tag>
+                <span v-if="scope.row.errorFlag">（错误信息: {{scope.row.exceptionResultTitle}}）</span>
               </template>
             </el-table-column>
-            <el-table-column prop="exceptionResultTitle" label="错误信息"></el-table-column>
             <el-table-column prop="orderNo" label="操作" width="140">
               <el-button slot-scope="scope" size="mini" type="danger" @click="deleteItem(scope.row)">删除</el-button>
             </el-table-column>

@@ -140,21 +140,9 @@
               <div>
                 <el-tooltip class="item" effect="dark"
                             :content="`货主货品编号:${item.orgGoodsDto.goodsNo} 货主疫苗ID:${item.orgGoodsId}`" placement="right">
-                  <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
+                  <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
                 </el-tooltip>
               </div>
-              <div>
-                <el-tooltip class="item" effect="dark"
-                            :content="`疫苗主档编号:${item.orgGoodsDto.goodsDto.code} 疫苗主档ID:${item.goodsId}`"
-                            placement="right">
-                  <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
-                </el-tooltip>
-              </div>
-              <!--<div>-->
-              <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
-              <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
-              <!--</el-tooltip>-->
-              <!--</div>-->
               <div>
                 <el-tooltip class="item" effect="dark" content="供货单位" placement="right">
                   <span>{{ item.salesFirmName }}</span>

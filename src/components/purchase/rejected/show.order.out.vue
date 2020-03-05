@@ -46,7 +46,7 @@
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px" v-show="currentOrder.state === '3' ">
-            <perm label="return-manager-audit">
+            <perm label="return-manager-batch-complete">
               <el-button type="primary" @click="completeOrder">完成订单</el-button>
             </perm>
           </li>
