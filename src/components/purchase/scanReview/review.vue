@@ -105,7 +105,7 @@
         if (this.doing) return;
         this.doing = true;
         this.$http.post(`/erp-order/${this.orderId}/review/complete`).then(res => {
-          this.$emit('refreshOrder');
+          this.$emit('refresh');
           this.$emit('right-close');
           this.doing = false;
         }).catch(error => {
