@@ -71,8 +71,9 @@
       };
     },
     watch: {
-      orderId() {
-        if (!this.show) return;
+      show(val) {
+        this.codeInfoList = [];
+        if (!val) return;
         this.queryCodeList();
       }
     },
