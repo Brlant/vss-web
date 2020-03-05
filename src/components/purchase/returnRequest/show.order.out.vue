@@ -55,7 +55,7 @@
           <li class="text-center order-btn" style="margin-top: 10px" v-if="pageType === 'pov'">
             <perm label="return-request-query-audit"
                   v-show="currentOrder.state === '0' || currentOrder.state === '1'">
-              <el-button style="width: 102px" plain @click="cancelOrder">取消退货申请</el-button>
+              <el-button style="width: 102px" plain @click="cancelOrder">取消申请</el-button>
             </perm>
           </li>
         </ul>
