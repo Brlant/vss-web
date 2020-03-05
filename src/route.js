@@ -125,7 +125,7 @@ export const route = [
           {
             path: '/cdc/return/request/list',
             component: () => import('./components/purchase/returnRequest/list.vue'),
-            meta: {moduleId: 'sale', title: '下级单位退货申请', perm: 'sub-unit-return-request-query', type: 'cdc'}
+            meta: {moduleId: 'sale', title: '退货申请', perm: 'sub-unit-return-request-query', type: 'cdc'}
           },
           {
             path: '/pov/record',
