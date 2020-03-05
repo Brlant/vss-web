@@ -45,6 +45,11 @@
               <el-button type="primary" @click="review">审单通过</el-button>
             </perm>
           </li>
+          <li class="text-center order-btn" style="margin-top: 10px" v-show="currentOrder.state === '3' ">
+            <perm label="return-manager-audit">
+              <el-button type="primary" @click="completeOrder">完成订单</el-button>
+            </perm>
+          </li>
         </ul>
       </div>
       <div class="content-right content-padding">
@@ -225,6 +230,25 @@
           duration: 2000,
           message: '请选择取消订单原因',
           type: 'warning'
+        });
+      },
+      completeOrder() {
+        this.$confirm('是否确认完成订单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post(`/erp-order/${this.orderId}/transport/complete`).then(() => {
+            this.$notify.success({
+              message: '完成订单'
+            });
+            this.$emit('refreshOrder');
+            this.$emit('close');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response.data && error.response.data.msg || '操作失败'
+            });
+          });
         });
       }
     }
