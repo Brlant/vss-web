@@ -14,6 +14,15 @@
     }
   }
 
+  .btn-submit-save {
+    position: absolute;
+    bottom: 20px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+    text-align: center;
+    padding: 15px;
+  }
 </style>
 
 <template>
@@ -21,10 +30,10 @@
     <div class="content-part">
       <div class="content-left">
         <h2 class="clearfix right-title">退货申请详情</h2>
-        <ul>
-          <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
-              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
-          </li>
+        <ul class="btn-submit-save">
+          <!--          <li class="list-style" v-for="item in pageSets" @click="showPart(item)"-->
+          <!--              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>-->
+          <!--          </li>-->
 
           <template v-if="pageType === 'pov'">
             <li class="text-center order-btn" style="margin-top: 10px" v-show="currentOrder.state === '0' ">
@@ -126,7 +135,7 @@
         this.title = item.name;
       },
       review(val, title) {
-        this.$confirm('是否' + title, '', {
+        this.$confirm('是否确认' + title, '', {
           confirmButtonText: '确定',
           cancelButtonText: '取消',
           type: 'warning'

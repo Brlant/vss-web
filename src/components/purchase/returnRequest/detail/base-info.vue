@@ -30,7 +30,7 @@
             <oms-row label="供货单位" :span="span">
               {{currentOrder.cdcName}}
             </oms-row>
-            <oms-row label="到货需求日期" :span="8">
+            <oms-row label="预计退货日期" :span="8">
               <span class="goods-span">{{currentOrder.demandTime | date}}</span>
             </oms-row>
             <oms-row label="退货单位仓库地址" :span="10">
@@ -39,7 +39,7 @@
             <oms-row label="关联采购退货订单" :span="10" v-show="currentOrder.orderNo">
               {{currentOrder.orderNo}}
             </oms-row>
-            <oms-row label="关联疾控销售退货订单" :span="10" v-show="currentOrder.orgOrderNo">
+            <oms-row label="关联疾控销售退货订单" :span="11" v-show="currentOrder.orgOrderNo">
               {{currentOrder.orgOrderNo}}
             </oms-row>
             <oms-row label="是否合格" :span="span">
@@ -51,7 +51,7 @@
               <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
             </oms-row>
             <el-row v-show="currentOrder.remark" :span="span">
-              <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
+              <oms-row label="备注" :span="8">{{ currentOrder.remark }}</oms-row>
             </el-row>
           </el-col>
           <el-col :span="12">
@@ -75,13 +75,13 @@
               <oms-row label="审批人" v-show="currentOrder.auditManName">
                 {{currentOrder.auditManName}}
               </oms-row>
-              <oms-row label="审批时间" v-show="currentOrder.auditManName">
+              <oms-row label="审批时间" v-show="currentOrder.auditTime">
                 {{currentOrder.auditTime | time}}
               </oms-row>
               <oms-row label="上级单位审批人" v-show="currentOrder.orgAuditManName">
                 {{currentOrder.orgAuditManName}}
               </oms-row>
-              <oms-row label="上级单位审批时间" v-show="currentOrder.auditManName">
+              <oms-row label="上级单位审批时间" v-show="currentOrder.orgAuditTime">
                 {{currentOrder.orgAuditTime | time}}
               </oms-row>
             </div>
@@ -89,7 +89,7 @@
               <oms-row label="审批人" v-show="currentOrder.orgAuditManName">
                 {{currentOrder.orgAuditManName}}
               </oms-row>
-              <oms-row label="审批时间" v-show="currentOrder.auditManName">
+              <oms-row label="审批时间" v-show="currentOrder.orgAuditTime">
                 {{currentOrder.orgAuditTime | time}}
               </oms-row>
             </div>
@@ -112,12 +112,15 @@
             <td class="text-center">疫苗</td>
             <td class="text-center">规格</td>
             <!--<td>批号</td>-->
-            <td class="text-center">生产/有效日期</td>
+            <td class="text-center">
+              生产日期<br/>
+              有效至
+            </td>
             <!--<td>有效期</td>-->
-            <td class="text-center">申请退货数量</td>
+            <td class="text-center">申请退货<br/>数量</td>
             <td class="text-center">单价</td>
             <td class="text-center">申请金额</td>
-            <td class="text-center">实际退货数量</td>
+            <td class="text-center">实际退货<br/>数量</td>
           </tr>
           </thead>
           <tbody>
@@ -146,6 +149,11 @@
               <div>
                 <el-tooltip class="item" effect="dark" content="供货单位" placement="right">
                   <span>{{ item.salesFirmName }}</span>
+                </el-tooltip>
+              </div>
+              <div v-if="item.orgGoodsDataDto.orgGoodsDto.goodsDto">
+                <el-tooltip class="item" effect="dark" content="生产厂商" placement="right">
+                  <span class="font-gray">{{ item.orgGoodsDataDto.orgGoodsDto.goodsDto.factoryName }}</span>
                 </el-tooltip>
               </div>
               <div>

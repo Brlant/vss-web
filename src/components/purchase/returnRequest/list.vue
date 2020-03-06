@@ -168,7 +168,7 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="到货需求日期" :span="7">
+              <oms-form-row label="预计退货日期" :span="7">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="demandTime"
@@ -201,7 +201,7 @@
       </div>
 
       <div class="order-list-status container" style="margin-bottom:20px">
-        <div class="status-item" :style="`width: ${['2', '5'].includes(item.state) ? 130 : 100}px`"
+        <div class="status-item" :style="`width: ${['2', '5'].includes(item.state) ? 140 : 120}px`"
              :class="{'active':key==activeStatus}"
              v-for="(item,key) in orgType"
              @click="changeStatus(item,key)">
@@ -253,7 +253,7 @@
               </el-col>
               <el-col :span="5">
                 <div>申请时间：{{item.applyTime | minute }}</div>
-                <div>到货需求日期：{{ item.demandTime | date }}</div>
+                <div>预计退货日期：{{ item.demandTime | date }}</div>
               </el-col>
               <el-col :span="3">
                 <div class="vertical-center">

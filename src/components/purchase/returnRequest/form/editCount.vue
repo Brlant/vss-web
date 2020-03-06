@@ -70,6 +70,7 @@
       </div>
     </div>
     <div class="content-right content-padding">
+      <h3 class="clearfix right-title">修改退货数量</h3>
       <div class="d-table-col-wrap">
         <div class="content-body clearfix">
           <el-row v-if="loading">
@@ -136,7 +137,7 @@
             </el-col>
           </el-row>
         </div>
-        <span style="font-size: 14px">【要货明细】</span>
+        <span style="font-size: 14px">【退货明细】</span>
         <table class="table table-hover" style="margin-top: 10px">
           <thead>
           <tr>

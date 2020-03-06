@@ -171,7 +171,7 @@
               <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
                          v-model="form.qualityFlag" @change="clearForm"></el-switch>
             </el-form-item>
-            <el-form-item label="到货需求日期" prop="demandTime">
+            <el-form-item label="预计退货日期" prop="demandTime">
               <el-date-picker
                 v-model="form.demandTime"
                 placeholder="请选择日期" format="yyyy-MM-dd"
@@ -193,7 +193,7 @@
                 <el-form-item label="产品" prop="orgGoodsId">
                   <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                              :remote-method="searchProduct" :clearable="true" :loading="loading"
-                             popper-class="order-good-selects"
+                             popper-class="order-good-selects" :no-data-text="noDataText"
                              @change="getGoodDetail">
                     <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
                                :label="item.orgGoodsDto.name"
@@ -509,6 +509,15 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      noDataText() {
+        if (typeof this.form.goodsType !== 'number') {
+          return '请选择订单类型';
+        }
+        if (!this.form.cdcId) {
+          return '请选择供货单位';
+        }
+        return '无数据';
       }
     },
     watch: {
