@@ -89,12 +89,7 @@
               <oms-row label="供货单位">
                 {{currentOrder.cdcName}}
               </oms-row>
-              <oms-row label="申请时间">
-                {{currentOrder.applyTime | time}}
-              </oms-row>
-              <oms-row label="到货需求日期">
-                {{currentOrder.demandTime | date }}
-              </oms-row>
+
               <oms-row label="退货单位仓库">
                 {{currentOrder.warehouseAddress}}
               </oms-row>
@@ -103,6 +98,12 @@
               </el-row>
             </el-col>
             <el-col :span="13">
+              <oms-row label="预计退货日期">
+                {{currentOrder.demandTime | date }}
+              </oms-row>
+              <oms-row label="申请时间">
+                {{currentOrder.applyTime | time}}
+              </oms-row>
               <oms-row label="申请人">
                 {{currentOrder.applyManName}}
               </oms-row>
@@ -110,13 +111,13 @@
                 <oms-row label="审批人" v-show="currentOrder.auditManName">
                   {{currentOrder.auditManName}}
                 </oms-row>
-                <oms-row label="审批时间" v-show="currentOrder.auditManName">
+                <oms-row label="审批时间" v-show="currentOrder.auditTime">
                   {{currentOrder.auditTime | time}}
                 </oms-row>
                 <oms-row label="上级单位审批人" v-show="currentOrder.orgAuditManName">
                   {{currentOrder.orgAuditManName}}
                 </oms-row>
-                <oms-row label="上级单位审批时间" v-show="currentOrder.auditManName">
+                <oms-row label="上级单位审批时间" v-show="currentOrder.orgAuditTime">
                   {{currentOrder.orgAuditTime | time}}
                 </oms-row>
               </div>
@@ -124,7 +125,7 @@
                 <oms-row label="审批人" v-show="currentOrder.orgAuditManName">
                   {{currentOrder.orgAuditManName}}
                 </oms-row>
-                <oms-row label="审批时间" v-show="currentOrder.auditManName">
+                <oms-row label="审批时间" v-show="currentOrder.orgAuditTime">
                   {{currentOrder.orgAuditTime | time}}
                 </oms-row>
               </div>
