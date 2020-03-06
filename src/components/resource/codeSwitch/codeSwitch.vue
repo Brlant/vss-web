@@ -1,27 +1,31 @@
-<style>
-  .code-switch {
+<style scoped>
+  .advanced-query-form {
     padding-left: 100px;
   }
 </style>
 <template>
-  <div class="code-switch">
-    <el-form :model="form" class="advanced-query-form clearfix" style="padding-top: 10px">
-      <el-form-item label="入库扫码开关" prop="type">
-        <el-switch @change="setSwitch"
-                   v-model="form.orgScanCode"
-                   active-color="#13ce66"
-                   inactive-color="#ff4949">
-        </el-switch>
-      </el-form-item>
-      <el-form-item label="出库扫码开关" prop="type">
-        <el-switch
-          @change="setSwitch"
-          v-model="form.orgOutScanCode"
-          active-color="#13ce66"
-          inactive-color="#ff4949">
-        </el-switch>
-      </el-form-item>
-    </el-form>
+  <div class="order-page">
+    <div class="container">
+      <div class="opera-btn-group">
+        <el-form :model="form" class="advanced-query-form clearfix" style="padding-top: 10px">
+          <el-form-item label="入库扫码开关" prop="type">
+            <el-switch @change="setSwitch"
+                       v-model="form.orgScanCode"
+                       active-color="#13ce66"
+                       inactive-color="#ff4949">
+            </el-switch>
+          </el-form-item>
+          <el-form-item label="出库扫码开关" prop="type">
+            <el-switch
+              @change="setSwitch"
+              v-model="form.orgOutScanCode"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+            </el-switch>
+          </el-form-item>
+        </el-form>
+      </div>
+    </div>
   </div>
 </template>
 
