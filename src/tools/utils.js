@@ -83,6 +83,19 @@ export default {
     4: {'title': '已完成', state: '4', num: ''},
     5: {'title': '已取消', state: '5', num: ''}
   },
+  outReturnRequestType: {
+    0: {'title': '待审核', state: '0', num: ''},
+    1: {'title': '上级单位待审核', state: '1', num: ''},
+    2: {'title': '已完成', state: '4', num: ''},
+    3: {'title': '审核不通过', state: '2', num: ''},
+    4: {'title': '上级单位审核不通过', state: '5', num: ''},
+    5: {'title': '已取消', state: '3', num: ''}
+  },
+  outCdcReturnRequestType: {
+    1: {'title': '待审核', state: '1', num: ''},
+    2: {'title': '已完成', state: '4', num: ''},
+    4: {'title': '审核不通过', state: '5', num: ''}
+  },
   paymentOperation: {
     0: {'title': '待审核', status: '0', num: ''},
     1: {'title': '待复核', status: '1', num: ''},

@@ -63,13 +63,14 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row label="到货时间" :span="5">
+            <el-col :span="10">
+              <oms-form-row label="入库时间" :span="5">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="aryTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
+                    type="datetimerange"
+                    :default-time="['00:00:00', '23:59:59']"
+                    placeholder="请选择">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
@@ -85,12 +86,13 @@
       </div>
       <div class="order-list clearfix " style="margin-top: 10px">
         <el-row class="order-list-header">
-          <el-col :span="5">疫苗</el-col>
+          <el-col :span="4">疫苗</el-col>
           <el-col :span="4">采购订单号</el-col>
-          <el-col :span="5">疫苗厂商</el-col>
+          <el-col :span="4">疫苗厂商</el-col>
           <el-col :span="3">采购数量</el-col>
           <el-col :span="3">到货数量</el-col>
-          <el-col :span="4">到货时间</el-col>
+          <el-col :span="3">到货时间</el-col>
+          <el-col :span="3">入库时间</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -107,13 +109,13 @@
         <div v-else="" class="order-list-body flex-list-dom">
           <div class="order-list-item order-list-item-bg" v-for="item in bills" :key="">
             <el-row>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="4" class="R pt10">
                 {{ item.goodsName }}
               </el-col>
               <el-col :span="4" class="R pt10">
                 {{ item.orderNo }}
               </el-col>
-              <el-col :span="5" class="R pt10">
+              <el-col :span="4" class="R pt10">
                 {{ item.factoryName }}
               </el-col>
               <el-col :span="3" class="R pt10">
@@ -122,8 +124,11 @@
               <el-col :span="3" class="R pt10">
                 {{ item.receiptCount }}
               </el-col>
-              <el-col :span="4" class="R pt10">
+              <el-col :span="3" class="R pt10">
                 {{ item.arriveTime | date }}
+              </el-col>
+              <el-col :span="3">
+                {{item.createTime | time}}
               </el-col>
             </el-row>
           </div>
@@ -204,8 +209,8 @@
         });
       },
       searchInOrder: function () {// 搜索
-        this.filters.arriveStartTime = this.$formatAryTime(this.aryTime, 0);
-        this.filters.arriveEndTime = this.$formatAryTime(this.aryTime, 1);
+        this.filters.arriveStartTime = this.$formatAryTime(this.aryTime, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.filters.arriveEndTime = this.$formatAryTime(this.aryTime, 1, 'YYYY-MM-DD HH:mm:ss');
         this.queryBillPage(1);
       },
       resetSearchForm: function () {// 重置表单

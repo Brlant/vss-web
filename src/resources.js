@@ -139,6 +139,30 @@ http.interceptors.response.use(response => {
 
 Vue.prototype.$http = http;
 
+export const returnRequest = resource('/return-application', http, {
+  povQuery(params) {
+    return http.get('/return-application/pov', {params});
+  },
+  povQueryCount(params) {
+    return http.get('/return-application/count', {params});
+  },
+  povAudit(obj) {
+    return http.put('/return-application/pov-audit', obj);
+  },
+  cancel(id) {
+    return http.put(`/return-application/cancel/${id}`);
+  },
+  cdcQuery(params) {
+    return http.get('/return-application/cdc', {params});
+  },
+  cdcQueryCount(params) {
+    return http.get('/return-application/cdc/count', {params});
+  },
+  cdcAudit(obj) {
+    return http.put('/return-application/cdc-audit', obj);
+  }
+});
+
 // 多人份剂次时效管理
 export const multiAging = resource('/multi-person-aging', http, {
   queryStateNum(params) {

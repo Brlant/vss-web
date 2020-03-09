@@ -107,13 +107,13 @@
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="padding: 0">{{ defaultIndex === 2 ? '编辑采购退货订单' : '新增采购退货订单'}}</h2>
+        <h2 class="clearfix right-title" style="padding: 0">{{ defaultIndex === 2 ? '编辑退货申请' : '新增退货申请'}}</h2>
         <ul>
           <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
               v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit" :disabled="doing">保存订单</el-button>
+            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
           </li>
         </ul>
       </div>
@@ -127,18 +127,9 @@
                 <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{item.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
-            <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
-                          v-show="showContent.isShowOtherContent">
-              <el-select type="text" v-model="form.transportationMeansId" placeholder="请选择物流方式"
-                         @change="changeTransportationMeans">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationMeansList"
-                           v-show="(item.key !== '2' || item.key==='2' && form.bizType!=='2-2') && item.key !== '4'"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item label="供货单位" prop="customerId">
+            <el-form-item label="供货单位" prop="cdcId">
               <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.customerId" @change="changeCustomerId" popper-class="good-selects">
+                         v-model="form.cdcId" @change="changeCustomerId" popper-class="good-selects">
                 <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
@@ -154,21 +145,20 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="供货单位仓库"
-                          v-show="showContent.isShowOtherContent">
-              <el-select placeholder="请选择供货单位仓库" v-model="form.transportationAddress" filterable clearable
-                         @change="changeWarehouseAdress">
-                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
-                  <span class="pull-left">{{ item.name }}</span>
-                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
-                </el-option>
+            <el-form-item label="物流方式" prop="transportationMeansId">
+              <el-select type="text" v-model="form.transportationMeansId" placeholder="请选择物流方式">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in transportationMeansList"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="实际收货人" v-show="showContent.isShowOtherContent">
-              <oms-input type="text" placeholder="请输入实际收货人" :maxlength="50" v-model="form.actualConsignee"></oms-input>
+            <el-form-item label="运输条件" prop="transportationConditionId">
+              <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationConditionId">
+                <el-option :value="item.key" :key="item.key" :label="item.label"
+                           v-for="item in transportationConditionList"></el-option>
+              </el-select>
             </el-form-item>
-            <el-form-item label="退货单位仓库地址" prop="orgAddress">
-              <el-select placeholder="请选择退货单位仓库地址" v-model="form.orgAddress" filterable :clearable="true"
+            <el-form-item label="退货单位仓库地址" prop="warehouseId">
+              <el-select placeholder="请选择退货单位仓库地址" v-model="form.warehouseId" filterable :clearable="true"
                          @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenterAddressList">
@@ -177,31 +167,16 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流商">
-              <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
-            </el-form-item>
             <el-form-item label="是否合格">
               <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
-                         v-model="form.qualifiedFlag" @change="clearForm"></el-switch>
+                         v-model="form.qualityFlag" @change="clearForm"></el-switch>
             </el-form-item>
-            <el-form-item label="运输条件" prop="transportationCondition">
-              <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationCondition">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationConditionList"></el-option>
-              </el-select>
-            </el-form-item>
-            <el-form-item :label="'预计出库时间'"
-                          :prop=" showContent.isShowOtherContent?'expectedTime':'' "
-                          v-show="showContent.isShowOtherContent">
+            <el-form-item label="预计退货日期" prop="demandTime">
               <el-date-picker
-                v-model="form.expectedTime"
+                v-model="form.demandTime"
                 placeholder="请选择日期" format="yyyy-MM-dd"
                 value-format="timestamp" :picker-options="pickerOptions">
               </el-date-picker>
-            </el-form-item>
-            <el-form-item label="退货原因">
-              <oms-input type="textarea" v-model="form.returnReason" placeholder="请输入退货原因"
-                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
             </el-form-item>
             <el-form-item label="备注">
               <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
@@ -218,7 +193,7 @@
                 <el-form-item label="产品" prop="orgGoodsId">
                   <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
                              :remote-method="searchProduct" :clearable="true" :loading="loading"
-                             popper-class="order-good-selects"
+                             popper-class="order-good-selects" :no-data-text="noDataText"
                              @change="getGoodDetail">
                     <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
                                :label="item.orgGoodsDto.name"
@@ -320,7 +295,7 @@
                     <span v-else="">{{ product.specifications }}</span>
                   </td>
                   <td>
-                    {{ product.no ? product.no : '无' }}
+                    {{ product.batchNumber ? product.batchNumber : '无' }}
                     <goods-status-tag :item="product" :form="form"/>
                   </td>
                   <td>
@@ -365,7 +340,7 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, erpOrder, http, InWork} from '@/resources';
+  import {Address, BaseInfo, http, returnRequest} from '@/resources';
   import utils from '@/tools/utils';
   import batchNumberPart from './batchNumber';
   import OrderMixin from '@/mixins/orderMixin';
@@ -427,23 +402,21 @@
         filterProductList: [],
         form: {
           goodsType: '',
-          'orgId': '',
-          'customerId': '',
-          'bizType': '2-1',
+          'povId': '',
+          'cdcId': '',
           'type': this.type,
-          'logisticsProviderName': '',
-          'transportationCondition': '',
           transportationMeansId: '',
+          transportationConditionId: '',
           transportationAddress: '',
           logisticsCentreId: '',
           importedFlag: false,
           orgRelation: '',
-          orgAddress: '',
-          qualifiedFlag: true,
+          warehouseId: '',
+          qualityFlag: true,
           sameBatchNumber: false,
           actualConsignee: '',
           'thirdPartyNumber': '',
-          'expectedTime': '',
+          'demandTime': '',
           'detailDtoList': [],
           'remark': '',
           returnReason: ''
@@ -452,42 +425,19 @@
           goodsType: [
             {required: true, message: '请选择订单类型', trigger: 'change'},
           ],
-          orderNo: [
-            {required: true, message: '请输入货主订单编号', trigger: 'blur'},
-            {validator: checkOrderNumber}
-          ],
-          thirdPartyNumber: [
-            {required: true, message: '请输入去向订单编号', trigger: 'blur'},
-            {validator: checkOrderNumber}
-          ],
-          orgId: [
-            {required: true, message: '请选择货主', trigger: 'change'}
-          ],
-          customerId: [
+          cdcId: [
             {required: true, message: '请选择供货单位', trigger: 'change'}
-          ],
-          bizType: [
-            {required: true, message: '请选择业务类型', trigger: 'change'}
           ],
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
-          transportationAddress: [
-            {required: true, message: '请选择去向地址', trigger: 'blur'}
-          ],
-          logisticsProviderName: [
-            {required: true, message: '请选择物流商', trigger: 'change'}
-          ],
-          orgAddress: [
-            {required: true, message: '请选择退货单位仓库地址', trigger: 'change'}
-          ],
-          logisticsCentreId: [
-            {required: true, message: '请选择物流中心', trigger: 'change'}
-          ],
-          transportationCondition: [
+          transportationConditionId: [
             {required: true, message: '请选择运输条件', trigger: 'change'}
           ],
-          expectedTime: [
+          warehouseId: [
+            {required: true, message: '请选择退货单位仓库地址', trigger: 'change'}
+          ],
+          demandTime: [
             {required: true, message: '请选择日期', trigger: 'change'}
           ]
         },
@@ -525,11 +475,6 @@
         isSupplierOrOrg: false,
         saveKey: 'outSalesOrderForm',
         isStorageData: false, // 判断是不是缓存数据
-        showContent: {
-          isShowOtherContent: true, // 是否显示物流类型
-          isShowCustomerId: true, // 是否显示供货单位
-          expectedTimeLabel: '预计出库时间'
-        },
         warehouses: [], // 供货单位仓库列表
         batchNumbers: [], // 疫苗批号列表
         selectBatchNumbers: [], // 已经选择的疫苗批号
@@ -548,14 +493,11 @@
       transportationMeansList() {
         return this.$getDict('outTransportMeans');
       },
-      transportationConditionList() {
-        return this.$getDict('transportationCondition');
-      },
-      shipmentPackingUnit() {
-        return this.$getDict('shipmentPackingUnit');
-      },
       measurementUnitList() {
         return this.$getDict('measurementUnit');
+      },
+      transportationConditionList() {
+        return this.$getDict('transportationCondition');
       },
       orgRelationList() {
         return this.$getDict('orgRelation');
@@ -567,6 +509,15 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      noDataText() {
+        if (typeof this.form.goodsType !== 'number') {
+          return '请选择订单类型';
+        }
+        if (!this.form.cdcId) {
+          return '请选择供货单位';
+        }
+        return '无数据';
       }
     },
     watch: {
@@ -583,9 +534,8 @@
         this.index = 0;
         this.idNotify = true;
         let user = this.$store.state.user;
-        this.form.orgId = user.userCompanyAddress;
+        this.form.povId = user.userCompanyAddress;
         this.searchProduct();
-        this.checkLicence(this.form.orgId);
         if (val === 2) {
           this.editOrderInfo();
         } else {
@@ -619,14 +569,11 @@
         this.$refs['orderAddForm'].resetFields();
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.actualConsignee = '';
-        this.form.logisticsProviderName = '';
         this.form.remark = '';
         this.form.returnReason = '';
         this.form.detailDtoList = [];
-        this.form.customerId = '';
-        this.form.transportationAddress = '';
-        this.form.actualConsignee = '';
-        this.form.orgAddress = '';
+        this.form.cdcId = '';
+        this.form.warehouseId = '';
         this.searchProductList = [];
         this.filterProductList = [];
       },
@@ -651,26 +598,35 @@
       },
       editOrderInfo() {
         if (!this.orderId) return;
-        InWork.queryOrderDetail(this.orderId).then(res => {
+        returnRequest.get(this.orderId).then(res => {
           this.resetForm();
           this.isStorageData = true;
-          res.data.detailDtoList.forEach(f => {
-            f.orgGoodsName = f.name;
-            f.no = f.batchNumber;
+          res.data.detailDtoList = res.data.detailDtoList.map(m => {
+            return {
+              amount: m.applyCount,
+              measurementUnit: m.unit,
+              orgGoodsId: m.orgGoodsId,
+              orgGoodsName: m.goodsName,
+              unitPrice: m.price,
+              specifications: m.specification,
+              combinationSign: m.combinationSign,
+              batchNumberId: m.batchNumberId,
+              batchNumber: m.batchNumber,
+              orgGoodsDto: m.orgGoodsDataDto.orgGoodsDto
+            };
           });
           this.orgList = [
             {
-              id: res.data.customerId,
-              name: res.data.customerName
+              id: res.data.cdcId,
+              name: res.data.cdcName
             }
           ];
           this.filterAddress(this.isStorageData);
-          this.filterOrg(res.data.customerName);
+          this.filterOrg(res.data.cdcName);
           this.form = JSON.parse(JSON.stringify(res.data));
           this.formCopy = JSON.parse(JSON.stringify(res.data));
           // ****** 2.0变化
-          this.changeCustomerId(this.form.customerId, true);
-          this.changeTransportationMeans(this.form.transportationMeansId);
+          this.changeCustomerId(this.form.cdcId, true);
           // ******
           this.$nextTick(() => {
             this.isStorageData = false;
@@ -699,13 +655,6 @@
       formatPrice() {// 格式化单价，保留两位小数
         this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
       },
-      changeExpectedTime: function (date) {// 格式化日期
-        if (!date) {
-          this.form.expectedTime = '';
-          return;
-        }
-        this.form.expectedTime = this.$moment(date).format('YYYY-MM-DD');
-      },
       setIndexValue: function (value) {// 左侧显示页切换
         this.index = value;
       },
@@ -713,11 +662,10 @@
         this.$emit('close');
       },
       filterOrg: function (query) {// 过滤POV
-        let orgId = this.form.orgId;
-        let bizType = this.form.bizType;
-        if (!orgId || !bizType) {
+        let orgId = this.form.povId;
+        if (!orgId) {
           this.orgList = [];
-          this.form.customerId = '';
+          this.form.cdcId = '';
           return;
         }
         let params = {
@@ -728,82 +676,6 @@
           this.orgList = res.data;
         });
       },
-      bizTypeChange: function (val) {// 业务类型改变时
-        if (!this.isStorageData) {// 有缓存时，不重置表单
-          let orgId = this.form.orgId;
-          let bizType = this.form.bizType;
-          this.$refs['orderAddForm'].resetFields();
-          this.form.remark = '';
-          this.form.orgId = orgId;
-          this.form.bizType = bizType;
-        }
-        switch (val) {
-          case '2-0' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowCustomerId: true, // 是否显示POV
-              expectedTimeLabel: '预计出库时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '2-1' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowCustomerId: true, // 是否显示POV
-              expectedTimeLabel: '预计出库时间'
-            };
-            this.filterOrg();
-            break;
-          }
-          case '2-2' : {
-            this.showContent = {
-              isShowOtherContent: false, // 是否显示物流类型
-              isShowCustomerId: false, // 是否显示POV
-              expectedTimeLabel: ''
-            };
-            break;
-          }
-          case '2-3' : {
-            this.showContent = {
-              isShowOtherContent: true, // 是否显示物流类型
-              isShowCustomerId: false, // 是否显示POV
-              expectedTimeLabel: '预计出库时间'
-            };
-            Address.queryAddress(this.form.orgId, {
-              deleteFlag: false,
-              orgId: this.form.orgId,
-              auditedStatus: '1',
-              status: 0
-            }).then(res => {
-              this.warehouses = res.data;
-            });
-            break;
-          }
-        }
-      },
-      changeTransportationMeans(val) {// 物流方式改变时
-        switch (val) {
-          case '0': {
-            this.showContent.expectedTimeLabel = '预计送货时间';
-            if (this.form.bizType === '2-1') {
-              this.showContent.expectedTimeLabel = '预计出库时间';
-            }
-            break;
-          }
-          case '1': {
-            this.showContent.expectedTimeLabel = '预计提货时间';
-            break;
-          }
-          case '2': {
-            this.showContent.expectedTimeLabel = '预计发货时间';
-            break;
-          }
-        }
-        if (this.form.bizType === '2-2') {
-          this.showContent.expectedTimeLabel = '';
-        }
-      },
       changeCustomerId(val, isEdit) {// POV改变时
         if (!this.isStorageData) {// 当有缓存时，不做清空操作
           this.product.orgGoodsId = '';
@@ -812,75 +684,32 @@
           this.accessoryList = [];
           this.batchNumbers = [];
         }
-        this.checkLicence(val);
-        this.searchWarehouses(val, isEdit);
         this.searchProduct();
-      },
-      searchWarehouses(orgId, isEdit) {
-        if (!this.isStorageData) {
-          this.warehouses = [];
-          this.form.transportationAddress = '';
-        }
-        if (!orgId) {
-          return;
-        }
-        Address.queryAddress(orgId, {deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0}).then(res => {
-          this.warehouses = res.data || [];
-          if (isEdit) return;
-          let defaultStore = res.data.find(item => item.default);
-          if (!defaultStore) return;
-          this.form.transportationAddress = defaultStore.id;
-          this.form.actualConsignee = defaultStore.contact;
-          this.form.consigneePhone = defaultStore.telephone;
-        });
-      },
-      changeWarehouseAdress: function (val) {
-        if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.actualConsignee = ''; // 仓库改变时, 设置实际收货人
-        }
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
       },
       filterAddress(isStorageData) {
-        Address.queryAddress(this.form.orgId, {
+        Address.queryAddress(this.form.povId, {
           deleteFlag: false,
-          orgId: this.form.orgId,
+          orgId: this.form.povId,
           auditedStatus: '1', status: 0
         }).then(res => {
           this.LogisticsCenterAddressList = res.data;
           if (isStorageData) return;
           let defaultStore = res.data.filter(item => item.default);
-          this.form.orgAddress = defaultStore.length ? defaultStore[0].id : '';
-          this.transportationAddressChange(this.form.orgAddress);
-        });
-      },
-      checkLicence: function (val) {// 检查货主/单位证照是否过期
-        if (!val || !this.action) return;
-        http.get('/order-licence/org/' + val + '/overdue').then(res => {
-          if (!res.data.length) return;
-          let msg = '';
-          res.data.forEach(item => {
-            msg += '"' + item.name + '",';
-          });
-          msg = msg.substring(0, msg.length - 1);
-          this.$notify({
-            duration: 2000,
-            title: '证照信息过期',
-            message: msg + '证照信息已过期,无法创建订单',
-            type: 'error'
-          });
+          this.form.warehouseId = defaultStore.length ? defaultStore[0].id : '';
         });
       },
       searchProduct: function (query) {
-        if (!this.form.customerId || typeof this.form.goodsType !== 'number') {
+        if (!this.form.cdcId || typeof this.form.goodsType !== 'number') {
           this.searchProductList = [];
           this.filterProductList = [];
           return;
         }
         let params = {
           keyWord: query,
-          factoryId: this.form.customerId,
+          factoryId: this.form.cdcId,
           vaccineType: this.form.goodsType + 1
         };
         let rTime = Date.now();
@@ -990,7 +819,7 @@
                   if (bl.isChecked) {
                     let product = JSON.parse(JSON.stringify(this.product));
                     product.batchNumberId = bl.id;
-                    product.no = bl.no;
+                    product.batchNumber = bl.no;
                     product.amount = bl.productCount;
                     product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
                     // 有效期
@@ -1091,7 +920,6 @@
       onSubmit: function () {// 提交表单
         if (!this.checkHasOrderNotAdded(this.product)) return;
         let self = this;
-        // this.changeExpectedTime(this.form.expectedTime);
         this.$refs['orderAddForm'].validate((valid) => {
           if (!valid || this.doing) {
             this.index = 0;
@@ -1107,6 +935,8 @@
             return false;
           }
           saveData.detailDtoList.forEach(item => {
+            item.price = item.unitPrice;
+            item.applyCount = item.amount;
             !item.combinationFlag && (item.combinationFlag = item.isCombination);
             delete item.fixInfo;
             delete item.mainOrgId;
@@ -1116,10 +946,10 @@
           saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
           this.doing = true;
           if (saveData.id) {
-            erpOrder.updateOrder(saveData.id, saveData).then(res => {
+            returnRequest.update(saveData.id, saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '编辑采购退货成功',
+                message: '编辑退货申请成功',
                 type: 'success'
               });
               self.$emit('change');
@@ -1130,16 +960,16 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '编辑采购退货失败',
+                title: '编辑退货申请失败',
                 message: error.response.data.msg,
                 type: 'error'
               });
             });
           } else {
-            erpOrder.save(saveData).then(res => {
+            returnRequest.save(saveData).then(res => {
               this.$notify({
                 duration: 2000,
-                message: '新增采购退货成功',
+                message: '新增退货申请成功',
                 type: 'success'
               });
               window.localStorage.removeItem(this.saveKey);
@@ -1151,7 +981,7 @@
               this.doing = false;
               this.$notify({
                 duration: 2000,
-                title: '新增采购退货失败',
+                title: '新增退货申请失败',
                 message: error.response.data.msg,
                 type: 'error'
               });

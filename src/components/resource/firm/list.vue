@@ -218,7 +218,6 @@
               </span>
             </h2>
             <div class="page-main-body">
-              <!--todo 添加logo-->
               <el-row>
                 <el-col :span="5" class="text-right">
                   单位名称：
@@ -401,11 +400,11 @@
 
 </template>
 <script>
-    import {BaseInfo, Vendor} from '@/resources';
-    import utils from '@/tools/utils';
-    import photoShow from './photo/photo.show.vue';
+  import {BaseInfo, Vendor} from '@/resources';
+  import utils from '@/tools/utils';
+  import photoShow from './photo/photo.show.vue';
 
-    export default {
+  export default {
     components: {photoShow},
     data: function () {
       return {

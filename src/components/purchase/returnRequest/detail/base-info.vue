@@ -21,60 +21,81 @@
       <div>
         <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2-2' ">
           <el-col :span="12">
-            <oms-row label="货主订单号" :span="span">
-              {{currentOrder.orderNo}}
+            <oms-row label="退货申请单号" :span="span">
+              {{currentOrder.id}}
             </oms-row>
-            <oms-row label="货主" :span="span">
-              {{currentOrder.orgName}}
+            <oms-row label="退货单位" :span="span">
+              {{currentOrder.povName}}
             </oms-row>
             <oms-row label="供货单位" :span="span">
-              {{currentOrder.customerName}}
+              {{currentOrder.cdcName}}
             </oms-row>
-            <oms-row label="供货单位仓库" :span="span">
-              {{ getWarehouseAdress(currentOrder)}}
-            </oms-row>
-            <oms-row label="运输条件" :span="span">
-              <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
+            <oms-row label="预计退货日期" :span="8">
+              <span class="goods-span">{{currentOrder.demandTime | date}}</span>
             </oms-row>
             <oms-row label="退货单位仓库地址" :span="10">
-              <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
+              <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
             </oms-row>
-            <oms-row label="物流商" :span="span">
-              {{currentOrder.logisticsProviderName}}
+            <oms-row label="关联采购退货订单" :span="10" v-show="currentOrder.orderNo">
+              {{currentOrder.orderNo}}
+            </oms-row>
+            <oms-row label="关联疾控销售退货订单" :span="11" v-show="currentOrder.orgOrderNo">
+              {{currentOrder.orgOrderNo}}
+            </oms-row>
+            <oms-row label="是否合格" :span="span">
+              <span class="goods-span" v-show="currentOrder.qualityFlag">合格</span>
+              <span class="goods-span" v-show="!currentOrder.qualityFlag">不合格</span>
+            </oms-row>
+            <oms-row label="状态" :span="span">
+              {{ getOrderStatus(currentOrder) }}
+              <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
             </oms-row>
             <el-row v-show="currentOrder.remark" :span="span">
-              <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
+              <oms-row label="备注" :span="8">{{ currentOrder.remark }}</oms-row>
             </el-row>
           </el-col>
           <el-col :span="12">
-            <oms-row label="业务类型">
-              <dict :dict-group="'bizOutType'" :dict-key="currentOrder.bizType"></dict>
-            </oms-row>
             <oms-row label="订单类型">
               <dict dict-group="orderGoodsType" :dict-key="'' + currentOrder.goodsType"></dict>
             </oms-row>
             <oms-row label="物流方式">
               <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
-            <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | minute}}</span>
+            <oms-row label="运输条件">
+              <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationConditionId"></dict>
             </oms-row>
-            <oms-row label="预计出库时间" v-show="currentOrder.expectedTime">
-              <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
+            <oms-row label="申请人">
+              <span class="goods-span">{{currentOrder.applyManName}}</span>
             </oms-row>
-            <oms-row label="是否合格">
-              <span class="goods-span" v-show="currentOrder.qualifiedFlag">合格</span>
-              <span class="goods-span" v-show="!currentOrder.qualifiedFlag">不合格</span>
+            <oms-row label="申请时间">
+              <span class="goods-span">{{currentOrder.applyTime | time}}</span>
             </oms-row>
-            <oms-row label="订单状态">
-              {{ getOrderStatus(currentOrder) }}
-              <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
-            </oms-row>
-            <oms-row label="取消原因" v-show="currentOrder.erpStatus === '5'">
+
+            <div v-if="pageType === 'pov'">
+              <oms-row label="审批人" v-show="currentOrder.auditManName">
+                {{currentOrder.auditManName}}
+              </oms-row>
+              <oms-row label="审批时间" v-show="currentOrder.auditTime">
+                {{currentOrder.auditTime | time}}
+              </oms-row>
+              <oms-row label="上级单位审批人" v-show="currentOrder.orgAuditManName">
+                {{currentOrder.orgAuditManName}}
+              </oms-row>
+              <oms-row label="上级单位审批时间" v-show="currentOrder.orgAuditTime">
+                {{currentOrder.orgAuditTime | time}}
+              </oms-row>
+            </div>
+            <div v-else>
+              <oms-row label="审批人" v-show="currentOrder.orgAuditManName">
+                {{currentOrder.orgAuditManName}}
+              </oms-row>
+              <oms-row label="审批时间" v-show="currentOrder.orgAuditTime">
+                {{currentOrder.orgAuditTime | time}}
+              </oms-row>
+            </div>
+
+            <oms-row label="取消原因" v-show="currentOrder.erpStatus === '3'">
               <span class="goods-span">{{currentOrder.cancelReason}}</span>
-            </oms-row>
-            <oms-row label="退货原因" v-show="currentOrder.returnReason">
-              {{ currentOrder.returnReason }}
             </oms-row>
           </el-col>
         </el-row>
@@ -92,14 +113,14 @@
             <td class="text-center">规格</td>
             <!--<td>批号</td>-->
             <td class="text-center">
-              生产日期
-              <br/>
+              生产日期<br/>
               有效期至
             </td>
             <!--<td>有效期</td>-->
-            <td class="text-center">数量</td>
+            <td class="text-center">申请退货<br/>数量</td>
             <td class="text-center">单价</td>
-            <td class="text-center">金额</td>
+            <td class="text-center">申请金额</td>
+            <td class="text-center">实际退货<br/>数量</td>
           </tr>
           </thead>
           <tbody>
@@ -122,24 +143,17 @@
               <div>
                 <el-tooltip class="item" effect="dark"
                             :content="`货主货品编号:${item.orgGoodsDto.goodsNo} 货主疫苗ID:${item.orgGoodsId}`" placement="right">
-                  <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
+                  <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
                 </el-tooltip>
               </div>
-              <div>
-                <el-tooltip class="item" effect="dark"
-                            :content="`疫苗主档编号:${item.orgGoodsDto.goodsDto.code} 疫苗主档ID:${item.goodsId}`"
-                            placement="right">
-                  <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
-                </el-tooltip>
-              </div>
-              <!--<div>-->
-              <!--<el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">-->
-              <!--<span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>-->
-              <!--</el-tooltip>-->
-              <!--</div>-->
               <div>
                 <el-tooltip class="item" effect="dark" content="供货单位" placement="right">
                   <span>{{ item.salesFirmName }}</span>
+                </el-tooltip>
+              </div>
+              <div v-if="item.orgGoodsDataDto.orgGoodsDto.goodsDto">
+                <el-tooltip class="item" effect="dark" content="生产厂商" placement="right">
+                  <span class="font-gray">{{ item.orgGoodsDataDto.orgGoodsDto.goodsDto.factoryName }}</span>
                 </el-tooltip>
               </div>
               <div>
@@ -153,21 +167,23 @@
             <!--<td width="80px" class="R">{{ item.batchNumber || '无' }}</td>-->
             <td class="text-center" style="width: 85px">
               <div>{{ item.productionDate | date }}</div>
-              <div>{{ item.expiryDate | date }}</div>
+              <div>{{ item.expirationDate | date }}</div>
             </td>
             <td width="70px" class="text-center">
-              {{item.amount}}
+              {{item.applyCount}}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
             <td width="80px" class="text-center">
-              <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
-              <span v-if="!item.unitPrice">-</span>
+              <span v-if="item.price">￥{{item.price | formatMoney}}</span>
+              <span v-if="!item.price">-</span>
             </td>
             <td width="80px" class="text-center">
-            <span v-if="item.unitPrice">
-            <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
-            </span>
-              <span v-if="!item.unitPrice">-</span>
+              <span v-if="item.applyMoney">￥{{item.applyMoney | formatMoney}}</span>
+              <span v-if="!item.applyMoney">-</span>
+            </td>
+            <td width="80px" class="text-center">
+              {{item.actualCount}}
+              <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
           </tr>
           <tr class="text-center">
@@ -232,6 +248,9 @@
           totalMoney += item.amount * item.unitPrice;
         });
         return totalMoney;
+      },
+      pageType() {
+        return this.$route.meta.type;
       }
     },
     watch: {
@@ -242,14 +261,7 @@
       }
     },
     methods: {
-      getTimeTitle: function (item) {
-        return item.transportationMeansId === '0' ? item.bizType === '2-1' ? '预计出库' : '预计送货'
-          : item.transportationMeansId === '1' ? '预计提货'
-            : item.transportationMeansId === '2' ? '预计发货' : '';
-      },
-//      getWarehouseAdress: function (item) { // 得到仓库地址
-//        return utils.formatAddress(item.province, item.city, item.region).split('/').join('') + item.detail;
-//      },
+
       searchWarehouses() {
         if (!this.currentOrder.customerId) {
           this.warehouses = [];
@@ -278,11 +290,13 @@
         }
         this.currentOrder.expectedTime = this.$moment(date).format('YYYY-MM-DD');
       },
-      getOrderStatus: function (order) { // 获取订单状态
+      getOrderStatus: function (order) { // 获取状态
         let state = '';
-        for (let key in utils.outReturnOrderType) {
-          if (order.state === utils.outReturnOrderType[key].state) {
-            state = utils.outReturnOrderType[key].title;
+        let orgType = utils[this.$route.meta.type === 'pov' ? 'outReturnRequestType' : 'outCdcReturnRequestType'];
+
+        for (let key in orgType) {
+          if (order.status + '' === orgType[key].state) {
+            state = orgType[key].title;
           }
         }
         return state;
