@@ -42,6 +42,9 @@
             <oms-row label="物流商" :span="span">
               {{currentOrder.logisticsProviderName}}
             </oms-row>
+            <el-row v-show="currentOrder.remark" :span="span">
+              <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
+            </el-row>
           </el-col>
           <el-col :span="12">
             <oms-row label="业务类型">
@@ -74,9 +77,6 @@
               {{ currentOrder.returnReason }}
             </oms-row>
           </el-col>
-        </el-row>
-        <el-row v-show="currentOrder.remark">
-          <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
         </el-row>
       </div>
 

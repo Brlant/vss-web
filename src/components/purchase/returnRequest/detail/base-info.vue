@@ -21,7 +21,7 @@
       <div>
         <el-row style="margin-bottom:0;position: relative" v-show=" currentOrder.bizType !== '2-2' ">
           <el-col :span="12">
-            <oms-row label="退后申请单号" :span="span">
+            <oms-row label="退货申请单号" :span="span">
               {{currentOrder.id}}
             </oms-row>
             <oms-row label="退货单位" :span="span">
