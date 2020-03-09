@@ -114,7 +114,7 @@
             <!--<td>批号</td>-->
             <td class="text-center">
               生产日期<br/>
-              有效至
+              有效期至
             </td>
             <!--<td>有效期</td>-->
             <td class="text-center">申请退货<br/>数量</td>

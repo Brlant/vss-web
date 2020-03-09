@@ -80,7 +80,7 @@
           </el-row>
           <el-row v-else="">
             <el-col :span="11">
-              <oms-row label="要货申请编号">
+              <oms-row label="退货申请编号">
                 {{currentOrder.id }}
               </oms-row>
               <oms-row label="退货单位">
