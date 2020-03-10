@@ -247,6 +247,7 @@
        * @param item
        */
       isChangeValue(item, product) {
+        if (!item.productCount) return;
         if (product.isMainly) {
           let newAmount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
           if (item.productCount !== newAmount) {
