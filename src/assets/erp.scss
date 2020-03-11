@@ -1634,3 +1634,13 @@ $borderColor: rgba(82, 82, 82, 0.23);
     color: red;
   }
 }
+
+// 隐藏数字输入框的上下调控按钮
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
