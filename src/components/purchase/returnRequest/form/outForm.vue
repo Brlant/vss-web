@@ -560,7 +560,7 @@
       },
       setDefaultValue() {
         this.form.transportationMeansId = '1';
-        this.form.transportationCondition = '0';
+        this.form.transportationConditionId = '0';
       },
       resetForm: function () {// 重置表单
         this.$refs['orderAddForm'].resetFields();
