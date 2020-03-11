@@ -117,7 +117,7 @@
                  onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="退货申请单号" :span="6">
+              <oms-form-row label="退货申请单号" :span="8">
                 <oms-input type="text" v-model="searchCondition.id" placeholder="请输入退货申请单号"></oms-input>
               </oms-form-row>
             </el-col>
@@ -166,37 +166,79 @@
               </oms-form-row>
             </el-col>
           </el-row>
-          <el-row>
-            <el-col :span="8">
-              <oms-form-row label="预计退货日期" :span="7">
-                <el-col :span="24">
-                  <el-date-picker
-                    v-model="demandTime"
-                    type="daterange"
-                    placeholder="请选择">
-                  </el-date-picker>
-                </el-col>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="申请时间" :span="6">
-                <el-col :span="24">
-                  <el-date-picker
-                    v-model="applyTime"
-                    type="datetimerange"
-                    :default-time="['00:00:00', '23:59:59']"
-                    placeholder="请选择">
-                  </el-date-picker>
-                </el-col>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="" :span="5">
-                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
-                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
-              </oms-form-row>
-            </el-col>
-          </el-row>
+          <div v-if="pageType === 'pov'">
+            <el-row>
+              <el-col :span="8">
+                <oms-form-row label="预计退货日期" :span="8">
+                  <el-col :span="24">
+                    <el-date-picker
+                      v-model="demandTime"
+                      type="daterange"
+                      placeholder="请选择">
+                    </el-date-picker>
+                  </el-col>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="8">
+                <oms-form-row label="申请时间" :span="6">
+                  <el-col :span="24">
+                    <el-date-picker
+                      v-model="applyTime"
+                      type="datetimerange"
+                      :default-time="['00:00:00', '23:59:59']"
+                      placeholder="请选择">
+                    </el-date-picker>
+                  </el-col>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="8">
+                <oms-form-row label="" :span="5">
+                  <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                </oms-form-row>
+              </el-col>
+            </el-row>
+          </div>
+          <div v-if="pageType === 'cdc'">
+            <el-row>
+              <el-col :span="8">
+                <oms-form-row label="退货单位区域代码" :span="8">
+                  <oms-input type="text" v-model="searchCondition.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="8">
+                <oms-form-row label="预计退货日期" :span="7">
+                  <el-col :span="24">
+                    <el-date-picker
+                      v-model="demandTime"
+                      type="daterange"
+                      placeholder="请选择">
+                    </el-date-picker>
+                  </el-col>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="8">
+                <oms-form-row label="申请时间" :span="6">
+                  <el-col :span="24">
+                    <el-date-picker
+                      v-model="applyTime"
+                      type="datetimerange"
+                      :default-time="['00:00:00', '23:59:59']"
+                      placeholder="请选择">
+                    </el-date-picker>
+                  </el-col>
+                </oms-form-row>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <oms-form-row label="" :span="5">
+                  <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                </oms-form-row>
+              </el-col>
+            </el-row>
+          </div>
         </el-form>
       </div>
 
@@ -344,7 +386,8 @@
           thirdPartyNumber: '',
           orgGoodsId: '',
           deleteFlag: false,
-          pushStatus: ''
+          pushStatus: '',
+          orgAreaCode: ''
         },
         searchCondition: {
           searchType: 1,
@@ -359,7 +402,8 @@
           povId: '',
           orgGoodsId: '',
           thirdPartyNumber: '',
-          pushStatus: ''
+          pushStatus: '',
+          orgAreaCode: ''
         },
         demandTime: '',
         applyTime: '',
@@ -451,7 +495,8 @@
           povId: '',
           orgGoodsId: '',
           thirdPartyNumber: '',
-          pushStatus: ''
+          pushStatus: '',
+          orgAreaCode: ''
         };
         this.demandTime = '';
         this.applyTime = '';

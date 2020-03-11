@@ -246,6 +246,8 @@
        * @param item
        */
       isChangeValue(item, product) {
+        // 输入数量值无效，直接返回
+        if (!item.productCount) return;
         if (product.isMainly) {
           let newAmount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
           if (item.productCount !== newAmount) {
