@@ -532,6 +532,8 @@
         this.idNotify = true;
         let user = this.$store.state.user;
         this.form.povId = user.userCompanyAddress;
+        this.form.transportationMeansId = '';
+        this.form.transportationConditionId = '';
         this.searchProduct();
         this.filterOrg();
         if (val === 2) {
