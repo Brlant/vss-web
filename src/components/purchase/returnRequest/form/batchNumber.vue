@@ -49,7 +49,7 @@
                   <el-tag v-show="!batchNumber.disabled && batchNumber.inEffectiveFlag" type="warning">近效期</el-tag>
                   <el-tag v-show="batchNumber.disabled" type="danger">已过期</el-tag>
               </span>
-              <goods-status-tag v-show="form.bizType === '2-1'" :item="batchNumber" :form="form"/>
+              <goods-status-tag :item="batchNumber" :form="form"/>
             </td>
             <td>{{ batchNumber.count }}</td>
             <td>{{ batchNumber.productionDate | date }}</td>
