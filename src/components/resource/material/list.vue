@@ -26,7 +26,7 @@
           <el-col :span="6" class="text-right">
                   <span>
                    <span class="btn-search-toggle open" v-show="showSearch">
-                      <single-input v-model="filters.keyWord" placeholder="请输入物料名称查询"
+                      <single-input v-model="filters.keyword" placeholder="请输入物料名称查询"
                                     :showFocus="showSearch"></single-input>
                       <i class="el-icon-t-search" @click.stop="showSearch=(!showSearch)"></i>
                   </span>
@@ -121,7 +121,7 @@
         showPart: false,
         materials: [],
         filters: {
-          keyWord: '',
+          keyword: '',
           deleteFlag: false
         },
         form: {},
