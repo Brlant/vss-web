@@ -234,7 +234,7 @@
       },
       standardReceive() {
         for (let i = 0; i < this.products.length; i++) {
-          if (!this.products[i].length) {
+          if (!this.products[i].receiptInfoList.length) {
             return this.$notify.info({
               duration: 2000,
               message: `货品"${this.products[i].goodsName}"请添加收货详情`
@@ -259,7 +259,7 @@
             orderId: this.currentOrder.id
           };
           this.doing = true;
-          receiptApi.batchReceipt(obj).then(res => {
+          erpOrder.batchReceipt(obj).then(res => {
             this.$notify.success('提交成功');
             if (this.currentOrder.state > 2) {
               this.$emit('returnOrderDetail');
