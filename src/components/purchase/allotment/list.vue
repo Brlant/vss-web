@@ -311,12 +311,19 @@
                   编辑
                 </span>
                 </perm>
-                <perm label="allocating-order-edit" v-if="item.state === '10'">
+                <perm label="allocating-order-receipt" v-if="item.state === '10'">
                    <span @click.stop.prevent="receiptOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-allot"></i></a>
                   收货
                 </span>
+                </perm>
+                <perm label="allocating-order-review" v-if="item.state === '7'">
+                  <span @click.stop.prevent="reviewOrder(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="el-icon-t-scan"></i></a>
+                   扫码复核
+                 </span>
                 </perm>
               </el-col>
             </el-row>
@@ -350,6 +357,10 @@
       <receive-part :orderId="currentOrderId" :defaultIndex="defaultIndex"
                     @close="resetRightBox"></receive-part>
     </page-right>
+    <page-right :show="showReviewCode" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <review-order :show="showReviewCode" :orderId="currentOrderId" @right-close="resetRightBox"
+                    @refresh="refreshOrder"/>
+    </page-right>
   </div>
 </template>
 <script>
@@ -359,10 +370,11 @@
   import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
   import receivePart from './receive/part';
+  import reviewOrder from './scanReview/review.vue';
 
   export default {
     components: {
-      showForm, addForm, receivePart
+      showForm, addForm, receivePart, reviewOrder
     },
     data: function () {
       return {
@@ -371,6 +383,7 @@
         showDetail: false,
         showSearch: false,
         showReceive: false,
+        showReviewCode: false,
         orderList: [],
         filters: {
           type: 0,
@@ -456,6 +469,11 @@
       }
     },
     methods: {
+      reviewOrder(item) {
+        this.action = 'edit';
+        this.showReviewCode = true;
+        this.currentOrderId = item.id;
+      },
       editOrder(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
@@ -509,6 +527,7 @@
         this.defaultIndex = 0;
         this.action = '';
         this.showReceive = false;
+        this.showReviewCode = false;
         // this.getOrderList(this.pager.currentPage);
         this.$router.push('/store/allotment/list');
       },
