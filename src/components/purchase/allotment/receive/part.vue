@@ -286,14 +286,14 @@
             this.doing = false;
             return false;
           }
-          let param = params || {checkExceptionFlag: true};
-          erpOrder.receiptOrder(this.currentOrder.id, param).then(() => {
+          erpOrder.receiptOrder(this.currentOrder.id).then(() => {
             this.$notify({
               duration: 2000,
               message: '收货完成',
               type: 'success'
             });
             this.$emit('close');
+            this.$emit('refresh');
             this.doing = false;
           }).catch(error => {
             this.doing = false;

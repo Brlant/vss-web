@@ -501,9 +501,7 @@ export const erpOrder = resource('/erp-order', http, {
     return http.get('/erp-order/quality-exception', {params});
   },
   receiptOrder: (orderId, params) => {// 确认收货
-    return http.put('/order-status/' + orderId + '/receipt', null, {
-      params
-    });
+    return http.post('/erp-order/' + orderId + '/receipt/in/complete', {});
   },
   batchReceipt(obj) {
     return http.post('/receipt/batch', obj);

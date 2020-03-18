@@ -355,7 +355,7 @@
     <page-right :show="showReceive" @right-close="resetRightBox" :css="{'width':'1120px','padding':0}"
                 class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
       <receive-part :orderId="currentOrderId" :defaultIndex="defaultIndex"
-                    @close="resetRightBox"></receive-part>
+                    @close="resetRightBox" @refresh="refreshOrder"></receive-part>
     </page-right>
     <page-right :show="showReviewCode" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
       <review-order :show="showReviewCode" :orderId="currentOrderId" @right-close="resetRightBox"
