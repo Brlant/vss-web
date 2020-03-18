@@ -94,7 +94,7 @@
         <el-col :span="15">
           <oms-row label="通关单号编码" :span="span">{{ item.customsFormNumber }}</oms-row>
           <oms-row label="口岸检验报告编号" :span="span">{{ item.portInspectionNumber }}</oms-row>
-          <oms-row label="散件数量" :span="span" v-show="item.smallPackageCount > 0 ">
+          <oms-row label="数量" :span="span" v-show="item.smallPackageCount > 0 ">
             {{item.smallPackageCount}}
             <span v-if="currentItem.orgGoodsDto">
              <dict :dict-group="'measurementUnit'"
@@ -102,7 +102,7 @@
                <el-tag type="success">合格</el-tag>
             </span>
           </oms-row>
-          <oms-row label="散件数量" :span="span" v-show="item.smallNonconformityCount > 0">
+          <oms-row label="数量" :span="span" v-show="item.smallNonconformityCount > 0">
             {{item.smallNonconformityCount}}
             <span v-if="currentItem.orgGoodsDto">
                 <dict :dict-group="'measurementUnit'"
@@ -114,7 +114,7 @@
       </el-row>
       <el-row class="text-right batch-total">
         <h3 class="h3">
-          合计:{{ item.aggregateQuantity + item.refuseCount }}
+          合计:{{ item.aggregateQuantity}}
           <span v-if="currentItem.orgGoodsDto">
           <dict :dict-group="'measurementUnit'" :dict-key="currentItem.orgGoodsDto.goodsDto.measurementUnit"></dict>
         </span>
