@@ -91,7 +91,7 @@
         let menu = [];
         let perms = this.$store.state.permissions || [];
         menu.push({name: '订单详情', key: 0});
-        if (this.state === '8') {
+        if (this.state !== '6') {
           menu.push({name: '收货详情', key: 1});
         }
         if (perms.includes('quality-exception-manager')) {

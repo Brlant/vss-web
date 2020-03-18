@@ -180,6 +180,7 @@
       </el-col>
     </el-row>
     <hr class="hr"/>
+    <div v-if="!goodsDetails.length && !doing" class="empty-info">无收货信息</div>
     <div v-loading="doing">
       <div v-for="item in goodsDetails" :key="item.id">
         <table class="product-detail-list mt-10" width="100%">

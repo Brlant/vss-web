@@ -499,7 +499,15 @@ export const erpOrder = resource('/erp-order', http, {
   // 查询异常
   queryOrderExcepiton: (params) => {
     return http.get('/erp-order/quality-exception', {params});
-  }
+  },
+  receiptOrder: (orderId, params) => {// 确认收货
+    return http.put('/order-status/' + orderId + '/receipt', null, {
+      params
+    });
+  },
+  batchReceipt(obj) {
+    return http.post('/receipt/batch', obj);
+  },
 });
 
 /**
