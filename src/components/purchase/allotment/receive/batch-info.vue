@@ -182,7 +182,7 @@
             </el-col>
           </el-row>
         </div>
-        <el-form-item label="合格散件">
+        <el-form-item label="合格数量">
           <oms-input type="text" placeholder="请输入" v-model="form.smallPackageCount" :min="0">
             <template slot="append" v-if="currentItem.orgGoodsDto">
               <dict :dict-group="'measurementUnit'"
@@ -190,7 +190,7 @@
             </template>
           </oms-input>
         </el-form-item>
-        <el-form-item label="不合格散件" class="nonconformity">
+        <el-form-item label="不合格数量" class="nonconformity">
           <oms-input type="text" placeholder="请输入" v-model="form.smallNonconformityCount" :min="0">
             <template slot="append" v-if="currentItem.orgGoodsDto">
               <dict :dict-group="'measurementUnit'"
@@ -258,7 +258,8 @@
           batchReleaseDate: '',
           batchReleaseNumber: '',
           customsFormNumber: '',
-          portInspectionNumber: ''
+          portInspectionNumber: '',
+          smallPackageFlag: true
         },
         rules: {
           productionDate: [
@@ -363,7 +364,8 @@
           refuseDate: '',
           refusePerson: '',
           refuseRemark: '',
-          refuseType: ''
+          refuseType: '',
+          smallPackageFlag: true
         };
       },
       reset() {
@@ -625,16 +627,8 @@
               return;
             }
           }
-          let refuseCount = 0;
-          if (this.form.largePackageFlag === false) {
-            refuseCount += this.form.largeNonconformityCount * this.currentItem.orgGoodsDto.goodsDto.largePacking;
-          }
-          if (this.form.smallPackageFlag === false) {
-            refuseCount += this.form.smallNonconformityCount * 1;
-          }
           this.form.orderDetailId = this.currentItem.id;
-          this.form.refuseCount = refuseCount;
-          this.form.aggregateQuantity = totalCount - refuseCount;
+          this.form.aggregateQuantity = totalCount;
           ary = this.batchNumberList.filter(f => f.id === this.form.batchNumberId);
           let obj = {};
           // 判断是否编辑批号，非编辑批号, 才合并值
