@@ -404,6 +404,11 @@ export const route = [
             path: '/report/trend',
             component: () => import('./components/report/use-trend.vue'),
             meta: {moduleId: 'report', title: '疫苗使用趋势表', perm: 'vaccine-trend-manager'}
+          },
+          {
+            path: '/report/vaccine/use',
+            component: () => import('./components/report/use-records.vue'),
+            meta: {moduleId: 'report', title: '疫苗使用情况统计', perm: 'query-multi-person-aging', icon: 'el-icon-t-baobiao'}
           }
         ]
       },
