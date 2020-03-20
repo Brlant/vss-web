@@ -30,7 +30,7 @@
   .adjust-const-stock-detail {
     h3 {
       background: #fff;
-      margin: 50px 0 0;
+      margin: 0 0 0;
       padding: 5px;
       text-align: center;
     }
@@ -47,7 +47,7 @@
         title="请选择疫苗和批号输入调整部分库存数，调整库存数必须是散件倍数，如果是正数则增加库存，如果是负数则减少库存。"
         type="warning">
       </el-alert>
-      <div class="opera-btn-group" :class="{up:!showSearch}">
+      <div class="opera-btn-group">
         <div class="opera-icon">
           <span>
             <i class="el-icon-t-adjust"></i>
@@ -226,7 +226,81 @@
         </el-table-column>
       </el-table>
     </div>
-    <div class="container adjust-const-stock-detail">
+    <div class="container adjust-const-stock-detail" style="margin-top: 50px">
+      <div class="opera-btn-group" :class="{up:!showSearch}">
+        <div class="opera-icon">
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
+            <i class="el-icon-arrow-up"></i>
+            <span v-show="showSearch">收起筛选</span>
+            <span v-show="!showSearch">展开筛选</span>
+          </span>
+        </div>
+        <el-form class="advanced-query-form clearfix" onsubmit="return false">
+          <el-col :span="8">
+            <oms-form-row label="货主疫苗" :span="5">
+              <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="searchFilterSearchOrgGoods"
+                         :clearable="true" @change="searchOrgGoodsChange"
+                         v-model="searchCondition.orgGoodsId" popper-class="good-selects">
+                <el-option :value="org.id" :key="org.id" :label="org.goodsName"
+                           v-for="org in searchOrgGoods">
+                  <div style="overflow: hidden">
+                    <span class="pull-left">{{org.goodsName}}</span>
+                  </div>
+                  <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}
+                      </span>
+                    <span class="select-other-info pull-left"><span
+                      v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
+                      </span>
+                  </div>
+                </el-option>
+              </el-select>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="6">
+            <oms-form-row label="批号" :span="4">
+              <el-select v-model="searchCondition.batchNumberId" filterable clearable remote
+                         :remoteMethod="searchFilterBatchNumber" placeholder="请输入批号名称搜索批号">
+                <el-option v-for="item in searchBatchNumberList" :value="item.id" :key="item.id"
+                           :label="item.batchNumber">
+                  {{ item.batchNumber }}
+                </el-option>
+              </el-select>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="10">
+            <oms-form-row label="创建时间" :span="5">
+              <el-col :span="24">
+                <el-date-picker
+                  v-model="createTime"
+                  type="datetimerange"
+                  :default-time="['00:00:00', '23:59:59']"
+                  placeholder="请选择">
+                </el-date-picker>
+              </el-col>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="8">
+            <oms-form-row label="" :span="5">
+              <el-button type="primary" native-type="submit" @click="queryInOrder">查询</el-button>
+              <el-button native-type="reset" @click="resetQueryForm">重置</el-button>
+            </oms-form-row>
+          </el-col>
+          <!--<el-col :span="12">-->
+          <!--<oms-form-row label="仓库" :span="3">-->
+          <!--<el-select v-model="filters.warehouseId" filterable clearable-->
+          <!--@change="warehouseChange"-->
+          <!--placeholder="请选择仓库">-->
+          <!--<el-option v-for="item in warehouses" :value="item.id" :key="item.id"-->
+          <!--:label="item.name">-->
+          <!--</el-option>-->
+          <!--</el-select>-->
+          <!--</oms-form-row>-->
+          <!--</el-col>-->
+
+        </el-form>
+      </div>
       <h3>操作明细</h3>
       <el-table :data="operateList" class="header-list store no-pointer" border v-loading="loadingLog"
                 :header-row-class-name="'headerClass'" :max-height="bodyHeight" style="width: 100%">
@@ -243,7 +317,7 @@
                          width="140"></el-table-column>
         <el-table-column prop="qualifiedActualServings" label="实际人份剂次" :sortable="true"
                          width="140"></el-table-column>
-        <el-table-column prop="unqualifiedCount" label="调整时间" :sortable="true" width="100">
+        <el-table-column prop="unqualifiedCount" label="创建时间" :sortable="true" width="100">
           <template slot-scope="scope">
             <span>{{scope.row.createTime | time}}</span>
           </template>
@@ -316,6 +390,15 @@
           'primary'
         ],
         batchNumberList: [],
+        searchOrgGoods: [],
+        searchBatchNumberList: [],
+        searchCondition: {
+          batchNumberId: '',
+          orgGoodsId: '',
+          createStartTime: '',
+          createEndTime: ''
+        },
+        createTime: '',
         warehouses: [],
         form: {
           availableCount: '',
@@ -360,6 +443,55 @@
       }
     },
     methods: {
+      queryInOrder: function () {// 搜索
+        this.searchCondition.createStartTime = this.$formatAryTime(this.createTime, 0, 'YYYY-MM-DD HH:mm:ss');
+        this.searchCondition.createEndTime = this.$formatAryTime(this.createTime, 1, 'YYYY-MM-DD HH:mm:ss');
+        this.queryOperateList(1);
+      },
+      resetQueryForm: function () {// 重置表单
+        this.searchCondition = {
+          batchNumberId: '',
+          orgGoodsId: '',
+          createStartTime: '',
+          createEndTime: ''
+        };
+        this.createTime = '';
+        this.queryOperateList(1);
+      },
+      searchFilterSearchOrgGoods(query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        let params = Object.assign({}, {
+          deleteFlag: false,
+          orgId: orgId,
+          keyWord: query
+        });
+        http.get('/erp-stock/goods', {params}).then(res => {
+          this.searchOrgGoods = res.data.list;
+        });
+      },
+      searchOrgGoodsChange(val) {
+        this.searchCondition.batchNumberId = '';
+        this.searchBatchNumberList = [];
+        this.searchFilterBatchNumber();
+      },
+      searchFilterBatchNumber(query) {
+        if (!this.searchCondition.orgGoodsId) return;
+        let goodsId = '';
+        this.searchOrgGoods.forEach(i => {
+          if (i.id === this.searchCondition.orgGoodsId) {
+            goodsId = i.goodsId;
+          }
+        });
+        if (!goodsId) return;
+        this.$http.get('/batch-number/pager', {
+          params: {
+            keyWord: query,
+            goodsId
+          }
+        }).then(res => {
+          this.searchBatchNumberList = res.data.list;
+        });
+      },
       handleSizeChange(val) {
         this.pager.pageSize = val;
         this.queryOperateList(1);
@@ -369,10 +501,10 @@
       },
       queryOperateList(pageNo) {
         this.pager.currentPage = pageNo;
-        let params = {
+        let params = Object.assign({
           pageNo: pageNo,
           pageSize: this.pager.pageSize,
-        };
+        }, this.searchCondition);
         this.loadingLog = true;
         this.$http.get('/erp-stock/adjust/log', {params}).then(res => {
           this.loadingLog = false;
