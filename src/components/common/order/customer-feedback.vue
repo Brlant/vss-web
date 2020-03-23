@@ -63,9 +63,9 @@
         <el-table-column prop="interfacePlatformType" label="接口平台类型" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="businessType" label="业务类型" :sortable="true" width="150"></el-table-column>
 
-        <el-table-column prop="requestAddress" label="请求地址" min-width="120">
+        <el-table-column prop="requestAddress" label="请求地址" min-width="200">
         </el-table-column>
-        <el-table-column prop="requestContent" label="请求内容" :sortable="true" width="150">
+        <el-table-column prop="requestContent" label="请求内容" :sortable="true" width="200">
           <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
             {{scope.row.requestContent}}
           </div>
