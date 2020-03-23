@@ -52,7 +52,7 @@
       </div>
       <el-table :data="detail.list" border class="clearfix" :header-row-class-name="'headerClass'"
                 ref="orderDetail" v-show="detail.list.length">
-        <el-table-column prop="successType" label="是否成功" :sortable="true" width="200">
+        <el-table-column prop="successType" label="状态" :sortable="true" width="100">
           <span slot-scope="{row}">
             {{row.successType === 'true' ? '成功': row.successType === 'false' ? '失败' : row.successType}}
           </span>
