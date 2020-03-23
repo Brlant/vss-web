@@ -70,7 +70,11 @@
             {{scope.row.requestContent}}
           </div>
         </el-table-column>
-        <el-table-column prop="requestDecryptionContent" label="请求内容解密" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="requestDecryptionContent" label="请求内容解密" :sortable="true" width="200">
+          <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
+            {{scope.row.requestDecryptionContent}}
+          </div>
+        </el-table-column>
         <el-table-column prop="responseTime" label="响应时间" :sortable="true" width="180">
           <span slot-scope="{row}">{{row.responseTime | time}}</span>
         </el-table-column>
