@@ -65,7 +65,11 @@
 
         <el-table-column prop="requestAddress" label="请求地址" min-width="120">
         </el-table-column>
-        <el-table-column prop="requestContent" label="请求内容" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="requestContent" label="请求内容" :sortable="true" width="150">
+          <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
+            {{scope.row.requestContent}}
+          </div>
+        </el-table-column>
         <el-table-column prop="requestDecryptionContent" label="请求内容解密" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="responseTime" label="响应时间" :sortable="true" width="180">
           <span slot-scope="{row}">{{row.responseTime | time}}</span>
