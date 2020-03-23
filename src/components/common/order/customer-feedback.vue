@@ -52,15 +52,18 @@
       </div>
       <el-table :data="detail.list" border class="clearfix" :header-row-class-name="'headerClass'"
                 ref="orderDetail" v-show="detail.list.length">
-        <el-table-column prop="serialNumber" label="流水号" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="interfacePlatformType" label="接口平台类型" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="businessType" label="业务类型" :sortable="true" width="250"></el-table-column>
-        <el-table-column prop="requestPerson" label="触发人" :sortable="true" width="180">
-        </el-table-column>
-        <el-table-column prop="requestAddress" label="请求地址" min-width="120">
+        <el-table-column prop="successType" label="是否成功" :sortable="true" width="200">
+          <span slot-scope="{row}">
+            {{row.successType === 'true' ? '成功': row.successType === 'false' ? '失败' : row.successType}}
+          </span>
         </el-table-column>
         <el-table-column prop="requestTime" label="请求时间" width="180">
           <span slot-scope="{row}">{{row.requestTime | time}}</span>
+        </el-table-column>
+        <el-table-column prop="interfacePlatformType" label="接口平台类型" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="businessType" label="业务类型" :sortable="true" width="150"></el-table-column>
+
+        <el-table-column prop="requestAddress" label="请求地址" min-width="120">
         </el-table-column>
         <el-table-column prop="requestContent" label="请求内容" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="requestDecryptionContent" label="请求内容解密" :sortable="true" width="150"></el-table-column>
@@ -74,8 +77,9 @@
         </el-table-column>
         <el-table-column prop="returnResult" label="HTTP状态码" :sortable="true" width="200">
         </el-table-column>
-        <el-table-column prop="successType" label="是否成功" :sortable="true" width="200">
+        <el-table-column prop="requestPerson" label="触发人" :sortable="true" width="180">
         </el-table-column>
+        <el-table-column prop="serialNumber" label="流水号" :sortable="true" width="120"></el-table-column>
       </el-table>
       <div class="text-center" v-show="detail.list.length">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
