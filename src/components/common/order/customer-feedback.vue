@@ -68,6 +68,9 @@
           <span slot-scope="{row}">{{row.responseTime | time}}</span>
         </el-table-column>
         <el-table-column prop="returnContent" label="响应内容" :sortable="true" width="200">
+          <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
+            {{scope.row.returnContent}}
+          </div>
         </el-table-column>
         <el-table-column prop="returnResult" label="HTTP状态码" :sortable="true" width="200">
         </el-table-column>
