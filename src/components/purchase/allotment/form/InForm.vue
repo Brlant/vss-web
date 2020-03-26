@@ -150,8 +150,8 @@
             <!--<el-option :label="item.name" :value="item.id" :key="item.id" v-for="item in LogisticsCenter"/>-->
             <!--</el-select>-->
             <!--</el-form-item>-->
-            <el-form-item label="疾控仓库地址" prop="transportationAddress">
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.transportationAddress"
+            <el-form-item label="仓库地址" prop="transportationAddress">
+              <el-select placeholder="请选择仓库地址" v-model="form.transportationAddress"
                          filterable :clearable="true" @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in cdcWarehouses">
@@ -413,7 +413,7 @@
             {required: true, message: '请选择物流方式', trigger: 'change'}
           ],
           transportationAddress: [
-            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+            {required: true, message: '请选择仓库地址', trigger: 'change'}
           ],
           pickUpAddress: [
             {required: true, message: '请选择提货地址', trigger: 'change'}
