@@ -50,7 +50,7 @@
             </oms-row>
             <oms-row label="疫苗主档通用名称" :span="span">{{currentItem.platformGoodsName }}</oms-row>
 
-            <oms-row label="生产厂商" :span="span">{{ currentItem.factoryName }}</oms-row>
+            <oms-row label="生产单位" :span="span">{{ currentItem.factoryName }}</oms-row>
             <oms-row label="批号" :span="span">{{ currentItem.batchNumber }}</oms-row>
             <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
           </el-col>

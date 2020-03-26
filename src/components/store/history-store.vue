@@ -75,8 +75,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="生产厂商" :span="5">
-                <el-select filterable remote placeholder="请输入名称生产厂商" :remote-method="filterFactory" :clearable="true"
+              <oms-form-row label="生产单位" :span="5">
+                <el-select filterable remote placeholder="请输入名称生产单位" :remote-method="filterFactory" :clearable="true"
                            v-model="searchWord.factoryId" popperClass="good-selects"
                            @click.native.once="filterFactory('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
@@ -118,7 +118,7 @@
                   show-summary :max-height="bodyHeight" style="width: 100%" v-show="batches.length">
           <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true"></el-table-column>
           <el-table-column prop="platformGoodsName" label="疫苗通用名称" min-width="200" :sortable="true"></el-table-column>
-          <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
+          <el-table-column prop="factoryName" label="生产单位" min-width="160" :sortable="true"></el-table-column>
           <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
 
           <el-table-column label="业务库存" align="center">
@@ -443,7 +443,7 @@
         Object.assign(this.filters, temp);
         this.batches = [];
       },
-      filterFactory(query) { // 生产厂商
+      filterFactory(query) { // 生产单位
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;

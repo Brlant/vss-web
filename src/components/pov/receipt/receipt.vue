@@ -91,7 +91,7 @@
               <oms-row label="疫苗名称" :span="span">{{product.name}}</oms-row>
               <oms-row label="批号" :span="span">{{product.batchNumber}}</oms-row>
               <oms-row label="规格" :span="span">{{product.orgGoodsDto.goodsDto.specifications}}</oms-row>
-              <oms-row label="生产厂商" :span="span">{{product.orgGoodsDto.goodsDto.factoryName}}</oms-row>
+              <oms-row label="生产单位" :span="span">{{product.orgGoodsDto.goodsDto.factoryName}}</oms-row>
               <oms-row label="数量" :span="span">{{product.amount}}</oms-row>
             </div>
             <div class="product-item is-total" style="cursor: default">

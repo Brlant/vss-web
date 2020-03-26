@@ -67,7 +67,7 @@
             <dict dict-group="vaccineSign" :dict-key="'' + currentItem.injectionTaskDto.vaccineSign"></dict>
           </oms-row>
           <oms-row label="规格" :span="span">{{currentItem.injectionTaskDto.specification}}</oms-row>
-          <oms-row label="生产厂商" :span="span">{{currentItem.injectionTaskDto.origin}}</oms-row>
+          <oms-row label="生产单位" :span="span">{{currentItem.injectionTaskDto.origin}}</oms-row>
           <oms-row label="批号" :span="span">{{currentItem.injectionTaskDto.batchNumber}}</oms-row>
           <oms-row label="生产日期" :span="span">{{currentItem.injectionTaskDto.productionDate | date}}</oms-row>
           <oms-row label="有效期" :span="span">{{currentItem.injectionTaskDto.expirationDate | date}}</oms-row>

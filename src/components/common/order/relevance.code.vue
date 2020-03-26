@@ -81,7 +81,7 @@
         <el-row class="order-list-header t-head" style="margin:0">
           <el-col :span="8">疫苗名称</el-col>
           <el-col :span="4">批号</el-col>
-          <el-col :span="6">生产厂商</el-col>
+          <el-col :span="6">生产单位</el-col>
           <el-col :span="3">生产日期</el-col>
           <el-col :span="3">数量</el-col>
         </el-row>
@@ -147,7 +147,7 @@
                     </el-tooltip>
                   </div>
                   <div>
-                    <el-tooltip content=生产厂商 class="item" effect="dark" placement="right">
+                    <el-tooltip content=生产单位 class="item" effect="dark" placement="right">
                       <span>{{item.factoryName}}</span>
                     </el-tooltip>
                   </div>

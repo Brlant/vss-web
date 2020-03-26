@@ -68,7 +68,7 @@
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark" content="生产厂商" placement="right">
+                <el-tooltip class="item" effect="dark" content="生产单位" placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.productFactory }}</span>
                 </el-tooltip>
               </div>

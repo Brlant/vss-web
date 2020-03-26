@@ -175,9 +175,9 @@
                         }}</span>
                         </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}</span>
+                        v-show="item.factoryName">生产单位:</span>{{ item.factoryName }}</span>
                       <!--<span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">-->
-                      <!--<span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}-->
+                      <!--<span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}-->
                       <!--</span>-->
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->

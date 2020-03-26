@@ -569,7 +569,7 @@
       getOrgMore: function () {
         this.getBusinessRelationList(this.typePager.currentPage + 1, true);
       },
-      queryOtherBusiness: function (keyWord) {// 过滤单位类型为生产厂商和供货单位的单位
+      queryOtherBusiness: function (keyWord) {// 过滤单位类型为生产单位和供货单位的单位
         let params = {
           pageNo: 1,
           deleteFlag: false,

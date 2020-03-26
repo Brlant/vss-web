@@ -41,7 +41,7 @@
       <tbody>
       <tr>
         <td colspan="3" width="180px" class="t-head">疫苗</td>
-        <td colspan="3" width="180px" class="t-head">生产厂商</td>
+        <td colspan="3" width="180px" class="t-head">生产单位</td>
         <td colspan="2" width="120px" class="t-head">批号</td>
         <td colspan="2" width="120px" class="t-head">生产日期</td>
         <td colspan="2" width="120px" class="t-head">有效期</td>

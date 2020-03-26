@@ -249,7 +249,7 @@
                           v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
                         </span>
                         <span class="select-other-info pull-left" v-if="item.factoryName">
-                          <span v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
+                          <span v-show="item.factoryName">生产单位:</span>{{ item.factoryName }}
                         </span>
                       </div>
                     </el-option>

@@ -59,7 +59,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left">
-                          生产厂商:{{ vaccine.saleFirmName }}
+                          生产单位:{{ vaccine.saleFirmName }}
                         </span>
                     </div>
                   </el-option>
@@ -79,8 +79,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8" class="clearfix">
-              <oms-form-row label="生产厂商" :span="5">
-                <el-select filterable remote placeholder="请输入名称生产厂商" :remote-method="filterFactory" :clearable="true"
+              <oms-form-row label="生产单位" :span="5">
+                <el-select filterable remote placeholder="请输入名称生产单位" :remote-method="filterFactory" :clearable="true"
                            v-model="searchWord.factoryId" popperClass="good-selects"
                            @click.native.once="filterFactory('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in factories">
@@ -122,7 +122,7 @@
         <el-table-column prop="orgName" label="货主" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="goodsName" label="货主疫苗名称" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="platformGoodsName" label="疫苗主档名称" min-width="160" :sortable="true"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商" min-width="160" :sortable="true"></el-table-column>
+        <el-table-column prop="factoryName" label="生产单位" min-width="160" :sortable="true"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column label="业务库存" align="center">
           <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
@@ -449,7 +449,7 @@
         Object.assign(this.filters, temp);
         this.batchNumberList = [];
       },
-      filterFactory(query) { // 生产厂商
+      filterFactory(query) { // 生产单位
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;

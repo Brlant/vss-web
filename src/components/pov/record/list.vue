@@ -44,7 +44,7 @@
                         <span v-show="org.code">货品编号:</span>{{org.code}}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="org.factoryName">生产厂商:</span>{{ org.factoryName }}
+                        v-show="org.factoryName">生产单位:</span>{{ org.factoryName }}
                       </span>
                     </div>
                   </el-option>
@@ -113,7 +113,7 @@
                   </el-tooltip>
                 </div>
                 <div>
-                  <el-tooltip class="item" effect="dark" content="生产厂商" placement="right">
+                  <el-tooltip class="item" effect="dark" content="生产单位" placement="right">
                     <span class="font-gray">{{item.origin}}</span>
                   </el-tooltip>
                 </div>

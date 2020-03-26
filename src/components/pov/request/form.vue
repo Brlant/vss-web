@@ -178,7 +178,7 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.supplyCompanyName">供货单位:</span>{{ item.supplyCompanyName }}</span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}</span>
+                        v-show="item.factoryName">生产单位:</span>{{ item.factoryName }}</span>
                     </div>
                     <!--<el-tag type="success" v-show="item.list.length"-->
                     <!--style="line-height: 22px;margin-left: 20px;height: 20px">-->

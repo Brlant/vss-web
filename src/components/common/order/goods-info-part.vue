@@ -21,7 +21,7 @@
           </span>
 
         </oms-row>
-        <oms-row label="生产厂商" :span="8">
+        <oms-row label="生产单位" :span="8">
           {{productInfo.fixInfo.goodsDto.factoryName}}
         </oms-row>
       </el-col>

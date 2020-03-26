@@ -177,7 +177,7 @@
                 :row-class-name="formatRowClass" :summary-method="getSummaries" show-summary
                 :max-height="bodyHeight" style="width: 100%">
         <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="factoryName" label="生产单位" :sortable="true" width="150"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
                          width="100">
@@ -507,7 +507,7 @@
         Object.assign(this.filters, temp);
         this.batches = [];
       },
-      filterFactory(query) { // 生产厂商
+      filterFactory(query) { // 生产单位
         let orgId = this.$store.state.user.userCompanyAddress;
         if (!orgId) {
           return;

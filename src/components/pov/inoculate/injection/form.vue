@@ -120,7 +120,7 @@
       </el-form-item>
       <el-row class="info" v-show="form.vaccineId&& form.batchNumberId">
         <el-col :span="12" v-show="form.factoryName">
-          <el-form-item label="生产厂商">{{form.factoryName}}</el-form-item>
+          <el-form-item label="生产单位">{{form.factoryName}}</el-form-item>
         </el-col>
         <el-col :span="12" v-show="form.vaccineSign">
           <el-form-item label="疫苗种类">

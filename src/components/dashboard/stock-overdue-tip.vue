@@ -7,7 +7,7 @@
         货主疫苗名称
       </el-col>
       <el-col :span="8">
-        生产厂商
+        生产单位
       </el-col>
       <el-col :span="4">
         批号

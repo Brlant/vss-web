@@ -189,7 +189,7 @@
               </el-col>
             </el-row>
             <oms-row class="row-mg" label="疫苗名称" :span="5">{{currentItem.injectionTaskDto.orgGoodsName}}</oms-row>
-            <oms-row class="row-mg" label="生产厂商" :span="5">{{currentItem.injectionTaskDto.origin}}</oms-row>
+            <oms-row class="row-mg" label="生产单位" :span="5">{{currentItem.injectionTaskDto.origin}}</oms-row>
             <el-row>
               <el-col :span="12">
                 <oms-row class="row-mg" label="规格" :span="10">{{currentItem.injectionTaskDto.specification}}</oms-row>

@@ -152,7 +152,7 @@
                 </el-tooltip>
               </div>
               <div v-if="item.orgGoodsDataDto.orgGoodsDto.goodsDto">
-                <el-tooltip class="item" effect="dark" content="生产厂商" placement="right">
+                <el-tooltip class="item" effect="dark" content="生产单位" placement="right">
                   <span class="font-gray">{{ item.orgGoodsDataDto.orgGoodsDto.goodsDto.factoryName }}</span>
                 </el-tooltip>
               </div>

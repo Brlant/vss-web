@@ -82,7 +82,7 @@
             疫苗名称
           </el-col>
           <el-col :span="3">疫苗规格</el-col>
-          <el-col :span="5">生产厂商</el-col>
+          <el-col :span="5">生产单位</el-col>
           <el-col :span="3">生产日期</el-col>
           <el-col :span="3">批号</el-col>
           <el-col :span="3">批签发号</el-col>

@@ -121,7 +121,7 @@
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
+                v-show="item.factoryName">生产单位:</span>{{ item.factoryName }}
               </span>
             </div>
           </el-option>
@@ -224,7 +224,7 @@
                   v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
               </span>
                 <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产厂商:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
                  </span>
               </div>
             </el-option>

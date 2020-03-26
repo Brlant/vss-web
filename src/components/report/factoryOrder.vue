@@ -68,7 +68,7 @@
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="vaccine.factoryName">生产厂商:</span>{{ vaccine.factoryName }}
+                          v-show="vaccine.factoryName">生产单位:</span>{{ vaccine.factoryName }}
                         </span>
                     </div>
                   </el-option>

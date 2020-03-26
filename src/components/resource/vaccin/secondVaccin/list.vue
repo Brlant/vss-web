@@ -248,7 +248,7 @@
               </el-row>
               <el-row>
                 <el-col :span="12">
-                  <goods-row label="生产厂商" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
+                  <goods-row label="生产单位" :span="12">{{ data.goodsDto.factoryName }}</goods-row>
                   <goods-row label="规格 / 型号" :span="12">{{ data.goodsDto.specifications }}</goods-row>
                   <goods-row label="疫苗编号" :span="12">{{ data.goodsDto.code }}</goods-row>
                   <goods-row label="疫苗名称" :span="12">{{ data.goodsDto.name }}</goods-row>

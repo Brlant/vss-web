@@ -291,7 +291,7 @@ export const route = [
           {
             path: '/finance/supplier',
             component: () => import('./components/finance/vaccine/list.vue'),
-            meta: {moduleId: 'finance', title: '疫苗厂商入库明细', perm: 'vaccine-vendor-reconciliation'}
+            meta: {moduleId: 'finance', title: '疫苗入库明细', perm: 'vaccine-vendor-reconciliation'}
           }
           // {
           //   path: '/finance/paying',

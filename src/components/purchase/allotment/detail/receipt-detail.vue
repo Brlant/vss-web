@@ -60,7 +60,7 @@
             </el-tooltip>
           </div>
         </td>
-        <td colspan="3" style="width: 180px" class="t-head">生产厂商</td>
+        <td colspan="3" style="width: 180px" class="t-head">生产单位</td>
         <td colspan="3" style="width: 280px">
           {{item.orgGoodsDto.goodsDto.factoryName}}
         </td>

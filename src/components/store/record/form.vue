@@ -120,7 +120,7 @@
               <el-row class="md-info" v-for="item in batches" :key="item.id">
                 <el-col :span="14">
                   <oms-row label="货主疫苗名称" :sapn="span">{{item.goodsName}}</oms-row>
-                  <oms-row label="生产厂商" :sapn="span">{{item.factoryName}}</oms-row>
+                  <oms-row label="生产单位" :sapn="span">{{item.factoryName}}</oms-row>
                   <oms-row label="批号" :sapn="span">{{item.batchNumber}}</oms-row>
                   <oms-row label="有效期" :sapn="span">{{item.expiryDate | date}}</oms-row>
                   <oms-row label="散件包装数量" :sapn="span">{{smallPackCount}}</oms-row>

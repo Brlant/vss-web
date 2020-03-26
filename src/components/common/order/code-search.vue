@@ -10,7 +10,7 @@
             <div class="select-other-info" style="margin-left: 0">
               <div>规格：{{item.specification}}</div>
               <div>编号：{{item.goodsCode}}</div>
-              <div>生产厂商：{{item.factoryName}}</div>
+              <div>生产单位：{{item.factoryName}}</div>
             </div>
           </el-option>
         </el-select>
