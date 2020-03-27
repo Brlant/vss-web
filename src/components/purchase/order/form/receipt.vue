@@ -124,6 +124,9 @@
             <el-form-item label="批号" style="margin-bottom: 5px">
               <span>{{ item.batchNumber }}</span>
             </el-form-item>
+            <el-form-item label="有效期至" style="margin-bottom: 5px">
+              <span>{{ item.expiryDate | date }}</span>
+            </el-form-item>
             <el-form-item label="数量">
               <input class="el-input__inner" type="number" placeholder="请输入数量" v-model.number="item.currentAmount"
                      @input="changeAmount(item)"></input>
