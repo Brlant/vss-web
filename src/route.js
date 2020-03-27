@@ -199,9 +199,14 @@ export const route = [
             ]
           },
           {
+            path: '/store/history/bizServing',
+            component: () => import('./components/store/history-store.vue'),
+            meta: {moduleId: 'store', title: '历史库存查询(含人份)', perm: 'cerp-stock-query-history', isBizServing: true}
+          },
+          {
             path: '/store/history',
             component: () => import('./components/store/history-store.vue'),
-            meta: {moduleId: 'store', title: '历史库存查询', perm: 'cerp-stock-query-history'}
+            meta: {moduleId: 'store', title: '历史库存查询', perm: 'cerp-stock-query-history-bizServing'}
           },
           {
             path: '/store/allotment/:id',
