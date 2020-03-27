@@ -42,195 +42,118 @@
 </style>
 <template>
   <div class="order-page">
-    <div class="container">
-      <el-alert
-        title="请选择疫苗和批号输入调整部分库存数，调整库存数必须是散件倍数，如果是正数则增加库存，如果是负数则减少库存。"
-        type="warning">
-      </el-alert>
-      <div class="opera-btn-group">
+    <div class="container adjust-const-stock-detail">
+      <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-
-          <span class="cursor-span" @click="$router.push('/store/count/adjust')">
-            <a href="#" class="btn-circle" @click.prevent=""><i
-              class="el-icon-back"></i> </a>返回
+          <span class="pull-left switching-icon" @click="showSearch = !showSearch">
+            <i class="el-icon-arrow-up"></i>
+            <span v-show="showSearch">收起筛选</span>
+            <span v-show="!showSearch">展开筛选</span>
+          </span>
+          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
+            <perm label="purchasing-contract-add">
+                  <a href="#" class="btn-circle" @click.prevent=""><i
+                    class="el-icon-t-plus"></i> </a>新增调整库存
+            </perm>
           </span>
         </div>
-        <el-form class="advanced-query-form" onsubmit="return false">
-          <el-row>
-            <el-col :span="12">
-              <oms-form-row label="货主疫苗" :span="4" :isRequire="true">
-                <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗"
-                           :remote-method="filterOrgGoods"
-                           :clearable="true"
-                           v-model="searchWord.orgGoodsId" popper-class="good-selects"
-                           @click.native.once="filterOrgGoods('')" @change="orgGoodsChange">
-                  <el-option :value="org.id" :key="org.id" :label="org.goodsName"
-                             v-for="org in orgGoods">
-                    <div style="overflow: hidden">
-                      <span class="pull-left">{{org.goodsName}}<el-tag style="float: none" type="danger"
-                                                                       v-show="!org.status">停用</el-tag></span>
-                    </div>
-                    <div style="overflow: hidden">
+        <el-form class="advanced-query-form clearfix" onsubmit="return false">
+          <el-col :span="8">
+            <oms-form-row label="货主疫苗" :span="5">
+              <el-select filterable remote placeholder="请输入名称或编号搜索货主疫苗" :remote-method="searchFilterSearchOrgGoods"
+                         :clearable="true" @change="searchOrgGoodsChange"
+                         v-model="searchCondition.orgGoodsId" popper-class="good-selects">
+                <el-option :value="org.id" :key="org.id" :label="org.goodsName"
+                           v-for="org in searchOrgGoods">
+                  <div style="overflow: hidden">
+                    <span class="pull-left">{{org.goodsName}}</span>
+                  </div>
+                  <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
                         v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}
                       </span>
-                      <span class="select-other-info pull-left"><span
-                        v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
+                    <span class="select-other-info pull-left"><span
+                      v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
                       </span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="12">
-              <oms-form-row label="批号" :span="5" :isRequire="true">
-                <el-select v-model="searchWord.batchNumberId" filterable clearable remote @change="batchNumberChange"
-                           :remoteMethod="filterBatchNumber" placeholder="请输入批号名称搜索批号">
-                  <el-option v-for="item in batchNumberList" :value="item.id" :key="item.id"
-                             :label="item.batchNumber">
-                    {{ item.batchNumber }}
-                    <!--<el-tag v-show="isNewBatch(item.createTime)" style="height: 20px">新</el-tag>-->
-                  </el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-          </el-row>
-          <el-row class="is-flex">
-            <el-col :span="12">
-              <oms-form-row label="仓库" :span="4">
-                <el-select v-model="searchWord.warehouseId" filterable clearable
-                           @change="warehouseChange"
-                           placeholder="请选择仓库">
-                  <el-option v-for="item in warehouses" :value="item.id" :key="item.id"
-                             :label="item.name">
-                  </el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="12">
-              <el-col :span="12" v-show="searchWord.orgGoodsId">
-                <oms-form-row class="is-flex" label="最小包装规格:" :span="10">
-                  <div>{{smallPackCount}}</div>
-                </oms-form-row>
+                  </div>
+                </el-option>
+              </el-select>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="6">
+            <oms-form-row label="批号" :span="4">
+              <el-select v-model="searchCondition.batchNumberId" filterable clearable remote
+                         :remoteMethod="searchFilterBatchNumber" placeholder="请输入批号名称搜索批号">
+                <el-option v-for="item in searchBatchNumberList" :value="item.id" :key="item.id"
+                           :label="item.batchNumber">
+                  {{ item.batchNumber }}
+                </el-option>
+              </el-select>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="10">
+            <oms-form-row label="调整时间" :span="5">
+              <el-col :span="24">
+                <el-date-picker
+                  v-model="createTime"
+                  type="datetimerange"
+                  :default-time="['00:00:00', '23:59:59']"
+                  placeholder="请选择">
+                </el-date-picker>
               </el-col>
-              <el-col :span="12">
-              </el-col>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="12">
-              <el-col :span="12">
-                <oms-form-row label="可用库存" :span="8">
-                  <el-input type="number" v-model.number="form.availableCount"></el-input>
-                </oms-form-row>
-              </el-col>
-              <el-col :span="12">
-                <oms-form-row label="在途库存" :span="8">
-                  <el-input type="number" v-model.number="form.transitCount"></el-input>
-                </oms-form-row>
-              </el-col>
-            </el-col>
-            <el-col :span="12">
-              <el-col :span="12">
-                <oms-form-row label="实际合格库存" :span="10">
-                  <el-input type="number" v-model.number="form.qualifiedCount"></el-input>
-                </oms-form-row>
-              </el-col>
-              <el-col :span="12">
-                <oms-form-row label="实际不合格库存" :span="10">
-                  <el-input type="number" v-model.number="form.unqualifiedCount"></el-input>
-                </oms-form-row>
-              </el-col>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="8">
-              <oms-form-row label="业务不合格库存" :span="8">
-                <el-input type="number" v-model.number="form.unqualifiedBizCount"></el-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="业务人份剂次" :span="8">
-                <el-input type="number" v-model.number="form.qualifiedBizServings"></el-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row label="实际人份剂次" :span="8">
-                <el-input type="number" v-model.number="form.qualifiedActualServings"></el-input>
-              </oms-form-row>
-            </el-col>
-          </el-row>
-          <el-row>
-            <el-col :span="10">
-              <oms-form-row label="备注" :span="4">
-                <el-input type="input" v-model="form.remark"></el-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="4">
-                <el-button type="primary" @click="onSubmit" :disabled="doing">调整库存</el-button>
-              </oms-form-row>
-            </el-col>
-          </el-row>
+            </oms-form-row>
+          </el-col>
+          <el-col :span="8">
+            <oms-form-row label="" :span="5">
+              <el-button type="primary" native-type="submit" @click="queryInOrder">查询</el-button>
+              <el-button native-type="reset" @click="resetQueryForm">重置</el-button>
+            </oms-form-row>
+          </el-col>
+          <!--<el-col :span="12">-->
+          <!--<oms-form-row label="仓库" :span="3">-->
+          <!--<el-select v-model="filters.warehouseId" filterable clearable-->
+          <!--@change="warehouseChange"-->
+          <!--placeholder="请选择仓库">-->
+          <!--<el-option v-for="item in warehouses" :value="item.id" :key="item.id"-->
+          <!--:label="item.name">-->
+          <!--</el-option>-->
+          <!--</el-select>-->
+          <!--</oms-form-row>-->
+          <!--</el-col>-->
+
         </el-form>
       </div>
-      <el-table :data="batches" class="header-list store" border @row-click="showDetail"
-                :header-row-class-name="'headerClass'" v-loading="loadingData"
-                :row-class-name="formatRowClass" :summary-method="getSummaries" show-summary
-                :max-height="bodyHeight" style="width: 100%">
+      <el-table :data="operateList" class="header-list store no-pointer" border v-loading="loadingLog"
+                :header-row-class-name="'headerClass'" :max-height="bodyHeight" style="width: 100%">
+        <el-table-column prop="unqualifiedCount" label="调整时间" :sortable="true" width="160">
+          <template slot-scope="scope">
+            <span>{{scope.row.createTime | time}}</span>
+          </template>
+        </el-table-column>
         <el-table-column prop="goodsName" label="货主疫苗名称" :sortable="true" width="150"></el-table-column>
-        <el-table-column prop="factoryName" label="生产厂商" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="warehouseAddress" label="仓库" :sortable="true" width="110"></el-table-column>
         <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
-        <el-table-column prop="availableCount" label="可用库存" :render-header="formatHeader" :sortable="true"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.availableCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="undeterminedCount" label="锁定库存" :render-header="formatHeader" :sortable="true"
-                         width="110">
-          <template slot-scope="scope">
-            <span>{{scope.row.undeterminedCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="unqualifiedBizCount" label="业务不合格库存" :render-header="formatHeader" :sortable="true"
-                         width="140">
-          <template slot-scope="scope">
-            <span>{{scope.row.unqualifiedBizCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="qualifiedCount" label="实际合格库存" :render-header="formatHeader" :sortable="true"
-                         width="120">
-          <template slot-scope="scope">
-            <span>{{scope.row.qualifiedCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.transitCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="unqualifiedCount" label="实际不合格库存" :render-header="formatHeader" :sortable="true"
-                         width="140">
-          <template slot-scope="scope">
-            <span>{{scope.row.unqualifiedCount}}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="availableCount" label="可用库存" :sortable="true" width="100"></el-table-column>
+        <el-table-column prop="unqualifiedBizCount" label="业务不合格库存" :sortable="true" width="140"></el-table-column>
+        <el-table-column prop="transitCount" label="在途库存" :sortable="true" width="100"></el-table-column>
+        <el-table-column prop="qualifiedActualCount" label="实际合格库存" :sortable="true" width="120"></el-table-column>
+        <el-table-column prop="stockUnqualifiedActualCount" label="实际不合格库存" :sortable="true"
+                         width="140"></el-table-column>
         <el-table-column prop="qualifiedBizServings" label="业务人份剂次" :sortable="true"
                          width="140"></el-table-column>
         <el-table-column prop="qualifiedActualServings" label="实际人份剂次" :sortable="true"
                          width="140"></el-table-column>
-        <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="100">
-          <template slot-scope="scope">
-            <span>{{ scope.row.expiryDate | date}}</span>
-          </template>
-        </el-table-column>
+        <el-table-column prop="remark" label="备注" width="100"></el-table-column>
       </el-table>
+      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+        <el-pagination
+          :total="pager.count" :pageSize="pager.pageSize"
+          @size-change="handleSizeChange" @current-change="handleCurrentChange"
+          :page-sizes="[pager.pageSize,20,50,100]" layout="sizes, prev, pager, next, jumper"
+          :current-page="pager.currentPage">
+        </el-pagination>
+      </div>
     </div>
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <detail :currentItem="currentItem" @close="resetRightBox"></detail>
-    </page-right>
   </div>
 </template>
 <script type="text/jsx">
@@ -308,8 +231,6 @@
       };
     },
     mounted() {
-      // this.getBatches(1);
-      this.queryOrgWarehouse();
       this.queryOperateList(1);
     },
     computed: {
@@ -338,6 +259,9 @@
       }
     },
     methods: {
+      add() {
+        this.$router.push('/store/count/adjust/detail');
+      },
       queryInOrder: function () {// 搜索
         this.searchCondition.createStartTime = this.$formatAryTime(this.createTime, 0, 'YYYY-MM-DD HH:mm:ss');
         this.searchCondition.createEndTime = this.$formatAryTime(this.createTime, 1, 'YYYY-MM-DD HH:mm:ss');
@@ -633,6 +557,7 @@
               message: '调整库存成功'
             });
             this.getBatches(1);
+            this.queryOperateList(1);
             this.form = {
               availableCount: '',
               qualifiedCount: '',
