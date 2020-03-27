@@ -50,15 +50,52 @@
           </el-button>
         </perm>
       </div>
-      <div class="qp-box" v-for="item in detail.list">
-        <h3>
-          {{ item.calltime }}
-          <el-tag v-if="item.result === 0 || item.result === '00'" type="success">正常</el-tag>
-          <el-tag v-else type="danger">异常</el-tag>
-        </h3>
-        <div>
-          {{item.jsonData}}
-        </div>
+      <el-table :data="detail.list" border class="clearfix" :header-row-class-name="'headerClass'"
+                ref="orderDetail" v-show="detail.list.length">
+        <el-table-column prop="successType" label="状态" :sortable="true" width="100">
+          <span slot-scope="{row}">
+            {{row.successType === 'true' ? '成功': row.successType === 'false' ? '失败' : row.successType}}
+          </span>
+        </el-table-column>
+        <el-table-column prop="requestTime" label="请求时间" width="180">
+          <span slot-scope="{row}">{{row.requestTime | time}}</span>
+        </el-table-column>
+        <el-table-column prop="interfacePlatformType" label="接口平台类型" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="businessType" label="业务类型" :sortable="true" width="150"></el-table-column>
+
+        <el-table-column prop="requestAddress" label="请求地址" min-width="200">
+        </el-table-column>
+        <el-table-column prop="requestContent" label="请求内容" :sortable="true" width="200">
+          <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
+            {{scope.row.requestContent}}
+          </div>
+        </el-table-column>
+        <el-table-column prop="requestDecryptionContent" label="请求内容解密" :sortable="true" width="200">
+          <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
+            {{scope.row.requestDecryptionContent}}
+          </div>
+        </el-table-column>
+        <el-table-column prop="responseTime" label="响应时间" :sortable="true" width="180">
+          <span slot-scope="{row}">{{row.responseTime | time}}</span>
+        </el-table-column>
+        <el-table-column prop="returnContent" label="响应内容" :sortable="true" width="200">
+          <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
+            {{scope.row.returnContent}}
+          </div>
+        </el-table-column>
+        <el-table-column prop="returnResult" label="HTTP状态码" :sortable="true" width="200">
+        </el-table-column>
+        <el-table-column prop="requestPerson" label="触发人" :sortable="true" width="180">
+        </el-table-column>
+        <el-table-column prop="serialNumber" label="流水号" :sortable="true" width="120"></el-table-column>
+      </el-table>
+      <div class="text-center" v-show="detail.list.length">
+        <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"
+                       :current-page="pager.currentPage"
+                       :page-sizes="[10,20,50,100]" :page-size="pager.pageSize"
+                       layout="sizes, prev, pager, next, jumper"
+                       :total="pager.count">
+        </el-pagination>
       </div>
     </div>
   </div>
@@ -81,7 +118,12 @@
       return {
         detail: null,
         loading: false,
-        loadingExcel: false
+        loadingExcel: false,
+        pager: {
+          currentPage: 1,
+          count: 0,
+          pageSize: 10
+        }
       };
     },
     computed: {
@@ -98,18 +140,28 @@
       }
     },
     methods: {
-      query() {
+      handleSizeChange(val) {
+        this.pager.pageSize = val;
+        window.localStorage.setItem('currentPageSize', val);
+        this.query(1);
+      },
+      handleCurrentChange(val) {
+        this.query(val);
+      },
+      query(pageNo) {
         if (!this.orderId) return;
+        this.pager.currentPage = pageNo;
         this.loading = true;
-        this.$http.get(`upload-data/order/${this.orderId}`).then(res => {
+        let params = {
+          pageNo: pageNo,
+          pageSize: this.pager.pageSize,
+        };
+        this.$http.get(`upload-data/order/${this.orderId}/log`, {params}).then(res => {
           let list = [];
-          res.data.list && res.data.list.forEach(i => {
-            if (i.json) {
-              let item = JSON.parse(i.json);
-              item.jsonData = i.json;
-              list.push(item);
-            }
-          });
+          if (res.data.pageResponse) {
+            list = res.data.pageResponse.list || [];
+            this.pager.count = res.data.pageResponse.count;
+          }
           this.detail = {
             list,
             signFlag: res.data.signFlag
