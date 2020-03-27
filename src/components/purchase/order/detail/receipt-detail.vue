@@ -180,6 +180,7 @@
       </el-col>
     </el-row>
     <hr class="hr"/>
+    <div v-if="!goodsDetails.length && !doing" class="empty-info">无收货信息</div>
     <div v-loading="doing">
       <div v-for="item in goodsDetails" :key="item.id">
         <table class="product-detail-list mt-10" width="100%">
@@ -231,7 +232,7 @@
             <td colspan="2" class="t-head">生产日期</td>
             <td colspan="2" class="t-head">有效期</td>
             <!--            <td colspan="3" class="t-head">整件数量</td>-->
-            <td colspan="4" class="t-head">散件数量</td>
+            <td colspan="4" class="t-head">数量</td>
             <td colspan="2" class="t-head">合计</td>
           </tr>
           <tr v-for="batchNumber in item.batchNumbers" :key="batchNumber.id"
@@ -270,7 +271,7 @@
                 <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
               </div>
               <div style="padding: 5px 0 " v-show="batchNumber.refuseCount">
-                <el-tag type="warning"></el-tag>
+                <el-tag type="warning">拒收</el-tag>
                 {{ batchNumber.refuseCount}}
                 <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
               </div>
@@ -370,7 +371,7 @@
                 <td colspan="2" class="t-head">生产日期</td>
                 <td colspan="2" class="t-head">有效期</td>
                 <!--                <td colspan="3" class="t-head">整件数量</td>-->
-                <td colspan="4" class="t-head">散件数量</td>
+                <td colspan="4" class="t-head">数量</td>
                 <td colspan="2" class="t-head">合计</td>
               </tr>
               <tr v-for="batchNumber in h.batchNumbers" :key="batchNumber.id">

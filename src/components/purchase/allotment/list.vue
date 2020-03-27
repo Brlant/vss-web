@@ -206,7 +206,8 @@
                  v-for="(item,key) in orgType" v-show="key < 4"
                  @click="changeStatus(item,key)">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>
+                {{item.title}}<span class="status-num">{{item.num}}</span>
               </div>
             </div>
           </div>
@@ -218,7 +219,8 @@
                  v-for="(item,key) in orgType"
                  @click="changeStatus(item,key)" v-show="key > 3">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>
+                {{item.title}}<span class="status-num">{{item.num}}</span>
               </div>
             </div>
           </div>
@@ -226,14 +228,14 @@
       </el-row>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="filters.state === '6' ? 7: 11">
+          <el-col :span="7">
             <el-checkbox v-model="checkAll" @change="checkAllOrder" v-show="isShowCheckBox"/>
             货主/订单号
           </el-col>
           <el-col :span="4">业务类型</el-col>
           <el-col :span="5">时间</el-col>
           <el-col :span="4">状态</el-col>
-          <el-col :span="4" v-if="filters.state === '6'">操作</el-col>
+          <el-col :span="4">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -251,7 +253,7 @@
           <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
                :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
             <el-row>
-              <el-col :span="filters.state === '6' ? 7: 11">
+              <el-col :span="7">
                 <div v-show="isShowCheckBox" class="flex-layout " @click.stop="item.checked = !item.checked">
                  <span @click.stop="" style="margin-right: 5px">
                      <el-checkbox v-model="item.checked" class="mr-5"/>
@@ -301,13 +303,27 @@
                   <order-push-status :status="item.pushStatus" :msg="item.pushMessage"/>
                 </div>
               </el-col>
-              <el-col :span="4" class="opera-btn" v-if="filters.state === '6' ">
-                <perm label="allocating-order-edit">
+              <el-col :span="4" class="opera-btn">
+                <perm label="allocating-order-edit" v-if="item.state === '6'">
                    <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
                   编辑
                 </span>
+                </perm>
+                <perm label="allocating-order-receipt" v-if="item.state === '10'">
+                   <span @click.stop.prevent="receiptOrder(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="el-icon-t-allot"></i></a>
+                  收货
+                </span>
+                </perm>
+                <perm label="allocating-order-review" v-if="item.state === '7'">
+                  <span @click.stop.prevent="reviewOrder(item)">
+                    <a href="#" class="btn-circle" @click.prevent=""><i
+                      class="el-icon-t-scan"></i></a>
+                   扫码复核
+                 </span>
                 </perm>
               </el-col>
             </el-row>
@@ -336,6 +352,15 @@
                 :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :show="showReceive" @right-close="resetRightBox" :css="{'width':'1120px','padding':0}"
+                class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
+      <receive-part :orderId="currentOrderId" :defaultIndex="defaultIndex"
+                    @close="resetRightBox" @refresh="refreshOrder"></receive-part>
+    </page-right>
+    <page-right :show="showReviewCode" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+      <review-order :show="showReviewCode" :orderId="currentOrderId" @right-close="resetRightBox"
+                    @refresh="refreshOrder"/>
+    </page-right>
   </div>
 </template>
 <script>
@@ -344,10 +369,12 @@
   import addForm from './form/InForm.vue';
   import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
+  import receivePart from './receive/part';
+  import reviewOrder from './scanReview/review.vue';
 
   export default {
     components: {
-      showForm, addForm
+      showForm, addForm, receivePart, reviewOrder
     },
     data: function () {
       return {
@@ -355,6 +382,8 @@
         showItemRight: false,
         showDetail: false,
         showSearch: false,
+        showReceive: false,
+        showReviewCode: false,
         orderList: [],
         filters: {
           type: 0,
@@ -440,11 +469,21 @@
       }
     },
     methods: {
+      reviewOrder(item) {
+        this.action = 'edit';
+        this.showReviewCode = true;
+        this.currentOrderId = item.id;
+      },
       editOrder(item) {
         this.action = 'edit';
         this.currentOrderId = item.id;
         this.showItemRight = true;
         this.defaultIndex = 2;
+      },
+      receiptOrder(item) {
+        this.currentOrderId = item.id;
+        this.showReceive = true;
+        this.defaultIndex = 3;
       },
       getOrderStatus: function (order) {
         let state = '';
@@ -487,6 +526,8 @@
         this.showItemRight = false;
         this.defaultIndex = 0;
         this.action = '';
+        this.showReceive = false;
+        this.showReviewCode = false;
         // this.getOrderList(this.pager.currentPage);
         this.$router.push('/store/allotment/list');
       },
