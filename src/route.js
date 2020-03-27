@@ -160,9 +160,21 @@ export const route = [
             meta: {moduleId: 'store', title: '即时库存(含人份)', perm: 'cerp-stock-query', isBizServing: true}
           },
           {
-            path: '/store/adjust/count',
-            component: () => import('./components/store/adjust-count-stock.vue'),
-            meta: {moduleId: 'store', title: '库存数量调整', perm: 'cerp-stock-adjust'}
+            path: '/store/count/adjust',
+            component: () => import('./components/common/parent-route.vue'),
+            meta: {moduleId: 'store', title: '库存数量调整', perm: 'cerp-stock-adjust', subMenuId: 'count'},
+            children: [
+              {
+                path: '',
+                component: () => import('./components/store/adjust-count-stock-log.vue'),
+                meta: {moduleId: 'store', title: '库存数量调整'}
+              },
+              {
+                path: '/store/count/adjust/detail',
+                component: () => import('./components/store/adjust-count-stock.vue'),
+                meta: {moduleId: 'store', title: '库存数量调整'}
+              }
+            ]
           },
           {
             path: '/store/adjust/status',
