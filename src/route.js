@@ -425,13 +425,13 @@ export const route = [
           {
             path: '/report/vaccine/use',
             component: () => import('./components/report/use-records.vue'),
-            meta: {
-              moduleId: 'report',
-              title: '疫苗使用情况统计',
-              perm: 'pov-injection-task-used-query',
-              icon: 'el-icon-t-baobiao'
-            }
-          }
+            meta: {moduleId: 'report', title: '疫苗使用情况统计', perm: 'query-multi-person-aging', icon: 'el-icon-t-baobiao'}
+          },
+          {
+            path: '/report/receive/records',
+            component: () => import('./components/report/receive-record.vue'),
+            meta: {moduleId: 'report', title: '收货记录表', perm: 'erp-receiving-record-query'}
+          },
         ]
       },
       {
