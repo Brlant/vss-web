@@ -26,7 +26,7 @@
               <oms-form-row :span="2" label="">
                 <el-button @click="searchInOrder" native-type="submit" type="primary">查询</el-button>
                 <el-button @click="resetSearchForm" native-type="reset">重置</el-button>
-                <perm label="injection-community-task-export" style="margin-left: 10px">
+                <perm label="pov-injection-community-task-export" style="margin-left: 10px">
                   <el-button @click="exportExcel" type="success" plain>导出Excel</el-button>
                 </perm>
               </oms-form-row>
