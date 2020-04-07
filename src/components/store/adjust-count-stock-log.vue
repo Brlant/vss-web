@@ -51,10 +51,11 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <perm label="purchasing-contract-add">
+            <perm label="cerp-stock-adjust">
                   <a href="#" class="btn-circle" @click.prevent=""><i
                     class="el-icon-t-plus"></i> </a>新增调整库存
             </perm>
+
           </span>
         </div>
         <el-form class="advanced-query-form clearfix" onsubmit="return false">
