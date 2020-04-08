@@ -162,7 +162,7 @@ export const route = [
           {
             path: '/store/count/adjust',
             component: () => import('./components/common/parent-route.vue'),
-            meta: {moduleId: 'store', title: '库存数量调整', perm: 'cerp-stock-adjust', subMenuId: 'count'},
+            meta: {moduleId: 'store', title: '库存数量调整', perm: 'cerp-stock-adjust-query', subMenuId: 'count'},
             children: [
               {
                 path: '',
