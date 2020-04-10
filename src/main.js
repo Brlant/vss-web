@@ -193,7 +193,7 @@ Vue.prototype.$formatOrgPhotoId = function (item) {
   return item.photoId || item.goodsDto.photoId;
 };
 
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://eb94ae86f9104780be615d09d50416f2@f-log.sinopharm-bio.com/3',
     environment: 'vss',
