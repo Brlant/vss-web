@@ -21,5 +21,8 @@ local-build:
     - scp -r dist/* root@172.25.10.10:/opt/dev-web-dist/vss
   only:
     - dev3.0
+    - tags
+    - 3.x
+
   tags:
     - node
