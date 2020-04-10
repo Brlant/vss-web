@@ -5,8 +5,9 @@ import './assets/element-variables.scss';
 import './assets/dtop-variables.scss';
 import '../static/css/oms.css';
 import '../static/fonts/iconfont.css';
-import Raven from 'raven-js';
-import RavenVue from 'raven-js/plugins/vue';
+import * as Sentry from '@sentry/browser';
+import * as Integrations from '@sentry/integrations';
+
 import '@/assets/erp.scss';
 import moment from 'dayjs';
 import 'dayjs/locale/zh-cn';
@@ -193,19 +194,18 @@ Vue.prototype.$formatOrgPhotoId = function (item) {
 };
 
 if (process.env.NODE_ENV === 'production') {
-  Raven
-    .config('https://7f0a84a6bb0642018aa4c44ab650c4f3@f-log.sinopharm-bio.com/3', {
-      serverName: 'vss',
-      shouldSendCallback: (date) => {// 过滤错误日志
-        let filterArray = ['Request failed with status code 401', 'Request failed with status code 502'];
-        if (date && date.hasOwnProperty('exception') && date.exception.hasOwnProperty('values') && filterArray.indexOf(date.exception.values[0].value) > -1) {
-          return false;
-        }
-        return date;
+  Sentry.init({
+    dsn: 'https://eb94ae86f9104780be615d09d50416f2@f-log.sinopharm-bio.com/3',
+    environment: 'vss',
+    integrations: [new Integrations.Vue({Vue, attachProps: true})],
+    shouldSendCallback: (date) => {// 过滤错误日志
+      let filterArray = ['Request failed with status code 401', 'Request failed with status code 502'];
+      if (date && date.hasOwnProperty('exception') && date.exception.hasOwnProperty('values') && filterArray.indexOf(date.exception.values[0].value) > -1 || date && date.transaction && date.transaction.indexOf('http://requirejs.org/docs/errors.html') > -1) {
+        return false;
       }
-    })
-    .addPlugin(RavenVue, Vue)
-    .install();
+      return date;
+    }
+  });
 }
 
 window.$mapInit = function () {
