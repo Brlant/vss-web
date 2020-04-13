@@ -48,7 +48,9 @@
         <el-table-column label="生产厂家" prop="factoryName" min-width="150px"></el-table-column>
         <el-table-column :sortable="true" label="数量" prop="count" width="80px"></el-table-column>
         <el-table-column label="疫苗批号" prop="batchNumber" min-width="120"></el-table-column>
-        <el-table-column label="疫苗有效期" prop="expirationDate" width="120px"></el-table-column>
+        <el-table-column label="疫苗有效期" prop="expirationDate" width="120px">
+          <span slot-scope="{row}">{{row.expirationDate | date}}</span>
+        </el-table-column>
         <el-table-column label="批签发" prop="batchReleaseNumber" width="120px"></el-table-column>
         <el-table-column label="批准文号" prop="approveNumber" width="120px"></el-table-column>
         <el-table-column label="收货人" prop="receiptBy" width="120px"></el-table-column>
