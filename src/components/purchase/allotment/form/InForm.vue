@@ -128,7 +128,7 @@
             </el-form-item>
             <el-form-item label="提货地址"
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
-                          v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
+                          v-if="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
               <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable :clearable="true">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in supplierWarehouses">
@@ -530,6 +530,7 @@
           this.form.state = '';
           this.form.id = null;
           this.filterAddress();
+          this.filterSupplierWarehouses();
         }
       },
       transportationMeansList: function (val) {
@@ -619,6 +620,7 @@
           });
           this.form = JSON.parse(JSON.stringify(res.data));
           this.filterAddress(this.isStorageData);
+          this.filterSupplierWarehouses(this.isStorageData);
           // ******2.0变化
           this.changeSupplier(this.form.supplierId, true);
           this.changeTransportationMeans(this.form.transportationMeansId, true);
@@ -716,6 +718,19 @@
           let defaultStore = res.data.filter(item => item.default);
           this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
           this.transportationAddressChange(this.form.transportationAddress);
+        });
+      },
+      filterSupplierWarehouses(isEdit) {
+        Address.queryAddress(this.form.orgId, {
+          deleteFlag: false,
+//                warehouseType: 0,
+          orgId: this.form.orgId,
+          auditedStatus: '1', status: 0
+        }).then(res => {
+          this.supplierWarehouses = res.data;
+          if (isEdit) return;
+          let defaultStore = res.data.filter(item => item.default);
+          this.form.pickUpAddress = defaultStore.length ? defaultStore[0].id : '';
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
