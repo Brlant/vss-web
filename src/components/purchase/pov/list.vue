@@ -93,7 +93,15 @@
                 <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="16">
+            <el-col :span="8">
+              <oms-form-row label="疫苗种类" :span="7">
+                <el-select type="text" v-model="searchWord.goodsType" placeholder="请选择疫苗种类">
+                  <el-option :value="item.key" :key="item.key" :label="item.label"
+                             v-for="item in vaccineSignList"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
@@ -261,14 +269,16 @@
           demandStartTime: '',
           demandEndTime: '',
           orgAreaCode: '',
-          id: ''
+          id: '',
+          goodsType: ''
         },
         searchWord: {
           povId: '',
           demandStartTime: '',
           demandEndTime: '',
           orgAreaCode: '',
-          id: ''
+          id: '',
+          goodsType: ''
         },
         demandTime: '',
         pager: {
@@ -288,6 +298,9 @@
     computed: {
       user() {
         return this.$store.state.user;
+      },
+      vaccineSignList(){
+        return this.$getDict('orderGoodsType');
       }
     },
     mounted() {
@@ -456,7 +469,9 @@
           demandStartTime: '',
           demandEndTime: '',
           orgAreaCode: '',
-          id: ''
+          id: '',
+          goodsType:''
+
         };
         this.demandTime = '';
         this.isCheckAll = false;
