@@ -300,7 +300,7 @@
         return this.$store.state.user;
       },
       vaccineSignList(){
-        return this.$getDict('orderGoodsType');
+        return this.$getDict('vaccineSign');
       }
     },
     mounted() {
