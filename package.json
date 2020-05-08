@@ -1,12 +1,13 @@
 {
   "name": "cerp-admin",
-  "description": "CERP前台",
-  "version": "1.0.0",
+  "description": "vss-web",
+  "version": "3.41.0",
   "author": "Hulk <jayzch@qq.com>",
   "private": true,
   "scripts": {
     "dev": "vue-cli-service serve",
     "build": "vue-cli-service build",
+    "postversion": "git push --follow-tags",
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
