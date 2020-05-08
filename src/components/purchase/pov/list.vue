@@ -12,6 +12,7 @@
   .special-col {
     padding-left: 20px;
     position: relative;
+
     .el-checkbox {
       position: absolute;
       left: 0;
@@ -139,7 +140,7 @@
           <el-col :span="5">
             <el-checkbox @change="checkAll" v-model="isCheckAll" v-show="filters.status === 1 || filters.status === 11">
             </el-checkbox>
-            要货单位要货申请编号
+            要货申请编号/疫苗种类
           </el-col>
           <el-col :span="6">要货单位</el-col>
           <el-col :span="3">到货需求日期</el-col>
@@ -168,6 +169,7 @@
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
                 {{ item.id }}
+                <div><dict dict-group="vaccineSign" :dict-key="'' + item.goodsType"></dict></div>
               </el-col>
               <el-col :span="6" class="pt">
                 <span>{{ item.povName }}</span>
@@ -177,7 +179,7 @@
               </el-col>
               <el-col :span="5" class="pt pl7">
                 <div>[建]{{ item.applyTime | time }}</div>
-                <div>[审]{{ item.auditTime | time }}</div>
+                <div v-if="item.auditTime">[审]{{ item.auditTime | time }}</div>
               </el-col>
               <el-col :span="5" class="opera-btn pl7">
                 <div>
@@ -299,7 +301,7 @@
       user() {
         return this.$store.state.user;
       },
-      vaccineSignList(){
+      vaccineSignList() {
         return this.$getDict('vaccineSign');
       }
     },
@@ -470,7 +472,7 @@
           demandEndTime: '',
           orgAreaCode: '',
           id: '',
-          goodsType:''
+          goodsType: ''
 
         };
         this.demandTime = '';
