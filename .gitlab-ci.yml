@@ -32,6 +32,6 @@ patch-deploy:
   script:
     - npm version minor
   only:
-    - master
+    - 3.x
   tags:
     - node
