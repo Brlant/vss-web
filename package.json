@@ -1,7 +1,7 @@
 {
   "name": "cerp-admin",
   "description": "vss-web",
-  "version": "3.41.0",
+  "version": "3.42.0",
   "author": "Hulk <jayzch@qq.com>",
   "private": true,
   "scripts": {
