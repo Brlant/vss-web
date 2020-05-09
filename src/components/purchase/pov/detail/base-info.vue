@@ -53,7 +53,7 @@
             {{currentOrder.id }}
           </oms-row>
           <oms-row label="疫苗种类">
-            <dict dict-group="vaccineSign" :dict-key="'' + currentOrder.goodsType"></dict>
+            <dict dict-group="orderGoodsType" :dict-key="'' + currentOrder.goodsType"></dict>
           </oms-row>
           <oms-row label="要货单位">
             {{currentOrder.povName }}

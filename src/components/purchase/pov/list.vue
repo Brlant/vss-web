@@ -169,7 +169,7 @@
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
                 {{ item.id }}
-                <div><dict dict-group="vaccineSign" :dict-key="'' + item.goodsType"></dict></div>
+                <div><dict dict-group="orderGoodsType" :dict-key="'' + item.goodsType"></dict></div>
               </el-col>
               <el-col :span="6" class="pt">
                 <span>{{ item.povName }}</span>
@@ -302,7 +302,7 @@
         return this.$store.state.user;
       },
       vaccineSignList() {
-        return this.$getDict('vaccineSign');
+        return this.$getDict('orderGoodsType');
       }
     },
     mounted() {
