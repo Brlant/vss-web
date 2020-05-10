@@ -44,7 +44,6 @@
               <el-button type="primary" @click="done" style="display:block;width:100%;" :loading="loading" native-type="submit">
                 {{btnString}}
               </el-button>
-
             </el-form-item>
             <!--<el-form-item label-width="80px">-->
             <!--<el-button type="success" @click="loginByWx" :disabled="wxLoading" style="display:block;width:100%;"-->
