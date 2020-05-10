@@ -41,8 +41,9 @@
             </el-form-item>
 
             <el-form-item label-width="80px">
-              <el-button type="primary" @click="done" style="display:block;width:100%;" native-type="submit">
-                {{btnString}} <i class="el-icon-loading" v-show="loading"></i></el-button>
+              <el-button type="primary" @click="done" style="display:block;width:100%;" :loading="loading" native-type="submit">
+                {{btnString}}
+              </el-button>
 
             </el-form-item>
             <!--<el-form-item label-width="80px">-->
