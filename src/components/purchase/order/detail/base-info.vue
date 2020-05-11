@@ -22,7 +22,8 @@
             {{currentOrder.supplierName}}
           </oms-row>
           <oms-row label="物流商" :span="span"
-                   v-show="currentOrder.transportationMeansId === '1' || currentOrder.transportationMeansId === '3'  ">
+                   v-show="(currentOrder.transportationMeansId === '1' ||
+                   currentOrder.transportationMeansId === '3') && currentOrder.logisticsProviderName ">
             {{currentOrder.logisticsProviderName}}
           </oms-row>
           <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
@@ -41,6 +42,9 @@
           <oms-row label="取消原因" :span="span" v-show="currentOrder.erpStatus === '9'">
             <span class="goods-span">{{currentOrder.cancelReason}}</span>
           </oms-row>
+          <oms-row label="经办人" :span="span" v-show="currentOrder.operatorName">
+            <span class="goods-span">{{currentOrder.operatorName}}</span>
+          </oms-row>
         </el-col>
         <el-col :span="12">
           <oms-row label="来源订单号" v-show="currentOrder.thirdPartyNumber">
@@ -55,7 +59,7 @@
           <oms-row label="物流方式">
             <dict :dict-group="'transportationMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
           </oms-row>
-          <oms-row label="物流中心">
+          <oms-row label="物流中心" v-show="currentOrder.centreName">
             <span class="goods-span">{{currentOrder.centreName}}</span>
           </oms-row>
           <oms-row label="预计入库时间" v-show="currentOrder.expectedTime">
