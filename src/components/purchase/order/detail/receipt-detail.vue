@@ -7,10 +7,12 @@
     text-align: center;
     border-collapse: collapse;
     font-size: 12px;
+
     > tbody > tr > td {
       padding: 5px;
       border: 1px solid $table-background-color;
     }
+
     .t-head {
       background: #eaf2f8;
       color: #1f2d3d;
@@ -22,13 +24,16 @@
         border-bottom: 0;
       }
     }
+
     &.is-tint {
       > tbody > tr > td {
         border: 1px solid #d6d6d6;
       }
+
       .t-head {
         background: $table-background-color-tint;
       }
+
       &.is-top {
         > tbody > tr > td {
           border-bottom: 0;
@@ -60,12 +65,14 @@
     border-top: 0;
     padding: 10px 20px;
     margin-bottom: 10px;
+
     h3 {
       margin: 0;
       font-weight: 500;
       font-size: 18px;
       text-align: center;
     }
+
     .h-item {
       padding-bottom: 20px;
     }
@@ -384,16 +391,16 @@
                 <td colspan="2">{{ batchNumber.productionDate | date }}</td>
                 <td colspan="2">{{ batchNumber.expiryDate | date }}</td>
                 <td colspan="4">
-                    <div v-show="batchNumber.smallPackageCount">
-                      <el-tag type="success">合格</el-tag>
-                      {{ batchNumber.smallPackageCount}}
-                      <dict :dict-group="'measurementUnit'" :dict-key="h.orgGoodsDto.goodsDto.measurementUnit"></dict>
-                    </div>
-                    <div style="padding: 5px 0 " v-show="batchNumber.smallNonconformityCount">
-                      <el-tag type="danger">不合格</el-tag>
-                      {{ batchNumber.smallNonconformityCount}}
-                      <dict :dict-group="'measurementUnit'" :dict-key="h.orgGoodsDto.goodsDto.measurementUnit"></dict>
-                    </div>
+                  <div v-show="batchNumber.smallPackageCount">
+                    <el-tag type="success">合格</el-tag>
+                    {{ batchNumber.smallPackageCount}}
+                    <dict :dict-group="'measurementUnit'" :dict-key="h.orgGoodsDto.goodsDto.measurementUnit"></dict>
+                  </div>
+                  <div style="padding: 5px 0 " v-show="batchNumber.smallNonconformityCount">
+                    <el-tag type="danger">不合格</el-tag>
+                    {{ batchNumber.smallNonconformityCount}}
+                    <dict :dict-group="'measurementUnit'" :dict-key="h.orgGoodsDto.goodsDto.measurementUnit"></dict>
+                  </div>
                   <div style="padding: 5px 0 " v-show="batchNumber.refuseCount">
                     <el-tag type="warning"></el-tag>
                     {{ batchNumber.refuseCount}}
@@ -499,6 +506,7 @@
               if (newItem.batchNumbers.length) {
                 newItem.factoryName = newItem.batchNumbers[0].factoryName;
                 newItem.sentAddress = newItem.batchNumbers[0].sentAddress;
+                newItem.createPersonName = newItem.batchNumbers[0].createPersonName;
                 newItem.transportTemperatureFlag = newItem.batchNumbers[0].transportTemperatureFlag;
                 newItem.arrivalDate = newItem.batchNumbers[0].arrivalDate;
                 newItem.plateNumberDtos = newItem.batchNumbers[0].plateNumberDtos || [];
