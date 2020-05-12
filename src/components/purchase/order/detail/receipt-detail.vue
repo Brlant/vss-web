@@ -214,12 +214,14 @@
           </tr>
           <tr>
             <td class="t-head" colspan="3">到货时间</td>
+            <td class="t-head" colspan="3">收货人</td>
             <td class="t-head" colspan="3">在途温度</td>
             <td class="t-head" colspan="3">订单始发地</td>
             <td class="t-head" colspan="5">车牌号</td>
           </tr>
           <tr>
             <td colspan="3">{{item.arrivalDate |time}}</td>
+            <td colspan="3">{{item.createPersonName}}</td>
             <td colspan="3">
               <el-tag type="success" v-show="item.transportTemperatureFlag !== false">合格</el-tag>
               <el-tag type="warning" v-show="item.transportTemperatureFlag === false">不合格</el-tag>
