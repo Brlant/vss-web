@@ -191,8 +191,6 @@
                   </el-col>
                 </oms-form-row>
               </el-col>
-            </el-row>
-            <el-row>
               <el-col :span="8">
                 <oms-form-row label="疫苗种类" :span="8" style="height: 36px">
                   <el-radio-group v-model="searchCondition.goodsType" size="small">
@@ -201,6 +199,8 @@
                   </el-radio-group>
                 </oms-form-row>
               </el-col>
+            </el-row>
+            <el-row>
               <el-col :span="8">
                 <oms-form-row label="" :span="6">
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
