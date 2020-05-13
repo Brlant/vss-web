@@ -107,6 +107,7 @@
                       class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
+          <goods-switch class="pull-right"></goods-switch>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -319,6 +320,7 @@
                 </perm>
               </el-col>
             </el-row>
+            <sale-goods-info :order-item="item"></sale-goods-info>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
@@ -548,6 +550,7 @@
           pageNo: pageNo,
           pageSize: this.pager.pageSize
         });
+        param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         returnRequest[this.pageType === 'pov' ? 'povQuery' : 'cdcQuery'](param).then(res => {
           this.initCheck(res.data.list);
           this.orderList = res.data.list;

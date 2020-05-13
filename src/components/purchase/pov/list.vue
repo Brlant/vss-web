@@ -44,6 +44,7 @@
                 class="el-icon-t-plus"></i></a><span class="wave-title">新增分货</span></span>
             </perm>
          </span>
+          <goods-switch class="pull-right"></goods-switch>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -214,6 +215,7 @@
                 </div>
               </el-col>
             </el-row>
+            <sale-goods-info :order-item="item"></sale-goods-info>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
@@ -358,6 +360,7 @@
           pageSize: this.pager.pageSize,
           cdcId: orgId
         }, searchCondition);
+        params.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         this.loadingData = true;
         pullSignal.queryCDC(params).then(res => {
           res.data.list.forEach(item => {
