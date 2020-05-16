@@ -32,9 +32,9 @@
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header">
-          <el-col :span=" isReceiving ? 5 : 6">货主/订单号</el-col>
+          <el-col :span=" isReceiving ? 5 : 6">订单号/货主</el-col>
           <el-col :span="3">业务类型</el-col>
-          <el-col :span="isReceiving ? 5 : 6">供货单位</el-col>
+          <el-col :span="isReceiving ? 5 : 6">来源订单号/供货单位</el-col>
           <el-col :span="isReceiving ? 5 : 6">时间</el-col>
           <el-col :span="3">状态</el-col>
           <el-col :span="3" v-if="isReceiving">操作</el-col>
@@ -69,7 +69,7 @@
                 </div>
               </el-col>
               <el-col :span="isReceiving ? 5: 6" class="pt10">
-                <div class="f-grey" v-show="item.thirdPartyNumber">来源订单号：{{item.thirdPartyNumber }}</div>
+                <div class="f-grey" v-show="item.thirdPartyNumber">{{item.thirdPartyNumber }}</div>
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="isReceiving ? 5 : 6">

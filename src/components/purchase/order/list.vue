@@ -243,10 +243,10 @@
         <el-row class="order-list-header">
           <el-col :span="5">
             <el-checkbox v-model="checkAll" @change="checkAllOrder" v-show="isShowCheckBox"/>
-            货主/订单号
+            订单号/货主
           </el-col>
           <el-col :span="3">业务类型</el-col>
-          <el-col :span="5">供货单位</el-col>
+          <el-col :span="5">来源订单号/供货单位</el-col>
           <el-col :span="4">时间</el-col>
           <el-col :span="4">状态</el-col>
           <el-col :span="3">操作</el-col>
@@ -296,7 +296,7 @@
                 </div>
               </el-col>
               <el-col :span="5" class="pt10">
-                <div class="f-grey" v-show="item.thirdPartyNumber">来源订单号：{{item.thirdPartyNumber }}</div>
+                <div class="f-grey" v-show="item.thirdPartyNumber">{{item.thirdPartyNumber }}</div>
                 <div>{{item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
