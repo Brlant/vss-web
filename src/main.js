@@ -196,15 +196,9 @@ Vue.prototype.$formatOrgPhotoId = function (item) {
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://eb94ae86f9104780be615d09d50416f2@f-log.sinopharm-bio.com/3',
-    environment: 'vss',
+    release: process.env.npm_package_version,
     integrations: [new Integrations.Vue({Vue, attachProps: true})],
-    shouldSendCallback: (date) => {// 过滤错误日志
-      let filterArray = ['Request failed with status code 401', 'Request failed with status code 502'];
-      if (date && date.hasOwnProperty('exception') && date.exception.hasOwnProperty('values') && filterArray.indexOf(date.exception.values[0].value) > -1 || date && date.transaction && date.transaction.indexOf('http://requirejs.org/docs/errors.html') > -1) {
-        return false;
-      }
-      return date;
-    }
+    ignoreErrors: ['Request failed with status code 401', 'Request failed with status code 502']
   });
 }
 
