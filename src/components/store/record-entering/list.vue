@@ -62,7 +62,7 @@
         <el-table-column
           prop="goodsName"
           align="center"
-          label="货主疫苗名称" style="width:40%">
+          label="货主疫苗名称" min-width="40%">
           <template slot-scope="scope">
             <el-select :clearable="true" :remote-method="filterOrgGoods"
                        @change="orgGoodsChange(scope.row)"
@@ -94,7 +94,7 @@
         </el-table-column>
         <el-table-column
           prop="batchNumber"
-          align="center" label="批号" style="width:20%">
+          align="center" label="批号" min-width="20%">
           <template slot-scope="scope">
             <el-select :remoteMethod="(query)=>filterBatchNumber(query,scope.row)" clearable filterable
                        placeholder="请输入批号名称搜索批号"
