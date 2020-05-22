@@ -166,7 +166,7 @@
           actualEndTime: '',
           vaccineId: '',
           actualCode: '',
-          unknownFlag: '',
+          traceCodeId: '',
           checked: false
         },
         searchCondition: {
@@ -174,7 +174,7 @@
           actualEndTime: '',
           vaccineId: '',
           actualCode: '',
-          unknownFlag: '',
+          traceCodeId: '',
           checked: false
         },
         actualTime: '',
@@ -201,9 +201,9 @@
     methods: {
       checkChange(val) {
         if (val) {
-          this.searchCondition.unknownFlag = true;
+          this.searchCondition.traceCodeId = 'NULL';
         } else {
-          this.searchCondition.unknownFlag = false;
+          this.searchCondition.traceCodeId = '';
         }
       },
       handleSizeChange(val) {
@@ -246,7 +246,7 @@
           actualEndTime: '',
           vaccineId: '',
           actualCode: '',
-          unknownFlag: '',
+          traceCodeId: '',
           checked: false
         };
         this.actualTime = '';
