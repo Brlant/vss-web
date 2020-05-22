@@ -12,7 +12,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column align="center" fixed="left" label="货主货品编号" min-width="120" prop="orgGoodsCode">
+    <el-table-column align="center" fixed="left" label="货主货品编号" min-width="100px" prop="orgGoodsCode">
       <template slot-scope="scope"><span>{{scope.row.orgGoodsDto.goodsNo}}</span></template>
     </el-table-column>
     <el-table-column align="center" label="疫苗种类" min-width="120px" prop="factoryName">
@@ -20,7 +20,7 @@
         <dict :dict-key="scope.row.orgGoodsDto.goodsVaccineSign" dict-group="vaccineSign"></dict>
       </template>
     </el-table-column>
-    <el-table-column align="center" fixed="left" label="疫苗主档通用名称" min-width="200" prop="orgGoodsDto.goodsDto.name">
+    <el-table-column align="center" fixed="left" label="疫苗主档通用名称" min-width="150px" prop="orgGoodsDto.goodsDto.name">
     </el-table-column>
     <el-table-column align="center" label="生产单位" min-width="160"
                      prop="orgGoodsDto.goodsDto.factoryName"></el-table-column>
@@ -155,9 +155,9 @@
             sums[index] = '合计';
             return;
           }
-          if (column.property !== 'availableCount' && column.property !== 'qualifiedCount' &&
-            column.property !== 'transitCount' && column.property !== 'unqualifiedCount'
-            && column.property !== 'undeterminedCount' && column.property !== 'totalCount' && column.property !== 'unqualifiedBizCount') {
+          if (column.property !== 'availableCount' && column.property !== 'unqualifiedBizCount' &&
+            column.property !== 'qualifiedBizServings' && column.property !== 'qualifiedCount'
+            && column.property !== 'unqualifiedCount' && column.property !== 'qualifiedActualServings') {
             sums[index] = '';
             return;
           }
