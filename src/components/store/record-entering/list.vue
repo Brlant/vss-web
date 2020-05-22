@@ -181,6 +181,7 @@
         <el-button>保存</el-button>
       </el-row>
       <!--     动态表格例子-->
+      <previewDialog :formItem="materials" ref="previewDialog"></previewDialog>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
           :current-page="pager.currentPage"
@@ -193,7 +194,6 @@
                 @right-close="resetRightBox">
       <form-part :formItem="form" @close="resetRightBox" @refresh="refresh"></form-part>
     </page-right>
-    <previewDialog :formItem="materials" ref="previewDialog"></previewDialog>
   </div>
 </template>
 <script>
