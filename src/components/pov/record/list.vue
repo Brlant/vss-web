@@ -59,8 +59,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row :span="6" label="未知追溯码">
-                <el-col :span="24">
+              <oms-form-row :span="8" label="筛选未知追溯码">
+                <el-col :span="8">
                   <el-checkbox @change="checkChange" v-model="searchCondition.checked"></el-checkbox>
                 </el-col>
               </oms-form-row>
@@ -133,7 +133,7 @@
                 {{ item.actualCode}}
               </el-col>
               <el-col :span="2">
-                {{item.sourceSystem ? 'vss' : ''}}
+                {{item.sourceSystem }}
                 <el-tag type="warning" v-show="item.traceCodeId==='NULL'">未知追溯码</el-tag>
               </el-col>
             </el-row>
