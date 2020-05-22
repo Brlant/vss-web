@@ -175,7 +175,10 @@
           </template>
         </el-table-column>
       </el-table>
-
+      <el-row style="text-align: center;padding-top: 10px">
+        <el-button @click="showPreviewDialog">预览</el-button>
+        <el-button>保存</el-button>
+      </el-row>
       <!--     动态表格例子-->
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
@@ -189,14 +192,16 @@
                 @right-close="resetRightBox">
       <form-part :formItem="form" @close="resetRightBox" @refresh="refresh"></form-part>
     </page-right>
+    <previewDialog ref="previewDialog"></previewDialog>
   </div>
 </template>
 <script>
   import formPart from './form.vue';
   import {Address, Vaccine} from '@/resources';
+  import previewDialog from './previewDialog';
 
   export default {
-    components: {formPart},
+    components: {formPart, previewDialog},
     data() {
       return {
         testList: [{
@@ -235,6 +240,9 @@
       this.queryOrgWarehouse();
     },
     methods: {
+      showPreviewDialog() {
+        this.$refs.previewDialog.show();
+      },
       setQualifiedBizServings(item) {
         if (!item.qualifiedBizServings && item.availableCount) {
           this.orgGoods.forEach(i => {
