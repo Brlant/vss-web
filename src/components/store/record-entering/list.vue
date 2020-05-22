@@ -27,14 +27,9 @@
     <div class="container">
 
       <div :class="{up:!showSearch}" class="opera-btn-group">
-        <div class="opera-icon">
-
-          <span @click="showSearch = !showSearch" class="pull-left switching-icon">
-          </span>
-        </div>
         <el-form class="advanced-query-form clearfix" onsubmit="return false">
-          <el-col :span="8">
-            <oms-form-row :span="4" label="仓库">
+          <el-col :span="12">
+            <oms-form-row :span="8" label="请选择库存所在位置">
               <el-select clearable filterable placeholder="请选择仓库" v-model="warehouseId">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
                            v-for="item in warehouses">
@@ -129,7 +124,7 @@
         <el-table-column align="center" label="实物库存" width="80px">
           <el-table-column
             align="center"
-            label="合格" prop="qualifiedCount" width="40px">
+            label="合格" prop="qualifiedCount" width="80px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedCount')"
                         type="number"
@@ -176,7 +171,7 @@
         </el-pagination>
       </div>
       <el-row style="text-align: center;padding:10px 0">
-        <el-button @click="showPreviewDialog">预览</el-button>
+        <el-button @click="showPreviewDialog" v-show="!this.showFlag">预览</el-button>
         <el-button @click="reset" v-show="this.showFlag">返回</el-button>
         <el-button @click="save" v-show="this.showFlag">保存</el-button>
       </el-row>
@@ -429,6 +424,9 @@
         });
         Address.queryAddress(param).then(res => {
           this.warehouses = res.data;
+          if (res.data) {
+            this.warehouseId = res.data[0];
+          }
         });
       },
       add() {

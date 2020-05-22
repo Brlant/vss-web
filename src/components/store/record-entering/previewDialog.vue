@@ -4,7 +4,7 @@
             :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
             :row-class-name="formatRowClass"
             show-summary style="width: 100%">
-    <el-table-column align="center" fixed="left" label="货主疫苗名称" min-width="200" prop="goodsName">
+    <el-table-column align="center" fixed="left" label="货主疫苗名称" min-width="180" prop="goodsName">
       <template slot-scope="scope">
         <el-tooltip :content="`orgGoodsId[${scope.row.orgGoodsDto.orgGoodsId}]`" class="item" effect="dark"
                     placement="right">
@@ -15,7 +15,7 @@
     <el-table-column align="center" fixed="left" label="货主货品编号" min-width="100" prop="orgGoodsCode">
       <template slot-scope="scope"><span>{{scope.row.orgGoodsDto.goodsNo}}</span></template>
     </el-table-column>
-    <el-table-column align="center" label="疫苗种类" min-width="80px" prop="factoryName">
+    <el-table-column align="center" label="疫苗种类" min-width="70" prop="factoryName">
       <template slot-scope="scope">
         <dict :dict-key="scope.row.orgGoodsDto.goodsVaccineSign" dict-group="vaccineSign"></dict>
       </template>
@@ -24,27 +24,27 @@
     </el-table-column>
     <el-table-column align="center" label="生产单位" min-width="120"
                      prop="orgGoodsDto.goodsDto.factoryName"></el-table-column>
-    <el-table-column align="center" label="批号" prop="batchNumber" width="90px"></el-table-column>
-    <el-table-column align="center" label="有效期" prop="expiryDate" width="110">
+    <el-table-column align="center" label="批号/有效期至" prop="batchNumber" width="110">
       <template slot-scope="scope">
-        <span>{{ scope.row.expiryDate | date}}</span>
+        <div>{{ scope.row.batchNumber }}</div>
+        <div>{{ scope.row.expiryDate | date}}</div>
       </template>
     </el-table-column>
       <el-table-column align="center" label="业务库存">
         <el-table-column :render-header="formatHeader" align="center" label="合格"
-                         prop="availableCount" width="60px">
+                         prop="availableCount" width="50px">
           <template slot-scope="scope">
             <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
         <el-table-column :render-header="formatHeader" align="center" label="不合格"
-                         prop="unqualifiedBizCount" width="60px">
+                         prop="unqualifiedBizCount" width="50px">
           <template slot-scope="scope">
             <span>{{scope.row.unqualifiedBizCount}}</span>
           </template>
         </el-table-column>
         <el-table-column :render-header="formatHeader" align="center" label="人份剂次"
-                         prop="qualifiedBizServings" width="60px">
+                         prop="qualifiedBizServings" width="50px">
           <template slot-scope="scope">
             <span>{{scope.row.qualifiedBizServings}}</span>
           </template>
@@ -53,19 +53,19 @@
 
       <el-table-column align="center" label="实物库存" >
         <el-table-column :render-header="formatHeader" align="center" label="合格"
-                         prop="qualifiedCount" width="60px">
+                         prop="qualifiedCount" width="50px">
           <template slot-scope="scope">
             <span>{{scope.row.qualifiedCount}}</span>
           </template>
         </el-table-column>
         <el-table-column :render-header="formatHeader" align="center" label="不合格"
-                         prop="unqualifiedCount" width="60px">
+                         prop="unqualifiedCount" width="50px">
           <template slot-scope="scope">
             <span>{{scope.row.unqualifiedCount}}</span>
           </template>
         </el-table-column>
         <el-table-column :render-header="formatHeader" align="center" label="人份剂次"
-                         prop="qualifiedActualServings" width="60px">
+                         prop="qualifiedActualServings" width="50px">
           <template slot-scope="scope">
             <span>{{scope.row.qualifiedActualServings}}</span>
           </template>
