@@ -59,11 +59,19 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row :span="8" label="筛选未知追溯码">
+                <el-col :span="8">
+                  <el-checkbox @change="checkChange" v-model="searchCondition.checked"></el-checkbox>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="3">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 <perm label="injection-task-export">
-                  <el-button style="margin-left: 10px" :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                  <el-button :disabled="isLoading" :plain="true" @click="exportFile" style="margin-left: 10px"
+                             type="success">
                     导出Excel
                   </el-button>
                 </perm>
@@ -76,9 +84,9 @@
         <el-row class="order-list-header">
           <el-col :span="4">接种时间/登记编号</el-col>
           <el-col :span="9">接种疫苗</el-col>
-          <el-col :span="4">批号</el-col>
+          <el-col :span="3">批号</el-col>
           <el-col :span="6">追溯码</el-col>
-          <el-col :span="1">来源</el-col>
+          <el-col :span="2">来源</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -118,14 +126,15 @@
                   </el-tooltip>
                 </div>
               </el-col>
-              <el-col :span="4" class="R pt10">
+              <el-col :span="3" class="R pt10">
                 {{ item.batchNumber }}
               </el-col>
               <el-col :span="6" class="R pt10">
                 {{ item.actualCode}}
               </el-col>
-              <el-col :span="1">
-                {{item.sourceSystem ? 'vss' : ''}}
+              <el-col :span="2">
+                {{item.sourceSystem }}
+                <el-tag type="warning" v-show="item.traceCodeId==='NULL'">未知追溯码</el-tag>
               </el-col>
             </el-row>
           </div>
@@ -156,13 +165,17 @@
           actualStartTime: '',
           actualEndTime: '',
           vaccineId: '',
-          actualCode: ''
+          actualCode: '',
+          traceCodeId: '',
+          checked: false
         },
         searchCondition: {
           actualStartTime: '',
           actualEndTime: '',
           vaccineId: '',
-          actualCode: ''
+          actualCode: '',
+          traceCodeId: '',
+          checked: false
         },
         actualTime: '',
         orgList: [], // 货主列表,
@@ -186,6 +199,13 @@
       }
     },
     methods: {
+      checkChange(val) {
+        if (val) {
+          this.searchCondition.traceCodeId = 'NULL';
+        } else {
+          this.searchCondition.traceCodeId = '';
+        }
+      },
       handleSizeChange(val) {
         this.pager.pageSize = val;
         this.getRecordPage(1);
@@ -225,7 +245,9 @@
           actualStartTime: '',
           actualEndTime: '',
           vaccineId: '',
-          actualCode: ''
+          actualCode: '',
+          traceCodeId: '',
+          checked: false
         };
         this.actualTime = '';
         Object.assign(this.searchCondition, temp);
