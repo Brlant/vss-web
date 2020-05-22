@@ -12,17 +12,17 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column align="center" fixed="left" label="货主货品编号" min-width="100px" prop="orgGoodsCode">
+    <el-table-column align="center" fixed="left" label="货主货品编号" min-width="100" prop="orgGoodsCode">
       <template slot-scope="scope"><span>{{scope.row.orgGoodsDto.goodsNo}}</span></template>
     </el-table-column>
-    <el-table-column align="center" label="疫苗种类" min-width="120px" prop="factoryName">
+    <el-table-column align="center" label="疫苗种类" min-width="80px" prop="factoryName">
       <template slot-scope="scope">
         <dict :dict-key="scope.row.orgGoodsDto.goodsVaccineSign" dict-group="vaccineSign"></dict>
       </template>
     </el-table-column>
-    <el-table-column align="center" fixed="left" label="疫苗主档通用名称" min-width="150px" prop="orgGoodsDto.goodsDto.name">
+    <el-table-column align="center" fixed="left" label="疫苗主档通用名称" min-width="120" prop="orgGoodsDto.goodsDto.name">
     </el-table-column>
-    <el-table-column align="center" label="生产单位" min-width="160"
+    <el-table-column align="center" label="生产单位" min-width="120"
                      prop="orgGoodsDto.goodsDto.factoryName"></el-table-column>
     <el-table-column align="center" label="批号" prop="batchNumber" width="90px"></el-table-column>
     <el-table-column align="center" label="有效期" prop="expiryDate" width="110">
