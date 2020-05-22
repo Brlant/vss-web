@@ -176,7 +176,7 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-row style="text-align: center;padding-top: 10px">
+      <el-row style="text-align: center;padding:10px 0">
         <el-button @click="showPreviewDialog">预览</el-button>
         <el-button>保存</el-button>
       </el-row>
@@ -242,8 +242,7 @@
     },
     methods: {
       showPreviewDialog() {
-        console.log(this.materials);
-        this.$refs.previewDialog.show();
+        this.$refs.previewDialog.dialogVisible = !this.$refs.previewDialog.dialogVisible;
       },
       setQualifiedBizServings(item) {
         if (!item.qualifiedBizServings && item.availableCount) {

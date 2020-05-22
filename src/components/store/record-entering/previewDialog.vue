@@ -91,12 +91,6 @@
       };
     },
     methods: {
-      handleClose() {
-        this.dialogVisible = false;
-      },
-      show() {
-        this.dialogVisible = true;
-      },
       formatHeader(h, col) {
         let property = col.column.property;
         let content = '';
