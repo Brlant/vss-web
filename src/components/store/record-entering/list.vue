@@ -48,7 +48,7 @@
       <el-table
         :data="materials" class="header-list store border-black record-table"
         border
-        style="width: 100%">
+        style="width: 100%" v-show="!this.showFlag">
         <el-table-column
           prop="goodsName"
           align="center"
@@ -129,7 +129,7 @@
         <el-table-column align="center" label="实物库存" width="80px">
           <el-table-column
             align="center"
-            label="合格" prop="qualifiedCount" width="80px">
+            label="合格" prop="qualifiedCount" width="40px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedCount')"
                         type="number"
@@ -166,11 +166,6 @@
           </template>
         </el-table-column>
       </el-table>
-      <el-row style="text-align: center;padding:10px 0">
-        <el-button @click="showPreviewDialog">预览</el-button>
-        <el-button @click="reset">重置</el-button>
-        <el-button @click="save">保存</el-button>
-      </el-row>
       <!--     动态表格例子-->
       <previewDialog :formItem="materials" ref="previewDialog"></previewDialog>
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
@@ -180,6 +175,11 @@
           layout="total,prev, pager, next, jumper">
         </el-pagination>
       </div>
+      <el-row style="text-align: center;padding:10px 0">
+        <el-button @click="showPreviewDialog">预览</el-button>
+        <el-button @click="reset" v-show="this.showFlag">返回</el-button>
+        <el-button @click="save" v-show="this.showFlag">保存</el-button>
+      </el-row>
     </div>
     <page-right :css="{'width':'1000px','padding':0}" :show="showPart"
                 @right-close="resetRightBox">
@@ -224,7 +224,7 @@
           pageSize: 15
         },
         currentId: '',
-        adjustTypeList: ['可用库存', '锁定库存', '实际不合格库存']
+        showFlag: false
       };
     },
     mounted() {
@@ -233,9 +233,8 @@
     },
     methods: {
       reset() {
-        this.warehouseId = '';
-        this.materials = [];
-        this.initTable();
+        this.showFlag = false;
+        this.$refs.previewDialog.dialogVisible = false;
       },
       showPreviewDialog() {
         if (!this.warehouseId) {
@@ -249,6 +248,7 @@
           }
         }
         this.$refs.previewDialog.dialogVisible = !this.$refs.previewDialog.dialogVisible;
+        this.showFlag = true;
       },
       setQualifiedBizServings(item) {
         if (!item.qualifiedBizServings && item.availableCount) {
