@@ -184,7 +184,7 @@ export const route = [
           {
             path: '/store/record-entering',
             component: () => import('./components/store/record-entering/list'),
-            meta: {moduleId: 'store', title: '初期库存录入', perm: 'cerp-stock-status-adjust'}
+            meta: {moduleId: 'store', title: '期初库存录入', perm: 'cerp-stock-status-adjust'}
           },
           {
             path: '/store/inventory',
