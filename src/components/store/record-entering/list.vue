@@ -36,166 +36,166 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form class="advanced-query-form clearfix" onsubmit="return false">
-          <el-col :span="8">
-            <oms-form-row :span="5" label="货主疫苗">
-              <el-select :clearable="true" :remote-method="filterOrgGoods" @change="orgGoodsChange" filterable
-                         placeholder="请输入名称或编号搜索货主疫苗" popper-class="good-selects"
-                         remote v-model="filters.orgGoodsId">
-                <el-option :key="org.id" :label="org.goodsName" :value="org.id"
-                           v-for="org in orgGoods">
-                  <div style="overflow: hidden">
-                    <span class="pull-left">{{org.goodsName}}</span>
-                  </div>
-                  <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}
-                      </span>
-                    <span class="select-other-info pull-left"><span
-                      v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
-                      </span>
-                  </div>
-                </el-option>
-              </el-select>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="6">
-            <oms-form-row :span="4" label="批号">
-              <el-select :remoteMethod="filterBatchNumber" clearable filterable placeholder="请输入批号名称搜索批号"
-                         remote v-model="filters.batchNumberId">
-                <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
-                           v-for="item in batchNumberList">
-                  {{ item.batchNumber }}
-                </el-option>
-              </el-select>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="10">
-            <oms-form-row :span="5" label="创建时间">
-              <el-col :span="24">
-                <el-date-picker
-                  placeholder="请选择"
-                  type="daterange"
-                  v-model="expectedTime">
-                </el-date-picker>
-              </el-col>
-            </oms-form-row>
-          </el-col>
-          <el-col :span="8">
-            <oms-form-row :span="5" label="">
-              <el-button @click="searchInOrder" native-type="submit" type="primary">查询</el-button>
-              <el-button @click="resetSearchForm" native-type="reset">重置</el-button>
-            </oms-form-row>
-          </el-col>
-          <!--<el-col :span="12">-->
-          <!--<oms-form-row label="仓库" :span="3">-->
-          <!--<el-select v-model="filters.warehouseId" filterable clearable-->
-          <!--@change="warehouseChange"-->
-          <!--placeholder="请选择仓库">-->
-          <!--<el-option v-for="item in warehouses" :value="item.id" :key="item.id"-->
-          <!--:label="item.name">-->
-          <!--</el-option>-->
-          <!--</el-select>-->
-          <!--</oms-form-row>-->
-          <!--</el-col>-->
+        <!--        <el-form class="advanced-query-form clearfix" onsubmit="return false">-->
+        <!--          <el-col :span="8">-->
+        <!--            <oms-form-row :span="5" label="货主疫苗">-->
+        <!--              <el-select :clearable="true" :remote-method="filterOrgGoods" @change="orgGoodsChange" filterable-->
+        <!--                         placeholder="请输入名称或编号搜索货主疫苗" popper-class="good-selects"-->
+        <!--                         remote v-model="filters.orgGoodsId">-->
+        <!--                <el-option :key="org.id" :label="org.goodsName" :value="org.id"-->
+        <!--                           v-for="org in orgGoods">-->
+        <!--                  <div style="overflow: hidden">-->
+        <!--                    <span class="pull-left">{{org.goodsName}}</span>-->
+        <!--                  </div>-->
+        <!--                  <div style="overflow: hidden">-->
+        <!--                      <span class="select-other-info pull-left"><span-->
+        <!--                        v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}-->
+        <!--                      </span>-->
+        <!--                    <span class="select-other-info pull-left"><span-->
+        <!--                      v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}-->
+        <!--                      </span>-->
+        <!--                  </div>-->
+        <!--                </el-option>-->
+        <!--              </el-select>-->
+        <!--            </oms-form-row>-->
+        <!--          </el-col>-->
+        <!--          <el-col :span="6">-->
+        <!--            <oms-form-row :span="4" label="批号">-->
+        <!--              <el-select :remoteMethod="filterBatchNumber" clearable filterable placeholder="请输入批号名称搜索批号"-->
+        <!--                         remote v-model="filters.batchNumberId">-->
+        <!--                <el-option :key="item.id" :label="item.batchNumber" :value="item.id"-->
+        <!--                           v-for="item in batchNumberList">-->
+        <!--                  {{ item.batchNumber }}-->
+        <!--                </el-option>-->
+        <!--              </el-select>-->
+        <!--            </oms-form-row>-->
+        <!--          </el-col>-->
+        <!--          <el-col :span="10">-->
+        <!--            <oms-form-row :span="5" label="创建时间">-->
+        <!--              <el-col :span="24">-->
+        <!--                <el-date-picker-->
+        <!--                  placeholder="请选择"-->
+        <!--                  type="daterange"-->
+        <!--                  v-model="expectedTime">-->
+        <!--                </el-date-picker>-->
+        <!--              </el-col>-->
+        <!--            </oms-form-row>-->
+        <!--          </el-col>-->
+        <!--          <el-col :span="8">-->
+        <!--            <oms-form-row :span="5" label="">-->
+        <!--              <el-button @click="searchInOrder" native-type="submit" type="primary">查询</el-button>-->
+        <!--              <el-button @click="resetSearchForm" native-type="reset">重置</el-button>-->
+        <!--            </oms-form-row>-->
+        <!--          </el-col>-->
+        <!--          &lt;!&ndash;<el-col :span="12">&ndash;&gt;-->
+        <!--          &lt;!&ndash;<oms-form-row label="仓库" :span="3">&ndash;&gt;-->
+        <!--          &lt;!&ndash;<el-select v-model="filters.warehouseId" filterable clearable&ndash;&gt;-->
+        <!--          &lt;!&ndash;@change="warehouseChange"&ndash;&gt;-->
+        <!--          &lt;!&ndash;placeholder="请选择仓库">&ndash;&gt;-->
+        <!--          &lt;!&ndash;<el-option v-for="item in warehouses" :value="item.id" :key="item.id"&ndash;&gt;-->
+        <!--          &lt;!&ndash;:label="item.name">&ndash;&gt;-->
+        <!--          &lt;!&ndash;</el-option>&ndash;&gt;-->
+        <!--          &lt;!&ndash;</el-select>&ndash;&gt;-->
+        <!--          &lt;!&ndash;</oms-form-row>&ndash;&gt;-->
+        <!--          &lt;!&ndash;</el-col>&ndash;&gt;-->
 
-        </el-form>
+        <!--        </el-form>-->
       </div>
 
-      <div class="order-list clearfix " style="margin-top: 10px">
-        <el-row class="order-list-header">
-          <el-col :span="5">货主疫苗名称</el-col>
-          <el-col :span="3">批号</el-col>
-          <el-col :span="2">原状态</el-col>
-          <el-col :span="3">新状态</el-col>
-          <el-col :span="2">数量</el-col>
-          <el-col :span="3">调整理由</el-col>
-          <el-col :span="2">创建人</el-col>
-          <el-col :span="4">创建时间</el-col>
-        </el-row>
-        <el-row v-if="loadingData">
-          <el-col :span="24">
-            <oms-loading :loading="loadingData"></oms-loading>
-          </el-col>
-        </el-row>
-        <el-row v-else-if="materials.length == 0">
-          <el-col :span="24">
-            <div class="empty-info">
-              暂无信息
-            </div>
-          </el-col>
-        </el-row>
-        <div class="order-list-body flex-list-dom" v-else="">
-          <div :class="[{'active':currentId==item.id}]" class="order-list-item order-list-item-bg"
-               v-for="item in materials">
-            <el-row>
-              <el-col :span="5">{{ item.goodsName }}</el-col>
-              <el-col :span="3">{{ item.batchNumber }}</el-col>
-              <el-col :span="2">{{ adjustTypeList[item.oldStatus] }}</el-col>
-              <el-col :span="3">{{ adjustTypeList[item.newStatus] }}</el-col>
-              <el-col :span="2" class="R">{{ item.count }}{{item.measurementUnit}}</el-col>
-              <el-col :span="3">{{ item.reason}}</el-col>
-              <el-col :span="2" class="R">{{ item.createdName }}</el-col>
-              <el-col :span="4">{{ item.createTime | time}}</el-col>
-            </el-row>
-          </div>
-        </div>
-      </div>
+      <!--      <div class="order-list clearfix " style="margin-top: 10px">-->
+      <!--        <el-row class="order-list-header">-->
+      <!--          <el-col :span="5">货主疫苗名称</el-col>-->
+      <!--          <el-col :span="3">批号</el-col>-->
+      <!--          <el-col :span="2">原状态</el-col>-->
+      <!--          <el-col :span="3">新状态</el-col>-->
+      <!--          <el-col :span="2">数量</el-col>-->
+      <!--          <el-col :span="3">调整理由</el-col>-->
+      <!--          <el-col :span="2">创建人</el-col>-->
+      <!--          <el-col :span="4">创建时间</el-col>-->
+      <!--        </el-row>-->
+      <!--        <el-row v-if="loadingData">-->
+      <!--          <el-col :span="24">-->
+      <!--            <oms-loading :loading="loadingData"></oms-loading>-->
+      <!--          </el-col>-->
+      <!--        </el-row>-->
+      <!--        <el-row v-else-if="materials.length == 0">-->
+      <!--          <el-col :span="24">-->
+      <!--            <div class="empty-info">-->
+      <!--              暂无信息-->
+      <!--            </div>-->
+      <!--          </el-col>-->
+      <!--        </el-row>-->
+      <!--        <div class="order-list-body flex-list-dom" v-else="">-->
+      <!--          <div :class="[{'active':currentId==item.id}]" class="order-list-item order-list-item-bg"-->
+      <!--               v-for="item in materials">-->
+      <!--            <el-row>-->
+      <!--              <el-col :span="5">{{ item.goodsName }}</el-col>-->
+      <!--              <el-col :span="3">{{ item.batchNumber }}</el-col>-->
+      <!--              <el-col :span="2">{{ adjustTypeList[item.oldStatus] }}</el-col>-->
+      <!--              <el-col :span="3">{{ adjustTypeList[item.newStatus] }}</el-col>-->
+      <!--              <el-col :span="2" class="R">{{ item.count }}{{item.measurementUnit}}</el-col>-->
+      <!--              <el-col :span="3">{{ item.reason}}</el-col>-->
+      <!--              <el-col :span="2" class="R">{{ item.createdName }}</el-col>-->
+      <!--              <el-col :span="4">{{ item.createTime | time}}</el-col>-->
+      <!--            </el-row>-->
+      <!--          </div>-->
+      <!--        </div>-->
+      <!--      </div>-->
       <!--     动态表格例子-->
-      <div style="height: 500px;margin-top: 20px">
-        <el-table
-          max-height="350"
-          :data="testList"
-          style="width: 100%">
-          <el-table-column
-            prop="goodsName"
-            label="货主疫苗名称">
-            <template slot-scope="scope">
-              <el-select :clearable="true" :remote-method="filterOrgGoods" @change="orgGoodsChangeTest" filterable
-                         placeholder="请输入名称或编号搜索货主疫苗" popper-class="good-selects"
-                         remote v-model="scope.row.goodsName">
-                <el-option :key="org.id" :label="org.goodsName" :value="org.id"
-                           v-for="org in orgGoods">
-                  <div style="overflow: hidden">
-                    <span class="pull-left">{{org.goodsName}}</span>
-                  </div>
-                  <div style="overflow: hidden">
+      <el-table
+        :data="materials"
+        border
+        style="width: 100%">
+        <el-table-column
+          prop="goodsName"
+          width="500px"
+          label="货主疫苗名称">
+          <template slot-scope="scope">
+            <el-select :clearable="true" :remote-method="filterOrgGoods" @change="orgGoodsChangeTest" filterable
+                       placeholder="请输入名称或编号搜索货主疫苗" popper-class="good-selects"
+                       style="width: 100%"
+                       remote v-model="scope.row.goodsName">
+              <el-option :key="org.id" :label="org.goodsName" :value="org.id"
+                         v-for="org in orgGoods">
+                <div style="overflow: hidden">
+                  <span class="pull-left">{{org.goodsName}}</span>
+                </div>
+                <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
                         v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}
                       </span>
-                    <span class="select-other-info pull-left"><span
-                      v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
+                  <span class="select-other-info pull-left"><span
+                    v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
                       </span>
-                  </div>
-                </el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column
-            prop="batchNumber"
-            label="批号">
-            <template slot-scope="scope">
-              <el-select :remoteMethod="filterBatchNumber" clearable filterable placeholder="请输入批号名称搜索批号"
-                         remote v-model="scope.row.batchNumber">
-                <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
-                           v-for="item in batchNumberList">
-                  {{ item.batchNumber }}
-                </el-option>
-              </el-select>
-            </template>
-          </el-table-column>
-          <el-table-column
-            fixed="right"
-            label="操作"
-            width="200">
-            <template slot-scope="scope">
-              <el-button type="text" size="small" style="padding: 0" @click="addTable">增加</el-button>
-              <el-button type="text" size="small" style="padding: 0" @click="eddTable(scope)">删除</el-button>
-            </template>
-          </el-table-column>
-        </el-table>
+                </div>
+              </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column
+          prop="batchNumber"
+          label="批号">
+          <template slot-scope="scope">
+            <el-select :remoteMethod="filterBatchNumber" clearable filterable placeholder="请输入批号名称搜索批号"
+                       remote v-model="scope.row.batchNumber">
+              <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
+                         v-for="item in batchNumberList">
+                {{ item.batchNumber }}
+              </el-option>
+            </el-select>
+          </template>
+        </el-table-column>
+        <el-table-column
+          fixed="right"
+          label="操作"
+          width="200">
+          <template slot-scope="scope">
+            <el-button type="text" size="small" style="padding: 0" @click="addTable">增加</el-button>
+            <el-button type="text" size="small" style="padding: 0" @click="eddTable(scope)">删除</el-button>
+          </template>
+        </el-table-column>
+      </el-table>
 
-      </div>
       <!--     动态表格例子-->
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
@@ -255,14 +255,14 @@
     methods: {
       //动态表格的方法
       addTable() {
-        this.testList.push({
+        this.materials.push({
           erpStockId: '',
           goodsName: '',
           batchNumber: ''
         });
       },
       eddTable(scope) {
-        this.testList.splice(scope.$index, 1);
+        this.materials.splice(scope.$index, 1);
       },
       orgGoodsChangeTest(val) {
         this.filters.batchNumberId = '';
@@ -271,7 +271,7 @@
       },
       filterBatchNumberTest(query) {
         this.$http.get('/batch-number/pager', {
-          params: {keyWord: query, goodsId:5381}
+          params: {keyWord: query, goodsId: 5381}
         }).then(res => {
           this.batchNumberList = res.data.list;
         });
