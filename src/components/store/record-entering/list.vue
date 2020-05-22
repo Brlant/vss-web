@@ -18,7 +18,7 @@
 
   .record-table {
     .el-input__inner {
-      padding: 0px !important;
+      padding: 5px !important;
     }
   }
 </style>
@@ -84,7 +84,7 @@
             <el-select :remoteMethod="(query)=>filterBatchNumber(query,scope.row)"
                        @change="setBatchNumber(scope.row)" clearable filterable
                        placeholder="请输入批号名称搜索批号"
-                       remote style="width: 100%" v-model="scope.row.batchNumberId">
+                       :disabled="!scope.row.orgGoodsId" remote style="width: 100%" v-model="scope.row.batchNumberId">
               <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
                          v-for="item in batchNumberList">
                 {{ item.batchNumber }}
@@ -99,7 +99,7 @@
             <template slot-scope="scope">
               <el-input @change="setQualifiedBizServings(scope.row)" @input="checkNumber(scope.row,'availableCount')"
 
-                        type="number" v-model="scope.row.availableCount"/>
+                        :disabled="!scope.row.orgGoodsId" type="number" v-model="scope.row.availableCount"/>
             </template>
           </el-table-column>
           <el-table-column
@@ -108,7 +108,7 @@
             <template slot-scope="scope">
               <el-input @change="setUnqualifiedCount(scope.row)" @input="checkNumber(scope.row,'unqualifiedBizCount')"
                         type="number"
-                        v-model="scope.row.unqualifiedBizCount"/>
+                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.unqualifiedBizCount"/>
             </template>
           </el-table-column>
           <el-table-column
@@ -117,7 +117,7 @@
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedBizServings')"
                         type="number"
-                        v-model="scope.row.qualifiedBizServings"/>
+                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.qualifiedBizServings"/>
             </template>
           </el-table-column>
         </el-table-column>
@@ -128,7 +128,7 @@
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedCount')"
                         type="number"
-                        v-model="scope.row.qualifiedCount"/>
+                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.qualifiedCount"/>
             </template>
           </el-table-column>
           <el-table-column
@@ -137,7 +137,7 @@
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'unqualifiedCount')"
                         type="number"
-                        v-model="scope.row.unqualifiedCount"/>
+                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.unqualifiedCount"/>
             </template>
           </el-table-column>
           <el-table-column
@@ -146,7 +146,7 @@
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedActualServings')"
                         type="number"
-                        v-model="scope.row.qualifiedActualServings"/>
+                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.qualifiedActualServings"/>
             </template>
           </el-table-column>
         </el-table-column>
@@ -172,8 +172,8 @@
       </div>
       <el-row style="text-align: center;padding:10px 0">
         <el-button @click="showPreviewDialog" v-show="!this.showFlag">预览</el-button>
-        <el-button @click="reset" v-show="this.showFlag">返回</el-button>
-        <el-button @click="save" v-show="this.showFlag">保存</el-button>
+        <el-button @click="reset" v-show="this.showFlag">修改</el-button>
+        <el-button :loading="loading" @click="save" type="success" v-show="this.showFlag">保存</el-button>
       </el-row>
     </div>
     <page-right :css="{'width':'1000px','padding':0}" :show="showPart"
@@ -219,7 +219,8 @@
           pageSize: 15
         },
         currentId: '',
-        showFlag: false
+        showFlag: false,
+        loading: false
       };
     },
     mounted() {
@@ -285,12 +286,12 @@
           batchNumberId: '',
           batchNumber: '',
           expiryDate: '',
-          availableCount: '',
-          unqualifiedBizCount: '',
-          qualifiedBizServings: '',
-          qualifiedCount: '',
-          unqualifiedCount: '',
-          qualifiedActualServings: '',
+          availableCount: null,
+          unqualifiedBizCount: null,
+          qualifiedBizServings: null,
+          qualifiedCount: null,
+          unqualifiedCount: null,
+          qualifiedActualServings: null,
           orgGoodsDto: {}
         });
       },
@@ -301,12 +302,12 @@
             batchNumberId: '',
             batchNumber: '',
             expiryDate: '',
-            availableCount: '',
-            unqualifiedBizCount: '',
-            qualifiedBizServings: '',
-            qualifiedCount: '',
-            unqualifiedCount: '',
-            qualifiedActualServings: '',
+            availableCount: null,
+            unqualifiedBizCount: null,
+            qualifiedBizServings: null,
+            qualifiedCount: null,
+            unqualifiedCount: null,
+            qualifiedActualServings: null,
             orgGoodsDto: {}
           });
         }
@@ -425,7 +426,7 @@
         Address.queryAddress(param).then(res => {
           this.warehouses = res.data;
           if (res.data) {
-            this.warehouseId = res.data[0];
+            this.warehouseId = res.data[0].id;
           }
         });
       },
@@ -463,15 +464,22 @@
           data.qualifiedActualServings = m.qualifiedActualServings;
           dataList.push(data);
         });
+        this.loading = true;
         this.$http.put('/erp-stock/batch/import', dataList).then(() => {
-          this.doing = false;
+          this.loading = false;
           this.$notify.success({
             message: '期初库存录入成功'
           });
-
+          this.$router.push({
+            path: '/store/request/bizServing'
+          });
+        }).catch(error => {
+          this.loading = false;
+          this.$notify.error({
+            message: '期初库存录入失败'
+          });
         });
       }
-
     }
   };
 </script>
