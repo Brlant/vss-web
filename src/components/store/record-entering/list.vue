@@ -169,9 +169,7 @@
       <el-row style="text-align: center;padding:10px 0">
         <el-button @click="showPreviewDialog">预览</el-button>
         <el-button @click="reset">重置</el-button>
-        <perm :label="cerp-stock-batch-adjust-insert">
-          <el-button @click="save">保存</el-button>
-        </perm>
+        <el-button @click="save">保存</el-button>
       </el-row>
       <!--     动态表格例子-->
       <previewDialog :formItem="materials" ref="previewDialog"></previewDialog>
