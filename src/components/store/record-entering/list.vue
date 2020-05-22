@@ -28,18 +28,8 @@
 
       <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
-          <perm class="switching-icon" label="cerp-stock-status-adjust-insert">
-             <span @click.prevent="add" class="pull-right cursor-span" style="margin-left: 10px">
-            <a @click.stop.prevent="add" class="btn-circle" href="#">
-                        <i class="el-icon-t-plus"></i>
-             </a>添加
-          </span>
-          </perm>
 
           <span @click="showSearch = !showSearch" class="pull-left switching-icon">
-            <i class="el-icon-arrow-up"></i>
-            <span v-show="showSearch">收起筛选</span>
-            <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
         <el-form class="advanced-query-form clearfix" onsubmit="return false">
@@ -178,7 +168,8 @@
       </el-table>
       <el-row style="text-align: center;padding:10px 0">
         <el-button @click="showPreviewDialog">预览</el-button>
-        <el-button>保存</el-button>
+        <el-button @click="reset">重置</el-button>
+        <el-button @click="save">保存</el-button>
       </el-row>
       <!--     动态表格例子-->
       <previewDialog :formItem="materials" ref="previewDialog"></previewDialog>
@@ -237,11 +228,26 @@
       };
     },
     mounted() {
-      this.addTable();
+      this.initTable();
       this.queryOrgWarehouse();
     },
     methods: {
+      reset() {
+        this.warehouseId = '';
+        this.materials = [];
+        this.initTable();
+      },
       showPreviewDialog() {
+        if (!this.warehouseId) {
+          return this.$notify.info('请选择仓库');
+        }
+        for (let i = 0; i < this.materials.length; i++) {
+          let val = this.materials[i];
+          if (!val.orgGoodsId || !val.batchNumberId || !val.availableCount || !val.unqualifiedBizCount ||
+            !val.qualifiedBizServings || !val.qualifiedCount || !val.unqualifiedCount || !val.qualifiedActualServings) {
+            return this.$notify.info('请输入完整数据');
+          }
+        }
         this.$refs.previewDialog.dialogVisible = !this.$refs.previewDialog.dialogVisible;
       },
       setQualifiedBizServings(item) {
@@ -279,6 +285,21 @@
       },
       //动态表格的方法
       addTable() {
+        this.materials.push({
+          orgGoodsId: '',
+          batchNumberId: '',
+          batchNumber: '',
+          expiryDate: '',
+          availableCount: '',
+          unqualifiedBizCount: '',
+          qualifiedBizServings: '',
+          qualifiedCount: '',
+          unqualifiedCount: '',
+          qualifiedActualServings: '',
+          orgGoodsDto: {}
+        });
+      },
+      initTable() {
         for (let i = 0; i < 5; i++) {
           this.materials.push({
             orgGoodsId: '',
@@ -411,16 +432,48 @@
         });
       },
       add() {
-        this.materials.forEach(val => {
+        for (let i = 0; i < this.materials.length; i++) {
+          let val = this.materials[i];
           if (!val.orgGoodsId || !val.batchNumberId || !val.availableCount || !val.unqualifiedBizCount ||
             !val.qualifiedBizServings || !val.qualifiedCount || !val.unqualifiedCount || !val.qualifiedActualServings) {
             return this.$notify.info('请输入完整数据');
           }
-        });
+        }
+      },
+      save() {
         if (!this.warehouseId) {
           return this.$notify.info('请选择仓库');
         }
+        for (let i = 0; i < this.materials.length; i++) {
+          let val = this.materials[i];
+          if (!val.orgGoodsId || !val.batchNumberId || !val.availableCount || !val.unqualifiedBizCount ||
+            !val.qualifiedBizServings || !val.qualifiedCount || !val.unqualifiedCount || !val.qualifiedActualServings) {
+            return this.$notify.info('请输入完整数据');
+          }
+        }
+        let dataList = [];
+        this.materials.forEach(m => {
+          let data = {};
+          data.orgGoodsId = m.orgGoodsId;
+          data.batchNumberId = m.batchNumberId;
+          data.warehouseId = this.warehouseId;
+          data.availableCount = m.availableCount;
+          data.unqualifiedBizCount = m.unqualifiedBizCount;
+          data.qualifiedBizServings = m.qualifiedBizServings;
+          data.qualifiedCount = m.qualifiedCount;
+          data.unqualifiedCount = m.unqualifiedCount;
+          data.qualifiedActualServings = m.qualifiedActualServings;
+          dataList.push(data);
+        });
+        this.$http.put('/erp-stock/batch/import', dataList).then(() => {
+          this.doing = false;
+          this.$notify.success({
+            message: '期初库存录入成功'
+          });
+
+        });
       }
+
     }
   };
 </script>
