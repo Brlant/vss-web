@@ -96,7 +96,8 @@
           prop="batchNumber"
           align="center" label="批号" min-width="10%">
           <template slot-scope="scope">
-            <el-select :remoteMethod="(query)=>filterBatchNumber(query,scope.row)" clearable filterable
+            <el-select :remoteMethod="(query)=>filterBatchNumber(query,scope.row)"
+                       @change="setBatchNumber(scope.row)" clearable filterable
                        placeholder="请输入批号名称搜索批号"
                        remote style="width: 100%" v-model="scope.row.batchNumberId">
               <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
@@ -192,7 +193,7 @@
                 @right-close="resetRightBox">
       <form-part :formItem="form" @close="resetRightBox" @refresh="refresh"></form-part>
     </page-right>
-    <previewDialog ref="previewDialog"></previewDialog>
+    <previewDialog :formItem="materials" ref="previewDialog"></previewDialog>
   </div>
 </template>
 <script>
@@ -241,6 +242,7 @@
     },
     methods: {
       showPreviewDialog() {
+        console.log(this.materials);
         this.$refs.previewDialog.show();
       },
       setQualifiedBizServings(item) {
@@ -282,6 +284,8 @@
           this.materials.push({
             orgGoodsId: '',
             batchNumberId: '',
+            batchNumber: '',
+            expiryDate: '',
             availableCount: '',
             unqualifiedBizCount: '',
             qualifiedBizServings: '',
@@ -297,6 +301,8 @@
       },
       orgGoodsChange(item) {
         item.batchNumberId = '';
+        item.batchNumber = '';
+        item.expiryDate = '';
         item.availableCount = '';
         item.unqualifiedBizCount = '';
         item.qualifiedBizServings = '';
@@ -376,7 +382,6 @@
             goodsId = i.orgGoodsDto.goodsId;
           }
         });
-        console.log(goodsId);
         if (!goodsId) return;
         this.$http.get('/batch-number/pager', {
           params: {
@@ -386,6 +391,16 @@
         }).then(res => {
           this.batchNumberList = res.data.list;
         });
+      },
+      setBatchNumber(item) {
+        if (item.batchNumberId) {
+          this.batchNumberList.forEach(i => {
+            if (i.id === item.batchNumberId) {
+              item.batchNumber = i.batchNumber;
+              item.expiryDate = i.expirationDate;
+            }
+          });
+        }
       },
       queryOrgWarehouse() {
         let param = Object.assign({}, {

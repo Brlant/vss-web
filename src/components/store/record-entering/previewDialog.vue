@@ -2,95 +2,75 @@
   <el-dialog
     title="预览"
     :visible.sync="dialogVisible"
-    width="50%"
+    width="90%"
     :before-close="handleClose">
-    <el-table :data="batches" class="header-list store border-black" border
+    <el-table :data="formItem" border class="header-list store border-black"
               :header-row-class-name="'headerClass'" v-loading="loadingData" :summary-method="getSummaries"
               :row-class-name="formatRowClass"
               show-summary style="width: 100%">
-      <el-table-column prop="goodsName" label="货主疫苗名称" min-width="200" :sortable="true">
+      <el-table-column align="center" label="货主疫苗名称" min-width="200" prop="goodsName">
         <template slot-scope="scope">
-          <el-tooltip class="item" effect="dark" :content="`orgGoodsId[${scope.row.orgGoodsId}]`" placement="right">
-            <span>{{scope.row.goodsName}}</span>
+          <el-tooltip :content="`orgGoodsId[${scope.row.orgGoodsDto.orgGoodsId}]`" class="item" effect="dark" placement="right">
+            <span>{{scope.row.orgGoodsDto.name}}</span>
           </el-tooltip>
         </template>
       </el-table-column>
-      <el-table-column prop="orgGoodsCode" label="货主货品编号" min-width="120" :sortable="true">
-        <template slot-scope="scope"><span>{{scope.row.orgGoodsCode}}</span></template>
+      <el-table-column align="center" label="货主货品编号" min-width="120" prop="orgGoodsCode">
+        <template slot-scope="scope"><span>{{scope.row.orgGoodsDto.goodsNo}}</span></template>
       </el-table-column>
-      <el-table-column prop="factoryName" label="疫苗种类" min-width="120" :sortable="true">
+      <el-table-column align="center" label="疫苗种类" min-width="120" prop="factoryName">
         <template slot-scope="scope">
-          <dict dict-group="vaccineSign" :dict-key="scope.row.vaccineType"></dict>
+          <dict :dict-key="scope.row.orgGoodsDto.goodsVaccineSign" dict-group="vaccineSign"></dict>
         </template>
       </el-table-column>
-      <el-table-column prop="platformGoodsName" label="疫苗主档通用名称" min-width="200" :sortable="true">
+      <el-table-column align="center" label="疫苗主档通用名称" min-width="200" prop="orgGoodsDto.goodsDto.name">
       </el-table-column>
-      <el-table-column prop="factoryName" label="生产单位" min-width="160" :sortable="true"></el-table-column>
-      <el-table-column prop="batchNumber" label="批号" :sortable="true" width="110"></el-table-column>
+      <el-table-column align="center" label="生产单位" min-width="160" prop="orgGoodsDto.goodsDto.factoryName"></el-table-column>
+      <el-table-column align="center" label="批号" prop="batchNumber" width="110"></el-table-column>
 
       <el-table-column label="业务库存" align="center">
-        <el-table-column prop="qualifiedBizServings" label="人份剂次" :render-header="formatHeader" :sortable="true"
-                         width="100" v-if="isBizServing">
-          <template slot-scope="scope">
-            <span>{{scope.row.qualifiedBizServings}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="availableCount" label="合格" :render-header="formatHeader" :sortable="true"
-                         width="100">
+        <el-table-column :render-header="formatHeader" align="center" label="合格"
+                         prop="availableCount" width="100">
           <template slot-scope="scope">
             <span>{{scope.row.availableCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="unqualifiedBizCount" label="不合格" :render-header="formatHeader" :sortable="true"
-                         width="100">
+        <el-table-column :render-header="formatHeader" align="center" label="不合格"
+                         prop="unqualifiedBizCount" width="100">
           <template slot-scope="scope">
             <span>{{scope.row.unqualifiedBizCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="undeterminedCount" label="业务停销" :render-header="formatHeader" :sortable="true"
-                         width="110">
+        <el-table-column :render-header="formatHeader" align="center" label="人份剂次"
+                         prop="qualifiedBizServings" width="100">
           <template slot-scope="scope">
-            <span>{{scope.row.undeterminedCount}}</span>
+            <span>{{scope.row.qualifiedBizServings}}</span>
           </template>
         </el-table-column>
       </el-table-column>
 
-
       <el-table-column label="实物库存" align="center">
-        <el-table-column prop="qualifiedActualServings" label="人份剂次" :render-header="formatHeader" :sortable="true"
-                         width="100" v-if="isBizServing">
-          <template slot-scope="scope">
-            <span>{{scope.row.qualifiedActualServings}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="qualifiedCount" label="合格" :render-header="formatHeader" :sortable="true"
-                         width="100">
+        <el-table-column :render-header="formatHeader" align="center" label="合格"
+                         prop="qualifiedCount" width="100">
           <template slot-scope="scope">
             <span>{{scope.row.qualifiedCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="unqualifiedCount" label="不合格" :render-header="formatHeader" :sortable="true"
-                         width="100">
+        <el-table-column :render-header="formatHeader" align="center" label="不合格"
+                         prop="unqualifiedCount" width="100">
           <template slot-scope="scope">
             <span>{{scope.row.unqualifiedCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="transitCount" label="在途库存" :render-header="formatHeader" :sortable="true"
-                         width="100">
+        <el-table-column :render-header="formatHeader" align="center" label="人份剂次"
+                         prop="qualifiedActualServings" width="100">
           <template slot-scope="scope">
-            <span>{{scope.row.transitCount}}</span>
-          </template>
-        </el-table-column>
-        <el-table-column prop="totalCount" label="库存总数" :render-header="formatHeader" :sortable="true"
-                         width="100">
-          <template slot-scope="scope">
-            <span>{{scope.row.totalCount}}</span>
+            <span>{{scope.row.qualifiedActualServings}}</span>
           </template>
         </el-table-column>
       </el-table-column>
 
-
-      <el-table-column prop="expiryDate" label="有效期" :sortable="true" width="110">
+      <el-table-column align="center" label="有效期" prop="expiryDate" width="110">
         <template slot-scope="scope">
           <span>{{ scope.row.expiryDate | date}}</span>
         </template>
@@ -107,11 +87,15 @@
 <script type="text/jsx">
   export default {
     name: 'previewDialog',
+    props: {
+      formItem: Array
+    },
     data() {
       return {
         loadingData: false,
         dialogVisible: false,
         batches: [],
+        materials: []
       };
     },
     methods: {
@@ -174,9 +158,9 @@
         }
         return (
           <el-tooltip effect="dark" content={content} placement="top">
-          <span>{title}</span>
+            <span>{title}</span>
           </el-tooltip>
-      )
+        );
       },
 
       getSummaries(param) {
@@ -210,12 +194,6 @@
         return sums;
       },
       formatRowClass(data) {
-        if (this.isValid(data.row) === 1) {
-          return 'effective-row';
-        }
-        if (this.isValid(data.row) === 0) {
-          return 'danger-row';
-        }
       },
     }
   };
