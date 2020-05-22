@@ -62,7 +62,7 @@
         <el-table-column
           prop="goodsName"
           align="center"
-          label="货主疫苗名称" min-width="40%">
+          label="货主疫苗名称" min-width="35%">
           <template slot-scope="scope">
             <el-select :clearable="true" :remote-method="filterOrgGoods"
                        @change="orgGoodsChange(scope.row)"
@@ -94,7 +94,7 @@
         </el-table-column>
         <el-table-column
           prop="batchNumber"
-          align="center" label="批号" min-width="20%">
+          align="center" label="批号" min-width="10%">
           <template slot-scope="scope">
             <el-select :remoteMethod="(query)=>filterBatchNumber(query,scope.row)" clearable filterable
                        placeholder="请输入批号名称搜索批号"
@@ -112,7 +112,7 @@
             label="合格" prop="availableCount" width="80px">
             <template slot-scope="scope">
               <el-input @change="setQualifiedBizServings(scope.row)" @input="checkNumber(scope.row,'availableCount')"
-                        placeholder="请输入数量"
+
                         type="number" v-model="scope.row.availableCount"/>
             </template>
           </el-table-column>
@@ -121,7 +121,7 @@
             label="不合格" prop="unqualifiedBizCount" width="80px">
             <template slot-scope="scope">
               <el-input @change="setUnqualifiedCount(scope.row)" @input="checkNumber(scope.row,'unqualifiedBizCount')"
-                        placeholder="请输入数量" type="number"
+                        type="number"
                         v-model="scope.row.unqualifiedBizCount"/>
             </template>
           </el-table-column>
@@ -129,7 +129,7 @@
             align="center"
             label="人份剂次" prop="qualifiedBizServings" width="80px">
             <template slot-scope="scope">
-              <el-input @input="checkNumber(scope.row,'qualifiedBizServings')" placeholder="请输入数量"
+              <el-input @input="checkNumber(scope.row,'qualifiedBizServings')"
                         type="number"
                         v-model="scope.row.qualifiedBizServings"/>
             </template>
@@ -140,7 +140,7 @@
             align="center"
             label="合格" prop="qualifiedCount" width="80px">
             <template slot-scope="scope">
-              <el-input @input="checkNumber(scope.row,'qualifiedCount')" placeholder="请输入数量"
+              <el-input @input="checkNumber(scope.row,'qualifiedCount')"
                         type="number"
                         v-model="scope.row.qualifiedCount"/>
             </template>
@@ -149,7 +149,7 @@
             align="center"
             label="不合格" prop="unqualifiedCount" width="80px">
             <template slot-scope="scope">
-              <el-input @input="checkNumber(scope.row,'unqualifiedCount')" placeholder="请输入数量"
+              <el-input @input="checkNumber(scope.row,'unqualifiedCount')"
                         type="number"
                         v-model="scope.row.unqualifiedCount"/>
             </template>
@@ -159,7 +159,7 @@
             label="人份剂次" prop="qualifiedActualServings" width="80px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedActualServings')"
-                        placeholder="请输入数量" type="number"
+                        type="number"
                         v-model="scope.row.qualifiedActualServings"/>
             </template>
           </el-table-column>
@@ -279,7 +279,8 @@
             qualifiedBizServings: '',
             qualifiedCount: '',
             unqualifiedCount: '',
-            qualifiedActualServings: ''
+            qualifiedActualServings: '',
+            orgGoodsDto: {}
           });
         }
       },
@@ -297,7 +298,13 @@
         this.batchNumberList = [];
         this.filterBatchNumber(null, item);
         // 设置多余属性值
-
+        if (item.orgGoodsId) {
+          this.orgGoods.forEach(i => {
+            if (i.orgGoodsDto.id === item.orgGoodsId) {
+              item.orgGoodsDto = JSON.parse(JSON.stringify(i.orgGoodsDto));
+            }
+          });
+        }
       },
       //************
       resetRightBox: function () {
