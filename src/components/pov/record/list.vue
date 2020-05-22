@@ -61,7 +61,10 @@
             <el-col :span="8">
               <oms-form-row :span="6" label="未知追溯码">
                 <el-col :span="24">
-                  <el-checkbox @change="checkChange" v-model="searchCondition.checked"></el-checkbox>
+                  <el-radio-group @change="checkChange" size="small" v-model="searchCondition.checked">
+                    <el-radio-button label="0">是</el-radio-button>
+                    <el-radio-button label="1">否</el-radio-button>
+                  </el-radio-group>
                 </el-col>
               </oms-form-row>
             </el-col>
@@ -200,7 +203,7 @@
     },
     methods: {
       checkChange(val) {
-        if (val) {
+        if (val==='0') {
           this.searchCondition.unknownFlag = true;
         } else {
           this.searchCondition.unknownFlag = false;
