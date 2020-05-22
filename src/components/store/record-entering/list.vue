@@ -141,6 +141,62 @@
           </div>
         </div>
       </div>
+      <!--     动态表格例子-->
+      <div style="height: 500px;margin-top: 20px">
+        <el-table
+          max-height="350"
+          :data="testList"
+          style="width: 100%">
+          <el-table-column
+            prop="goodsName"
+            label="货主疫苗名称">
+            <template slot-scope="scope">
+              <el-select :clearable="true" :remote-method="filterOrgGoods" @change="orgGoodsChangeTest" filterable
+                         placeholder="请输入名称或编号搜索货主疫苗" popper-class="good-selects"
+                         remote v-model="scope.row.goodsName">
+                <el-option :key="org.id" :label="org.goodsName" :value="org.id"
+                           v-for="org in orgGoods">
+                  <div style="overflow: hidden">
+                    <span class="pull-left">{{org.goodsName}}</span>
+                  </div>
+                  <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}
+                      </span>
+                    <span class="select-other-info pull-left"><span
+                      v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
+                      </span>
+                  </div>
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column
+            prop="batchNumber"
+            label="批号">
+            <template slot-scope="scope">
+              <el-select :remoteMethod="filterBatchNumber" clearable filterable placeholder="请输入批号名称搜索批号"
+                         remote v-model="scope.row.batchNumber">
+                <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
+                           v-for="item in batchNumberList">
+                  {{ item.batchNumber }}
+                </el-option>
+              </el-select>
+            </template>
+          </el-table-column>
+          <el-table-column
+            fixed="right"
+            label="操作"
+            width="200">
+            <template slot-scope="scope">
+              <el-button type="text" size="small" style="padding: 0" @click="addTable">增加</el-button>
+              <el-button type="text" size="small" style="padding: 0" @click="eddTable(scope)">删除</el-button>
+            </template>
+          </el-table-column>
+        </el-table>
+
+      </div>
+      <!--     动态表格例子-->
       <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
         <el-pagination
           :current-page="pager.currentPage"
@@ -163,6 +219,11 @@
     components: {formPart},
     data() {
       return {
+        testList: [{
+          erpStockId: '',
+          goodsName: '',
+          batchNumber: ''
+        }],
         loadingData: false,
         showSearch: false,
         showPart: false,
@@ -192,6 +253,30 @@
       this.getMaPage(1);
     },
     methods: {
+      //动态表格的方法
+      addTable() {
+        this.testList.push({
+          erpStockId: '',
+          goodsName: '',
+          batchNumber: ''
+        });
+      },
+      eddTable(scope) {
+        this.testList.splice(scope.$index, 1);
+      },
+      orgGoodsChangeTest(val) {
+        this.filters.batchNumberId = '';
+        this.batchNumberList = [];
+        this.filterBatchNumberTest();
+      },
+      filterBatchNumberTest(query) {
+        this.$http.get('/batch-number/pager', {
+          params: {keyWord: query, goodsId:5381}
+        }).then(res => {
+          this.batchNumberList = res.data.list;
+        });
+      },
+      //************
       resetRightBox: function () {
         this.showPart = false;
       },
