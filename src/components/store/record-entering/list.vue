@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss">
   @import "../../../assets/mixins";
 
   .btn-color {
@@ -15,8 +15,9 @@
     padding-left: 10px;
     padding-right: 10px;
   }
-  .record-table{
-   .el-input__inner{
+
+  .record-table {
+    .el-input__inner {
       padding: 0px !important;
     }
   }
@@ -41,7 +42,18 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
+        <el-form class="advanced-query-form clearfix" onsubmit="return false">
+          <el-col :span="8">
+            <oms-form-row :span="4" label="仓库">
+              <el-select clearable filterable placeholder="请选择仓库" v-model="warehouseId">
+                <el-option :key="item.id" :label="item.name" :value="item.id"
+                           v-for="item in warehouses">
+                </el-option>
+              </el-select>
+            </oms-form-row>
+          </el-col>
 
+        </el-form>
       </div>
       <el-table
         :data="materials" class="header-list store border-black record-table"
@@ -50,24 +62,31 @@
         <el-table-column
           prop="goodsName"
           align="center"
-          label="货主疫苗名称" width="300px">
+          label="货主疫苗名称" style="width:40%">
           <template slot-scope="scope">
-            <el-select :clearable="true" :remote-method="filterOrgGoods" @change="orgGoodsChangeTest" filterable
+            <el-select :clearable="true" :remote-method="filterOrgGoods"
+                       @change="orgGoodsChange(scope.row)"
+                       @click.native="filterOrgGoods('')" filterable
                        placeholder="请输入名称或编号搜索货主疫苗" popper-class="good-selects"
                        style="width: 100%"
-                       remote v-model="scope.row.goodsName">
-              <el-option :key="org.id" :label="org.goodsName" :value="org.id"
-                         v-for="org in orgGoods">
+                       remote v-model="scope.row.orgGoodsId">
+              <el-option :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
+                         :value="item.orgGoodsDto.id"
+                         v-for="item in orgGoods">
                 <div style="overflow: hidden">
-                  <span class="pull-left">{{org.goodsName}}</span>
+                      <span class="pull-left">{{item.orgGoodsDto.name}}<el-tag style="float: none" type="danger"
+                                                                               v-show="!item.orgGoodsDto.status">停用</el-tag></span>
                 </div>
                 <div style="overflow: hidden">
-                      <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}
-                      </span>
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                        </span>
                   <span class="select-other-info pull-left"><span
-                    v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
-                      </span>
+                    v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
+                        </span>
+                  <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                    </span>
                 </div>
               </el-option>
             </el-select>
@@ -75,10 +94,11 @@
         </el-table-column>
         <el-table-column
           prop="batchNumber"
-          align="center" label="批号">
+          align="center" label="批号" style="width:20%">
           <template slot-scope="scope">
-            <el-select :remoteMethod="filterBatchNumber" clearable filterable placeholder="请输入批号名称搜索批号"
-                       remote v-model="scope.row.batchNumber">
+            <el-select :remoteMethod="(query)=>filterBatchNumber(query,scope.row)" clearable filterable
+                       placeholder="请输入批号名称搜索批号"
+                       remote style="width: 100%" v-model="scope.row.batchNumberId">
               <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
                          v-for="item in batchNumberList">
                 {{ item.batchNumber }}
@@ -89,51 +109,64 @@
         <el-table-column align="center" label="业务库存">
           <el-table-column
             align="center"
-            label="合格" prop="batchNumber">
+            label="合格" prop="availableCount" width="80px">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.availableCount"></el-input>
+              <el-input @change="setQualifiedBizServings(scope.row)" @input="checkNumber(scope.row,'availableCount')"
+                        placeholder="请输入数量"
+                        type="number" v-model="scope.row.availableCount"/>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="不合格" prop="batchNumber">
+            label="不合格" prop="unqualifiedBizCount" width="80px">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.unqualifiedBizCount"></el-input>
+              <el-input @change="setUnqualifiedCount(scope.row)" @input="checkNumber(scope.row,'unqualifiedBizCount')"
+                        placeholder="请输入数量" type="number"
+                        v-model="scope.row.unqualifiedBizCount"/>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="人份剂次" prop="batchNumber">
+            label="人份剂次" prop="qualifiedBizServings" width="80px">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.qualifiedBizServings"></el-input>
+              <el-input @input="checkNumber(scope.row,'qualifiedBizServings')" placeholder="请输入数量"
+                        type="number"
+                        v-model="scope.row.qualifiedBizServings"/>
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column align="center" label="实物库存">
+        <el-table-column align="center" label="实物库存" width="80px">
           <el-table-column
             align="center"
-            label="合格" prop="batchNumber">
+            label="合格" prop="qualifiedCount" width="80px">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.batchNumber"></el-input>
+              <el-input @input="checkNumber(scope.row,'qualifiedCount')" placeholder="请输入数量"
+                        type="number"
+                        v-model="scope.row.qualifiedCount"/>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="不合格" prop="batchNumber">
+            label="不合格" prop="unqualifiedCount" width="80px">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.batchNumber"></el-input>
+              <el-input @input="checkNumber(scope.row,'unqualifiedCount')" placeholder="请输入数量"
+                        type="number"
+                        v-model="scope.row.unqualifiedCount"/>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="人份剂次" prop="batchNumber">
+            label="人份剂次" prop="qualifiedActualServings" width="80px">
             <template slot-scope="scope">
-              <el-input v-model="scope.row.batchNumber"></el-input>
+              <el-input @input="checkNumber(scope.row,'qualifiedActualServings')"
+                        placeholder="请输入数量" type="number"
+                        v-model="scope.row.qualifiedActualServings"/>
             </template>
           </el-table-column>
         </el-table-column>
         <el-table-column
           fixed="right"
+          align="center"
           label="操作"
           width="90">
           <template slot-scope="scope">
@@ -160,7 +193,7 @@
 </template>
 <script>
   import formPart from './form.vue';
-  import {Address, http} from '@/resources';
+  import {Address, Vaccine} from '@/resources';
 
   export default {
     components: {formPart},
@@ -171,8 +204,9 @@
           goodsName: '',
           batchNumber: ''
         }],
+        warehouseId: '',
         loadingData: false,
-        showSearch: false,
+        showSearch: true,
         showPart: false,
         materials: [],
         filters: {
@@ -197,31 +231,73 @@
       };
     },
     mounted() {
-      this.getMaPage(1);
+      this.addTable();
+      this.queryOrgWarehouse();
     },
     methods: {
+      setQualifiedBizServings(item) {
+        if (!item.qualifiedBizServings && item.availableCount) {
+          this.orgGoods.forEach(i => {
+            if (i.orgGoodsDto.id === item.orgGoodsId) {
+              item.qualifiedBizServings = item.availableCount * i.orgGoodsDto.goodsDto.propertyMap.personPortion;
+              if (!item.qualifiedActualServings) {
+                item.qualifiedActualServings = item.qualifiedBizServings;
+              }
+            }
+          });
+        }
+        if (!item.qualifiedCount && item.availableCount) {
+          item.qualifiedCount = item.availableCount;
+        }
+      },
+      setUnqualifiedCount(item) {
+        if (!item.unqualifiedCount && item.unqualifiedBizCount) {
+          item.unqualifiedCount = item.unqualifiedBizCount;
+        }
+      },
+      checkNumber(item, itemName) {
+        if (!item.orgGoodsId) {
+          item[itemName] = '';
+          return this.$notify.info('请先选择货主疫苗');
+        }
+        if (!item.batchNumberId) {
+          item[itemName] = '';
+          return this.$notify.info('请先选择批号');
+        }
+        if (item[itemName] && item[itemName] < 0) {
+          item[itemName] = 0;
+        }
+      },
       //动态表格的方法
       addTable() {
-        this.materials.push({
-          erpStockId: '',
-          goodsName: '',
-          batchNumber: ''
-        });
+        for (let i = 0; i < 5; i++) {
+          this.materials.push({
+            orgGoodsId: '',
+            batchNumberId: '',
+            availableCount: '',
+            unqualifiedBizCount: '',
+            qualifiedBizServings: '',
+            qualifiedCount: '',
+            unqualifiedCount: '',
+            qualifiedActualServings: ''
+          });
+        }
       },
       eddTable(scope) {
         this.materials.splice(scope.$index, 1);
       },
-      orgGoodsChangeTest(val) {
-        this.filters.batchNumberId = '';
+      orgGoodsChange(item) {
+        item.batchNumberId = '';
+        item.availableCount = '';
+        item.unqualifiedBizCount = '';
+        item.qualifiedBizServings = '';
+        item.qualifiedCount = '';
+        item.unqualifiedCount = '';
+        item.qualifiedActualServings = '';
         this.batchNumberList = [];
-        this.filterBatchNumberTest();
-      },
-      filterBatchNumberTest(query) {
-        this.$http.get('/batch-number/pager', {
-          params: {keyWord: query, goodsId: 5381}
-        }).then(res => {
-          this.batchNumberList = res.data.list;
-        });
+        this.filterBatchNumber(null, item);
+        // 设置多余属性值
+
       },
       //************
       resetRightBox: function () {
@@ -269,27 +345,23 @@
       filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         let params = Object.assign({}, {
-          deleteFlag: false,
+          keyWord: query,
           orgId: orgId,
-          keyWord: query
+          status: true
         });
-        http.get('/erp-stock/goods', {params}).then(res => {
+        Vaccine.query(params).then(res => {
           this.orgGoods = res.data.list;
         });
       },
-      orgGoodsChange(val) {
-        this.filters.batchNumberId = '';
-        this.batchNumberList = [];
-        this.filterBatchNumber();
-      },
-      filterBatchNumber(query) {
-        if (!this.filters.orgGoodsId) return;
+      filterBatchNumber(query, item) {
+        if (!item.orgGoodsId) return;
         let goodsId = '';
         this.orgGoods.forEach(i => {
-          if (i.id === this.filters.orgGoodsId) {
-            goodsId = i.goodsId;
+          if (i.orgGoodsDto.id === item.orgGoodsId) {
+            goodsId = i.orgGoodsDto.goodsId;
           }
         });
+        console.log(goodsId);
         if (!goodsId) return;
         this.$http.get('/batch-number/pager', {
           params: {
@@ -310,8 +382,15 @@
         });
       },
       add() {
-        this.form = {};
-        this.showPart = true;
+        this.materials.forEach(val => {
+          if (!val.orgGoodsId || !val.batchNumberId || !val.availableCount || !val.unqualifiedBizCount ||
+            !val.qualifiedBizServings || !val.qualifiedCount || !val.unqualifiedCount || !val.qualifiedActualServings) {
+            return this.$notify.info('请输入完整数据');
+          }
+        });
+        if (!this.warehouseId) {
+          return this.$notify.info('请选择仓库');
+        }
       }
     }
   };
