@@ -182,6 +182,11 @@ export const route = [
             meta: {moduleId: 'store', title: '库存状态调整', perm: 'cerp-stock-status-adjust'}
           },
           {
+            path: '/store/record-entering',
+            component: () => import('./components/store/record-entering/list'),
+            meta: {moduleId: 'store', title: '初期库存录入', perm: 'cerp-stock-status-adjust'}
+          },
+          {
             path: '/store/inventory',
             component: () => import('./components/common/parent-route.vue'),
             meta: {moduleId: 'store', title: '库存盘点', perm: 'erp-stock-inventory-query', subMenuId: 'inventory'},
