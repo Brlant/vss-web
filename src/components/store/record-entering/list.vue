@@ -176,19 +176,14 @@
         <el-button :loading="loading" @click="save" type="success" v-show="this.showFlag">保存</el-button>
       </el-row>
     </div>
-    <page-right :css="{'width':'1000px','padding':0}" :show="showPart"
-                @right-close="resetRightBox">
-      <form-part :formItem="form" @close="resetRightBox" @refresh="refresh"></form-part>
-    </page-right>
   </div>
 </template>
 <script>
-  import formPart from './form.vue';
   import {Address, Vaccine} from '@/resources';
   import previewDialog from './previewDialog';
 
   export default {
-    components: {formPart, previewDialog},
+    components: {previewDialog},
     data() {
       return {
         testList: [{
