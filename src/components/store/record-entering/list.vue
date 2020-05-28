@@ -315,10 +315,10 @@
         item.batchNumber = '';
         item.expiryDate = '';
         item.availableCount = '';
-        item.unqualifiedBizCount = '';
+        item.unqualifiedBizCount = 0;
         item.qualifiedBizServings = '';
         item.qualifiedCount = '';
-        item.unqualifiedCount = '';
+        item.unqualifiedCount = 0;
         item.qualifiedActualServings = '';
         this.batchNumberList = [];
         this.filterBatchNumber(null, item);
