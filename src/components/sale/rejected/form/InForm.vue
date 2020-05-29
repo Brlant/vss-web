@@ -1001,7 +1001,7 @@
                             specificationsId: '',
                             specifications: m.accessoryGoods.specifications,
                             proportion: m.proportion,
-                            expirationDate: m.expirationDate
+                            expirationDate: bl.expirationDate
                           });
                         }
                       });
