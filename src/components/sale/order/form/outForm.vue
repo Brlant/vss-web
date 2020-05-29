@@ -1014,7 +1014,7 @@
                               measurementUnit: m.accessoryGoods.measurementUnit,
                               packingCount: null,
                               specificationsId: '',
-                              expirationDate: m.expirationDate, // 有效期
+                              expirationDate: bl.expirationDate, // 有效期
                               specifications: m.accessoryGoods.specifications,
                               proportion: m.proportion
                             });
