@@ -5,12 +5,15 @@
     width: 800px;
     padding: 30px 0;
     overflow: auto;
+
     .title {
       margin-left: 30px;
     }
+
     .order-info-part {
       padding: 0 50px;
     }
+
     .goods-info-left {
       width: 330px;
       margin-left: 30px;
@@ -20,22 +23,27 @@
       border-top-left-radius: 4px;
       border-bottom-left-radius: 4px;
     }
+
     .goods-info-right {
       width: 210px;
       padding: 32px 20px 33px 20px;
       background-color: rgb(238, 238, 238);
       border: 1px solid rgb(238, 238, 238);
       float: left;
+
       .el-row {
         margin-bottom: 5px;
       }
+
       margin-bottom: 20px;
     }
+
     .min-gutter {
       .el-form-item {
         margin-bottom: 4px;
       }
     }
+
     .border-show {
       height: 15px;
       width: 100%;
@@ -59,8 +67,10 @@
       color: #999;
       line-height: 20px;
     }
+
     border-collapse: separate;
     border-spacing: 0;
+
     > tbody > tr > td {
       border-top: 1px solid #eee;
     }
@@ -200,6 +210,14 @@
           <el-row>
             <el-col :span="8">
               <order-push-search v-model="searchCondition.pushStatus"/>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="疫苗种类" :span="6" style="height: 36px">
+                <el-radio-group v-model="searchCondition.goodsType" size="small">
+                  <el-radio-button label="0">免疫规划疫苗</el-radio-button>
+                  <el-radio-button label="1">非免疫规划疫苗</el-radio-button>
+                </el-radio-group>
+              </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row label="" :span="5">
@@ -376,7 +394,8 @@
           thirdPartyNumber: '',
           orgGoodsId: '',
           deleteFlag: false,
-          pushStatus: ''
+          pushStatus: '',
+          goodsType: ''
         },
         searchCondition: {
           searchType: 1,
@@ -390,7 +409,8 @@
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: '',
-          pushStatus: ''
+          pushStatus: '',
+          goodsType: ''
         },
         expectedTime: '',
         createTimes: '',
@@ -470,7 +490,8 @@
           transactOrgId: '',
           orgGoodsId: '',
           thirdPartyNumber: '',
-          pushStatus: ''
+          pushStatus: '',
+          goodsType: ''
         };
         this.expectedTime = '';
         this.createTimes = '';

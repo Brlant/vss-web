@@ -106,6 +106,14 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row label="疫苗种类" :span="5" style="height: 36px">
+                <el-radio-group v-model="searchWord.orderGoodsType" size="small">
+                  <el-radio-button label="0">免疫规划疫苗</el-radio-button>
+                  <el-radio-button label="1">非免疫规划疫苗</el-radio-button>
+                </el-radio-group>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="1">
                 <perm label="sale-detail-form-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
@@ -176,7 +184,8 @@
           createEndTime: '',
           batchNumberId: '',
           orgGoodsId: '',
-          factoryId: ''
+          factoryId: '',
+          orderGoodsType: ''
         },
         orgList: [],
         factoryList: [],
@@ -305,7 +314,8 @@
           createEndTime: '',
           batchNumberId: '',
           orgGoodsId: '',
-          factoryId: ''
+          factoryId: '',
+          orderGoodsType: ''
         };
         this.bizDateAry = '';
         this.search();

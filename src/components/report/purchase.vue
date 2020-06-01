@@ -96,7 +96,15 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="" :span="1">
+              <oms-form-row label="疫苗种类" :span="6" style="height: 36px">
+                <el-radio-group v-model="searchWord.orderGoodsType" size="small">
+                  <el-radio-button label="0">免疫规划疫苗</el-radio-button>
+                  <el-radio-button label="1">非免疫规划疫苗</el-radio-button>
+                </el-radio-group>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row label="" :span="6">
                 <perm label="purchasing-detail-form-export">
                   <el-button type="primary" @click="search" :disabled="loadingData">
                     查询
@@ -165,7 +173,8 @@
           createStartTime: '',
           createEndTime: '',
           batchNumberId: '',
-          orgGoodsId: ''
+          orgGoodsId: '',
+          orderGoodsType:''
         },
         orgList: [],
         orgGoods: [],
@@ -280,7 +289,8 @@
           createStartTime: '',
           createEndTime: '',
           batchNumberId: '',
-          orgGoodsId: ''
+          orgGoodsId: '',
+          orderGoodsType:''
         };
         this.bizDateAry = '';
         this.search();

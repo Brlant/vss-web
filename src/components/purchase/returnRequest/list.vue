@@ -192,7 +192,17 @@
                 </oms-form-row>
               </el-col>
               <el-col :span="8">
-                <oms-form-row label="" :span="5">
+                <oms-form-row label="疫苗种类" :span="8" style="height: 36px">
+                  <el-radio-group v-model="searchCondition.goodsType" size="small">
+                    <el-radio-button label="0">免疫规划疫苗</el-radio-button>
+                    <el-radio-button label="1">非免疫规划疫苗</el-radio-button>
+                  </el-radio-group>
+                </oms-form-row>
+              </el-col>
+            </el-row>
+            <el-row>
+              <el-col :span="8">
+                <oms-form-row label="" :span="6">
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 </oms-form-row>
@@ -232,7 +242,15 @@
             </el-row>
             <el-row>
               <el-col :span="8">
-                <oms-form-row label="" :span="5">
+                <oms-form-row label="疫苗种类" :span="8" style="height: 36px">
+                  <el-radio-group v-model="searchCondition.goodsType" size="small">
+                    <el-radio-button label="0">免疫规划疫苗</el-radio-button>
+                    <el-radio-button label="1">非免疫规划疫苗</el-radio-button>
+                  </el-radio-group>
+                </oms-form-row>
+              </el-col>
+              <el-col :span="8">
+                <oms-form-row label="" :span="6">
                   <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 </oms-form-row>
@@ -387,7 +405,8 @@
           orgGoodsId: '',
           deleteFlag: false,
           pushStatus: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          goodsType: ''
         },
         searchCondition: {
           searchType: 1,
@@ -403,7 +422,8 @@
           orgGoodsId: '',
           thirdPartyNumber: '',
           pushStatus: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          goodsType: ''
         },
         demandTime: '',
         applyTime: '',
@@ -496,7 +516,8 @@
           orgGoodsId: '',
           thirdPartyNumber: '',
           pushStatus: '',
-          orgAreaCode: ''
+          orgAreaCode: '',
+          goodsType: ''
         };
         this.demandTime = '';
         this.applyTime = '';
