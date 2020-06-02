@@ -236,7 +236,7 @@
           let val = this.materials[i];
           if (!val.orgGoodsId) {
             this.materials.splice(i, 1);
-            i--
+            i--;
           }
         }
         for (let i = 0; i < this.materials.length; i++) {
