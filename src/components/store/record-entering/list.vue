@@ -233,8 +233,8 @@
         }
         for (let i = 0; i < this.materials.length; i++) {
           let val = this.materials[i];
-          if (!val.orgGoodsId || !val.batchNumberId || !val.availableCount || !val.unqualifiedBizCount ||
-            !val.qualifiedBizServings || !val.qualifiedCount || !val.unqualifiedCount || !val.qualifiedActualServings) {
+          if (!val.orgGoodsId || !val.batchNumberId || val.availableCount === '' || val.unqualifiedBizCount === '' ||
+            val.qualifiedBizServings === '' || val.qualifiedCount === '' || val.unqualifiedCount === '' || val.qualifiedActualServings === '') {
             return this.$notify.info('请输入完整数据');
           }
         }
@@ -428,8 +428,8 @@
       add() {
         for (let i = 0; i < this.materials.length; i++) {
           let val = this.materials[i];
-          if (!val.orgGoodsId || !val.batchNumberId || !val.availableCount || !val.unqualifiedBizCount ||
-            !val.qualifiedBizServings || !val.qualifiedCount || !val.unqualifiedCount || !val.qualifiedActualServings) {
+          if (!val.orgGoodsId || !val.batchNumberId || val.availableCount === '' || val.unqualifiedBizCount === '' ||
+            val.qualifiedBizServings === '' || val.qualifiedCount === '' || val.unqualifiedCount === '' || val.qualifiedActualServings === '') {
             return this.$notify.info('请输入完整数据');
           }
         }
@@ -440,8 +440,8 @@
         }
         for (let i = 0; i < this.materials.length; i++) {
           let val = this.materials[i];
-          if (!val.orgGoodsId || !val.batchNumberId || !val.availableCount || !val.unqualifiedBizCount ||
-            !val.qualifiedBizServings || !val.qualifiedCount || !val.unqualifiedCount || !val.qualifiedActualServings) {
+          if (!val.orgGoodsId || !val.batchNumberId || val.availableCount === '' || val.unqualifiedBizCount === '' ||
+            val.qualifiedBizServings === '' || val.qualifiedCount === '' || val.unqualifiedCount === '' || val.qualifiedActualServings === '') {
             return this.$notify.info('请输入完整数据');
           }
         }
