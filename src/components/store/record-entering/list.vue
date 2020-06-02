@@ -227,7 +227,7 @@
         this.showFlag = false;
         this.$refs.previewDialog.dialogVisible = false;
       },
-      showPreviewDialog: function () {
+      showPreviewDialog() {
         if (!this.warehouseId) {
           return this.$notify.info('请选择仓库');
         }
@@ -235,7 +235,13 @@
         for (let i = this.materials.length - 1; i > 0; i--) {
           let val = this.materials[i];
           if (!val.orgGoodsId) {
-            this.materials.splice(this.materials.indexOf(val), 1);
+            this.materials.splice(i, 1);
+          }
+        }
+        for (let i = 0; i < this.materials.length; i++) {
+          let val = this.materials[i];
+          if (!val.orgGoodsId) {
+            this.materials.splice(i, 1);
           }
         }
         for (let i = 0; i < this.materials.length; i++) {
