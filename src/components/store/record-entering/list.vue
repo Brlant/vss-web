@@ -231,11 +231,29 @@
         if (!this.warehouseId) {
           return this.$notify.info('请选择仓库');
         }
+        // 删除未选货品的数据行
+        for (let i = 0; i < this.materials.length; i++) {
+          let val = this.materials[i];
+          if (!val.orgGoodsId) {
+            this.materials.splice(i, 1);
+            i--;
+          }
+        }
         for (let i = 0; i < this.materials.length; i++) {
           let val = this.materials[i];
           if (!val.orgGoodsId || !val.batchNumberId || val.availableCount === '' || val.unqualifiedBizCount === '' ||
             val.qualifiedBizServings === '' || val.qualifiedCount === '' || val.unqualifiedCount === '' || val.qualifiedActualServings === '') {
             return this.$notify.info('请输入完整数据');
+          }
+        }
+        // 校验是否有同货品同批号的数据，如果存在则提示
+        for (var i = 0; i < this.materials.length; i++) {
+          let temp = this.materials[i];
+          for (var j = 0; j < this.materials.length; j++) {
+            let next = this.materials[j];
+            if (temp.orgGoodsId === next.orgGoodsId && temp.batchNumberId === next.batchNumberId && i !== j) {
+              return this.$notify.info('存在同货品同批号的数据');
+            }
           }
         }
         this.$refs.previewDialog.dialogVisible = !this.$refs.previewDialog.dialogVisible;
