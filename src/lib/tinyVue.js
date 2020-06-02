@@ -99,6 +99,7 @@ import ElForm from '../components/common/form/src/form.vue';
 import goodsInfoPart from '@/components/common/order/goods-info-part';
 import cancelOrder from '@/components/common/order/cancel-order';
 import orderGoodsInfo from '@/components/common/order/order-goods-info';
+import saleGoodsInfo from '@/components/common/order/sale-goods-info';
 import relevanceCodeReview from '@/components/common/order/relevance.code-review.vue';
 import goodsStatusTag from '@/components/common/order/goods-status-tag';
 import CardBox from '@/components/common/card-box';
@@ -174,6 +175,7 @@ const tinyVue = [
   goodsInfoPart,
   cancelOrder,
   orderGoodsInfo,
+  saleGoodsInfo,
   CardBox,
   // 公用组件
   CuPagination,

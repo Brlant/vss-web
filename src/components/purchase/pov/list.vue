@@ -44,6 +44,7 @@
                 class="el-icon-t-plus"></i></a><span class="wave-title">新增分货</span></span>
             </perm>
          </span>
+          <goods-switch class="pull-right"></goods-switch>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -53,7 +54,7 @@
         <el-form class="advanced-query-form" :model="searchWord" onsubmit="return false">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="收货单位" :span="4">
+              <oms-form-row :span="5" label="收货单位">
                 <el-select placeholder="请输入名称搜索收货单位" v-model="searchWord.povId" filterable remote
                            :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
                            popperClass="good-selects">
@@ -94,7 +95,7 @@
                 <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="6">
               <oms-form-row label="疫苗种类" :span="7">
                 <el-select type="text" v-model="searchWord.goodsType" placeholder="请选择疫苗种类">
                   <el-option :value="item.key" :key="item.key" :label="item.label"
@@ -102,7 +103,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
+            <el-col :span="10">
               <oms-form-row label="" :span="1">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
@@ -214,6 +215,7 @@
                 </div>
               </el-col>
             </el-row>
+            <sale-goods-info :order-item="item"></sale-goods-info>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
@@ -303,6 +305,9 @@
       },
       vaccineSignList() {
         return this.$getDict('orderGoodsType');
+      },
+      isShowGoodsList() {
+        return this.$store.state.isShowGoodsList;
       }
     },
     mounted() {
@@ -325,6 +330,9 @@
         if (val.userCompanyAddress) {
           this.getDemandList(1);
         }
+      },
+      isShowGoodsList() {
+        this.getDemandList(1);
       }
     },
     methods: {
@@ -358,6 +366,7 @@
           pageSize: this.pager.pageSize,
           cdcId: orgId
         }, searchCondition);
+        params.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
         this.loadingData = true;
         pullSignal.queryCDC(params).then(res => {
           res.data.list.forEach(item => {
