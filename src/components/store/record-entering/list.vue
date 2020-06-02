@@ -157,7 +157,9 @@
           width="90">
           <template slot-scope="scope">
             <el-button type="text" size="small" style="padding: 0" @click="addTable">增加</el-button>
-            <el-button type="text" size="small" style="padding: 0" @click="eddTable(scope)">删除</el-button>
+            <el-button @click="eddTable(scope)" size="small" style="padding: 0" type="text" v-show="materials.length>1">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -330,7 +332,10 @@
         }
       },
       eddTable(scope) {
-        this.materials.splice(scope.$index, 1);
+        // 如果数据行都没填写数据，至少保留一行
+        if (this.materials.length > 1) {
+          this.materials.splice(scope.$index, 1);
+        }
       },
       orgGoodsChange(item) {
         item.batchNumberId = '';
@@ -398,12 +403,13 @@
       },
       filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
-        let params = Object.assign({}, {
+        Vaccine.query({
           keyWord: query,
           orgId: orgId,
-          status: true
-        });
-        Vaccine.query(params).then(res => {
+          status: true,
+          deleteFlag: false,
+          auditedStatus: '1'
+        }).then(res => {
           this.orgGoods = res.data.list;
         });
       },
@@ -436,11 +442,10 @@
         }
       },
       queryOrgWarehouse() {
-        let param = Object.assign({}, {
-          deleteFlag: false,
-          auditedStatus: '1'
-        });
-        Address.queryAddress(param).then(res => {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        Address.queryAddress(orgId, {
+          orgId: orgId
+        }).then(res => {
           this.warehouses = res.data;
           if (res.data) {
             this.warehouseId = res.data[0].id;
