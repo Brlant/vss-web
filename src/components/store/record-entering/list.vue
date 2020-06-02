@@ -239,6 +239,10 @@
             i--;
           }
         }
+        if (!this.materials.length) {
+          this.initTable();
+          return this.$notify.info('请先填写数据');
+        }
         for (let i = 0; i < this.materials.length; i++) {
           let val = this.materials[i];
           if (!val.orgGoodsId || !val.batchNumberId || val.availableCount === '' || val.unqualifiedBizCount === '' ||
