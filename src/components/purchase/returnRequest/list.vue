@@ -448,6 +448,9 @@
       },
       pageType() {
         return this.$route.meta.type;
+      },
+      isShowGoodsList() {
+        return this.$store.state.isShowGoodsList;
       }
     },
     watch: {
@@ -459,6 +462,9 @@
       },
       pageType() {
         this.orgType = utils[this.$route.meta.type === 'pov' ? 'outReturnRequestType' : 'outCdcReturnRequestType'];
+        this.getOrderList(1);
+      },
+      isShowGoodsList() {
         this.getOrderList(1);
       }
     },
