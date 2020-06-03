@@ -30,7 +30,11 @@
         <el-form class="advanced-query-form clearfix" onsubmit="return false">
           <el-col :span="12">
             <oms-form-row :span="8" label="请选择库存所在位置">
-              <el-select clearable filterable placeholder="请选择仓库" v-model="warehouseId">
+              <el-select :clearable="true"
+                         :remote-method="queryOrgWarehouse" @click.native="queryOrgWarehouse('')"
+                         filterable placeholder="请选择仓库"
+                         remote
+                         v-model="warehouseId">
                 <el-option :key="item.id" :label="item.name" :value="item.id"
                            v-for="item in warehouses">
                 </el-option>
@@ -47,7 +51,7 @@
         <el-table-column
           prop="goodsName"
           align="center"
-          label="货主疫苗名称" min-width="35%">
+          label="货主疫苗名称" min-width="25%">
           <template slot-scope="scope">
             <el-select :clearable="true" :remote-method="filterOrgGoods"
                        @change="orgGoodsChange(scope.row)"
@@ -88,8 +92,22 @@
           </template>
         </el-table-column>
         <el-table-column
+          align="center"
+          label="规格" min-width="8%" prop="specifications">
+          <template slot-scope="scope">
+            {{scope.row.specifications}}
+          </template>
+        </el-table-column>
+        <el-table-column
+          align="center"
+          label="生产厂家" min-width="8%" prop="factoryName">
+          <template slot-scope="scope">
+            {{scope.row.factoryName}}
+          </template>
+        </el-table-column>
+        <el-table-column
           prop="batchNumber"
-          align="center" label="批号" min-width="10%">
+          align="center" label="批号" min-width="8%">
           <template slot-scope="scope">
             <el-select :remoteMethod="(query)=>filterBatchNumber(query,scope.row)"
                        @change="setBatchNumber(scope.row)" clearable filterable
@@ -102,28 +120,36 @@
             </el-select>
           </template>
         </el-table-column>
+        <el-table-column
+          align="center"
+          label="单位" min-width="3%" prop="measurementUnit">
+          <template slot-scope="scope">
+            {{scope.row.measurementUnit}}
+          </template>
+        </el-table-column>
         <el-table-column align="center" label="业务库存">
           <el-table-column
             align="center"
-            label="合格" prop="availableCount" width="80px">
+            label="合格" prop="availableCount" width="60px">
             <template slot-scope="scope">
               <el-input @change="setQualifiedBizServings(scope.row)" @input="checkNumber(scope.row,'availableCount')"
-
-                        :disabled="!scope.row.orgGoodsId" type="number" v-model="scope.row.availableCount"/>
+                        :disabled="!scope.row.orgGoodsId" type="number" v-model="scope.row.availableCount">
+              </el-input>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="不合格" prop="unqualifiedBizCount" width="80px">
+            label="不合格" prop="unqualifiedBizCount" width="60px">
             <template slot-scope="scope">
               <el-input @change="setUnqualifiedCount(scope.row)" @input="checkNumber(scope.row,'unqualifiedBizCount')"
                         type="number"
-                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.unqualifiedBizCount"/>
+                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.unqualifiedBizCount">
+              </el-input>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="人份剂次" prop="qualifiedBizServings" width="80px">
+            label="人份剂次" prop="qualifiedBizServings" width="60px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedBizServings')"
                         type="number"
@@ -131,28 +157,30 @@
             </template>
           </el-table-column>
         </el-table-column>
-        <el-table-column align="center" label="实物库存" width="80px">
+        <el-table-column align="center" label="实物库存" width="60px">
           <el-table-column
             align="center"
-            label="合格" prop="qualifiedCount" width="80px">
+            label="合格" prop="qualifiedCount" width="60px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedCount')"
                         type="number"
-                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.qualifiedCount"/>
+                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.qualifiedCount">
+              </el-input>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="不合格" prop="unqualifiedCount" width="80px">
+            label="不合格" prop="unqualifiedCount" width="60px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'unqualifiedCount')"
                         type="number"
-                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.unqualifiedCount"/>
+                        :disabled="!scope.row.orgGoodsId" v-model="scope.row.unqualifiedCount">
+              </el-input>
             </template>
           </el-table-column>
           <el-table-column
             align="center"
-            label="人份剂次" prop="qualifiedActualServings" width="80px">
+            label="人份剂次" prop="qualifiedActualServings" width="60px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedActualServings')"
                         type="number"
@@ -164,11 +192,11 @@
           fixed="right"
           align="center"
           label="操作"
-          width="90">
+          width="40">
           <template slot-scope="scope">
             <el-button type="text" size="small" style="padding: 0" @click="addTable">增加</el-button>
-            <el-button @click="eddTable(scope)" size="small" style="padding: 0" type="text" v-show="materials.length>1">
-              删除
+            <el-button @click="eddTable(scope)" size="small" style="padding: 0;margin: 0" type="text"
+                       v-show="materials.length>1">删除
             </el-button>
           </template>
         </el-table-column>
@@ -232,7 +260,7 @@
     },
     mounted() {
       this.initTable();
-      this.queryOrgWarehouse();
+      this.initOrgWarehouse();
     },
     methods: {
       reset() {
@@ -260,6 +288,11 @@
           if (!val.orgGoodsId || !val.batchNumberId || val.availableCount === '' || val.unqualifiedBizCount === '' ||
             val.qualifiedBizServings === '' || val.qualifiedCount === '' || val.unqualifiedCount === '' || val.qualifiedActualServings === '') {
             return this.$notify.info('请输入完整数据');
+          }
+          if ( val.availableCount >9999999999 || val.unqualifiedBizCount >9999999999 ||
+            val.qualifiedBizServings >9999999999 || val.qualifiedCount >9999999999 ||
+            val.unqualifiedCount >9999999999 || val.qualifiedActualServings >9999999999) {
+            return this.$notify.warning('输入的数据超过最大10位数的限制');
           }
         }
         // 校验是否有同货品同批号的数据，如果存在则提示
@@ -307,6 +340,10 @@
         if (item[itemName] && item[itemName] < 0) {
           item[itemName] = 0;
         }
+        // 校验数据最大10位数
+        if (item[itemName] > 9999999999) {
+          return this.$notify.warning('输入的数据超过最大10位数的限制!');
+        }
       },
       //动态表格的方法
       addTable() {
@@ -321,7 +358,10 @@
           qualifiedCount: null,
           unqualifiedCount: null,
           qualifiedActualServings: null,
-          orgGoodsDto: {}
+          orgGoodsDto: {},
+          measurementUnit: '',
+          specifications: '',
+          factoryName: ''
         });
       },
       initTable() {
@@ -337,7 +377,10 @@
             qualifiedCount: null,
             unqualifiedCount: null,
             qualifiedActualServings: null,
-            orgGoodsDto: {}
+            orgGoodsDto: {},
+            measurementUnit: '',
+            specifications: '',
+            factoryName: ''
           });
         }
       },
@@ -357,6 +400,9 @@
         item.qualifiedCount = '';
         item.unqualifiedCount = 0;
         item.qualifiedActualServings = '';
+        item.measurementUnit = '';
+        item.specifications = '';
+        item.factoryName = '';
         this.batchNumberList = [];
         this.filterBatchNumber(null, item);
         // 设置多余属性值
@@ -364,6 +410,9 @@
           this.orgGoods.forEach(i => {
             if (i.orgGoodsDto.id === item.orgGoodsId) {
               item.orgGoodsDto = JSON.parse(JSON.stringify(i.orgGoodsDto));
+              item.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
+              item.specifications = item.orgGoodsDto.goodsDto.specifications;
+              item.factoryName = item.orgGoodsDto.goodsDto.factoryName;
             }
           });
         }
@@ -449,15 +498,31 @@
           });
         }
       },
-      queryOrgWarehouse() {
+      initOrgWarehouse(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
         Address.queryAddress(orgId, {
-          orgId: orgId
+          orgId: orgId,
+          deleteFlag: false,
+          auditedStatus: '1',
+          status: '0',
+          keyword: query
         }).then(res => {
           this.warehouses = res.data;
           if (res.data) {
             this.warehouseId = res.data[0].id;
           }
+        });
+      },
+      queryOrgWarehouse(query) {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        Address.queryAddress(orgId, {
+          orgId: orgId,
+          deleteFlag: false,
+          auditedStatus: '1',
+          status: '0',
+          keyword: query
+        }).then(res => {
+          this.warehouses = res.data;
         });
       },
       add() {
