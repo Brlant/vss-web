@@ -66,12 +66,22 @@
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
-                  <span class="select-other-info pull-left"><span
-                    v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
-                        </span>
+                  <br/>
                   <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
-                    </span>
+                                <span v-show="item.orgGoodsDto.goodsDto.name">货品主档:</span>{{ item.orgGoodsDto.goodsDto.name }}
+                          </span>
+                  <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                                <span v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{ item.orgGoodsDto.goodsDto.specifications }}
+                          </span>
+                  <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                                <span v-show="item.orgGoodsDto.goodsDto.dosageForm">剂型:</span><dict
+                    :dict-group="'dosageForm'"
+                    :dict-key="item.orgGoodsDto.goodsDto.dosageForm"></dict>
+                  </span>
+                  <br/>
+                  <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                                <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                  </span>
                 </div>
               </el-option>
             </el-select>
