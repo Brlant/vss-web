@@ -66,12 +66,22 @@
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
-                  <span class="select-other-info pull-left"><span
-                    v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
-                        </span>
+                  <br/>
                   <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
-                    </span>
+                                <span v-show="item.orgGoodsDto.goodsDto.name">货品主档:</span>{{ item.orgGoodsDto.goodsDto.name }}
+                          </span>
+                  <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                                <span v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{ item.orgGoodsDto.goodsDto.specifications }}
+                          </span>
+                  <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                                <span v-show="item.orgGoodsDto.goodsDto.dosageForm">剂型:</span><dict
+                    :dict-group="'dosageForm'"
+                    :dict-key="item.orgGoodsDto.goodsDto.dosageForm"></dict>
+                  </span>
+                  <br/>
+                  <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                                <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                  </span>
                 </div>
               </el-option>
             </el-select>
@@ -157,7 +167,9 @@
           width="90">
           <template slot-scope="scope">
             <el-button type="text" size="small" style="padding: 0" @click="addTable">增加</el-button>
-            <el-button type="text" size="small" style="padding: 0" @click="eddTable(scope)">删除</el-button>
+            <el-button @click="eddTable(scope)" size="small" style="padding: 0" type="text" v-show="materials.length>1">
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -238,6 +250,10 @@
             this.materials.splice(i, 1);
             i--;
           }
+        }
+        if (!this.materials.length) {
+          this.initTable();
+          return this.$notify.info('请先填写数据');
         }
         for (let i = 0; i < this.materials.length; i++) {
           let val = this.materials[i];
@@ -326,7 +342,10 @@
         }
       },
       eddTable(scope) {
-        this.materials.splice(scope.$index, 1);
+        // 如果数据行都没填写数据，至少保留一行
+        if (this.materials.length > 1) {
+          this.materials.splice(scope.$index, 1);
+        }
       },
       orgGoodsChange(item) {
         item.batchNumberId = '';
@@ -393,13 +412,12 @@
         this.getMaPage(1);
       },
       filterOrgGoods(query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
-        let params = Object.assign({}, {
+        Vaccine.query({
           keyWord: query,
-          orgId: orgId,
-          status: true
-        });
-        Vaccine.query(params).then(res => {
+          status: true,
+          deleteFlag: false,
+          auditedStatus: '1'
+        }).then(res => {
           this.orgGoods = res.data.list;
         });
       },
@@ -432,11 +450,10 @@
         }
       },
       queryOrgWarehouse() {
-        let param = Object.assign({}, {
-          deleteFlag: false,
-          auditedStatus: '1'
-        });
-        Address.queryAddress(param).then(res => {
+        let orgId = this.$store.state.user.userCompanyAddress;
+        Address.queryAddress(orgId, {
+          orgId: orgId
+        }).then(res => {
           this.warehouses = res.data;
           if (res.data) {
             this.warehouseId = res.data[0].id;

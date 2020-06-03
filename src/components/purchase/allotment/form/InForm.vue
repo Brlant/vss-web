@@ -79,7 +79,7 @@
   }
 
   .ar {
-    text-align: right;
+    text-align: left;
   }
 
   .goods-btn {
@@ -261,9 +261,9 @@
               <thead>
               <tr>
                 <th style="width: 300px">疫苗名称</th>
-                <th>疫苗单价</th>
-                <th>疫苗数量</th>
-                <th>金额</th>
+                <th class="ar">疫苗单价</th>
+                <th class="ar">疫苗数量</th>
+                <th class="ar">金额</th>
                 <th>操作</th>
               </tr>
               </thead>
@@ -283,10 +283,13 @@
                   :dict-group="'measurementUnit'"
                   :dict-key="product.measurementUnit"></dict>）</span>
                 </td>
-                <td class="ar">
+                <td class="ar" v-show="Number(product.unitPrice)">
                   <span v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney
                     }}</span>
-                  <span v-if="!Number(product.unitPrice)">-</span>
+                  <span style="align-content: center" v-if="!Number(product.unitPrice)">-</span>
+                </td>
+                <td class="ar" v-show="!Number(product.unitPrice)">
+                  <span style="align-content: center" v-if="!Number(product.unitPrice)">-</span>
                 </td>
                 <td class="goods-btn">
                   <div v-show="defaultIndex === 2">
