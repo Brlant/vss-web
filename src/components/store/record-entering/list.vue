@@ -412,10 +412,8 @@
         this.getMaPage(1);
       },
       filterOrgGoods(query) {
-        let orgId = this.$store.state.user.userCompanyAddress;
         Vaccine.query({
           keyWord: query,
-          orgId: orgId,
           status: true,
           deleteFlag: false,
           auditedStatus: '1'
