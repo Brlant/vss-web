@@ -116,6 +116,7 @@
                        @click.native="(query)=>filterBatchNumber('',scope.row)"
                        @change="setBatchNumber(scope.row)" clearable filterable
                        placeholder="请输入批号名称搜索批号"
+                       @visible-change="(query)=>checkBatchNumber(query,scope.row)"
                        :disabled="!scope.row.orgGoodsId" remote style="width: 100%" v-model="scope.row.batchNumberId">
               <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
                          v-for="item in batchNumberList">
@@ -336,7 +337,7 @@
         }
       },
       setQualifiedActualServings(item) {
-        if (!item.qualifiedBizServings && item.qualifiedActualServings) {
+        if (!item.qualifiedActualServings && item.qualifiedBizServings) {
           item.qualifiedActualServings = item.qualifiedBizServings;
         }
       },
@@ -483,12 +484,13 @@
           this.orgGoods = res.data.list;
         });
       },
-      filterBatchNumber(query, item) {
-        if (!item.orgGoodsId) return;
-        // 如果当前的批号列表和货主货品id不符合，清空批号列表
-        if (this.batchNumberList && this.batchNumberList.some(v => v.orgGoodsId !== item.orgGoodsId)) {
+      checkBatchNumber(query, item) { // 如果当前的批号列表和货主货品id不符合，清空批号列表
+        if (this.batchNumberList && this.batchNumberList.some(v => v.goodsId !== item.goodsId)) {
           this.batchNumberList = [];
         }
+      },
+      filterBatchNumber(query, item) {
+        if (!item.orgGoodsId) return;
         let goodsId = '';
         this.orgGoods.forEach(i => {
           if (i.orgGoodsDto.id === item.orgGoodsId) {
