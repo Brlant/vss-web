@@ -74,6 +74,7 @@
                   <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                                 <span v-show="item.orgGoodsDto.goodsDto.name">货品主档:</span>{{ item.orgGoodsDto.goodsDto.name }}
                           </span>
+                  <br/>
                   <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                                 <span v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{ item.orgGoodsDto.goodsDto.specifications }}
                           </span>
@@ -135,7 +136,7 @@
         <el-table-column align="center" label="业务库存">
           <el-table-column
             align="center"
-            label="合格" prop="availableCount" width="60px">
+            label="合格" prop="availableCount" width="65px">
             <template slot-scope="scope">
               <el-input :disabled="!scope.row.orgGoodsId"
                         :maxlength="10"
@@ -146,7 +147,7 @@
           </el-table-column>
           <el-table-column
             align="center"
-            label="不合格" prop="unqualifiedBizCount" width="60px">
+            label="不合格" prop="unqualifiedBizCount" width="65px">
             <template slot-scope="scope">
               <el-input @change="setUnqualifiedCount(scope.row)" @input="checkNumber(scope.row,'unqualifiedBizCount')"
                         :maxlength="10"
@@ -156,7 +157,7 @@
           </el-table-column>
           <el-table-column
             align="center"
-            label="人份剂次" prop="qualifiedBizServings" width="60px">
+            label="人份剂次" prop="qualifiedBizServings" width="65px">
             <template slot-scope="scope">
               <el-input :maxlength="10"
                         @change="setQualifiedActualServings(scope.row)"
@@ -168,7 +169,7 @@
         <el-table-column align="center" label="实物库存" width="60px">
           <el-table-column
             align="center"
-            label="合格" prop="qualifiedCount" width="80px">
+            label="合格" prop="qualifiedCount" width="65px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedCount')"
                         :maxlength="10"
@@ -178,7 +179,7 @@
           </el-table-column>
           <el-table-column
             align="center"
-            label="不合格" prop="unqualifiedCount" width="60px">
+            label="不合格" prop="unqualifiedCount" width="65px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'unqualifiedCount')"
                         :maxlength="10"
@@ -188,7 +189,7 @@
           </el-table-column>
           <el-table-column
             align="center"
-            label="人份剂次" prop="qualifiedActualServings" width="60px">
+            label="人份剂次" prop="qualifiedActualServings" width="65px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedActualServings')"
                         :maxlength="10"
