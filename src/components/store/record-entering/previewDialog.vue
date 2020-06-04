@@ -12,7 +12,7 @@
         </el-tooltip>
       </template>
     </el-table-column>
-    <el-table-column align="center" fixed="left" label="货主货品编号" min-width="80" prop="orgGoodsCode">
+    <el-table-column align="center" fixed="left" label="疫苗编码" min-width="80" prop="orgGoodsCode">
       <template slot-scope="scope"><span>{{scope.row.orgGoodsDto.goodsNo}}</span></template>
     </el-table-column>
     <el-table-column align="center" label="疫苗种类" min-width="70" prop="factoryName">
@@ -24,7 +24,7 @@
     </el-table-column>
     <el-table-column align="center" fixed="left" label="规格" min-width="80" prop="orgGoodsDto.goodsDto.specifications">
     </el-table-column>
-    <el-table-column align="center" label="生产单位" min-width="120"
+    <el-table-column align="center" label="生产厂商" min-width="120"
                      prop="orgGoodsDto.goodsDto.factoryName"></el-table-column>
     <el-table-column align="center" label="批号/有效期至" prop="batchNumber" width="110">
       <template slot-scope="scope">

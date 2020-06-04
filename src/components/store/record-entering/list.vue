@@ -78,6 +78,9 @@
                                 <span v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{ item.orgGoodsDto.goodsDto.specifications }}
                           </span>
                   <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                                <span v-show="item.orgGoodsDto.goodsDto.measurementUnit">单位:</span>{{ item.orgGoodsDto.goodsDto.measurementUnit }}
+                          </span>
+                  <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
                                 <span v-show="item.orgGoodsDto.goodsDto.dosageForm">剂型:</span><dict
                     :dict-group="'dosageForm'"
                     :dict-key="item.orgGoodsDto.goodsDto.dosageForm"></dict>
@@ -107,9 +110,10 @@
         </el-table-column>
         <el-table-column
           prop="batchNumber"
-          align="center" label="批号" min-width="8%">
+          align="center" label="批号" min-width="9%">
           <template slot-scope="scope">
             <el-select :remoteMethod="(query)=>filterBatchNumber(query,scope.row)"
+                       @click.native="(query)=>filterBatchNumber('',scope.row)"
                        @change="setBatchNumber(scope.row)" clearable filterable
                        placeholder="请输入批号名称搜索批号"
                        :disabled="!scope.row.orgGoodsId" remote style="width: 100%" v-model="scope.row.batchNumberId">
@@ -132,8 +136,10 @@
             align="center"
             label="合格" prop="availableCount" width="60px">
             <template slot-scope="scope">
-              <el-input @change="setQualifiedBizServings(scope.row)" @input="checkNumber(scope.row,'availableCount')"
-                        :disabled="!scope.row.orgGoodsId" type="number" v-model="scope.row.availableCount">
+              <el-input :disabled="!scope.row.orgGoodsId"
+                        :maxlength="10"
+                        @change="setQualifiedBizServings(scope.row)"
+                        @input="checkNumber(scope.row,'availableCount')" v-model="scope.row.availableCount">
               </el-input>
             </template>
           </el-table-column>
@@ -142,7 +148,7 @@
             label="不合格" prop="unqualifiedBizCount" width="60px">
             <template slot-scope="scope">
               <el-input @change="setUnqualifiedCount(scope.row)" @input="checkNumber(scope.row,'unqualifiedBizCount')"
-                        type="number"
+                        :maxlength="10"
                         :disabled="!scope.row.orgGoodsId" v-model="scope.row.unqualifiedBizCount">
               </el-input>
             </template>
@@ -151,8 +157,9 @@
             align="center"
             label="人份剂次" prop="qualifiedBizServings" width="60px">
             <template slot-scope="scope">
-              <el-input @input="checkNumber(scope.row,'qualifiedBizServings')"
-                        type="number"
+              <el-input :maxlength="10"
+                        @change="setQualifiedActualServings(scope.row)"
+                        @input="checkNumber(scope.row,'qualifiedBizServings')"
                         :disabled="!scope.row.orgGoodsId" v-model="scope.row.qualifiedBizServings"/>
             </template>
           </el-table-column>
@@ -160,10 +167,10 @@
         <el-table-column align="center" label="实物库存" width="60px">
           <el-table-column
             align="center"
-            label="合格" prop="qualifiedCount" width="60px">
+            label="合格" prop="qualifiedCount" width="80px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedCount')"
-                        type="number"
+                        :maxlength="10"
                         :disabled="!scope.row.orgGoodsId" v-model="scope.row.qualifiedCount">
               </el-input>
             </template>
@@ -173,7 +180,7 @@
             label="不合格" prop="unqualifiedCount" width="60px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'unqualifiedCount')"
-                        type="number"
+                        :maxlength="10"
                         :disabled="!scope.row.orgGoodsId" v-model="scope.row.unqualifiedCount">
               </el-input>
             </template>
@@ -183,7 +190,7 @@
             label="人份剂次" prop="qualifiedActualServings" width="60px">
             <template slot-scope="scope">
               <el-input @input="checkNumber(scope.row,'qualifiedActualServings')"
-                        type="number"
+                        :maxlength="10"
                         :disabled="!scope.row.orgGoodsId" v-model="scope.row.qualifiedActualServings"/>
             </template>
           </el-table-column>
@@ -289,10 +296,10 @@
             val.qualifiedBizServings === '' || val.qualifiedCount === '' || val.unqualifiedCount === '' || val.qualifiedActualServings === '') {
             return this.$notify.info('请输入完整数据');
           }
-          if ( val.availableCount >9999999999 || val.unqualifiedBizCount >9999999999 ||
-            val.qualifiedBizServings >9999999999 || val.qualifiedCount >9999999999 ||
-            val.unqualifiedCount >9999999999 || val.qualifiedActualServings >9999999999) {
-            return this.$notify.warning('输入的数据超过最大10位数的限制');
+          if (val.availableCount > 2147483647 || val.unqualifiedBizCount > 2147483647 ||
+            val.qualifiedBizServings > 2147483647 || val.qualifiedCount > 2147483647 ||
+            val.unqualifiedCount > 2147483647 || val.qualifiedActualServings > 2147483647) {
+            return this.$notify.warning('输入的数据超过最大数值限制');
           }
         }
         // 校验是否有同货品同批号的数据，如果存在则提示
@@ -328,6 +335,11 @@
           item.unqualifiedCount = item.unqualifiedBizCount;
         }
       },
+      setQualifiedActualServings(item) {
+        if (!item.qualifiedBizServings && item.qualifiedActualServings) {
+          item.qualifiedActualServings = item.qualifiedBizServings;
+        }
+      },
       checkNumber(item, itemName) {
         if (!item.orgGoodsId) {
           item[itemName] = '';
@@ -337,12 +349,13 @@
           item[itemName] = '';
           return this.$notify.info('请先选择批号');
         }
-        if (item[itemName] && item[itemName] < 0) {
-          item[itemName] = 0;
-        }
         // 校验数据最大10位数
-        if (item[itemName] > 9999999999) {
-          return this.$notify.warning('输入的数据超过最大10位数的限制!');
+        if (item[itemName]) {
+          let flag = new RegExp('^[1-9]\\d*|0$').test(item[itemName]);
+          if (!flag) {
+            item[itemName] = '';
+            return this.$notify.warning('请输入正整数!');
+          }
         }
       },
       //动态表格的方法
@@ -472,6 +485,10 @@
       },
       filterBatchNumber(query, item) {
         if (!item.orgGoodsId) return;
+        // 如果当前的批号列表和货主货品id不符合，清空批号列表
+        if (this.batchNumberList && this.batchNumberList.some(v => v.orgGoodsId !== item.orgGoodsId)) {
+          this.batchNumberList = [];
+        }
         let goodsId = '';
         this.orgGoods.forEach(i => {
           if (i.orgGoodsDto.id === item.orgGoodsId) {
