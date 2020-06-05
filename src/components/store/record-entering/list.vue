@@ -117,7 +117,6 @@
                        @click.native="(query)=>filterBatchNumber('',scope.row)"
                        @change="setBatchNumber(scope.row)" clearable filterable
                        placeholder="请输入批号名称搜索批号"
-                       @visible-change="(query)=>checkBatchNumber(query,scope.row)"
                        :disabled="!scope.row.orgGoodsId" remote style="width: 100%" v-model="scope.row.batchNumberId">
               <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
                          v-for="item in scope.row.batchNumberList">
@@ -375,7 +374,8 @@
           orgGoodsDto: {},
           measurementUnit: '',
           specifications: '',
-          factoryName: ''
+          factoryName: '',
+          batchNumberList: []
         });
       },
       initTable() {
@@ -484,14 +484,6 @@
         }).then(res => {
           this.orgGoods = res.data.list;
         });
-      },
-      checkBatchNumber(query, item) { // 如果当前的批号列表和货主货品id不符合，清空批号列表
-        if (query) {
-          if (item.batchNumberList && item.batchNumberList.some(v => v.goodsId !== item.goodsId)) {
-            item.batchNumberList = [];
-          }
-        }
-
       },
       filterBatchNumber(query, item) {
         if (!item.orgGoodsId) return;
