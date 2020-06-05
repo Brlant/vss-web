@@ -394,7 +394,8 @@
             orgGoodsDto: {},
             measurementUnit: '',
             specifications: '',
-            factoryName: ''
+            factoryName: '',
+            batchNumberList: []
           });
         }
       },
@@ -485,9 +486,12 @@
         });
       },
       checkBatchNumber(query, item) { // 如果当前的批号列表和货主货品id不符合，清空批号列表
-        if (item.batchNumberList && item.batchNumberList.some(v => v.goodsId !== item.goodsId)) {
-          item.batchNumberList = [];
+        if (query) {
+          if (item.batchNumberList && item.batchNumberList.some(v => v.goodsId !== item.goodsId)) {
+            item.batchNumberList = [];
+          }
         }
+
       },
       filterBatchNumber(query, item) {
         if (!item.orgGoodsId) return;
