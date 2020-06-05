@@ -120,7 +120,7 @@
                        @visible-change="(query)=>checkBatchNumber(query,scope.row)"
                        :disabled="!scope.row.orgGoodsId" remote style="width: 100%" v-model="scope.row.batchNumberId">
               <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
-                         v-for="item in batchNumberList">
+                         v-for="item in scope.row.batchNumberList">
                 {{ item.batchNumber }}
               </el-option>
             </el-select>
@@ -253,7 +253,6 @@
           endTime: ''
         },
         expectedTime: '',
-        batchNumberList: [],
         warehouses: [],
         orgGoods: [],
         form: {},
@@ -418,7 +417,7 @@
         item.measurementUnit = '';
         item.specifications = '';
         item.factoryName = '';
-        this.batchNumberList = [];
+        item.batchNumberList = [];
         this.filterBatchNumber(null, item);
         // 设置多余属性值
         if (item.orgGoodsId) {
@@ -486,8 +485,8 @@
         });
       },
       checkBatchNumber(query, item) { // 如果当前的批号列表和货主货品id不符合，清空批号列表
-        if (this.batchNumberList && this.batchNumberList.some(v => v.goodsId !== item.goodsId)) {
-          this.batchNumberList = [];
+        if (item.batchNumberList && item.batchNumberList.some(v => v.goodsId !== item.goodsId)) {
+          item.batchNumberList = [];
         }
       },
       filterBatchNumber(query, item) {
@@ -505,12 +504,12 @@
             goodsId
           }
         }).then(res => {
-          this.batchNumberList = res.data.list;
+          this.$set(item, 'batchNumberList', res.data.list);
         });
       },
       setBatchNumber(item) {
         if (item.batchNumberId) {
-          this.batchNumberList.forEach(i => {
+          item.batchNumberList.forEach(i => {
             if (i.id === item.batchNumberId) {
               item.batchNumber = i.batchNumber;
               item.expiryDate = i.expirationDate;
