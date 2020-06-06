@@ -1,18 +1,25 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
+const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir);
 }
 
-const plugins = [new CopyWebpackPlugin([
-  {
-    from: path.resolve(__dirname, 'static'),
-    to: 'static',
-    ignore: ['.*']
-  }
-])];
+const plugins = [new SentryWebpackPlugin({
+  include: './dist/static/map',
+  ignoreFile: '.sentrycliignore',
+  ignore: ['node_modules'],
+  configFile: 'sentry.properties'
+}),
+  new CopyWebpackPlugin([
+    {
+      from: path.resolve(__dirname, 'static'),
+      to: 'static',
+      ignore: ['.*']
+    }
+  ])];
 if (process.env.NODE_ENV === 'production') {
   plugins.push(new CompressionWebpackPlugin({
     asset: '[path].gz[query]',
