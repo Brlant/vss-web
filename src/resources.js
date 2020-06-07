@@ -106,7 +106,7 @@ http.interceptors.response.use(response => {
   let notice = window.localStorage.getItem(noticeTipKey);
   let response = error.response;
 
-  if (notice === '1' && response.status !== 401) {
+  if (notice === '1' && response && response.status !== 401) {
     return Promise.reject(error);
   } else {
     window.localStorage.setItem(noticeTipKey, '1');
