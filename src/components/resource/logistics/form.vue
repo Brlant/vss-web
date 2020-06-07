@@ -207,7 +207,7 @@
               this.$emit('close');
             }).catch(error => {
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '添加免疫规划疫苗物流费用失败'
+                message: error.response && error.response.data && error.response.data.msg || '添加免疫规划疫苗物流费用失败'
               });
               this.doing = false;
             });
@@ -221,7 +221,7 @@
               this.$emit('close');
             }).catch(error => {
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '修改免疫规划疫苗物流费用失败'
+                message: error.response && error.response.data && error.response.data.msg || '修改免疫规划疫苗物流费用失败'
               });
               this.doing = false;
             });

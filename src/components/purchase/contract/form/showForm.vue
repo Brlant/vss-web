@@ -404,7 +404,7 @@
           }).catch(error => {
             this.$notify.error({
               duration: 2000,
-              message: error.response.data && error.response.data.msg || '同步采购合同《' + this.form.purchaseContractName + '》的信息失败'
+              message: error.response && error.response.data && error.response.data.msg || '同步采购合同《' + this.form.purchaseContractName + '》的信息失败'
             });
           });
         });
@@ -417,7 +417,7 @@
         }).catch(error => {
           this.isPrinting = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '导出失败'
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
           });
         });
       }

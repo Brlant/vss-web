@@ -427,7 +427,7 @@
             this.getDemandList(1);
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '生成销售订单失败'
+              message: error.response && error.response.data && error.response.data.msg || '生成销售订单失败'
             });
           });
         });
@@ -518,7 +518,7 @@
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/sale/pov/list'});
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '导出失败'
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },
@@ -543,7 +543,7 @@
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/sale/pov/list'});
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '导出失败'
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },
@@ -590,7 +590,7 @@
           this.$router.push({path: '/purchase/allocation/task', query: {id: res.data.id}});
         }).catch(error => {
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '生产采购汇总单失败'
+            message: error.response && error.response.data && error.response.data.msg || '生产采购汇总单失败'
           });
         });
       },
@@ -610,7 +610,7 @@
           this.$router.push({path: '/sale/allocation/pov', query: {id: res.data.id}});
         }).catch(error => {
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '生成销售汇总单失败'
+            message: error.response && error.response.data && error.response.data.msg || '生成销售汇总单失败'
           });
         });
       },
@@ -628,7 +628,7 @@
               this.getDemandList(1);
             }).catch(error => {
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '取消需求单失败'
+                message: error.response && error.response.data && error.response.data.msg || '取消需求单失败'
               });
             });
           } else {
@@ -639,7 +639,7 @@
               this.getDemandList(1);
             }).catch(error => {
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '取消需求单失败'
+                message: error.response && error.response.data && error.response.data.msg || '取消需求单失败'
               });
             });
           }

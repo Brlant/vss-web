@@ -127,7 +127,7 @@
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '导出失败'
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },
@@ -187,7 +187,7 @@
           this.setStatus(item);
         }).catch(error => {
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '盘点失败'
+            message: error.response && error.response.data && error.response.data.msg || '盘点失败'
           });
         });
       },

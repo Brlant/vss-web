@@ -386,7 +386,7 @@
           }).catch(error => {
             this.$notify.error({
               duration: 2000,
-              message: error.response.data && error.response.data.msg || '启用采购合同失败'
+              message: error.response && error.response.data && error.response.data.msg || '启用采购合同失败'
             });
           });
         });
@@ -407,7 +407,7 @@
           }).catch(error => {
             this.$notify.error({
               duration: 2000,
-              message: error.response.data && error.response.data.msg || '停用采购合同失败'
+              message: error.response && error.response.data && error.response.data.msg || '停用采购合同失败'
             });
           });
         });
@@ -435,7 +435,7 @@
           }).catch(error => {
             this.$notify.error({
               duration: 2000,
-              message: error.response.data && error.response.data.msg || '批量生成采购订单失败'
+              message: error.response && error.response.data && error.response.data.msg || '批量生成采购订单失败'
             });
           });
         });

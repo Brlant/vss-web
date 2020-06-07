@@ -142,7 +142,7 @@
           }).catch(error => {
             this.doing = false;
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '修改失败'
+              message: error.response && error.response.data && error.response.data.msg || '修改失败'
             });
           });
         });

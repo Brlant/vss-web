@@ -145,7 +145,7 @@
             this.transformState('7');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '审单通过失败'
+              message: error.response && error.response.data && error.response.data.msg || '审单通过失败'
             });
           });
         });

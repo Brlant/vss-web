@@ -133,7 +133,7 @@
         }).catch(error => {
           this.doing = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '复核不通过'
+            message: error.response && error.response.data && error.response.data.msg || '复核不通过'
           });
         });
       },
@@ -150,7 +150,7 @@
         }).catch(error => {
           this.doing = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '出库失败'
+            message: error.response && error.response.data && error.response.data.msg || '出库失败'
           });
         });
       },
@@ -164,7 +164,7 @@
         }).catch(error => {
           this.doing = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '复核错误追溯码失败'
+            message: error.response && error.response.data && error.response.data.msg || '复核错误追溯码失败'
           });
         });
       },

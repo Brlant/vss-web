@@ -270,7 +270,7 @@
             }).catch(error => {
               this.doing = false;
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '编辑发票失败'
+                message: error.response && error.response.data && error.response.data.msg || '编辑发票失败'
               });
             });
           } else {
@@ -284,7 +284,7 @@
             }).catch(error => {
               this.doing = false;
               this.$notify.error({
-                message: error.response.data && error.response.data.msg || '添加发票失败'
+                message: error.response && error.response.data && error.response.data.msg || '添加发票失败'
               });
             });
           }

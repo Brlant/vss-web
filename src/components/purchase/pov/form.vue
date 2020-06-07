@@ -293,7 +293,7 @@
           this.$emit('change', this.currentItem, count);
         }).catch(error => {
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '分配数量失败'
+            message: error.response && error.response.data && error.response.data.msg || '分配数量失败'
           });
         });
       }

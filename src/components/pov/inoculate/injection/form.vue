@@ -456,7 +456,7 @@
                 this.$emit('change');
               }).catch(error => {
                 this.$notify.error({
-                  message: error.response.data && error.response.data.msg || '修改失败'
+                  message: error.response && error.response.data && error.response.data.msg || '修改失败'
                 });
                 this.doing = false;
               });
@@ -484,7 +484,7 @@
           this.$emit('change');
         }).catch((error) => {
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '新增失败'
+            message: error.response && error.response.data && error.response.data.msg || '新增失败'
           });
           this.doing = false;
         });

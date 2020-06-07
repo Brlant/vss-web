@@ -306,7 +306,7 @@
         }).catch(error => {
           this.doing = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '提交分配方案失败'
+            message: error.response && error.response.data && error.response.data.msg || '提交分配方案失败'
           });
         });
       }

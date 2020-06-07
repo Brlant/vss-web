@@ -244,7 +244,7 @@
           });
         }).catch(error => {
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '分配采购数量失败'
+            message: error.response && error.response.data && error.response.data.msg || '分配采购数量失败'
           });
         });
       },
@@ -259,7 +259,7 @@
         }).catch(error => {
           this.doing = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '生成采购合同失败'
+            message: error.response && error.response.data && error.response.data.msg || '生成采购合同失败'
           });
         });
       }

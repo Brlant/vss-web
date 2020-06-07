@@ -453,7 +453,7 @@
             window.localStorage.removeItem('weChatInfo');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '解绑微信失败'
+              message: error.response && error.response.data && error.response.data.msg || '解绑微信失败'
             });
           });
         });

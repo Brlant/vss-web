@@ -239,7 +239,7 @@
             this.queryList(1);
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || `删除${item.birthCertificateNumber}失败`
+              message: error.response && error.response.data && error.response.data.msg || `删除${item.birthCertificateNumber}失败`
             });
           });
         });
@@ -332,7 +332,7 @@
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '导出失败'
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
           });
         });
       }

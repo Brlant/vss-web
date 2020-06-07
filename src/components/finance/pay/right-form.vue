@@ -151,7 +151,7 @@
             this.$emit('refreshDetails');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '增加实付金额失败'
+              message: error.response && error.response.data && error.response.data.msg || '增加实付金额失败'
             });
             this.doing = false;
           });

@@ -231,7 +231,7 @@
           }).catch(error => {
             this.doing = false;
             this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '收货失败'
+              message: error.response && error.response && error.response.data && error.response.data.msg || '收货失败'
             });
           });
         });
@@ -266,7 +266,7 @@
         }).catch(error => {
           this.doing = false;
           this.$notify.error({
-            message: error.response && error.response.data && error.response.data.msg || '添加收货信息失败'
+            message: error.response && error.response && error.response.data && error.response.data.msg || '添加收货信息失败'
           });
         });
       },

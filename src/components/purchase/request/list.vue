@@ -388,7 +388,7 @@
             this.getOrgsList(1);
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '取消申请单失败'
+              message: error.response && error.response.data && error.response.data.msg || '取消申请单失败'
             });
           });
         });
@@ -408,7 +408,7 @@
             this.getOrgsList(1);
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '申请单审核失败'
+              message: error.response && error.response.data && error.response.data.msg || '申请单审核失败'
             });
           });
         });

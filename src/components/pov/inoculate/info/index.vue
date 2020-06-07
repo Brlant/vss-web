@@ -211,7 +211,7 @@
             this.queryList(1);
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || `删除${item.birthCertificateNumber}失败`
+              message: error.response && error.response.data && error.response.data.msg || `删除${item.birthCertificateNumber}失败`
             });
           });
         });

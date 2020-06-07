@@ -219,7 +219,7 @@
         }).catch(error => {
           this.$store.commit('initPrint', {isPrinting: false, moduleId: this.$route.path});
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '下载失败'
+            message: error.response && error.response.data && error.response.data.msg || '下载失败'
           });
         });
       },

@@ -168,7 +168,7 @@
         }).catch(error => {
           this.printing = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '导出失败'
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },
@@ -180,7 +180,7 @@
         }).catch(error => {
           this.printingTransport = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '导出失败'
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },
@@ -192,7 +192,7 @@
         }).catch(error => {
           this.printingTag = false;
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '导出失败'
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
           });
         });
       },
@@ -223,7 +223,7 @@
           this.$emit('close');
         }).catch(error => {
           this.$notify.error({
-            message: error.response.data && error.response.data.msg || '确认订单失败'
+            message: error.response && error.response.data && error.response.data.msg || '确认订单失败'
           });
         });
       },
@@ -240,7 +240,7 @@
             this.transformState('2');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '审单通过失败'
+              message: error.response && error.response.data && error.response.data.msg || '审单通过失败'
             });
           });
         });
@@ -263,7 +263,7 @@
             this.$emit('close');
           }).catch(error => {
             this.$notify.error({
-              message: error.response.data && error.response.data.msg || '删除订单失败'
+              message: error.response && error.response.data && error.response.data.msg || '删除订单失败'
             });
           });
         });
