@@ -53,15 +53,15 @@
           align="center"
           label="货主疫苗名称" min-width="25%">
           <template slot-scope="scope">
-            <el-select :clearable="true" :remote-method="filterOrgGoods"
+            <el-select :clearable="true" :remote-method="(query)=>filterOrgGoods(query,scope.row)"
                        @change="orgGoodsChange(scope.row)"
-                       @click.native="filterOrgGoods('')" filterable
+                       @click.native="(query)=>filterOrgGoods('',scope.row)" filterable
                        placeholder="请输入名称或编号搜索货主疫苗" popper-class="good-selects"
                        style="width: 100%"
                        remote v-model="scope.row.orgGoodsId">
               <el-option :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
                          :value="item.orgGoodsDto.id"
-                         v-for="item in orgGoods">
+                         v-for="item in scope.row.orgGoodsList">
                 <div style="overflow: hidden">
                       <span class="pull-left">{{item.orgGoodsDto.name}}<el-tag style="float: none" type="danger"
                                                                                v-show="!item.orgGoodsDto.status">停用</el-tag></span>
@@ -243,6 +243,7 @@
         loadingData: false,
         showSearch: true,
         showPart: false,
+        saveKey: 'recordEnteringForm',
         materials: [],
         filters: {
           batchNumberId: '',
@@ -253,7 +254,6 @@
         },
         expectedTime: '',
         warehouses: [],
-        orgGoods: [],
         form: {},
         pager: {
           currentPage: 1,
@@ -266,10 +266,26 @@
       };
     },
     mounted() {
-      this.initTable();
+      this.initForm();
+      if (!this.materials.length) {
+        this.initTable();
+      }
       this.initOrgWarehouse();
     },
     methods: {
+      autoSave: function () {
+        console.log(this.materials, '123');
+        window.localStorage.setItem(this.saveKey, JSON.stringify(this.materials));
+      },
+      initForm: function () {// 根据缓存，回设form
+        let oldForm = window.localStorage.getItem(this.saveKey);
+        if (oldForm) {
+          this.materials = JSON.parse(oldForm);
+          console.log(this.materials);
+          // this.form.logisticsCentreId = this.form.logisticsCentreId
+          //   ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
+        }
+      },
       reset() {
         this.showFlag = false;
         this.$refs.previewDialog.dialogVisible = false;
@@ -317,7 +333,7 @@
       },
       setQualifiedBizServings(item) {
         if (!item.qualifiedBizServings && item.availableCount) {
-          this.orgGoods.forEach(i => {
+          item.orgGoodsList.forEach(i => {
             if (i.orgGoodsDto.id === item.orgGoodsId) {
               item.qualifiedBizServings = item.availableCount * i.orgGoodsDto.goodsDto.propertyMap.personPortion;
               if (!item.qualifiedActualServings) {
@@ -329,16 +345,19 @@
         if (!item.qualifiedCount && item.availableCount) {
           item.qualifiedCount = item.availableCount;
         }
+        this.autoSave();
       },
       setUnqualifiedCount(item) {
         if (!item.unqualifiedCount && item.unqualifiedBizCount) {
           item.unqualifiedCount = item.unqualifiedBizCount;
         }
+        this.autoSave();
       },
       setQualifiedActualServings(item) {
         if (!item.qualifiedActualServings && item.qualifiedBizServings) {
           item.qualifiedActualServings = item.qualifiedBizServings;
         }
+        this.autoSave();
       },
       checkNumber(item, itemName) {
         if (!item.orgGoodsId) {
@@ -357,6 +376,8 @@
             return this.$notify.warning('请输入正整数!');
           }
         }
+        // 存储信息
+        this.autoSave();
       },
       //动态表格的方法
       addTable() {
@@ -365,37 +386,41 @@
           batchNumberId: '',
           batchNumber: '',
           expiryDate: '',
-          availableCount: null,
-          unqualifiedBizCount: null,
-          qualifiedBizServings: null,
-          qualifiedCount: null,
-          unqualifiedCount: null,
-          qualifiedActualServings: null,
+          availableCount: '',
+          unqualifiedBizCount: '',
+          qualifiedBizServings: '',
+          qualifiedCount: '',
+          unqualifiedCount: '',
+          qualifiedActualServings: '',
           orgGoodsDto: {},
           measurementUnit: '',
           specifications: '',
           factoryName: '',
-          batchNumberList: []
+          batchNumberList: [],
+          orgGoodsList: []
         });
+        this.autoSave();
       },
       initTable() {
+        console.log("1111");
         for (let i = 0; i < 5; i++) {
           this.materials.push({
             orgGoodsId: '',
             batchNumberId: '',
             batchNumber: '',
             expiryDate: '',
-            availableCount: null,
-            unqualifiedBizCount: null,
-            qualifiedBizServings: null,
-            qualifiedCount: null,
-            unqualifiedCount: null,
-            qualifiedActualServings: null,
+            availableCount: '',
+            unqualifiedBizCount: '',
+            qualifiedBizServings: '',
+            qualifiedCount: '',
+            unqualifiedCount: '',
+            qualifiedActualServings: '',
             orgGoodsDto: {},
             measurementUnit: '',
             specifications: '',
             factoryName: '',
-            batchNumberList: []
+            batchNumberList: [],
+            orgGoodsList: []
           });
         }
       },
@@ -404,8 +429,10 @@
         if (this.materials.length > 1) {
           this.materials.splice(scope.$index, 1);
         }
+        this.autoSave();
       },
       orgGoodsChange(item) {
+        console.log("222");
         item.batchNumberId = '';
         item.batchNumber = '';
         item.expiryDate = '';
@@ -422,7 +449,7 @@
         this.filterBatchNumber(null, item);
         // 设置多余属性值
         if (item.orgGoodsId) {
-          this.orgGoods.forEach(i => {
+          item.orgGoodsList.forEach(i => {
             if (i.orgGoodsDto.id === item.orgGoodsId) {
               item.orgGoodsDto = JSON.parse(JSON.stringify(i.orgGoodsDto));
               item.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
@@ -430,6 +457,8 @@
               item.factoryName = item.orgGoodsDto.goodsDto.factoryName;
             }
           });
+          // 存储信息
+          this.autoSave();
         }
       },
       //************
@@ -475,20 +504,21 @@
         this.expectedTime = '';
         this.getMaPage(1);
       },
-      filterOrgGoods(query) {
+      filterOrgGoods(query, item) {
         Vaccine.query({
           keyWord: query,
           status: true,
           deleteFlag: false,
           auditedStatus: '1'
         }).then(res => {
-          this.orgGoods = res.data.list;
+          this.$set(item, 'orgGoodsList', res.data.list);
         });
       },
       filterBatchNumber(query, item) {
         if (!item.orgGoodsId) return;
         let goodsId = '';
-        this.orgGoods.forEach(i => {
+        console.log(item);
+        item.orgGoodsList.forEach(i => {
           if (i.orgGoodsDto.id === item.orgGoodsId) {
             goodsId = i.orgGoodsDto.goodsId;
           }
@@ -511,6 +541,8 @@
               item.expiryDate = i.expirationDate;
             }
           });
+          // 存储信息
+          this.autoSave();
         }
       },
       initOrgWarehouse(query) {
@@ -580,6 +612,7 @@
           this.$notify.success({
             message: '期初库存录入成功'
           });
+          window.localStorage.removeItem(this.saveKey);
           this.$router.push({
             path: '/store/request/bizServing'
           });
