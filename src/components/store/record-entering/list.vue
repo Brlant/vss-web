@@ -274,14 +274,12 @@
     },
     methods: {
       autoSave: function () {
-        console.log(this.materials, '123');
         window.localStorage.setItem(this.saveKey, JSON.stringify(this.materials));
       },
       initForm: function () {// 根据缓存，回设form
         let oldForm = window.localStorage.getItem(this.saveKey);
         if (oldForm) {
           this.materials = JSON.parse(oldForm);
-          console.log(this.materials);
           // this.form.logisticsCentreId = this.form.logisticsCentreId
           //   ? this.form.logisticsCentreId : window.localStorage.getItem('logisticsCentreId');
         }
@@ -402,7 +400,6 @@
         this.autoSave();
       },
       initTable() {
-        console.log("1111");
         for (let i = 0; i < 5; i++) {
           this.materials.push({
             orgGoodsId: '',
@@ -432,7 +429,6 @@
         this.autoSave();
       },
       orgGoodsChange(item) {
-        console.log("222");
         item.batchNumberId = '';
         item.batchNumber = '';
         item.expiryDate = '';
@@ -517,7 +513,6 @@
       filterBatchNumber(query, item) {
         if (!item.orgGoodsId) return;
         let goodsId = '';
-        console.log(item);
         item.orgGoodsList.forEach(i => {
           if (i.orgGoodsDto.id === item.orgGoodsId) {
             goodsId = i.orgGoodsDto.goodsId;

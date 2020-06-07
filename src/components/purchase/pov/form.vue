@@ -252,7 +252,6 @@
         });
       },
       updateItem(index) {
-        console.log(index);
         this.$emit('updateItem', this.TotalAllocationList[index]);
       },
       submit(item) {

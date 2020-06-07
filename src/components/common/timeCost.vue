@@ -41,12 +41,10 @@
       getDate: function () {
         let b = this.$moment(this.fDate);
         let a = this.tDate ? this.$moment(this.tDate) : this.$moment();
-        console.log('b-' + b, 'a-' + a);
         this.d = a.diff(b, 'd');
         this.h = a.diff(b, 'h') % 24;
         let m = a.diff(b, 'm') % 60;
         this.m = m ? m : 0;
-        console.log(this.d, this.h, this.m);
       }
     },
     mounted: function () {

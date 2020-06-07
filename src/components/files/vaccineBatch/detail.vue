@@ -246,7 +246,6 @@
 //          // 处理idList
 //          if (res.data) {
 //            this.fileMap.drugControlReports.forEach(val => {
-//              console.log(val.id);
 //              this.drugControlReportIdList.push(val.id);
 //            });
 //            this.fileMap.batchReleases.forEach(val => {

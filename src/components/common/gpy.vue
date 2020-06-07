@@ -61,7 +61,6 @@
       },
       OpenVideo: function () {
         this.Video = this.plugin.Device_CreateVideo(this.option.dev, this.option.nResolution, this.option.SelectType);
-        console.log(this.option.dev, this.option.nResolution, this.option.SelectType);
         if (this.Video) {
           this.view.View_SelectVideo(this.Video);
           this.view.View_SetText('打开视频中，请等待...', 0);

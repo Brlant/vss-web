@@ -78,7 +78,6 @@ const mutations = {
   },
   changeAttachment(state, data) {
     let currentId;
-    console.log(data);
     if (typeof data === 'object') {
       currentId = data.currentId;
       state.attachmentDialog.attachmentList = data.attachmentList;

@@ -267,7 +267,6 @@
     methods: {
       changeFiles: function (fileList) {
         let ids = [];
-        console.log(fileList);
         fileList.forEach(file => {
           ids.push(file.attachmentId);
         });

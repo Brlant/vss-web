@@ -10,7 +10,6 @@
       return {};
     },
     mounted() {
-      console.log('ssss');
     },
     method: {}
   };
