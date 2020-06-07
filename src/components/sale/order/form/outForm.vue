@@ -412,7 +412,6 @@
           'orgGoodsId': '',
           'packingCount': null,
           'specificationsId': '',
-          inEffectiveFlag: false,
           unitPrice: null,
           'fixInfo': {
             'goodsDto': {}
@@ -905,7 +904,6 @@
             'orgGoodsId': '',
             'packingCount': null,
             'specificationsId': '',
-            inEffectiveFlag: false,
             'fixInfo': {
               'goodsDto': {}
             },
@@ -1078,7 +1076,6 @@
             'orgGoodsId': '',
             'packingCount': null,
             'specificationsId': '',
-            inEffectiveFlag: false,
             'fixInfo': {
               'goodsDto': {}
             },
