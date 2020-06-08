@@ -18,10 +18,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -55,6 +57,7 @@
     .el-select {
       width: 260px;
     }
+
     .el-input {
       width: 260px;
     }
@@ -250,14 +253,32 @@
             callback(new Error('输入数量大于总数量'));
             break;
           }
-          /*case 3: {
-            callback(new Error('输入数量不是散件的倍数,推荐数量' + obj.count));
+          case 3: {
+            // callback(new Error('输入数量不是散件的倍数,推荐数量' + obj.count));
+            let goodsName = '';
+            this.orgGoods.forEach(i => {
+              if (this.form.orgGoodsId === i.id) {
+                goodsName = i.goodsName;
+              }
+            });
+            this.$confirm(`疫苗"${goodsName}"数量${this.form.count}不是最小包装的倍数，确认后会对后续操作产生严重影响!
+          选择“是”修改数量为${obj.count}，选择“否”确认数量${this.form.count}`, '', {
+              confirmButtonText: '是',
+              cancelButtonText: '否',
+              type: 'warning'
+            }).then(res => {
+              this.form.count = obj.count;
+            }).catch(() => {
+            });
             break;
-          }*/
+          }
           case 4: {
             callback();
             break;
           }
+            break;
+          default:
+            break;
         }
       },
       /**
@@ -278,13 +299,13 @@
         if (count > total) return {type: exceeded_number};
         let remainder = count % packageCount;
         if (remainder === 0) return {type: correct};
-        /*let ig = Math.floor(count / packageCount);
+        let ig = Math.floor(count / packageCount);
         let curCount = 0;
         curCount = ((ig + 1) * packageCount > total) ? ig * packageCount : (ig + 1) * packageCount;
         return {
           type: not_package_multiple,
           count: curCount
-        };*/
+        };
       },
       filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
