@@ -24,12 +24,6 @@
     <div class="container">
       <div class="opera-btn-group" :class="{up:!showSearch}">
         <div class="opera-icon">
-          <perm label="scrap-multi-person-aging">
-            <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="addScrap">
-               <a href="#" class="btn-circle" @click.prevent=""><i
-                 class="el-icon-t-remove"></i> </a>批量报废
-            </span>
-          </perm>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -87,10 +81,7 @@
       </div>
       <div class="order-list clearfix">
         <el-row class="order-list-header">
-          <el-col :span="6">
-            <el-checkbox v-model="checkAll" @change="checkAllChange" v-show="filters.status === '0'"/>
-            疫苗名称
-          </el-col>
+          <el-col :span="6">疫苗名称</el-col>
           <el-col :span="6">追溯码</el-col>
           <el-col :span="6">时间</el-col>
           <el-col :span="4">剂次</el-col>
@@ -113,9 +104,6 @@
                :class="[{'active':currentItem.multiPersonAgingId===item.multiPersonAgingId}]">
             <el-row>
               <el-col :span="6" class="flex-col">
-                <div @click.stop="" v-show="filters.status === '0'">
-                  <el-checkbox v-model="item.checked"/>
-                </div>
                 <div>{{item.vaccineName}}</div>
               </el-col>
               <el-col :span="6">
