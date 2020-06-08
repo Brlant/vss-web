@@ -276,7 +276,6 @@
             callback();
             break;
           }
-            break;
           default:
             break;
         }
