@@ -3,12 +3,6 @@
     <div class="container">
       <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
-          <perm label="add-vaccination-task">
-            <span @click.prevent="add" class="pull-right cursor-span" style="margin-left: 10px">
-               <a @click.prevent="" class="btn-circle" href="#"><i
-                 class="el-icon-t-plus"></i> </a>添加
-            </span>
-          </perm>
           <span @click="showSearch = !showSearch" class="pull-left switching-icon">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -24,23 +18,23 @@
               </oms-form-row>
             </el-col>
             <el-col :span="9">
-              <oms-form-row :span="4" label="疫苗">
-                <el-select :clearable="true" :remote-method="queryOrgGoodsList" @click.native="queryOrgGoodsList('')"
-                           @change="orgGoodsIdChange" filterable
+              <oms-form-row :span="4" label="疫苗主档">
+                <el-select :clearable="true" :remote-method="queryAllGoodsList" @change="goodsIdChange"
+                           @click.native="queryAllGoodsList('')" filterable
                            placeholder="请输入名称或编号搜索疫苗" popper-class="good-selects" remote
                            v-model="searchCondition.vaccineId">
-                  <el-option :key="item.id" :label="item.goodsName" :value="item.goodsId"
-                             v-for="item in orgGoodsList">
+                  <el-option :key="item.goodsId" :label="item.goodsName" :value="item.goodsId"
+                             v-for="item in goodsList">
                     <div style="overflow: hidden">
                       <span class="pull-left">{{item.goodsName}}</span>
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.goodsNo">货主货品编号:</span>{{item.goodsNo}}
+                          v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
                         </span>
                       <span class="select-other-info pull-left">
-                          <span v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
-                        </span>
+                          <span v-show="item.saleFirmName">生产厂商:</span>{{ item.factoryName }}
+                      </span>
                     </div>
                   </el-option>
                 </el-select>
@@ -53,12 +47,57 @@
                            remote v-model="searchCondition.batchNumberId">
                   <el-option :key="item.id" :label="item.batchNumber" :value="item.id"
                              v-for="item in batchNumberList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.batchNumber}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                        <span class="select-other-info pull-left">
+                          {{item.goodsName}}
+                        </span>
+                    </div>
+                    <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.goodsCode">疫苗编号:</span>{{item.goodsCode}}
+                        </span>
+                      <span class="select-other-info pull-left">
+                          <span v-show="item.orgName">生产单位:</span>{{ item.orgName }}
+                      </span>
+                    </div>
                   </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
           </el-row>
           <el-row>
+            <el-col :span="9">
+              <oms-form-row :span="4" label="货主疫苗">
+                <el-select :clearable="true" :remote-method="queryAllOrgGoodsList"
+                           @change="orgGoodsIdChange"
+                           @click.native="queryAllOrgGoodsList('')" filterable
+                           placeholder="请输入名称或编号搜索疫苗" popper-class="good-selects" remote
+                           v-model="searchCondition.orgGoodsId">
+                  <el-option :key="item.id" :label="item.goodsName" :value="item.id"
+                             v-for="item in orgGoodsList">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{item.goodsName}}</span>
+                    </div>
+                    <div style="overflow: hidden">
+                        <span class="select-other-info pull-left"><span
+                          v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
+                        </span>
+                      <span class="select-other-info pull-left">
+                          <span v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="9">
+              <oms-form-row :span="4" label="追溯码">
+                <oms-input placeholder="请输入追溯码" type="text" v-model="searchCondition.actualCode"></oms-input>
+              </oms-form-row>
+            </el-col>
             <el-col :span="6">
               <oms-form-row :span="5" label="">
                 <el-button @click="searchInOrder" native-type="submit" type="primary">查询</el-button>
@@ -80,13 +119,12 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header">
           <el-col :span="3">登记编号</el-col>
-          <el-col :span="2">受种者</el-col>
+          <el-col :span="3">受种者</el-col>
           <el-col :span="5">疫苗名称</el-col>
-          <el-col :span="2">疫苗种类</el-col>
-          <el-col :span="2">批号</el-col>
+          <el-col :span="4">疫苗种类</el-col>
+          <el-col :span="3">批号</el-col>
           <el-col :span="4">时间</el-col>
-          <el-col :span="3">状态</el-col>
-          <el-col :span="3">操作</el-col>
+          <el-col :span="2">状态</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -104,47 +142,38 @@
           <div :class="[{'active':currentItem.id===item.id}]" @click.prevent="showItem(item)"
                class="order-list-item order-list-item-bg pointer" v-for="item in taskList">
             <el-row>
-              <el-col :span="3">
+              <el-col :span="3" v-if="item.inoculatorNumber">
                 {{item.inoculatorNumber}}
                 <!--<el-tag type="success" v-show="item.payCostType === 1">已缴费</el-tag>-->
                 <!--<el-tag type="warning" v-show="item.payCostType === 0">未缴费</el-tag>-->
               </el-col>
-              <el-col :span="2">
+              <el-col :span="3" v-if="!item.inoculatorNumber">
+                {{item.id}}
+                <!--<el-tag type="success" v-show="item.payCostType === 1">已缴费</el-tag>-->
+                <!--<el-tag type="warning" v-show="item.payCostType === 0">未缴费</el-tag>-->
+              </el-col>
+              <el-col :span="3">
                 {{item.inoculatorName}}
               </el-col>
               <el-col :span="5">
                 <div>{{item.orgGoodsName}}</div>
                 <div class="font-gray">{{item.specification}}</div>
               </el-col>
-              <el-col :span="2">
-                <dict dict-group="vaccineSign" :dict-key="'' + item.vaccineSign"></dict>
+              <el-col :span="4">
+                <el-tag class="el-tag--max" type="success" v-if="item.vaccineSign === '2'">
+                  <dict :dict-key="'' + item.vaccineSign" dict-group="vaccineSign"></dict>
+                </el-tag>
+                <dict :dict-key="'' + item.vaccineSign" dict-group="vaccineSign" v-else></dict>
               </el-col>
-              <el-col :span="2">
+              <el-col :span="3">
                 {{item.batchNumber}}
               </el-col>
               <el-col :span="4">
                 <div v-show="item.createTime">创建：{{item.createTime | minute}}</div>
-                <div v-show="item.registrationTime">登记：{{item.registrationTime | minute}}</div>
                 <div v-show="item.actualTime">接种：{{item.actualTime | minute}}</div>
               </el-col>
-              <el-col :span="3">
+              <el-col :span="2">
                 {{getStatusTitle(item.status)}}
-              </el-col>
-              <el-col :span="3" class="opera-btn">
-                <div v-show="activeStatus === '0'">
-                  <perm label="edit-vaccination-task">
-                      <span @click.stop.prevent="editItem(item)">
-                      <a @click.prevent="" class="btn-circle" href="#"><i
-                        class="el-icon-t-edit"></i></a>
-                    编辑
-                  </span>
-                  </perm>
-                  <perm label="cancel-vaccination-task">
-                      <span @click.stop.prevent="deleteItem(item)">
-                        <a @click.prevent="" class="btn-circle" href="#"><i class="el-icon-close"></i></a>取消
-                  </span>
-                  </perm>
-                </div>
               </el-col>
             </el-row>
           </div>
@@ -155,7 +184,7 @@
       <el-pagination
         :current-page="pager.currentPage"
         :pageSize="pager.pageSize" :total="pager.count" @current-change="queryList"
-        layout="prev, pager, next">
+        layout="sizes, prev, pager, next, jumper, total">>
       </el-pagination>
     </div>
 
@@ -185,13 +214,17 @@
           status: '0',
           inoculatorNumber: '',
           vaccineId: '',
-          batchNumberId: ''
+          orgGoodsId: '',
+          batchNumberId: '',
+          actualCode: ''
         },
         injectionType: utils.injectionType,
         searchCondition: {
           inoculatorNumber: '',
           vaccineId: '',
-          batchNumberId: ''
+          orgGoodsId: '',
+          batchNumberId: '',
+          actualCode: ''
         },
         activeStatus: '0',
         currentItem: {},
@@ -211,15 +244,22 @@
     computed: {},
     methods: {
       queryBatchNumbers(query) {
+/*
         if (!this.searchCondition.vaccineId) {
           this.$notify.info('请先选择疫苗');
           return;
         }
+*/
         this.queryBatchNumberList({
           keyWord: query
         });
       },
       orgGoodsIdChange(val) {
+        this.batchNumberList = [];
+        this.searchCondition.batchNumberId = '';
+        this.queryBatchNumbers();
+      },
+      goodsIdChange(val) {
         this.batchNumberList = [];
         this.searchCondition.batchNumberId = '';
         this.queryBatchNumbers();
@@ -239,7 +279,9 @@
         let temp = {
           inoculatorNumber: '',
           vaccineId: '',
-          batchNumberId: ''
+          orgGoodsId: '',
+          batchNumberId: '',
+          actualCode: ''
         };
         this.expectedTime = '';
         this.batchNumberList = [];
@@ -249,6 +291,8 @@
       },
       resetRightBox: function () {
         this.defaultIndex = 0;
+        this.currentItem = {};
+        this.form = {};
       },
       add: function () {
         this.width = 800;

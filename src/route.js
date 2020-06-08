@@ -133,6 +133,11 @@ export const route = [
             meta: {moduleId: 'pov', title: '注射记录', perm: 'injection-task-manager'}
           },
           {
+            path: '/pov/injection-task',
+            component: () => import('./components/pov/inoculate/injection/index.vue'),
+            meta: {moduleId: 'pov', title: '接种任务', perm: 'injection-task-info-manager'}
+          },
+          {
             path: '/pov/subordinate/record',
             component: () => import('./components/pov/record/subordinate/list.vue'),
             meta: {moduleId: 'pov', title: '下属单位注射记录', perm: 'subordinate-injection-task-manager'}

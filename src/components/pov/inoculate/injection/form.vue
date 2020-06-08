@@ -37,8 +37,8 @@
              @submit.prevent="onSubmit('form')" onsubmit="return false">
       <h2>基本信息</h2>
       <el-form-item label="受种者" prop="inoculatorInfoId">
-        <el-select v-model="form.inoculatorInfoId" filterable remote :remote-method="queryPersons"
-                   placeholder="请输入姓名或身份证号或接种证编号或出生证号进行搜索"
+        <el-select :remote-method="queryPersons" @change="changeInoculatorId" filterable placeholder="请输入姓名或身份证号或接种证编号或出生证号或护照号进行搜索" remote
+                   v-if="!type" v-model="form.inoculatorInfoId"
                    clearable popper-class="good-selects" @clear="queryPersons('')">
           <el-option v-for="item in personList" :key="item.id" :label="item.inoculatorName" :value="item.id">
             <div>
@@ -49,14 +49,16 @@
               <span class="select-other-info"><span v-show="item.inoculatorCardNumber">身份证:</span>{{item.inoculatorCardNumber}}</span>
               <span class="select-other-info"><span v-show="item.birthCertificateNumber">出生证号:</span>
                 {{item.birthCertificateNumber}}</span>
+              <span class="select-other-info"><span v-show="item.passportNo">护照号:</span>{{item.passportNo}}</span>
             </div>
           </el-option>
         </el-select>
+        <span v-else>{{form.inoculatorName}}</span>
       </el-form-item>
       <el-row>
         <el-col :span="14">
           <el-form-item label="登记编号" prop="inoculatorNumber">
-            <oms-input placeholder="请输入登记编号" v-model="form.inoculatorNumber"></oms-input>
+            <oms-input :maxlength="25" placeholder="请输入登记编号" v-model="form.inoculatorNumber"></oms-input>
           </el-form-item>
         </el-col>
         <el-col :span="10">
@@ -80,19 +82,26 @@
     <el-form ref="addForm" :model="form" label-width="100px" :rules="rules"
              @submit.prevent="onSubmit('form')" onsubmit="return false">
       <h2>疫苗信息</h2>
-      <el-form-item label="疫苗" prop="vaccineId">
-        <el-select v-model="form.vaccineId" filterable remote :remote-method="queryOrgGoodsListNew"
-                   placeholder="请输入名称或货主货品编号搜索疫苗"
+      <el-form-item label="货品属性" prop="injectionTaskType" v-if="type">
+        <el-radio-group @change="injectionTaskTypeChange" v-model="form.injectionTaskType">
+          <el-radio label="1">狂苗</el-radio>
+          <el-radio label="2">狂免</el-radio>
+        </el-radio-group>
+      </el-form-item>
+      <el-form-item label="疫苗" prop="orgGoodsId">
+        <el-select :filter-method="filterGoods" @change="orgGoodsIdChange" @focus="filterGoods('')"
+                   filterable
                    clearable popper-class="order-good-selects"
-                   @change="orgGoodsIdChange" @clear="queryOrgGoodsListNew('')">
-          <el-option v-for="item in orgGoodsList" :key="item.id" :label="item.goodsName"
-                     :value="item.goodsId">
+                   placeholder="请输入名称或疫苗编号或疫苗名称拼音或疫苗名称拼音首字母搜索疫苗"
+                   v-model="form.orgGoodsId">
+          <el-option :key="item.id" :label="item.goodsName" :value="item.id"
+                     v-for="item in filterOrgGoodsList">
             <div style="overflow: hidden">
               <span class="pull-left">{{item.goodsName}}</span>
             </div>
             <div style="overflow: hidden">
               <span class="select-other-info pull-left"><span
-                v-show="item.goodsNo">货主货品编号:</span>{{item.goodsNo}}
+                v-show="item.goodsNo">疫苗编号:</span>{{item.goodsNo}}
               </span>
               <span class="select-other-info pull-left">
                 <span v-show="item.saleFirmName">供货单位:</span>{{ item.saleFirmName }}
@@ -101,15 +110,48 @@
                   <dict dict-group="vaccineSign" :dict-key="'' + item.vaccineSign"></dict>
               </span>
             </div>
+            <div style="overflow: hidden">
+              <span class="select-other-info pull-left">
+                <span>规格:</span>{{item.specifications}}
+              </span>
+              <span class="select-other-info pull-left">
+                <span v-show="item.factoryName">生产厂商:</span>{{ item.factoryName }}
+              </span>
+            </div>
           </el-option>
         </el-select>
       </el-form-item>
+      <el-row class="info" v-show="form.orgGoodsId">
+        <el-col :span="12" v-show="form.factoryName">
+          <el-form-item label="生产厂商">{{form.factoryName}}</el-form-item>
+        </el-col>
+        <el-col :span="12" v-show="form.vaccineSign">
+          <el-form-item label="疫苗种类">
+            <el-tag class="el-tag--max" type="success" v-if="form.vaccineSign === '2'">
+              <dict :dict-key="'' + form.vaccineSign" dict-group="vaccineSign"></dict>
+            </el-tag>
+            <dict :dict-key="'' + form.vaccineSign" dict-group="vaccineSign" v-else></dict>
+          </el-form-item>
+        </el-col>
+        <el-col :span="12" v-show="form.specifications">
+          <el-form-item label="规格">{{form.specifications}}</el-form-item>
+        </el-col>
+        <el-col :span="12">
+          <el-form-item label="接种途径">
+            <!--<el-select type="text" v-model="form.inoculationChannel" placeholder="请选择接种途径"-->
+            <!--@change="inoculationChannelChange">-->
+            <!--<el-option :value="item.key" :key="item.key" :label="item.label"-->
+            <!--v-for="item in inoculationChannelList"></el-option>-->
+            <!--</el-select>-->
+            <dict :dict-group="'inoculationChannel'" :dict-key="form.inoculationChannel"></dict>
+          </el-form-item>
+        </el-col>
+      </el-row>
       <el-form-item label="批号" prop="batchNumberId">
-        <el-select v-model="form.batchNumberId" filterable remote :remote-method="queryBatchNumbers"
-                   placeholder="请输入名称搜索批号" @clear="queryBatchNumbers('')"
-                   clearable popper-class="good-selects" @change="batchNumberChange">
-          <el-option v-for="item in batchNumberList" :key="item.batchNumberId" :label="item.batchNumber"
-                     :value="item.batchNumberId">
+        <el-select @change="batchNumberChange" clearable filterable
+                   placeholder="请输入名称搜索批号" popper-class="good-selects" v-model="form.batchNumberId">
+          <el-option :key="item.batchNumberId" :label="item.batchNumber" :value="item.batchNumberId"
+                     v-for="item in batchNumberList">
             <div>{{item.batchNumber}}</div>
             <div class="font-gray">
               <span v-show="item.qualifiedBizServings">剩余剂次：{{item.qualifiedBizServings}}</span>
@@ -118,34 +160,17 @@
           </el-option>
         </el-select>
       </el-form-item>
-      <el-row class="info" v-show="form.vaccineId&& form.batchNumberId">
-        <el-col :span="12" v-show="form.factoryName">
-          <el-form-item label="生产单位">{{form.factoryName}}</el-form-item>
-        </el-col>
-        <el-col :span="12" v-show="form.vaccineSign">
-          <el-form-item label="疫苗种类">
-            <dict dict-group="vaccineSign" :dict-key="'' + form.vaccineSign"></dict>
-          </el-form-item>
-        </el-col>
-        <el-col :span="12" v-show="form.specifications">
-          <el-form-item label="规格">{{form.specifications}}</el-form-item>
-        </el-col>
-        <el-col :span="12" v-show="form.qualifiedBizServings">
-          <el-form-item label="剩余剂次">
-            <span>{{form.qualifiedBizServings}}</span>
-          </el-form-item>
-        </el-col>
-      </el-row>
       <el-row>
-        <el-col :span="12">
-          <el-form-item label="接种途径" prop="inoculationChannel">
-            <el-select type="text" v-model="form.inoculationChannel" placeholder="请选择接种途径"
-                       @change="inoculationChannelChange">
-              <el-option :value="item.key" :key="item.key" :label="item.label"
-                         v-for="item in inoculationChannelList"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
+        <!--<el-col :span="12">-->
+        <!--<el-form-item label="接种途径" prop="inoculationChannel">-->
+        <!--&lt;!&ndash;<el-select type="text" v-model="form.inoculationChannel" placeholder="请选择接种途径"&ndash;&gt;-->
+        <!--&lt;!&ndash;@change="inoculationChannelChange">&ndash;&gt;-->
+        <!--&lt;!&ndash;<el-option :value="item.key" :key="item.key" :label="item.label"&ndash;&gt;-->
+        <!--&lt;!&ndash;v-for="item in inoculationChannelList"></el-option>&ndash;&gt;-->
+        <!--&lt;!&ndash;</el-select>&ndash;&gt;-->
+        <!--<dict :dict-group="'inoculationChannel'" :dict-key="form.inoculationChannel"></dict>-->
+        <!--</el-form-item>-->
+        <!--</el-col>-->
         <el-col :span="12">
           <el-form-item label="接种部位" prop="inoculationPosition">
             <el-select type="text" v-model="form.inoculationPosition" placeholder="请选择接种部位">
@@ -159,10 +184,9 @@
         <h2>已选疫苗</h2>
         <goods-list :goodsList="form.list" @deleteItem="deleteItem"/>
       </div>
-      <el-form-item label-width="100px">
-        <el-button type="primary" plain @click="addGoods" v-show="!form.id && form.vaccineId">添加多种疫苗</el-button>
-      </el-form-item>
-      <el-form-item label-width="100px" v-show="form.vaccineId || form.list.length">
+      <el-form-item label-width="100px" v-show="form.orgGoodsId || form.list.length">
+        <el-button @click="addGoods" plain type="primary" v-if="!type" v-show="!form.id && form.orgGoodsId">添加多种疫苗
+        </el-button>
         <el-button type="primary" @click="onSubmit('form')" native-type="submit" :disabled="doing">保存接种任务</el-button>
         <el-button @click="doClose">取消</el-button>
       </el-form-item>
@@ -183,7 +207,8 @@
         type: Object,
         default: {},
         required: true
-      }
+      },
+      type: String
     },
     data: function () {
       return {
@@ -191,7 +216,7 @@
         form: {
           inoculatorInfoId: '',
           inoculatorNumber: '',
-          vaccineId: '',
+          orgGoodsId: '',
           batchNumberId: '',
           inoculationPosition: '',
           inoculationChannel: '',
@@ -200,6 +225,7 @@
           qualifiedBizServings: '',
           specifications: '',
           factoryName: '',
+          injectionTaskType: '1',
           list: []
         },
         rules: {
@@ -209,7 +235,7 @@
           inoculatorNumber: [
             {required: true, message: '请输入登记编号', trigger: ['blur', 'change']}
           ],
-          vaccineId: [
+          orgGoodsId: [
             {required: true, message: '请选择疫苗', trigger: 'change'}
           ],
           batchNumberId: [
@@ -220,8 +246,12 @@
           ],
           inoculationChannel: [
             {required: true, message: '请选择接种途径', trigger: 'change'}
+          ],
+          injectionTaskType: [
+            {required: true, message: '请选择货品属性', trigger: 'change'}
           ]
         },
+        filterOrgGoodsList: [],
         doing: false,
         injectionType: 0 // 0 添加一个疫苗, 1 添加2个疫苗
       };
@@ -237,37 +267,12 @@
     watch: {
       formItem: function (val) {
         this.batchNumberList = [];
-        if (val.id) {
-          this.batchNumberList = [
-            {
-              batchNumberId: this.formItem.batchNumberId,
-              batchNumber: this.formItem.batchNumber
-            }
-          ];
-          this.personList = [
-            {
-              inoculatorName: this.formItem.inoculatorName,
-              id: this.formItem.inoculatorInfoId
-            }
-          ];
-          this.orgGoodsList = [
-            {
-              goodsId: this.formItem.vaccineId,
-              goodsName: this.formItem.orgGoodsName,
-              id: this.formItem.orgGoodsId
-            }
-          ];
-          this.form = Object.assign({}, this.formItem, {
-            specifications: this.formItem.specification,
-            factoryName: this.formItem.origin,
-            vaccineSign: this.formItem.vaccineSign
-          });
-          this.form.list = [];
-        } else {
-          this.form = {
+        this.injectionType = 0;
+        if (this.type) {
+          this.form = Object.assign({}, {
             inoculatorInfoId: '',
             inoculatorNumber: '',
-            vaccineId: '',
+            orgGoodsId: '',
             batchNumberId: '',
             inoculationPosition: '',
             inoculationChannel: '',
@@ -276,15 +281,60 @@
             qualifiedBizServings: '',
             specifications: '',
             factoryName: '',
+            injectionTaskType: '1',
             list: []
-          };
-          this.orgGoodsList = [];
-          this.personList = [];
-          this.batchNumberList = [];
-          this.queryPersonList();
-          this.queryOrgGoodsListNew();
-          this.queryBatchNumbers();
+          }, this.formItem);
+        } else {
+          if (val.id) {
+            this.batchNumberList = [
+              {
+                batchNumberId: this.formItem.batchNumberId,
+                batchNumber: this.formItem.batchNumber
+              }
+            ];
+            this.personList = [
+              {
+                inoculatorName: this.formItem.inoculatorName,
+                id: this.formItem.inoculatorInfoId
+              }
+            ];
+            this.orgGoodsList = [
+              {
+                goodsId: this.formItem.vaccineId,
+                goodsName: this.formItem.orgGoodsName,
+                id: this.formItem.orgGoodsId
+              }
+            ];
+            this.filterOrgGoodsList = JSON.parse(JSON.stringify(this.orgGoodsList));
+            this.form = Object.assign({}, this.formItem, {
+              specifications: this.formItem.specification,
+              factoryName: this.formItem.origin,
+              vaccineSign: this.formItem.vaccineSign
+            });
+            this.form.list = [];
+          } else {
+            this.form = {
+              inoculatorInfoId: '',
+              inoculatorNumber: '',
+              orgGoodsId: '',
+              batchNumberId: '',
+              inoculationPosition: '',
+              inoculationChannel: '',
+              payCostType: 1,
+              newInoculationStatus: 0,
+              qualifiedBizServings: '',
+              specifications: '',
+              factoryName: '',
+              injectionTaskType: '1',
+              list: []
+            };
+            this.orgGoodsList = [];
+            this.filterOrgGoodsList = [];
+            this.personList = [];
+            this.batchNumberList = [];
+          }
         }
+        this.queryOrgGoodsListNew();
         this.$nextTick(() => {
           this.$refs['form'].clearValidate();
           this.$refs['addForm'].clearValidate();
@@ -292,21 +342,39 @@
       }
     },
     methods: {
+      injectionTaskTypeChange() {
+        this.form.orgGoodsId = '';
+        this.orgGoodsIdChange(this.form.orgGoodsId);
+      },
+      changeInoculatorId(val) {
+        this.form.inoculatorNumber = '';
+        if (!val) return;
+        let item = this.personList.find(i => i.id === val);
+        if (!item) return;
+        this.form.inoculatorNumber = item.inoculatorNumber || item.inoculatorCardNumber || item.birthCertificateNumber || item.passportNo || '';
+      },
+      filterGoods(query) {
+        this.filterOrgGoodsList = this.orgGoodsList.filter(f => {
+          if (!this.type) return true;
+          return f.vaccineAttribute === (this.form.injectionTaskType === '1' ? '0' : '15');
+        }).filter(f => f.nameAcronymy.indexOf(query) !== -1 ||
+          f.goodsName.indexOf(query) !== -1 || f.goodsNo.indexOf(query) !== -1 || f.namePhonetic.indexOf(query) !== -1);
+      },
       queryOrgGoodsListNew(query) {
         const params = {
           keyWord: query
         };
         this.$http.get('/injection-task/goods', {params}).then(res => {
-          this.orgGoodsList = res.data.list;
+          this.orgGoodsList = res.data;
+          this.filterOrgGoodsList = JSON.parse(JSON.stringify(res.data));
         });
       },
       queryPersons(query) {
-        this.form.inoculatorNumber = query;
         this.queryPersonList(query);
       },
       queryBatchNumbers(query, first) {
-        if (!this.form.vaccineId) return;
-        let item = this.orgGoodsList.find(f => f.goodsId === this.form.vaccineId);
+        if (!this.form.orgGoodsId) return;
+        let item = this.orgGoodsList.find(f => f.id === this.form.orgGoodsId);
         this.form.orgGoodsId = item.id;
         if (!this.form.orgGoodsId) {
           this.batchNumberList = [];
@@ -318,7 +386,7 @@
             params.keyWord = query;
           },
           success: (res) => {
-            this.batchNumberList = res.data.filter(f => f.qualifiedBizServings).sort((pre, cur) => pre.expiryDate - cur.expiryDate);
+            this.batchNumberList = res.data.sort((pre, cur) => pre.expiryDate - cur.expiryDate);
             if (!this.batchNumberList.length) {
               return this.$notify.info('没有可用库存');
             }
@@ -328,7 +396,6 @@
               this.form.batchNumber = this.batchNumberList[0].batchNumber;
               this.form.batchNumberId = this.batchNumberList[0].batchNumberId;
               this.form.expiryDate = this.batchNumberList[0].expiryDate;
-              this.form.qualifiedBizServings = this.batchNumberList[0].qualifiedBizServings;
             }
           }
         });
@@ -340,8 +407,8 @@
         this.form.inoculationPosition = '';
         this.form.inoculationChannel = '';
         if (!val) return;
-        let item = this.orgGoodsList.find(f => f.goodsId === val);
-        this.form.orgGoodsId = item.id;
+        let item = this.orgGoodsList.find(f => f.id === val);
+        this.form.vaccineId = item.goodsId;
         this.form.orgGoodsName = item.goodsName;
         this.form.inoculationChannel = item.inoculationChannel;
         this.form.specifications = item.specifications;
@@ -399,11 +466,13 @@
       },
       deleteItem(item) {
         this.form.list = this.form.list.filter(f => f !== item);
+        if (!this.form.list.length) {
+          this.injectionType = 0;
+        }
       },
       onSubmit: function (formName) {
         let self = this;
         if (this.doing) return;
-        this.doing = true;
         this.$refs[formName].validate((valid) => {
           if (!valid) {
             this.doing = false;
@@ -455,17 +524,17 @@
                 });
                 this.$emit('change');
               }).catch(error => {
+                this.doing = false;
                 this.$notify.error({
                   message: error.response && error.response.data && error.response.data.msg || '修改失败'
                 });
-                this.doing = false;
               });
             });
           }
         });
       },
       add(formData) {
-        const list = formData.list.map(m => {
+        let list = formData.list.map(m => {
           return Object.assign({}, m, {
             inoculatorInfoId: formData.inoculatorInfoId,
             inoculatorNumber: formData.inoculatorNumber,
@@ -473,8 +542,16 @@
             newInoculationStatus: formData.newInoculationStatus
           });
         });
+        let http = inoculateTask.save;
+        // 犬伤处置
+        if (this.type) {
+          list[0].disposalRecordId = formData.disposalRecordId;
+          list[0].injectionTaskType = formData.injectionTaskType;
+          list = list[0];
+          http = obj => this.$http.post('/disposal-record-task/add', obj);
+        }
         this.doing = true;
-        inoculateTask.save(list).then(() => {
+        http(list).then(() => {
           this.doing = false;
           this.$notify.success({
             duration: 2000,
@@ -483,10 +560,10 @@
           });
           this.$emit('change');
         }).catch((error) => {
+          this.doing = false;
           this.$notify.error({
             message: error.response && error.response.data && error.response.data.msg || '新增失败'
           });
-          this.doing = false;
         });
       },
       doClose: function () {
