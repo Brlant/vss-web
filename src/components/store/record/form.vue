@@ -154,7 +154,7 @@
                   </el-select>
                 </el-form-item>
                 <el-form-item label="数量" prop="count" class="clearfix">
-                  <el-input type="number" v-model.number="form.count"></el-input>
+                  <el-input @blur="checkCount(form.count)" type="number" v-model.number="form.count"></el-input>
                 </el-form-item>
                 <el-form-item label="调整理由">
                   <el-input type="textarea" v-model.number="form.reason"></el-input>
@@ -238,6 +238,42 @@
       }
     },
     methods: {
+      checkCount(count) {
+        let packageCount = this.smallPackCount;
+        let total = this.totalCount;
+        if (!count) {
+          return;
+        }
+        if (!packageCount) {
+          return;
+        }
+        if (count > total) {
+          return;
+        }
+        let type = 0;
+        let remainder = count % packageCount;
+        if (remainder === 0) {
+          return;
+        }
+        let ig = Math.floor(count / packageCount);
+        let curCount = 0;
+        curCount = ((ig + 1) * packageCount > total) ? ig * packageCount : (ig + 1) * packageCount;
+        let goodsName = '';
+        this.orgGoods.forEach(i => {
+          if (this.form.orgGoodsId === i.id) {
+            goodsName = i.goodsName;
+          }
+        });
+        this.$confirm(`疫苗"${goodsName}"数量${this.form.count}不是最小包装的倍数，确认后会对后续操作产生严重影响!
+          选择“是”修改数量为${curCount}，选择“否”确认数量${this.form.count}`, '', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(res => {
+          this.form.count = curCount;
+        }).catch(() => {
+        });
+      },
       validatePackageMultiple(rule, value, callback) {
         let obj = this.validPackage(value, this.smallPackCount, this.totalCount);
         switch (obj.type) {
@@ -254,22 +290,7 @@
             break;
           }
           case 3: {
-            // callback(new Error('输入数量不是散件的倍数,推荐数量' + obj.count));
-            let goodsName = '';
-            this.orgGoods.forEach(i => {
-              if (this.form.orgGoodsId === i.id) {
-                goodsName = i.goodsName;
-              }
-            });
-            this.$confirm(`疫苗"${goodsName}"数量${this.form.count}不是最小包装的倍数，确认后会对后续操作产生严重影响!
-          选择“是”修改数量为${obj.count}，选择“否”确认数量${this.form.count}`, '', {
-              confirmButtonText: '是',
-              cancelButtonText: '否',
-              type: 'warning'
-            }).then(res => {
-              this.form.count = obj.count;
-            }).catch(() => {
-            });
+            callback();
             break;
           }
           case 4: {
