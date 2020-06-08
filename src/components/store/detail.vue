@@ -66,6 +66,7 @@
             <oms-row label="库存总数" :span="span">{{ currentItem.totalCount }}</oms-row>
           </el-col>
         </el-row>
+<!--
         <table class="table clearfix">
           <thead>
           <tr class="tr-bg">
@@ -101,6 +102,7 @@
           </tr>
           </tbody>
         </table>
+-->
       </div>
     </div>
   </div>
