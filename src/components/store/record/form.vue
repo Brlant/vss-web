@@ -106,7 +106,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="仓库" prop="warehouseId">
+            <!--<el-form-item label="仓库" prop="warehouseId">
               <el-select v-model="form.warehouseId" filterable clearable
                          @change="warehouseChange"
                          placeholder="请选择仓库">
@@ -114,7 +114,7 @@
                            :label="item.name">
                 </el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item>-->
             <div v-loading="loadingData">
               <div class="empty-info" v-show="!batches.length">暂无库存信息</div>
               <el-row class="md-info" v-for="item in batches" :key="item.id">
