@@ -34,6 +34,18 @@
     margin-bottom: 10px;
     font-size: 16px;
   }
+
+  .img-warp {
+    padding: 20px;
+    text-align: center;
+
+    .confirm-img {
+      width: auto;
+      height: auto;
+      max-height: 100%;
+      max-width: 100%;
+    }
+  }
 </style>
 
 <template>
@@ -44,10 +56,15 @@
 
         <section v-if="currentItem.inoculatorInfoDto">
           <h2>受种者信息</h2>
-          <oms-row class="row-mg" label="姓名" :span="5">
+          <oms-row :span="5" class="row-mg" label="姓名" v-show="currentItem.inoculatorInfoDto.inoculatorName">
             {{currentItem.inoculatorInfoDto.inoculatorName}}
-            <span class="col-label">性别：</span>{{currentItem.inoculatorInfoDto.inoculatorSex}}
-            <span class="col-label">生日：</span>{{currentItem.inoculatorInfoDto.inoculatorBirthday | date}}
+            <span class="col-label" v-show="currentItem.inoculatorInfoDto.inoculatorSex">
+              性别：</span>{{currentItem.inoculatorInfoDto.inoculatorSex}}
+            <span v-show="currentItem.inoculatorInfoDto.inoculatorBirthday">
+              <span class="col-label">生日：</span>
+              {{currentItem.inoculatorInfoDto.inoculatorBirthday | date}}
+              <span class="ml-15">{{currentItem.inoculatorInfoDto.inoculatorBirthday | formatBirthDate}}</span>
+            </span>
           </oms-row>
           <oms-row class="row-mg" label="接种证编号" :span="5" v-show="currentItem.inoculatorInfoDto.inoculateCode">
             {{currentItem.inoculatorInfoDto.inoculateCode}}
@@ -58,29 +75,48 @@
           <oms-row class="row-mg" label="出生证号" :span="5" v-show="currentItem.inoculatorInfoDto.birthCertificateNumber">
             {{currentItem.inoculatorInfoDto.birthCertificateNumber}}
           </oms-row>
+          <oms-row :span="5" class="row-mg" label="护照号" v-show="currentItem.inoculatorInfoDto.passportNo">
+            {{currentItem.inoculatorInfoDto.passportNo}}
+          </oms-row>
+          <oms-row :span="5" class="row-mg" label="备注" v-show="currentItem.inoculatorInfoDto.inoculatorRemarks">
+            {{currentItem.inoculatorInfoDto.inoculatorRemarks}}
+          </oms-row>
         </section>
         <section v-if="currentItem.injectionTaskDto">
           <h2>接种任务</h2>
-          <oms-row label="登记编号" :span="span">{{currentItem.injectionTaskDto.inoculatorNumber}}</oms-row>
+          <oms-row :span="span" label="接种任务ID">
+            {{currentItem.injectionTaskDto.id}}
+          </oms-row>
+          <oms-row :span="span" label="登记编号" v-if="currentItem.injectionTaskDto.inoculatorNumber">
+            {{currentItem.injectionTaskDto.inoculatorNumber}}
+          </oms-row>
+          <oms-row :span="span" label="追溯码">
+            {{currentItem.injectionTaskDto.actualCode}}
+            <el-tag type="warn" v-if="!currentItem.injectionTaskDto.traceCodeId">
+              未知追溯码
+            </el-tag>
+          </oms-row>
           <oms-row label="疫苗名称" :span="span">{{currentItem.injectionTaskDto.orgGoodsName}}</oms-row>
           <oms-row label="疫苗种类" :span="span">
-            <dict dict-group="vaccineSign" :dict-key="'' + currentItem.injectionTaskDto.vaccineSign"></dict>
+            <el-tag type="success" v-if="currentItem.injectionTaskDto.vaccineSign === '2'">
+              <dict :dict-key="'' + currentItem.injectionTaskDto.vaccineSign" dict-group="vaccineSign"></dict>
+            </el-tag>
+            <dict :dict-key="'' + currentItem.injectionTaskDto.vaccineSign" dict-group="vaccineSign" v-else></dict>
           </oms-row>
           <oms-row label="规格" :span="span">{{currentItem.injectionTaskDto.specification}}</oms-row>
-          <oms-row label="生产单位" :span="span">{{currentItem.injectionTaskDto.origin}}</oms-row>
+          <oms-row :span="span" label="生产厂商">{{currentItem.injectionTaskDto.origin}}</oms-row>
           <oms-row label="批号" :span="span">{{currentItem.injectionTaskDto.batchNumber}}</oms-row>
           <oms-row label="生产日期" :span="span">{{currentItem.injectionTaskDto.productionDate | date}}</oms-row>
-          <oms-row label="有效期" :span="span">{{currentItem.injectionTaskDto.expirationDate | date}}</oms-row>
-          <oms-row label="接种部位" :span="span">
+          <oms-row :span="span" label="有效期至">{{currentItem.injectionTaskDto.expirationDate | date}}</oms-row>
+          <oms-row :span="span" label="接种部位" v-if="currentItem.injectionTaskDto.inoculationPosition">
             <dict :dict-group="'inoculationPosition'"
                   :dict-key="currentItem.injectionTaskDto.inoculationPosition"></dict>
           </oms-row>
-          <oms-row label="接种途经" :span="span">
+          <oms-row :span="span" label="接种途经" v-if="currentItem.injectionTaskDto.inoculationChannel">
             <dict :dict-group="'inoculationChannel'" :dict-key="currentItem.injectionTaskDto.inoculationChannel"></dict>
           </oms-row>
           <oms-row label="任务创建时间" :span="span">{{currentItem.injectionTaskDto.createTime | time}}</oms-row>
-          <oms-row label="登记时间" :span="span">{{currentItem.injectionTaskDto.registrationTime | time}}</oms-row>
-          <oms-row label="登记完成时间" :span="span" v-show="currentItem.injectionTaskDto.actualTime">
+          <oms-row :span="span" label="接种时间" v-show="currentItem.injectionTaskDto.actualTime">
             {{currentItem.injectionTaskDto.actualTime | time}}
           </oms-row>
           <!--<oms-row label="是否缴费" :span="span">-->
@@ -92,6 +128,12 @@
           <oms-row label="状态" :span="span">
             {{getStatusTitle(currentItem.injectionTaskDto.status)}}
           </oms-row>
+        </section>
+        <section v-if="currentItem.injectionTaskDto && currentItem.injectionTaskDto.attachmentResponseList">
+          <h2>接种签核信息</h2>
+          <div class="img-warp" v-for="item in currentItem.injectionTaskDto.attachmentResponseList">
+            <img :src="item.attachmentStoragePath" class="confirm-img"/>
+          </div>
         </section>
       </div>
     </div>
