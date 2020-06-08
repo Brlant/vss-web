@@ -250,10 +250,10 @@
             callback(new Error('输入数量大于总数量'));
             break;
           }
-          case 3: {
+          /*case 3: {
             callback(new Error('输入数量不是散件的倍数,推荐数量' + obj.count));
             break;
-          }
+          }*/
           case 4: {
             callback();
             break;
@@ -278,13 +278,13 @@
         if (count > total) return {type: exceeded_number};
         let remainder = count % packageCount;
         if (remainder === 0) return {type: correct};
-        let ig = Math.floor(count / packageCount);
+        /*let ig = Math.floor(count / packageCount);
         let curCount = 0;
         curCount = ((ig + 1) * packageCount > total) ? ig * packageCount : (ig + 1) * packageCount;
         return {
           type: not_package_multiple,
           count: curCount
-        };
+        };*/
       },
       filterOrgGoods(query) {
         let orgId = this.$store.state.user.userCompanyAddress;
