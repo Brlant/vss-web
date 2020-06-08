@@ -18,10 +18,12 @@
       text-align: center;
       width: $leftWidth;
     }
+
     .content-right {
       > h3 {
         left: $leftWidth;
       }
+
       left: $leftWidth;
     }
   }
@@ -55,6 +57,7 @@
     .el-select {
       width: 260px;
     }
+
     .el-input {
       width: 260px;
     }
@@ -106,7 +109,7 @@
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="仓库" prop="warehouseId">
+            <!--<el-form-item label="仓库" prop="warehouseId">
               <el-select v-model="form.warehouseId" filterable clearable
                          @change="warehouseChange"
                          placeholder="请选择仓库">
@@ -114,7 +117,7 @@
                            :label="item.name">
                 </el-option>
               </el-select>
-            </el-form-item>
+            </el-form-item>-->
             <div v-loading="loadingData">
               <div class="empty-info" v-show="!batches.length">暂无库存信息</div>
               <el-row class="md-info" v-for="item in batches" :key="item.id">
@@ -251,13 +254,31 @@
             break;
           }
           case 3: {
-            callback(new Error('输入数量不是散件的倍数,推荐数量' + obj.count));
+            // callback(new Error('输入数量不是散件的倍数,推荐数量' + obj.count));
+            let goodsName = '';
+            this.orgGoods.forEach(i => {
+              if (this.form.orgGoodsId === i.id) {
+                goodsName = i.goodsName;
+              }
+            });
+            this.$confirm(`疫苗"${goodsName}"数量${this.form.count}不是最小包装的倍数，确认后会对后续操作产生严重影响!
+          选择“是”修改数量为${obj.count}，选择“否”确认数量${this.form.count}`, '', {
+              confirmButtonText: '是',
+              cancelButtonText: '否',
+              type: 'warning'
+            }).then(res => {
+              this.form.count = obj.count;
+            }).catch(() => {
+            });
             break;
           }
           case 4: {
             callback();
             break;
           }
+            break;
+          default:
+            break;
         }
       },
       /**
