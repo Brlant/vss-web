@@ -43,6 +43,23 @@ export const route = [
             path: '/pov/return/request/list',
             component: () => import('./components/purchase/returnRequest/list.vue'),
             meta: {moduleId: 'pov', title: '退货申请', perm: 'return-request-query', type: 'pov'}
+          },
+          {
+            path: '/purchase/allocation',
+            component: () => import('./components/common/parent-route.vue'),
+            meta: {moduleId: 'pov', title: '采购汇总', perm: 'purchansing-assignment'},
+            children: [
+              {
+                path: '',
+                component: () => import('./components/purchase/collect/list.vue'),
+                meta: {moduleId: 'pov', title: '采购汇总', perm: 'purchansing-assignment'}
+              },
+              {
+                path: '/purchase/allocation/task',
+                component: () => import('./components/purchase/collect/allocation.vue'),
+                meta: {moduleId: 'pov', title: '采购汇总', perm: 'purchansing-assignment'}
+              }
+            ]
           }
         ]
       },
@@ -80,23 +97,6 @@ export const route = [
                 path: '/sale/allocation/pov',
                 component: () => import('./components/purchase/pov/allocation.vue'),
                 meta: {moduleId: 'sale', title: '要货需求', perm: 'demand-assignment-update'}
-              }
-            ]
-          },
-          {
-            path: '/purchase/allocation',
-            component: () => import('./components/common/parent-route.vue'),
-            meta: {moduleId: 'purchase', title: '采购汇总', perm: 'purchansing-assignment'},
-            children: [
-              {
-                path: '',
-                component: () => import('./components/purchase/collect/list.vue'),
-                meta: {moduleId: 'purchase', title: '采购汇总', perm: 'purchansing-assignment'}
-              },
-              {
-                path: '/purchase/allocation/task',
-                component: () => import('./components/purchase/collect/allocation.vue'),
-                meta: {moduleId: 'purchase', title: '采购汇总', perm: 'purchansing-assignment'}
               }
             ]
           },
