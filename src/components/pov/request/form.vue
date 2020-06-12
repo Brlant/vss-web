@@ -674,6 +674,7 @@
           });
           return;
         }
+        this.changeNumber();
         let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
         if (!isCheck) return;
         let ary = this.filterProductList.filter(f => f.orgGoodsId === this.product.orgGoodsId);
