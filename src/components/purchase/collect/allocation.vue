@@ -23,6 +23,10 @@
       <div class="mb-15" style="overflow: hidden">
         <el-button class="pull-left" type="primary" :plain="true" @click="$router.push('/purchase/allocation')">返回采购汇总
         </el-button>
+        <perm label="submit-pull-signal" v-show="!$route.query.type">
+          <el-button class="pull-right" style="margin-left:20px" type="primary" @click="pullSubmit" v-show="status === 0 " :disabled="pullDoing">生成要货申请
+          </el-button>
+        </perm>
         <perm label="submit-purchansing-plan" v-show="!$route.query.type">
           <el-button class="pull-right" type="primary" @click="submit" v-show="status === 0 " :disabled="doing">生成采购合同
           </el-button>
@@ -146,6 +150,7 @@
         purchase: {},
         vaccineType: '',
         doing: false,
+        pullDoing: false,
         changeTotalNumber: utils.changeTotalNumber
       };
     },
@@ -262,8 +267,22 @@
             message: error.response && error.response.data && error.response.data.msg || '生成采购合同失败'
           });
         });
+      },
+      pullSubmit() {
+        this.pullDoing = true;
+        procurementCollect.createPullSignal(this.$route.query.id).then(() => {
+          this.pullDoing = false;
+          this.$notify.success({
+            message: '生成要货申请成功'
+          });
+          this.$router.push('/purchase/allocation');
+        }).catch(error => {
+          this.pullDoing = false;
+          this.$notify.error({
+            message: error.response.data && error.response.data.msg || '生成要货申请失败'
+          });
+        });
       }
     }
-
   };
 </script>

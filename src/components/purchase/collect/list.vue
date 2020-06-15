@@ -74,7 +74,7 @@
                       <span @click.prevent="showDetail(item)">
                         <a href="#" class="btn-circle" @click.prevent=""><i
                           class="el-icon-t-wave"></i></a>
-                        生成采购合同
+                        编辑采购汇总
                       </span>
                     </perm>
                   </div>

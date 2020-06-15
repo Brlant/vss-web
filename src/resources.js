@@ -809,6 +809,9 @@ export const procurementCollect = resource('/procurement-demand', http, {
   createOrder(key) {
     return http.put(`/procurement-demand/${key}/sales-ticket`);
   },
+  createPullSignal(key){
+    return http.put(`/procurement-demand/${key}/pull-signal`);
+  },
   queryDetailList(key) {
     return http.get(`/procurement-demand/${key}/goods`);
   },
