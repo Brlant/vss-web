@@ -52,6 +52,11 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row :span="5" label="批号">
+                <el-input placeholder="请输入批号" v-model="searchCondition.batchNumber"></el-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="接种单位名称" :span="7">
                 <el-select filterable remote placeholder="请输入接种单位名称查询"
                            :remote-method="filterProvide" :clearable="true" :loading="selectLoading"
@@ -175,14 +180,16 @@
           actualEndTime: '',
           vaccineId: '',
           povId: '',
-          actualCode: ''
+          actualCode: '',
+          batchNumber: ''
         },
         searchCondition: {
           actualStartTime: '',
           actualEndTime: '',
           vaccineId: '',
           povId: '',
-          actualCode: ''
+          actualCode: '',
+          batchNumber: ''
         },
         actualTime: '',
         orgList: [], // 货主列表,
@@ -220,7 +227,7 @@
           this.selectLoading = false;
         }).catch(() => {
           this.selectLoading = false;
-        })
+        });
       },
       handleSizeChange(val) {
         this.pager.pageSize = val;
@@ -262,7 +269,8 @@
           actualEndTime: '',
           vaccineId: '',
           povId: '',
-          actualCode: ''
+          actualCode: '',
+          batchNumber: ''
         };
         this.actualTime = '';
         Object.assign(this.searchCondition, temp);
