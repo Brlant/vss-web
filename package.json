@@ -1,7 +1,7 @@
 {
   "name": "vss-web",
   "description": "vss-web",
-  "version": "3.55.0",
+  "version": "3.56.0",
   "author": "Hulk <jayzch@qq.com>",
   "private": true,
   "scripts": {
