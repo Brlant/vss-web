@@ -149,7 +149,7 @@
                 {{ item.actualCode}}
               </el-col>
               <el-col :span="1">
-                {{item.sourceSystem ? 'vss' : ''}}
+                {{item.sourceSystem}}
               </el-col>
             </el-row>
           </div>
