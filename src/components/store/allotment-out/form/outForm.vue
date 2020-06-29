@@ -139,8 +139,8 @@
             <el-form-item label="实际收货人" v-show="showContent.isShowOtherContent">
               <oms-input type="text" placeholder="请输入实际收货人" :maxlength="50" v-model="form.actualConsignee"></oms-input>
             </el-form-item>
-            <el-form-item label="疾控仓库地址" prop="orgAddress">
-              <el-select placeholder="请选择疾控仓库地址" v-model="form.orgAddress" filterable :clearable="true"
+            <el-form-item label="仓库地址" prop="orgAddress">
+              <el-select placeholder="请选择仓库地址" v-model="form.orgAddress" filterable :clearable="true"
                          @change="transportationAddressChange">
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenterAddressList">
@@ -447,7 +447,7 @@
             {required: true, message: '请选择物流商', trigger: 'change'}
           ],
           orgAddress: [
-            {required: true, message: '请选择疾控仓库地址', trigger: 'change'}
+            {required: true, message: '请选择仓库地址', trigger: 'change'}
           ],
           logisticsCentreId: [
             {required: true, message: '请选择物流中心', trigger: 'change'}

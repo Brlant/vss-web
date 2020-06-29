@@ -135,7 +135,7 @@
             <el-form-item label="物流中心">
               {{currentItem.centreName}}
             </el-form-item>
-            <el-form-item label="疾控仓库地址">
+            <el-form-item label="仓库地址">
               {{ getWarehouseAddress(currentItem)}}
             </el-form-item>
             <!--<el-form-item label="是否进口">-->
