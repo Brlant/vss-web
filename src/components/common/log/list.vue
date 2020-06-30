@@ -66,11 +66,9 @@
             <el-col :span="8">
               <oms-form-row label="日志操作时间" :span="7">
                 <el-col :span="24">
-                  <el-date-picker
-                    v-model="expectedTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
-                  </el-date-picker>
+                  <el-date-picker v-model="expectedTime" type="datetimerange"
+                                  :default-time="['00:00:00', '23:59:59']"
+                                  placeholder="请选择"></el-date-picker>
                 </el-col>
               </oms-form-row>
             </el-col>
