@@ -32,8 +32,8 @@
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="allocating-out-order-cancel"
-                  v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'">
-              <el-button type="warning" plain @click="cancel">取消订单</el-button>
+                  v-show="currentOrder.state === '2'">
+              <el-button @click="completeOrder" type="primary">完成订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
@@ -45,6 +45,11 @@
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="allocating-out-order-audit" v-show="currentOrder.state === '1' ">
               <el-button type="primary" @click="review">审单通过</el-button>
+            </perm>
+          </li>
+          <li class="text-center order-btn" style="margin-top: 10px" v-show="currentOrder.state === '3' ">
+            <perm label="return-manager-batch-complete">
+              <el-button @click="completeOrder" type="primary">完成订单</el-button>
             </perm>
           </li>
         </ul>
@@ -120,6 +125,25 @@
       }
     },
     methods: {
+      completeOrder() {
+        this.$confirm('是否确认完成订单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post(`/erp-order/${this.orderId}/transport/complete`).then(() => {
+            this.$notify.success({
+              message: '完成订单'
+            });
+            this.$emit('refreshOrder');
+            this.$emit('close');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response && error.response.data && error.response.data.msg || '操作失败'
+            });
+          });
+        });
+      },
       queryOrderDetail() {
         if (!this.orderId) return false;
         this.currentOrder = {};
