@@ -305,6 +305,7 @@
     },
     data: function () {
       return {
+        warehouseTypeList: this.$store.state.warehouseType,
         pickerOptions0: {
           disabledDate(time) {
             return new Date(time).getTime() < Date.now();
@@ -419,7 +420,7 @@
         return name + item.detail;
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
+        return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
       },
       editOrderInfo() {
         pullSignal.get(this.currentOrder.id).then(res => {

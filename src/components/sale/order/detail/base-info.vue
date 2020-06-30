@@ -277,6 +277,7 @@
         span: 8,
         warehouses: [],
         LogisticsCenter: [],
+        warehouseTypeList: this.$store.state.warehouseType,
         rules: {
           transportationMeansId: [
             {required: true, message: '请选择物流方式', trigger: 'change'}
@@ -357,7 +358,7 @@
             : item.transportationMeansId === '2' ? '预计发货' : '';
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
+        return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
       },
       changeRemark(form) {
         if (!this.currentOrder.remark) {

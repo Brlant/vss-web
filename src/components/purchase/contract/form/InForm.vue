@@ -473,7 +473,8 @@
         cdcWarehouses: [],
         supplierWarehouses: [],
         changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage
+        isCheckPackage: utils.isCheckPackage,
+        warehouseTypeList: this.$store.state.warehouseType
       };
     },
     computed: {
@@ -760,7 +761,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
+        return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
       },
       changeSupplier: function (val, isEdit) {// 业务单位改变
         this.form.supplierName = this.orgList.filter(f => f.id === val)[0] && this.orgList.filter(f => f.id === val)[0].name;

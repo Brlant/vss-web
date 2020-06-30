@@ -126,7 +126,7 @@
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
                            v-for="item in LogisticsCenterAddressList">
                   <span class="pull-left">{{ item.name }}</span>
-                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}（{{storeType[item.warehouseType]}}）</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -158,7 +158,7 @@
               <el-select placeholder="请选择收货地址" v-model="form.transportationAddress" filterable clearable>
                 <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
                   <span class="pull-left">{{ item.name }}</span>
-                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}（{{storeType[item.warehouseType]}}）</span>
+                  <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
@@ -530,7 +530,7 @@
         editItemProduct: {},
         isHasBatchNumberInfo: false,
         formCopy: {},
-        storeType: ['物流公司仓库', '本地仓库']
+        warehouseTypeList: this.$store.state.warehouseType
       };
     },
     computed: {
@@ -620,10 +620,10 @@
       },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
-        return name + item.detail + `（${this.storeType[item.warehouseType]}）`;
+        return name + item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
+        return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
       },
       getTitle() {
         return `${this.defaultIndex === 2 ? '编辑' : '添加'}报损`;

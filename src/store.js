@@ -29,6 +29,11 @@ const state = {
     {key: 0, label: '免疫规划疫苗'},
     {key: 1, label: '非免疫规划疫苗'}
   ],
+  warehouseType: [
+    {key: '0', label: '物流公司仓库'},
+    {key: '1', label: '本地仓库'},
+    {key: '2', label: '物流中心'}
+  ],
   sysTitle: '疫苗供应链管理系统'
 };
 let bodyLeft = window.localStorage.getItem('bodyLeft');

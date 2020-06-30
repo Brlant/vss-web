@@ -392,6 +392,7 @@
       };
 
       return {
+        warehouseTypeList: this.$store.state.warehouseType,
         loading: false,
         idNotify: true,
         product: {
@@ -724,7 +725,7 @@
         });
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
+        return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
       },
       bizTypeChange: function (val) {// 业务类型改变
         if (!this.isStorageData) {// 有缓存时，不重置表单
