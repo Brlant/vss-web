@@ -90,22 +90,35 @@
       </div>
 
       <el-table :data="logList" border @row-click="showDetail" class="clearfix" :header-row-class-name="'headerClass'"
-                ref="orderDetail" v-loading="loadingData">
+                ref="orderDetail" :v-loading="loadingData">
         <el-table-column prop="operationTime" label="日志操作时间" :sortable="true"
-                         width="200">
+                         width="110">
           <template slot-scope="scope">
-            {{ scope.row.operationTime | time}}
+            {{ scope.row.operationTime | mtime}}
           </template>
         </el-table-column>
-        <el-table-column prop="userName" label="日志操作人" :sortable="true" width="120"></el-table-column>
-        <el-table-column prop="orgName" label="所属单位" :sortable="true" width="250"></el-table-column>
-        <el-table-column prop="actionType" label="日志操作类型" :sortable="true" width="180">
+        <el-table-column prop="userName" label="日志操作人" :sortable="true" width="80"></el-table-column>
+        <el-table-column prop="orgName" label="所属单位" :sortable="true" width="50"></el-table-column>
+        <el-table-column prop="actionType" label="日志操作类型" :sortable="true" width="100">
           <template slot-scope="scope">
             {{ showActionType(scope.row.actionType)}}
           </template>
         </el-table-column>
-        <el-table-column prop="logRemarks" label="日志内容" :sortable="true"></el-table-column>
-        <el-table-column prop="ip" label="IP" :sortable="true" width="150"></el-table-column>
+        <el-table-column prop="logRemarks" label="日志内容" min-width="120">
+
+        </el-table-column>
+        <el-table-column prop="body" label="请求内容" width="350" >
+          <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
+            {{scope.row.body}}
+          </div>
+        </el-table-column>
+        <el-table-column prop="body" label="响应内容" width="350" >
+          <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
+            {{scope.row.response}}
+          </div>
+        </el-table-column>
+        <el-table-column prop="sessionId" label="sessionId" :sortable="true"></el-table-column>
+        <el-table-column prop="ip" label="IP" :sortable="true" width="50"></el-table-column>
       </el-table>
       <div class="text-center" v-show="(logList.length || pager.currentPage !== 1) && !loadingData">
         <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange"

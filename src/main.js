@@ -37,6 +37,10 @@ Vue.filter('date', function (dateTime) {
   if (!dateTime) return '';
   return moment(dateTime).format('YYYY-MM-DD');
 });
+Vue.filter('mtime', function (dateTime) {
+  if (!dateTime) return '';
+  return moment(dateTime).format('YYYY-MM-DD HH:mm:ss.SSS');
+});
 Vue.filter('time', function (dateTime) {
   if (!dateTime) return '';
   return moment(dateTime).format('YYYY-MM-DD HH:mm:ss');
