@@ -32,8 +32,8 @@
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm label="allocating-out-order-cancel"
-                  v-show="currentOrder.state === '2'">
-              <el-button @click="completeOrder" type="primary">完成订单</el-button>
+                  v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'">
+              <el-button @click="cancel" plain type="warning">取消订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
