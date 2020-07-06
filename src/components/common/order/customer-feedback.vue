@@ -30,17 +30,12 @@
       </h3>
       <div v-show="isShowPushBtn" class="mb-10" style="display: inline-block">
         <perm :label="perm">
-          <el-button type="primary" size="mini" @click="uploadData">推送数据</el-button>
+          <el-button @click="uploadData" size="mini" type="primary">签收并推送数据</el-button>
         </perm>
       </div>
       <div v-show="!isShowPushBtn" class="mb-10 ml-10">
         <perm label="upload-data-operate-again" style="display: inline-block">
           <el-button type="primary" size="mini" @click="uploadData">重新推送数据</el-button>
-        </perm>
-      </div>
-      <div class="mb-10 ml-10" style="display: inline-block">
-        <perm :label="perm">
-          <el-button type="primary" size="mini" @click="uploadWDData">推送给市疾控</el-button>
         </perm>
       </div>
       <div class="ml-10" style="display: inline-block">
