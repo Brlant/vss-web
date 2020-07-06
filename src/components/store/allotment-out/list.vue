@@ -301,12 +301,19 @@
                   <order-push-status :status="item.pushStatus" :msg="item.pushMessage"/>
                 </div>
               </el-col>
-              <el-col :span="3" class="opera-btn" v-if="filters.state === '0' || filters.state === '1' ">
-                <perm label="allocating-out-order-edit">
+              <el-col :span="3" class="opera-btn">
+                <perm label="allocating-out-order-edit" v-if="filters.state === '0' || filters.state === '1' ">
                   <span @click.stop.prevent="editOrder(item)">
                     <a href="#" class="btn-circle" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
                   编辑
+                 </span>
+                </perm>
+                <perm label="return-manager-batch-review" v-if="['2'].includes(filters.state)">
+                  <span @click.stop.prevent="reviewOrder(item)">
+                    <a @click.prevent="" class="btn-circle" href="#"><i
+                      class="el-icon-t-scan"></i></a>
+                   扫码复核
                  </span>
                 </perm>
               </el-col>
@@ -333,6 +340,10 @@
       <add-form type="1" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :action="action"
                 @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :css="{'width':'1000px','padding':0}" :show="showReviewCode" @right-close="resetRightBox">
+      <review-order :orderId="currentOrderId" :show="showReviewCode" @refresh="refreshOrder"
+                    @right-close="resetRightBox"/>
+    </page-right>
   </div>
 </template>
 <script>
@@ -341,10 +352,11 @@
   import addForm from './form/outForm.vue';
   import {BaseInfo, erpOrder, Vaccine} from '@/resources';
   import OrderMixin from '@/mixins/orderMixin';
+  import reviewOrder from '@/components/purchase/scanReview/review.vue';
 
   export default {
     components: {
-      showForm, addForm
+      showForm, addForm, reviewOrder
     },
     data: function () {
       return {
@@ -353,6 +365,7 @@
         showPart: false,
         showDetail: false,
         showSearch: false,
+        showReviewCode: false,
         orderList: [],
         filters: {
           type: 1,
@@ -430,6 +443,30 @@
       }
     },
     methods: {
+      completeOrder() {
+        this.$confirm('是否确认完成订单', '', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          this.$http.post(`/erp-order/${this.orderId}/transport/complete`).then(() => {
+            this.$notify.success({
+              message: '完成订单'
+            });
+            this.$emit('refreshOrder');
+            this.$emit('close');
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response && error.response.data && error.response.data.msg || '操作失败'
+            });
+          });
+        });
+      },
+      reviewOrder(item) {
+        this.action = 'edit';
+        this.showReviewCode = true;
+        this.currentOrderId = item.id;
+      },
       showPartItem(item) {
         this.currentOrderId = item.id;
         this.showPart = true;
@@ -482,6 +519,7 @@
         this.defaultIndex = 0;
         this.action = '';
         this.showPart = false;
+        this.showReviewCode = false;
         // this.getOrderList(this.pager.currentPage);
         this.$router.push('/store/allotment/out/list');
       },

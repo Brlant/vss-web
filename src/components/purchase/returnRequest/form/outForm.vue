@@ -480,7 +480,8 @@
         requestTime: '',
         editItemProduct: {},
         isHasBatchNumberInfo: false,
-        formCopy: {}
+        formCopy: {},
+        warehouseTypeList: this.$store.state.warehouseType
       };
     },
     computed: {
@@ -672,7 +673,7 @@
         this.searchProduct();
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail + `（${item.warehouseType === '0' ? '物流仓库' : '本地仓库'}）`;
+        return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
       },
       filterAddress(isStorageData) {
         Address.queryAddress(this.form.povId, {
