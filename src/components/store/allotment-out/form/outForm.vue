@@ -968,22 +968,49 @@
                 this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
               }
               item.list.forEach(m => {
-                let amount = Math.ceil(m.proportion * (totalAmount ? totalAmount : this.product.amount));
-                this.form.detailDtoList.push({
-                  no: '',
-                  batchNumberId: '',
-                  mainOrgId: item.orgGoodsDto.id,
-                  isCombination: true,
-                  orgGoodsId: m.accessory,
-                  orgGoodsName: m.name,
-                  unitPrice: m.procurementPrice ? m.procurementPrice : 0,
-                  amount: amount,
-                  measurementUnit: m.accessoryGoods.measurementUnit,
-                  packingCount: null,
-                  specificationsId: '',
-                  expirationDate: m.expirationDate, // 有效期
-                  specifications: m.accessoryGoods.specifications,
-                  proportion: m.proportion
+                this.batchNumbers.forEach(b => {
+                  if (b.orgGoodsId === m.accessory) {
+                    if (b.lots.length) {
+                      b.lots.forEach(bl => {
+                        if (bl.isChecked) {
+                          this.form.detailDtoList.push({
+                            no: bl.no,
+                            expirationDate: bl.expirationDate,
+                            batchNumberId: bl.id,
+                            mainOrgId: item.orgGoodsDto.id,
+                            isCombination: true,
+                            orgGoodsId: m.accessory,
+                            orgGoodsName: m.name,
+                            unitPrice: m.procurementPrice ? m.procurementPrice : 0,
+                            amount: bl.productCount,
+                            measurementUnit: m.accessoryGoods.measurementUnit,
+                            packingCount: null,
+                            specificationsId: '',
+                            specifications: m.accessoryGoods.specifications,
+                            proportion: m.proportion
+                          });
+                        }
+                      });
+                    } else {
+                      let amount = Math.ceil(m.proportion * totalAmount);
+                      this.form.detailDtoList.push({
+                        no: '',
+                        batchNumberId: '',
+                        mainOrgId: item.orgGoodsDto.id,
+                        isCombination: true,
+                        orgGoodsId: m.accessory,
+                        orgGoodsName: m.name,
+                        unitPrice: m.procurementPrice ? m.procurementPrice : 0,
+                        amount: amount,
+                        measurementUnit: m.accessoryGoods.measurementUnit,
+                        packingCount: null,
+                        specificationsId: '',
+                        specifications: m.accessoryGoods.specifications,
+                        proportion: m.proportion,
+                        expirationDate: m.expirationDate
+                      });
+                    }
+                  }
                 });
               });
             }
