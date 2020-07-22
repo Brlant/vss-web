@@ -575,7 +575,7 @@
         this.form.cdcId = '';
         this.form.warehouseId = '';
         this.searchProductList = [];
-        this.filterProductList = [];
+         this.filterProductList = [];
       },
       clearForm() {
         this.accessoryList = [];
@@ -595,7 +595,7 @@
         };
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.detailDtoList = [];
-        this.searchProductList = [];
+        this.filterProductList = [];
       },
       editOrderInfo() {
         if (!this.orderId) return;
