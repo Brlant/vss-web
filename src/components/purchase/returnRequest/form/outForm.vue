@@ -825,7 +825,7 @@
                     b.lots.forEach(bl => {
                       if (!bl.isChecked) return;
                       this.form.detailDtoList.push({
-                        no: bl.no,
+                        batchNumber: bl.no,
                         expirationDate: bl.expirationDate,
                         batchNumberId: bl.id,
                         mainOrgId: item.orgGoodsDto.id,
