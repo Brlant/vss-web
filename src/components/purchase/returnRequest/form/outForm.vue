@@ -613,7 +613,8 @@
               combinationSign: m.combinationSign,
               batchNumberId: m.batchNumberId,
               batchNumber: m.batchNumber,
-              orgGoodsDto: m.orgGoodsDataDto.orgGoodsDto
+              orgGoodsDto: m.orgGoodsDataDto.orgGoodsDto,
+              expirationDate: m.expirationDate
             };
           });
           this.filterAddress(this.isStorageData);
@@ -825,7 +826,7 @@
                     b.lots.forEach(bl => {
                       if (!bl.isChecked) return;
                       this.form.detailDtoList.push({
-                        no: bl.no,
+                        batchNumber: bl.no,
                         expirationDate: bl.expirationDate,
                         batchNumberId: bl.id,
                         mainOrgId: item.orgGoodsDto.id,

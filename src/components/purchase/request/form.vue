@@ -432,7 +432,8 @@
               orgGoodsId: m.orgGoodsId,
               orgGoodsName: m.goodsName,
               unitPrice: m.price,
-              specification: m.specification
+              specification: m.specification,
+              expirationDate: m.expirationDate
             };
           });
           this.orgList.push({
@@ -465,7 +466,8 @@
             measurementUnit: m.unit,
             orgGoodsId: m.orgGoodsId,
             orgGoodsName: m.goodsName,
-            unitPrice: m.price
+            unitPrice: m.price,
+            expirationDate: m.expirationDate
           };
         });
         this.orgList.push({
