@@ -853,7 +853,7 @@
                     if (b.orgGoodsId !== m.accessory) return;
                     if (b.lots.length) {
                       b.lots.forEach(bl => {
-                        if (bl.isChecked) return;
+                        if (!bl.isChecked) return;
                         this.form.detailDtoList.push({
                           no: bl.no,
                           expirationDate: bl.expirationDate,
