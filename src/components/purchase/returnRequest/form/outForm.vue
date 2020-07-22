@@ -575,7 +575,7 @@
         this.form.cdcId = '';
         this.form.warehouseId = '';
         this.searchProductList = [];
-         this.filterProductList = [];
+        this.filterProductList = [];
       },
       clearForm() {
         this.accessoryList = [];
@@ -820,47 +820,45 @@
               }
               item.list.forEach(m => {
                 this.batchNumbers.forEach(b => {
-                  if (b.orgGoodsId === m.accessory) {
-                    if (b.lots.length) {
-                      b.lots.forEach(bl => {
-                        if (bl.isChecked) {
-                          this.form.detailDtoList.push({
-                            no: bl.no,
-                            expirationDate: bl.expirationDate,
-                            batchNumberId: bl.id,
-                            mainOrgId: item.orgGoodsDto.id,
-                            isCombination: true,
-                            orgGoodsId: m.accessory,
-                            orgGoodsName: m.name,
-                            unitPrice: m.procurementPrice ? m.procurementPrice : 0,
-                            amount: bl.productCount,
-                            measurementUnit: m.accessoryGoods.measurementUnit,
-                            packingCount: null,
-                            specificationsId: '',
-                            specifications: m.accessoryGoods.specifications,
-                            proportion: m.proportion
-                          });
-                        }
-                      });
-                    } else {
-                      let amount = Math.ceil(m.proportion * totalAmount);
+                  if (b.orgGoodsId !== m.accessory) return;
+                  if (b.lots.length) {
+                    b.lots.forEach(bl => {
+                      if (bl.isChecked) return;
                       this.form.detailDtoList.push({
-                        no: '',
-                        batchNumberId: '',
+                        no: bl.no,
+                        expirationDate: bl.expirationDate,
+                        batchNumberId: bl.id,
                         mainOrgId: item.orgGoodsDto.id,
                         isCombination: true,
                         orgGoodsId: m.accessory,
                         orgGoodsName: m.name,
                         unitPrice: m.procurementPrice ? m.procurementPrice : 0,
-                        amount: amount,
+                        amount: bl.productCount,
                         measurementUnit: m.accessoryGoods.measurementUnit,
                         packingCount: null,
                         specificationsId: '',
                         specifications: m.accessoryGoods.specifications,
-                        proportion: m.proportion,
-                        expirationDate: m.expirationDate
+                        proportion: m.proportion
                       });
-                    }
+                    });
+                  } else {
+                    let amount = Math.ceil(m.proportion * totalAmount);
+                    this.form.detailDtoList.push({
+                      no: '',
+                      batchNumberId: '',
+                      mainOrgId: item.orgGoodsDto.id,
+                      isCombination: true,
+                      orgGoodsId: m.accessory,
+                      orgGoodsName: m.name,
+                      unitPrice: m.procurementPrice ? m.procurementPrice : 0,
+                      amount: amount,
+                      measurementUnit: m.accessoryGoods.measurementUnit,
+                      packingCount: null,
+                      specificationsId: '',
+                      specifications: m.accessoryGoods.specifications,
+                      proportion: m.proportion,
+                      expirationDate: m.expirationDate
+                    });
                   }
                 });
               });
