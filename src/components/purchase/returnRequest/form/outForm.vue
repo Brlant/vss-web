@@ -595,6 +595,7 @@
         };
         this.$refs['orderGoodsAddForm'].resetFields();
         this.form.detailDtoList = [];
+        this.searchProductList = [];
       },
       editOrderInfo() {
         if (!this.orderId) return;
