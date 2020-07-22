@@ -322,6 +322,17 @@
             });
           }
         });
+        // 置空勾选项和数量
+        this.batchNumbers.filter(f => f.orgGoodsId !== this.product.orgGoodsId).forEach(i => {
+          i.lots.forEach(lot => {
+            if (lot.isChecked) {
+              lot.isChecked = !lot.isChecked;
+            }
+            if (lot.productCount) {
+              lot.productCount = null;
+            }
+          });
+        });
         this.batchNumbers.filter(f => f.orgGoodsId !== this.product.orgGoodsId).forEach(i => {
           // 组合疫苗总数量
           let comTotalCount = 0;
