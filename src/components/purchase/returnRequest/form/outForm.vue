@@ -613,7 +613,8 @@
               combinationSign: m.combinationSign,
               batchNumberId: m.batchNumberId,
               batchNumber: m.batchNumber,
-              orgGoodsDto: m.orgGoodsDataDto.orgGoodsDto
+              orgGoodsDto: m.orgGoodsDataDto.orgGoodsDto,
+              expirationDate: m.expirationDate
             };
           });
           this.filterAddress(this.isStorageData);
