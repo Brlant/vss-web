@@ -195,12 +195,12 @@
                 i.lots.forEach(i => {
                   if (i.id === this.editItemProduct.batchNumberId) {
                     i.productCount = this.editItemProduct.amount;
-                    // 编辑时，如果是已经保存的疫苗，取其相应的数量+还剩下的可用库存
-                    this.formCopy.detailDtoList.forEach(p => {
-                      if (p.batchNumberId === this.editItemProduct.batchNumberId) {
-                        i.count = i.count + p.amount;
-                      }
-                    });
+                    /* // 编辑时，如果是已经保存的疫苗，取其相应的数量+还剩下的可用库存
+                     this.formCopy.detailDtoList.forEach(p => {
+                       if (p.batchNumberId === this.editItemProduct.batchNumberId) {
+                         i.count = i.count + p.amount;
+                       }
+                     });*/
                     i.isChecked = true;
                   }
                 });
@@ -321,6 +321,17 @@
               }
             });
           }
+        });
+        // 置空勾选项和数量
+        this.batchNumbers.filter(f => f.orgGoodsId !== this.product.orgGoodsId).forEach(i => {
+          i.lots.forEach(lot => {
+            if (lot.isChecked) {
+              lot.isChecked = !lot.isChecked;
+            }
+            if (lot.productCount) {
+              lot.productCount = null;
+            }
+          });
         });
         this.batchNumbers.filter(f => f.orgGoodsId !== this.product.orgGoodsId).forEach(i => {
           // 组合疫苗总数量

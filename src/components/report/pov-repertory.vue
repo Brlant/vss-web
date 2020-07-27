@@ -27,8 +27,16 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
-              <oms-form-row label="" :span="2">
+            <el-col :span="8">
+              <oms-form-row :span="7" label="疫苗种类">
+                <el-select placeholder="请选择疫苗种类" type="text" v-model="searchWord.type">
+                  <el-option :key="item.key" :label="item.label" :value="item.key"
+                             v-for="item in vaccineSignList"></el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row :span="4" label="">
                 <perm label="pov-stock-form-manager-export">
                   <el-button type="primary" @click="search" :disabled="isLoading">
                     查询
@@ -116,7 +124,8 @@
         showSearch: true,
         searchWord: {
           startTime: '',
-          endTime: ''
+          endTime: '',
+          type: ''
         },
         bizDateAry: '',
         isLoading: false
@@ -125,6 +134,9 @@
     computed: {
       type() {
         return this.$route.meta.type;
+      },
+      vaccineSignList() {
+        return this.$getDict('vaccineSign');
       },
       getHeight: function () {
         return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
@@ -157,7 +169,7 @@
         }
         this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
         this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
-        let params = Object.assign({}, this.searchWord, {type: this.type - 1});
+        let params = Object.assign({}, this.searchWord);
         this.isLoading = true;
         this.$store.commit('initPrint', {
           isPrinting: true,
@@ -226,7 +238,7 @@
         }
         this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
         this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
-        let params = Object.assign({}, this.searchWord, {type: this.type - 1});
+        let params = Object.assign({}, this.searchWord);
         this.loadingData = true;
         this.$http.get('/erp-statement/pov-stock', {params}).then(res => {
           res.data.forEach(i => {
@@ -240,7 +252,8 @@
       resetSearchForm: function () {
         this.searchWord = {
           startTime: '',
-          endTime: ''
+          endTime: '',
+          type: ''
         };
         this.bizDateAry = '';
       },

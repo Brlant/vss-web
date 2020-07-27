@@ -440,7 +440,8 @@
             orgGoodsName: m.goodsName,
             unitPrice: m.price,
             specification: m.specification,
-            combinationSign: m.combinationSign
+            combinationSign: m.combinationSign,
+            expirationDate: m.expirationDate
           };
         });
         this.form = {
@@ -470,7 +471,8 @@
             orgGoodsName: m.goodsName,
             unitPrice: m.price,
             specification: m.specification,
-            combinationSign: m.combinationSign
+            combinationSign: m.combinationSign,
+            expirationDate: m.expirationDate
           };
         });
         this.form = {
