@@ -1132,7 +1132,7 @@
               this.$notify({
                 duration: 2000,
                 title: '编辑采购退货失败',
-                message: error.response.data.msg,
+                message: error.response && error.response.data && error.response.data.msg || '网络异常',
                 type: 'error'
               });
             });
@@ -1153,7 +1153,7 @@
               this.$notify({
                 duration: 2000,
                 title: '新增采购退货失败',
-                message: error.response.data.msg,
+                message: error.response && error.response.data && error.response.data.msg || '网络异常',
                 type: 'error'
               });
             });

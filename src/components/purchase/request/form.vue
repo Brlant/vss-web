@@ -792,7 +792,7 @@
               this.$notify({
                 duration: 2000,
                 title: '编辑分货申请单失败',
-                message: error.response.data.msg,
+                message: error.response && error.response.data && error.response.data.msg || '网络异常',
                 type: 'error'
               });
             });
@@ -812,7 +812,7 @@
               this.$notify({
                 duration: 2000,
                 title: '新增分货申请单失败',
-                message: error.response.data.msg,
+                message: error.response && error.response.data && error.response.data.msg || '网络异常',
                 type: 'error'
               });
             });

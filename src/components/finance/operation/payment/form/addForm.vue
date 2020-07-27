@@ -349,7 +349,7 @@
             this.$notify({
               duration: 2000,
               title: '新增付款作业申请失败',
-              message: error.response.data.msg,
+              message: error.response && error.response.data && error.response.data.msg || '网络异常',
               type: 'error'
             });
           });

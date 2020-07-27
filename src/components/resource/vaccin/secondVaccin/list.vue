@@ -543,7 +543,7 @@
             let e = error.response;
             if (e.status === 400) {
               this.$notify.info({
-                message: error.response.data.msg
+                message: error.response && error.response.data && error.response.data.msg || '网络异常'
               });
             }
           });

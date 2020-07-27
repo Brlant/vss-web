@@ -304,7 +304,7 @@
               this.$notify({
                 duration: 2000,
                 title: '无法操作',
-                message: error.response.data.msg,
+                message: error.response && error.response.data && error.response.data.msg || '网络异常',
                 type: 'error'
               });
             }

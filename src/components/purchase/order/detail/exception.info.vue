@@ -358,7 +358,7 @@
             this.$notify({
               duration: 20000,
               title: '无法关闭',
-              message: error.response.data.msg,
+              message: error.response && error.response.data && error.response.data.msg || '网络异常',
               type: 'error'
             });
           });
