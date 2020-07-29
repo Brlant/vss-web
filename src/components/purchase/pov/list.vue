@@ -170,7 +170,9 @@
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
                 {{ item.id }}
-                <div><dict dict-group="orderGoodsType" :dict-key="'' + item.goodsType"></dict></div>
+                <div>
+                  <dict :dict-key="'' + item.goodsType" dict-group="orderGoodsType"></dict>
+                </div>
               </el-col>
               <el-col :span="6" class="pt">
                 <span>{{ item.povName }}</span>
@@ -504,6 +506,7 @@
           demandStartTime: this.searchWord.demandStartTime,
           demandEndTime: this.searchWord.demandEndTime,
           orgAreaCode: this.searchWord.orgAreaCode,
+          goodsType: this.searchWord.goodsType,
           id: this.searchWord.id
         };
         Object.assign(this.filters, this.searchWord);
