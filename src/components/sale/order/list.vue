@@ -5,12 +5,15 @@
     width: 800px;
     padding: 30px 0;
     overflow: auto;
+
     .title {
       margin-left: 30px;
     }
+
     .order-info-part {
       padding: 0 50px;
     }
+
     .goods-info-left {
       width: 330px;
       margin-left: 30px;
@@ -20,22 +23,27 @@
       border-top-left-radius: 4px;
       border-bottom-left-radius: 4px;
     }
+
     .goods-info-right {
       width: 210px;
       padding: 32px 20px 33px 20px;
       background-color: rgb(238, 238, 238);
       border: 1px solid rgb(238, 238, 238);
       float: left;
+
       .el-row {
         margin-bottom: 5px;
       }
+
       margin-bottom: 20px;
     }
+
     .min-gutter {
       .el-form-item {
         margin-bottom: 4px;
       }
     }
+
     .border-show {
       height: 15px;
       width: 100%;
@@ -60,8 +68,10 @@
       line-height: 20px;
       cursor: pointer;
     }
+
     border-collapse: separate;
     border-spacing: 0;
+
     > tbody > tr > td {
       border-top: 1px solid #eee;
     }
@@ -672,6 +682,7 @@
               message: error.response && error.response.data && error.response.data.msg || '转换失败'
             });
           });
+        }).catch(() => {
         });
       }
     }

@@ -613,6 +613,7 @@
               message: error.response && error.response.data && error.response.data.msg || '转换失败'
             });
           });
+        }).catch(() => {
         });
       }
     }
