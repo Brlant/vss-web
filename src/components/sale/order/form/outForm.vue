@@ -310,7 +310,7 @@
                     <span v-else="">{{ product.specifications }}</span>
                   </td>
                   <td>
-                    {{ product.no ? product.no : '无' }}
+                    {{ product.batchNumber ? product.batchNumber : '无' }}
                     <!--<el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>-->
                     <goods-status-tag :item="product" :form="form"/>
 
@@ -985,6 +985,7 @@
                         let product = JSON.parse(JSON.stringify(this.product));
                         product.batchNumberId = bl.id;
                         product.no = bl.no;
+                        product.batchNumber = bl.no;
                         product.amount = bl.productCount;
                         product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
                         // 有效期

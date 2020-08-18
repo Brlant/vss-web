@@ -102,6 +102,7 @@ export default {
                 let product = JSON.parse(JSON.stringify(this.product));
                 product.batchNumberId = bl.id;
                 product.no = bl.no;
+                product.batchNumber = bl.no;
                 product.amount = bl.productCount;
                 product.measurementUnit = this.editItemProduct.measurementUnit;
                 this.form.detailDtoList.push(product);

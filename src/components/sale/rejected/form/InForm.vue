@@ -319,7 +319,7 @@
                   <span v-else="">{{ product.specifications }}</span>
                 </td>
                 <td>
-                  {{ product.no ? product.no : '无' }}
+                  {{ product.batchNumber ? product.batchNumber : '无' }}
                   <!--<el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>-->
                   <goods-status-tag :item="product" :form="form"/>
                 </td>
@@ -972,6 +972,7 @@
                       let product = JSON.parse(JSON.stringify(this.product));
                       product.batchNumberId = bl.id;
                       product.no = bl.batchNumber;
+                      product.batchNumber = bl.batchNumber;
                       product.amount = bl.productCount;
                       product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
                       // 有效期
@@ -989,7 +990,7 @@
                     b.lots.forEach(bl => {
                       if (!bl.isChecked) return;
                       this.form.detailDtoList.push({
-                        batchNumber: bl.no,
+                        batchNumber: bl.batchNumber,
                         expirationDate: bl.expirationDate,
                         batchNumberId: bl.id,
                         mainOrgId: item.orgGoodsDto.id,
