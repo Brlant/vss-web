@@ -954,7 +954,6 @@
               if (this.batchNumbers.length) {
                 this.batchNumbers[0].lots.forEach(bl => {
                   if (bl.isChecked) {
-                    console.log("111",bl);
                     let product = JSON.parse(JSON.stringify(this.product));
                     product.batchNumberId = bl.id;
                     product.no = bl.no;
