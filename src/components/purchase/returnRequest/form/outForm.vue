@@ -845,7 +845,7 @@
                   } else {
                     let amount = Math.ceil(m.proportion * totalAmount);
                     this.form.detailDtoList.push({
-                      no: '',
+                      batchNumber: '',
                       batchNumberId: '',
                       mainOrgId: item.orgGoodsDto.id,
                       isCombination: true,

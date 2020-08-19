@@ -297,7 +297,7 @@
                     <span v-else="">{{ product.specifications }}</span>
                   </td>
                   <td>
-                    {{ product.no ? product.no : '无' }}
+                    {{ product.batchNumber ? product.batchNumber : '无' }}
                     <!--<el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>-->
                     <goods-status-tag :item="product" :form="form"/>
 
@@ -838,7 +838,7 @@
                       if (bl.isChecked) {
                         let product = JSON.parse(JSON.stringify(this.product));
                         product.batchNumberId = bl.id;
-                        product.no = bl.no;
+                        product.batchNumber = bl.no;
                         product.expirationDate = bl.expirationDate;
                         product.amount = bl.productCount;
                         product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
@@ -874,7 +874,7 @@
                     } else {
                       let amount = Math.ceil(m.proportion * totalAmount);
                       this.form.detailDtoList.push({
-                        no: '',
+                        batchNumber: '',
                         batchNumberId: '',
                         mainOrgId: item.orgGoodsDto.id,
                         isCombination: true,
@@ -896,7 +896,7 @@
                 this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
                 item.list.forEach(m => {
                   this.form.detailDtoList.push({
-                    no: '',
+                    batchNumber: '',
                     batchNumberId: '',
                     mainOrgId: item.orgGoodsDto.id,
                     isCombination: true,
