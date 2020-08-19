@@ -992,7 +992,6 @@
                   if (bl.isChecked) {
                     let product = JSON.parse(JSON.stringify(this.product));
                     product.batchNumberId = bl.id;
-                    product.no = bl.no;
                     product.batchNumber = bl.no;
                     product.amount = bl.productCount;
                     product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
@@ -1031,7 +1030,7 @@
                   } else {
                     let amount = Math.ceil(m.proportion * totalAmount);
                     this.form.detailDtoList.push({
-                      no: '',
+                      batchNumber: '',
                       batchNumberId: '',
                       mainOrgId: item.orgGoodsDto.id,
                       isCombination: true,
