@@ -155,14 +155,14 @@
             </el-col>
             <el-col :span="1"></el-col>
             <el-col :span="6">
-              <el-button plain v-show="batchNumberInfos.length && !batchNumberInfos[0].createdBy && !form.isNew"
+              <!--<el-button plain v-show="batchNumberInfos.length && !batchNumberInfos[0].createdBy && !form.isNew"
                          @click="editBatch">
                 编辑
               </el-button>
               <el-button plain
                          v-show="batchNumberInfos.length && !batchNumberInfos[0].createdBy && isShowBatchReceipt && !form.isNew"
                          @click="cancelEditBatch">取消编辑
-              </el-button>
+              </el-button>-->
             </el-col>
           </el-row>
         </el-form-item>
