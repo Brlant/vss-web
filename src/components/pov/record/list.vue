@@ -198,7 +198,8 @@ export default {
         vaccineId: '',
         actualCode: '',
         traceCodeId: '',
-        checked: false
+        checked: false,
+        batchNumberId: ''
       },
       searchCondition: {
         actualStartTime: '',
