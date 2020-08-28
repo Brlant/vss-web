@@ -1,94 +1,104 @@
 <style lang="scss" scoped="">
 
-  .page-right-part {
-    box-sizing: content-box;
-    width: 800px;
-    padding: 30px 0;
-    overflow: auto;
-    .title {
-      margin-left: 30px;
-    }
-    .order-info-part {
-      padding: 0 50px;
-    }
-    .goods-info-left {
-      width: 330px;
-      margin-left: 30px;
-      padding: 20px;
-      float: left;
-      border: 1px solid rgb(238, 238, 238);
-      border-top-left-radius: 4px;
-      border-bottom-left-radius: 4px;
-    }
-    .goods-info-right {
-      width: 210px;
-      padding: 32px 20px 33px 20px;
-      background-color: rgb(238, 238, 238);
-      border: 1px solid rgb(238, 238, 238);
-      float: left;
-      .el-row {
-        margin-bottom: 5px;
-      }
-      margin-bottom: 20px;
-    }
-    .min-gutter {
-      .el-form-item {
-        margin-bottom: 4px;
-      }
-    }
-    .border-show {
-      height: 15px;
-      width: 100%;
-      border-bottom: 1px solid #777777;
-      opacity: 0.2;
-      margin-bottom: 10px;
-    }
+.page-right-part {
+  box-sizing: content-box;
+  width: 800px;
+  padding: 30px 0;
+  overflow: auto;
 
+  .title {
+    margin-left: 30px;
   }
 
-  .exceptionPosition {
-    /*margin-left: 40px;*/
-    position: absolute;
-    right: 0;
-    top: 50%;
-    transform: translateY(-50%);
+  .order-info-part {
+    padding: 0 50px;
   }
 
-  .table {
-    .order-list-item {
-      color: #999;
-      line-height: 20px;
+  .goods-info-left {
+    width: 330px;
+    margin-left: 30px;
+    padding: 20px;
+    float: left;
+    border: 1px solid rgb(238, 238, 238);
+    border-top-left-radius: 4px;
+    border-bottom-left-radius: 4px;
+  }
+
+  .goods-info-right {
+    width: 210px;
+    padding: 32px 20px 33px 20px;
+    background-color: rgb(238, 238, 238);
+    border: 1px solid rgb(238, 238, 238);
+    float: left;
+
+    .el-row {
+      margin-bottom: 5px;
     }
-    border-collapse: separate;
-    border-spacing: 0;
-    > tbody > tr > td {
-      border-top: 1px solid #eee;
+
+    margin-bottom: 20px;
+  }
+
+  .min-gutter {
+    .el-form-item {
+      margin-bottom: 4px;
     }
-
   }
 
-  .empty-position {
-    width: 150px;
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
+  .border-show {
+    height: 15px;
+    width: 100%;
+    border-bottom: 1px solid #777777;
+    opacity: 0.2;
+    margin-bottom: 10px;
   }
 
-  .w90 {
-    width: 90px;
-  }
+}
 
+.exceptionPosition {
+  /*margin-left: 40px;*/
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.table {
   .order-list-item {
-    cursor: pointer;
+    color: #999;
+    line-height: 20px;
   }
 
-  .cursor-span {
-    cursor: pointer;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  > tbody > tr > td {
+    border-top: 1px solid #eee;
   }
 
-  .order-list-status-right {
-    justify-content: flex-end;
-  }
+}
+
+.empty-position {
+  width: 150px;
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.w90 {
+  width: 90px;
+}
+
+.order-list-item {
+  cursor: pointer;
+}
+
+.cursor-span {
+  cursor: pointer;
+}
+
+.order-list-status-right {
+  justify-content: flex-end;
+}
 </style>
 <template>
   <div class="order-page">
@@ -140,11 +150,11 @@
                            @click.native.once="filterOrg('')">
                   <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
                     <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{org.name}}</span>
+                      <span class="pull-left" style="clear: right">{{ org.name }}</span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{org.manufacturerCode}}
+                        <span>系统代码:</span>{{ org.manufacturerCode }}
                       </span>
                     </div>
                   </el-option>
@@ -163,13 +173,13 @@
                              :value="item.orgGoodsDto.id">
                     <div style="overflow: hidden">
                       <span class="pull-left">
-                        {{item.orgGoodsDto.name}}
+                        {{ item.orgGoodsDto.name }}
                         <el-tag style="float: none" type="danger" v-show="!item.orgGoodsDto.status">停用</el-tag>
                       </span>
                     </div>
                     <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{ item.orgGoodsDto.goodsNo }}
                         </span>
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
@@ -205,6 +215,11 @@
               <order-push-search v-model="searchCondition.pushStatus"/>
             </el-col>
             <el-col :span="8">
+              <oms-form-row label="来源订单号" :span="6">
+                <oms-input type="text" v-model="searchCondition.thirdPartyNumber" placeholder="请输入货主订单号"></oms-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
               <oms-form-row label="" :span="5">
                 <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
@@ -221,7 +236,7 @@
                  v-for="(item,key) in orgType" v-show="key < 4"
                  @click="changeStatus(item,key)">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{ item.title }}<span class="status-num">{{ item.num }}</span>
               </div>
             </div>
           </div>
@@ -233,7 +248,7 @@
                  v-for="(item,key) in orgType"
                  @click="changeStatus(item,key)" v-show="key > 3">
               <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{ item.title }}<span class="status-num">{{ item.num }}</span>
               </div>
             </div>
           </div>
@@ -274,19 +289,19 @@
                   </span>
                   <div>
                     <div class="f-grey">
-                      {{item.orderNo }}
+                      {{ item.orderNo }}
                     </div>
                     <div>
-                      {{item.orgName }}
+                      {{ item.orgName }}
                     </div>
                   </div>
                 </div>
                 <div v-show="!isShowCheckBox">
                   <div class="f-grey">
-                    {{item.orderNo }}
+                    {{ item.orderNo }}
                   </div>
                   <div>
-                    {{item.orgName }}
+                    {{ item.orgName }}
                   </div>
                 </div>
               </el-col>
@@ -296,22 +311,22 @@
                 </div>
               </el-col>
               <el-col :span="5" class="pt10">
-                <div class="f-grey" v-show="item.thirdPartyNumber">{{item.thirdPartyNumber }}</div>
-                <div>{{item.transactOrgName }}</div>
+                <div class="f-grey" v-show="item.thirdPartyNumber">{{ item.thirdPartyNumber }}</div>
+                <div>{{ item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
                 <div>
                   <span>下单</span>
-                  ：{{item.createTime | minute }}
+                  ：{{ item.createTime | minute }}
                 </div>
                 <div v-show="item.expectedTime">
                   <span>预计入库</span>
-                  ：{{ item.expectedTime | date}}
+                  ：{{ item.expectedTime | date }}
                 </div>
               </el-col>
               <el-col :span="4">
                 <div>
-                  {{getOrderStatus(item)}}
+                  {{ getOrderStatus(item) }}
                   <order-push-status :status="item.pushStatus" :msg="item.pushMessage"/>
                 </div>
               </el-col>
@@ -365,315 +380,315 @@
   </div>
 </template>
 <script>
-  import utils from '@/tools/utils';
-  import showForm from './show.order.in.vue';
-  import addForm from './form/InForm.vue';
-  import {BaseInfo, erpOrder, Vaccine} from '@/resources';
-  import OrderMixin from '@/mixins/orderMixin';
-  import receiptInfo from './form/receipt';
+import utils from '@/tools/utils';
+import showForm from './show.order.in.vue';
+import addForm from './form/InForm.vue';
+import {BaseInfo, erpOrder, Vaccine} from '@/resources';
+import OrderMixin from '@/mixins/orderMixin';
+import receiptInfo from './form/receipt';
 
-  export default {
-    components: {
-      showForm, addForm, receiptInfo
-    },
-    data: function () {
-      return {
-        loadingData: true,
-        showItemRight: false,
-        showDetail: false,
-        showSearch: false,
-        showReceiptRight: false,
-        orderList: [],
-        filters: {
-          type: 0,
-          state: '6',
-          orderNo: '',
-          logisticsProviderName: '',
-          createStartTime: '',
-          createEndTime: '',
-          bizType: '1-0',
-          transportationMeansId: '',
-          transactOrgId: '',
-          thirdPartyNumber: '',
-          orgGoodsId: '',
-          orgAreaCode: '',
-          deleteFlag: false,
-          pushStatus: ''
-        },
-        searchCondition: {
-          searchType: 1,
-          orderNo: '',
-          logisticsProviderName: '',
-          createStartTime: '',
-          createEndTime: '',
-          transportationMeansId: '',
-          transactOrgId: '',
-          thirdPartyNumber: '',
-          orgGoodsId: '',
-          orgAreaCode: '',
-          pushStatus: ''
-        },
-        expectedTime: '',
-        orgType: utils.inOrderType,
-        activeStatus: 0,
-        currentOrderId: '',
-        orgList: [], // 来源单位列表
-        logisticsList: [], // 物流商列表
-        pager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 20
-        },
-        defaultIndex: 0, // 添加订单默认选中第一个tab
-        action: '',
-        user: {},
-        state: '',
-        purchase: {},
-        goodesList: []
-      };
-    },
-    mixins: [OrderMixin],
-    mounted() {
-      this.getOrderList(1);
-      let orderId = this.$route.params.id;
-      if (orderId && orderId !== 'list' && orderId !== 'add') {
-        this.currentOrderId = orderId;
-        this.showDetail = true;
-      }
-      if (orderId === 'add') {
-        this.add();
-        this.purchase = {
-          id: this.$route.query.id,
-          count: this.$route.query.count
-        };
-      }
-    },
-    computed: {
-      transportationMeansList: function () {
-        return this.$getDict('transportationMeans');
-      },
-      bizInTypes: function () {
-        return this.$getDict('bizInType');
-      },
-      vaccineType() {
-        return this.$route.meta.type;
-      }
-    },
-    watch: {
+export default {
+  components: {
+    showForm, addForm, receiptInfo
+  },
+  data: function () {
+    return {
+      loadingData: true,
+      showItemRight: false,
+      showDetail: false,
+      showSearch: false,
+      showReceiptRight: false,
+      orderList: [],
       filters: {
-        handler: function () {
-          this.getOrderList(1);
-        },
-        deep: true
+        type: 0,
+        state: '6',
+        orderNo: '',
+        logisticsProviderName: '',
+        createStartTime: '',
+        createEndTime: '',
+        bizType: '1-0',
+        transportationMeansId: '',
+        transactOrgId: '',
+        thirdPartyNumber: '',
+        orgGoodsId: '',
+        orgAreaCode: '',
+        deleteFlag: false,
+        pushStatus: ''
       },
-      vaccineType() {
+      searchCondition: {
+        searchType: 1,
+        orderNo: '',
+        logisticsProviderName: '',
+        createStartTime: '',
+        createEndTime: '',
+        transportationMeansId: '',
+        transactOrgId: '',
+        thirdPartyNumber: '',
+        orgGoodsId: '',
+        orgAreaCode: '',
+        pushStatus: ''
+      },
+      expectedTime: '',
+      orgType: utils.inOrderType,
+      activeStatus: 0,
+      currentOrderId: '',
+      orgList: [], // 来源单位列表
+      logisticsList: [], // 物流商列表
+      pager: {
+        currentPage: 1,
+        count: 0,
+        pageSize: 20
+      },
+      defaultIndex: 0, // 添加订单默认选中第一个tab
+      action: '',
+      user: {},
+      state: '',
+      purchase: {},
+      goodesList: []
+    };
+  },
+  mixins: [OrderMixin],
+  mounted() {
+    this.getOrderList(1);
+    let orderId = this.$route.params.id;
+    if (orderId && orderId !== 'list' && orderId !== 'add') {
+      this.currentOrderId = orderId;
+      this.showDetail = true;
+    }
+    if (orderId === 'add') {
+      this.add();
+      this.purchase = {
+        id: this.$route.query.id,
+        count: this.$route.query.count
+      };
+    }
+  },
+  computed: {
+    transportationMeansList: function () {
+      return this.$getDict('transportationMeans');
+    },
+    bizInTypes: function () {
+      return this.$getDict('bizInType');
+    },
+    vaccineType() {
+      return this.$route.meta.type;
+    }
+  },
+  watch: {
+    filters: {
+      handler: function () {
         this.getOrderList(1);
+      },
+      deep: true
+    },
+    vaccineType() {
+      this.getOrderList(1);
+    }
+  },
+  methods: {
+    editOrder(item) {
+      this.action = 'edit';
+      this.currentOrderId = item.id;
+      this.showItemRight = true;
+      this.defaultIndex = 2;
+    },
+    getOrderStatus: function (order) {
+      let state = '';
+      for (let key in this.orgType) {
+        if (order.state === this.orgType[key].state) {
+          state = this.orgType[key].title;
+        }
+      }
+      return state;
+    },
+    searchInOrder: function () {// 搜索
+      this.searchCondition.createStartTime = this.$formatAryTime(this.expectedTime, 0);
+      this.searchCondition.createEndTime = this.$formatAryTime(this.expectedTime, 1);
+      Object.assign(this.filters, this.searchCondition);
+    },
+    searchProduct(keyWord) {
+      let params = Object.assign({}, {
+        keyWord: keyWord
+      });
+      Vaccine.query(params).then(res => {
+        this.goodesList = res.data.list;
+      });
+    },
+    resetSearchForm: function () {// 重置表单
+      let temp = {
+        searchType: '',
+        orderNo: '',
+        logisticsProviderName: '',
+        createStartTime: '',
+        createEndTime: '',
+        transportationMeansId: '',
+        transactOrgId: '',
+        thirdPartyNumber: '',
+        orgGoodsId: '',
+        orgAreaCode: '',
+        pushStatus: ''
+      };
+      this.expectedTime = '';
+      Object.assign(this.searchCondition, temp);
+      Object.assign(this.filters, temp);
+    },
+    resetRightBox: function () {
+      this.showDetail = false;
+      this.showItemRight = false;
+      this.defaultIndex = 0;
+      this.action = '';
+      this.showReceiptRight = false;
+      // this.getOrderList(this.pager.currentPage);
+      this.$router.push('list');
+    },
+    add: function () {
+      this.showItemRight = true;
+      this.defaultIndex = 1;
+      this.action = 'add';
+    },
+    onSubmit: function () {
+      this.getOrderList(1);
+      if (this.defaultIndex === 2) {
+        let orderId = this.currentOrderId;
+        this.currentOrderId = '';
+        this.$nextTick(() => {
+          this.currentOrderId = orderId;
+        });
       }
     },
-    methods: {
-      editOrder(item) {
-        this.action = 'edit';
-        this.currentOrderId = item.id;
-        this.showItemRight = true;
-        this.defaultIndex = 2;
-      },
-      getOrderStatus: function (order) {
-        let state = '';
-        for (let key in this.orgType) {
-          if (order.state === this.orgType[key].state) {
-            state = this.orgType[key].title;
-          }
-        }
-        return state;
-      },
-      searchInOrder: function () {// 搜索
-        this.searchCondition.createStartTime = this.$formatAryTime(this.expectedTime, 0);
-        this.searchCondition.createEndTime = this.$formatAryTime(this.expectedTime, 1);
-        Object.assign(this.filters, this.searchCondition);
-      },
-      searchProduct(keyWord) {
-        let params = Object.assign({}, {
-          keyWord: keyWord
-        });
-        Vaccine.query(params).then(res => {
-          this.goodesList = res.data.list;
-        });
-      },
-      resetSearchForm: function () {// 重置表单
-        let temp = {
-          searchType: '',
-          orderNo: '',
-          logisticsProviderName: '',
-          createStartTime: '',
-          createEndTime: '',
-          transportationMeansId: '',
-          transactOrgId: '',
-          thirdPartyNumber: '',
-          orgGoodsId: '',
-          orgAreaCode: '',
-          pushStatus: ''
-        };
-        this.expectedTime = '';
-        Object.assign(this.searchCondition, temp);
-        Object.assign(this.filters, temp);
-      },
-      resetRightBox: function () {
-        this.showDetail = false;
-        this.showItemRight = false;
-        this.defaultIndex = 0;
-        this.action = '';
-        this.showReceiptRight = false;
-        // this.getOrderList(this.pager.currentPage);
-        this.$router.push('list');
-      },
-      add: function () {
-        this.showItemRight = true;
-        this.defaultIndex = 1;
-        this.action = 'add';
-      },
-      onSubmit: function () {
-        this.getOrderList(1);
-        if (this.defaultIndex === 2) {
-          let orderId = this.currentOrderId;
-          this.currentOrderId = '';
-          this.$nextTick(() => {
-            this.currentOrderId = orderId;
-          });
-        }
-      },
-      getOrderList: function (pageNo) {
-        if (pageNo === 1) {
-          this.pager.count = 0;
-        }
-        this.pager.currentPage = pageNo;
-        let param = {};
-        this.loadingData = true;
-        param = Object.assign({}, this.filters, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize,
-          goodsType: this.vaccineType === '1' ? '0' : '1'
-        });
-        // 明细查询
-        param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
-        if (this.filters.state !== '20') {
-          erpOrder.query(param).then(res => {
-            this.initCheck(res.data.list);
-            this.orderList = res.data.list;
+    getOrderList: function (pageNo) {
+      if (pageNo === 1) {
+        this.pager.count = 0;
+      }
+      this.pager.currentPage = pageNo;
+      let param = {};
+      this.loadingData = true;
+      param = Object.assign({}, this.filters, {
+        pageNo: pageNo,
+        pageSize: this.pager.pageSize,
+        goodsType: this.vaccineType === '1' ? '0' : '1'
+      });
+      // 明细查询
+      param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
+      if (this.filters.state !== '20') {
+        erpOrder.query(param).then(res => {
+          this.initCheck(res.data.list);
+          this.orderList = res.data.list;
 //            this.pager.count = res.data.count;
-            if (this.orderList.length === this.pager.pageSize) {
-              this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
-            }
-            this.loadingData = false;
-          });
-        } else {
-          erpOrder.queryOrderExcepiton(param).then(res => {
-            this.orderList = res.data.list;
-//            this.pager.count = res.data.count;
-            if (this.orderList.length === this.pager.pageSize) {
-              this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
-            }
-            this.loadingData = false;
-          });
-        }
-        this.queryStatusNum(param);
-      },
-      refreshOrder() {
-        this.getOrderList(this.pager.currentPage);
-      },
-      filterOrg: function (query) {// 过滤供货商
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          this.searchCondition.transactOrgId = '';
-          this.orgList = [];
-          return;
-        }
-        BaseInfo.queryOrgByReation(orgId, {keyWord: query, relation: '1'}).then(res => {
-          this.orgList = res.data;
-        });
-      },
-      filterLogistics: function (query) {// 过滤物流提供方
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          this.searchCondition.logisticsProvider = '';
-          this.logisticsList = [];
-          return;
-        }
-        BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
-          this.logisticsList = res.data;
-        });
-      },
-      filterListColor: function (index) {// 过滤左边列表边角颜色
-        let status = -1;
-        for (let key in this.orgType) {
-          if (this.orgType[key].state === index) {
-            status = key;
+          if (this.orderList.length === this.pager.pageSize) {
+            this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
           }
-        }
-        return status;
-      },
-      orgChange: function () {
+          this.loadingData = false;
+        });
+      } else {
+        erpOrder.queryOrderExcepiton(param).then(res => {
+          this.orderList = res.data.list;
+//            this.pager.count = res.data.count;
+          if (this.orderList.length === this.pager.pageSize) {
+            this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
+          }
+          this.loadingData = false;
+        });
+      }
+      this.queryStatusNum(param);
+    },
+    refreshOrder() {
+      this.getOrderList(this.pager.currentPage);
+    },
+    filterOrg: function (query) {// 过滤供货商
+      let orgId = this.$store.state.user.userCompanyAddress;
+      if (!orgId) {
         this.searchCondition.transactOrgId = '';
         this.orgList = [];
-        this.filterOrg();
-        this.filterLogistics();
-      },
-      queryStatusNum: function (params) {
-        erpOrder.queryStateNum(params).then(res => {
-          let data = res.data;
-          this.orgType[0].num = this.obtionStatusNum(data['in-pend-check']);
-          this.orgType[1].num = this.obtionStatusNum(data['in-arrive']);
-          this.orgType[2].num = this.obtionStatusNum(data['in-pend-execute']);
-          this.orgType[3].num = this.obtionStatusNum(data['in-complete']);
-          this.orgType[4].num = this.obtionStatusNum(data['in-cancel']);
-          this.orgType[5].num = this.obtionStatusNum(data['in-refuse']);
-          this.orgType[6].num = this.obtionStatusNum(data['exception']);
-        });
-      },
-      isLock: function (item) { // 判断是不是被锁定
-        let isLock = false;
-        if (item.lockFlag && item.lockMan !== this.user.userId) {
-          isLock = true;
-        }
-        return isLock;
-      },
-      obtionStatusNum: function (num) {
-        if (typeof num !== 'number') {
-          return 0;
-        }
-        return num;
-      },
-      remove: function (order) {
-        // Order.delete(order.id).then(() => {
-        //   this.getOrderList();
-        // });
-      },
-      showItem: function (order) {
-        this.currentOrderId = '';
-        this.$nextTick(() => {
-          this.currentOrderId = order.id;
-          this.state = order.state;
-          this.showDetail = true;
-          this.$router.push(`${order.id}`);
-        });
-      },
-      showPart(item) {
-        this.currentOrderId = '';
-        this.$nextTick(() => {
-          this.currentItem = item;
-          this.currentOrderId = item.id;
-          this.showReceiptRight = true;
-        });
-      },
-      changeStatus: function (item, key) {// 订单分类改变
-        this.activeStatus = key;
-        this.filters.state = item.state;
-      },
-      advancedQuery: function () {
-        this.showSearch = !this.showSearch;
-      },
-      formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+        return;
       }
+      BaseInfo.queryOrgByReation(orgId, {keyWord: query, relation: '1'}).then(res => {
+        this.orgList = res.data;
+      });
+    },
+    filterLogistics: function (query) {// 过滤物流提供方
+      let orgId = this.$store.state.user.userCompanyAddress;
+      if (!orgId) {
+        this.searchCondition.logisticsProvider = '';
+        this.logisticsList = [];
+        return;
+      }
+      BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
+        this.logisticsList = res.data;
+      });
+    },
+    filterListColor: function (index) {// 过滤左边列表边角颜色
+      let status = -1;
+      for (let key in this.orgType) {
+        if (this.orgType[key].state === index) {
+          status = key;
+        }
+      }
+      return status;
+    },
+    orgChange: function () {
+      this.searchCondition.transactOrgId = '';
+      this.orgList = [];
+      this.filterOrg();
+      this.filterLogistics();
+    },
+    queryStatusNum: function (params) {
+      erpOrder.queryStateNum(params).then(res => {
+        let data = res.data;
+        this.orgType[0].num = this.obtionStatusNum(data['in-pend-check']);
+        this.orgType[1].num = this.obtionStatusNum(data['in-arrive']);
+        this.orgType[2].num = this.obtionStatusNum(data['in-pend-execute']);
+        this.orgType[3].num = this.obtionStatusNum(data['in-complete']);
+        this.orgType[4].num = this.obtionStatusNum(data['in-cancel']);
+        this.orgType[5].num = this.obtionStatusNum(data['in-refuse']);
+        this.orgType[6].num = this.obtionStatusNum(data['exception']);
+      });
+    },
+    isLock: function (item) { // 判断是不是被锁定
+      let isLock = false;
+      if (item.lockFlag && item.lockMan !== this.user.userId) {
+        isLock = true;
+      }
+      return isLock;
+    },
+    obtionStatusNum: function (num) {
+      if (typeof num !== 'number') {
+        return 0;
+      }
+      return num;
+    },
+    remove: function (order) {
+      // Order.delete(order.id).then(() => {
+      //   this.getOrderList();
+      // });
+    },
+    showItem: function (order) {
+      this.currentOrderId = '';
+      this.$nextTick(() => {
+        this.currentOrderId = order.id;
+        this.state = order.state;
+        this.showDetail = true;
+        this.$router.push(`${order.id}`);
+      });
+    },
+    showPart(item) {
+      this.currentOrderId = '';
+      this.$nextTick(() => {
+        this.currentItem = item;
+        this.currentOrderId = item.id;
+        this.showReceiptRight = true;
+      });
+    },
+    changeStatus: function (item, key) {// 订单分类改变
+      this.activeStatus = key;
+      this.filters.state = item.state;
+    },
+    advancedQuery: function () {
+      this.showSearch = !this.showSearch;
+    },
+    formatTime: function (date) {
+      return date ? this.$moment(date).format('YYYY-MM-DD') : '';
     }
-  };
+  }
+};
 </script>
