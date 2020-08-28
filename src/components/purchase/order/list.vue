@@ -216,7 +216,7 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row label="来源订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.thirdPartyNumber" placeholder="请输入货主订单号"></oms-input>
+                <oms-input type="text" v-model="searchCondition.thirdPartyNumber" placeholder="请输入来源订单号"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
