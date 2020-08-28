@@ -607,6 +607,11 @@
           this.filterAddress();
         }
         this.searchProduct();
+      },
+      "form.goodsType"() {
+        // 货品类型变更清空货品下拉列表
+        this.searchProductList = [];
+        this.filterProductList = [];
       }
     },
 
