@@ -132,10 +132,13 @@
                   <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
                 </el-tooltip>
               </div>
-              <div>
+              <div style="display: flex;justify-content: space-between;align-items: center">
                 <el-tooltip class="item" effect="dark" content="疫苗规格" placement="right">
                   <span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>
                 </el-tooltip>
+                <perm label="breakage-order-undo">
+                  <el-button @click="showUndo(item)" v-show="currentOrder.state==='4'">撤销</el-button>
+                </perm>
               </div>
             </td>
             <td width="100px" class="R text-center">
@@ -174,15 +177,17 @@
         </table>
       </div>
     </div>
+    <undo ref="undo"></undo>
   </div>
 </template>
 <script>
   import utils from '@/tools/utils';
   import {Address, LogisticsCenter} from '@/resources';
   import materialPart from '../material.vue';
+  import undo from '@/components/store/breakage-order/form/undo';
 
   export default {
-    components: {materialPart},
+    components: {materialPart, undo},
     props: {
       currentOrder: {
         type: Object,
@@ -270,14 +275,20 @@
       }
     },
     methods: {
+      showUndo(item) {
+        this.$refs.undo.form = Object.assign({}, this.$refs.undo.form, {
+          orderId: item.orderId,
+          injectionTaskId: item.id,
+        });
+        this.$refs.undo.show();
+
+      },
       filterAddressLabel(item) {
         let name = item.name ? '【' + item.name + '】' : '';
         return name + item.detail;
       },
       getTimeTitle: function (item) {
-        return item.transportationMeansId === '0' ? item.bizType === '2-1' ? '预计出库' : '预计送货'
-          : item.transportationMeansId === '1' ? '预计提货'
-            : item.transportationMeansId === '2' ? '预计发货' : '';
+        return item.transportationMeansId === '0' ? item.bizType === '2-1' ? '预计出库' : '预计送货' : item.transportationMeansId === '1' ? '预计提货' : item.transportationMeansId === '2' ? '预计发货' : '';
       },
       getWarehouseAdress: function (item) { // 得到仓库地址
         return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;

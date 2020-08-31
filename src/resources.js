@@ -65,7 +65,7 @@ http.interceptors.request.use(function (config) {
     let u = {
       'username': data.userName,
       'id': data.userId
-    }
+    };
     Sentry.setUser(u);
   } catch (e) {
   }
@@ -809,7 +809,7 @@ export const procurementCollect = resource('/procurement-demand', http, {
   createOrder(key) {
     return http.put(`/procurement-demand/${key}/sales-ticket`);
   },
-  createPullSignal(key){
+  createPullSignal(key) {
     return http.put(`/procurement-demand/${key}/pull-signal`);
   },
   queryDetailList(key) {
@@ -1219,6 +1219,11 @@ export const Notice = resource('notice', http, {
   },
   remove(id) {
     return http.delete('notice/' + id);
+  }
+});
+export const demand = resource('', http, {
+  reportedUndo(data) {
+    return http.post(`/cancel-inoculated-task/breakage-order`, data);
   }
 });
 
