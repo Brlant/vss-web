@@ -29,6 +29,7 @@
       </el-form-item>
       <el-form-item label="上传附件" prop="fileIdList">
         <oms-el-upload
+          :file-list="fileList"
           class="avatar-user-uploader"
           :on-success="handleAvatarSuccess"
           :on-remove="handleRemove"
