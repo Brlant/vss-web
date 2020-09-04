@@ -570,7 +570,7 @@
         return this.$getDict('breakageType');
       },
       isSelfBreakage() { // pov自行报损
-        return this.form.customerChannel === '0';
+        return this.form.customerChannel !== '1';
       },
       isEntrustWarehouse() {
         let status = false;
