@@ -634,48 +634,15 @@ export default {
       return `${this.defaultIndex === 2 ? '编辑' : '添加'}报损`;
     },
     resetForm: function () {// 重置表单
-      this.form = {
-          goodsType: '',
-          'orgId': '',
-          'customerId': '',
-          'bizType': '2-4',
-          'type': this.type,
-          'logisticsProviderName': '',
-          'customerChannel': '0',
-          transportationMeansId: '',
-          transportationAddress: '',
-          logisticsCentreId: '',
-          transportationCondition: '',
-          importedFlag: false,
-          orgRelation: '',
-          orgAddress: '',
-          qualifiedFlag: true,
-          sameBatchNumber: false,
-          actualConsignee: '',
-          'consigneePhone': '',
-          'thirdPartyNumber': '',
-          'expectedTime': '',
-          'detailDtoList': [],
-          'remark': ''
-        };
-        this.product = {
-          'amount': null,
-          'entrustment': false,
-          'measurementUnit': '',
-          'orgGoodsId': '',
-          'packingCount': null,
-          'specificationsId': '',
-          unitPrice: null,
-          'fixInfo': {
-            'goodsDto': {}
-          }
-        };
+      this.$refs['orderAddForm'].resetFields();
+      this.$refs['orderGoodsAddForm'].resetFields();
       this.form.actualConsignee = '';
       this.form.consigneePhone = '';
       this.form.logisticsProviderName = '';
       this.form.remark = '';
       this.form.detailDtoList = [];
       this.form.customerId = '';
+      this.form.transportationMeansId = '';
       this.form.transportationAddress = '';
       this.form.transportationCondition = '';
       this.form.orgAddress = '';
