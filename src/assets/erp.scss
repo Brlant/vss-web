@@ -765,6 +765,7 @@ $leftWidth: 260px;
           padding: 10px 15px 10px 0;
         }
       }
+
       &.pointer {
         cursor: pointer;
       }
@@ -1210,6 +1211,7 @@ $borderColor: rgba(82, 82, 82, 0.23);
     line-height: normal;
     max-width: 620px;
     white-space: normal;
+
     span {
       line-height: initial !important;
     }

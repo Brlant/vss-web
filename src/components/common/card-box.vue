@@ -7,10 +7,10 @@
   </div>
 </template>
 <script>
-  export default {
-    name: 'card-box',
-    props: {
-      title: String
-    }
-  };
+export default {
+  name: 'card-box',
+  props: {
+    title: String
+  }
+};
 </script>

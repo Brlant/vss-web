@@ -1,60 +1,60 @@
 <style lang="scss" scoped>
-  @import "../../../assets/mixins";
+@import "../../../assets/mixins";
 
-  .table {
-    table-layout: fixed;
-    margin-top: 10px;
-    font-size: 12px;
-    /*padding-left: 5px;*/
-    font-weight: 400;
+.table {
+  table-layout: fixed;
+  margin-top: 10px;
+  font-size: 12px;
+  /*padding-left: 5px;*/
+  font-weight: 400;
 
-    .order-list-item {
-      color: #999;
-      line-height: 20px;
-    }
-
-    border-collapse: separate;
-    border-spacing: 0;
-
-    > tbody > tr > td, > thead > tr > th {
-      border: 0;
-    }
-
-    > thead {
-      background: #eff4fb;
-    }
-
-    > tbody {
-      background: #f6faff;
-    }
+  .order-list-item {
+    color: #999;
+    line-height: 20px;
   }
 
-  .table-product-list {
-    > thead > tr > th {
-      padding: 5px;
-    }
+  border-collapse: separate;
+  border-spacing: 0;
 
-    > tbody > tr > td {
-      padding: 2px 0 2px 5px;
-    }
+  > tbody > tr > td, > thead > tr > th {
+    border: 0;
   }
 
-  .table-product-list {
-    margin-bottom: 0;
+  > thead {
+    background: #eff4fb;
   }
 
-  .product-title {
-    text-align: center;
-    border: 1px solid #eee;
-    background: #eee;
+  > tbody {
+    background: #f6faff;
   }
+}
+
+.table-product-list {
+  > thead > tr > th {
+    padding: 5px;
+  }
+
+  > tbody > tr > td {
+    padding: 2px 0 2px 5px;
+  }
+}
+
+.table-product-list {
+  margin-bottom: 0;
+}
+
+.product-title {
+  text-align: center;
+  border: 1px solid #eee;
+  background: #eee;
+}
 </style>
 <template>
   <div v-if="isShowGoodsList">
-    <table class="table no-border table-product-list" v-show="orderItem.detailDtoList">
+    <table v-show="orderItem.detailDtoList" class="table no-border table-product-list">
       <thead>
       <tr>
-        <th width="50" class="text-center">序号</th>
+        <th class="text-center" width="50">序号</th>
         <th width="400">疫苗名称</th>
         <th>规格</th>
         <th>单价</th>
@@ -65,11 +65,11 @@
       </thead>
       <tbody>
       <tr v-for="(row,index) in orderItem.detailDtoList">
-        <td width="30" class="text-center">{{index+1}}</td>
+        <td class="text-center" width="30">{{index+1}}</td>
         <td style="width: 400px">
           <span>{{row.goodsName}}</span>
         </td>
-        <td style="width: 100px" v-if="row.specification">{{row.specification}}
+        <td v-if="row.specification" style="width: 100px">{{row.specification}}
         </td>
         <td align="left">
           <span v-if="row.price">￥{{row.price | formatMoney}}</span>
@@ -91,16 +91,16 @@
   </div>
 </template>
 <script>
-  export default {
-    name: 'SaleGoodsInfo',
-    props: {
-      orderItem: {},
-      showBatch: Boolean
-    },
-    computed: {
-      isShowGoodsList() {
-        return this.$store.state.isShowGoodsList;
-      }
+export default {
+  name: 'SaleGoodsInfo',
+  props: {
+    orderItem: {},
+    showBatch: Boolean
+  },
+  computed: {
+    isShowGoodsList() {
+      return this.$store.state.isShowGoodsList;
     }
-  };
+  }
+};
 </script>

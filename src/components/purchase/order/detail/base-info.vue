@@ -1,7 +1,7 @@
 <style scoped="">
-  .oms-row {
-    margin-bottom: 10px;
-  }
+.oms-row {
+  margin-bottom: 10px;
+}
 </style>
 <template>
   <div>
@@ -11,43 +11,43 @@
     <div v-else="" class="page-main-body padding">
 
       <el-row style="margin-bottom: 0">
-        <oms-row label="货主订单号" :span="4">{{ currentOrder.orderNo }}</oms-row>
+        <oms-row :span="4" label="货主订单号">{{ currentOrder.orderNo }}</oms-row>
       </el-row>
       <el-row style="margin-bottom:0">
         <el-col :span="12">
-          <oms-row label="货主" :span="span">
+          <oms-row :span="span" label="货主">
             {{currentOrder.orgName}}
           </oms-row>
-          <oms-row label="供货单位" :span="span">
+          <oms-row :span="span" label="供货单位">
             {{currentOrder.supplierName}}
           </oms-row>
-          <oms-row label="物流商" :span="span"
-                   v-show="(currentOrder.transportationMeansId === '1' ||
-                   currentOrder.transportationMeansId === '3') && currentOrder.logisticsProviderName ">
+          <oms-row v-show="(currentOrder.transportationMeansId === '1' ||
+                   currentOrder.transportationMeansId === '3') && currentOrder.logisticsProviderName " :span="span"
+                   label="物流商">
             {{currentOrder.logisticsProviderName}}
           </oms-row>
-          <oms-row label="提货地址" v-show="currentOrder.transportationMeansId === '2'" :span="span">
+          <oms-row v-show="currentOrder.transportationMeansId === '2'" :span="span" label="提货地址">
             {{currentOrder.pickUpWarehouseAddress}}
           </oms-row>
-          <oms-row label="运输条件" :span="span">
+          <oms-row :span="span" label="运输条件">
             <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
           </oms-row>
-          <oms-row label="仓库地址" :span="span">
+          <oms-row :span="span" label="仓库地址">
             <span class="goods-span">{{ getWarehouseAdress(currentOrder)}}</span>
           </oms-row>
-          <oms-row label="订单状态" :span="span">
+          <oms-row :span="span" label="订单状态">
             {{ getCurrentOrderStatus(currentOrder.state) }}
-            <order-push-status :status="currentOrder.pushStatus" :msg="currentOrder.pushMessage"/>
+            <order-push-status :msg="currentOrder.pushMessage" :status="currentOrder.pushStatus"/>
           </oms-row>
-          <oms-row label="取消原因" :span="span" v-show="currentOrder.erpStatus === '9'">
+          <oms-row v-show="currentOrder.erpStatus === '9'" :span="span" label="取消原因">
             <span class="goods-span">{{currentOrder.cancelReason}}</span>
           </oms-row>
-          <oms-row label="经办人" :span="span" v-show="currentOrder.operatorName">
+          <oms-row v-show="currentOrder.operatorName" :span="span" label="经办人">
             <span class="goods-span">{{currentOrder.operatorName}}</span>
           </oms-row>
         </el-col>
         <el-col :span="12">
-          <oms-row label="来源订单号" v-show="currentOrder.thirdPartyNumber">
+          <oms-row v-show="currentOrder.thirdPartyNumber" label="来源订单号">
             {{currentOrder.thirdPartyNumber }}
           </oms-row>
           <oms-row label="业务类型">
@@ -59,57 +59,57 @@
           <oms-row label="物流方式">
             <dict :dict-group="'transportationMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
           </oms-row>
-          <oms-row label="物流中心" v-show="currentOrder.centreName">
+          <oms-row v-show="currentOrder.centreName" label="物流中心">
             <span class="goods-span">{{currentOrder.centreName}}</span>
           </oms-row>
-          <oms-row label="预计入库时间" v-show="currentOrder.expectedTime">
+          <oms-row v-show="currentOrder.expectedTime" label="预计入库时间">
             <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
           </oms-row>
         </el-col>
       </el-row>
       <el-row v-show="currentOrder.remark">
-        <oms-row label="备注" :span="4">{{ currentOrder.remark }}</oms-row>
+        <oms-row :span="4" label="备注">{{ currentOrder.remark }}</oms-row>
       </el-row>
       <!--<hr class="hr"/>-->
       <div class="table-product">
-        <table class="table no-border table-product-list " v-show="currentOrder.detailDtoList">
+        <table v-show="currentOrder.detailDtoList" class="table no-border table-product-list ">
           <thead>
           <tr>
             <td></td>
             <td></td>
             <td class="text-center">疫苗</td>
             <td class="text-center">规格</td>
-            <td class="text-center" v-show="vaccineType==='2'">单价</td>
+            <td v-show="vaccineType==='2'" class="text-center">单价</td>
             <td class="text-center">数量</td>
-            <td class="text-center" v-show="vaccineType==='2'">金额</td>
+            <td v-show="vaccineType==='2'" class="text-center">金额</td>
           </tr>
           </thead>
           <tbody>
           <tr v-for="(item, index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
             <td width="10">{{index + 1}}</td>
             <td width="80">
-              <el-tooltip v-if="$formatPhotoUrl(item)" popperClass="el-tooltip" class="item"
-                          effect="light" placement="right">
+              <el-tooltip v-if="$formatPhotoUrl(item)" class="item" effect="light"
+                          placement="right" popperClass="el-tooltip">
                 <compressed-img :src="$formatPhotoUrl(item) +'?image&action=resize:w_80,h_80,m_2' "
                                 class="product-img"/>
                 <compressed-img slot="content" :src="$formatPhotoUrl(item) +'?image&action=resize:h_200,m_2' "
                                 class="product-img"/>
               </el-tooltip>
-              <el-tooltip v-else class="item" effect="light" popperClass="el-tooltip" placement="right">
+              <el-tooltip v-else class="item" effect="light" placement="right" popperClass="el-tooltip">
                 <img :src="'../../../../static/img/userpic.png'" class="product-img">
-                <img :src="'../../../../static/img/userpic.png'" slot="content" class="product-img">
+                <img slot="content" :src="'../../../../static/img/userpic.png'" class="product-img">
               </el-tooltip>
             </td>
             <td>
               <div>
-                <el-tooltip class="item" effect="dark"
-                            :content="`货主货品编号:${item.orgGoodsDto.goodsNo} 货主疫苗ID:${item.orgGoodsId}`" placement="right">
+                <el-tooltip :content="`货主货品编号:${item.orgGoodsDto.goodsNo} 货主疫苗ID:${item.orgGoodsId}`" class="item"
+                            effect="dark" placement="right">
                   <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
                 </el-tooltip>
               </div>
               <div>
-                <el-tooltip class="item" effect="dark"
-                            :content="`疫苗主档编号:${item.orgGoodsDto.goodsDto.code} 疫苗主档ID:${item.goodsId}`"
+                <el-tooltip :content="`疫苗主档编号:${item.orgGoodsDto.goodsDto.code} 疫苗主档ID:${item.goodsId}`" class="item"
+                            effect="dark"
                             placement="right">
                   <span style="font-size: 12px;color:#999">{{ item.goodsName }}</span>
                 </el-tooltip>
@@ -120,7 +120,7 @@
               <!--</el-tooltip>-->
               <!--</div>-->
               <div>
-                <el-tooltip class="item" effect="dark" content="供货单位" placement="right">
+                <el-tooltip class="item" content="供货单位" effect="dark" placement="right">
                   <span>{{ item.salesFirmName }}</span>
                 </el-tooltip>
               </div>
@@ -128,15 +128,15 @@
             <td class="text-center" width="70px">
               <span>{{ item.orgGoodsDto.goodsDto.specifications }}</span>
             </td>
-            <td width="80px" class="text-center" v-show="vaccineType==='2'">
+            <td v-show="vaccineType==='2'" class="text-center" width="80px">
               <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
               <span v-if="!item.unitPrice">-</span>
             </td>
-            <td width="80px" class="text-center">
+            <td class="text-center" width="80px">
               {{item.amount}}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
-            <td class="text-center" v-show="vaccineType==='2'">
+            <td v-show="vaccineType==='2'" class="text-center">
             <span v-if="item.unitPrice">
               <span>¥</span>{{ item.amount * item.unitPrice | formatMoney }}
             </span>
@@ -144,12 +144,12 @@
             </td>
           </tr>
           <tr class="text-center">
-            <td colspan="5" align="right">
-              <total-count property="amount" :list="currentOrder.detailDtoList"></total-count>
+            <td align="right" colspan="5">
+              <total-count :list="currentOrder.detailDtoList" property="amount"></total-count>
             </td>
-            <td colspan="2" align="right" v-show="vaccineType==='2'">
-            <span style="font-weight:600;"
-                  v-show="currentOrder.totalAmount">合计: ¥  {{ currentOrder.totalAmount | formatMoney}}</span>
+            <td v-show="vaccineType==='2'" align="right" colspan="2">
+            <span v-show="currentOrder.totalAmount"
+                  style="font-weight:600;">合计: ¥  {{ currentOrder.totalAmount | formatMoney}}</span>
             </td>
           </tr>
           </tbody>
@@ -159,39 +159,39 @@
   </div>
 </template>
 <script>
-  import utils from '@/tools/utils';
+import utils from '@/tools/utils';
 
-  export default {
-    props: {
-      currentOrder: {
-        type: Object,
-        default: function () {
-          return {};
-        }
-      },
-      vaccineType: ''
-    },
-    data() {
-      return {
-        span: 8
-      };
-    },
-    methods: {
-      getCurrentOrderStatus: function (state) {// 获取订单状态
-        let retstate = '';
-        for (let key in utils.inOrderType) {
-          if (state === utils.inOrderType[key].state) {
-            retstate = utils.inOrderType[key].title;
-          }
-        }
-        return retstate;
-      },
-      getWarehouseAdress: function (item) { // 得到仓库地址
-        if (!item.warehouseAddress) {
-          return '';
-        }
-        return item.warehouseAddress;
+export default {
+  props: {
+    currentOrder: {
+      type: Object,
+      default: function () {
+        return {};
       }
+    },
+    vaccineType: ''
+  },
+  data() {
+    return {
+      span: 8
+    };
+  },
+  methods: {
+    getCurrentOrderStatus: function (state) {// 获取订单状态
+      let retstate = '';
+      for (let key in utils.inOrderType) {
+        if (state === utils.inOrderType[key].state) {
+          retstate = utils.inOrderType[key].title;
+        }
+      }
+      return retstate;
+    },
+    getWarehouseAdress: function (item) { // 得到仓库地址
+      if (!item.warehouseAddress) {
+        return '';
+      }
+      return item.warehouseAddress;
     }
-  };
+  }
+};
 </script>

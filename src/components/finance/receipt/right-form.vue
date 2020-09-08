@@ -1,86 +1,93 @@
 <style lang="scss" scoped>
-  @import "../../../assets/mixins.scss";
+@import "../../../assets/mixins.scss";
 
-  $leftWidth: 220px;
+$leftWidth: 220px;
 
-  .el-form .el-checkbox__label {
-    font-size: 12px;
-    padding-left: 5px;
+.el-form .el-checkbox__label {
+  font-size: 12px;
+  padding-left: 5px;
+}
+
+.el-form .el-checkbox__inner {
+  width: 14px;
+  height: 14px;
+}
+
+.content-part {
+  .content-left {
+    text-align: center;
+    width: $leftWidth;
   }
 
-  .el-form .el-checkbox__inner {
-    width: 14px;
-    height: 14px;
-  }
-
-  .content-part {
-    .content-left {
-      text-align: center;
-      width: $leftWidth;
-    }
-    .content-right {
-      > h3 {
-        left: $leftWidth;
-      }
+  .content-right {
+    > h3 {
       left: $leftWidth;
     }
+
+    left: $leftWidth;
+  }
+}
+
+.el-form .el-select {
+  display: block;
+}
+
+.order-product-box {
+  position: relative;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 26px;
+
+  .product-info-fix {
+    background: #f6f6f6;
+    margin-top: 10px;
+    padding: 5px;
+    margin-bottom: 20px;
   }
 
-  .el-form .el-select {
-    display: block;
+  &:hover {
+    border-color: #aaa
   }
 
-  .order-product-box {
-    position: relative;
-    border-radius: 10px;
-    font-size: 12px;
-    line-height: 26px;
-    .product-info-fix {
-      background: #f6f6f6;
-      margin-top: 10px;
-      padding: 5px;
-      margin-bottom: 20px;
-    }
+  .product-remove {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: #666;
+
     &:hover {
-      border-color: #aaa
+      color: #333
     }
-    .product-remove {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      cursor: pointer;
-      color: #666;
-      &:hover {
-        color: #333
-      }
+  }
+
+  .order-goods-info {
+    .col-label {
+      padding-top: 4px;
     }
-    .order-goods-info {
-      .col-label {
-        padding-top: 4px;
-      }
-    }
-
   }
 
-  .ml15 {
-    margin-left: 40px;
-  }
+}
 
-  .combinatioon-product {
-    color: #777
-  }
+.ml15 {
+  margin-left: 40px;
+}
 
-  .productItem-info {
-    float: left;
-  }
+.combinatioon-product {
+  color: #777
+}
 
-  .ar {
-    text-align: right;
-  }
+.productItem-info {
+  float: left;
+}
+
+.ar {
+  text-align: right;
+}
 </style>
 
 <template>
@@ -90,16 +97,16 @@
         <h2 class="clearfix right-title" style="font-size: 16px">增加实收金额</h2>
         <ul>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit" :disabled="doing">保存</el-button>
+            <el-button :disabled="doing" type="success" @click="onSubmit">保存</el-button>
           </li>
         </ul>
       </div>
       <div class="content-right min-gutter">
         <div class="hide-content show-content">
-          <el-form ref="form" :rules="rules" :model="form"
+          <el-form ref="form" :model="form" :rules="rules"
                    label-width="160px" style="padding-right: 20px">
             <el-form-item label="实收金额" prop="money">
-              <oms-input type="text" placeholder="请输入实收金额" v-model="form.paymentAmount" :min="0"
+              <oms-input v-model="form.paymentAmount" :min="0" placeholder="请输入实收金额" type="text"
                          @blur="formatPrice">
                 <template slot="prepend">¥</template>
               </oms-input>
@@ -111,52 +118,52 @@
   </div>
 </template>
 <script>
-  import utils from '@/tools/utils';
-  import {receipt} from '@/resources';
+import utils from '@/tools/utils';
+import {receipt} from '@/resources';
 
-  export default {
-    props: {
-      formItem: Object
-    },
-    data() {
-      return {
-        form: {
-          detailId: '',
-          paymentAmount: ''
-        },
-        rules: {
-          paymentAmount: {required: true, message: '请输入实收金额', trigger: 'blur'}
-        },
-        doing: false
-      };
-    },
-    methods: {
-      formatPrice: function () {// 格式化单价，保留两位小数
-        this.form.paymentAmount = utils.autoformatDecimalPoint(this.form.paymentAmount);
+export default {
+  props: {
+    formItem: Object
+  },
+  data() {
+    return {
+      form: {
+        detailId: '',
+        paymentAmount: ''
       },
-      onSubmit() {
-        this.$refs['form'].validate((valid) => {
-          if (!valid) {
-            return false;
-          }
-          this.form.detailId = this.formItem.id;
-          this.form.paymentAmount = parseFloat(this.form.paymentAmount);
-          this.doing = true;
-          receipt.modifyDetail(this.formItem.id, this.form).then(() => {
-            this.$notify.success({
-              message: '增加实收金额成功'
-            });
-            this.doing = false;
-            this.$refs['form'].resetFields();
-            this.$emit('refreshDetails');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '增加实收金额失败'
-            });
-            this.doing = false;
+      rules: {
+        paymentAmount: {required: true, message: '请输入实收金额', trigger: 'blur'}
+      },
+      doing: false
+    };
+  },
+  methods: {
+    formatPrice: function () {// 格式化单价，保留两位小数
+      this.form.paymentAmount = utils.autoformatDecimalPoint(this.form.paymentAmount);
+    },
+    onSubmit() {
+      this.$refs['form'].validate((valid) => {
+        if (!valid) {
+          return false;
+        }
+        this.form.detailId = this.formItem.id;
+        this.form.paymentAmount = parseFloat(this.form.paymentAmount);
+        this.doing = true;
+        receipt.modifyDetail(this.formItem.id, this.form).then(() => {
+          this.$notify.success({
+            message: '增加实收金额成功'
           });
+          this.doing = false;
+          this.$refs['form'].resetFields();
+          this.$emit('refreshDetails');
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response && error.response.data && error.response.data.msg || '增加实收金额失败'
+          });
+          this.doing = false;
         });
-      }
+      });
     }
-  };
+  }
+};
 </script>

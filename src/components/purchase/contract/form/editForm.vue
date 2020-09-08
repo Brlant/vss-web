@@ -1,92 +1,99 @@
 <style lang="scss" scoped>
-  @import "../../../../assets/mixins.scss";
+@import "../../../../assets/mixins.scss";
 
-  $leftWidth: 200px;
+$leftWidth: 200px;
 
-  .el-form .el-checkbox__label {
-    font-size: 12px;
-    padding-left: 5px;
+.el-form .el-checkbox__label {
+  font-size: 12px;
+  padding-left: 5px;
+}
+
+.el-form .el-checkbox__inner {
+  width: 14px;
+  height: 14px;
+}
+
+.content-part {
+  .content-left {
+    text-align: center;
+    width: $leftWidth;
   }
 
-  .el-form .el-checkbox__inner {
-    width: 14px;
-    height: 14px;
-  }
-
-  .content-part {
-    .content-left {
-      text-align: center;
-      width: $leftWidth;
-    }
-    .content-right {
-      > h3 {
-        left: $leftWidth;
-      }
+  .content-right {
+    > h3 {
       left: $leftWidth;
     }
+
+    left: $leftWidth;
+  }
+}
+
+.el-form .el-select {
+  display: block;
+}
+
+.order-product-box {
+  position: relative;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 26px;
+
+  .product-info-fix {
+    background: #f6f6f6;
+    margin-top: 10px;
+    padding: 5px;
+    margin-bottom: 20px;
   }
 
-  .el-form .el-select {
-    display: block;
+  &:hover {
+    border-color: #aaa
   }
 
-  .order-product-box {
-    position: relative;
-    border-radius: 10px;
-    font-size: 12px;
-    line-height: 26px;
-    .product-info-fix {
-      background: #f6f6f6;
-      margin-top: 10px;
-      padding: 5px;
-      margin-bottom: 20px;
-    }
+  .product-remove {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: #666;
+
     &:hover {
-      border-color: #aaa
-    }
-    .product-remove {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      cursor: pointer;
-      color: #666;
-      &:hover {
-        color: #333
-      }
-    }
-    .order-goods-info {
-      .col-label {
-        padding-top: 4px;
-      }
-    }
-
-  }
-
-  .ml15 {
-    margin-left: 40px;
-  }
-
-  .combinatioon-product {
-    color: #777
-  }
-
-  .productItem-info {
-    float: left;
-  }
-
-  .ar {
-    text-align: right;
-  }
-
-  .goods-btn {
-    a:hover {
-      color: $activeColor;
+      color: #333
     }
   }
+
+  .order-goods-info {
+    .col-label {
+      padding-top: 4px;
+    }
+  }
+
+}
+
+.ml15 {
+  margin-left: 40px;
+}
+
+.combinatioon-product {
+  color: #777
+}
+
+.productItem-info {
+  float: left;
+}
+
+.ar {
+  text-align: right;
+}
+
+.goods-btn {
+  a:hover {
+    color: $activeColor;
+  }
+}
 </style>
 
 <template>
@@ -95,8 +102,8 @@
       <div class="content-left">
         <h2 class="clearfix right-title">编辑采购合同</h2>
         <ul>
-          <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
-              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
+          <li v-for="item in productListSet" class="list-style" v-bind:class="{ 'active' : index==item.key}"
+              @click="setIndexValue(item.key)"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -107,13 +114,13 @@
         <h3>{{currentPartName}}</h3>
 
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-          <el-form ref="orderAddForm" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
-                   label-width="160px" style="padding-right: 20px">
+          <el-form ref="orderAddForm" :model="form" label-width="160px" onsubmit="return false"
+                   style="padding-right: 20px" @submit.prevent="onSubmit">
             <el-form-item label="合同名称">
-              <oms-input type="text" v-model="form.purchaseContractName" placeholder="请输入采购合同名称"></oms-input>
+              <oms-input v-model="form.purchaseContractName" placeholder="请输入采购合同名称" type="text"></oms-input>
             </el-form-item>
             <el-form-item label="合同编号">
-              <oms-input type="text" v-model="form.purchaseContractNo" placeholder="请输入采购合同编号"></oms-input>
+              <oms-input v-model="form.purchaseContractNo" placeholder="请输入采购合同编号" type="text"></oms-input>
             </el-form-item>
             <el-form-item label="物流方式">
               <dict :dict-group="'transportationMeans'" :dict-key="currentItem.transportationMeansId"></dict>
@@ -121,15 +128,15 @@
             <el-form-item label="供货单位">
               {{currentItem.supplierName}}
             </el-form-item>
-            <el-form-item label="物流商"
-                          v-show="showContent.isShowOtherContent&&(currentItem.transportationMeansId==='1' || currentItem.transportationMeansId==='3')">
+            <el-form-item v-show="showContent.isShowOtherContent&&(currentItem.transportationMeansId==='1' || currentItem.transportationMeansId==='3')"
+                          label="物流商">
               {{currentItem.logisticsProviderName}}
             </el-form-item>
-            <el-form-item label="提货地址" v-show="showContent.isShowOtherContent&&currentItem.transportationMeansId==='2' "
-                          :clearable="true">
+            <el-form-item v-show="showContent.isShowOtherContent&&currentItem.transportationMeansId==='2' " :clearable="true"
+                          label="提货地址">
               {{currentItem.pickUpWarehouseName}}
             </el-form-item>
-            <el-form-item label="运输条件" v-show="showContent.isShowOtherContent">
+            <el-form-item v-show="showContent.isShowOtherContent" label="运输条件">
               <dict :dict-group="'transportationCondition'" :dict-key="currentItem.transportationCondition"></dict>
             </el-form-item>
             <el-form-item label="物流中心">
@@ -171,8 +178,8 @@
               <tbody>
               <tr v-for="product in currentItem.detailDtoList" :class="{'combinatioon-product':product.isCombination}">
                 <td>
-                  <el-tag type="success" v-show="product.isCombination" style="font-size: 10px"
-                          :class="{ml15:product.isCombination}">组合
+                  <el-tag v-show="product.isCombination" :class="{ml15:product.isCombination}" style="font-size: 10px"
+                          type="success">组合
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
                 </td>
@@ -197,8 +204,8 @@
               </tr>
               <tr>
                 <td colspan="3"></td>
-                <td colspan="2"><span style="color: #333;font-weight: 700"
-                                      v-show="currentItem.detailDtoList.length && totalMoney">合计:</span><span
+                <td colspan="2"><span v-show="currentItem.detailDtoList.length && totalMoney"
+                                      style="color: #333;font-weight: 700">合计:</span><span
                   v-show="currentItem.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
               </tr>
               </tbody>
@@ -212,136 +219,136 @@
 </template>
 
 <script>
-  import {PurchaseContract} from './../../../../resources';
+import {PurchaseContract} from './../../../../resources';
 
-  export default {
-    name: 'editForm',
-    loading: false,
-    props: ['action', 'type', 'orderId'],
-    data: function () {
-      return {
-        loading: false,
-        product: {
-          'amount': null,
-          'entrustment': false,
-          'measurementUnit': '',
-          'orgGoodsId': '',
-          'packingCount': null,
-          'specificationsId': '',
-          'orgGoodsName': '',
-          'unitPrice': null,
-          'fixInfo': {
-            'goodsDto': {}
-          }
-        },
-        form: {},
-        currentPartName: '',
-        index: 0,
-        productListSet: [
-          {name: '基本信息', key: 0},
-          {name: '疫苗信息', key: 1}
-        ],
-        doing: false,
-        showContent: {
-          isShowOtherContent: true, // 是否显示物流类型
-          isShowSupplierId: true, // 是否显示来源单位
-          expectedTimeLabel: '预计入库时间'
-        },
-        currentItem: {
-          detailDtoList: []
+export default {
+  name: 'editForm',
+  loading: false,
+  props: ['action', 'type', 'orderId'],
+  data: function () {
+    return {
+      loading: false,
+      product: {
+        'amount': null,
+        'entrustment': false,
+        'measurementUnit': '',
+        'orgGoodsId': '',
+        'packingCount': null,
+        'specificationsId': '',
+        'orgGoodsName': '',
+        'unitPrice': null,
+        'fixInfo': {
+          'goodsDto': {}
         }
-      };
-    },
-    computed: {
-      totalMoney: function () {
-        let totalMoney = 0.00;
-        if (!this.currentItem.detailDtoList.length) return totalMoney;
-        this.currentItem.detailDtoList.forEach(item => {
-          totalMoney += item.amount * item.unitPrice;
-        });
-        return totalMoney;
+      },
+      form: {},
+      currentPartName: '',
+      index: 0,
+      productListSet: [
+        {name: '基本信息', key: 0},
+        {name: '疫苗信息', key: 1}
+      ],
+      doing: false,
+      showContent: {
+        isShowOtherContent: true, // 是否显示物流类型
+        isShowSupplierId: true, // 是否显示来源单位
+        expectedTimeLabel: '预计入库时间'
+      },
+      currentItem: {
+        detailDtoList: []
       }
-    },
-    watch: {
-      orderId: function (val) {
-        if (val && this.action === 'edit') {
-          this.queryInfo(val);
-        }
-      }
-    },
-    mounted: function () {
-      this.currentPartName = this.productListSet[0].name;
-    },
-    methods: {
-      getWarehouseAddress: function (item) { // 得到仓库地址
-        if (!item.warehouseAddress) {
-          return '';
-        }
-        return item.warehouseAddress;
-      },
-      queryInfo(val) {
-        if (!val) return;
-        PurchaseContract.queryContractDetail(val).then(res => {
-          this.currentItem = {
-            'purchaseContractNo': res.data.purchaseContractNo,
-            'purchaseContractName': res.data.purchaseContractName,
-            'centreName': res.data.centreName,
-            'pickUpWarehouseName': res.data.pickUpWarehouseName,
-            'logisticsProviderName': res.data.logisticsProviderName,
-            'supplierName': res.data.supplierName,
-            'transportationCondition': res.data.transportationCondition,
-            'transportationMeansId': res.data.transportationMeansId,
-            'warehouseAddress': res.data.warehouseAddress,
-            'availabilityStatus': res.data.availabilityStatus,
-            'purchaseContractIsUsed': res.data.purchaseContractIsUsed,
-            'remark': res.data.remark,
-            'detailDtoList': res.data.detailDtoList
-          };
-          this.form.purchaseContractName = res.data.purchaseContractName;
-          this.form.purchaseContractNo = res.data.purchaseContractNo;
-          this.currentItem.detailDtoList.forEach(f => {
-            f.orgGoodsName = f.name;
-          });
-        });
-      },
-      setIndexValue: function (value) {// 左侧显示页切换
-        this.index = value;
-      },
-      doClose: function () {
-        this.$emit('right-close');
-      },
-      onSubmit: function () {// 提交表单
-        let self = this;
-        this.$refs['orderAddForm'].validate((valid) => {
-          if (!valid || this.doing) {
-            this.index = 0;
-            return false;
-          }
-          this.doing = true;
-          if (this.orderId) {
-            PurchaseContract.updatePurchaseContractName(this.orderId, this.form).then(res => {
-              this.$notify({
-                duration: 2000,
-                message: '编辑采购合同成功',
-                type: 'success'
-              });
-              self.$emit('change');
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('right-close');
-              });
-            }).catch(error => {
-              this.doing = false;
-              this.$notify({
-                duration: 2000,
-                title: '编辑采购合同失败',
-                message: error.response && error.response.data && error.response.data.msg || '网络异常',
-                type: 'error'
-              });
-            });
-          }
-        });
+    };
+  },
+  computed: {
+    totalMoney: function () {
+      let totalMoney = 0.00;
+      if (!this.currentItem.detailDtoList.length) return totalMoney;
+      this.currentItem.detailDtoList.forEach(item => {
+        totalMoney += item.amount * item.unitPrice;
+      });
+      return totalMoney;
+    }
+  },
+  watch: {
+    orderId: function (val) {
+      if (val && this.action === 'edit') {
+        this.queryInfo(val);
       }
     }
-  };
+  },
+  mounted: function () {
+    this.currentPartName = this.productListSet[0].name;
+  },
+  methods: {
+    getWarehouseAddress: function (item) { // 得到仓库地址
+      if (!item.warehouseAddress) {
+        return '';
+      }
+      return item.warehouseAddress;
+    },
+    queryInfo(val) {
+      if (!val) return;
+      PurchaseContract.queryContractDetail(val).then(res => {
+        this.currentItem = {
+          'purchaseContractNo': res.data.purchaseContractNo,
+          'purchaseContractName': res.data.purchaseContractName,
+          'centreName': res.data.centreName,
+          'pickUpWarehouseName': res.data.pickUpWarehouseName,
+          'logisticsProviderName': res.data.logisticsProviderName,
+          'supplierName': res.data.supplierName,
+          'transportationCondition': res.data.transportationCondition,
+          'transportationMeansId': res.data.transportationMeansId,
+          'warehouseAddress': res.data.warehouseAddress,
+          'availabilityStatus': res.data.availabilityStatus,
+          'purchaseContractIsUsed': res.data.purchaseContractIsUsed,
+          'remark': res.data.remark,
+          'detailDtoList': res.data.detailDtoList
+        };
+        this.form.purchaseContractName = res.data.purchaseContractName;
+        this.form.purchaseContractNo = res.data.purchaseContractNo;
+        this.currentItem.detailDtoList.forEach(f => {
+          f.orgGoodsName = f.name;
+        });
+      });
+    },
+    setIndexValue: function (value) {// 左侧显示页切换
+      this.index = value;
+    },
+    doClose: function () {
+      this.$emit('right-close');
+    },
+    onSubmit: function () {// 提交表单
+      let self = this;
+      this.$refs['orderAddForm'].validate((valid) => {
+        if (!valid || this.doing) {
+          this.index = 0;
+          return false;
+        }
+        this.doing = true;
+        if (this.orderId) {
+          PurchaseContract.updatePurchaseContractName(this.orderId, this.form).then(res => {
+            this.$notify({
+              duration: 2000,
+              message: '编辑采购合同成功',
+              type: 'success'
+            });
+            self.$emit('change');
+            this.$nextTick(() => {
+              this.doing = false;
+              this.$emit('right-close');
+            });
+          }).catch(error => {
+            this.doing = false;
+            this.$notify({
+              duration: 2000,
+              title: '编辑采购合同失败',
+              message: error.response && error.response.data && error.response.data.msg || '网络异常',
+              type: 'error'
+            });
+          });
+        }
+      });
+    }
+  }
+};
 </script>
