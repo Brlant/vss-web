@@ -111,33 +111,29 @@ $leftWidth: 240px;
         </ul>
       </div>
       <div class="content-right min-gutter">
-        <h3>{{ currentPartName }}</h3>
+        <h3>{{currentPartName}}</h3>
         <el-form ref="orderAddForm" :model="form" :rules="rules" label-width="160px" onsubmit="return false"
                  style="padding-right: 20px" @submit.prevent="onSubmit">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-            <el-form-item v-show="showContent.isShowOtherContent"
-                          :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
+            <el-form-item v-show="showContent.isShowOtherContent" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
                           label="物流方式">
               <el-select v-model="form.transportationMeansId" placeholder="请选择物流方式" type="text"
                          @change="changeTransportationMeans">
-                <el-option v-for="item in transportationMeansList"
-                           v-show="(item.key !== '2' || item.key==='2' && form.bizType!=='2-2') && item.key !== '4'"
-                           :key="item.key"
+                <el-option v-for="item in transportationMeansList" v-show="(item.key !== '2' || item.key==='2' && form.bizType!=='2-2') && item.key !== '4'" :key="item.key"
                            :label="item.label"
                            :value="item.key"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="收货单位" prop="customerId">
-              <el-select v-model="form.customerId" :clearable="true" :remote-method="filterPOV" filterable
-                         placeholder="请输入名称搜索收货单位"
+              <el-select v-model="form.customerId" :clearable="true" :remote-method="filterPOV" filterable placeholder="请输入名称搜索收货单位"
                          popper-class="good-selects" remote @change="changeCustomerId">
                 <el-option v-for="org in orgList" :key="org.id" :label="org.name" :value="org.id">
                   <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{ org.name }}</span>
+                    <span class="pull-left" style="clear: right">{{org.name}}</span>
                   </div>
                   <div v-show="org.manufacturerCode" style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{ org.manufacturerCode }}
+                        <span>系统代码:</span>{{org.manufacturerCode}}
                       </span>
                   </div>
                 </el-option>
@@ -202,8 +198,7 @@ $leftWidth: 240px;
             <div class="oms-form order-product-box">
               <el-form ref="orderGoodsAddForm" :model="product" :rules="orderGoodsRules" label-width="120px">
                 <el-form-item label="产品" prop="orgGoodsId">
-                  <el-select v-model="product.orgGoodsId" :clearable="true" :loading="loading"
-                             :remote-method="searchProduct"
+                  <el-select v-model="product.orgGoodsId" :clearable="true" :loading="loading" :remote-method="searchProduct"
                              filterable placeholder="请输入名称搜索产品" popper-class="order-good-selects"
                              remote
                              @change="getGoodDetail">
@@ -211,34 +206,28 @@ $leftWidth: 240px;
                                :label="item.orgGoodsDto.name"
                                :value="item.orgGoodsDto.id">
                       <div style="overflow: hidden">
-                        <span class="pull-left">{{ item.orgGoodsDto.name }}</span>
-                        <el-tag v-show="item.list.length" class="pull-left"
-                                style="line-height: 22px;margin-left: 20px;height: 20px"
+                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                        <el-tag v-show="item.list.length" class="pull-left" style="line-height: 22px;margin-left: 20px;height: 20px"
                                 type="success">
                           组合
                         </el-tag>
                         <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-right"><span
-                          v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{
-                            item.orgGoodsDto.goodsDto.specifications
-                          }}
+                          v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{item.orgGoodsDto.goodsDto.specifications}}
                         </span>
                       </div>
                       <div style="overflow: hidden">
                         <span v-show="vaccineType==='2'" class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{ item.orgGoodsDto.goodsNo }}
+                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span v-show="vaccineType==='2'" class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.sellPrice">销售价格:￥{{
-                            item.orgGoodsDto.sellPrice
+                          v-show="item.orgGoodsDto.sellPrice">销售价格:￥{{ item.orgGoodsDto.sellPrice
                           }}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                         <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-left">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{
-                            item.orgGoodsDto.goodsDto.factoryName
-                          }}
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
                         </span>
                       </div>
                     </el-option>
@@ -268,7 +257,7 @@ $leftWidth: 240px;
                       <el-col :span="10">
                         <span v-show="accessoryList.length">【组合疫苗】</span>
                         <span v-for="acce in accessoryList" style="display: block;font-size: 12px">
-                       <span style="margin-right: 10px">{{ acce.name }}</span>
+                       <span style="margin-right: 10px">{{acce.name}}</span>
                        <span v-show="acce.sellPrice"
                              style="margin-right: 10px">销售价格:¥{{ acce.sellPrice | formatMoney }}</span>
                        <span v-show="acce.proportion" style="margin-right: 10px">比例:{{ acce.proportion }}</span>
@@ -313,7 +302,7 @@ $leftWidth: 240px;
                     <el-tag v-show="product.isCombination" :class="{ml15:product.isCombination}" style="font-size: 10px"
                             type="success">组合
                     </el-tag>
-                    <span>{{ product.orgGoodsName }}</span>
+                    <span>{{product.orgGoodsName}}</span>
                   </td>
                   <td>
                     <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
@@ -328,18 +317,17 @@ $leftWidth: 240px;
                   </td>
                   <td v-show="vaccineType==='2'" class="ar">
                    <span v-show="Number(product.unitPrice)">
-                     <span>¥</span>{{ product.unitPrice | formatMoney }}
+                     <span>¥</span>{{product.unitPrice | formatMoney}}
                      <span v-if="!Number(product.unitPrice)">-</span>
                    </span>
                     <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
-                  <td class="ar">{{ product.amount }} <span v-show="product.measurementUnit">（<dict
+                  <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
                   <td v-show="vaccineType==='2'" class="ar">
-                    <span v-show="Number(product.unitPrice)">¥{{
-                        product.amount * product.unitPrice | formatMoney
+                    <span v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney
                       }}</span>
                     <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
@@ -857,9 +845,6 @@ export default {
       });
     },
     getWarehouseAdress: function (item) { // 得到仓库地址
-      if (!item) {
-        return;
-      }
       return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
     },
     checkLicence: function (val) {// 检查货主/单位证照是否过期
