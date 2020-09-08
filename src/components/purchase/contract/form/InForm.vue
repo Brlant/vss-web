@@ -1,92 +1,99 @@
 <style lang="scss" scoped>
-  @import "../../../../assets/mixins.scss";
+@import "../../../../assets/mixins.scss";
 
-  $leftWidth: 200px;
+$leftWidth: 200px;
 
-  .el-form .el-checkbox__label {
-    font-size: 12px;
-    padding-left: 5px;
+.el-form .el-checkbox__label {
+  font-size: 12px;
+  padding-left: 5px;
+}
+
+.el-form .el-checkbox__inner {
+  width: 14px;
+  height: 14px;
+}
+
+.content-part {
+  .content-left {
+    text-align: center;
+    width: $leftWidth;
   }
 
-  .el-form .el-checkbox__inner {
-    width: 14px;
-    height: 14px;
-  }
-
-  .content-part {
-    .content-left {
-      text-align: center;
-      width: $leftWidth;
-    }
-    .content-right {
-      > h3 {
-        left: $leftWidth;
-      }
+  .content-right {
+    > h3 {
       left: $leftWidth;
     }
+
+    left: $leftWidth;
+  }
+}
+
+.el-form .el-select {
+  display: block;
+}
+
+.order-product-box {
+  position: relative;
+  border-radius: 10px;
+  font-size: 12px;
+  line-height: 26px;
+
+  .product-info-fix {
+    background: #f6f6f6;
+    margin-top: 10px;
+    padding: 5px;
+    margin-bottom: 20px;
   }
 
-  .el-form .el-select {
-    display: block;
+  &:hover {
+    border-color: #aaa
   }
 
-  .order-product-box {
-    position: relative;
-    border-radius: 10px;
-    font-size: 12px;
-    line-height: 26px;
-    .product-info-fix {
-      background: #f6f6f6;
-      margin-top: 10px;
-      padding: 5px;
-      margin-bottom: 20px;
-    }
+  .product-remove {
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 20px;
+    height: 20px;
+    line-height: 20px;
+    text-align: center;
+    cursor: pointer;
+    color: #666;
+
     &:hover {
-      border-color: #aaa
-    }
-    .product-remove {
-      position: absolute;
-      right: 0;
-      top: 0;
-      width: 20px;
-      height: 20px;
-      line-height: 20px;
-      text-align: center;
-      cursor: pointer;
-      color: #666;
-      &:hover {
-        color: #333
-      }
-    }
-    .order-goods-info {
-      .col-label {
-        padding-top: 4px;
-      }
-    }
-
-  }
-
-  .ml15 {
-    margin-left: 40px;
-  }
-
-  .combinatioon-product {
-    color: #777
-  }
-
-  .productItem-info {
-    float: left;
-  }
-
-  .ar {
-    text-align: right;
-  }
-
-  .goods-btn {
-    a:hover {
-      color: $activeColor;
+      color: #333
     }
   }
+
+  .order-goods-info {
+    .col-label {
+      padding-top: 4px;
+    }
+  }
+
+}
+
+.ml15 {
+  margin-left: 40px;
+}
+
+.combinatioon-product {
+  color: #777
+}
+
+.productItem-info {
+  float: left;
+}
+
+.ar {
+  text-align: right;
+}
+
+.goods-btn {
+  a:hover {
+    color: $activeColor;
+  }
+}
 </style>
 
 <template>
@@ -95,8 +102,8 @@
       <div class="content-left">
         <h2 class="clearfix right-title">{{showTitle}}采购合同</h2>
         <ul>
-          <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
-              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
+          <li v-for="item in productListSet" class="list-style" v-bind:class="{ 'active' : index==item.key}"
+              @click="setIndexValue(item.key)"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
             <el-button type="success" @click="onSubmit">保存</el-button>
@@ -107,61 +114,61 @@
         <h3>{{currentPartName}}</h3>
 
         <div class="hide-content" v-bind:class="{'show-content' : index==0}">
-          <el-form ref="contractForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
-                   label-width="160px" style="padding-right: 20px">
+          <el-form ref="contractForm" :model="form" :rules="rules" label-width="160px" onsubmit="return false"
+                   style="padding-right: 20px" @submit.prevent="onSubmit">
             <el-form-item label="合同名称">
-              <oms-input type="text" v-model="form.purchaseContractName" placeholder="请输入采购合同名称"></oms-input>
+              <oms-input v-model="form.purchaseContractName" placeholder="请输入采购合同名称" type="text"></oms-input>
             </el-form-item>
             <el-form-item label="合同编号">
-              <oms-input type="text" v-model="form.purchaseContractNo" placeholder="请输入采购合同编号"></oms-input>
+              <oms-input v-model="form.purchaseContractNo" placeholder="请输入采购合同编号" type="text"></oms-input>
             </el-form-item>
-            <el-form-item label="物流方式" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
-                          v-show="showContent.isShowOtherContent">
-              <el-select type="text" v-model="form.transportationMeansId" @change="changeTransportationMeans"
-                         placeholder="请选择物流方式">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationMeansList" v-show="item.key !== '3' "></el-option>
+            <el-form-item v-show="showContent.isShowOtherContent" :prop=" showContent.isShowOtherContent?'transportationMeansId':'' "
+                          label="物流方式">
+              <el-select v-model="form.transportationMeansId" placeholder="请选择物流方式" type="text"
+                         @change="changeTransportationMeans">
+                <el-option v-for="item in transportationMeansList" v-show="item.key !== '3' " :key="item.key"
+                           :label="item.label" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label="供货单位" prop="supplierId">
-              <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg" :clearable="true"
-                         v-model="form.supplierId" @change="changeSupplier" @click.native.once="filterOrg('')">
-                <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+              <el-select v-model="form.supplierId" :clearable="true" :remote-method="filterOrg" filterable placeholder="请输入名称搜索供货单位"
+                         remote @change="changeSupplier" @click.native.once="filterOrg('')">
+                <el-option v-for="org in orgList" :key="org.id" :label="org.name" :value="org.id">
                   <div style="overflow: hidden">
                     <span class="pull-left" style="clear: right">{{org.name}}</span>
-                    <span class="pull-right" style="color: #999" v-if="org.relationList">
+                    <span v-if="org.relationList" class="pull-right" style="color: #999">
                      <dict :dict-group="'orgRelation'" :dict-key="org.relationList[0]"></dict>
                     </span>
                   </div>
                   <div style="overflow: hidden">
-                  <span class="select-other-info pull-left" v-show="org.manufacturerCode">
+                  <span v-show="org.manufacturerCode" class="select-other-info pull-left">
                     <span>系统代码:</span>{{org.manufacturerCode}}
                   </span>
                   </div>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流商"
-                          v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')">
-              <oms-input type="text" v-model="form.logisticsProviderName" placeholder="请输入物流商名称"></oms-input>
+            <el-form-item v-show="showContent.isShowOtherContent&&(form.transportationMeansId==='1' || form.transportationMeansId==='3')"
+                          label="物流商">
+              <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商名称" type="text"></oms-input>
             </el-form-item>
-            <el-form-item label="提货地址"
+            <el-form-item v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' "
                           :prop=" showContent.isShowOtherContent&&form.transportationMeansId==='2'?'pickUpAddress':'' "
-                          v-show="showContent.isShowOtherContent&&form.transportationMeansId==='2' ">
-              <el-select placeholder="请选择提货地址" v-model="form.pickUpAddress" filterable :clearable="true">
-                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
-                           v-for="item in supplierWarehouses">
+                          label="提货地址">
+              <el-select v-model="form.pickUpAddress" :clearable="true" filterable placeholder="请选择提货地址">
+                <el-option v-for="item in supplierWarehouses" :key="item.id" :label="filterAddressLabel(item)"
+                           :value="item.id">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
 
-            <el-form-item label="运输条件" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
-                          v-show="showContent.isShowOtherContent">
-              <el-select type="text" v-model="form.transportationCondition" placeholder="请选择运输条件">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationConditionList"></el-option>
+            <el-form-item v-show="showContent.isShowOtherContent" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
+                          label="运输条件">
+              <el-select v-model="form.transportationCondition" placeholder="请选择运输条件" type="text">
+                <el-option v-for="item in transportationConditionList" :key="item.key" :label="item.label"
+                           :value="item.key"></el-option>
               </el-select>
             </el-form-item>
             <!--<el-form-item label="物流中心" prop="logisticsCentreId">-->
@@ -170,9 +177,9 @@
             <!--</el-select>-->
             <!--</el-form-item>-->
             <el-form-item label="仓库地址" prop="transportationAddress">
-              <el-select placeholder="请选择仓库地址" v-model="form.transportationAddress" filterable :clearable="true">
-                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
-                           v-for="item in cdcWarehouses">
+              <el-select v-model="form.transportationAddress" :clearable="true" filterable placeholder="请选择仓库地址">
+                <el-option v-for="item in cdcWarehouses" :key="item.id" :label="filterAddressLabel(item)"
+                           :value="item.id">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
@@ -188,8 +195,8 @@
             <!--</el-switch>-->
             <!--</el-form-item>-->
             <el-form-item label="其他约定事项">
-              <oms-input type="textarea" v-model="form.remark" placeholder="请输入其他约定事项"
-                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+              <oms-input v-model="form.remark" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入其他约定事项"
+                         type="textarea"></oms-input>
             </el-form-item>
             <el-form-item label-width="120px">
               <el-button type="primary" @click="index++">添加疫苗</el-button>
@@ -199,23 +206,23 @@
         <div class="hide-content" v-bind:class="{'show-content' : index==1}">
 
           <div class="oms-form order-product-box">
-            <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
+            <el-form ref="orderGoodsAddForm" :model="product" :rules="orderGoodsRules" label-width="120px">
               <el-form-item label="产品" prop="orgGoodsId">
-                <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
-                           :loading="loading"
-                           popper-class="order-good-selects"
-                           @change="getGoodDetail">
+                <el-select v-model="product.orgGoodsId" :clearable="true" :loading="loading" :remote-method="searchProduct"
+                           filterable placeholder="请输入名称搜索产品" popper-class="order-good-selects"
+                           remote
+                           @change="getGoodDetail"
+                           @click.native="searchProduct('')">
                   <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
                              :label="item.orgGoodsDto.name"
                              :value="item.orgGoodsDto.id">
                     <div style="overflow: hidden">
                       <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                      <el-tag class="pull-left" type="success" v-show="item.list.length"
-                              style="line-height: 22px;margin-left: 20px;height: 20px">
+                      <el-tag v-show="item.list.length" class="pull-left" style="line-height: 22px;margin-left: 20px;height: 20px"
+                              type="success">
                         组合
                       </el-tag>
-                      <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
+                      <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-right"><span
                         v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{item.orgGoodsDto.goodsDto.specifications}}
                       </span>
                     </div>
@@ -230,7 +237,7 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                       </span>
-                      <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                      <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-left">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
                       </span>
                     </div>
@@ -238,15 +245,15 @@
                 </el-select>
               </el-form-item>
               <div v-show="product.orgGoodsId">
-                <el-form-item label="产品数量" class="productItem-info" prop="amount">
-                  <oms-input type="number" v-model.number="product.amount" :min="0" @blur="changeNumber">
+                <el-form-item class="productItem-info" label="产品数量" prop="amount">
+                  <oms-input v-model.number="product.amount" :min="0" type="number" @blur="changeNumber">
                     <template slot="append">
                       <dict :dict-group="'measurementUnit'" :dict-key="product.fixInfo.goodsDto.measurementUnit"></dict>
                     </template>
                   </oms-input>
                 </el-form-item>
-                <el-form-item label="单价" class="productItem-info" prop="unitPrice">
-                  <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
+                <el-form-item class="productItem-info" label="单价" prop="unitPrice">
+                  <oms-input v-model="product.unitPrice" :min="0" placeholder="请输入单价" type="text"
                              @blur="formatPrice">
                     <template slot="prepend">¥</template>
                   </oms-input>
@@ -258,17 +265,17 @@
                     </el-col>
                     <el-col :span="10">
                       <span v-show="accessoryList.length">【组合疫苗】</span>
-                      <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
+                      <span v-for="acce in accessoryList" :key="acce.id" style="display: block;font-size: 12px">
                        <span style="margin-right: 10px">{{acce.name}}</span>
-                      <span style="margin-right: 10px"
-                            v-show="acce.procurementPrice">采购价格:¥ {{ acce.procurementPrice | formatMoney }}</span>
-                       <span style="margin-right: 10px" v-show="acce.proportion">比例:{{ acce.proportion }}</span>
+                      <span v-show="acce.procurementPrice"
+                            style="margin-right: 10px">采购价格:¥ {{ acce.procurementPrice | formatMoney }}</span>
+                       <span v-show="acce.proportion" style="margin-right: 10px">比例:{{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                   </span>
                     </el-col>
                   </el-row>
                 </div>
-                <oms-form-row label="" :span="4">
+                <oms-form-row :span="4" label="">
                   <el-button type="primary" @click="addProduct" @mousedown.native="mousedownAdd">加入合同</el-button>
                 </oms-form-row>
               </div>
@@ -292,8 +299,8 @@
               <tbody>
               <tr v-for="product in form.detailDtoList" :class="{'combinatioon-product':product.isCombination}">
                 <td>
-                  <el-tag type="success" v-show="product.isCombination" style="font-size: 10px"
-                          :class="{ml15:product.isCombination}">组合
+                  <el-tag v-show="product.isCombination" :class="{ml15:product.isCombination}" style="font-size: 10px"
+                          type="success">组合
                   </el-tag>
                   <span>{{product.orgGoodsName}}</span>
                 </td>
@@ -317,19 +324,19 @@
                 </td>
                 <td class="goods-btn">
                   <div v-show="index === 2">
-                    <a href="#" @click.prevent="editItem(product)" v-show="!product.isCombination"><i
+                    <a v-show="!product.isCombination" href="#" @click.prevent="editItem(product)"><i
                       class="el-icon-t-edit"></i> 编辑</a>
                   </div>
                   <div>
-                    <a href="#" @click.prevent="remove(product)" v-show="!product.isCombination"><i
+                    <a v-show="!product.isCombination" href="#" @click.prevent="remove(product)"><i
                       class="el-icon-t-delete"></i> 删除</a>
                   </div>
                 </td>
               </tr>
               <tr>
                 <td colspan="3"></td>
-                <td colspan="2"><span style="color: #333;font-weight: 700"
-                                      v-show="form.detailDtoList.length && totalMoney">合计:</span><span
+                <td colspan="2"><span v-show="form.detailDtoList.length && totalMoney"
+                                      style="color: #333;font-weight: 700">合计:</span><span
                   v-show="form.detailDtoList.length && totalMoney">   ¥{{ totalMoney | formatMoney }}</span></td>
               </tr>
               </tbody>
@@ -343,37 +350,198 @@
 </template>
 
 <script>
-  import {Address, BaseInfo, http, LogisticsCenter, PurchaseContract} from './../../../../resources';
-  import utils from '@/tools/utils';
-  import OrderMixin from '@/mixins/orderMixin';
-  import addGoodsMixin from '@/mixins/addGoodsMixin';
+import {Address, BaseInfo, http, LogisticsCenter, PurchaseContract} from './../../../../resources';
+import utils from '@/tools/utils';
+import OrderMixin from '@/mixins/orderMixin';
+import addGoodsMixin from '@/mixins/addGoodsMixin';
 
-  export default {
-    name: 'addForm',
-    loading: false,
-    props: ['action', 'type', 'orderId'],
-    mixins: [OrderMixin, addGoodsMixin],
-    data: function () {
-      return {
-        loading: false,
-        idNotify: true,
-        product: {
-          'amount': null,
-          'entrustment': false,
-          'measurementUnit': '',
-          'orgGoodsId': '',
-          'packingCount': null,
-          'specificationsId': '',
-          'orgGoodsName': '',
-          'unitPrice': null,
-          'fixInfo': {
-            'goodsDto': {}
-          }
-        },
-        accessoryList: [], // 组合疫苗列表
-        searchProductList: [],
-        filterProductList: [],
-        form: {
+export default {
+  name: 'addForm',
+  loading: false,
+  props: ['action', 'type', 'orderId'],
+  mixins: [OrderMixin, addGoodsMixin],
+  data: function () {
+    return {
+      loading: false,
+      idNotify: true,
+      product: {
+        'amount': null,
+        'entrustment': false,
+        'measurementUnit': '',
+        'orgGoodsId': '',
+        'packingCount': null,
+        'specificationsId': '',
+        'orgGoodsName': '',
+        'unitPrice': null,
+        'fixInfo': {
+          'goodsDto': {}
+        }
+      },
+      accessoryList: [], // 组合疫苗列表
+      searchProductList: [],
+      filterProductList: [],
+      form: {
+        goodsType: '',
+        'purchaseContractNo': '',
+        'purchaseContractName': '',
+        'availabilityStatus': true,
+        'orgId': this.$store.state.user.userCompanyAddress,
+        'customerId': '',
+        'bizType': '1-0',
+        'type': this.type,
+        'logisticsProviderName': '',
+        'transportationCondition': '0',
+        'transportationMeansId': '1',
+        'transportationAddress': '',
+        'importedFlag': '',
+        'orgRelation': '',
+        'logisticsCentreId': '',
+        'expectedTime': '',
+        'detailDtoList': [],
+        'supplierId': '',
+        'remark': '',
+        'pickUpAddress': '',
+        'supplierName': ''
+      },
+      rules: {
+        goodsType: [
+          {required: true, message: '请选择合同类型', trigger: 'change'},
+        ],
+        purchaseContractName: [
+          {required: true, message: '请输入采购合同名称', trigger: 'blur'}
+        ],
+        purchaseContractNo: [
+          {required: true, message: '请输入采购合同编号', trigger: 'blur'}
+        ],
+        supplierId: [
+          {required: true, message: '请选择供货单位', trigger: 'change'}
+        ],
+        transportationMeansId: [
+          {required: true, message: '请选择物流方式', trigger: 'change'}
+        ],
+        transportationAddress: [
+          {required: true, message: '请选择仓库地址', trigger: 'change'}
+        ],
+        pickUpAddress: [
+          {required: true, message: '请选择提货地址', trigger: 'change'}
+        ],
+        logisticsProviderName: [
+          {required: true, message: '请选择物流商', trigger: 'change'}
+        ],
+        logisticsCentreId: [
+          {required: true, message: '请选择物流中心', trigger: 'change'}
+        ],
+        transportationCondition: [
+          {required: true, message: '请选择运输条件', trigger: 'change'}
+        ],
+        expectedTime: [
+          {required: true, message: '请选择预计入库时间', trigger: 'change'}
+        ]
+      },
+      orderGoodsRules: {
+        orgGoodsId: [
+          {required: true, message: '请选择产品', trigger: 'change'}
+        ],
+        amount: [
+          {required: true, min: 1, type: 'number', message: '请输入产品数量', trigger: 'blur'}
+        ],
+        unitPrice: [
+          {required: true, message: '请输入单价', trigger: 'change'}
+        ],
+        packingCount: [
+          {required: true, min: 1, type: 'number', message: '请输入包装数量', trigger: 'blur'}
+        ],
+        specificationsId: [
+          {required: true, message: '请选择包装单位', trigger: 'change'}
+        ]
+      },
+      currentPartName: '',
+      index: 0,
+      productListSet: [
+        {name: '基本信息', key: 0},
+        {name: '疫苗信息', key: 1}
+      ],
+      orgList: [],
+      customerList: [],
+      logisticsList: [],
+      goodsList: {},
+      relationList: [],
+      LogisticsCenter: [],
+      doing: false,
+      isSupplierOrOrg: false, // 是不是货主或业务单位
+      saveKey: 'contractForm',
+      isStorageData: false, // 判断是不是缓存数据
+      showContent: {
+        isShowOtherContent: true, // 是否显示物流类型
+        isShowSupplierId: true, // 是否显示来源单位
+        expectedTimeLabel: '预计入库时间'
+      },
+      currentTransportationMeans: [],
+      cdcWarehouses: [],
+      supplierWarehouses: [],
+      changeTotalNumber: utils.changeTotalNumber,
+      isCheckPackage: utils.isCheckPackage,
+      warehouseTypeList: this.$store.state.warehouseType
+    };
+  },
+  computed: {
+    bizTypeList: function () {
+      return this.$getDict('bizInType');
+    },
+    transportationMeansList: function () {
+      return this.$getDict('transportationMeans');
+    },
+    shipmentPackingUnit: function () {
+      return this.$getDict('shipmentPackingUnit');
+    },
+    measurementUnitList: function () {
+      return this.$getDict('measurementUnit');
+    },
+    transportationConditionList: function () {
+      return this.$getDict('transportationCondition');
+    },
+    totalMoney: function () {
+      let totalMoney = 0.00;
+      if (!this.form.detailDtoList.length) return totalMoney;
+      this.form.detailDtoList.forEach(item => {
+        totalMoney += item.amount * item.unitPrice;
+      });
+      return totalMoney;
+    },
+    user() {
+      return this.$store.state.user.userCompanyAddress;
+    },
+    showTitle() {
+      let title = '新增';
+      if (this.action === 'edit') {
+        title = '编辑';
+      }
+      return title;
+    }
+  },
+  watch: {
+    index: function (val) {
+      this.productListSet.forEach((item) => {
+        if (item.key === val) {
+          this.currentPartName = item.name;
+        }
+      });
+    },
+    form: {
+      handler: 'autoSave',
+      deep: true
+    },
+    transportationMeansList: function (val) {
+      this.currentTransportationMeans = val.slice();
+    },
+    action(val) {
+      this.index = 0;
+      if (this.$store.state.user.userCompanyAddress && val === 'add') {
+        BaseInfo.queryBaseInfo(this.$store.state.user.userCompanyAddress).then(res => {
+          let myDate = new Date();
+          this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
+        });
+        this.form = {
           goodsType: '',
           'purchaseContractNo': '',
           'purchaseContractName': '',
@@ -392,466 +560,377 @@
           'expectedTime': '',
           'detailDtoList': [],
           'supplierId': '',
+          'supplierName': '',
           'remark': '',
-          'pickUpAddress': '',
-          'supplierName': ''
-        },
-        rules: {
-          goodsType: [
-            {required: true, message: '请选择合同类型', trigger: 'change'},
-          ],
-          purchaseContractName: [
-            {required: true, message: '请输入采购合同名称', trigger: 'blur'}
-          ],
-          purchaseContractNo: [
-            {required: true, message: '请输入采购合同编号', trigger: 'blur'}
-          ],
-          supplierId: [
-            {required: true, message: '请选择供货单位', trigger: 'change'}
-          ],
-          transportationMeansId: [
-            {required: true, message: '请选择物流方式', trigger: 'change'}
-          ],
-          transportationAddress: [
-            {required: true, message: '请选择仓库地址', trigger: 'change'}
-          ],
-          pickUpAddress: [
-            {required: true, message: '请选择提货地址', trigger: 'change'}
-          ],
-          logisticsProviderName: [
-            {required: true, message: '请选择物流商', trigger: 'change'}
-          ],
-          logisticsCentreId: [
-            {required: true, message: '请选择物流中心', trigger: 'change'}
-          ],
-          transportationCondition: [
-            {required: true, message: '请选择运输条件', trigger: 'change'}
-          ],
-          expectedTime: [
-            {required: true, message: '请选择预计入库时间', trigger: 'change'}
-          ]
-        },
-        orderGoodsRules: {
-          orgGoodsId: [
-            {required: true, message: '请选择产品', trigger: 'change'}
-          ],
-          amount: [
-            {required: true, min: 1, type: 'number', message: '请输入产品数量', trigger: 'blur'}
-          ],
-          unitPrice: [
-            {required: true, message: '请输入单价', trigger: 'change'}
-          ],
-          packingCount: [
-            {required: true, min: 1, type: 'number', message: '请输入包装数量', trigger: 'blur'}
-          ],
-          specificationsId: [
-            {required: true, message: '请选择包装单位', trigger: 'change'}
-          ]
-        },
-        currentPartName: '',
-        index: 0,
-        productListSet: [
-          {name: '基本信息', key: 0},
-          {name: '疫苗信息', key: 1}
-        ],
-        orgList: [],
-        customerList: [],
-        logisticsList: [],
-        goodsList: {},
-        relationList: [],
-        LogisticsCenter: [],
-        doing: false,
-        isSupplierOrOrg: false, // 是不是货主或业务单位
-        saveKey: 'contractForm',
-        isStorageData: false, // 判断是不是缓存数据
-        showContent: {
-          isShowOtherContent: true, // 是否显示物流类型
-          isShowSupplierId: true, // 是否显示来源单位
-          expectedTimeLabel: '预计入库时间'
-        },
-        currentTransportationMeans: [],
-        cdcWarehouses: [],
-        supplierWarehouses: [],
-        changeTotalNumber: utils.changeTotalNumber,
-        isCheckPackage: utils.isCheckPackage,
-        warehouseTypeList: this.$store.state.warehouseType
-      };
-    },
-    computed: {
-      bizTypeList: function () {
-        return this.$getDict('bizInType');
-      },
-      transportationMeansList: function () {
-        return this.$getDict('transportationMeans');
-      },
-      shipmentPackingUnit: function () {
-        return this.$getDict('shipmentPackingUnit');
-      },
-      measurementUnitList: function () {
-        return this.$getDict('measurementUnit');
-      },
-      transportationConditionList: function () {
-        return this.$getDict('transportationCondition');
-      },
-      totalMoney: function () {
-        let totalMoney = 0.00;
-        if (!this.form.detailDtoList.length) return totalMoney;
-        this.form.detailDtoList.forEach(item => {
-          totalMoney += item.amount * item.unitPrice;
-        });
-        return totalMoney;
-      },
-      user() {
-        return this.$store.state.user.userCompanyAddress;
-      },
-      showTitle() {
-        let title = '新增';
-        if (this.action === 'edit') {
-          title = '编辑';
-        }
-        return title;
+          'pickUpAddress': ''
+        };
+        this.initForm();
+        // if (this.form.supplierName && this.form.supplierId) {
+        //   this.orgList = [
+        //     {
+        //       name: this.form.supplierName,
+        //       id: this.form.supplierId
+        //     }
+        //   ];
+        // }
+        // this.filterOrg(this.form.supplierName);
+        // this.filterLogisticsCenter();
+        this.filterAddress();
+      } else if (this.orderId && val === 'edit') {
+        this.editOrderInfo();
+        this.filterAddress(this.form.warehouseAddress);
       }
     },
-    watch: {
-      index: function (val) {
-        this.productListSet.forEach((item) => {
-          if (item.key === val) {
-            this.currentPartName = item.name;
-          }
-        });
-      },
-      form: {
-        handler: 'autoSave',
-        deep: true
-      },
-      transportationMeansList: function (val) {
-        this.currentTransportationMeans = val.slice();
-      },
-      action(val) {
-        this.index = 0;
-        if (this.$store.state.user.userCompanyAddress && val === 'add') {
-          BaseInfo.queryBaseInfo(this.$store.state.user.userCompanyAddress).then(res => {
-            let myDate = new Date();
-            this.form.purchaseContractNo = res.data.orgDto.orgAreaCode + myDate.getFullYear();
-          });
-          this.form = {
-            goodsType: '',
-            'purchaseContractNo': '',
-            'purchaseContractName': '',
-            'availabilityStatus': true,
-            'orgId': this.$store.state.user.userCompanyAddress,
-            'customerId': '',
-            'bizType': '1-0',
-            'type': this.type,
-            'logisticsProviderName': '',
-            'transportationCondition': '0',
-            'transportationMeansId': '1',
-            'transportationAddress': '',
-            'importedFlag': '',
-            'orgRelation': '',
-            'logisticsCentreId': '',
-            'expectedTime': '',
-            'detailDtoList': [],
-            'supplierId': '',
-            'supplierName': '',
-            'remark': '',
-            'pickUpAddress': ''
-          };
-          this.initForm();
-          // if (this.form.supplierName && this.form.supplierId) {
-          //   this.orgList = [
-          //     {
-          //       name: this.form.supplierName,
-          //       id: this.form.supplierId
-          //     }
-          //   ];
-          // }
-          // this.filterOrg(this.form.supplierName);
-          // this.filterLogisticsCenter();
-          this.filterAddress();
-        } else if (this.orderId && val === 'edit') {
-          this.editOrderInfo();
-          this.filterAddress(this.form.warehouseAddress);
-        }
-      },
-      orderId(val) {
-        if (val) {
-          this.orderId = val;
-        }
+    orderId(val) {
+      if (val) {
+        this.orderId = val;
       }
+    }
+  },
+  mounted: function () {
+    this.currentPartName = this.productListSet[0].name;
+  },
+  methods: {
+    filterAddressLabel(item) {
+      let name = item.name ? '【' + item.name + '】' : '';
+      return name + item.detail;
     },
-    mounted: function () {
-      this.currentPartName = this.productListSet[0].name;
+    setDefaultValue() {
+      this.form.transportationCondition = '0';
+      // this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
+      this.form.purchaseContractName = '';
     },
-    methods: {
-      filterAddressLabel(item) {
-        let name = item.name ? '【' + item.name + '】' : '';
-        return name + item.detail;
-      },
-      setDefaultValue() {
+    createOrderInfo() {
+      this.form.purchaseContractName = '';
+      this.form.detailDtoList = [];
+      let orgGoodsId = this.purchase.id;
+      if (!orgGoodsId) return;
+      http.get(`/purchase-agreement/org-goods/${orgGoodsId}`).then(res => {
+        this.form.transportationMeansId = '1';
         this.form.transportationCondition = '0';
-        // this.form.logisticsCentreId = this.$store.state.logisticsCentreId;
-        this.form.purchaseContractName = '';
-      },
-      createOrderInfo() {
-        this.form.purchaseContractName = '';
-        this.form.detailDtoList = [];
-        let orgGoodsId = this.purchase.id;
-        if (!orgGoodsId) return;
-        http.get(`/purchase-agreement/org-goods/${orgGoodsId}`).then(res => {
-          this.form.transportationMeansId = '1';
-          this.form.transportationCondition = '0';
-          this.form.remark = '';
-          if (!res.data.orgGoodsDto.salesFirm) return;
-          this.orgList.push({
-            id: res.data.orgGoodsDto.salesFirm,
-            name: res.data.orgGoodsDto.salesFirmName,
-            relationList: []
-          });
-
-          this.form.supplierId = res.data.orgGoodsDto.salesFirm;
-          this.$nextTick(() => {
-            this.filterProductList.push({
-              orgGoodsDto: res.data.orgGoodsDto || {},
-              list: []
-            });
-            this.product.orgGoodsId = res.data.orgGoodsDto.id;
-            this.product.fixInfo = res.data.orgGoodsDto;
-            let price = res.data.orgGoodsDto.procurementPrice;
-            this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
-            this.product.measurementUnit = res.data.orgGoodsDto.goodsDto.measurementUnit;
-            this.accessoryList = res.data.list;
-            this.product.amount = Math.abs(this.purchase.count);
-          });
-        });
-      },
-      editOrderInfo() {
-        if (!this.orderId) return;
-        PurchaseContract.queryContractDetail(this.orderId).then(res => {
-//          this.currentOrder = res.data;
-          this.resetForm();
-          this.isStorageData = true;
-          this.form = JSON.parse(JSON.stringify(res.data));
-          res.data.detailDtoList.forEach(f => {
-            f.orgGoodsName = f.name;
-          });
-          if (this.form.supplierName && this.form.supplierId) {
-            this.orgList = [
-              {
-                name: this.form.supplierName,
-                id: this.form.supplierId
-              }
-            ];
-          }
-          // ******2.0变化
-          this.changeSupplier(this.form.supplierId, true);
-          this.changeTransportationMeans(this.form.transportationMeansId);
-          this.form.detailDtoList = res.data.detailDtoList;
-          // ******
-          this.$nextTick(() => {
-            this.isStorageData = false;
-          });
-        });
-      },
-      changeNumber() {
-        if (!this.product.amount) return;
-        let newAmount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
-        if (this.product.amount !== newAmount) {
-          this.$confirm(`疫苗"${this.product.fixInfo.name}"数量${this.product.amount}不是最小包装的倍数，确认后会对后续操作产生严重影响!
-          选择“是”修改数量为${newAmount}，选择“否”确认数量${this.product.amount}`, '', {
-            confirmButtonText: '是',
-            cancelButtonText: '否',
-            type: 'warning'
-          }).then(res => {
-            this.product.amount = newAmount;
-            this.setAddProduct();
-          }).catch(() => {
-            this.setAddProduct();
-          });
-        } else {
-          this.setAddProduct();
-        }
-      },
-      autoSave: function () {
-        if (!this.form.id && this.action === 'add') {
-          window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
-        }
-      },
-      initForm: function () {// 根据缓存，回设form
-        let oldForm = window.localStorage.getItem(this.saveKey);
-        if (oldForm && this.action === 'add') {
-          this.form = Object.assign({}, this.form, JSON.parse(oldForm), {
-            purchaseContractName: '',
-            supplierId: '',
-            supplierName: '',
-            pickUpAddress: ''
-          });
-        }
-      },
-      resetForm: function () {// 重置表单
-        this.$refs['contractForm'].resetFields();
-        this.$refs['orderGoodsAddForm'].resetFields();
-        this.form.supplierId = '';
-        this.form.actualConsignee = '';
-        this.form.logisticsProviderName = '';
-        this.form.logisticsCentreId = '';
         this.form.remark = '';
-        this.form.detailDtoList = [];
+        if (!res.data.orgGoodsDto.salesFirm) return;
+        this.orgList.push({
+          id: res.data.orgGoodsDto.salesFirm,
+          name: res.data.orgGoodsDto.salesFirmName,
+          relationList: []
+        });
+
+        this.form.supplierId = res.data.orgGoodsDto.salesFirm;
+        this.$nextTick(() => {
+          this.filterProductList.push({
+            orgGoodsDto: res.data.orgGoodsDto || {},
+            list: []
+          });
+          this.product.orgGoodsId = res.data.orgGoodsDto.id;
+          this.product.fixInfo = res.data.orgGoodsDto;
+          let price = res.data.orgGoodsDto.procurementPrice;
+          this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
+          this.product.measurementUnit = res.data.orgGoodsDto.goodsDto.measurementUnit;
+          this.accessoryList = res.data.list;
+          this.product.amount = Math.abs(this.purchase.count);
+        });
+      });
+    },
+    editOrderInfo() {
+      if (!this.orderId) return;
+      PurchaseContract.queryContractDetail(this.orderId).then(res => {
+//          this.currentOrder = res.data;
+        this.resetForm();
+        this.isStorageData = true;
+        this.form = JSON.parse(JSON.stringify(res.data));
+        res.data.detailDtoList.forEach(f => {
+          f.orgGoodsName = f.name;
+        });
+        if (this.form.supplierName && this.form.supplierId) {
+          this.orgList = [
+            {
+              name: this.form.supplierName,
+              id: this.form.supplierId
+            }
+          ];
+        }
+        // ******2.0变化
+        this.changeSupplier(this.form.supplierId, true);
+        this.changeTransportationMeans(this.form.transportationMeansId);
+        this.form.detailDtoList = res.data.detailDtoList;
+        // ******
+        this.$nextTick(() => {
+          this.isStorageData = false;
+        });
+      });
+    },
+    changeNumber() {
+      if (!this.product.amount) return;
+      let newAmount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
+      if (this.product.amount !== newAmount) {
+        this.$confirm(`疫苗"${this.product.fixInfo.name}"数量${this.product.amount}不是最小包装的倍数，确认后会对后续操作产生严重影响!
+          选择“是”修改数量为${newAmount}，选择“否”确认数量${this.product.amount}`, '', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(res => {
+          this.product.amount = newAmount;
+          this.setAddProduct();
+        }).catch(() => {
+          this.setAddProduct();
+        });
+      } else {
+        this.setAddProduct();
+      }
+    },
+    autoSave: function () {
+      if (!this.form.id && this.action === 'add') {
+        window.localStorage.setItem(this.saveKey, JSON.stringify(this.form));
+      }
+    },
+    initForm: function () {// 根据缓存，回设form
+      let oldForm = window.localStorage.getItem(this.saveKey);
+      if (oldForm && this.action === 'add') {
+        this.form = Object.assign({}, this.form, JSON.parse(oldForm), {
+          purchaseContractName: '',
+          supplierId: '',
+          supplierName: '',
+          pickUpAddress: ''
+        });
+      }
+    },
+    resetForm: function () {// 重置表单
+      this.$refs['contractForm'].resetFields();
+      this.$refs['orderGoodsAddForm'].resetFields();
+      this.form.supplierId = '';
+      this.form.actualConsignee = '';
+      this.form.logisticsProviderName = '';
+      this.form.logisticsCentreId = '';
+      this.form.remark = '';
+      this.form.detailDtoList = [];
+      this.form.pickUpAddress = '';
+    },
+    formatPrice: function () {// 格式化单价，保留两位小数
+      this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
+    },
+    changeExpectedTime: function (date) {// 格式化时间
+      if (!date) {
+        this.form.expectedTime = '';
+        return;
+      }
+      this.form.expectedTime = this.$moment(date).format('YYYY-MM-DD');
+    },
+    setIndexValue: function (value) {// 左侧显示页切换
+      this.index = value;
+    },
+    doClose: function () {
+      this.$emit('right-close');
+    },
+    filterOrg: function (query) {// 过滤来源单位
+      let orgId = this.$store.state.user.userCompanyAddress;
+      if (!orgId) {
+        this.orgList = [];
+        this.form.supplierId = '';
+        return;
+      }
+      let params = {
+        keyWord: query,
+        relation: '1'
+      };
+      BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
+        this.orgList = res.data;
+      });
+    },
+    filterLogistics: function (query) {// 过滤物流商
+      let orgId = this.$store.state.user.userCompanyAddress;
+      if (!orgId) {
+        this.logisticsList = [];
+        this.form.logisticsProviderName = '';
+        return;
+      }
+      BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
+        this.logisticsList = res.data;
+      });
+    },
+    filterLogisticsCenter: function () {// 过滤物流中心
+      let param = {
+        deleteFlag: false
+      };
+      LogisticsCenter.query(param).then(res => {
+        this.LogisticsCenter = res.data;
+      });
+    },
+    filterAddress() {
+      Address.queryAddress(this.form.orgId, {
+        deleteFlag: false,
+        orgId: this.$store.state.user.userCompanyAddress,
+        auditedStatus: '1', status: 0
+      }).then(res => {
+        this.cdcWarehouses = res.data;
+        let defaultStore = res.data.filter(item => item.default);
+        this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
+      });
+    },
+    getWarehouseAdress: function (item) { // 得到仓库地址
+      return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
+    },
+    changeSupplier: function (val, isEdit) {// 业务单位改变
+      this.form.supplierName = this.orgList.filter(f => f.id === val)[0] && this.orgList.filter(f => f.id === val)[0].name;
+      this.form.detailDtoList = [];
+      if (!this.isStorageData) {// 当有缓存时，不做清空操作
+        this.supplierWarehouses = [];
         this.form.pickUpAddress = '';
-      },
-      formatPrice: function () {// 格式化单价，保留两位小数
-        this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
-      },
-      changeExpectedTime: function (date) {// 格式化时间
-        if (!date) {
-          this.form.expectedTime = '';
-          return;
-        }
-        this.form.expectedTime = this.$moment(date).format('YYYY-MM-DD');
-      },
-      setIndexValue: function (value) {// 左侧显示页切换
-        this.index = value;
-      },
-      doClose: function () {
-        this.$emit('right-close');
-      },
-      filterOrg: function (query) {// 过滤来源单位
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          this.orgList = [];
-          this.form.supplierId = '';
-          return;
-        }
-        let params = {
-          keyWord: query,
-          relation: '1'
-        };
-        BaseInfo.queryOrgByAllRelation(orgId, params).then(res => {
-          this.orgList = res.data;
-        });
-      },
-      filterLogistics: function (query) {// 过滤物流商
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          this.logisticsList = [];
-          this.form.logisticsProviderName = '';
-          return;
-        }
-        BaseInfo.queryOrgByAllRelation(orgId, {keyWord: query, relation: '3'}).then(res => {
-          this.logisticsList = res.data;
-        });
-      },
-      filterLogisticsCenter: function () {// 过滤物流中心
-        let param = {
-          deleteFlag: false
-        };
-        LogisticsCenter.query(param).then(res => {
-          this.LogisticsCenter = res.data;
-        });
-      },
-      filterAddress() {
-        Address.queryAddress(this.form.orgId, {
+        this.product.orgGoodsId = '';
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.accessoryList = [];
+      }
+      if (!val) return;
+      if (this.form.transportationMeansId === '2') {
+        Address.queryAddress(val, {
           deleteFlag: false,
-          orgId: this.$store.state.user.userCompanyAddress,
+          orgId: val,
           auditedStatus: '1', status: 0
         }).then(res => {
-          this.cdcWarehouses = res.data;
-          let defaultStore = res.data.filter(item => item.default);
-          this.form.transportationAddress = defaultStore.length ? defaultStore[0].id : '';
+          this.supplierWarehouses = res.data;
         });
-      },
-      getWarehouseAdress: function (item) { // 得到仓库地址
-        return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
-      },
-      changeSupplier: function (val, isEdit) {// 业务单位改变
-        this.form.supplierName = this.orgList.filter(f => f.id === val)[0] && this.orgList.filter(f => f.id === val)[0].name;
-        this.form.detailDtoList = [];
-        if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.supplierWarehouses = [];
-          this.form.pickUpAddress = '';
-          this.product.orgGoodsId = '';
-          this.$refs['orderGoodsAddForm'].resetFields();
-          this.accessoryList = [];
-        }
-        if (!val) return;
-        if (this.form.transportationMeansId === '2') {
-          Address.queryAddress(val, {
-            deleteFlag: false,
-            orgId: val,
-            auditedStatus: '1', status: 0
-          }).then(res => {
-            this.supplierWarehouses = res.data;
-          });
-        }
-        this.searchProduct();
-        this.checkLicence(val);
-      },
-      changeTransportationMeans: function () {// 物流方式改变
-        if (!this.isStorageData) {// 当有缓存时，不做清空操作
-          this.form.pickUpAddress = '';
-          this.form.logisticsProviderName = '';
-          this.form.supplierId = '';
-        }
-      },
-      checkLicence: function (val) {// 校验单位和货主证照是否过期
-        if (!val || !this.action) return;
-        http.get('/order-licence/org/' + val + '/overdue').then(res => {
-          if (!res.data.length) return;
-          let msg = '';
-          res.data.forEach(item => {
-            msg += '"' + item.name + '",';
-          });
-          msg = msg.substring(0, msg.length - 1);
-          this.$notify({
-            duration: 2000,
-            title: '证照信息过期',
-            message: msg + '证照信息已过期,无法创建合同',
-            type: 'error'
-          });
+      }
+      this.searchProduct();
+      this.checkLicence(val);
+    },
+    changeTransportationMeans: function () {// 物流方式改变
+      if (!this.isStorageData) {// 当有缓存时，不做清空操作
+        this.form.pickUpAddress = '';
+        this.form.logisticsProviderName = '';
+        this.form.supplierId = '';
+      }
+    },
+    checkLicence: function (val) {// 校验单位和货主证照是否过期
+      if (!val || !this.action) return;
+      http.get('/order-licence/org/' + val + '/overdue').then(res => {
+        if (!res.data.length) return;
+        let msg = '';
+        res.data.forEach(item => {
+          msg += '"' + item.name + '",';
         });
-      },
-      searchProduct: function (query) {
-        if (!this.form.supplierId) {
-          this.searchProductList = [];
+        msg = msg.substring(0, msg.length - 1);
+        this.$notify({
+          duration: 2000,
+          title: '证照信息过期',
+          message: msg + '证照信息已过期,无法创建合同',
+          type: 'error'
+        });
+      });
+    },
+    searchProduct: function (query) {
+      if (!this.form.supplierId) {
+        this.searchProductList = [];
+        return;
+      }
+      let params = {
+        keyWord: query,
+        factoryId: this.form.supplierId
+      };
+      let rTime = Date.now();
+      this.requestTime = rTime;
+      http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
+        if (this.requestTime > rTime) {
           return;
         }
-        let params = {
-          keyWord: query,
-          factoryId: this.form.supplierId
-        };
-        let rTime = Date.now();
-        this.requestTime = rTime;
-        http.get('purchase-agreement/valid/org-goods', {params: params}).then(res => {
-          if (this.requestTime > rTime) {
-            return;
-          }
-          this.searchProductList = res.data;
-          this.$nextTick(function () {
-            this.filterProducts();
-          });
+        this.searchProductList = res.data;
+        this.$nextTick(function () {
+          this.filterProducts();
         });
-      },
-      filterProducts: function () {
-        let arr = [];
-        let isIn;
-        this.searchProductList.forEach(item => {
-          isIn = false;
-          this.form.detailDtoList.forEach(product => {
-            if (product.orgGoodsId === item.orgGoodsDto.id) {
-              if (!product.isCombination) {
-                isIn = true;
-                return false;
-              }
+      });
+    },
+    filterProducts: function () {
+      let arr = [];
+      let isIn;
+      this.searchProductList.forEach(item => {
+        isIn = false;
+        this.form.detailDtoList.forEach(product => {
+          if (product.orgGoodsId === item.orgGoodsDto.id) {
+            if (!product.isCombination) {
+              isIn = true;
+              return false;
+            }
+          }
+        });
+        if (!isIn) {
+          arr.push(item);
+        }
+      });
+      this.filterProductList = arr;
+    },
+    getGoodDetail: function (OrgGoodsId) {// 选疫苗
+      if (!OrgGoodsId) {
+        this.product = {
+          'amount': null,
+          'entrustment': false,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.accessoryList = [];
+        return;
+      }
+      this.searchProductList.forEach(item => {
+        if (item.orgGoodsDto.id === OrgGoodsId) {
+          this.product.fixInfo = item.orgGoodsDto;
+          let price = item.orgGoodsDto.procurementPrice;
+          this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
+          this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
+          this.accessoryList = item.list;
+          this.form.detailDtoList.forEach((detailItem) => {
+            if (detailItem.orgGoodsId === OrgGoodsId) {
+              detailItem.fixInfo = item.orgGoodsDto;
+              return false;
             }
           });
-          if (!isIn) {
-            arr.push(item);
+        }
+      });
+      this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+    },
+    addProduct: function () {// 疫苗加入到合同
+      // 重置添加按钮点击状态
+      this.resetIsClickForm();
+      if (!this.product.orgGoodsId) {
+        this.$notify.info({
+          duration: 2000,
+          message: '请先选择产品'
+        });
+        return false;
+      }
+      let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+      if (!isCheck) return;
+      this.$refs['orderGoodsAddForm'].validate((valid) => {
+        if (!valid) {
+          return false;
+        }
+        this.searchProductList.forEach((item) => {
+          if (this.product.orgGoodsId === item.orgGoodsDto.id) {
+            this.product.orgGoodsName = item.orgGoodsDto.name;
+            this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
+            this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
+            item.list.forEach(m => {
+              let amount = Math.ceil(m.proportion * this.product.amount);
+              this.form.detailDtoList.push({
+                mainOrgId: item.orgGoodsDto.id,
+                isCombination: true,
+                orgGoodsId: m.accessory,
+                orgGoodsName: m.name,
+                unitPrice: m.procurementPrice ? m.procurementPrice : 0,
+                amount: amount,
+                measurementUnit: m.accessoryGoods.measurementUnit,
+                packingCount: null,
+                specifications: m.accessoryGoods.specifications,
+                specificationsId: ''
+              });
+            });
           }
         });
-        this.filterProductList = arr;
-      },
-      getGoodDetail: function (OrgGoodsId) {// 选疫苗
-        if (!OrgGoodsId) {
+        this.$nextTick(function () {
           this.product = {
             'amount': null,
             'entrustment': false,
@@ -866,178 +945,106 @@
           };
           this.$refs['orderGoodsAddForm'].resetFields();
           this.accessoryList = [];
-          return;
-        }
-        this.searchProductList.forEach(item => {
-          if (item.orgGoodsDto.id === OrgGoodsId) {
-            this.product.fixInfo = item.orgGoodsDto;
-            let price = item.orgGoodsDto.procurementPrice;
-            this.product.unitPrice = utils.autoformatDecimalPoint(price ? price.toString() : '');
-            this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
-            this.accessoryList = item.list;
-            this.form.detailDtoList.forEach((detailItem) => {
-              if (detailItem.orgGoodsId === OrgGoodsId) {
-                detailItem.fixInfo = item.orgGoodsDto;
-                return false;
-              }
-            });
-          }
+          this.searchProduct();
         });
-        this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-      },
-      addProduct: function () {// 疫苗加入到合同
-        // 重置添加按钮点击状态
-        this.resetIsClickForm();
-        if (!this.product.orgGoodsId) {
-          this.$notify.info({
+      });
+
+    },
+    remove: function (item) {
+      this.deleteItem(item);
+      this.searchProduct();
+    },
+    deleteItem(item) {
+      this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
+      this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
+    },
+    editItem(item) {
+      this.filterProductList.push({
+        orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
+        list: []
+      });
+      this.product.orgGoodsId = item.orgGoodsId;
+      this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
+      this.product.amount = item.amount;
+      this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
+      // 2.0变化
+      this.deleteItem(item);
+      this.searchProduct(item.orgGoodsName);
+    },
+    onSubmit: function () {// 提交表单
+      if (!this.checkHasOrderNotAdded(this.product, '合同')) return;
+      let self = this;
+      // this.changeExpectedTime(this.form.expectedTime);
+      this.$refs['contractForm'].validate((valid) => {
+        if (!valid || this.doing) {
+          this.index = 0;
+          return false;
+        }
+        let saveData = JSON.parse(JSON.stringify(self.form));
+        if (saveData.detailDtoList.length === 0) {
+          this.$notify({
             duration: 2000,
-            message: '请先选择产品'
+            message: '请添加合同产品',
+            type: 'warning'
           });
           return false;
         }
-        let isCheck = this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
-        if (!isCheck) return;
-        this.$refs['orderGoodsAddForm'].validate((valid) => {
-          if (!valid) {
-            return false;
-          }
-          this.searchProductList.forEach((item) => {
-            if (this.product.orgGoodsId === item.orgGoodsDto.id) {
-              this.product.orgGoodsName = item.orgGoodsDto.name;
-              this.product.measurementUnit = item.orgGoodsDto.goodsDto.measurementUnit;
-              this.form.detailDtoList.push(JSON.parse(JSON.stringify(this.product)));
-              item.list.forEach(m => {
-                let amount = Math.ceil(m.proportion * this.product.amount);
-                this.form.detailDtoList.push({
-                  mainOrgId: item.orgGoodsDto.id,
-                  isCombination: true,
-                  orgGoodsId: m.accessory,
-                  orgGoodsName: m.name,
-                  unitPrice: m.procurementPrice ? m.procurementPrice : 0,
-                  amount: amount,
-                  measurementUnit: m.accessoryGoods.measurementUnit,
-                  packingCount: null,
-                  specifications: m.accessoryGoods.specifications,
-                  specificationsId: ''
-                });
-              });
-            }
-          });
-          this.$nextTick(function () {
-            this.product = {
-              'amount': null,
-              'entrustment': false,
-              'measurementUnit': '',
-              'orgGoodsId': '',
-              'packingCount': null,
-              'specificationsId': '',
-              'fixInfo': {
-                'goodsDto': {}
-              },
-              'unitPrice': null
-            };
-            this.$refs['orderGoodsAddForm'].resetFields();
-            this.accessoryList = [];
-            this.searchProduct();
-          });
+        saveData.detailDtoList.forEach(item => {
+          delete item.fixInfo;
+          delete item.mainOrgId;
+          delete item.isCombination;
+          delete item.orgGoodsDto;
         });
-
-      },
-      remove: function (item) {
-        this.deleteItem(item);
-        this.searchProduct();
-      },
-      deleteItem(item) {
-        this.form.detailDtoList.splice(this.form.detailDtoList.indexOf(item), 1);
-        this.form.detailDtoList = this.form.detailDtoList.filter(dto => item.orgGoodsId !== dto.mainOrgId);
-      },
-      editItem(item) {
-        this.filterProductList.push({
-          orgGoodsDto: item.orgGoodsDto || item.fixInfo || {},
-          list: []
-        });
-        this.product.orgGoodsId = item.orgGoodsId;
-        this.product.unitPrice = utils.autoformatDecimalPoint(item.unitPrice ? item.unitPrice.toString() : '');
-        this.product.amount = item.amount;
-        this.product.fixInfo = item.orgGoodsDto || item.fixInfo;
-        // 2.0变化
-        this.deleteItem(item);
-        this.searchProduct(item.orgGoodsName);
-      },
-      onSubmit: function () {// 提交表单
-        if (!this.checkHasOrderNotAdded(this.product, '合同')) return;
-        let self = this;
-        // this.changeExpectedTime(this.form.expectedTime);
-        this.$refs['contractForm'].validate((valid) => {
-          if (!valid || this.doing) {
-            this.index = 0;
-            return false;
-          }
-          let saveData = JSON.parse(JSON.stringify(self.form));
-          if (saveData.detailDtoList.length === 0) {
+        saveData.detailDtoList = this.mergeSameOrgGoodsWhenIn(saveData.detailDtoList);
+        this.doing = true;
+        if (saveData.id && this.action === 'edit') {
+          PurchaseContract.updateOrder(saveData.id, saveData).then(res => {
+            this.resetForm();
             this.$notify({
               duration: 2000,
-              message: '请添加合同产品',
-              type: 'warning'
+              message: '编辑采购合同成功',
+              type: 'success'
             });
-            return false;
-          }
-          saveData.detailDtoList.forEach(item => {
-            delete item.fixInfo;
-            delete item.mainOrgId;
-            delete item.isCombination;
-            delete item.orgGoodsDto;
+            self.$emit('change');
+            this.$nextTick(() => {
+              this.doing = false;
+              this.$emit('right-close');
+            });
+          }).catch(error => {
+            this.doing = false;
+            this.$notify({
+              duration: 2000,
+              title: '编辑采购合同失败',
+              message: error.response && error.response.data && error.response.data.msg || '网络异常',
+              type: 'error'
+            });
           });
-          saveData.detailDtoList = this.mergeSameOrgGoodsWhenIn(saveData.detailDtoList);
-          this.doing = true;
-          if (saveData.id && this.action === 'edit') {
-            PurchaseContract.updateOrder(saveData.id, saveData).then(res => {
-              this.resetForm();
-              this.$notify({
-                duration: 2000,
-                message: '编辑采购合同成功',
-                type: 'success'
-              });
-              self.$emit('change');
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('right-close');
-              });
-            }).catch(error => {
-              this.doing = false;
-              this.$notify({
-                duration: 2000,
-                title: '编辑采购合同失败',
-                message: error.response && error.response.data && error.response.data.msg || '网络异常',
-                type: 'error'
-              });
+        } else if (this.action === 'add') {
+          PurchaseContract.save(saveData).then(res => {
+            this.$notify({
+              duration: 2000,
+              message: '新增采购合同成功',
+              type: 'success'
             });
-          } else if (this.action === 'add') {
-            PurchaseContract.save(saveData).then(res => {
-              this.$notify({
-                duration: 2000,
-                message: '新增采购合同成功',
-                type: 'success'
-              });
-              window.localStorage.removeItem(this.saveKey);
-              this.resetForm();
-              this.$emit('change', res.data);
-              this.$nextTick(() => {
-                this.doing = false;
-                this.$emit('right-close');
-              });
-            }).catch(error => {
+            window.localStorage.removeItem(this.saveKey);
+            this.resetForm();
+            this.$emit('change', res.data);
+            this.$nextTick(() => {
               this.doing = false;
-              this.$notify({
-                duration: 2000,
-                title: '新增采购合同失败',
-                message: error.response && error.response.data && error.response.data.msg || '网络异常',
-                type: 'error'
-              });
+              this.$emit('right-close');
             });
-          }
-        });
-      }
+          }).catch(error => {
+            this.doing = false;
+            this.$notify({
+              duration: 2000,
+              title: '新增采购合同失败',
+              message: error.response && error.response.data && error.response.data.msg || '网络异常',
+              type: 'error'
+            });
+          });
+        }
+      });
     }
-  };
+  }
+};
 </script>

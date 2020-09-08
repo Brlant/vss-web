@@ -1,18 +1,19 @@
 <style lang="scss" scoped="">
 
-  .home-btn-banner {
+.home-btn-banner {
 
-    .home-btn-wrap {
-      width: 100%;
-      padding: 25px 0;
-      font-size: 2.5em;
-      i {
-        font-size: 1em;
-        margin-right: 10px;
+  .home-btn-wrap {
+    width: 100%;
+    padding: 25px 0;
+    font-size: 2.5em;
 
-      }
+    i {
+      font-size: 1em;
+      margin-right: 10px;
+
     }
   }
+}
 </style>
 
 <template>
@@ -33,15 +34,15 @@
 
 </template>
 <script>
-  import PurchaseOrderException from './purchase-order-exception';
-  import DevDemand from './dev-demand';
-  import StockOverdueTip from './stock-overdue-tip';
-  import licence from './licence';
-  import notice from './notice/notice';
+import PurchaseOrderException from './purchase-order-exception';
+import DevDemand from './dev-demand';
+import StockOverdueTip from './stock-overdue-tip';
+import licence from './licence';
+import notice from './notice/notice';
 
-  export default {
-    components: {PurchaseOrderException, DevDemand, StockOverdueTip, licence, notice}
-  };
+export default {
+  components: {PurchaseOrderException, DevDemand, StockOverdueTip, licence, notice}
+};
 
 </script>
 

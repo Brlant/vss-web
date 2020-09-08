@@ -1,7 +1,7 @@
 <template>
   <card-box title="疫苗效期提醒">
-    <el-row class="list-item" type="flex"
-            :gutter="15"
+    <el-row :gutter="15" class="list-item"
+            type="flex"
     >
       <el-col :span="10">
         货主疫苗名称
@@ -25,9 +25,9 @@
     <div v-if="!stockList.length" class="no-info">
       暂无效期疫苗
     </div>
-    <el-row v-else="" v-for="(item, index) in stockList" :key="item.id" type="flex" :gutter="15"
+    <el-row v-for="(item, index) in stockList" v-else="" :key="item.id" :class="formatStockRowClass(item)" :gutter="15"
             class="list-item"
-            :class="formatStockRowClass(item)">
+            type="flex">
       <el-col :span="8" class="R">
         {{ item.goodsName}}
       </el-col>
@@ -50,43 +50,43 @@
   </card-box>
 </template>
 <script>
-  export default {
-    data: function () {
-      return {
-        stockList: []
-      };
-    },
-    mounted() {
-      this.getErpStockList();
-    },
-    methods: {
-      getErpStockList: function () {
-        this.queryErpStockOverdue().then(res => {
-          if (res.data[0]) {
-            this.stockList = res.data[0].map((item) => {
-              item.status = '已过期';
-              return item;
-            });
-          }
-          if (res.data[1]) {
-            this.stockList = this.stockList.concat(res.data[1].map((item) => {
-              item.status = '近效期';
-              return item;
-            }));
-          }
-        });
-      },
-      queryErpStockOverdue: function () {
-        return this.$http.get('/erp-stock/overdue');
-      },
-      formatStockRowClass(item) {
-        if (item.status === '近效期') {
-          return 'effective-row';
+export default {
+  data: function () {
+    return {
+      stockList: []
+    };
+  },
+  mounted() {
+    this.getErpStockList();
+  },
+  methods: {
+    getErpStockList: function () {
+      this.queryErpStockOverdue().then(res => {
+        if (res.data[0]) {
+          this.stockList = res.data[0].map((item) => {
+            item.status = '已过期';
+            return item;
+          });
         }
-        if (item.status === '已过期') {
-          return 'danger-row';
+        if (res.data[1]) {
+          this.stockList = this.stockList.concat(res.data[1].map((item) => {
+            item.status = '近效期';
+            return item;
+          }));
         }
+      });
+    },
+    queryErpStockOverdue: function () {
+      return this.$http.get('/erp-stock/overdue');
+    },
+    formatStockRowClass(item) {
+      if (item.status === '近效期') {
+        return 'effective-row';
+      }
+      if (item.status === '已过期') {
+        return 'danger-row';
       }
     }
-  };
+  }
+};
 </script>

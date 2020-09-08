@@ -1,5 +1,5 @@
 <style lang="scss" scoped="">
-  @import "../assets/login.scss";
+@import "../assets/login.scss";
 </style>
 <template>
   <div class="main-box-rap">
@@ -13,23 +13,23 @@
         <div style="padding:0 20px">
           <div v-if="showInfo" class="text-center">
             已发送重置密码邮件至邮箱 {{user.email}}
-            <el-button type="primary" @click="resend" style="display:block;width:100%;margin:30px 0">
+            <el-button style="display:block;width:100%;margin:30px 0" type="primary" @click="resend">
               没有收到？点击重新发送验证邮件
             </el-button>
           </div>
           <div v-else-if="showPhoneCode">
             <h3 class="text-center">短信激活账号/重置密码</h3>
-            <el-form key="el-form--reset" label-position="top" ref="resetForm" label-width="80px" :model="resetUser"
-                     :rules="resetUserRules"
-                     @submit.prevent="resetPass" onsubmit="return false">
+            <el-form key="el-form--reset" ref="resetForm" :model="resetUser" :rules="resetUserRules" label-position="top"
+                     label-width="80px"
+                     onsubmit="return false" @submit.prevent="resetPass">
 
               <el-form-item label="密码" prop="password">
-                <el-input type="password" v-model="resetUser.password"></el-input>
+                <el-input v-model="resetUser.password" type="password"></el-input>
               </el-form-item>
               <el-form-item label="确认密码" prop="password2">
-                <el-input type="password" v-model="resetUser.password2"></el-input>
+                <el-input v-model="resetUser.password2" type="password"></el-input>
               </el-form-item>
-              <el-form-item label="短信验证码" prop="code" v-show="showPhoneCode">
+              <el-form-item v-show="showPhoneCode" label="短信验证码" prop="code">
                 <div style="display:flex">
                   <div style="width:300px;margin-right:50px">
                     <el-input v-model="resetUser.code"></el-input>
@@ -43,20 +43,20 @@
 
               <el-button-group style="width: 100%;margin-top:20px">
 
-                <el-button type="primary" @click="resetPass" style="width:50%;" native-type="submit"
-                           :disabled="loading">
+                <el-button :disabled="loading" native-type="submit" style="width:50%;" type="primary"
+                           @click="resetPass">
                   重置密码
                 </el-button>
                 <el-button style="width:50%;">
-                  <router-link to="/login" style="display: block">返回登录</router-link>
+                  <router-link style="display: block" to="/login">返回登录</router-link>
                 </el-button>
               </el-button-group>
             </el-form>
           </div>
           <div v-else>
-            <el-form key="el-form--login" label-position="top" ref="loginForm" label-width="80px" :model="user"
-                     :rules="rules"
-                     @submit.prevent="done" onsubmit="return false">
+            <el-form key="el-form--login" ref="loginForm" :model="user" :rules="rules" label-position="top"
+                     label-width="80px"
+                     onsubmit="return false" @submit.prevent="done">
               <el-form-item label="系统代码" prop="orgCode">
                 <el-input v-model="user.orgCode"></el-input>
               </el-form-item>
@@ -68,7 +68,7 @@
                   <div style="width:300px;margin-right:50px">
                     <el-input v-model="user.code"></el-input>
                   </div>
-                  <div style="line-height:1px;"><img :src="codeUrl" @click="getCode" height="42" style="cursor:pointer">
+                  <div style="line-height:1px;"><img :src="codeUrl" height="42" style="cursor:pointer" @click="getCode">
                   </div>
                 </div>
 
@@ -76,7 +76,7 @@
 
               <el-button-group style="width: 100%;margin-top:20px">
 
-                <el-button type="primary" @click="done" style="width:50%;" native-type="submit" :disabled="loading">
+                <el-button :disabled="loading" native-type="submit" style="width:50%;" type="primary" @click="done">
                   {{btnString}}
                 </el-button>
                 <el-button style="width:50%;" @click="$router.push('/login')">
@@ -92,162 +92,162 @@
 </template>
 
 <script>
-  import {http, User} from '../resources';
+import {http, User} from '../resources';
 
-  const timeInterval = 60;
-  let phoneReg = /^1[0-9]{10}$/;
-  export default {
-    name: 'forget',
-    data: function () {
-      let self = this;
-      let validatePass = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请输入密码'));
+const timeInterval = 60;
+let phoneReg = /^1[0-9]{10}$/;
+export default {
+  name: 'forget',
+  data: function () {
+    let self = this;
+    let validatePass = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请输入密码'));
+      } else {
+        let rl = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
+        if (!rl.test(self.resetUser.password)) {
+          callback('密码必须为8~16个字符，且包含数字、大写字母、小写字母');
         } else {
-          let rl = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[^]{8,16}$/;
-          if (!rl.test(self.resetUser.password)) {
-            callback('密码必须为8~16个字符，且包含数字、大写字母、小写字母');
-          } else {
-            if (self.resetUser.password2 !== '') {
-              this.$refs.resetForm.validateField('password2');
-            }
-            callback();
+          if (self.resetUser.password2 !== '') {
+            this.$refs.resetForm.validateField('password2');
           }
-        }
-      };
-      let validatePass2 = (rule, value, callback) => {
-        if (value === '') {
-          callback(new Error('请再次输入密码'));
-        } else if (value !== self.resetUser.password) {
-          callback(new Error('两次输入密码不一致!'));
-        } else {
           callback();
         }
-      };
-      return {
-        user: {account: '', code: '', type: 1, orgCode: '', email: '', phoneCode: '', phone: ''},
-        resetUser: {userId: '', code: '', password: '', password2: ''},
-        resetUserRules: {
-          code: [
-            {required: true, message: '请输入短信验证码', trigger: 'blur'}
-          ],
-          password: [
-            {validator: validatePass, required: true, trigger: 'blur'}
-          ],
-          password2: [
-            {validator: validatePass2, required: true, trigger: 'blur'}
-          ]
-        },
-        loading: false,
-        showInfo: false,
-        codeUrl: '',
-        showCode: false,
-        btnString: '提交',
-        rules: {
-          orgCode: [
-            {required: true, message: '请输入系统代码', trigger: 'blur'}
-          ],
-          account: [
-            {required: true, message: '请输入账号'}
-          ],
-          validateCode: [
-            {required: true, message: '请输入验证码'}
-          ]
-        },
-        showPhoneCode: false,
-        leftTime: timeInterval,
-        userId: ''
-      };
-    },
-    methods: {
-      done() {
-        this.$refs['loginForm'].validate((valid) => {
-          if (valid) {
-            this.loading = true;
-            User.forget(this.user).then(response => {// 验证
-              if (response.data.phone) {
-                this.user.phone = response.data.phone;
-                this.showPhoneCode = true;
-                this.loading = false;
-                this.setTimer();
-              } else {
-                this.showInfo = true;
-                this.user.email = response.data.email;
-              }
-              this.userId = response.data.userId;
-            }, error => {
-              let data = error.response.data;
-              this.$notify.error({
-                message: data.msg
-              });
-              this.getCode();
+      }
+    };
+    let validatePass2 = (rule, value, callback) => {
+      if (value === '') {
+        callback(new Error('请再次输入密码'));
+      } else if (value !== self.resetUser.password) {
+        callback(new Error('两次输入密码不一致!'));
+      } else {
+        callback();
+      }
+    };
+    return {
+      user: {account: '', code: '', type: 1, orgCode: '', email: '', phoneCode: '', phone: ''},
+      resetUser: {userId: '', code: '', password: '', password2: ''},
+      resetUserRules: {
+        code: [
+          {required: true, message: '请输入短信验证码', trigger: 'blur'}
+        ],
+        password: [
+          {validator: validatePass, required: true, trigger: 'blur'}
+        ],
+        password2: [
+          {validator: validatePass2, required: true, trigger: 'blur'}
+        ]
+      },
+      loading: false,
+      showInfo: false,
+      codeUrl: '',
+      showCode: false,
+      btnString: '提交',
+      rules: {
+        orgCode: [
+          {required: true, message: '请输入系统代码', trigger: 'blur'}
+        ],
+        account: [
+          {required: true, message: '请输入账号'}
+        ],
+        validateCode: [
+          {required: true, message: '请输入验证码'}
+        ]
+      },
+      showPhoneCode: false,
+      leftTime: timeInterval,
+      userId: ''
+    };
+  },
+  methods: {
+    done() {
+      this.$refs['loginForm'].validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          User.forget(this.user).then(response => {// 验证
+            if (response.data.phone) {
+              this.user.phone = response.data.phone;
+              this.showPhoneCode = true;
               this.loading = false;
+              this.setTimer();
+            } else {
+              this.showInfo = true;
+              this.user.email = response.data.email;
+            }
+            this.userId = response.data.userId;
+          }, error => {
+            let data = error.response.data;
+            this.$notify.error({
+              message: data.msg
             });
-          }
-        });
-      },
-      getCode: function () {
-        this.user.code = '';
-        this.showCode = true;
-        this.codeUrl = process.env.VUE_APP_API + '/foundation/CAPTCHA?' + Math.random();
-      },
-      resend: function () {
-        http.get('/oms/user/' + this.userId + '/password/verifyMail/resend').then(response => {// 验证
-          this.user.email = response.data.email;
-          this.$notify.info({
-            message: '发送成功'
+            this.getCode();
+            this.loading = false;
           });
-        }, () => {
-          this.$notify.error({
-            message: '发送失败,请联系管理员'
-          });
-        });
-      },
-      resendSMS: function () {
-        this.leftTime = timeInterval;
-        this.setTimer();
-        http.get('/oms/user/' + this.userId + '/password/verifySMS/resend').then(response => {// 验证
-          this.$notify.info({
-            message: '发送成功'
-          });
-        }, () => {
-          this.$notify.error({
-            message: '发送失败,请联系管理员'
-          });
-        });
-      },
-      setTimer: function () {
-        if (this.leftTime > 0) {
-          this.leftTime = this.leftTime - 1;
-          setTimeout(() => {
-            this.setTimer();
-          }, 1000);
         }
-      },
-      resetPass: function () {
-        this.$refs['resetForm'].validate((valid) => {
-          if (valid) {
-            this.loading = true;
-            let data = Object.assign({}, this.resetUser, {userId: this.userId});
-            http.put('/oms/user/phone/reset-psw', data).then(response => {// 验证
-              this.$notify.info({
-                message: '重置成功'
-              });
-              this.$router.push('/login');
-            }, error => {
-              let data = error.response.data;
-              this.$notify.error({
-                message: data.msg
-              });
-              this.getCode();
-              this.loading = false;
-            });
-          }
+      });
+    },
+    getCode: function () {
+      this.user.code = '';
+      this.showCode = true;
+      this.codeUrl = process.env.VUE_APP_API + '/foundation/CAPTCHA?' + Math.random();
+    },
+    resend: function () {
+      http.get('/oms/user/' + this.userId + '/password/verifyMail/resend').then(response => {// 验证
+        this.user.email = response.data.email;
+        this.$notify.info({
+          message: '发送成功'
         });
+      }, () => {
+        this.$notify.error({
+          message: '发送失败,请联系管理员'
+        });
+      });
+    },
+    resendSMS: function () {
+      this.leftTime = timeInterval;
+      this.setTimer();
+      http.get('/oms/user/' + this.userId + '/password/verifySMS/resend').then(response => {// 验证
+        this.$notify.info({
+          message: '发送成功'
+        });
+      }, () => {
+        this.$notify.error({
+          message: '发送失败,请联系管理员'
+        });
+      });
+    },
+    setTimer: function () {
+      if (this.leftTime > 0) {
+        this.leftTime = this.leftTime - 1;
+        setTimeout(() => {
+          this.setTimer();
+        }, 1000);
       }
     },
-    mounted: function () {
-      this.getCode();
+    resetPass: function () {
+      this.$refs['resetForm'].validate((valid) => {
+        if (valid) {
+          this.loading = true;
+          let data = Object.assign({}, this.resetUser, {userId: this.userId});
+          http.put('/oms/user/phone/reset-psw', data).then(response => {// 验证
+            this.$notify.info({
+              message: '重置成功'
+            });
+            this.$router.push('/login');
+          }, error => {
+            let data = error.response.data;
+            this.$notify.error({
+              message: data.msg
+            });
+            this.getCode();
+            this.loading = false;
+          });
+        }
+      });
     }
-  };
+  },
+  mounted: function () {
+    this.getCode();
+  }
+};
 </script>
