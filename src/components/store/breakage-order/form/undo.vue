@@ -115,6 +115,7 @@
       },
       handleAvatarSuccess(file) {
         this.form.fileIdList.push(file.attachmentId);
+        this.$refs.form.validate();
       },
       handleRemove(file) {
         this.form.fileIdList = this.form.fileIdList.filter(f => f !== file.response.attachmentId);
