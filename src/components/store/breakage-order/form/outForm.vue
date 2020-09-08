@@ -130,7 +130,7 @@ $leftWidth: 200px;
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流商">
+            <el-form-item label="物流商" prop="logisticsProviderName">
               <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
             </el-form-item>
             <el-form-item label="报损方式" prop="customerChannel">
@@ -168,7 +168,7 @@ $leftWidth: 200px;
                            :value="item.key"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="是否合格">
+            <el-form-item label="是否合格" prop="qualifiedFlag">
               <el-switch v-model="form.qualifiedFlag" active-color="#13ce66" active-text="是" inactive-color="#ff4949"
                          inactive-text="否" @change="qualifiedFlagChange"></el-switch>
             </el-form-item>
@@ -461,9 +461,6 @@ export default {
         transportationAddress: [
           {required: true, message: '请选择收货地址', trigger: 'change'}
         ],
-        logisticsProviderName: [
-          {required: true, message: '请选择物流商', trigger: 'change'}
-        ],
         orgAddress: [
           {required: true, message: '请选择发货地址', trigger: 'change'}
         ],
@@ -642,6 +639,7 @@ export default {
       this.form.remark = '';
       this.form.detailDtoList = [];
       this.form.customerId = '';
+      this.form.transportationMeansId = '';
       this.form.transportationAddress = '';
       this.form.transportationCondition = '';
       this.form.orgAddress = '';
