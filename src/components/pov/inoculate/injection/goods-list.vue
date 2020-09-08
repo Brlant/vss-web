@@ -12,7 +12,7 @@
       </tr>
       </thead>
       <tbody>
-      <tr :key="product.goodsId" v-for="product in goodsList">
+      <tr v-for="product in goodsList" :key="product.goodsId">
         <td>
           <span>{{product.orgGoodsName}}</span>
           <div class="font-gray">
@@ -31,7 +31,7 @@
         </td>
         <td>
           <div>
-            <a @click.prevent="deleteItem(product)" href="#"><i class="el-icon-t-delete"></i> 删除</a>
+            <a href="#" @click.prevent="deleteItem(product)"><i class="el-icon-t-delete"></i> 删除</a>
           </div>
         </td>
       </tr>
@@ -40,17 +40,17 @@
   </div>
 </template>
 <script>
-  export default {
-    props: {
-      goodsList: {
-        type: Array,
-        default: () => []
-      }
-    },
-    methods: {
-      deleteItem(item) {
-        this.$emit('deleteItem', item);
-      }
+export default {
+  props: {
+    goodsList: {
+      type: Array,
+      default: () => []
     }
-  };
+  },
+  methods: {
+    deleteItem(item) {
+      this.$emit('deleteItem', item);
+    }
+  }
+};
 </script>

@@ -2,7 +2,7 @@
   <span>
     <el-tag v-if="status === '1'" type="success">推送完成</el-tag>
     <el-tag v-else-if="status === '2'" type="danger">
-     <el-tooltip class="item" effect="dark" :content="msg" placement="right">
+     <el-tooltip :content="msg" class="item" effect="dark" placement="right">
        <span class="font-gray">推送失败</span>
      </el-tooltip>
     </el-tag>
@@ -10,15 +10,15 @@
   </span>
 </template>
 <script>
-  export default {
-    name: 'orderPushStatus',
-    props: {
-      status: {
-        type: String
-      },
-      msg: {
-        type: String,
-      }
+export default {
+  name: 'orderPushStatus',
+  props: {
+    status: {
+      type: String
+    },
+    msg: {
+      type: String,
     }
-  };
+  }
+};
 </script>

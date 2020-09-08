@@ -1,56 +1,56 @@
 <style lang="scss" scoped="">
-  $activeColor: #00bff3;
-  .main-footer {
-    position: absolute;
-    left: 0;
-    bottom: 0;
-    right: 0;
+$activeColor: #00bff3;
+.main-footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  color: #b6b6b6;
+
+  a {
     color: #b6b6b6;
+  }
 
-    a {
-      color: #b6b6b6;
-    }
+  padding: 6.5px;
 
-    padding: 6.5px;
+  .container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
 
-    .container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
+  p {
+    padding: 0;
+    margin: 0;
+  }
 
-    p {
-      padding: 0;
-      margin: 0;
-    }
+  .footer-left {
+    display: flex;
+    align-items: center;
 
-    .footer-left {
-      display: flex;
-      align-items: center;
-
-      img {
-        margin-right: 20px
-      }
-    }
-
-    .footer-right {
-      display: flex;
-      align-items: center;
-
-      .footer-right-item {
-        margin-right: 20px;
-
-        &:last-child {
-          margin-right: 0
-        }
-      }
+    img {
+      margin-right: 20px
     }
   }
 
-  .img-police {
-    vertical-align: middle;
-    margin-left: 10px;
+  .footer-right {
+    display: flex;
+    align-items: center;
+
+    .footer-right-item {
+      margin-right: 20px;
+
+      &:last-child {
+        margin-right: 0
+      }
+    }
   }
+}
+
+.img-police {
+  vertical-align: middle;
+  margin-left: 10px;
+}
 
 </style>
 
@@ -68,10 +68,10 @@
 </template>
 
 <script>
-  export default {
-    data() {
-      return {};
-    },
-    methods: {}
-  };
+export default {
+  data() {
+    return {};
+  },
+  methods: {}
+};
 </script>

@@ -1,26 +1,28 @@
 <style lang="scss" scoped>
-  $leftWidth: 180px;
-  .content-part {
-    .content-left {
-      width: $leftWidth;
-    }
-    .content-right {
-      > h3 {
-        left: $leftWidth;
-      }
-      left: $leftWidth;
-    }
+$leftWidth: 180px;
+.content-part {
+  .content-left {
+    width: $leftWidth;
   }
 
-  .btn-submit-save {
-    position: absolute;
-    bottom: 20px;
-    left: 0;
-    right: 0;
-    z-index: 1;
-    text-align: center;
-    padding: 15px;
+  .content-right {
+    > h3 {
+      left: $leftWidth;
+    }
+
+    left: $leftWidth;
   }
+}
+
+.btn-submit-save {
+  position: absolute;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  z-index: 1;
+  text-align: center;
+  padding: 15px;
+}
 </style>
 
 <template>
@@ -39,30 +41,30 @@
   </div>
 </template>
 <script>
-  import basicInfo from './base-info.vue';
+import basicInfo from './base-info.vue';
 
-  export default {
-    components: {
-      basicInfo
-    },
-    props: {
-      currentItem: Object
-    },
-    data() {
-      return {
-        currentOrder: {},
-        index: 0,
-        pageSets: [
-          {name: '需求单详情', key: 0}
-        ],
-        title: '需求单详情'
-      };
-    },
-    methods: {
-      close() {
-        this.$emit('close');
-      }
+export default {
+  components: {
+    basicInfo
+  },
+  props: {
+    currentItem: Object
+  },
+  data() {
+    return {
+      currentOrder: {},
+      index: 0,
+      pageSets: [
+        {name: '需求单详情', key: 0}
+      ],
+      title: '需求单详情'
+    };
+  },
+  methods: {
+    close() {
+      this.$emit('close');
     }
-  };
+  }
+};
 </script>
 

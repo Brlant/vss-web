@@ -102,89 +102,89 @@ $leftWidth: 200px;
       <div class="content-left">
         <h2 class="clearfix right-title" style="padding: 0">{{ getTitle() }}</h2>
         <ul>
-          <li class="list-style" v-for="item in productListSet" @click="setIndexValue(item.key)"
-              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
+          <li v-for="item in productListSet" class="list-style" v-bind:class="{ 'active' : index==item.key}"
+              @click="setIndexValue(item.key)"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button type="success" @click="onSubmit" :disabled="doing">保存订单</el-button>
+            <el-button :disabled="doing" type="success" @click="onSubmit">保存订单</el-button>
           </li>
         </ul>
       </div>
       <div class="content-right min-gutter">
-        <h3>{{ currentPartName }}</h3>
-        <el-form ref="orderAddForm" :rules="rules" :model="form" @submit.prevent="onSubmit" onsubmit="return false"
-                 label-width="160px" style="padding-right: 20px">
+        <h3>{{currentPartName}}</h3>
+        <el-form ref="orderAddForm" :model="form" :rules="rules" label-width="160px" onsubmit="return false"
+                 style="padding-right: 20px" @submit.prevent="onSubmit">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
             <el-form-item label="货品类型" prop="goodsType">
               <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
-                <el-radio :label="item.key" :key="item.key" v-for="item in vaccineTypeList">{{ item.label }}</el-radio>
+                <el-radio v-for="item in vaccineTypeList" :key="item.key" :label="item.key">{{item.label}}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="仓库地址" prop="orgAddress">
-              <el-select placeholder="请选择仓库地址" v-model="form.orgAddress" filterable :clearable="true"
+              <el-select v-model="form.orgAddress" :clearable="true" filterable placeholder="请选择仓库地址"
                          @change="transportationAddressChange">
-                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id"
-                           v-for="item in LogisticsCenterAddressList">
+                <el-option v-for="item in LogisticsCenterAddressList" :key="item.id" :label="filterAddressLabel(item)"
+                           :value="item.id">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流商" prop="logisticsProviderName">
+            <el-form-item label="物流商">
               <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
             </el-form-item>
             <el-form-item label="报损方式" prop="customerChannel">
-              <el-select type="text" placeholder="请选择报损方式" v-model="form.customerChannel"
+              <el-select v-model="form.customerChannel" placeholder="请选择报损方式" type="text"
                          @change="customerChannelChange">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in breakageType"></el-option>
+                <el-option v-for="item in breakageType" :key="item.key" :label="item.label"
+                           :value="item.key"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="去向单位" prop="customerId" v-if="!isSelfBreakage">
-              <el-select placeholder="请选择去向单位" v-model="form.customerId" clearable @change="customerIdChange">
-                <el-option :label="item.orgName" :value="item.orgId" :key="item.orgId" v-for="item in customerList">
+            <el-form-item v-if="!isSelfBreakage" label="去向单位" prop="customerId">
+              <el-select v-model="form.customerId" clearable placeholder="请选择去向单位" @change="customerIdChange">
+                <el-option v-for="item in customerList" :key="item.orgId" :label="item.orgName" :value="item.orgId">
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="运输方式" v-if="isEntrustWarehouse" prop="transportationMeansId">
-              <el-select type="text" placeholder="请选择运输方式" v-model="form.transportationMeansId"
+            <el-form-item v-if="isEntrustWarehouse" label="运输方式" prop="transportationMeansId">
+              <el-select v-model="form.transportationMeansId" placeholder="请选择运输方式" type="text"
                          @change="transportationMeansIdChange">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationMeansList" v-show="item.key <= 1"></el-option>
+                <el-option v-for="item in transportationMeansList" v-show="item.key <= 1" :key="item.key"
+                           :label="item.label" :value="item.key"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="收货地址" prop="transportationAddress" v-if="form.transportationMeansId === '0'"
-                          v-show="showContent.isShowOtherContent" :clearable="true">
-              <el-select placeholder="请选择收货地址" v-model="form.transportationAddress" filterable clearable>
-                <el-option :label="filterAddressLabel(item)" :value="item.id" :key="item.id" v-for="item in warehouses">
+            <el-form-item v-if="form.transportationMeansId === '0'" v-show="showContent.isShowOtherContent" :clearable="true"
+                          label="收货地址" prop="transportationAddress">
+              <el-select v-model="form.transportationAddress" clearable filterable placeholder="请选择收货地址">
+                <el-option v-for="item in warehouses" :key="item.id" :label="filterAddressLabel(item)" :value="item.id">
                   <span class="pull-left">{{ item.name }}</span>
                   <span class="pull-right" style="color: #999">{{ getWarehouseAdress(item) }}</span>
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="运输条件" prop="transportationCondition" v-if="form.transportationMeansId === '0'">
-              <el-select type="text" placeholder="请选择运输条件" v-model="form.transportationCondition">
-                <el-option :value="item.key" :key="item.key" :label="item.label"
-                           v-for="item in transportationConditionList"></el-option>
+            <el-form-item v-if="form.transportationMeansId === '0'" label="运输条件" prop="transportationCondition">
+              <el-select v-model="form.transportationCondition" placeholder="请选择运输条件" type="text">
+                <el-option v-for="item in transportationConditionList" :key="item.key" :label="item.label"
+                           :value="item.key"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="是否合格" prop="qualifiedFlag">
-              <el-switch active-text="是" inactive-text="否" active-color="#13ce66" inactive-color="#ff4949"
-                         v-model="form.qualifiedFlag" @change="qualifiedFlagChange"></el-switch>
+            <el-form-item label="是否合格">
+              <el-switch v-model="form.qualifiedFlag" active-color="#13ce66" active-text="是" inactive-color="#ff4949"
+                         inactive-text="否" @change="qualifiedFlagChange"></el-switch>
             </el-form-item>
-            <el-form-item label="预计送货时间" prop="expectedTime" v-if="form.transportationMeansId === '0'">
-              <el-date-picker v-model="form.expectedTime" placeholder="请选择预计送货时间"
-                              format="yyyy-MM-dd" :picker-options="pickerOptions" value-format="timestamp">
+            <el-form-item v-if="form.transportationMeansId === '0'" label="预计送货时间" prop="expectedTime">
+              <el-date-picker v-model="form.expectedTime" :picker-options="pickerOptions"
+                              format="yyyy-MM-dd" placeholder="请选择预计送货时间" value-format="timestamp">
               </el-date-picker>
             </el-form-item>
-            <el-form-item label="报损原因" prop="remark" v-if="isSelfBreakage">
-              <oms-input type="textarea" v-model="form.remark" placeholder="请输入备注信息"
-                         :autosize="{ minRows: 2, maxRows: 5}"></oms-input>
+            <el-form-item v-if="isSelfBreakage" label="报损原因" prop="remark">
+              <oms-input v-model="form.remark" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
+                         type="textarea"></oms-input>
             </el-form-item>
-            <el-form-item label="报损原因" prop="remark" v-if="!isSelfBreakage">
-              <el-select type="text" placeholder="请选择报损原因" v-model="form.remark">
-                <el-option :value="item.label" :key="item.key" :label="item.label"
-                           v-for="item in breakageReason"></el-option>
+            <el-form-item v-if="!isSelfBreakage" label="报损原因" prop="remark">
+              <el-select v-model="form.remark" placeholder="请选择报损原因" type="text">
+                <el-option v-for="item in breakageReason" :key="item.key" :label="item.label"
+                           :value="item.label"></el-option>
               </el-select>
             </el-form-item>
             <el-form-item label-width="160px">
@@ -194,51 +194,45 @@ $leftWidth: 200px;
           <div class="hide-content" v-bind:class="{'show-content' : index==1}">
 
             <div class="oms-form order-product-box">
-              <el-form ref="orderGoodsAddForm" :rules="orderGoodsRules" :model="product" label-width="120px">
+              <el-form ref="orderGoodsAddForm" :model="product" :rules="orderGoodsRules" label-width="120px">
                 <el-form-item label="产品" prop="orgGoodsId">
-                  <el-select v-model="product.orgGoodsId" filterable remote placeholder="请输入名称搜索产品"
-                             :remote-method="searchProduct" :clearable="true" :loading="loading"
-                             popper-class="order-good-selects"
+                  <el-select v-model="product.orgGoodsId" :clearable="true" :loading="loading" :remote-method="searchProduct"
+                             filterable placeholder="请输入名称搜索产品" popper-class="order-good-selects"
+                             remote
                              @change="getGoodDetail">
                     <el-option v-for="item in filterProductList" :key="item.orgGoodsDto.id"
                                :label="item.orgGoodsDto.name"
                                :value="item.orgGoodsDto.id">
                       <div style="overflow: hidden">
-                        <span class="pull-left">{{ item.orgGoodsDto.name }}</span>
-                        <el-tag class="pull-left" type="success" v-show="item.list.length"
-                                style="line-height: 22px;margin-left: 20px;height: 20px">
+                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
+                        <el-tag v-show="item.list.length" class="pull-left" style="line-height: 22px;margin-left: 20px;height: 20px"
+                                type="success">
                           组合
                         </el-tag>
-                        <span class="select-other-info pull-right" v-if="item.orgGoodsDto.goodsDto"><span
-                          v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{
-                            item.orgGoodsDto.goodsDto.specifications
-                          }}
+                        <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-right"><span
+                          v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{item.orgGoodsDto.goodsDto.specifications}}
                         </span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{ item.orgGoodsDto.goodsNo }}
+                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
                         </span>
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{
-                            item.orgGoodsDto.procurementPrice
-                          }}</span>
+                          v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice}}</span>
                         </span>
                         <span class="select-other-info pull-left"><span
                           v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
-                        <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{
-                            item.orgGoodsDto.goodsDto.factoryName
-                          }}
+                        <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-left">
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
                         </span>
                       </div>
                     </el-option>
                   </el-select>
                 </el-form-item>
                 <div v-show="product.orgGoodsId">
-                  <el-form-item label="单价" class="productItem-info" prop="unitPrice">
-                    <oms-input type="text" placeholder="请输入单价" v-model="product.unitPrice" :min="0"
+                  <el-form-item class="productItem-info" label="单价" prop="unitPrice">
+                    <oms-input v-model="product.unitPrice" :min="0" placeholder="请输入单价" type="text"
                                @blur="formatPrice">
                       <template slot="prepend">¥</template>
                     </oms-input>
@@ -250,23 +244,23 @@ $leftWidth: 200px;
                       </el-col>
                       <el-col :span="10">
                         <span v-show="accessoryList.length">【组合疫苗】</span>
-                        <span style="display: block;font-size: 12px" v-for="acce in accessoryList">
-                       <span style="margin-right: 10px">{{ acce.name }}</span>
-                       <span style="margin-right: 10px"
-                             v-show="acce.procurementPrice">采购价格:¥{{ acce.procurementPrice | formatMoney }}</span>
-                       <span style="margin-right: 10px" v-show="acce.proportion">比例:{{ acce.proportion }}</span>
+                        <span v-for="acce in accessoryList" style="display: block;font-size: 12px">
+                       <span style="margin-right: 10px">{{acce.name}}</span>
+                       <span v-show="acce.procurementPrice"
+                             style="margin-right: 10px">采购价格:¥{{ acce.procurementPrice | formatMoney }}</span>
+                       <span v-show="acce.proportion" style="margin-right: 10px">比例:{{ acce.proportion }}</span>
                        <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
                     </span>
                       </el-col>
                     </el-row>
                   </div>
-                  <batch-number-part ref="batchNumberPart" :form="form" :product="product"
-                                     :productList="filterProductList"
-                                     :editItemProduct="editItemProduct"
-                                     :formCopy="formCopy" @addProduct="setAddProduct"
+                  <batch-number-part ref="batchNumberPart" :editItemProduct="editItemProduct" :form="form"
+                                     :formCopy="formCopy"
+                                     :product="product"
+                                     :productList="filterProductList" @addProduct="setAddProduct"
                                      @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"></batch-number-part>
 
-                  <oms-form-row label-width="160px" :span="4" :label="''">
+                  <oms-form-row :label="''" :span="4" label-width="160px">
                     <el-button type="primary" @click="addProduct" @mousedown.native="mousedownAdd">加入订单</el-button>
                   </oms-form-row>
                 </div>
@@ -292,10 +286,10 @@ $leftWidth: 200px;
                 <tbody>
                 <tr v-for="product in form.detailDtoList" :class="{'combinatioon-product':product.isCombination}">
                   <td>
-                    <el-tag type="success" v-show="product.isCombination" style="font-size: 10px"
-                            :class="{ml15:product.isCombination}">组合
+                    <el-tag v-show="product.isCombination" :class="{ml15:product.isCombination}" style="font-size: 10px"
+                            type="success">组合
                     </el-tag>
-                    <span>{{ product.orgGoodsName }}</span>
+                    <span>{{product.orgGoodsName}}</span>
                   </td>
                   <td>
                     <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
@@ -305,26 +299,25 @@ $leftWidth: 200px;
                   <td>
                     {{ product.batchNumber ? product.batchNumber : '无' }}
                     <!--<el-tag v-show="product.inEffectiveFlag" type="warning">近效期</el-tag>-->
-                    <goods-status-tag :item="product" :form="form"/>
+                    <goods-status-tag :form="form" :item="product"/>
 
                   </td>
                   <td>
-                    {{ product.expirationDate | date }}
+                    {{ product.expirationDate | date}}
                   </td>
                   <td class="ar">
                    <span v-show="Number(product.unitPrice)">
-                     <span>¥</span>{{ product.unitPrice | formatMoney }}
+                     <span>¥</span>{{product.unitPrice | formatMoney}}
                      <span v-if="!Number(product.unitPrice)">-</span>
                    </span>
                     <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
-                  <td class="ar">{{ product.amount }} <span v-show="product.measurementUnit">（<dict
+                  <td class="ar">{{product.amount}} <span v-show="product.measurementUnit">（<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>）</span>
                   </td>
                   <td class="ar">
-                    <span v-show="Number(product.unitPrice)">¥{{
-                        product.amount * product.unitPrice | formatMoney
+                    <span v-show="Number(product.unitPrice)">¥{{ product.amount * product.unitPrice | formatMoney
                       }}</span>
                     <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
@@ -340,8 +333,8 @@ $leftWidth: 200px;
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="5" align="right">
-                    <total-count property="amount" :list="form.detailDtoList"></total-count>
+                  <td align="right" colspan="5">
+                    <total-count :list="form.detailDtoList" property="amount"></total-count>
                   </td>
                   <td colspan="2" style="font-weight: 600">
                     <span v-show="form.detailDtoList.length && totalMoney">合计:</span><span
@@ -641,15 +634,48 @@ export default {
       return `${this.defaultIndex === 2 ? '编辑' : '添加'}报损`;
     },
     resetForm: function () {// 重置表单
-      this.$refs['orderAddForm'].resetFields();
-      this.$refs['orderGoodsAddForm'].resetFields();
+      this.form = {
+          goodsType: '',
+          'orgId': '',
+          'customerId': '',
+          'bizType': '2-4',
+          'type': this.type,
+          'logisticsProviderName': '',
+          'customerChannel': '0',
+          transportationMeansId: '',
+          transportationAddress: '',
+          logisticsCentreId: '',
+          transportationCondition: '',
+          importedFlag: false,
+          orgRelation: '',
+          orgAddress: '',
+          qualifiedFlag: true,
+          sameBatchNumber: false,
+          actualConsignee: '',
+          'consigneePhone': '',
+          'thirdPartyNumber': '',
+          'expectedTime': '',
+          'detailDtoList': [],
+          'remark': ''
+        };
+        this.product = {
+          'amount': null,
+          'entrustment': false,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          unitPrice: null,
+          'fixInfo': {
+            'goodsDto': {}
+          }
+        };
       this.form.actualConsignee = '';
       this.form.consigneePhone = '';
       this.form.logisticsProviderName = '';
       this.form.remark = '';
       this.form.detailDtoList = [];
       this.form.customerId = '';
-      this.form.transportationMeansId = '';
       this.form.transportationAddress = '';
       this.form.transportationCondition = '';
       this.form.orgAddress = '';

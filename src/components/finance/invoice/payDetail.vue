@@ -1,34 +1,34 @@
 <style lang="scss">
-  @import "../../../assets/mixins.scss";
+@import "../../../assets/mixins.scss";
 
-  .ar {
-    text-align: right;
-  }
+.ar {
+  text-align: right;
+}
 
-  .goods-btn {
-    a:hover {
-      color: $activeColor;
-    }
+.goods-btn {
+  a:hover {
+    color: $activeColor;
   }
+}
 
-  .el-form--inline .el-form-item {
-    margin-right: 0;
-  }
+.el-form--inline .el-form-item {
+  margin-right: 0;
+}
 
-  .create-date {
-    .el-date-editor--datetimerange.el-input {
-      width: 310px;
-    }
+.create-date {
+  .el-date-editor--datetimerange.el-input {
+    width: 310px;
   }
+}
 </style>
 <template>
   <div>
     <el-form ref="payForm" :inline="true" onsubmit="return false">
       <el-form-item label="疫苗名称">
         <!--<oms-input v-model="searchCondition.goodsName"></oms-input>-->
-        <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称搜索疫苗"
-                   :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
-                   popper-class="good-selects">
+        <el-select v-model="searchCondition.orgGoodsId" :clearable="true" :remote-method="searchProduct" filterable
+                   placeholder="请输入名称搜索疫苗" popper-class="good-selects" remote
+                   @click.native="searchProduct('')">
           <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
                      :label="item.orgGoodsDto.name"
                      :value="item.orgGoodsDto.id">
@@ -42,22 +42,22 @@
               <span class="select-other-info pull-left"><span
                 v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
-              <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+              <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-left">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
                 </span>
             </div>
           </el-option>
         </el-select>
       </el-form-item>
-      <el-form-item label="发生时间" class="create-date">
+      <el-form-item class="create-date" label="发生时间">
         <el-date-picker
           v-model="createTimes"
-          type="daterange"
-          placeholder="请选择">
+          placeholder="请选择"
+          type="daterange">
         </el-date-picker>
       </el-form-item>
       <el-form-item style="margin-left: 10px">
-        <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+        <el-button native-type="submit" type="primary" @click="searchInOrder">查询</el-button>
       </el-form-item>
     </el-form>
     <div class="product-list-detail">
@@ -104,16 +104,16 @@
         </tr>
         </tbody>
       </table>
-      <div class="text-center" v-show="pager.count>pager.pageSize">
-        <el-pagination layout="prev, pager, next"
-                       :total="pager.count"
+      <div v-show="pager.count>pager.pageSize" class="text-center">
+        <el-pagination :current-page="pager.currentPage"
                        :pageSize="pager.pageSize"
-                       @current-change="queryPayments"
-                       :current-page="pager.currentPage">
+                       :total="pager.count"
+                       layout="prev, pager, next"
+                       @current-change="queryPayments">
         </el-pagination>
       </div>
     </div>
-    <div class="product-list-detail" v-show="selectPayments.length">
+    <div v-show="selectPayments.length" class="product-list-detail">
       <h3 style="background: #f1f1f1;overflow: hidden">
         <span style="float: left">已选明细</span>
         <span style="float: right">已选发票明细总额：￥{{ amount | formatMoney }}</span>
@@ -160,111 +160,111 @@
 
 </template>
 <script>
-  import {Vaccine} from '@/resources';
+import {Vaccine} from '@/resources';
 
-  export default {
-    props: {
-      selectPayments: Array,
-      factoryId: String,
-      amount: String
-    },
-    data() {
-      return {
-        payments: [],
-        form: {
-          detailId: ''
-        },
-        pager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 50
-        },
-        filterRights: {
-          orgGoodsId: '',
-          createStartTime: '',
-          createEndTime: ''
-        },
-        searchCondition: {
-          orgGoodsId: '',
-          createStartTime: '',
-          createEndTime: ''
-        },
-        createTimes: '',
-        goodesList: []
-      };
-    },
-    computed: {
-      showPayments() {
-        return this.payments.filter(f => this.selectPayments.every(e => e.id !== f.id));
-      }
-    },
-    watch: {
-      factoryId(val) {
-        this.payments = [];
-        this.goodesList = [];
-        this.resetSearchForm();
-        if (!val) return;
-        this.queryPayments(1);
+export default {
+  props: {
+    selectPayments: Array,
+    factoryId: String,
+    amount: String
+  },
+  data() {
+    return {
+      payments: [],
+      form: {
+        detailId: ''
+      },
+      pager: {
+        currentPage: 1,
+        count: 0,
+        pageSize: 50
       },
       filterRights: {
-        handler: function () {
-          this.queryPayments(1);
-        },
-        deep: true
+        orgGoodsId: '',
+        createStartTime: '',
+        createEndTime: ''
+      },
+      searchCondition: {
+        orgGoodsId: '',
+        createStartTime: '',
+        createEndTime: ''
+      },
+      createTimes: '',
+      goodesList: []
+    };
+  },
+  computed: {
+    showPayments() {
+      return this.payments.filter(f => this.selectPayments.every(e => e.id !== f.id));
+    }
+  },
+  watch: {
+    factoryId(val) {
+      this.payments = [];
+      this.goodesList = [];
+      this.resetSearchForm();
+      if (!val) return;
+      this.queryPayments(1);
+    },
+    filterRights: {
+      handler: function () {
+        this.queryPayments(1);
+      },
+      deep: true
+    }
+  },
+  methods: {
+    queryPayments(pageNo) {
+      this.pager.currentPage = pageNo;
+      this.loadingData = true;
+      let params = Object.assign({}, {
+        pageNo: pageNo,
+        pageSize: this.pager.pageSize
+      }, this.filterRights);
+      this.$http.get(`/accounts-payable/remittee/${this.factoryId}/detail/no-invoice`, {params}).then(res => {
+        this.loadingData = false;
+        this.payments = res.data.list;
+        this.pager.count = res.data.count;
+      });
+    },
+    searchProduct(keyWord) {
+      if (!this.factoryId) return;
+      let params = Object.assign({}, {
+        keyWord: keyWord,
+        salesFirm: this.factoryId
+      });
+      Vaccine.query(params).then(res => {
+        this.goodesList = res.data.list;
+      });
+    },
+    searchInOrder: function () {// 搜索
+      this.searchCondition.createStartTime = this.$formatAryTime(this.createTimes, 0);
+      this.searchCondition.createEndTime = this.$formatAryTime(this.createTimes, 1);
+      Object.assign(this.filterRights, this.searchCondition);
+    },
+    resetSearchForm: function () {// 重置表单
+      let temp = {
+        orgGoodsId: '',
+        createStartTime: '',
+        createEndTime: ''
+      };
+      this.createTimes = '';
+      Object.assign(this.searchCondition, temp);
+      Object.assign(this.filterRights, temp);
+    },
+    formatTime: function (date) {
+      return date ? this.$moment(date).format('YYYY-MM-DD') : '';
+    },
+    add(item) {
+      let index = this.selectPayments.indexOf(item);
+      if (index === -1) {
+        this.selectPayments.push(item);
       }
     },
-    methods: {
-      queryPayments(pageNo) {
-        this.pager.currentPage = pageNo;
-        this.loadingData = true;
-        let params = Object.assign({}, {
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize
-        }, this.filterRights);
-        this.$http.get(`/accounts-payable/remittee/${this.factoryId}/detail/no-invoice`, {params}).then(res => {
-          this.loadingData = false;
-          this.payments = res.data.list;
-          this.pager.count = res.data.count;
-        });
-      },
-      searchProduct(keyWord) {
-        if (!this.factoryId) return;
-        let params = Object.assign({}, {
-          keyWord: keyWord,
-          salesFirm: this.factoryId
-        });
-        Vaccine.query(params).then(res => {
-          this.goodesList = res.data.list;
-        });
-      },
-      searchInOrder: function () {// 搜索
-        this.searchCondition.createStartTime = this.$formatAryTime(this.createTimes, 0);
-        this.searchCondition.createEndTime = this.$formatAryTime(this.createTimes, 1);
-        Object.assign(this.filterRights, this.searchCondition);
-      },
-      resetSearchForm: function () {// 重置表单
-        let temp = {
-          orgGoodsId: '',
-          createStartTime: '',
-          createEndTime: ''
-        };
-        this.createTimes = '';
-        Object.assign(this.searchCondition, temp);
-        Object.assign(this.filterRights, temp);
-      },
-      formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
-      },
-      add(item) {
-        let index = this.selectPayments.indexOf(item);
-        if (index === -1) {
-          this.selectPayments.push(item);
-        }
-      },
-      remove(item) {
-        let index = this.selectPayments.indexOf(item);
-        this.selectPayments.splice(index, 1);
-      }
+    remove(item) {
+      let index = this.selectPayments.indexOf(item);
+      this.selectPayments.splice(index, 1);
     }
-  };
+  }
+};
 </script>

@@ -1,22 +1,22 @@
 <template>
   <transition-group
-    tag="ul"
     :class="[
       'el-upload-list',
       'el-upload-list--' + listType,
       { 'is-disabled': disabled }
     ]"
     name="el-list"
+    tag="ul"
   >
     <li
       v-for="(file, index) in files"
-      :class="['el-upload-list__item', 'is-' + file.status]"
+      v-if="file.status === 'uploading'"
       :key="file.uid"
-      v-if="file.status === 'uploading'">
+      :class="['el-upload-list__item', 'is-' + file.status]">
       <img
-        class="el-upload-list__item-thumbnail"
         v-if="file.status !== 'uploading' && ['picture-card', 'picture'].indexOf(listType) > -1"
-        :src="file.url" alt=""
+        :src="file.url"
+        alt="" class="el-upload-list__item-thumbnail"
       >
       <a class="el-upload-list__item-name" @click="handleClick(file)">
         <i class="el-icon-document"></i>{{file.name}}
@@ -28,17 +28,17 @@
           'el-icon-check': ['picture-card', 'picture'].indexOf(listType) > -1
         }"></i>
       </label>
-      <i class="el-icon-close" v-if="!disabled" @click="$emit('remove', file)"></i>
+      <i v-if="!disabled" class="el-icon-close" @click="$emit('remove', file)"></i>
       <el-progress
         v-if="file.status === 'uploading'"
-        :type="listType === 'picture-card' ? 'circle' : 'line'"
+        :percentage="parsePercentage(file.percentage)"
         :stroke-width="listType === 'picture-card' ? 6 : 2"
-        :percentage="parsePercentage(file.percentage)">
+        :type="listType === 'picture-card' ? 'circle' : 'line'">
       </el-progress>
-      <span class="el-upload-list__item-actions" v-if="listType === 'picture-card'">
+      <span v-if="listType === 'picture-card'" class="el-upload-list__item-actions">
         <span
-          class="el-upload-list__item-preview"
           v-if="handlePreview && listType === 'picture-card'"
+          class="el-upload-list__item-preview"
           @click="handlePreview(file)"
         >
           <i class="el-icon-view"></i>
@@ -55,32 +55,32 @@
   </transition-group>
 </template>
 <script>
-  import Locale from 'element-ui/lib/mixins/locale';
+import Locale from 'element-ui/lib/mixins/locale';
 
-  export default {
-    mixins: [Locale],
+export default {
+  mixins: [Locale],
 
-    props: {
-      files: {
-        type: Array,
-        default() {
-          return [];
-        }
-      },
-      disabled: {
-        type: Boolean,
-        default: false
-      },
-      handlePreview: Function,
-      listType: String
-    },
-    methods: {
-      parsePercentage(val) {
-        return parseInt(val, 10);
-      },
-      handleClick(file) {
-        this.handlePreview && this.handlePreview(file);
+  props: {
+    files: {
+      type: Array,
+      default() {
+        return [];
       }
+    },
+    disabled: {
+      type: Boolean,
+      default: false
+    },
+    handlePreview: Function,
+    listType: String
+  },
+  methods: {
+    parsePercentage(val) {
+      return parseInt(val, 10);
+    },
+    handleClick(file) {
+      this.handlePreview && this.handlePreview(file);
     }
-  };
+  }
+};
 </script>

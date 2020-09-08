@@ -1,15 +1,15 @@
 <template>
   <span>
     <span v-show="accessoryList.length">【组合疫苗】</span>
-    <span style="display: block;font-size: 12px" v-for="acce in accessoryList" :key="acce.id">
+    <span v-for="acce in accessoryList" :key="acce.id" style="display: block;font-size: 12px">
          <span style="margin-right: 10px">{{acce.name}}</span>
-        <span style="margin-right: 10px"
-              v-show="acce.procurementPrice">采购价格:¥ {{ acce.procurementPrice | formatMoney }}</span>
-         <span style="margin-right: 10px"
-               v-show="acce.sellPrice">销售价格:¥{{ acce.sellPrice | formatMoney }}</span>
-         <span style="margin-right: 10px" v-show="acce.proportion">比例:{{ acce.proportion }}</span>
+        <span v-show="acce.procurementPrice"
+              style="margin-right: 10px">采购价格:¥ {{ acce.procurementPrice | formatMoney }}</span>
+         <span v-show="acce.sellPrice"
+               style="margin-right: 10px">销售价格:¥{{ acce.sellPrice | formatMoney }}</span>
+         <span v-show="acce.proportion" style="margin-right: 10px">比例:{{ acce.proportion }}</span>
          <span style="margin-right: 10px">{{ acce.salesFirmName }}</span>
-        <span style="margin-right: 10px" v-if="acce.accessoryGoods">
+        <span v-if="acce.accessoryGoods" style="margin-right: 10px">
            散件：
           <span v-show="acce.accessoryGoods.smallPacking">
             {{acce.accessoryGoods.smallPacking}}
@@ -23,13 +23,13 @@
   </span>
 </template>
 <script>
-  export default {
-    name: 'acceGoodsPart',
-    props: {
-      accessoryList: {
-        type: Array,
-        default: () => []
-      }
+export default {
+  name: 'acceGoodsPart',
+  props: {
+    accessoryList: {
+      type: Array,
+      default: () => []
     }
-  };
+  }
+};
 </script>

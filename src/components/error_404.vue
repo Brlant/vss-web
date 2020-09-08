@@ -10,16 +10,16 @@
   <div></div>
 </template>
 <script>
-  import {Auth} from '@/resources';
+import {Auth} from '@/resources';
 
-  export default {
-    name: 'error',
-    mounted() {
-      Auth.checkLogin().then(() => {
-        this.$router.replace('/');
-      }).catch(() => {
-        this.$router.replace('/login');
-      });
-    }
-  };
+export default {
+  name: 'error',
+  mounted() {
+    Auth.checkLogin().then(() => {
+      this.$router.replace('/');
+    }).catch(() => {
+      this.$router.replace('/login');
+    });
+  }
+};
 </script>

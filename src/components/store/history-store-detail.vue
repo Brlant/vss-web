@@ -1,41 +1,41 @@
 <style lang="scss" scoped="">
-  @import "../../assets/mixins";
+@import "../../assets/mixins";
 
-  .content-part {
-    .content-right {
-      > h3 {
-        left: 0;
-      }
-
+.content-part {
+  .content-right {
+    > h3 {
       left: 0;
-      padding-left: 25px;
-      padding-right: 25px;
-    }
-  }
-
-  .tr-bg {
-    background: #eeeeee;
-  }
-
-  .table > tbody > tr:first-child > td {
-    border-top: 0;
-  }
-
-  .tr-ntd-bg {
-    &:nth-child(odd) {
-      background: #ffffff;
     }
 
-    &:nth-child(even) {
-      background: $dialog-left-bg;
-    }
+    left: 0;
+    padding-left: 25px;
+    padding-right: 25px;
+  }
+}
+
+.tr-bg {
+  background: #eeeeee;
+}
+
+.table > tbody > tr:first-child > td {
+  border-top: 0;
+}
+
+.tr-ntd-bg {
+  &:nth-child(odd) {
+    background: #ffffff;
   }
 
-  .batch-info {
-    .oms-row {
-      margin-bottom: 10px;
-    }
+  &:nth-child(even) {
+    background: $dialog-left-bg;
   }
+}
+
+.batch-info {
+  .oms-row {
+    margin-bottom: 10px;
+  }
+}
 </style>
 <template>
   <div>
@@ -44,22 +44,22 @@
         <h3>库存详情</h3>
         <el-row class="batch-info">
           <el-col :span="12">
-            <oms-row label="货主" :span="span">{{ currentItem.orgName }}</oms-row>
-            <oms-row label="货主疫苗名称" :span="span">{{currentItem.goodsName }}</oms-row>
-            <oms-row label="生产单位" :span="span">{{ currentItem.factoryName }}</oms-row>
-            <oms-row label="批号" :span="span">{{ currentItem.batchNumber }}</oms-row>
-            <oms-row label="有效期" :span="span">{{ currentItem.expiryDate | date }}</oms-row>
+            <oms-row :span="span" label="货主">{{ currentItem.orgName }}</oms-row>
+            <oms-row :span="span" label="货主疫苗名称">{{currentItem.goodsName }}</oms-row>
+            <oms-row :span="span" label="生产单位">{{ currentItem.factoryName }}</oms-row>
+            <oms-row :span="span" label="批号">{{ currentItem.batchNumber }}</oms-row>
+            <oms-row :span="span" label="有效期">{{ currentItem.expiryDate | date }}</oms-row>
           </el-col>
           <el-col :span="12">
             <!--<oms-row label="业务剂次库存" :span="span">{{ currentItem.qualifiedBizServings }}</oms-row>-->
-            <oms-row label="合格业务库存" :span="span">{{ currentItem.availableCount }}</oms-row>
-            <oms-row label="不合格业务库存" :span="span">{{ currentItem.unqualifiedBizCount }}</oms-row>
-            <oms-row label="业务停销" :span="span">{{ currentItem.undeterminedCount }}</oms-row>
+            <oms-row :span="span" label="合格业务库存">{{ currentItem.availableCount }}</oms-row>
+            <oms-row :span="span" label="不合格业务库存">{{ currentItem.unqualifiedBizCount }}</oms-row>
+            <oms-row :span="span" label="业务停销">{{ currentItem.undeterminedCount }}</oms-row>
             <!--<oms-row label="实物剂次库存" :span="span">{{ currentItem.qualifiedActualServings }}</oms-row>-->
-            <oms-row label="合格实物库存" :span="span">{{ currentItem.qualifiedCount }}</oms-row>
-            <oms-row label="不合格实物库存" :span="span">{{ currentItem.unqualifiedCount }}</oms-row>
-            <oms-row label="在途库存" :span="span">{{ currentItem.transitCount }}</oms-row>
-            <oms-row label="库存总数" :span="span">{{ currentItem.totalCount }}</oms-row>
+            <oms-row :span="span" label="合格实物库存">{{ currentItem.qualifiedCount }}</oms-row>
+            <oms-row :span="span" label="不合格实物库存">{{ currentItem.unqualifiedCount }}</oms-row>
+            <oms-row :span="span" label="在途库存">{{ currentItem.transitCount }}</oms-row>
+            <oms-row :span="span" label="库存总数">{{ currentItem.totalCount }}</oms-row>
           </el-col>
         </el-row>
         <table class="table clearfix">
@@ -82,7 +82,7 @@
               </div>
             </td>
           </tr>
-          <tr v-else="" v-for="i in storeDetails" :key="i.id" class="tr-ntd-bg">
+          <tr v-for="i in storeDetails" v-else="" :key="i.id" class="tr-ntd-bg">
             <td>
               <div>
                 {{ i.warehouseName }}
@@ -102,32 +102,32 @@
   </div>
 </template>
 <script>
-  import {erpStock} from '@/resources';
+import {erpStock} from '@/resources';
 
-  export default {
-    props: ['currentItem', 'isShowLock'],
-    data() {
-      return {
-        loadingData: false,
-        storeDetails: [],
-        span: 9
-      };
-    },
-    watch: {
-      currentItem() {
-        this.queryStoreDetails();
-      }
-    },
-    methods: {
-      queryStoreDetails() {
-        this.storeDetails = [];
-        if (!this.currentItem.id) return;
-        this.loadingData = true;
-        erpStock.queryHistoryDetail(this.currentItem.backupsInfoId, this.currentItem.id).then(res => {
-          this.loadingData = false;
-          this.storeDetails = res.data.list;
-        });
-      }
+export default {
+  props: ['currentItem', 'isShowLock'],
+  data() {
+    return {
+      loadingData: false,
+      storeDetails: [],
+      span: 9
+    };
+  },
+  watch: {
+    currentItem() {
+      this.queryStoreDetails();
     }
-  };
+  },
+  methods: {
+    queryStoreDetails() {
+      this.storeDetails = [];
+      if (!this.currentItem.id) return;
+      this.loadingData = true;
+      erpStock.queryHistoryDetail(this.currentItem.backupsInfoId, this.currentItem.id).then(res => {
+        this.loadingData = false;
+        this.storeDetails = res.data.list;
+      });
+    }
+  }
+};
 </script>
