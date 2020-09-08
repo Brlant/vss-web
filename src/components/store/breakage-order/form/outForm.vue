@@ -1053,7 +1053,6 @@ export default {
             this.$emit('close');
             this.resetForm();
           }).catch(error => {
-            console.log(error);
             this.doing = false;
             this.$notify({
               duration: 2000,
