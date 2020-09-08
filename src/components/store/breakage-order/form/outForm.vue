@@ -461,9 +461,6 @@ export default {
         transportationAddress: [
           {required: true, message: '请选择收货地址', trigger: 'change'}
         ],
-        logisticsProviderName: [
-          {required: true, message: '请选择物流商', trigger: 'change'}
-        ],
         orgAddress: [
           {required: true, message: '请选择发货地址', trigger: 'change'}
         ],
