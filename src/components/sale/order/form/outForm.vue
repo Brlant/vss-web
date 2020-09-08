@@ -845,6 +845,9 @@ export default {
       });
     },
     getWarehouseAdress: function (item) { // 得到仓库地址
+      if (!item) {
+        return;
+      }
       return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
     },
     checkLicence: function (val) {// 检查货主/单位证照是否过期
