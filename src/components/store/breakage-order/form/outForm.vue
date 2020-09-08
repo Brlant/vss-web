@@ -634,8 +634,42 @@
         return `${this.defaultIndex === 2 ? '编辑' : '添加'}报损`;
       },
       resetForm: function () {// 重置表单
-        this.$refs['orderAddForm'].resetFields();
-        this.$refs['orderGoodsAddForm'].resetFields();
+        this.form = {
+          goodsType: '',
+          'orgId': '',
+          'customerId': '',
+          'bizType': '2-4',
+          'type': this.type,
+          'logisticsProviderName': '',
+          'customerChannel': '0',
+          transportationMeansId: '',
+          transportationAddress: '',
+          logisticsCentreId: '',
+          transportationCondition: '',
+          importedFlag: false,
+          orgRelation: '',
+          orgAddress: '',
+          qualifiedFlag: true,
+          sameBatchNumber: false,
+          actualConsignee: '',
+          'consigneePhone': '',
+          'thirdPartyNumber': '',
+          'expectedTime': '',
+          'detailDtoList': [],
+          'remark': ''
+        };
+        this.product = {
+          'amount': null,
+          'entrustment': false,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          unitPrice: null,
+          'fixInfo': {
+            'goodsDto': {}
+          }
+        };
         this.form.actualConsignee = '';
         this.form.consigneePhone = '';
         this.form.logisticsProviderName = '';
