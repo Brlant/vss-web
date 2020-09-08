@@ -130,7 +130,7 @@ $leftWidth: 200px;
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="物流商">
+            <el-form-item label="物流商" prop="logisticsProviderName">
               <oms-input v-model="form.logisticsProviderName" placeholder="请输入物流商"></oms-input>
             </el-form-item>
             <el-form-item label="报损方式" prop="customerChannel">
@@ -168,7 +168,7 @@ $leftWidth: 200px;
                            :value="item.key"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item label="是否合格">
+            <el-form-item label="是否合格" prop="qualifiedFlag">
               <el-switch v-model="form.qualifiedFlag" active-color="#13ce66" active-text="是" inactive-color="#ff4949"
                          inactive-text="否" @change="qualifiedFlagChange"></el-switch>
             </el-form-item>
@@ -1053,6 +1053,7 @@ export default {
             this.$emit('close');
             this.resetForm();
           }).catch(error => {
+            console.log(error);
             this.doing = false;
             this.$notify({
               duration: 2000,
