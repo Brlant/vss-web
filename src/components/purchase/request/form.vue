@@ -651,6 +651,8 @@ export default {
         this.currentList = [];
         return;
       }
+      // 清空当前选择疫苗列表
+      this.currentList = [];
       http.get('/org/goods/' + OrgGoodsId).then(res => {
         this.currentList.push(res.data);
 
