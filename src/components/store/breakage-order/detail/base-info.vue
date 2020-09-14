@@ -22,31 +22,31 @@
         <el-row v-show=" currentOrder.bizType !== '2-2' " style="margin-bottom:0;position: relative">
           <el-col :span="12">
             <oms-row :span="span" label="货主订单号">
-              {{currentOrder.orderNo}}
+              {{ currentOrder.orderNo }}
             </oms-row>
             <oms-row :span="span" label="货主">
-              {{currentOrder.orgName}}
+              {{ currentOrder.orgName }}
             </oms-row>
             <oms-row :span="span" label="报损方式">
               <dict :dict-group="'breakageType'" :dict-key="currentOrder.customerChannel"></dict>
             </oms-row>
             <oms-row v-show="currentOrder.customerChannel === '1'" :span="span" label="去向单位">
-              {{currentOrder.customerName}}
+              {{ currentOrder.customerName }}
             </oms-row>
             <oms-row v-show="currentOrder.centreName" :span="span" label="物流中心">
-              {{currentOrder.centreName}}
+              {{ currentOrder.centreName }}
             </oms-row>
             <oms-row :span="span" label="运输条件">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
             <oms-row :span="span" label="仓库地址">
-              <span class="goods-span">{{currentOrder.outWarehouseAddress}}</span>
+              <span class="goods-span">{{ currentOrder.outWarehouseAddress }}</span>
             </oms-row>
             <oms-row :span="span" label="物流商">
-              <span class="goods-span">{{currentOrder.logisticsProviderName}}</span>
+              <span class="goods-span">{{ currentOrder.logisticsProviderName }}</span>
             </oms-row>
             <oms-row v-show="currentOrder.warehouseAddress" :span="span" label="收货地址">
-              <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
+              <span class="goods-span">{{ currentOrder.warehouseAddress }}</span>
             </oms-row>
           </el-col>
           <el-col :span="12">
@@ -60,10 +60,10 @@
               <dict :dict-group="'outTransportMeans'" :dict-key="currentOrder.transportationMeansId"></dict>
             </oms-row>
             <oms-row label="下单时间">
-              <span class="goods-span">{{currentOrder.createTime | minute}}</span>
+              <span class="goods-span">{{ currentOrder.createTime | minute }}</span>
             </oms-row>
             <oms-row v-show="currentOrder.expectedTime" label="预计送货时间">
-              <span class="goods-span">{{currentOrder.expectedTime | date}}</span>
+              <span class="goods-span">{{ currentOrder.expectedTime | date }}</span>
             </oms-row>
             <oms-row label="是否合格">
               <span v-show="currentOrder.qualifiedFlag" class="goods-span">合格</span>
@@ -74,7 +74,7 @@
               <order-push-status :msg="currentOrder.pushMessage" :status="currentOrder.pushStatus"/>
             </oms-row>
             <oms-row v-show="currentOrder.erpStatus === '5'" :span="span" label="取消原因">
-              <span class="goods-span">{{currentOrder.cancelReason}}</span>
+              <span class="goods-span">{{ currentOrder.cancelReason }}</span>
             </oms-row>
             <!--<oms-row :label="getTimeTitle(currentOrder)" v-show="currentOrder.expectedTime">-->
             <!--<span class="goods-span">{{currentOrder.expectedTime | date}}</span>-->
@@ -104,7 +104,7 @@
           </thead>
           <tbody>
           <tr v-for="(item, index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
-            <td width="10">{{index + 1}}</td>
+            <td width="10">{{ index + 1 }}</td>
             <td width="80">
               <el-tooltip v-if="$formatPhotoUrl(item)" class="item" effect="light"
                           placement="right" popperClass="el-tooltip">
@@ -122,7 +122,7 @@
               <div>
                 <el-tooltip :content="`货主货品编号:${item.orgGoodsDto.goodsNo} 货主疫苗ID:${item.orgGoodsId}`" class="item"
                             effect="dark" placement="right">
-                  <span style="font-size: 14px;line-height: 20px">{{item.name}}</span>
+                  <span style="font-size: 14px;line-height: 20px">{{ item.name }}</span>
                 </el-tooltip>
               </div>
               <div>
@@ -136,24 +136,28 @@
                 <el-tooltip class="item" content="疫苗规格" effect="dark" placement="right">
                   <span style="font-size: 12px;">{{ item.orgGoodsDto.goodsDto.specifications }}</span>
                 </el-tooltip>
-                <perm label="breakage-order-undo">
-                  <el-button v-show="currentOrder.state==='4'" @click="showUndo(item)">撤销</el-button>
-                </perm>
               </div>
             </td>
             <td class="R text-center" width="100px">
               {{ item.batchNumber || '无' }}
+              <div>
+                <perm label="breakage-order-undo">
+                  <el-button v-show="currentOrder.state==='4'&&item.amount>0" @click="showUndo(item)"
+                             style="margin: 4px 0">撤销
+                  </el-button>
+                </perm>
+              </div>
               <!--<el-tag v-show="item.inEffectiveFlag" type="warning">近效期</el-tag>-->
               <goods-status-tag :form="currentOrder" :item="item"/>
             </td>
             <!--<td>{{ item.productionDate | date }}</td>-->
             <td class="text-center" width="90px">{{ item.expiryDate | date }}</td>
             <td class="text-center" width="80px">
-              <span v-if="item.unitPrice">￥{{item.unitPrice | formatMoney}}</span>
+              <span v-if="item.unitPrice">￥{{ item.unitPrice | formatMoney }}</span>
               <span v-if="!item.unitPrice">-</span>
             </td>
             <td class="text-center" width="80px">
-              {{item.amount}}
+              {{ item.amount }}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
             <td class="text-center">
@@ -169,7 +173,8 @@
             </td>
             <td align="right" colspan="2">
             <span v-show="currentOrder.totalAmount"
-                  style="font-weight:600;">合计: ¥  {{ currentOrder.totalAmount | formatMoney
+                  style="font-weight:600;">合计: ¥  {{
+                currentOrder.totalAmount | formatMoney
               }}</span>
             </td>
           </tr>
