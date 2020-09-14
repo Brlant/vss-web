@@ -66,8 +66,8 @@ export default {
       attachmentRight: {// 附件管理权限
         watch: 'erp-order-document-watch',
         download: 'erp-order-document-watch',
-        upload: '',
-        remove: ''
+        upload: 'erp-order-document-upload',
+        remove: 'erp-order-document-delete'
       }
     };
   },
