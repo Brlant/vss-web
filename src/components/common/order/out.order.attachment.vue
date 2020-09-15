@@ -10,8 +10,8 @@
     <attachment-show :attachmentRight="{
         watch: 'erp-warehouse-temperature-watch',
         download: 'erp-warehouse-temperature-watch',
-        upload: '',
-        remove: ''
+        upload: 'erp-order-document-upload',
+        remove: 'erp-order-document-delete'
       }" :currentOrder="currentOrder"
                      :orderAttachment="accessory.transitTemperatureFroms"
                      label="在途温度"
