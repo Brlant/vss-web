@@ -26,7 +26,8 @@
              class="status-item"
              @click="changeStatus(item,key)">
           <div :class="['b_color_'+key]" class="status-bg"></div>
-          <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span
+            class="status-num">{{ item.num }}</span>
           </div>
         </div>
       </div>
@@ -50,14 +51,15 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div v-for="item in allocationList" :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]"
+          <div v-for="item in allocationList"
+               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]"
                class="order-list-item">
             <el-row>
               <el-col :span="8" class="R pt">
                 <span>{{ item.createName }}</span>
               </el-col>
               <el-col :span="4" class="pt">
-                <span>{{ item.createTime | minute}}</span>
+                <span>{{ item.createTime | minute }}</span>
               </el-col>
               <el-col :span="4" class="pt">
                 <span>{{ item.status === 0 ? '未完成' : '已完成' }}</span>
@@ -83,6 +85,15 @@
                     <a class="btn-circle" href="#" @click.prevent=""><i
                       class="el-icon-t-wave"></i></a>
                     查看分配详情
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                   <span @click.prevent="exportDetail(item)">
+                    <a class="btn-circle" href="#" @click.prevent=""><i
+                      class="el-icon-t-print"></i></a>
+                    导出
                     </span>
                   </div>
                 </div>
@@ -125,7 +136,8 @@ export default {
       },
       activeStatus: 0,
       currentItemId: '',
-      currentItem: {}
+      currentItem: {},
+      isLoading: false
     };
   },
   mounted() {
@@ -181,6 +193,25 @@ export default {
     },
     showDetail(item) {
       this.$router.push({path: '/sale/allocation/task', query: {id: item.id}});
+    },
+    exportDetail(item) {
+      this.isLoading = true;
+      let moduleId = "/sale/allocation";
+      this.$store.commit('initPrint', {isPrinting: true, moduleId: moduleId});
+      this.$http.get(`demand-assignment/${item.id}/export`, {}).then(res => {
+        utils.download(res.data.path, '销售分配表');
+        this.isLoading = false;
+        this.$notify.success({
+          message: '导出销售分配信息成功'
+        });
+        this.$store.commit('initPrint', {isPrinting: false, moduleId: moduleId});
+      }).catch(error => {
+        this.isLoading = false;
+        this.$store.commit('initPrint', {isPrinting: false, moduleId: moduleId});
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '导出失败'
+        });
+      });
     },
     purchase(item) {
       this.$router.push({path: '/sale/allocation/task', query: {id: item.id, type: 'purchase'}});
