@@ -25,7 +25,7 @@ patch-deploy:
   stage: deploy
   when: manual
   script:
-    - npm version minor
+    - npm version minor --unsafe-perm
   only:
     - 3.x
   tags:
