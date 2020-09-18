@@ -2,7 +2,7 @@
   <div v-if="productInfo.fixInfo">
     <el-row>
       <el-col :span="12">
-        <oms-row label="散件" :span="8">
+        <oms-row :span="8" label="散件">
           <span v-show="productInfo.fixInfo.goodsDto.smallPacking">
                       {{productInfo.fixInfo.goodsDto.smallPacking}}
           <dict :dict-group="'measurementUnit'" :dict-key="productInfo.fixInfo.goodsDto.measurementUnit"></dict>
@@ -11,7 +11,7 @@
                 :dict-key="productInfo.fixInfo.goodsDto.smallPackageUnit"></dict>
           </span>
         </oms-row>
-        <oms-row label="整件" :span="8">
+        <oms-row :span="8" label="整件">
           <span v-show="productInfo.fixInfo.goodsDto.largePacking">
           {{productInfo.fixInfo.goodsDto.largePacking}}
           <dict :dict-group="'measurementUnit'" :dict-key="productInfo.fixInfo.goodsDto.measurementUnit"></dict>
@@ -21,18 +21,18 @@
           </span>
 
         </oms-row>
-        <oms-row label="生产单位" :span="8">
+        <oms-row :span="8" label="生产单位">
           {{productInfo.fixInfo.goodsDto.factoryName}}
         </oms-row>
       </el-col>
       <el-col :span="12">
-        <oms-row label="规格" :span="8">
+        <oms-row :span="8" label="规格">
           {{productInfo.fixInfo.goodsDto.specifications}}
         </oms-row>
-        <oms-row label="货主货品编号" :span="8">
+        <oms-row :span="8" label="货主货品编号">
           {{productInfo.fixInfo.goodsNo}}
         </oms-row>
-        <oms-row label="批准文号" :span="8">
+        <oms-row :span="8" label="批准文号">
           {{productInfo.fixInfo.goodsDto.approvalNumber}}
         </oms-row>
       </el-col>
@@ -44,10 +44,10 @@
   </div>
 </template>
 <script>
-  export default {
-    name: 'GoodsInfoPart',
-    props: {
-      productInfo: {}
-    }
-  };
+export default {
+  name: 'GoodsInfoPart',
+  props: {
+    productInfo: {}
+  }
+};
 </script>

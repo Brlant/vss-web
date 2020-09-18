@@ -1,46 +1,49 @@
 <style lang="scss" scoped="">
-  .content-part {
-    .content-right {
-      > h3 {
-        left: 0;
-      }
+.content-part {
+  .content-right {
+    > h3 {
       left: 0;
-      padding-left: 100px;
-      padding-right: 100px;
     }
-  }
 
-  .tr-bg {
-    background: #eeeeee;
+    left: 0;
+    padding-left: 100px;
+    padding-right: 100px;
   }
+}
 
-  .qp-box {
-    margin-bottom: 40px;
-    margin-left: 40px;
-    padding: 20px;
-    box-shadow: 4px 4px 2px 0 #ddd;
-  }
+.tr-bg {
+  background: #eeeeee;
+}
 
-  .base-pic-list {
-    padding-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-    .base-pic-item {
-      border: 1px solid #eee;
-      position: relative;
-      cursor: pointer;
+.qp-box {
+  margin-bottom: 40px;
+  margin-left: 40px;
+  padding: 20px;
+  box-shadow: 4px 4px 2px 0 #ddd;
+}
+
+.base-pic-list {
+  padding-top: 10px;
+  display: flex;
+  flex-wrap: wrap;
+
+  .base-pic-item {
+    border: 1px solid #eee;
+    position: relative;
+    cursor: pointer;
+    width: 180px;
+    margin: 5px;
+    padding: 10px;
+    font-size: 12px;
+
+    img {
       width: 180px;
-      margin: 5px;
-      padding: 10px;
-      font-size: 12px;
-      img {
-        width: 180px;
-        display: block;
-        background: #ccc;
+      display: block;
+      background: #ccc;
 
-      }
     }
   }
+}
 </style>
 <template>
   <div>
@@ -59,8 +62,8 @@
                     药检报告
                   </h2>
                   <div>
-                    <div class="base-pic-list" v-if="drugControlReportList.length>0">
-                      <div class="base-pic-item" v-if="Util.getType(drugControlReportList[0].attachmentStoragePath)">
+                    <div v-if="drugControlReportList.length>0" class="base-pic-list">
+                      <div v-if="Util.getType(drugControlReportList[0].attachmentStoragePath)" class="base-pic-item">
                         <div @click="watchDrugControlReport(drugControlReportList[0])">
                           <compressed-img
                             :src="drugControlReportList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
@@ -81,10 +84,11 @@
                     批签发
                   </h2>
                   <div>
-                    <div class="base-pic-list" v-if="batchReleaseList.length>0">
-                      <div class="base-pic-item" v-if="Util.getType(batchReleaseList[0].attachmentStoragePath)">
+                    <div v-if="batchReleaseList.length>0" class="base-pic-list">
+                      <div v-if="Util.getType(batchReleaseList[0].attachmentStoragePath)" class="base-pic-item">
                         <div @click="watchBatchRelease(batchReleaseList[0])">
-                          <compressed-img :src="batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
+                          <compressed-img
+                            :src="batchReleaseList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -104,8 +108,8 @@
                     进口注册证
                   </h2>
                   <div>
-                    <div class="base-pic-list" v-if="importCertificateList.length>0">
-                      <div class="base-pic-item" v-if="Util.getType(importCertificateList[0].attachmentStoragePath)">
+                    <div v-if="importCertificateList.length>0" class="base-pic-list">
+                      <div v-if="Util.getType(importCertificateList[0].attachmentStoragePath)" class="base-pic-item">
                         <div @click="watchImportCertificate(importCertificateList[0])">
                           <compressed-img
                             :src="importCertificateList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
@@ -126,10 +130,11 @@
                     通关单
                   </h2>
                   <div>
-                    <div class="base-pic-list" v-if="customsPassList.length>0">
-                      <div class="base-pic-item" v-if="Util.getType(customsPassList[0].attachmentStoragePath)">
+                    <div v-if="customsPassList.length>0" class="base-pic-list">
+                      <div v-if="Util.getType(customsPassList[0].attachmentStoragePath)" class="base-pic-item">
                         <div @click="watchCustomsPass(customsPassList[0])">
-                          <compressed-img :src="customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
+                          <compressed-img
+                            :src="customsPassList[0].attachmentStoragePath+'?image&action=resize:w_180,m_0'"/>
                         </div>
                       </div>
                     </div>
@@ -147,102 +152,102 @@
   </div>
 </template>
 <script>
-  import {http, OmsAttachment} from '../../../resources';
-  import attachmentLists from '../../common/attachmentList.vue';
-  import Util from '@/tools/utils';
+import {http, OmsAttachment} from '../../../resources';
+import attachmentLists from '../../common/attachmentList.vue';
+import Util from '@/tools/utils';
 
-  export default {
-    components: {
-      attachmentLists
+export default {
+  components: {
+    attachmentLists
+  },
+  props: ['id'],
+  data() {
+    return {
+      loadingData: true,
+      batchNumber: {},
+      fileMap: [],
+      drugControlReportIdList: {},
+      batchReleaseIdList: {},
+      importCertificateIdList: {},
+      customsPassIdList: {},
+      drugControlReportList: {},
+      batchReleaseList: {},
+      importCertificateList: {},
+      customsPassList: {},
+      Util
+    };
+  },
+  watch: {
+    id(val) {
+      this.queryStoreDetails();
+      this.getDrugControlReportList(val, 'drugControlReport');
+      this.getBatchReleaseList(val, 'batchRelease');
+      this.getImportCertificateList(val, 'importCertificate');
+      this.getCustomsPassList(val, 'customsPass');
+    }
+  },
+  methods: {
+    getDrugControlReportList: function (objectId, objectType) {
+      if (!objectId) return;
+      OmsAttachment.queryOneAttachmentList(objectId, objectType).then(res => {
+        this.drugControlReportList = res.data;
+      });
     },
-    props: ['id'],
-    data() {
-      return {
-        loadingData: true,
-        batchNumber: {},
-        fileMap: [],
-        drugControlReportIdList: {},
-        batchReleaseIdList: {},
-        importCertificateIdList: {},
-        customsPassIdList: {},
-        drugControlReportList: {},
-        batchReleaseList: {},
-        importCertificateList: {},
-        customsPassList: {},
-        Util
-      };
+    getBatchReleaseList: function (objectId, objectType) {
+      if (!objectId) return;
+      OmsAttachment.queryOneAttachmentList(objectId, objectType).then(res => {
+        this.batchReleaseList = res.data;
+      });
     },
-    watch: {
-      id(val) {
-        this.queryStoreDetails();
-        this.getDrugControlReportList(val, 'drugControlReport');
-        this.getBatchReleaseList(val, 'batchRelease');
-        this.getImportCertificateList(val, 'importCertificate');
-        this.getCustomsPassList(val, 'customsPass');
+    getImportCertificateList: function (objectId, objectType) {
+      if (!objectId) return;
+      OmsAttachment.queryOneAttachmentList(objectId, objectType).then(res => {
+        this.importCertificateList = res.data;
+      });
+    },
+    getCustomsPassList: function (objectId, objectType) {
+      if (!objectId) return;
+      OmsAttachment.queryOneAttachmentList(objectId, objectType).then(res => {
+        this.customsPassList = res.data;
+      });
+    },
+    watchDrugControlReport(item) {
+      if (item) {
+        this.$store.commit('changeAttachment', {
+          currentId: item.attachmentId,
+          attachmentList: this.drugControlReportList
+        });
       }
     },
-    methods: {
-      getDrugControlReportList: function (objectId, objectType) {
-        if (!objectId) return;
-        OmsAttachment.queryOneAttachmentList(objectId, objectType).then(res => {
-          this.drugControlReportList = res.data;
+    watchBatchRelease(item) {
+      if (item) {
+        this.$store.commit('changeAttachment', {
+          currentId: item.attachmentId,
+          attachmentList: this.batchReleaseList
         });
-      },
-      getBatchReleaseList: function (objectId, objectType) {
-        if (!objectId) return;
-        OmsAttachment.queryOneAttachmentList(objectId, objectType).then(res => {
-          this.batchReleaseList = res.data;
+      }
+    },
+    watchImportCertificate(item) {
+      if (item) {
+        this.$store.commit('changeAttachment', {
+          currentId: item.attachmentId,
+          attachmentList: this.importCertificateList
         });
-      },
-      getImportCertificateList: function (objectId, objectType) {
-        if (!objectId) return;
-        OmsAttachment.queryOneAttachmentList(objectId, objectType).then(res => {
-          this.importCertificateList = res.data;
+      }
+    },
+    watchCustomsPass(item) {
+      if (item) {
+        this.$store.commit('changeAttachment', {
+          currentId: item.attachmentId,
+          attachmentList: this.customsPassList
         });
-      },
-      getCustomsPassList: function (objectId, objectType) {
-        if (!objectId) return;
-        OmsAttachment.queryOneAttachmentList(objectId, objectType).then(res => {
-          this.customsPassList = res.data;
-        });
-      },
-      watchDrugControlReport(item) {
-        if (item) {
-          this.$store.commit('changeAttachment', {
-            currentId: item.attachmentId,
-            attachmentList: this.drugControlReportList
-          });
-        }
-      },
-      watchBatchRelease(item) {
-        if (item) {
-          this.$store.commit('changeAttachment', {
-            currentId: item.attachmentId,
-            attachmentList: this.batchReleaseList
-          });
-        }
-      },
-      watchImportCertificate(item) {
-        if (item) {
-          this.$store.commit('changeAttachment', {
-            currentId: item.attachmentId,
-            attachmentList: this.importCertificateList
-          });
-        }
-      },
-      watchCustomsPass(item) {
-        if (item) {
-          this.$store.commit('changeAttachment', {
-            currentId: item.attachmentId,
-            attachmentList: this.customsPassList
-          });
-        }
-      },
-      queryStoreDetails() {
-        this.loadingData = true;
-        http.get(`/batch-number/${this.id}`).then(res => {
-          this.batchNumber = res.data;
-          this.fileMap = res.data.map;
+      }
+    },
+    queryStoreDetails() {
+      this.loadingData = true;
+      http.get(`/batch-number/${this.id}`).then(res => {
+        this.batchNumber = res.data;
+        this.fileMap = res.data.map;
 //          // 处理idList
 //          if (res.data) {
 //            this.fileMap.drugControlReports.forEach(val => {
@@ -258,9 +263,9 @@
 //              this.customsPassIdList.push(val.id);
 //            });
 //          }
-          this.loadingData = false;
-        });
-      }
+        this.loadingData = false;
+      });
     }
-  };
+  }
+};
 </script>

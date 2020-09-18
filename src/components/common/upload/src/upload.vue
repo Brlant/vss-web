@@ -1,174 +1,174 @@
 <template>
-  <div class="el-upload" :class="'el-upload--'+listType" @click="handleClick">
-    <upload-dragger :disabled="disabled" @file="uploadFiles" v-if="drag">
+  <div :class="'el-upload--'+listType" class="el-upload" @click="handleClick">
+    <upload-dragger v-if="drag" :disabled="disabled" @file="uploadFiles">
       <slot></slot>
     </upload-dragger>
     <slot v-else></slot>
-    <input class="el-upload__input" type="file" ref="input" :name="name" @change="handleChange" :multiple="multiple"
-           :accept="accept"/>
+    <input ref="input" :accept="accept" :multiple="multiple" :name="name" class="el-upload__input" type="file"
+           @change="handleChange"/>
   </div>
 </template>
 <script>
-  import ajax from './ajax';
-  import UploadDragger from './upload-dragger.vue';
+import ajax from './ajax';
+import UploadDragger from './upload-dragger.vue';
 
-  export default {
-    inject: ['uploader'],
-    components: {
-      UploadDragger
-    },
-    props: {
+export default {
+  inject: ['uploader'],
+  components: {
+    UploadDragger
+  },
+  props: {
+    type: String,
+    action: {
       type: String,
-      action: {
-        type: String,
-        required: true
-      },
-      name: {
-        type: String,
-        default: 'file'
-      },
-      http: Object,
-      data: Object,
-      headers: Object,
-      withCredentials: Boolean,
-      multiple: Boolean,
-      accept: String,
-      onStart: Function,
-      onProgress: Function,
-      onSuccess: Function,
-      onError: Function,
-      beforeUpload: Function,
-      drag: Boolean,
-      onPreview: {
-        type: Function,
-        default: function () {
-        }
-      },
-      onRemove: {
-        type: Function,
-        default: function () {
-        }
-      },
-      fileList: Array,
-      autoUpload: Boolean,
-      listType: String,
-      httpRequest: {
-        type: Function,
-        default: ajax
-      },
-      disabled: Boolean,
-      formData: {
-        type: Object
+      required: true
+    },
+    name: {
+      type: String,
+      default: 'file'
+    },
+    http: Object,
+    data: Object,
+    headers: Object,
+    withCredentials: Boolean,
+    multiple: Boolean,
+    accept: String,
+    onStart: Function,
+    onProgress: Function,
+    onSuccess: Function,
+    onError: Function,
+    beforeUpload: Function,
+    drag: Boolean,
+    onPreview: {
+      type: Function,
+      default: function () {
       }
     },
-
-    data() {
-      return {
-        mouseover: false,
-        reqs: {}
-      };
+    onRemove: {
+      type: Function,
+      default: function () {
+      }
     },
+    fileList: Array,
+    autoUpload: Boolean,
+    listType: String,
+    httpRequest: {
+      type: Function,
+      default: ajax
+    },
+    disabled: Boolean,
+    formData: {
+      type: Object
+    }
+  },
 
-    methods: {
-      isImage(str) {
-        return str.indexOf('image') !== -1;
-      },
-      handleChange(ev) {
-        const files = ev.target.files;
-        if (!files) return;
-        this.uploadFiles(files);
-      },
-      uploadFiles(files) {
-        let postFiles = Array.prototype.slice.call(files);
-        if (!this.multiple) {
-          postFiles = postFiles.slice(0, 1);
-        }
+  data() {
+    return {
+      mouseover: false,
+      reqs: {}
+    };
+  },
 
-        if (postFiles.length === 0) {
-          return;
-        }
+  methods: {
+    isImage(str) {
+      return str.indexOf('image') !== -1;
+    },
+    handleChange(ev) {
+      const files = ev.target.files;
+      if (!files) return;
+      this.uploadFiles(files);
+    },
+    uploadFiles(files) {
+      let postFiles = Array.prototype.slice.call(files);
+      if (!this.multiple) {
+        postFiles = postFiles.slice(0, 1);
+      }
 
-        postFiles.forEach(rawFile => {
-          this.onStart(rawFile);
-          if (this.autoUpload) this.upload(rawFile);
-        });
-      },
-      upload(rawFile, file) {
+      if (postFiles.length === 0) {
+        return;
+      }
 
-        this.$refs.input.value = null;
+      postFiles.forEach(rawFile => {
+        this.onStart(rawFile);
+        if (this.autoUpload) this.upload(rawFile);
+      });
+    },
+    upload(rawFile, file) {
 
-        if (!this.beforeUpload) {
-          return this.post(rawFile);
-        }
+      this.$refs.input.value = null;
 
-        const before = this.beforeUpload(rawFile);
-        if (before && before.then) {
-          before.then(processedFile => {
-            if (Object.prototype.toString.call(processedFile) === '[object File]') {
-              this.post(processedFile);
-            } else {
-              this.post(rawFile);
-            }
-          }, () => {
-            this.onRemove(null, rawFile);
-          });
-        } else if (before !== false) {
-          this.post(rawFile);
-        } else {
+      if (!this.beforeUpload) {
+        return this.post(rawFile);
+      }
+
+      const before = this.beforeUpload(rawFile);
+      if (before && before.then) {
+        before.then(processedFile => {
+          if (Object.prototype.toString.call(processedFile) === '[object File]') {
+            this.post(processedFile);
+          } else {
+            this.post(rawFile);
+          }
+        }, () => {
           this.onRemove(null, rawFile);
+        });
+      } else if (before !== false) {
+        this.post(rawFile);
+      } else {
+        this.onRemove(null, rawFile);
+      }
+    },
+    abort(file) {
+      const {reqs} = this;
+      if (file) {
+        let uid = file;
+        if (file.uid) uid = file.uid;
+        if (reqs[uid]) {
+          reqs[uid].abort();
         }
-      },
-      abort(file) {
-        const {reqs} = this;
-        if (file) {
-          let uid = file;
-          if (file.uid) uid = file.uid;
-          if (reqs[uid]) {
-            reqs[uid].abort();
-          }
-        } else {
-          Object.keys(reqs).forEach((uid) => {
-            if (reqs[uid]) reqs[uid].abort();
-            delete reqs[uid];
-          });
+      } else {
+        Object.keys(reqs).forEach((uid) => {
+          if (reqs[uid]) reqs[uid].abort();
+          delete reqs[uid];
+        });
+      }
+    },
+    post(rawFile) {
+      const {uid} = rawFile;
+      const options = {
+        headers: this.headers,
+        withCredentials: this.withCredentials,
+        file: rawFile,
+        data: this.data,
+        filename: this.name,
+        action: this.action,
+        onProgress: e => {
+          this.onProgress(e, rawFile);
+        },
+        onSuccess: res => {
+          this.onSuccess(res, rawFile);
+          delete this.reqs[uid];
+        },
+        onError: err => {
+          this.onError(err, rawFile);
+          delete this.reqs[uid];
         }
-      },
-      post(rawFile) {
-        const {uid} = rawFile;
-        const options = {
-          headers: this.headers,
-          withCredentials: this.withCredentials,
-          file: rawFile,
-          data: this.data,
-          filename: this.name,
-          action: this.action,
-          onProgress: e => {
-            this.onProgress(e, rawFile);
-          },
-          onSuccess: res => {
-            this.onSuccess(res, rawFile);
-            delete this.reqs[uid];
-          },
-          onError: err => {
-            this.onError(err, rawFile);
-            delete this.reqs[uid];
-          }
-        };
-        const req = this.httpRequest(options, Object.assign({
-          objectId: '',
-          objectType: ''
-        }, this.formData, {fileName: rawFile.name}), this.$http);
-        this.reqs[uid] = req;
-        if (req && req.then) {
-          req.then(options.onSuccess, options.onError);
-        }
-      },
-      handleClick() {
-        if (!this.disabled) {
-          this.$refs.input.value = null;
-          this.$refs.input.click();
-        }
+      };
+      const req = this.httpRequest(options, Object.assign({
+        objectId: '',
+        objectType: ''
+      }, this.formData, {fileName: rawFile.name}), this.$http);
+      this.reqs[uid] = req;
+      if (req && req.then) {
+        req.then(options.onSuccess, options.onError);
+      }
+    },
+    handleClick() {
+      if (!this.disabled) {
+        this.$refs.input.value = null;
+        this.$refs.input.click();
       }
     }
-  };
+  }
+};
 </script>

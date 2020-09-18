@@ -1,24 +1,24 @@
 <style lang="scss" scoped="">
-  @import "../../../assets/mixins";
+@import "../../../assets/mixins";
 
-  .btn-color {
-    a:hover {
-      color: $activeColor;
-    }
+.btn-color {
+  a:hover {
+    color: $activeColor;
   }
+}
 
-  .order-list-item {
-    cursor: pointer;
-  }
+.order-list-item {
+  cursor: pointer;
+}
 </style>
 <template>
   <div class="order-page">
     <div class="container">
-      <div class="opera-btn-group" :class="{up:!showSearch}">
+      <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm label="invoice-add">
-                  <a href="#" class="btn-circle" @click.prevent=""><i
+                  <a class="btn-circle" href="#" @click.prevent=""><i
                     class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
@@ -28,21 +28,21 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
-                 onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" onsubmit="return false"
+                 style="padding-top: 10px">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="发票号码" :span="5">
-                <oms-input type="text" v-model="searchCondition.invoiceNumber" placeholder="请输入发票号码"></oms-input>
+              <oms-form-row :span="5" label="发票号码">
+                <oms-input v-model="searchCondition.invoiceNumber" placeholder="请输入发票号码" type="text"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货单位" :span="5">
-                <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg"
-                           @click.native="filterOrg('')"
-                           :clearable="true"
-                           v-model="searchCondition.factoryId" popperClass="good-selects">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+              <oms-form-row :span="5" label="供货单位">
+                <el-select v-model="searchCondition.factoryId" :clearable="true" :remote-method="filterOrg" filterable
+                           placeholder="请输入名称搜索供货单位"
+                           popperClass="good-selects"
+                           remote @click.native="filterOrg('')">
+                  <el-option v-for="org in orgList" :key="org.id" :label="org.name" :value="org.id">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{org.name}}</span>
                     </div>
@@ -56,8 +56,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="" :span="1">
-                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+              <oms-form-row :span="1" label="">
+                <el-button native-type="submit" type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
             </el-col>
@@ -65,12 +65,12 @@
         </el-form>
       </div>
       <div class="order-list-status container" style="margin-bottom:20px">
-        <div class="status-item"
+        <div v-for="(item,key) in orgType"
              :class="{'active':key==activeStatus,'exceptionPosition':key === '5'}"
-             v-for="(item,key) in orgType"
+             class="status-item"
              @click="changeStatus(item,key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          <div :class="['b_color_'+key]" class="status-bg"></div>
+          <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
           </div>
         </div>
       </div>
@@ -97,8 +97,8 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item order-list-item-bg" v-for="item in invoices"
-               :class="[{'active':currentId==item.id}]" @click="showDetailPart(item)">
+          <div v-for="item in invoices" :class="[{'active':currentId==item.id}]"
+               class="order-list-item order-list-item-bg" @click="showDetailPart(item)">
             <el-row>
               <el-col :span="6" class="R pt10">
                     <span>
@@ -146,159 +146,159 @@
           </div>
         </div>
       </div>
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <div v-show="pager.count>pager.pageSize && !loadingData" class="text-center">
         <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="getMaPage"
-          :current-page="pager.currentPage">
+          :current-page="pager.currentPage"
+          :pageSize="pager.pageSize" :total="pager.count" layout="prev, pager, next"
+          @current-change="getMaPage">
         </el-pagination>
       </div>
     </div>
-    <page-right :show="showPart" @right-close="resetRightBox"
-                :css="{'width':'1000px','padding':0}">
+    <page-right :css="{'width':'1000px','padding':0}" :show="showPart"
+                @right-close="resetRightBox">
       <form-part :formItem="form" @close="resetRightBox" @refresh="refresh"></form-part>
     </page-right>
-    <page-right :show="showDetail" @right-close="resetRightBox"
-                :css="{'width':'1000px','padding':0}">
-      <detail-part :currentId="currentId" @close="resetRightBox" @refresh="refresh"
-                   :showDetail="showDetail"></detail-part>
+    <page-right :css="{'width':'1000px','padding':0}" :show="showDetail"
+                @right-close="resetRightBox">
+      <detail-part :currentId="currentId" :showDetail="showDetail" @close="resetRightBox"
+                   @refresh="refresh"></detail-part>
     </page-right>
   </div>
 </template>
 <script>
-  import {BaseInfo, invoiceManage} from '@/resources';
-  import formPart from './form.vue';
-  import utils from '@/tools/utils';
-  import detailPart from './detail.vue';
+import {BaseInfo, invoiceManage} from '@/resources';
+import formPart from './form.vue';
+import utils from '@/tools/utils';
+import detailPart from './detail.vue';
 
-  export default {
-    components: {formPart, detailPart},
-    data() {
-      return {
-        loadingData: true,
-        showSearch: true,
-        showPart: false,
-        showDetail: false,
-        invoices: [],
-        filters: {
-          deleteFlag: false,
-          status: 0,
-          invoiceNumber: '',
-          factoryId: ''
-        },
-        activeStatus: 0,
-        orgType: utils.invoiceType,
-        searchCondition: {
-          invoiceNumber: '',
-          factoryId: ''
-        },
-        form: {},
-        pager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 15
-        },
-        currentId: '',
-        orgList: []
-      };
-    },
-    mounted() {
-      this.getMaPage(1);
-    },
-    watch: {
+export default {
+  components: {formPart, detailPart},
+  data() {
+    return {
+      loadingData: true,
+      showSearch: true,
+      showPart: false,
+      showDetail: false,
+      invoices: [],
       filters: {
-        handler: function () {
-          this.getMaPage(1);
-        },
-        deep: true
-      }
-    },
-    methods: {
-      resetRightBox: function () {
-        this.showPart = false;
-        this.showDetail = false;
+        deleteFlag: false,
+        status: 0,
+        invoiceNumber: '',
+        factoryId: ''
       },
-      getMaPage(pageNo) { // 得到波次列表
-        this.pager.currentPage = pageNo;
-        let params = Object.assign({
-          pageNo: pageNo,
-          pageSize: this.pager.pageSize
-        }, this.filters);
-        this.loadingData = true;
-        invoiceManage.query(params).then(res => {
-          this.invoices = res.data.list;
-          this.pager.count = res.data.count;
-          this.loadingData = false;
-        });
-        this.queryCount(params);
+      activeStatus: 0,
+      orgType: utils.invoiceType,
+      searchCondition: {
+        invoiceNumber: '',
+        factoryId: ''
       },
-      queryCount(params) {
-        invoiceManage.queryCount(params).then(res => {
-          this.orgType[0].num = res.data['non-payment'];
-          this.orgType[1].num = res.data['paid'];
-        });
+      form: {},
+      pager: {
+        currentPage: 1,
+        count: 0,
+        pageSize: 15
       },
-      filterOrg: function (query) {// 过滤供货商
-        let orgId = this.$store.state.user.userCompanyAddress;
-        if (!orgId) {
-          this.searchCondition.factoryId = '';
-          this.orgList = [];
-          return;
-        }
-        BaseInfo.queryOrgByReation(orgId, {keyWord: query, relation: '1'}).then(res => {
-          this.orgList = res.data;
-        });
-      },
-      refresh() {
+      currentId: '',
+      orgList: []
+    };
+  },
+  mounted() {
+    this.getMaPage(1);
+  },
+  watch: {
+    filters: {
+      handler: function () {
         this.getMaPage(1);
-        this.showPart = false;
       },
-      add() {
-        this.form = {};
-        this.showPart = true;
-      },
-      edit(item) {
-        this.currentId = item.id;
-        this.form = item;
-        this.showPart = true;
-      },
-      showDetailPart(item) {
-        this.currentId = item.id;
-        this.showDetail = true;
-      },
-      changeStatus: function (item, key) {// 订单分类改变
-        this.activeStatus = key;
-        this.filters.status = item.status;
-      },
-      searchInOrder: function () {// 搜索
-        Object.assign(this.filters, this.searchCondition);
-      },
-      resetSearchForm: function () {// 重置表单
-        let temp = {
-          invoiceNumber: '',
-          factoryId: ''
-        };
-        Object.assign(this.searchCondition, temp);
-        Object.assign(this.filters, temp);
-      },
-      deleteItem(item) {
-        this.$confirm('是否删除发票 "' + item.invoiceNumber + '"?', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          invoiceManage.delete(item.id).then(() => {
-            this.$notify.success({
-              message: '删除成功'
-            });
-            this.getMaPage();
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '删除失败'
-            });
+      deep: true
+    }
+  },
+  methods: {
+    resetRightBox: function () {
+      this.showPart = false;
+      this.showDetail = false;
+    },
+    getMaPage(pageNo) { // 得到波次列表
+      this.pager.currentPage = pageNo;
+      let params = Object.assign({
+        pageNo: pageNo,
+        pageSize: this.pager.pageSize
+      }, this.filters);
+      this.loadingData = true;
+      invoiceManage.query(params).then(res => {
+        this.invoices = res.data.list;
+        this.pager.count = res.data.count;
+        this.loadingData = false;
+      });
+      this.queryCount(params);
+    },
+    queryCount(params) {
+      invoiceManage.queryCount(params).then(res => {
+        this.orgType[0].num = res.data['non-payment'];
+        this.orgType[1].num = res.data['paid'];
+      });
+    },
+    filterOrg: function (query) {// 过滤供货商
+      let orgId = this.$store.state.user.userCompanyAddress;
+      if (!orgId) {
+        this.searchCondition.factoryId = '';
+        this.orgList = [];
+        return;
+      }
+      BaseInfo.queryOrgByReation(orgId, {keyWord: query, relation: '1'}).then(res => {
+        this.orgList = res.data;
+      });
+    },
+    refresh() {
+      this.getMaPage(1);
+      this.showPart = false;
+    },
+    add() {
+      this.form = {};
+      this.showPart = true;
+    },
+    edit(item) {
+      this.currentId = item.id;
+      this.form = item;
+      this.showPart = true;
+    },
+    showDetailPart(item) {
+      this.currentId = item.id;
+      this.showDetail = true;
+    },
+    changeStatus: function (item, key) {// 订单分类改变
+      this.activeStatus = key;
+      this.filters.status = item.status;
+    },
+    searchInOrder: function () {// 搜索
+      Object.assign(this.filters, this.searchCondition);
+    },
+    resetSearchForm: function () {// 重置表单
+      let temp = {
+        invoiceNumber: '',
+        factoryId: ''
+      };
+      Object.assign(this.searchCondition, temp);
+      Object.assign(this.filters, temp);
+    },
+    deleteItem(item) {
+      this.$confirm('是否删除发票 "' + item.invoiceNumber + '"?', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        invoiceManage.delete(item.id).then(() => {
+          this.$notify.success({
+            message: '删除成功'
+          });
+          this.getMaPage();
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response && error.response.data && error.response.data.msg || '删除失败'
           });
         });
-      }
+      });
     }
-  };
+  }
+};
 </script>

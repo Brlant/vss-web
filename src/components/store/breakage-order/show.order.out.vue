@@ -1,18 +1,18 @@
 <style lang="scss" scoped>
-  $leftWidth: 220px;
-  .content-part {
-    .content-left {
-      width: $leftWidth;
-    }
+$leftWidth: 220px;
+.content-part {
+  .content-left {
+    width: $leftWidth;
+  }
 
-    .content-right {
-      > h3 {
-        left: $leftWidth;
-      }
-
+  .content-right {
+    > h3 {
       left: $leftWidth;
     }
+
+    left: $leftWidth;
   }
+}
 
 </style>
 
@@ -22,12 +22,12 @@
       <div class="content-left">
         <h2 class="clearfix right-title">报损详情</h2>
         <ul>
-          <li class="list-style" v-for="item in pageSets" @click="showPart(item)"
-              v-bind:class="{ 'active' : index==item.key}"><span>{{ item.name }}</span>
+          <li v-for="item in pageSets" class="list-style" v-bind:class="{ 'active' : index==item.key}"
+              @click="showPart(item)"><span>{{ item.name }}</span>
           </li>
           <li class="text-center order-btn" style="margin-top: 40px">
-            <perm label="breakage-order-confirm"
-                  v-show="currentOrder.state === '0' ">
+            <perm v-show="currentOrder.state === '0' "
+                  label="breakage-order-confirm">
               <el-button type="primary" @click="checkPass">确认订单</el-button>
             </perm>
           </li>
@@ -39,40 +39,40 @@
           <!--</perm>-->
           <!--</li>-->
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="breakage-order-cancel"
-                  v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'">
-              <el-button type="warning" plain @click="cancel">取消订单</el-button>
+            <perm v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'"
+                  label="breakage-order-cancel">
+              <el-button plain type="warning" @click="cancel">取消订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
-            <perm label="breakage-order-cancel"
-                  v-show="currentOrder.state === '0'">
-              <el-button type="danger" plain @click="deleteOrder">删除订单</el-button>
+            <perm v-show="currentOrder.state === '0'"
+                  label="breakage-order-cancel">
+              <el-button plain type="danger" @click="deleteOrder">删除订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm
-              :label="'breakage-order-export-scrap-stock' " v-show="currentOrder.state > 0">
-              <el-button type="primary" plain @click="exportScrapStockInfo" style="width: 200px;padding: 10px 10px"
-                         :loading="printing">
+              v-show="currentOrder.state > 0" :label="'breakage-order-export-scrap-stock' ">
+              <el-button :loading="printing" plain style="width: 200px;padding: 10px 10px" type="primary"
+                         @click="exportScrapStockInfo">
                 {{printing ? '正在导出' : '导出待报废库存登记表'}}
               </el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm
-              :label="'breakage-order-export-scrap-stock-transport' " v-show="currentOrder.state > 0">
-              <el-button type="primary" plain @click="exportScrapStockTransportInfo"
-                         style="width: 200px; padding: 10px 10px" :loading="printingTransport">
+              v-show="currentOrder.state > 0" :label="'breakage-order-export-scrap-stock-transport' ">
+              <el-button :loading="printingTransport" plain style="width: 200px; padding: 10px 10px"
+                         type="primary" @click="exportScrapStockTransportInfo">
                 {{printingTransport ? '正在导出' : '导出待报废疫苗转运单'}}
               </el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm
-              :label="'breakage-order-export-scrap-stock-tag' " v-show="currentOrder.state > 0">
-              <el-button type="primary" plain @click="exportScarpVaccineTag"
-                         style="width: 200px;padding: 10px 10px" :loading="printingTag">
+              v-show="currentOrder.state > 0" :label="'breakage-order-export-scrap-stock-tag' ">
+              <el-button :loading="printingTag" plain style="width: 200px;padding: 10px 10px"
+                         type="primary" @click="exportScarpVaccineTag">
                 {{printingTag ? '正在导出' : '导出待报废疫苗专用标签'}}
               </el-button>
             </perm>
@@ -81,203 +81,203 @@
       </div>
       <div class="content-right content-padding">
         <h3>{{ title }}</h3>
-        <basic-info :currentOrder="currentOrder" v-show="index === 0" :index="index" :isCheck="isCheck"
-                    @checkPass="checkPass" :vaccineType="vaccineType"></basic-info>
-        <receipt :currentOrder="currentOrder" v-show="index === 1" :index="index"></receipt>
-        <log :currentOrder="currentOrder" v-show="index === 2" :defaultIndex="2" :index="index"></log>
-        <order-attachment :currentOrder="currentOrder" :index="index" v-show="index === 3"></order-attachment>
-        <relevance-code :currentOrder="currentOrder" :index="index" type="1" v-show="index === 8"></relevance-code>
-        <relevance-code-review :currentOrder="currentOrder" :index="index" type="1"
-                               v-show="index === 9"></relevance-code-review>
-        <cancel-order ref="cancelPart" :orderId="orderId" @close="$emit('close')" @refreshOrder="$emit('refreshOrder')"
-                      v-show="index === 0"></cancel-order>
-        <order-push-log :currentOrder="currentOrder" :index="index" v-show="index === 15"></order-push-log>
-        <customer-feedback :currentOrder="currentOrder" :orderId="currentOrder.id" :index="index"
-                           v-show="index === 12"/>
+        <basic-info v-show="index === 0" :currentOrder="currentOrder" :index="index" :isCheck="isCheck"
+                    :vaccineType="vaccineType" @checkPass="checkPass"></basic-info>
+        <receipt v-show="index === 1" :currentOrder="currentOrder" :index="index"></receipt>
+        <log v-show="index === 2" :currentOrder="currentOrder" :defaultIndex="2" :index="index"></log>
+        <order-attachment v-show="index === 3" :currentOrder="currentOrder" :index="index"></order-attachment>
+        <relevance-code v-show="index === 8" :currentOrder="currentOrder" :index="index" type="1"></relevance-code>
+        <relevance-code-review v-show="index === 9" :currentOrder="currentOrder" :index="index"
+                               type="1"></relevance-code-review>
+        <cancel-order v-show="index === 0" ref="cancelPart" :orderId="orderId" @close="$emit('close')"
+                      @refreshOrder="$emit('refreshOrder')"></cancel-order>
+        <order-push-log v-show="index === 15" :currentOrder="currentOrder" :index="index"></order-push-log>
+        <customer-feedback v-show="index === 12" :currentOrder="currentOrder" :index="index"
+                           :orderId="currentOrder.id"/>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import basicInfo from './detail/base-info.vue';
-  import log from '@/components/common/order.log.vue';
-  import receipt from './detail/receipt.vue';
-  import {erpOrder, http, InWork} from '@/resources';
-  import orderAttachment from './breakage-order.attachment.vue';
-  import relevanceCode from '@/components/common/order/relevance.code.vue';
-  import utils from '@/tools/utils';
-  import OrderPushLog from '@/components/common/order/order-push-log';
+import basicInfo from './detail/base-info.vue';
+import log from '@/components/common/order.log.vue';
+import receipt from './detail/receipt.vue';
+import {erpOrder, http, InWork} from '@/resources';
+import orderAttachment from './breakage-order.attachment.vue';
+import relevanceCode from '@/components/common/order/relevance.code.vue';
+import utils from '@/tools/utils';
+import OrderPushLog from '@/components/common/order/order-push-log';
 
-  export default {
-    components: {basicInfo, log, receipt, orderAttachment, relevanceCode, OrderPushLog},
-    props: {
-      orderId: {
-        type: String
-      },
-      state: String,
-      vaccineType: String
+export default {
+  components: {basicInfo, log, receipt, orderAttachment, relevanceCode, OrderPushLog},
+  props: {
+    orderId: {
+      type: String
     },
-    data() {
-      return {
-        currentOrder: {},
-        index: 0,
-        title: '',
-        isCheck: false,
-        printing: false,
-        printingTransport: false,
-        printingTag: false
-      };
-    },
-    watch: {
-      orderId() {
-        this.index = 0;
-        this.title = '报损详情';
-        this.queryOrderDetail();
+    state: String,
+    vaccineType: String
+  },
+  data() {
+    return {
+      currentOrder: {},
+      index: 0,
+      title: '',
+      isCheck: false,
+      printing: false,
+      printingTransport: false,
+      printingTag: false
+    };
+  },
+  watch: {
+    orderId() {
+      this.index = 0;
+      this.title = '报损详情';
+      this.queryOrderDetail();
+    }
+  },
+  computed: {
+    pageSets() {
+      let menu = [];
+      let perms = this.$store.state.permissions || [];
+      menu.push({name: '报损详情', key: 0});
+      if (this.state === '4' && this.currentOrder.customerChannel) {
+        menu.push({name: '收货详情', key: 1});
       }
-    },
-    computed: {
-      pageSets() {
-        let menu = [];
-        let perms = this.$store.state.permissions || [];
-        menu.push({name: '报损详情', key: 0});
-        if (this.state === '4' && this.currentOrder.customerChannel) {
-          menu.push({name: '收货详情', key: 1});
-        }
-        if (perms.includes('erp-order-document-watch')) {
-          menu.push({name: '附件管理', key: 3});
-        }
-        let state = this.state;
-        if (state > 2) {
-          // menu.push({name: '关联追溯码', key: 8});
-          menu.push({name: '复核追溯码', key: 9});
-        }
-        menu.push({name: '操作日志', key: 2});
-        menu.push({name: '推送日志', key: 15});
-        if (perms.includes('sales-order-upload-data')) {
-          menu.push({name: '反馈信息', key: 12});
-        }
-        return menu;
+      if (perms.includes('erp-order-document-watch')) {
+        menu.push({name: '附件管理', key: 3});
       }
+      let state = this.state;
+      if (state > 2) {
+        // menu.push({name: '关联追溯码', key: 8});
+        menu.push({name: '复核追溯码', key: 9});
+      }
+      menu.push({name: '操作日志', key: 2});
+      menu.push({name: '推送日志', key: 15});
+      if (perms.includes('sales-order-upload-data')) {
+        menu.push({name: '反馈信息', key: 12});
+      }
+      return menu;
+    }
+  },
+  methods: {
+    exportScrapStockInfo: function () {
+      this.printing = true;
+      this.$http.get(`erp-order/${this.currentOrder.id}/scrap-stock`, {}).then(res => {
+        utils.download(res.data.path, '导出待报废库存登记表');
+        this.printing = false;
+      }).catch(error => {
+        this.printing = false;
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '导出失败'
+        });
+      });
     },
-    methods: {
-      exportScrapStockInfo: function () {
-        this.printing = true;
-        this.$http.get(`erp-order/${this.currentOrder.id}/scrap-stock`, {}).then(res => {
-          utils.download(res.data.path, '导出待报废库存登记表');
-          this.printing = false;
-        }).catch(error => {
-          this.printing = false;
-          this.$notify.error({
-            message: error.response && error.response.data && error.response.data.msg || '导出失败'
-          });
+    exportScrapStockTransportInfo: function () {
+      this.printingTransport = true;
+      this.$http.get(`erp-order/${this.currentOrder.id}/scrap-stock-transport`, {}).then(res => {
+        utils.download(res.data.path, '导出待报废疫苗转运单');
+        this.printingTransport = false;
+      }).catch(error => {
+        this.printingTransport = false;
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '导出失败'
         });
-      },
-      exportScrapStockTransportInfo: function () {
-        this.printingTransport = true;
-        this.$http.get(`erp-order/${this.currentOrder.id}/scrap-stock-transport`, {}).then(res => {
-          utils.download(res.data.path, '导出待报废疫苗转运单');
-          this.printingTransport = false;
-        }).catch(error => {
-          this.printingTransport = false;
-          this.$notify.error({
-            message: error.response && error.response.data && error.response.data.msg || '导出失败'
-          });
+      });
+    },
+    exportScarpVaccineTag: function () {
+      this.printingTag = true;
+      this.$http.get(`erp-order/${this.currentOrder.id}/scrap-vaccine-tag`, {}).then(res => {
+        utils.download(res.data.path, '导出待报废疫苗专用标签');
+        this.printingTag = false;
+      }).catch(error => {
+        this.printingTag = false;
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '导出失败'
         });
-      },
-      exportScarpVaccineTag: function () {
-        this.printingTag = true;
-        this.$http.get(`erp-order/${this.currentOrder.id}/scrap-vaccine-tag`, {}).then(res => {
-          utils.download(res.data.path, '导出待报废疫苗专用标签');
-          this.printingTag = false;
-        }).catch(error => {
-          this.printingTag = false;
-          this.$notify.error({
-            message: error.response && error.response.data && error.response.data.msg || '导出失败'
-          });
+      });
+    },
+    queryOrderDetail() {
+      if (!this.orderId) return false;
+      this.currentOrder = {};
+      InWork.queryOrderDetail(this.orderId).then(res => {
+        res.data.state = res.data.erpStatus;
+        this.currentOrder = res.data;
+      });
+    },
+    showPart(item) {
+      this.index = item.key;
+      this.title = item.name;
+    },
+    check() {
+      this.isCheck = false;
+      this.$nextTick(() => {
+        this.isCheck = true;
+      });
+    },
+    checkPass() {
+      http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
+        this.$notify.success({
+          message: '确认订单成功'
         });
-      },
-      queryOrderDetail() {
-        if (!this.orderId) return false;
-        this.currentOrder = {};
-        InWork.queryOrderDetail(this.orderId).then(res => {
-          res.data.state = res.data.erpStatus;
-          this.currentOrder = res.data;
+        this.transformState('1');
+        this.$emit('close');
+      }).catch(error => {
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '确认订单失败'
         });
-      },
-      showPart(item) {
-        this.index = item.key;
-        this.title = item.name;
-      },
-      check() {
-        this.isCheck = false;
-        this.$nextTick(() => {
-          this.isCheck = true;
-        });
-      },
-      checkPass() {
-        http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
+      });
+    },
+    review() {
+      this.$confirm('是否审单通过', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        http.put(`/erp-order/${this.orderId}/check`).then(() => {
           this.$notify.success({
-            message: '确认订单成功'
+            message: '审单通过成功'
           });
-          this.transformState('1');
+          this.transformState('2');
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response && error.response.data && error.response.data.msg || '审单通过失败'
+          });
+        });
+      });
+    },
+    transformState(state) {
+      this.currentOrder.state = state;
+      this.$emit('refreshOrder');
+    },
+    deleteOrder() {
+      this.$confirm('是否删除订单', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        erpOrder.delete(this.orderId).then(() => {
+          this.$notify.success({
+            message: '删除订单成功'
+          });
+          this.$emit('refreshOrder');
           this.$emit('close');
         }).catch(error => {
           this.$notify.error({
-            message: error.response && error.response.data && error.response.data.msg || '确认订单失败'
+            message: error.response && error.response.data && error.response.data.msg || '删除订单失败'
           });
         });
-      },
-      review() {
-        this.$confirm('是否审单通过', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          http.put(`/erp-order/${this.orderId}/check`).then(() => {
-            this.$notify.success({
-              message: '审单通过成功'
-            });
-            this.transformState('2');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '审单通过失败'
-            });
-          });
-        });
-      },
-      transformState(state) {
-        this.currentOrder.state = state;
-        this.$emit('refreshOrder');
-      },
-      deleteOrder() {
-        this.$confirm('是否删除订单', '', {
-          confirmButtonText: '确定',
-          cancelButtonText: '取消',
-          type: 'warning'
-        }).then(() => {
-          erpOrder.delete(this.orderId).then(() => {
-            this.$notify.success({
-              message: '删除订单成功'
-            });
-            this.$emit('refreshOrder');
-            this.$emit('close');
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '删除订单失败'
-            });
-          });
-        });
-      },
-      cancel() {
-        this.index = 0;
-        this.$refs['cancelPart'].isShow = true;
-        this.$notify({
-          duration: 2000,
-          message: '请选择取消订单原因',
-          type: 'warning'
-        });
-      }
+      });
+    },
+    cancel() {
+      this.index = 0;
+      this.$refs['cancelPart'].isShow = true;
+      this.$notify({
+        duration: 2000,
+        message: '请选择取消订单原因',
+        type: 'warning'
+      });
     }
-  };
+  }
+};
 </script>
 

@@ -1,12 +1,12 @@
 <style lang="scss" scoped="">
-  .opera-btn-group {
-    margin: 10px 0;
-  }
+.opera-btn-group {
+  margin: 10px 0;
+}
 </style>
 <template>
   <div class="order-page">
     <div class="container">
-      <div class="opera-btn-group" :class="{up:!showSearch}">
+      <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
@@ -17,31 +17,31 @@
         <el-form class="advanced-query-form">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="业务日期" :span="5">
+              <oms-form-row :span="5" label="业务日期">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
+                    format="yyyy-MM-dd"
+                    placeholder="请选择" type="daterange">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row :span="7" label="疫苗种类">
-                <el-select placeholder="请选择疫苗种类" type="text" v-model="searchWord.type">
-                  <el-option :key="item.key" :label="item.label" :value="item.key"
-                             v-for="item in vaccineSignList"></el-option>
+                <el-select v-model="searchWord.type" placeholder="请选择疫苗种类" type="text">
+                  <el-option v-for="item in vaccineSignList" :key="item.key" :label="item.label"
+                             :value="item.key"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row :span="4" label="">
                 <perm label="pov-stock-form-manager-export">
-                  <el-button type="primary" @click="search" :disabled="isLoading">
+                  <el-button :disabled="isLoading" type="primary" @click="search">
                     查询
                   </el-button>
-                  <el-button :plain="true" type="success" @click="exportFile" :disabled="isLoading">
+                  <el-button :disabled="isLoading" :plain="true" type="success" @click="exportFile">
                     导出Excel
                   </el-button>
                 </perm>
@@ -50,58 +50,58 @@
           </el-row>
         </el-form>
       </div>
-      <el-table :data="reportList" class="header-list" :summary-method="getSummaries" show-summary
-                :row-class-name="formatRowClass"
-                @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave" border
-                ref="reportTable" :maxHeight="getHeight" :header-row-class-name="'headerClass'" v-loading="loadingData">
-        <el-table-column prop="orgGoodsName" label="疫苗名称" min-width="100"></el-table-column>
-        <el-table-column prop="batchNumber" label="批号" :sortable="true"></el-table-column>
-        <el-table-column prop="expirationDate" label="效期" :sortable="true"></el-table-column>
-        <el-table-column prop="restStockCount" label="期前库存" :sortable="true"></el-table-column>
-        <el-table-column prop="purchaseCount" label="进苗数量" :sortable="true"></el-table-column>
-        <el-table-column prop="injectionCount" label="使用数量" :sortable="true"></el-table-column>
-        <el-table-column prop="endStockCount" label="期末库存" :sortable="true"></el-table-column>
-        <el-table-column prop="price" label="单价" :sortable="true" v-if="type === 2">
+      <el-table ref="reportTable" v-loading="loadingData" :data="reportList" :header-row-class-name="'headerClass'"
+                :maxHeight="getHeight"
+                :row-class-name="formatRowClass" :summary-method="getSummaries" border
+                class="header-list" show-summary @cell-mouse-enter="cellMouseEnter" @cell-mouse-leave="cellMouseLeave">
+        <el-table-column label="疫苗名称" min-width="100" prop="orgGoodsName"></el-table-column>
+        <el-table-column :sortable="true" label="批号" prop="batchNumber"></el-table-column>
+        <el-table-column :sortable="true" label="效期" prop="expirationDate"></el-table-column>
+        <el-table-column :sortable="true" label="期前库存" prop="restStockCount"></el-table-column>
+        <el-table-column :sortable="true" label="进苗数量" prop="purchaseCount"></el-table-column>
+        <el-table-column :sortable="true" label="使用数量" prop="injectionCount"></el-table-column>
+        <el-table-column :sortable="true" label="期末库存" prop="endStockCount"></el-table-column>
+        <el-table-column v-if="type === 2" :sortable="true" label="单价" prop="price">
           <template slot-scope="scope">
             <span>￥{{scope.row.price}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="restStockMoney" label="期前金额" :sortable="true" v-if="type === 2">
+        <el-table-column v-if="type === 2" :sortable="true" label="期前金额" prop="restStockMoney">
           <template slot-scope="scope">
             <span>￥{{scope.row.restStockMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="purchaseMoney" label="进苗金额" :sortable="true" v-if="type === 2">
+        <el-table-column v-if="type === 2" :sortable="true" label="进苗金额" prop="purchaseMoney">
           <template slot-scope="scope">
             <span>￥{{scope.row.purchaseMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="injectionMoney" label="使用金额" :sortable="true" v-if="type === 2">
+        <el-table-column v-if="type === 2" :sortable="true" label="使用金额" prop="injectionMoney">
           <template slot-scope="scope">
             <span>￥{{scope.row.injectionMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="endStockMoney" label="期末金额" :sortable="true" v-if="type === 2">
+        <el-table-column v-if="type === 2" :sortable="true" label="期末金额" prop="endStockMoney">
           <template slot-scope="scope">
             <span>￥{{scope.row.endStockMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="returnCount" label="退货数量" :sortable="true">
+        <el-table-column :sortable="true" label="退货数量" prop="returnCount">
           <template slot-scope="scope">
             <span>{{scope.row.returnCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="returnMoney" label="退货金额" :sortable="true" v-if="type === 2">
+        <el-table-column v-if="type === 2" :sortable="true" label="退货金额" prop="returnMoney">
           <template slot-scope="scope">
             <span>￥{{scope.row.returnMoney}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="scrapCount" label="报废数量" :sortable="true">
+        <el-table-column :sortable="true" label="报废数量" prop="scrapCount">
           <template slot-scope="scope">
             <span>{{scope.row.scrapCount}}</span>
           </template>
         </el-table-column>
-        <el-table-column prop="scrapMoney" label="报废金额" :sortable="true" v-if="type === 2">
+        <el-table-column v-if="type === 2" :sortable="true" label="报废金额" prop="scrapMoney">
           <template slot-scope="scope">
             <span>￥{{scope.row.scrapMoney}}</span>
           </template>
@@ -111,155 +111,155 @@
   </div>
 </template>
 <script>
-  import utils from '@/tools/utils';
-  import validMixin from '@/mixins/vaildMixin';
-  import ReportMixin from '@/mixins/reportMixin';
+import utils from '@/tools/utils';
+import validMixin from '@/mixins/vaildMixin';
+import ReportMixin from '@/mixins/reportMixin';
 
-  export default {
-    mixins: [validMixin, ReportMixin],
-    data() {
-      return {
-        loadingData: false,
-        reportList: [],
-        showSearch: true,
-        searchWord: {
-          startTime: '',
-          endTime: '',
-          type: ''
-        },
-        bizDateAry: '',
-        isLoading: false
-      };
+export default {
+  mixins: [validMixin, ReportMixin],
+  data() {
+    return {
+      loadingData: false,
+      reportList: [],
+      showSearch: true,
+      searchWord: {
+        startTime: '',
+        endTime: '',
+        type: ''
+      },
+      bizDateAry: '',
+      isLoading: false
+    };
+  },
+  computed: {
+    type() {
+      return this.$route.meta.type;
     },
-    computed: {
-      type() {
-        return this.$route.meta.type;
-      },
-      vaccineSignList() {
-        return this.$getDict('vaccineSign');
-      },
-      getHeight: function () {
-        return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
+    vaccineSignList() {
+      return this.$getDict('vaccineSign');
+    },
+    getHeight: function () {
+      return parseInt(this.$store.state.bodyHeight, 10) - 70 + this.fixedHeight;
+    }
+  },
+  watch: {
+    type() {
+      this.reportList = [];
+      this.bizDateAry = '';
+    }
+  },
+  methods: {
+    isValid(item) {
+      let a = this.$moment();
+      let b = this.$moment(item.expirationDate);
+      let days = b.diff(a, 'days');
+      return a < b ? days > 90 ? 2 : 1 : 0;
+    },
+    formatRowClass(data) {
+      if (this.isValid(data.row) === 1) {
+        return 'effective-row';
       }
     },
-    watch: {
-      type() {
-        this.reportList = [];
-        this.bizDateAry = '';
+    exportFile: function () {
+      if (!this.bizDateAry || !this.bizDateAry.length) {
+        this.$notify.info({
+          message: '请选择业务日期'
+        });
+        return;
       }
-    },
-    methods: {
-      isValid(item) {
-        let a = this.$moment();
-        let b = this.$moment(item.expirationDate);
-        let days = b.diff(a, 'days');
-        return a < b ? days > 90 ? 2 : 1 : 0;
-      },
-      formatRowClass(data) {
-        if (this.isValid(data.row) === 1) {
-          return 'effective-row';
-        }
-      },
-      exportFile: function () {
-        if (!this.bizDateAry || !this.bizDateAry.length) {
-          this.$notify.info({
-            message: '请选择业务日期'
-          });
-          return;
-        }
-        this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
-        this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
-        let params = Object.assign({}, this.searchWord);
-        this.isLoading = true;
+      this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
+      this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
+      let params = Object.assign({}, this.searchWord);
+      this.isLoading = true;
+      this.$store.commit('initPrint', {
+        isPrinting: true,
+        moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`
+      });
+      this.$http.get('/erp-statement/pov-stock/export', {params}).then(res => {
+        utils.download(res.data.path, '接种单位非免疫规划疫苗盘点表');
+        this.isLoading = false;
         this.$store.commit('initPrint', {
-          isPrinting: true,
+          isPrinting: false,
           moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`
         });
-        this.$http.get('/erp-statement/pov-stock/export', {params}).then(res => {
-          utils.download(res.data.path, '接种单位非免疫规划疫苗盘点表');
-          this.isLoading = false;
-          this.$store.commit('initPrint', {
-            isPrinting: false,
-            moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`
-          });
-        }).catch(error => {
-          this.isLoading = false;
-          this.$store.commit('initPrint', {
-            isPrinting: false,
-            moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`
-          });
-          this.$notify.error({
-            message: error.response && error.response.data && error.response.data.msg || '导出失败'
-          });
+      }).catch(error => {
+        this.isLoading = false;
+        this.$store.commit('initPrint', {
+          isPrinting: false,
+          moduleId: `/report/pov/${this.type === 1 ? 'one' : 'two'}/repertory`
         });
-      },
-      getSummaries(param) {
-        const {columns, data} = param;
-        const sums = [];
-        columns.forEach((column, index) => {
-          if (index === 0) {
-            sums[index] = '合计';
-            return;
-          }
-          if (column.property === 'orgGoodsName' || column.property === 'batchNumber' ||
-            column.property === 'expirationDate' || column.property === 'price') {
-            sums[index] = '';
-            return;
-          }
-          const values = data.map(item => Number(item[column.property]));
-          if (!values.every(value => isNaN(value))) {
-            sums[index] = values.reduce((prev, curr) => {
-              const value = Number(curr);
-              if (!isNaN(value)) {
-                return prev + curr;
-              } else {
-                return prev;
-              }
-            }, 0);
-          } else {
-            sums[index] = '';
-          }
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '导出失败'
         });
-        if (this.type === 2) {
-          sums.forEach((i, index) => {
-            if (index > 7 && index !== 12 && index !== 14) {
-              sums[index] = '￥' + i;
-            }
-          });
-        }
-        return sums;
-      },
-      search: function () {// 搜索
-        if (!this.bizDateAry || !this.bizDateAry.length) {
-          this.$notify.info({
-            message: '请选择业务日期'
-          });
+      });
+    },
+    getSummaries(param) {
+      const {columns, data} = param;
+      const sums = [];
+      columns.forEach((column, index) => {
+        if (index === 0) {
+          sums[index] = '合计';
           return;
         }
-        this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
-        this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
-        let params = Object.assign({}, this.searchWord);
-        this.loadingData = true;
-        this.$http.get('/erp-statement/pov-stock', {params}).then(res => {
-          res.data.forEach(i => {
-            i.expirationDate = this.formatTime(i.expirationDate);
-          });
-          this.reportList = res.data;
-          this.loadingData = false;
-          this.setFixedHeight();
+        if (column.property === 'orgGoodsName' || column.property === 'batchNumber' ||
+          column.property === 'expirationDate' || column.property === 'price') {
+          sums[index] = '';
+          return;
+        }
+        const values = data.map(item => Number(item[column.property]));
+        if (!values.every(value => isNaN(value))) {
+          sums[index] = values.reduce((prev, curr) => {
+            const value = Number(curr);
+            if (!isNaN(value)) {
+              return prev + curr;
+            } else {
+              return prev;
+            }
+          }, 0);
+        } else {
+          sums[index] = '';
+        }
+      });
+      if (this.type === 2) {
+        sums.forEach((i, index) => {
+          if (index > 7 && index !== 12 && index !== 14) {
+            sums[index] = '￥' + i;
+          }
         });
-      },
-      resetSearchForm: function () {
-        this.searchWord = {
-          startTime: '',
-          endTime: '',
-          type: ''
-        };
-        this.bizDateAry = '';
-      },
-      formatTime: function (date) {
-        return date ? this.$moment(date).format('YYYY-MM-DD') : '';
       }
+      return sums;
+    },
+    search: function () {// 搜索
+      if (!this.bizDateAry || !this.bizDateAry.length) {
+        this.$notify.info({
+          message: '请选择业务日期'
+        });
+        return;
+      }
+      this.searchWord.startTime = this.$formatAryTime(this.bizDateAry, 0);
+      this.searchWord.endTime = this.$formatAryTime(this.bizDateAry, 1);
+      let params = Object.assign({}, this.searchWord);
+      this.loadingData = true;
+      this.$http.get('/erp-statement/pov-stock', {params}).then(res => {
+        res.data.forEach(i => {
+          i.expirationDate = this.formatTime(i.expirationDate);
+        });
+        this.reportList = res.data;
+        this.loadingData = false;
+        this.setFixedHeight();
+      });
+    },
+    resetSearchForm: function () {
+      this.searchWord = {
+        startTime: '',
+        endTime: '',
+        type: ''
+      };
+      this.bizDateAry = '';
+    },
+    formatTime: function (date) {
+      return date ? this.$moment(date).format('YYYY-MM-DD') : '';
     }
-  };
+  }
+};
 </script>

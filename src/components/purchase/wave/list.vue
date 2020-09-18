@@ -1,32 +1,33 @@
 <style lang="scss" scoped="">
 
-  .align-word {
-    letter-spacing: 1em;
-    margin-right: -1em;
-  }
+.align-word {
+  letter-spacing: 1em;
+  margin-right: -1em;
+}
 
-  .color-blue {
-    color: #00ff00;
-  }
+.color-blue {
+  color: #00ff00;
+}
 
-  .color-red {
-    color: red;
-  }
+.color-red {
+  color: red;
+}
 
-  /*.order-list-item {*/
-  /*cursor: pointer;*/
-  /*}*/
+/*.order-list-item {*/
+/*cursor: pointer;*/
+/*}*/
 </style>
 <template>
   <div class="order-page">
     <div class="container">
       <div class="order-list-status container" style="margin-bottom:20px">
-        <div class="status-item"
+        <div v-for="(item,key) in waveType"
              :class="{'active':key==activeStatus,'exceptionPosition':key == 11}"
-             v-for="(item,key) in waveType"
+             class="status-item"
              @click="changeStatus(item,key)">
-          <div class="status-bg" :class="['b_color_'+key]"></div>
-          <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          <div :class="['b_color_'+key]" class="status-bg"></div>
+          <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span
+            class="status-num">{{ item.num }}</span>
           </div>
         </div>
       </div>
@@ -50,14 +51,15 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item" v-for="item in allocationList"
-               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]">
+          <div v-for="item in allocationList"
+               :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]"
+               class="order-list-item">
             <el-row>
               <el-col :span="8" class="R pt">
                 <span>{{ item.createName }}</span>
               </el-col>
               <el-col :span="4" class="pt">
-                <span>{{ item.createTime | minute}}</span>
+                <span>{{ item.createTime | minute }}</span>
               </el-col>
               <el-col :span="4" class="pt">
                 <span>{{ item.status === 0 ? '未完成' : '已完成' }}</span>
@@ -71,7 +73,7 @@
                     <!--规划采购-->
                     <!--</span>-->
                     <span @click.prevent="showDetail(item)">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
+                    <a class="btn-circle" href="#" @click.prevent=""><i
                       class="el-icon-t-wave"></i></a>
                     疫苗分配
                     </span>
@@ -80,9 +82,18 @@
                 <div v-show="item.status === 1">
                   <div>
                    <span @click.prevent="showDetail(item)">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
+                    <a class="btn-circle" href="#" @click.prevent=""><i
                       class="el-icon-t-wave"></i></a>
                     查看分配详情
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <div>
+                   <span @click.prevent="exportDetail(item)">
+                    <a class="btn-circle" href="#" @click.prevent=""><i
+                      class="el-icon-t-print"></i></a>
+                    导出
                     </span>
                   </div>
                 </div>
@@ -92,131 +103,151 @@
           </div>
         </div>
       </div>
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <div v-show="pager.count>pager.pageSize && !loadingData" class="text-center">
         <el-pagination
-          layout="prev, pager, next"
-          :total="pager.count" :pageSize="pager.pageSize" @current-change="queryAllocationList"
-          :current-page="pager.currentPage">
+          :current-page="pager.currentPage"
+          :pageSize="pager.pageSize" :total="pager.count" layout="prev, pager, next"
+          @current-change="queryAllocationList">
         </el-pagination>
       </div>
     </div>
   </div>
 </template>
 <script>
-  import {demandAssignment} from '@/resources';
-  import utils from '@/tools/utils';
+import {demandAssignment} from '@/resources';
+import utils from '@/tools/utils';
 
-  export default {
+export default {
 
-    data() {
-      return {
-        loadingData: false,
-        allocationList: [],
-        showRight: false,
-        showDetailPart: false,
-        waveType: utils.waveType,
-        pager: {
-          currentPage: 1,
-          count: 0,
-          pageSize: 15
-        },
-        filters: {
-          status: 0
-        },
-        activeStatus: 0,
-        currentItemId: '',
-        currentItem: {}
-      };
-    },
-    mounted() {
-      this.queryAllocationList();
-    },
-    watch: {
+  data() {
+    return {
+      loadingData: false,
+      allocationList: [],
+      showRight: false,
+      showDetailPart: false,
+      waveType: utils.waveType,
+      pager: {
+        currentPage: 1,
+        count: 0,
+        pageSize: 15
+      },
       filters: {
-        handler: function () {
-          this.queryAllocationList(1);
-        },
-        deep: true
-      }
-    },
-    methods: {
-      queryAllocationList(pageNo) { // 得到需求分配列表
-        this.allocationList = [];
-        this.pager.currentPage = pageNo;
-        this.loadingData = true;
-        let params = Object.assign({}, this.filters);
-        demandAssignment.query(params).then(res => {
-          this.allocationList = res.data.list;
-          this.pager.count = res.data.count;
-          this.loadingData = false;
-        });
-        this.queryStatusNum(params);
+        status: 0
       },
-      queryStatusNum: function (params) {
-        demandAssignment.queryStateNum(params).then(res => {
-          let data = res.data;
-          this.waveType[0].num = this.obtionStatusNum(data['unfinished']);
-          this.waveType[1].num = this.obtionStatusNum(data['complete']);
-        });
+      activeStatus: 0,
+      currentItemId: '',
+      currentItem: {},
+      isLoading: false
+    };
+  },
+  mounted() {
+    this.queryAllocationList();
+  },
+  watch: {
+    filters: {
+      handler: function () {
+        this.queryAllocationList(1);
       },
-      obtionStatusNum: function (num) {
-        if (typeof num !== 'number') {
-          return 0;
-        }
-        return num;
-      },
-      resetRightBox() {
-        this.showRight = false;
-      },
-      showPart(item) {
-        this.currentItem = item;
-        this.showRight = true;
-      },
-      change(item, count) {
-        this.allocationList.forEach(i => {
-          if (i.orgGoodsId === item.orgGoodsId) {
-            i.resultAmount = i.inventoryQuantity - count;
-          }
-        });
-      },
-      showDetail(item) {
-        this.$router.push({path: '/sale/allocation/task', query: {id: item.id}});
-      },
-      purchase(item) {
-        this.$router.push({path: '/sale/allocation/task', query: {id: item.id, type: 'purchase'}});
-      },
-      changeStatus: function (item, key) {// 订单分类改变
-        this.activeStatus = key;
-        this.filters.status = item.status;
-      },
-      filterListColor: function (index) {// 过滤左边列表边角颜色
-        let status = -1;
-        for (let key in this.waveType) {
-          if (this.waveType[key].status === index) {
-            status = key;
-          }
-        }
-        return status;
-      },
-      submit() {
-        let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
-        if (isNotNormal) {
-          this.$notify.info({
-            message: '库存不足，请重新分配'
-          });
-          return;
-        }
-        demandAssignment.createOrder(this.$route.query.id).then(() => {
-          this.$notify.success({
-            message: '提交分配方案成功'
-          });
-        }).catch(error => {
-          this.$notify.error({
-            message: error.response && error.response.data && error.response.data.msg || '提交分配方案失败'
-          });
-        });
-      }
+      deep: true
     }
+  },
+  methods: {
+    queryAllocationList(pageNo) { // 得到需求分配列表
+      this.allocationList = [];
+      this.pager.currentPage = pageNo;
+      this.loadingData = true;
+      let params = Object.assign({}, this.filters);
+      demandAssignment.query(params).then(res => {
+        this.allocationList = res.data.list;
+        this.pager.count = res.data.count;
+        this.loadingData = false;
+      });
+      this.queryStatusNum(params);
+    },
+    queryStatusNum: function (params) {
+      demandAssignment.queryStateNum(params).then(res => {
+        let data = res.data;
+        this.waveType[0].num = this.obtionStatusNum(data['unfinished']);
+        this.waveType[1].num = this.obtionStatusNum(data['complete']);
+      });
+    },
+    obtionStatusNum: function (num) {
+      if (typeof num !== 'number') {
+        return 0;
+      }
+      return num;
+    },
+    resetRightBox() {
+      this.showRight = false;
+    },
+    showPart(item) {
+      this.currentItem = item;
+      this.showRight = true;
+    },
+    change(item, count) {
+      this.allocationList.forEach(i => {
+        if (i.orgGoodsId === item.orgGoodsId) {
+          i.resultAmount = i.inventoryQuantity - count;
+        }
+      });
+    },
+    showDetail(item) {
+      this.$router.push({path: '/sale/allocation/task', query: {id: item.id}});
+    },
+    exportDetail(item) {
+      this.isLoading = true;
+      let moduleId = "/sale/allocation";
+      this.$store.commit('initPrint', {isPrinting: true, moduleId: moduleId});
+      this.$http.get(`demand-assignment/${item.id}/export`, {}).then(res => {
+        utils.download(res.data.path, '销售分配表');
+        this.isLoading = false;
+        this.$notify.success({
+          message: '导出销售分配信息成功'
+        });
+        this.$store.commit('initPrint', {isPrinting: false, moduleId: moduleId});
+      }).catch(error => {
+        this.isLoading = false;
+        this.$store.commit('initPrint', {isPrinting: false, moduleId: moduleId});
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '导出失败'
+        });
+      });
+    },
+    purchase(item) {
+      this.$router.push({path: '/sale/allocation/task', query: {id: item.id, type: 'purchase'}});
+    },
+    changeStatus: function (item, key) {// 订单分类改变
+      this.activeStatus = key;
+      this.filters.status = item.status;
+    },
+    filterListColor: function (index) {// 过滤左边列表边角颜色
+      let status = -1;
+      for (let key in this.waveType) {
+        if (this.waveType[key].status === index) {
+          status = key;
+        }
+      }
+      return status;
+    },
+    submit() {
+      let isNotNormal = this.allocationList.some(s => s.resultAmount < 0);
+      if (isNotNormal) {
+        this.$notify.info({
+          message: '库存不足，请重新分配'
+        });
+        return;
+      }
+      demandAssignment.createOrder(this.$route.query.id).then(() => {
+        this.$notify.success({
+          message: '提交分配方案成功'
+        });
+      }).catch(error => {
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '提交分配方案失败'
+        });
+      });
+    }
+  }
 
-  };
+};
 </script>
