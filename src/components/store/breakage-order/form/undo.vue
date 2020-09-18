@@ -31,6 +31,7 @@
         <oms-el-upload
           :file-list="fileList"
           :on-remove="handleRemove"
+          :onPreview="onPreview"
           :on-success="handleAvatarSuccess"
           action="/omsAttachment"
           class="avatar-user-uploader">
@@ -92,6 +93,9 @@ export default {
     };
   },
   methods: {
+    onPreview(file) {
+      this.$store.commit('changeAttachment', {currentId: file.response.attachmentId, attachmentList: this.fileList});
+    },
     addCode() {
       this.form.detailDtoList.push({code: ''});
     },
