@@ -137,6 +137,8 @@
         </el-table-column>
         <el-table-column :sortable="true" label="疫苗主档通用名称" min-width="200" prop="platformGoodsName">
         </el-table-column>
+        <el-table-column :sortable="true" label="规格" min-width="120" prop="specification">
+        </el-table-column>
         <el-table-column :sortable="true" label="生产单位" min-width="160" prop="factoryName"></el-table-column>
         <el-table-column :sortable="true" label="批号" prop="batchNumber" width="110"></el-table-column>
 
