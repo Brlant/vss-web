@@ -1,43 +1,45 @@
 <style lang="scss" scoped>
 
-  .el-form .el-select {
-    display: block;
-  }
+.el-form .el-select {
+  display: block;
+}
 
-  .d-table-right {
-    .org-name-h2 {
-      font-size: 16px;
-      font-weight: bold;
-    }
+.d-table-right {
+  .org-name-h2 {
+    font-size: 16px;
+    font-weight: bold;
   }
+}
 
-  .d-table-col-wrap {
-    overflow: auto;
-  }
+.d-table-col-wrap {
+  overflow: auto;
+}
 
-  .pov-info {
-    margin-bottom: 20px;
-    .font-bold {
-      font-size: 14px;
-    }
-  }
+.pov-info {
+  margin-bottom: 20px;
 
-  .oms-row {
+  .font-bold {
     font-size: 14px;
-    margin-bottom: 10px;
   }
+}
 
-  .content-body {
-    margin: 20px 0;
-  }
+.oms-row {
+  font-size: 14px;
+  margin-bottom: 10px;
+}
 
-  .relation-no {
-    cursor: pointer;
-    color: #337ecc;
-    &:hover {
-      color: #409EFF;
-    }
+.content-body {
+  margin: 20px 0;
+}
+
+.relation-no {
+  cursor: pointer;
+  color: #337ecc;
+
+  &:hover {
+    color: #409EFF;
   }
+}
 </style>
 <template>
   <div class="d-table-col-wrap">
@@ -53,7 +55,7 @@
             {{currentOrder.id }}
           </oms-row>
           <oms-row label="疫苗种类">
-            <dict dict-group="orderGoodsType" :dict-key="'' + currentOrder.goodsType"></dict>
+            <dict :dict-key="'' + currentOrder.goodsType" dict-group="orderGoodsType"></dict>
           </oms-row>
           <oms-row label="要货单位">
             {{currentOrder.povName }}
@@ -82,13 +84,13 @@
             {{currentOrder.auditTime | time}}
           </oms-row>
           <oms-row label="关联疾控销售订单">
-            <a href="#" class="relation-no" @click.stop.prevent="goTo">
+            <a class="relation-no" href="#" @click.stop.prevent="goTo">
               {{currentOrder.orderNo}}
             </a>
           </oms-row>
         </el-col>
       </el-row>
-      <oms-row label="备注" :span="3" v-show="currentOrder.remark">{{ currentOrder.remark }}</oms-row>
+      <oms-row v-show="currentOrder.remark" :span="3" label="备注">{{ currentOrder.remark }}</oms-row>
     </div>
     <span style="font-size: 14px">【要货明细】</span>
     <table class="table table-hover" style="margin-top: 10px">
@@ -127,11 +129,11 @@
         </td>
       </tr>
       <tr>
-        <th colspan="6" class="text-right">
-          <total-count property="applyCount" :list="currentOrder.detailDtoList"></total-count>
+        <th class="text-right" colspan="6">
+          <total-count :list="currentOrder.detailDtoList" property="applyCount"></total-count>
           ;
-          <total-count property="applyMoney" :showIcon="true" title="合计金额"
-                       :list="currentOrder.detailDtoList"></total-count>
+          <total-count :list="currentOrder.detailDtoList" :showIcon="true" property="applyMoney"
+                       title="合计金额"></total-count>
         </th>
       </tr>
       </tbody>
@@ -139,37 +141,37 @@
   </div>
 </template>
 <script>
-  import {pullSignal} from '@/resources';
+import {pullSignal} from '@/resources';
 
-  export default {
-    props: {
-      currentItem: Object
-    },
-    data: function () {
-      return {
-        loading: false,
-        currentOrder: {}
-      };
-    },
-    watch: {
-      currentItem() {
-        this.getDetail();
-      }
-    },
-    methods: {
-      goTo() {
-        let url = this.currentOrder.goodsType === 0 ? '/sale/order/one/class/' : '/sale/order/two/class/';
-        this.$router.push(url + this.currentOrder.orderId);
-      },
-      getDetail: function () {
-        this.currentOrder = {};
-        if (!this.currentItem.id) return;
-        this.loading = true;
-        pullSignal.get(this.currentItem.id).then(res => {
-          this.currentOrder = res.data;
-          this.loading = false;
-        });
-      }
+export default {
+  props: {
+    currentItem: Object
+  },
+  data: function () {
+    return {
+      loading: false,
+      currentOrder: {}
+    };
+  },
+  watch: {
+    currentItem() {
+      this.getDetail();
     }
-  };
+  },
+  methods: {
+    goTo() {
+      let url = this.currentOrder.goodsType === 0 ? '/sale/order/one/class/' : '/sale/order/two/class/';
+      this.$router.push(url + this.currentOrder.orderId);
+    },
+    getDetail: function () {
+      this.currentOrder = {};
+      if (!this.currentItem.id) return;
+      this.loading = true;
+      pullSignal.get(this.currentItem.id).then(res => {
+        this.currentOrder = res.data;
+        this.loading = false;
+      });
+    }
+  }
+};
 </script>

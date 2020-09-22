@@ -103,11 +103,11 @@
 <template>
   <div class="order-page">
     <div class="container">
-      <div class="opera-btn-group" :class="{up:!showSearch}">
+      <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
             <perm :label="vaccineType === '1'?'purchasing-order-add': 'second-vaccine-purchasing-order-add' ">
-                  <a href="#" class="btn-circle" @click.prevent=""><i
+                  <a class="btn-circle" href="#" @click.prevent=""><i
                     class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
@@ -117,38 +117,38 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
           <goods-switch class="pull-right"></goods-switch>
-          <span class="pull-right cursor-span" style="margin-right: 15px" @click.prevent="batchAuditOrder"
-                v-show="isShowCheckBox">
+          <span v-show="isShowCheckBox" class="pull-right cursor-span" style="margin-right: 15px"
+                @click.prevent="batchAuditOrder">
             <perm
               :label="vaccineType === '1'?'purchasing-order-batch-audit': 'second-vaccine-purchasing-order-batch-audit' ">
-                  <a href="#" class="btn-circle" @click.prevent=""><i
+                  <a class="btn-circle" href="#" @click.prevent=""><i
                     class="el-icon-document"></i> </a>批量审单
             </perm>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
-                 onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" onsubmit="return false"
+                 style="padding-top: 10px">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="货主订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.orderNo" placeholder="请输入货主订单号"></oms-input>
+              <oms-form-row :span="6" label="货主订单号">
+                <oms-input v-model="searchCondition.orderNo" placeholder="请输入货主订单号" type="text"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="物流方式" :span="6">
-                <el-select type="text" v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式">
-                  <el-option :value="item.key" :key="item.key" :label="item.label"
-                             v-for="item in transportationMeansList">
+              <oms-form-row :span="6" label="物流方式">
+                <el-select v-model="searchCondition.transportationMeansId" placeholder="请选择物流方式" type="text">
+                  <el-option v-for="item in transportationMeansList" :key="item.key" :label="item.label"
+                             :value="item.key">
                   </el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="供货单位" :span="6">
-                <el-select filterable remote placeholder="请输入名称搜索供货单位" :remote-method="filterOrg" :clearable="true"
-                           v-model="searchCondition.transactOrgId" popperClass="good-selects"
+              <oms-form-row :span="6" label="供货单位">
+                <el-select v-model="searchCondition.transactOrgId" :clearable="true" :remote-method="filterOrg" filterable placeholder="请输入名称搜索供货单位"
+                           popperClass="good-selects" remote
                            @click.native.once="filterOrg('')">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                  <el-option v-for="org in orgList" :key="org.id" :label="org.name" :value="org.id">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{ org.name }}</span>
                     </div>
@@ -164,17 +164,17 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="货主疫苗" :span="6">
-                <el-select v-model="searchCondition.orgGoodsId" filterable remote placeholder="请输入名称或编号搜索货主疫苗"
-                           :remote-method="searchProduct" @click.native="searchProduct('')" :clearable="true"
-                           popper-class="good-selects">
+              <oms-form-row :span="6" label="货主疫苗">
+                <el-select v-model="searchCondition.orgGoodsId" :clearable="true" :remote-method="searchProduct" filterable
+                           placeholder="请输入名称或编号搜索货主疫苗" popper-class="good-selects" remote
+                           @click.native="searchProduct('')">
                   <el-option v-for="item in goodesList" :key="item.orgGoodsDto.id"
                              :label="item.orgGoodsDto.name"
                              :value="item.orgGoodsDto.id">
                     <div style="overflow: hidden">
                       <span class="pull-left">
                         {{ item.orgGoodsDto.name }}
-                        <el-tag style="float: none" type="danger" v-show="!item.orgGoodsDto.status">停用</el-tag>
+                        <el-tag v-show="!item.orgGoodsDto.status" style="float: none" type="danger">停用</el-tag>
                       </span>
                     </div>
                     <div style="overflow: hidden">
@@ -184,7 +184,7 @@
                       <span class="select-other-info pull-left"><span
                         v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
-                      <span class="select-other-info pull-left" v-if="item.orgGoodsDto.goodsDto">
+                      <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-left">
                           <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>
                         {{ item.orgGoodsDto.goodsDto.factoryName }}
                       </span>
@@ -194,17 +194,17 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="单位区域代码" :span="7">
-                <oms-input type="text" v-model="searchCondition.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
+              <oms-form-row :span="7" label="单位区域代码">
+                <oms-input v-model="searchCondition.orgAreaCode" placeholder="请输入单位区域代码" type="text"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="下单时间" :span="6">
+              <oms-form-row :span="6" label="下单时间">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="expectedTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
+                    format="yyyy-MM-dd"
+                    placeholder="请选择" type="daterange">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
@@ -215,13 +215,13 @@
               <order-push-search v-model="searchCondition.pushStatus"/>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="来源订单号" :span="6">
-                <oms-input type="text" v-model="searchCondition.thirdPartyNumber" placeholder="请输入来源订单号"></oms-input>
+              <oms-form-row :span="6" label="来源订单号">
+                <oms-input v-model="searchCondition.thirdPartyNumber" placeholder="请输入来源订单号" type="text"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="" :span="5">
-                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+              <oms-form-row :span="5" label="">
+                <el-button native-type="submit" type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
               </oms-form-row>
             </el-col>
@@ -231,24 +231,24 @@
       <el-row>
         <el-col :span="13">
           <div class="order-list-status" style="margin-bottom:20px">
-            <div class="status-item"
-                 :class="{'active':key==activeStatus}"
-                 v-for="(item,key) in orgType" v-show="key < 4"
+            <div v-for="(item,key) in orgType"
+                 v-show="key < 4"
+                 :class="{'active':key==activeStatus}" class="status-item"
                  @click="changeStatus(item,key)">
-              <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{ item.title }}<span class="status-num">{{ item.num }}</span>
+              <div :class="['b_color_'+key]" class="status-bg"></div>
+              <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span class="status-num">{{ item.num }}</span>
               </div>
             </div>
           </div>
         </el-col>
         <el-col :span="11">
           <div class="order-list-status  order-list-status-right" style="margin-bottom:20px">
-            <div class="status-item"
+            <div v-for="(item,key) in orgType"
+                 v-show="key > 3"
                  :class="{'active':key==activeStatus}"
-                 v-for="(item,key) in orgType"
-                 @click="changeStatus(item,key)" v-show="key > 3">
-              <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{ item.title }}<span class="status-num">{{ item.num }}</span>
+                 class="status-item" @click="changeStatus(item,key)">
+              <div :class="['b_color_'+key]" class="status-bg"></div>
+              <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span class="status-num">{{ item.num }}</span>
               </div>
             </div>
           </div>
@@ -257,7 +257,7 @@
       <div class="order-list clearfix">
         <el-row class="order-list-header">
           <el-col :span="5">
-            <el-checkbox v-model="checkAll" @change="checkAllOrder" v-show="isShowCheckBox"/>
+            <el-checkbox v-show="isShowCheckBox" v-model="checkAll" @change="checkAllOrder"/>
             订单号/货主
           </el-col>
           <el-col :span="3">业务类型</el-col>
@@ -279,12 +279,12 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item" v-for="item in orderList" @click.prevent="showItem(item)"
-               :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]">
+          <div v-for="item in orderList" :class="['status-'+filterListColor(item.state),{'active':currentOrderId==item.id}]" class="order-list-item"
+               @click.prevent="showItem(item)">
             <el-row>
               <el-col :span="5">
                 <div v-show="isShowCheckBox" class="flex-layout" @click.stop="item.checked = !item.checked">
-                  <span @click.stop="" style="margin-right: 5px">
+                  <span style="margin-right: 5px" @click.stop="">
                      <el-checkbox v-model="item.checked" class="mr-5"/>
                   </span>
                   <div>
@@ -311,7 +311,7 @@
                 </div>
               </el-col>
               <el-col :span="5" class="pt10">
-                <div class="f-grey" v-show="item.thirdPartyNumber">{{ item.thirdPartyNumber }}</div>
+                <div v-show="item.thirdPartyNumber" class="f-grey">{{ item.thirdPartyNumber }}</div>
                 <div>{{ item.transactOrgName }}</div>
               </el-col>
               <el-col :span="4">
@@ -327,22 +327,22 @@
               <el-col :span="4">
                 <div>
                   {{ getOrderStatus(item) }}
-                  <order-push-status :status="item.pushStatus" :msg="item.pushMessage"/>
+                  <order-push-status :msg="item.pushMessage" :status="item.pushStatus"/>
                 </div>
               </el-col>
               <el-col :span="3" class="opera-btn">
-                <perm :label="vaccineType === '1'?'purchasing-order-edit': 'second-vaccine-purchasing-order-edit' "
-                      v-show="filters.state === '6'">
+                <perm v-show="filters.state === '6'"
+                      :label="vaccineType === '1'?'purchasing-order-edit': 'second-vaccine-purchasing-order-edit' ">
                    <span @click.stop.prevent="editOrder(item)">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
+                    <a class="btn-circle" href="#" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
                   编辑
                 </span>
                 </perm>
-                <perm :label="vaccineType === '1' ? 'pov-receipt' : 'second-vaccine-pov-receipt'"
-                      v-show="filters.state === '10'">
+                <perm v-show="filters.state === '10'"
+                      :label="vaccineType === '1' ? 'pov-receipt' : 'second-vaccine-pov-receipt'">
                   <span @click.stop="showPart(item)">
-                    <a href="#" class="btn-circle btn-opera" @click.prevent=""><i
+                    <a class="btn-circle btn-opera" href="#" @click.prevent=""><i
                       class="el-icon-t-receipt"></i></a>
                     收货
                   </span>
@@ -356,25 +356,25 @@
       </div>
 
     </div>
-    <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+    <div v-show="pager.count>pager.pageSize && !loadingData" class="text-center">
       <el-cu-pagination
-        layout="prev, pager, next"
-        :total="pager.count" :pageSize="pager.pageSize" @current-change="getOrderList"
-        :current-page="pager.currentPage">
+        :current-page="pager.currentPage"
+        :pageSize="pager.pageSize" :total="pager.count" layout="prev, pager, next"
+        @current-change="getOrderList">
       </el-cu-pagination>
     </div>
-    <page-right :show="showDetail" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
-                class="order-detail-info specific-part-z-index" partClass="pr-no-animation">
-      <show-form :orderId="currentOrderId" :state="state" @refreshOrder="refreshOrder"
-                 @close="resetRightBox" :vaccineType="vaccineType"></show-form>
+    <page-right :css="{'width':'1000px','padding':0}" :show="showDetail" class="order-detail-info specific-part-z-index"
+                partClass="pr-no-animation" @right-close="resetRightBox">
+      <show-form :orderId="currentOrderId" :state="state" :vaccineType="vaccineType"
+                 @close="resetRightBox" @refreshOrder="refreshOrder"></show-form>
     </page-right>
-    <page-right :show="showItemRight" class="specific-part-z-index" @right-close="beforeCloseConfirm"
-                :css="{'width':'1000px','padding':0}">
-      <add-form type="0" :defaultIndex="defaultIndex" :orderId="currentOrderId" @change="onSubmit" :purchase="purchase"
-                :action="action"
-                @close="resetRightBox" :vaccineType="vaccineType"></add-form>
+    <page-right :css="{'width':'1000px','padding':0}" :show="showItemRight" class="specific-part-z-index"
+                @right-close="beforeCloseConfirm">
+      <add-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" :purchase="purchase" :vaccineType="vaccineType"
+                type="0"
+                @change="onSubmit" @close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showReceiptRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
+    <page-right :css="{'width':'1000px','padding':0}" :show="showReceiptRight" @right-close="resetRightBox">
       <receipt-info :orderId="currentOrderId" :showRight="showReceiptRight" @close="resetRightBox"></receipt-info>
     </page-right>
   </div>

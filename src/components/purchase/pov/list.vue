@@ -24,41 +24,41 @@
 <template>
   <div class="order-page">
     <div class="container">
-      <div class="opera-btn-group" :class="{up:!showSearch}">
+      <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
-          <span class="pull-right" v-show="filters.status === 11">
-          <perm label="purchansing-assignment-add" class="opera-btn">
-            <span @click="createPurchaseDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
+          <span v-show="filters.status === 11" class="pull-right">
+          <perm class="opera-btn" label="purchansing-assignment-add">
+            <span style="cursor:pointer" @click="createPurchaseDemand"><a class="btn-circle" href="#" @click.prevent=""><i
               class="el-icon-t-wave"></i></a><span class="wave-title"> 生成采购汇总单</span></span>
           </perm>
          </span>
-          <span class="pull-right" v-show="filters.status === 1">
-            <perm label="demand-assignment-add" class="opera-btn">
-              <span @click="createDemand" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
+          <span v-show="filters.status === 1" class="pull-right">
+            <perm class="opera-btn" label="demand-assignment-add">
+              <span style="cursor:pointer" @click="createDemand"><a class="btn-circle" href="#" @click.prevent=""><i
                 class="el-icon-t-wave"></i></a><span class="wave-title"> 生成销售汇总单</span></span>
             </perm>
          </span>
           <span class="pull-right">
-            <perm label="cargo-signal-add" class="opera-btn">
-              <span @click="applyOrder" style="cursor:pointer"><a href="#" @click.prevent="" class="btn-circle"><i
+            <perm class="opera-btn" label="cargo-signal-add">
+              <span style="cursor:pointer" @click="applyOrder"><a class="btn-circle" href="#" @click.prevent=""><i
                 class="el-icon-t-plus"></i></a><span class="wave-title">新增分货</span></span>
             </perm>
          </span>
           <goods-switch class="pull-right"></goods-switch>
-          <span class="pull-left switching-icon" @click="showSearch = !showSearch" style="margin-right: 20px">
+          <span class="pull-left switching-icon" style="margin-right: 20px" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form class="advanced-query-form" :model="searchWord" onsubmit="return false">
+        <el-form :model="searchWord" class="advanced-query-form" onsubmit="return false">
           <el-row>
             <el-col :span="8">
               <oms-form-row :span="5" label="收货单位">
-                <el-select placeholder="请输入名称搜索收货单位" v-model="searchWord.povId" filterable remote
-                           :remote-method="filterOrg" @click.native="filterOrg('')" :clearable="true"
-                           popperClass="good-selects">
-                  <el-option :value="org.id" :key="org.id" :label="org.name" v-for="org in orgList">
+                <el-select v-model="searchWord.povId" :clearable="true" :remote-method="filterOrg" filterable
+                           placeholder="请输入名称搜索收货单位" popperClass="good-selects" remote
+                           @click.native="filterOrg('')">
+                  <el-option v-for="org in orgList" :key="org.id" :label="org.name" :value="org.id">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{ org.name }}</span>
                     </div>
@@ -72,8 +72,8 @@
               </oms-form-row>
             </el-col>
             <el-col :span="7">
-              <oms-form-row label="申请单编号" :span="8">
-                <oms-input type="text" v-model="searchWord.id" placeholder="请输入申请单编号"></oms-input>
+              <oms-form-row :span="8" label="申请单编号">
+                <oms-input v-model="searchWord.id" placeholder="请输入申请单编号" type="text"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="9">
@@ -83,32 +83,32 @@
                 </el-col>
                 <el-col :span="16">
                   <el-date-picker
-                    type="daterange"
                     v-model="demandTime"
-                    placeholder="请选择到货需求日期" format="yyyy-MM-dd">
+                    format="yyyy-MM-dd"
+                    placeholder="请选择到货需求日期" type="daterange">
                   </el-date-picker>
                 </el-col>
               </el-row>
             </el-col>
             <el-col :span="8" class="clearfix">
-              <oms-form-row label="单位区域代码" :span="7">
-                <oms-input type="text" v-model="searchWord.orgAreaCode" placeholder="请输入单位区域代码"></oms-input>
+              <oms-form-row :span="7" label="单位区域代码">
+                <oms-input v-model="searchWord.orgAreaCode" placeholder="请输入单位区域代码" type="text"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row label="疫苗种类" :span="7">
-                <el-select type="text" v-model="searchWord.goodsType" placeholder="请选择疫苗种类">
-                  <el-option :value="item.key" :key="item.key" :label="item.label"
-                             v-for="item in vaccineSignList"></el-option>
+              <oms-form-row :span="7" label="疫苗种类">
+                <el-select v-model="searchWord.goodsType" placeholder="请选择疫苗种类" type="text">
+                  <el-option v-for="item in vaccineSignList" :key="item.key" :label="item.label"
+                             :value="item.key"></el-option>
                 </el-select>
               </oms-form-row>
             </el-col>
             <el-col :span="10">
-              <oms-form-row label="" :span="1">
-                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+              <oms-form-row :span="1" label="">
+                <el-button native-type="submit" type="primary" @click="searchInOrder">查询</el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
-                <el-button @click="exportExcel" :plain="true" type="success">导出EXCEL</el-button>
-                <el-button @click="exportNoSaleExcel" :plain="true" type="success">导出待生成销售汇总</el-button>
+                <el-button :plain="true" type="success" @click="exportExcel">导出EXCEL</el-button>
+                <el-button :plain="true" type="success" @click="exportNoSaleExcel">导出待生成销售汇总</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -117,20 +117,20 @@
       <el-row>
         <el-col :span="13">
           <div class="order-list-status container clearfix">
-            <div class="status-item" :class="{'active':key==activeStatus}" style="width: 115px"
-                 v-for="(item,key) in assignType" v-show="key < 4" @click="checkStatus(item, key)">
-              <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{ item.title }}<span class="status-num">
+            <div v-for="(item,key) in assignType" v-show="key < 4" :class="{'active':key==activeStatus}"
+                 class="status-item" style="width: 115px" @click="checkStatus(item, key)">
+              <div :class="['b_color_'+key]" class="status-bg"></div>
+              <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span class="status-num">
             {{ item.num }}</span></div>
             </div>
           </div>
         </el-col>
         <el-col :span="11">
           <div class="order-list-status order-list-status-right container clearfix">
-            <div class="status-item" v-show="key > 3" :class="{'active':key==activeStatus}" style="width: 115px"
-                 v-for="(item,key) in assignType" @click="checkStatus(item, key)">
-              <div class="status-bg" :class="['b_color_'+key]"></div>
-              <div><i class="el-icon-caret-right" v-if="key==activeStatus"></i>{{ item.title }}<span class="status-num">
+            <div v-for="(item,key) in assignType" v-show="key > 3" :class="{'active':key==activeStatus}" class="status-item"
+                 style="width: 115px" @click="checkStatus(item, key)">
+              <div :class="['b_color_'+key]" class="status-bg"></div>
+              <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span class="status-num">
             {{ item.num }}</span></div>
             </div>
           </div>
@@ -139,7 +139,7 @@
       <div class="order-list clearfix " style="margin-top: 20px">
         <el-row class="order-list-header">
           <el-col :span="5">
-            <el-checkbox @change="checkAll" v-model="isCheckAll" v-show="filters.status === 1 || filters.status === 11">
+            <el-checkbox v-show="filters.status === 1 || filters.status === 11" v-model="isCheckAll" @change="checkAll">
             </el-checkbox>
             要货申请编号/疫苗种类
           </el-col>
@@ -161,12 +161,12 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item" v-for="item in demandList"
-               :class="['status-'+activeStatus,{'active':currentItemId==item.id}]">
+          <div v-for="item in demandList" :class="['status-'+activeStatus,{'active':currentItemId==item.id}]"
+               class="order-list-item">
             <el-row>
-              <el-col :span="5" class="R pt10" :class="{'special-col': filters.status === 1 || filters.status === 11}">
-                <div class="el-checkbox-warp" @click.stop.prevent="checkItem(item)"
-                     v-show="filters.status === 1 || filters.status === 11">
+              <el-col :class="{'special-col': filters.status === 1 || filters.status === 11}" :span="5" class="R pt10">
+                <div v-show="filters.status === 1 || filters.status === 11" class="el-checkbox-warp"
+                     @click.stop.prevent="checkItem(item)">
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
                 {{ item.id }}
@@ -187,29 +187,29 @@
               <el-col :span="5" class="opera-btn pl7">
                 <div>
                   <span @click.prevent="showDetail(item)">
-                    <a href="#" class="btn-circle" @click.prevent=""><i
+                    <a class="btn-circle" href="#" @click.prevent=""><i
                       class="el-icon-t-detail"></i></a>
                   查看详情
                   </span>
                 </div>
                 <div>
                   <perm label="demand-assignment-update">
-                    <span @click.prevent="editOrder(item)" v-show="filters.status === 1 || filters.status === 2">
-                      <a href="#" class="btn-circle" @click.prevent=""><i
+                    <span v-show="filters.status === 1 || filters.status === 2" @click.prevent="editOrder(item)">
+                      <a class="btn-circle" href="#" @click.prevent=""><i
                         class="el-icon-t-edit"></i></a>
                         编辑
                   </span>
                   </perm>
-                  <perm label="demand-assignment-cancel" v-show="filters.status === 1 || filters.status === 11">
+                  <perm v-show="filters.status === 1 || filters.status === 11" label="demand-assignment-cancel">
                      <span @click.prevent="cancel(item)">
-                      <a href="#" class="btn-circle" @click.prevent=""><i
+                      <a class="btn-circle" href="#" @click.prevent=""><i
                         class="el-icon-t-verify"></i></a>
                         取消需求单
                       </span>
                   </perm>
                   <perm label="demand-assignment-add">
-                    <span @click.prevent="createSaleOrder(item)" v-show="filters.status === 2 && item.singleFlag">
-                        <a href="#" class="btn-circle" @click.prevent=""><i
+                    <span v-show="filters.status === 2 && item.singleFlag" @click.prevent="createSaleOrder(item)">
+                        <a class="btn-circle" href="#" @click.prevent=""><i
                           class="el-icon-t-sale"></i></a>
                           生成销售单
                     </span>
@@ -224,24 +224,24 @@
 
       </div>
 
-      <div class="text-center" v-show="demandList.length && !loadingData">
+      <div v-show="demandList.length && !loadingData" class="text-center">
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :total="pager.count" :page-sizes="[10,20,50,100]" :pageSize="pager.pageSize"
-          :current-page="pager.currentPage">
+          :current-page="pager.currentPage" :page-sizes="[10,20,50,100]"
+          :pageSize="pager.pageSize"
+          :total="pager.count" layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+          @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>
-    <page-right :show="showDetailPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}"
-                class="order-detail-info" partClass="pr-no-animation">
+    <page-right :css="{'width':'1000px','padding':0}" :show="showDetailPart" class="order-detail-info"
+                partClass="pr-no-animation" @right-close="resetRightBox">
       <show-form :currentItem="currentItem" @close="resetRightBox"></show-form>
     </page-right>
-    <page-right :show="showRight" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <add-form @change="onSubmit" :currentOrder="currentItem" :index="index" @close="resetRightBox"></add-form>
+    <page-right :css="{'width':'1000px','padding':0}" :show="showRight" @right-close="resetRightBox">
+      <add-form :currentOrder="currentItem" :index="index" @change="onSubmit" @close="resetRightBox"></add-form>
     </page-right>
-    <page-right :show="showEditPart" @right-close="resetRightBox" :css="{'width':'1000px','padding':0}">
-      <edit-form @change="onSubmit" :currentItem="currentItem" :showEditPart="showEditPart"
+    <page-right :css="{'width':'1000px','padding':0}" :show="showEditPart" @right-close="resetRightBox">
+      <edit-form :currentItem="currentItem" :showEditPart="showEditPart" @change="onSubmit"
                  @close="resetRightBox"></edit-form>
     </page-right>
   </div>
@@ -488,12 +488,6 @@ export default {
       Object.assign(this.filters, temp);
     },
     exportExcel() {
-      if (!(this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0])) {
-        this.$notify.info({
-          message: '请选择需求到货日期'
-        });
-        return;
-      }
       this.searchWord.demandStartTime = this.$formatAryTime(this.demandTime, 0);
       this.searchWord.demandEndTime = this.$formatAryTime(this.demandTime, 1);
       let filters = {
@@ -522,12 +516,6 @@ export default {
       });
     },
     exportNoSaleExcel() {
-      if (!(this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0])) {
-        this.$notify.info({
-          message: '请选择需求到货日期'
-        });
-        return;
-      }
       let params = Object.assign({}, {
         cdcId: this.user.userCompanyAddress
       }, this.filters, {

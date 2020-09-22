@@ -1,7 +1,7 @@
 <template>
   <div class="order-page">
     <div class="container">
-      <div class="opera-btn-group" :class="{up:!showSearch}">
+      <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
@@ -9,28 +9,28 @@
             <span v-show="!showSearch">展开筛选</span>
           </span>
         </div>
-        <el-form v-show="showSearch" class="advanced-query-form clearfix" style="padding-top: 10px"
-                 onsubmit="return false">
+        <el-form v-show="showSearch" class="advanced-query-form clearfix" onsubmit="return false"
+                 style="padding-top: 10px">
           <el-row>
             <el-col :span="8">
-              <oms-form-row label="接种时间" :span="6">
+              <oms-form-row :span="6" label="接种时间">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="actualTime"
-                    type="daterange"
-                    placeholder="请选择" format="yyyy-MM-dd">
+                    format="yyyy-MM-dd"
+                    placeholder="请选择" type="daterange">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="疫苗主档" :span="6">
-                <el-select filterable remote placeholder="请输入名称或编号搜索疫苗主档" :remote-method="searchProduct"
-                           :clearable="true"
-                           v-model="searchCondition.vaccineId" popper-class="good-selects"
+              <oms-form-row :span="6" label="疫苗主档">
+                <el-select v-model="searchCondition.vaccineId" :clearable="true" :remote-method="searchProduct" filterable
+                           placeholder="请输入名称或编号搜索疫苗主档"
+                           popper-class="good-selects" remote
                            @click.native.once="searchProduct('')">
-                  <el-option :value="org.id" :key="org.id" :label="org.name"
-                             v-for="org in detailList">
+                  <el-option v-for="org in detailList" :key="org.id" :label="org.name"
+                             :value="org.id">
                     <div style="overflow: hidden">
                       <span class="pull-left">
                         {{ org.name }}
@@ -53,12 +53,12 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row :span="5" label="批号">
-                <el-select filterable remote placeholder="请输入关键字搜索批号" :remote-method="queryBatchNumbers"
-                           :clearable="true"
-                           v-model="searchCondition.batchNumberId" popper-class="good-selects"
+                <el-select v-model="searchCondition.batchNumberId" :clearable="true" :remote-method="queryBatchNumbers" filterable
+                           placeholder="请输入关键字搜索批号"
+                           popper-class="good-selects" remote
                            @click.native.once="queryBatchNumbers('')">
-                  <el-option :value="item.id" :key="item.id" :label="item.batchNumber"
-                             v-for="item in batchNumberList">
+                  <el-option v-for="item in batchNumberList" :key="item.id" :label="item.batchNumber"
+                             :value="item.id">
                     <div style="overflow: hidden">
                       <span class="pull-left">
                         {{ item.batchNumber }}
@@ -83,7 +83,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="追溯码" :span="6">
+              <oms-form-row :span="6" label="追溯码">
                 <el-col :span="24">
                   <el-input v-model="searchCondition.actualCode" placeholder="请输入追溯码"></el-input>
                 </el-col>
@@ -92,17 +92,17 @@
             <el-col :span="8">
               <oms-form-row :span="8" label="筛选未知追溯码">
                 <el-col :span="8">
-                  <el-checkbox @change="checkChange" v-model="searchCondition.checked"></el-checkbox>
+                  <el-checkbox v-model="searchCondition.checked" @change="checkChange"></el-checkbox>
                 </el-col>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row label="" :span="3">
-                <el-button type="primary" native-type="submit" @click="searchInOrder">查询</el-button>
+              <oms-form-row :span="3" label="">
+                <el-button native-type="submit" type="primary" @click="searchInOrder">查询</el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 <perm label="injection-task-export">
-                  <el-button :disabled="isLoading" :plain="true" @click="exportFile" style="margin-left: 10px"
-                             type="success">
+                  <el-button :disabled="isLoading" :plain="true" style="margin-left: 10px" type="success"
+                             @click="exportFile">
                     导出Excel
                   </el-button>
                 </perm>
@@ -132,12 +132,12 @@
           </el-col>
         </el-row>
         <div v-else="" class="order-list-body flex-list-dom">
-          <div class="order-list-item order-list-item-bg" v-for="item in CDCs" :key="">
+          <div v-for="item in CDCs" :key="" class="order-list-item order-list-item-bg">
             <el-row>
               <el-col :span="4" class="R pt10">
                 {{ item.actualTime | minute }}
                 <div>
-                  <el-tooltip class="item" effect="dark" content="登记编号" placement="right">
+                  <el-tooltip class="item" content="登记编号" effect="dark" placement="right">
                     <span class="font-gray">{{ item.inoculatorNumber }}</span>
                   </el-tooltip>
                 </div>
@@ -147,12 +147,12 @@
                   {{ item.goodsName }}
                 </div>
                 <div>
-                  <el-tooltip class="item" effect="dark" content="规格" placement="right">
+                  <el-tooltip class="item" content="规格" effect="dark" placement="right">
                     <span class="font-gray">{{ item.specification }}</span>
                   </el-tooltip>
                 </div>
                 <div>
-                  <el-tooltip class="item" effect="dark" content="生产单位" placement="right">
+                  <el-tooltip class="item" content="生产单位" effect="dark" placement="right">
                     <span class="font-gray">{{ item.origin }}</span>
                   </el-tooltip>
                 </div>
@@ -165,18 +165,18 @@
               </el-col>
               <el-col :span="2">
                 {{ item.sourceSystem }}
-                <el-tag type="warning" v-show="item.traceCodeId==='NULL'">未知追溯码</el-tag>
+                <el-tag v-show="item.traceCodeId==='NULL'" type="warning">未知追溯码</el-tag>
               </el-col>
             </el-row>
           </div>
         </div>
       </div>
-      <div class="text-center" v-show="pager.count>pager.pageSize && !loadingData">
+      <div v-show="pager.count>pager.pageSize && !loadingData" class="text-center">
         <el-pagination
-          layout="total, sizes, prev, pager, next, jumper"
-          :total="pager.count" :page-sizes="[pager.pageSize,30,50,100]" @size-change="handleSizeChange"
-          @current-change="handleCurrentChange"
-          :current-page="pager.currentPage">
+          :current-page="pager.currentPage"
+          :page-sizes="[pager.pageSize,30,50,100]" :total="pager.count" layout="total, sizes, prev, pager, next, jumper"
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange">
         </el-pagination>
       </div>
     </div>

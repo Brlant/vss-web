@@ -1,44 +1,49 @@
 <style lang="scss" scoped>
 
-  $leftWidth: 180px;
-  .content-part {
-    .content-left {
-      width: $leftWidth;
-      text-align: center;
-    }
-    .content-right {
-      > h3 {
-        left: $leftWidth;
-      }
-      left: $leftWidth;
-      padding: 5px 20px 0 20px;
-    }
-    .page-main-body {
-      font-size: 16px;
-    }
-    .oms-row {
-      margin-bottom: 10px;
-    }
-    p {
-      white-space: pre-wrap;
-      text-indent: 2em;
-    }
+$leftWidth: 180px;
+.content-part {
+  .content-left {
+    width: $leftWidth;
+    text-align: center;
   }
 
-  .border-show {
-    /*height: 10px;*/
-    border-bottom: 1px solid #777;
-    opacity: .2;
-    /* margin-left: 40px; */
-    /* margin-right: 40px; */
+  .content-right {
+    > h3 {
+      left: $leftWidth;
+    }
+
+    left: $leftWidth;
+    padding: 5px 20px 0 20px;
+  }
+
+  .page-main-body {
+    font-size: 16px;
+  }
+
+  .oms-row {
     margin-bottom: 10px;
   }
 
-  .card-box .card-box-body .el-row {
-    border-bottom: 0 solid #eee;
-    padding-top: 8px;
-    padding-bottom: 8px;
+  p {
+    white-space: pre-wrap;
+    text-indent: 2em;
   }
+}
+
+.border-show {
+  /*height: 10px;*/
+  border-bottom: 1px solid #777;
+  opacity: .2;
+  /* margin-left: 40px; */
+  /* margin-right: 40px; */
+  margin-bottom: 10px;
+}
+
+.card-box .card-box-body .el-row {
+  border-bottom: 0 solid #eee;
+  padding-top: 8px;
+  padding-bottom: 8px;
+}
 </style>
 
 <template>
@@ -90,44 +95,44 @@
   </div>
 </template>
 <script>
-  import attachmentLists from '../../../common/attachmentList.vue';
-  import {OmsAttachment} from '@/resources';
+import attachmentLists from '../../../common/attachmentList.vue';
+import {OmsAttachment} from '@/resources';
 
-  export default {
-    components: {
-      attachmentLists
-    },
-    props: {
-      formItem: {
-        type: Object
-      }
-    },
-    data() {
-      return {
-        attachmentIdList: [],
-        form: {}
-      };
-    },
-    computed: {},
-    watch: {
-      formItem: {
-        handler(val) {
-          this.form = val;
-          this.getFileList();
-        }
-      }
-    },
-    methods: {
-      doClose: function () {
-        this.$emit('right-close');
-      },
-      getFileList: function () {
-        if (!this.form.noticeId) return;
-        OmsAttachment.queryOneAttachmentList(this.form.noticeId, 'notice').then(res => {
-          this.attachmentIdList = res.data;
-        });
+export default {
+  components: {
+    attachmentLists
+  },
+  props: {
+    formItem: {
+      type: Object
+    }
+  },
+  data() {
+    return {
+      attachmentIdList: [],
+      form: {}
+    };
+  },
+  computed: {},
+  watch: {
+    formItem: {
+      handler(val) {
+        this.form = val;
+        this.getFileList();
       }
     }
-  };
+  },
+  methods: {
+    doClose: function () {
+      this.$emit('right-close');
+    },
+    getFileList: function () {
+      if (!this.form.noticeId) return;
+      OmsAttachment.queryOneAttachmentList(this.form.noticeId, 'notice').then(res => {
+        this.attachmentIdList = res.data;
+      });
+    }
+  }
+};
 </script>
 
