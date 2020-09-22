@@ -488,12 +488,6 @@ export default {
       Object.assign(this.filters, temp);
     },
     exportExcel() {
-      if (!(this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0])) {
-        this.$notify.info({
-          message: '请选择需求到货日期'
-        });
-        return;
-      }
       this.searchWord.demandStartTime = this.$formatAryTime(this.demandTime, 0);
       this.searchWord.demandEndTime = this.$formatAryTime(this.demandTime, 1);
       let filters = {
@@ -522,12 +516,6 @@ export default {
       });
     },
     exportNoSaleExcel() {
-      if (!(this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0])) {
-        this.$notify.info({
-          message: '请选择需求到货日期'
-        });
-        return;
-      }
       let params = Object.assign({}, {
         cdcId: this.user.userCompanyAddress
       }, this.filters, {
