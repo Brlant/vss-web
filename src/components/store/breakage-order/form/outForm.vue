@@ -172,7 +172,7 @@ $leftWidth: 200px;
               <el-switch v-model="form.qualifiedFlag" active-color="#13ce66" active-text="是" inactive-color="#ff4949"
                          inactive-text="否" @change="qualifiedFlagChange"></el-switch>
             </el-form-item>
-            <el-form-item v-if="form.transportationMeansId === '0'" label="预计送货时间" prop="expectedTime">
+            <el-form-item v-show="form.transportationMeansId === '0'" label="预计送货时间" prop="expectedTime">
               <el-date-picker v-model="form.expectedTime" :picker-options="pickerOptions"
                               format="yyyy-MM-dd" placeholder="请选择预计送货时间" value-format="timestamp">
               </el-date-picker>
