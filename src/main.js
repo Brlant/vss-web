@@ -200,7 +200,6 @@ Vue.prototype.$formatOrgPhotoId = function (item) {
 if (process.env.NODE_ENV === 'production') {
   Sentry.init({
     dsn: 'https://eb94ae86f9104780be615d09d50416f2@f-log.sinopharm-bio.com/3',
-    release: process.env.npm_package_version,
     integrations: [new Integrations.Vue({Vue, attachProps: true})],
     ignoreErrors: ['Request failed with status code 401', 'Request failed with status code 502']
   });
