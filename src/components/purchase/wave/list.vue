@@ -90,11 +90,13 @@
                 </div>
                 <div>
                   <div>
-                   <span @click.prevent="exportDetail(item)">
-                    <a class="btn-circle" href="#" @click.prevent=""><i
-                      class="el-icon-t-print"></i></a>
-                    导出
-                    </span>
+                    <perm label="cerp-create-wave-export">
+                       <span @click.prevent="exportDetail(item)">
+                          <a class="btn-circle" href="#" @click.prevent=""><i
+                            class="el-icon-t-print"></i></a>
+                          导出
+                        </span>
+                    </perm>
                   </div>
                 </div>
               </el-col>
