@@ -172,7 +172,8 @@ $leftWidth: 200px;
               <el-switch v-model="form.qualifiedFlag" active-color="#13ce66" active-text="是" inactive-color="#ff4949"
                          inactive-text="否" @change="qualifiedFlagChange"></el-switch>
             </el-form-item>
-            <el-form-item v-show="form.transportationMeansId === '0'" label="预计送货时间" prop="expectedTime">
+            <el-form-item v-show="form.transportationMeansId === '0'" label="预计送货时间" prop="expectedTime"
+                          :rules="form.transportationMeansId === '0'?[{ required: true,message:'请选择预计送货时间',trigger: 'blur' }]:[]">
               <el-date-picker v-model="form.expectedTime" :picker-options="pickerOptions"
                               format="yyyy-MM-dd" placeholder="请选择预计送货时间" value-format="timestamp">
               </el-date-picker>
@@ -472,9 +473,6 @@ export default {
         ],
         customerChannel: [
           {required: true, message: '请选择报损方式', trigger: 'change'}
-        ],
-        expectedTime: [
-          {required: true, message: '请选择预计报送时间', trigger: 'change'}
         ],
         remark: [
           {required: true, message: '请输入报损原因', trigger: ['change', 'blur']}
@@ -946,7 +944,6 @@ export default {
       this.searchProduct();
     },
     editItem(item) {
-      debugger;
       this.product.orgGoodsId = '';
       this.$nextTick(() => {
         this.filterProductList.push({
