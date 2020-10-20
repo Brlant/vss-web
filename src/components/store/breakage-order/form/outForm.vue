@@ -188,6 +188,11 @@ $leftWidth: 200px;
                            :value="item.label"></el-option>
               </el-select>
             </el-form-item>
+            <el-form-item v-if="!isSelfBreakage" label="备注">
+              <oms-input v-model="form.breakageReason" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
+                         type="textarea"></oms-input>
+            </el-form-item>
+
             <el-form-item label-width="160px">
               <el-button type="primary" @click="index++">添加疫苗</el-button>
             </el-form-item>
@@ -433,7 +438,8 @@ export default {
         'thirdPartyNumber': '',
         'expectedTime': '',
         'detailDtoList': [],
-        'remark': ''
+        'remark': '',
+        breakageReason: ''
       },
       rules: {
         goodsType: [
@@ -635,6 +641,7 @@ export default {
       this.form.consigneePhone = '';
       this.form.logisticsProviderName = '';
       this.form.remark = '';
+      this.form.breakageReason = '';
       this.form.detailDtoList = [];
       this.form.customerId = '';
       this.form.transportationMeansId = '';

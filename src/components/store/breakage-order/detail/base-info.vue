@@ -84,6 +84,10 @@
         <el-row v-show="currentOrder.remark">
           <oms-row :span="4" label="报损原因">{{ currentOrder.remark }}</oms-row>
         </el-row>
+        <el-row v-show="currentOrder.breakageReason">
+          <oms-row :span="4" label="备注">{{ currentOrder.breakageReason }}</oms-row>
+        </el-row>
+
       </div>
 
       <!--<hr class="hr"/>-->
