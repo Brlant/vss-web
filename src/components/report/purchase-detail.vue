@@ -402,7 +402,13 @@ export default {
       });
     },
     filterBatchNumber(query) {
-      this.$http.get('erp-stock/batch-number', {params: {keyWord: query}}).then(res => {
+      this.$http.get('/batch-number/pager', {params: {keyWord: query}}).then(res => {
+        this.batchNumberList = res.data.list;
+      });
+    },
+    queryBatchNumberList(prop) {
+      const params = prop || {};
+      this.$http.get('/batch-number/pager', {params}).then(res => {
         this.batchNumberList = res.data.list;
       });
     },
