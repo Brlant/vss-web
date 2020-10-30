@@ -497,9 +497,13 @@ export default {
         ary.forEach(i => {
           let batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
           let obj = {};
+          let amount = 0;
           batchNumbers.forEach(i => {
             obj[i.orderReceiptId] = '';
+            // 计算应收合计数量
+            amount += i.aggregateQuantity;
           });
+          i.amount = amount;
           Object.keys(obj).forEach(k => {
             let newItem = JSON.parse(JSON.stringify(i));
             newItem.batchNumbers = batchNumbers.filter(f => f.orderReceiptId + '' === k);
