@@ -7,12 +7,7 @@ function resolve(dir) {
   return path.join(__dirname, '..', dir);
 }
 
-const plugins = [new SentryWebpackPlugin({
-  include: './dist/static/map',
-  ignoreFile: '.sentrycliignore',
-  ignore: ['node_modules'],
-  configFile: 'sentry.properties'
-}),
+const plugins = [
   new CopyWebpackPlugin([
     {
       from: path.resolve(__dirname, 'static'),
