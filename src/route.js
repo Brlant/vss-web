@@ -358,6 +358,11 @@ export const route = [
             meta: {moduleId: 'report', title: '出货一览表', perm: 'shipment-form-manager'}
           },
           {
+            path: '/warehouse/report',
+            component: () => import('./components/report/warehouse-report'),
+            meta: {moduleId: 'report', title: '出入库登记表导出', perm: 'warehouse-report-export'}
+          },
+          {
             path: '/drug-administration/report/in',
             component: () => import('./components/report/drug-administration-out.vue'),
             meta: {moduleId: 'report', title: '市药监购进数据导出', perm: 'drug-administration-in-data-export', type: '0'}
