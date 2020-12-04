@@ -36,7 +36,7 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="10">
+            <el-col :span="9">
               <oms-form-row :span="4" label="疫苗名称">
                 <el-select v-model="searchWord.orgGoodsIdList" :clearable="true" :remote-method="filterOrgGoods"
                            filterable
@@ -68,7 +68,7 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="7">
               <oms-form-row :span="6" label="疫苗种类" style="height: 36px">
                 <el-radio-group v-model="searchWord.vaccineType" size="small">
                   <el-radio-button label="0">免疫规划疫苗</el-radio-button>
@@ -97,8 +97,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="5" label="批号">
+            <el-col :span="9">
+              <oms-form-row :span="4" label="批号">
                 <el-select v-model="searchWord.batchNumberId" :remoteMethod="filterBatchNumber" clearable filterable
                            placeholder="请输入批号名称搜索批号" remote
                            @click.native.once="filterBatchNumber('')">
@@ -107,8 +107,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="10" label="单据类型">
+            <el-col :span="7">
+              <oms-form-row :span="6" label="单据类型">
                 <el-select v-model="searchWord.bizType" placeholder="请选择单据类型">
                   <el-option v-for="item in bizTypeList" :key="item.key" :label="item.label"
                              :value="item.key"></el-option>
@@ -118,33 +118,13 @@
           </el-row>
           <el-row>
             <el-col :span="8">
-              <oms-form-row :span="5" label="来源单位">
+              <oms-form-row :span="5" label="往来单位">
                 <el-select v-model="searchWord.sourceOrgId" :clearable="true" :remote-method="filterSourceOrg"
                            filterable
-                           placeholder="请输入名称搜索来源单位"
+                           placeholder="请输入名称搜索往来单位"
                            popperClass="good-selects" remote
                            @click.native.once="filterSourceOrg('')">
                   <el-option v-for="org in sourceOrgList" :key="org.id" :label="org.name" :value="org.id">
-                    <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{ org.name }}</span>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{ org.manufacturerCode }}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="5" label="去向单位">
-                <el-select v-model="searchWord.directOrgId" :clearable="true" :remote-method="filterDirectOrg"
-                           filterable
-                           placeholder="请输入名称搜索去向单位"
-                           popperClass="good-selects" remote
-                           @click.native.once="filterDirectOrg('')">
-                  <el-option v-for="org in directOrgList" :key="org.id" :label="org.name" :value="org.id">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{ org.name }}</span>
                     </div>
@@ -187,7 +167,6 @@ export default {
       factoryList: [],
       batchNumberList: [],
       sourceOrgList: [],
-      directOrgList: [],
       showSearch: true,
       searchWord: {
         orgGoodsIdList: [],
@@ -196,7 +175,6 @@ export default {
         vaccineType: '',
         bizType: '',
         sourceOrgId: '',
-        directOrgId: '',
         startTime: '',
         endTime: ''
       },
@@ -252,11 +230,6 @@ export default {
     filterSourceOrg: function (query) {
       BaseInfo.query({keyWord: query}).then(res => {
         this.sourceOrgList = res.data.list;
-      });
-    },
-    filterDirectOrg: function (query) {
-      BaseInfo.query({keyWord: query}).then(res => {
-        this.directOrgList = res.data.list;
       });
     },
     filterBatchNumber(query) {
@@ -315,7 +288,6 @@ export default {
         vaccineType: '',
         bizType: '',
         sourceOrgId: '',
-        directOrgId: '',
         startTime: '',
         endTime: ''
       };
