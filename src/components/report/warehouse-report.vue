@@ -25,8 +25,8 @@
         </div>
         <el-form class="advanced-query-form">
           <el-row>
-            <el-col :span="8">
-              <oms-form-row :span="5" label="业务日期">
+            <el-col :span="10">
+              <oms-form-row :span="5" label="业务日期" isRequire>
                 <el-col :span="24">
                   <el-date-picker
                     v-model="bizDateAry"
@@ -36,8 +36,8 @@
                 </el-col>
               </oms-form-row>
             </el-col>
-            <el-col :span="9">
-              <oms-form-row :span="4" label="疫苗名称">
+            <el-col :span="14">
+              <oms-form-row :span="4" label="疫苗名称" isRequire>
                 <el-select v-model="searchWord.orgGoodsIdList" :clearable="true" :remote-method="filterOrgGoods"
                            filterable
                            placeholder="请输入名称或编号搜索疫苗名称"
@@ -68,17 +68,9 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="7">
-              <oms-form-row :span="6" label="疫苗种类" style="height: 36px">
-                <el-radio-group v-model="searchWord.vaccineType" size="small">
-                  <el-radio-button label="0">免疫规划疫苗</el-radio-button>
-                  <el-radio-button label="1">非免疫规划疫苗</el-radio-button>
-                </el-radio-group>
-              </oms-form-row>
-            </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8">
+            <el-col :span="10">
               <oms-form-row :span="5" label="生产厂家">
                 <el-select v-model="searchWord.factoryId" :clearable="true" :remote-method="filterOrg" filterable
                            placeholder="请输入名称搜索生产厂家"
@@ -97,8 +89,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="9">
-              <oms-form-row :span="4" label="批号">
+            <el-col :span="7">
+              <oms-form-row :span="7" label="批号">
                 <el-select v-model="searchWord.batchNumberId" :remoteMethod="filterBatchNumber" clearable filterable
                            placeholder="请输入批号名称搜索批号" remote
                            @click.native.once="filterBatchNumber('')">
@@ -117,7 +109,7 @@
             </el-col>
           </el-row>
           <el-row>
-            <el-col :span="8">
+            <el-col :span="10">
               <oms-form-row :span="5" label="往来单位">
                 <el-select v-model="searchWord.sourceOrgId" :clearable="true" :remote-method="filterSourceOrg"
                            filterable
@@ -137,8 +129,16 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="8">
+              <oms-form-row :span="6" label="疫苗种类" style="height: 36px">
+                <el-radio-group v-model="searchWord.vaccineType" size="small">
+                  <el-radio-button label="0">免疫规划疫苗</el-radio-button>
+                  <el-radio-button label="1">非免疫规划疫苗</el-radio-button>
+                </el-radio-group>
+              </oms-form-row>
+            </el-col>
             <el-col :span="6">
-              <oms-form-row :span="10" label="">
+              <oms-form-row :span="6" label="">
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 <el-button :disabled="isLoading" :plain="true" type="success" @click="exportFile">
                   导出
