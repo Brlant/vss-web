@@ -1,8 +1,8 @@
 <style lang="scss" scoped>
 
 .sign-img {
-  width: auto;
-  height: 30px;
+  width: 65px;
+  height: 24px;
   vertical-align: middle;
   cursor: pointer;
 }
