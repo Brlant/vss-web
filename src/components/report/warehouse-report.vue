@@ -194,7 +194,10 @@ export default {
     },
     bizTypeList() {
       let ary = this.$getDict('bizType');
-      ary.push({key: '3-0', label: '接种'})
+      let flag = ary.some(f => f.key === '3-0');
+      if (!flag) {
+        ary.push({key: '3-0', label: '接种'})
+      }
       return ary;
     },
     vaccineSignList() {
