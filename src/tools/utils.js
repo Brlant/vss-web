@@ -17,6 +17,7 @@ function funDownload(content, filename) {
 
 export default {
   address: Address.value,
+  scanCodeRecordStatus: ['取消签核', '已签核'],
   requestType: {
     1: {'title': '待审批', status: 0, num: ''},
     2: {'title': '待疾控处理', status: 1, num: ''},
