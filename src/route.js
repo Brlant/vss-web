@@ -133,6 +133,16 @@ export const route = [
             meta: {moduleId: 'pov', title: '注射记录', perm: 'injection-task-manager'}
           },
           {
+            path: '/pov/scan-code-record',
+            component: () => import('./components/pov/scan-code-record/list.vue'),
+            meta: {moduleId: 'pov', title: '扫码验证签核记录', perm: 'injection-signed-manager'}
+          },
+          {
+            path: '/pov/subordinate/scan-code-record',
+            component: () => import('./components/pov/scan-code-record/subordinate/list.vue'),
+            meta: {moduleId: 'pov', title: '下属单位扫码验证签核记录', perm: 'injection-subordinate-signed-manager'}
+          },
+          {
             path: '/pov/injection-task',
             component: () => import('./components/pov/inoculate/injection/index.vue'),
             meta: {moduleId: 'pov', title: '接种任务', perm: 'injection-task-info-manager'}
