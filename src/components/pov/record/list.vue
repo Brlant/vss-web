@@ -171,7 +171,7 @@
           </div>
         </div>
       </div>
-      <div  class="text-center">
+      <div v-show="detailList.length && !loadingData" class="text-center">
         <el-pagination
           :current-page="pager.currentPage"
           :page-sizes="[10,30,50,100]" :total="pager.count" layout="sizes, prev, pager, next, jumper"
