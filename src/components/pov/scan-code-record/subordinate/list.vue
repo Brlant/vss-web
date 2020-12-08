@@ -46,14 +46,14 @@
                            :remote-method="filterProvide" filterable placeholder="请输入接种单位名称查询"
                            popperClass="good-selects" remote
                            @click.native.once="filterProvide('')">
-                  <el-option v-for="item in provideList" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
-                             :value="item.orgGoodsDto.id">
+                  <el-option v-for="item in provideList" :key="item.id" :label="item.name"
+                             :value="item.id">
                     <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{ item.orgGoodsDto.name }}</span>
+                      <span class="pull-left" style="clear: right">{{ item.name }}</span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{ item.orgGoodsDto.goodsDto.manufacturerCode }}
+                        <span>系统代码:</span>{{ item.manufacturerCode }}
                       </span>
                     </div>
                   </el-option>
