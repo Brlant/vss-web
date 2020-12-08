@@ -165,7 +165,7 @@
                 {{ item.actualCode }}
               </el-col>
               <el-col :span="2">
-                <img v-if="item.signedFile.attachmentStoragePath" :src="item.signedFile.attachmentStoragePath"
+                <img v-if="item.signedFile&&item.signedFile.attachmentStoragePath" :src="item.signedFile&&item.signedFile.attachmentStoragePath"
                      class="sign-img" @click="showImg(item)">
                 <span v-else>未签名</span>
               </el-col>
