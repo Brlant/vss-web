@@ -171,10 +171,10 @@
           </div>
         </div>
       </div>
-      <div v-show="pager.count>pager.pageSize && !loadingData" class="text-center">
+      <div v-show="detailList.length && !loadingData" class="text-center">
         <el-pagination
           :current-page="pager.currentPage"
-          :page-sizes="[pager.pageSize,30,50,100]" :total="pager.count" layout="total, sizes, prev, pager, next, jumper"
+          :page-sizes="[10,30,50,100]" :total="pager.count" layout="sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange">
         </el-pagination>
@@ -215,7 +215,7 @@ export default {
       pager: {
         currentPage: 1,
         count: 0,
-        pageSize: 15
+        pageSize: 10
       },
       doing: false,
       batchNumberList: []
@@ -269,7 +269,9 @@ export default {
       this.loadingData = true;
       this.$http.get('/injection-task/injection-task-query', {params}).then(res => {
         this.CDCs = res.data.list;
-        this.pager.count = res.data.count;
+        if (res.data.list.length) {
+          this.pager.count = this.pager.currentPage * this.pager.pageSize + (res.data.list.length < this.pager.pageSize ? 0: 1);
+        }
         this.loadingData = false;
       });
     },

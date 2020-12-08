@@ -26,7 +26,7 @@
     <div v-if="!detail || detail.signFlag === null" class="empty-info">暂无反馈信息</div>
     <div v-else>
       <h3 class="title">
-        {{detail.signFlag ? '已签收': '未签收'}}
+        {{ detail.signFlag ? '已签收' : '未签收' }}
       </h3>
       <div v-show="isShowPushBtn" class="mb-10" style="display: inline-block">
         <perm :label="perm">
@@ -41,52 +41,56 @@
       <div class="ml-10" style="display: inline-block">
         <perm :label="perm">
           <el-button :loading="loadingExcel" size="mini" type="success" @click="exportDataExcel">
-            {{loadingExcel ? '正在导出' :'导出国家协同平台XML'}}
+            {{ loadingExcel ? '正在导出' : '导出国家协同平台XML' }}
           </el-button>
         </perm>
       </div>
       <el-table v-show="detail.list.length" ref="orderDetail" :data="detail.list" :header-row-class-name="'headerClass'"
                 border class="clearfix">
-        <el-table-column :sortable="true" label="状态" prop="successType" width="100">
+        <el-table-column label="状态" prop="successType" width="100">
           <span slot-scope="{row}">
-            {{row.successType === 'true' ? '成功': row.successType === 'false' ? '失败' : row.successType}}
+            {{ row.successType === 'true' ? '成功' : row.successType === 'false' ? '失败' : row.successType }}
           </span>
         </el-table-column>
         <el-table-column label="请求时间" prop="requestTime" width="180">
-          <span slot-scope="{row}">{{row.requestTime | time}}</span>
+          <span slot-scope="{row}">{{ row.requestTime | time }}</span>
         </el-table-column>
-        <el-table-column :sortable="true" label="接口平台类型" prop="interfacePlatformType" width="150"></el-table-column>
-        <el-table-column :sortable="true" label="业务类型" prop="businessType" width="150"></el-table-column>
+        <el-table-column label="接口平台类型" prop="interfacePlatformType" width="150"></el-table-column>
+        <el-table-column label="业务类型" prop="businessType" width="150"></el-table-column>
 
-        <el-table-column label="请求地址" min-width="200" prop="requestAddress">
+        <el-table-column label="请求地址" width="200" prop="requestAddress">
         </el-table-column>
-        <el-table-column :sortable="true" label="请求内容" prop="requestContent" width="200">
+        <el-table-column label="请求内容" prop="requestContent" width="200">
           <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
-            {{scope.row.requestContent}}
+            {{ centerShowMore(scope.row) }}
+            <el-button type="text" v-show="!scope.row.centerShowMore" @click="centerChangeState(scope.row)">显示
+            </el-button>
           </div>
         </el-table-column>
-        <el-table-column :sortable="true" label="请求内容解密" prop="requestDecryptionContent" width="200">
+        <el-table-column label="请求内容解密" prop="requestDecryptionContent" width="200">
           <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
-            {{scope.row.requestDecryptionContent}}
+            {{ codeShowMore(scope.row) }}
+            <el-button type="text" v-show="!scope.row.showMore" @click="changeState(scope.row)">显示
+            </el-button>
           </div>
         </el-table-column>
-        <el-table-column :sortable="true" label="响应时间" prop="responseTime" width="180">
-          <span slot-scope="{row}">{{row.responseTime | time}}</span>
+        <el-table-column label="响应时间" prop="responseTime" width="180">
+          <span slot-scope="{row}">{{ row.responseTime | time }}</span>
         </el-table-column>
-        <el-table-column :sortable="true" label="响应内容" prop="returnContent" width="200">
+        <el-table-column label="响应内容" prop="returnContent" width="200">
           <div slot-scope="scope" style="max-height: 150px;overflow-y: auto">
-            {{scope.row.returnContent}}
+            {{ scope.row.returnContent }}
           </div>
         </el-table-column>
-        <el-table-column :sortable="true" label="HTTP状态码" prop="returnResult" width="200">
+        <el-table-column label="HTTP状态码" prop="returnResult" width="100">
         </el-table-column>
-        <el-table-column :sortable="true" label="触发人" prop="requestPerson" width="180">
+        <el-table-column label="触发人" prop="requestPerson" width="180">
         </el-table-column>
-        <el-table-column :sortable="true" label="流水号" prop="serialNumber" width="120"></el-table-column>
+        <el-table-column label="流水号" prop="serialNumber" width="120"></el-table-column>
       </el-table>
       <div v-show="detail.list.length" class="text-center">
         <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
-                       :page-sizes="[10,20,50,100]"
+                       :page-sizes="[5,10,20,50,100]"
                        :total="pager.count" layout="sizes, prev, pager, next, jumper"
                        @size-change="handleSizeChange"
                        @current-change="handleCurrentChange">
@@ -117,7 +121,7 @@ export default {
       pager: {
         currentPage: 1,
         count: 0,
-        pageSize: 10
+        pageSize: 5
       }
     };
   },
@@ -125,6 +129,24 @@ export default {
     isShowPushBtn() {
       // 推送数据条件： 反馈信息不存在 或者最新反馈信息推送异常
       return !this.detail.list.length || this.detail.list[0].result !== 0 || this.detail.list[0].result !== '00';
+    },
+    codeShowMore() {
+      return function (row) {
+        let title = '';
+        if (row.requestDecryptionContent && row.showMore) {
+          title = row.requestDecryptionContent
+        }
+        return title
+      }
+    },
+    centerShowMore() {
+      return function (row) {
+        let title = '';
+        if (row.requestContent && row.centerShowMore) {
+          title = row.requestContent
+        }
+        return title
+      }
     }
   },
   watch: {
@@ -135,6 +157,12 @@ export default {
     }
   },
   methods: {
+    changeState(row) {
+      row.showMore = !row.showMore
+    },
+    centerChangeState(row) {
+      row.centerShowMore = !row.centerShowMore
+    },
     handleSizeChange(val) {
       this.pager.pageSize = val;
       window.localStorage.setItem('currentPageSize', val);
@@ -154,7 +182,11 @@ export default {
       this.$http.get(`upload-data/order/${this.orderId}/log`, {params}).then(res => {
         let list = [];
         if (res.data.pageResponse) {
-          list = res.data.pageResponse.list || [];
+          list = res.data.pageResponse.list.map(m => {
+            m.showMore = false;
+            m.centerShowMore = false;
+            return m
+          }) || [];
           this.pager.count = res.data.pageResponse.count;
         }
         this.detail = {

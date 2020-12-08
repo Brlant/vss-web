@@ -163,8 +163,15 @@ export default {
       this.loading = true;
       http.get(`/receipt/order/${this.currentOrder.id}`).then(res => {
         this.goodsDetails = this.currentOrder.detailDtoList.slice();
+        let amout = 0;
         this.goodsDetails.forEach(i => {
           i.batchNumbers = res.data.filter(f => f.orderDetailId === i.id);
+          if (i.batchNumbers) {
+            i.batchNumbers.forEach(i => {
+              amout += i.aggregateQuantity;
+            })
+            i.amount = amout;
+          }
         });
         this.loading = false;
       });

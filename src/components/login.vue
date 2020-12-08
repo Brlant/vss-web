@@ -26,8 +26,9 @@
                          @blur="check()"></oms-input>
             </el-form-item>
             <el-form-item label="密码" prop="password" style="position:relative">
-              <oms-input v-model="user.password" :showFocus="isFocus === 3" placeholder="请输入密码"
-                         type="password"></oms-input>
+<!--              <oms-input v-model="user.password" :showFocus="isFocus === 3" placeholder="请输入密码"-->
+<!--                         type="password"></oms-input>-->
+              <el-input placeholder="请输入密码" v-model="user.password" :autofocus="isFocus === 3" show-password></el-input>
               <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>
             </el-form-item>
             <el-form-item v-show="showCode" label="验证码">
