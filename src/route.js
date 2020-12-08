@@ -358,6 +358,11 @@ export const route = [
             meta: {moduleId: 'report', title: '采购明细表', perm: 'purchasing-detail-form-manager'}
           },
           {
+            path: '/report/purchase-detail',
+            component: () => import('./components/report/purchase-detail.vue'),
+            meta: {moduleId: 'report', title: '采购明细表（详细）', perm: 'sz-purchasing-detail-form-manager'}
+          },
+          {
             path: '/report/sale',
             component: () => import('./components/report/sale.vue'),
             meta: {moduleId: 'report', title: '销售明细表', perm: 'sale-detail-form-manager'}
