@@ -90,8 +90,8 @@
             <el-col :span="8">
               <oms-form-row :span="5" label="疫苗类型" style="height: 36px">
                 <el-radio-group v-model="searchWord.vaccineType" size="small">
-                  <el-radio-button label="0">免疫规划疫苗</el-radio-button>
-                  <el-radio-button label="1">非免疫规划疫苗</el-radio-button>
+                  <el-radio-button label="1">免疫规划疫苗</el-radio-button>
+                  <el-radio-button label="2">非免疫规划疫苗</el-radio-button>
                 </el-radio-group>
               </oms-form-row>
             </el-col>
