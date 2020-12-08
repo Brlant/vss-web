@@ -41,26 +41,6 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row :span="7" label="接种单位名称">
-                <el-select v-model="searchCondition.povId" :clearable="true" :loading="selectLoading"
-                           :remote-method="filterProvide" filterable placeholder="请输入接种单位名称查询"
-                           popperClass="good-selects" remote
-                           @click.native.once="filterProvide('')">
-                  <el-option v-for="item in provideList" :key="item.id" :label="item.name"
-                             :value="item.id">
-                    <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{ item.name }}</span>
-                    </div>
-                    <div style="overflow: hidden">
-                      <span class="select-other-info pull-left">
-                        <span>系统代码:</span>{{ item.manufacturerCode }}
-                      </span>
-                    </div>
-                  </el-option>
-                </el-select>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
               <oms-form-row :span="6" label="疫苗名称">
                 <el-select v-model="searchCondition.orgGoodsId" :clearable="true" :remote-method="searchProduct"
                            filterable
@@ -230,7 +210,6 @@ export default {
       },
       statusList: utils.scanCodeRecordStatus,
       doing: false,
-      provideList: [],
       selectLoading: false
     };
   },
@@ -267,20 +246,6 @@ export default {
     },
     showImg: function (file) {
       this.$store.commit('changeAttachment', file.signedFile.attachmentId);
-    },
-    filterProvide: function (query) {
-      let orgId = this.$store.state.user.userCompanyAddress;
-      let params = {
-        keyWord: query,
-        subjectOrgId: orgId
-      };
-      this.selectLoading = true;
-      BaseInfo.queryOrgByVossAuth(orgId, params).then(res => {
-        this.provideList = res.data;
-        this.selectLoading = false;
-      }).catch(() => {
-        this.selectLoading = false;
-      });
     },
     handleSizeChange(val) {
       this.pager.pageSize = val;
