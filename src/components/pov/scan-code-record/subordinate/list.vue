@@ -170,7 +170,7 @@
                 <span v-else>未签名</span>
               </el-col>
               <el-col :span="2">
-                {{ statusList[item.signedStatus] }}
+                {{ item.signedStatus ? statusList[item.signedStatus] : '' }}
                 <perm label="injection-subordinate-signed-cancel">
                   <span @click.stop="cancelItem(item)" v-show="item.signedStatus==='1'">
                       <a class="btn-circle btn-opera" href="#" @click.prevent=""><i
