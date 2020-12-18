@@ -42,6 +42,9 @@
             <oms-row :span="span" label="物流商">
               {{currentOrder.logisticsProviderName}}
             </oms-row>
+            <oms-row :span="span" label="实际收货人" v-show="currentOrder.transactOrgHandlers">
+              {{currentOrder.transactOrgHandlers}}
+            </oms-row>
             <el-row v-show="currentOrder.remark" :span="span">
               <oms-row :span="4" label="备注">{{ currentOrder.remark }}</oms-row>
             </el-row>
@@ -72,6 +75,9 @@
             </oms-row>
             <oms-row v-show="currentOrder.erpStatus === '5'" label="取消原因">
               <span class="goods-span">{{currentOrder.cancelReason}}</span>
+            </oms-row>
+            <oms-row label="交接时间" v-show="currentOrder.handoverTime">
+              {{currentOrder.handoverTime|time}}
             </oms-row>
             <oms-row v-show="currentOrder.returnReason" label="退货原因">
               {{ currentOrder.returnReason }}
