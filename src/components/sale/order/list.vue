@@ -247,11 +247,11 @@
             <el-checkbox v-show="isShowCheckBox" v-model="checkAll" @change="checkAllOrder"/>
             货主/订单号
           </el-col>
-          <el-col :span="4">业务类型</el-col>
+          <el-col :span="3">业务类型</el-col>
           <el-col :span="5">收货单位</el-col>
           <el-col :span="5">时间</el-col>
           <el-col :span="2">状态</el-col>
-          <el-col v-if="filters.state < 4 " :span="3" class="opera-btn">操作</el-col>
+          <el-col v-if="filters.state < 4 " :span="4" class="opera-btn">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -292,7 +292,7 @@
                   </div>
                 </div>
               </el-col>
-              <el-col :span="4">
+              <el-col :span="3">
                 <div class="vertical-center">
                   <dict :dict-group="'bizOutType'" :dict-key="item.bizType"></dict>
                 </div>
@@ -310,23 +310,33 @@
                   <order-push-status :msg="item.pushMessage" :status="item.pushStatus"/>
                 </div>
               </el-col>
-              <el-col v-if="filters.state < 4" :span="3" class="opera-btn">
+              <el-col v-if="filters.state < 4" :span="4" class="opera-btn">
                 <perm v-show="filters.state === '0' || filters.state === '1'"
                       :label="vaccineType === '1'?'sales-order-edit': 'second-vaccine-sales-order-edit' ">
-              <span @click.stop.prevent="editOrder(item)">
-                <a class="btn-circle" href="#" @click.prevent=""><i
-                  class="el-icon-t-edit"></i></a>
-                编辑
-              </span>
+                  <span @click.stop.prevent="editOrder(item)">
+                    <a class="btn-circle" href="#" @click.prevent="">
+                      <i class="el-icon-t-edit"></i>
+                    </a>编辑
+                  </span>
                 </perm>
                 <perm v-show="filters.state === '2' || filters.state === '3'"
                       :label="vaccineType === '1'?'sales-order-conversion': 'second-vaccine-sales-order-conversion' ">
-              <span @click.stop.prevent="transformReturnOrder(item)">
-                <a class="btn-circle" href="#" @click.prevent=""><i
-                  class="el-icon-t-reset"></i></a>
-                <span style="font-size: 12px">转成销售退货订单</span>
-              </span>
+                  <span @click.stop.prevent="transformReturnOrder(item)">
+                    <a class="btn-circle" href="#" @click.prevent=""><i
+                      class="el-icon-t-reset"></i></a>
+                    <span style="font-size: 12px">转成销售退货订单</span>
+                  </span>
                 </perm>
+                <div>
+                  <perm v-if="['2'].includes(filters.state)" :label="vaccineType === '1'?'sales-order-batch-review': 'second-vaccine-sales-order-batch-review' ">
+                  <span @click.stop.prevent="reviewOrder(item)">
+                    <a class="btn-circle" href="#" @click.prevent="">
+                      <i class="el-icon-t-scan"></i>
+                    </a>
+                    <span style="font-size: 12px">扫码复核</span>
+                 </span>
+                  </perm>
+                </div>
               </el-col>
             </el-row>
             <order-goods-info :order-item="item"></order-goods-info>
@@ -351,6 +361,10 @@
       <add-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" :vaccineType="vaccineType" type="1"
                 @change="onSubmit" @close="resetRightBox"></add-form>
     </page-right>
+    <page-right :css="{'width':'1000px','padding':0}" :show="showReviewCode" @right-close="resetRightBox">
+      <review-order :orderId="currentOrderId" :show="showReviewCode" @refresh="refreshOrder"
+                    @right-close="resetRightBox"/>
+    </page-right>
   </div>
 </template>
 <script>
@@ -359,15 +373,17 @@ import showForm from './show.order.out.vue';
 import addForm from './form/outForm.vue';
 import {BaseInfo, erpOrder, Vaccine} from '@/resources';
 import OrderMixin from '@/mixins/orderMixin';
+import reviewOrder from '@/components/purchase/scanReview/review.vue';
 
 export default {
   components: {
-    showForm, addForm
+    showForm, addForm,reviewOrder
   },
   data: function () {
     return {
       loadingData: true,
       showItemRight: false,
+      showReviewCode:false,
       showPart: false,
       showDetail: false,
       showSearch: false,
@@ -456,6 +472,11 @@ export default {
     }
   },
   methods: {
+    reviewOrder(item) {
+      this.action = 'edit';
+      this.showReviewCode = true;
+      this.currentOrderId = item.id;
+    },
     editOrder(item) {
       this.action = 'edit';
       this.currentOrderId = item.id;
@@ -514,6 +535,7 @@ export default {
     resetRightBox: function () {
       this.showDetail = false;
       this.showItemRight = false;
+      this.showReviewCode=false;
       this.defaultIndex = 0;
       this.action = '';
       this.showPart = false;
