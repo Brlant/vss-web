@@ -393,6 +393,11 @@ export const route = [
             meta: {moduleId: 'report', title: '进销存盘点表', perm: 'inventory-form-manager'}
           },
           {
+            path: '/report/shenzhen-repertory',
+            component: () => import('./components/report/shenzhen-repertory.vue'),
+            meta: {moduleId: 'report', title: '进销存盘点表(深圳专用)', perm: 'shenzhen-inventory-form-manager'}
+          },
+          {
             path: '/report/first/out/manager',
             component: () => import('./components/report/one-out.vue'),
             meta: {moduleId: 'report', title: '免疫规划疫苗各区出货统计表', perm: 'first-vaccine-out-form-manager'}
