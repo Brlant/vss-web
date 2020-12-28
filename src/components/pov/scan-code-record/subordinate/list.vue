@@ -144,7 +144,7 @@
           <div v-for="item in recordList" :key="" class="order-list-item order-list-item-bg">
             <el-row>
               <el-col :span="2" class="R pt10">
-                {{ item.createTime | date }}
+                {{ item.actualTime | date }}
               </el-col>
               <el-col :span="4" class="R pt10">
                 {{ item.povName }}
