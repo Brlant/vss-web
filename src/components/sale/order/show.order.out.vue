@@ -50,6 +50,11 @@ $leftWidth: 180px;
               <el-button plain type="danger" @click="deleteOrder">删除订单</el-button>
             </perm>
           </li>
+          <li v-show="currentOrder.state === '3' " class="text-center order-btn" style="margin-top: 10px">
+            <perm :label="vaccineType==='1'?'sales-order-complete':'second-vaccine-sales-order-complete'">
+              <el-button type="primary" @click="completeOrder">完成订单</el-button>
+            </perm>
+          </li>
         </ul>
       </div>
       <div class="content-right content-padding">
@@ -254,6 +259,25 @@ export default {
         duration: 2000,
         message: '请选择取消订单原因',
         type: 'warning'
+      });
+    },
+    completeOrder() {
+      this.$confirm('是否确认完成订单', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.$http.post(`/erp-order/${this.orderId}/transport/complete`).then(() => {
+          this.$notify.success({
+            message: '完成订单'
+          });
+          this.$emit('refreshOrder');
+          this.$emit('close');
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response && error.response.data && error.response.data.msg || '操作失败'
+          });
+        });
       });
     }
   }
