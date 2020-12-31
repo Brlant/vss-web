@@ -59,8 +59,8 @@ $activeColor: #00bff3;
     <div class="container">
       <div class="col-xs-12 col-md-7 pl-0 pr-0 police-part">
         <span class="mr-10">国药控股上海生物医药有限公司</span>
-        <a href="http://www.beian.miit.gov.cn/" target="_blank">
-          沪ICP备10213462号
+        <a href="https://beian.miit.gov.cn/" target="_blank">
+          沪ICP备10213462号-7
         </a>
       </div>
     </div>
