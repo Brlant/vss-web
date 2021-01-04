@@ -42,30 +42,30 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row :span="6" label="疫苗名称">
-                <el-select v-model="searchCondition.orgGoodsId" :clearable="true" :remote-method="searchProduct"
+                <el-select v-model="searchCondition.vaccineId" :clearable="true" :remote-method="searchProduct"
                            filterable
                            placeholder="请输入名称或编号搜索疫苗"
                            popper-class="good-selects" remote
                            @click.native.once="searchProduct('')">
-                  <el-option v-for="item in detailList" :key="item.orgGoodsDto.id" :label="item.orgGoodsDto.name"
-                             :value="item.orgGoodsDto.id">
+                  <el-option v-for="item in detailList" :key="item.id" :label="item.name"
+                             :value="item.id">
                     <div style="overflow: hidden">
                       <span class="pull-left">
-                        {{ item.orgGoodsDto.name }}
+                        {{ item.name }}
                       </span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left">
-                        <span v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{
-                          item.orgGoodsDto.goodsDto.specifications
+                        <span v-show="item.specifications">规格:</span>{{
+                          item.specifications
                         }}
                       </span>
                       <span class="select-other-info pull-left">
-                        <span v-show="item.orgGoodsDto.goodsDto.code">货品编号:</span>{{ item.orgGoodsDto.goodsDto.code }}
+                        <span v-show="item.code">货品编号:</span>{{ item.code }}
                       </span>
                       <span class="select-other-info pull-left"><span
-                        v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{
-                          item.orgGoodsDto.goodsDto.factoryName
+                        v-show="item.factoryName">生产单位:</span>{{
+                          item.factoryName
                         }}
                       </span>
                     </div>
@@ -130,7 +130,7 @@
                 {{ item.povName }}
               </el-col>
               <el-col :span="4" class="R pt10">
-                {{ item.orgGoodsName }}
+                {{ item.goodsName }}
               </el-col>
               <el-col :span="2" class="R pt10">
                 {{ item.batchNumber }}
@@ -187,7 +187,7 @@ export default {
       filters: {
         actualStartTime: '',
         actualEndTime: '',
-        orgGoodsId: '',
+        vaccineId: '',
         actualCode: '',
         povId: '',
         signedStatus: '',
@@ -196,7 +196,7 @@ export default {
       searchCondition: {
         actualStartTime: '',
         actualEndTime: '',
-        orgGoodsId: '',
+        vaccineId: '',
         actualCode: '',
         povId: '',
         signedStatus: ''
@@ -274,7 +274,7 @@ export default {
         deleteFlag: false,
         keyWord: query
       });
-      this.$http.get('/vaccine-info', {params}).then(res => {
+      this.$http.get('/goods/main-info-pager', {params}).then(res => {
         this.detailList = res.data.list;
       });
     },
@@ -287,7 +287,7 @@ export default {
       let temp = {
         actualStartTime: '',
         actualEndTime: '',
-        orgGoodsId: '',
+        vaccineId: '',
         actualCode: '',
         povId: '',
         signedStatus: '',
