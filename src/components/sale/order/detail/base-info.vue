@@ -42,6 +42,12 @@
             <oms-row label="订单状态">
               {{ getOrderStatus(currentOrder) }}
             </oms-row>
+            <oms-row :span="span" label="实际收货人" v-show="currentOrder.transactOrgHandlers">
+              {{currentOrder.transactOrgHandlers}}
+            </oms-row>
+            <oms-row label="交接时间" v-show="currentOrder.handoverTime">
+              {{currentOrder.handoverTime|time}}
+            </oms-row>
           </el-col>
         </el-row>
         <el-form ref="orderAddForm" :model="currentOrder" :rules="rules"
