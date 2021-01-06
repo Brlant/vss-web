@@ -68,10 +68,10 @@
               </el-option>
             </el-select>
           </el-form-item>
-          <el-form-item label="实际收货人">
+<!--          <el-form-item label="实际收货人">
             <oms-input v-model="currentOrder.actualConsignee" :maxlength="50" placeholder="请输入实际收货人"
                        type="text"></oms-input>
-          </el-form-item>
+          </el-form-item>-->
           <el-form-item label="收货人联系电话">
             <oms-input v-model="currentOrder.consigneePhone" :maxlength="50" placeholder="请输入收货人联系电话"
                        type="text"></oms-input>
@@ -129,8 +129,8 @@
                 {{currentOrder.logisticsProviderName}}
               </span>
             </oms-row>
-            <oms-row :span="span" label="实际收货人">
-              <span class="goods-span">{{currentOrder.actualConsignee}}</span>
+            <oms-row :span="span" label="实际收货人" v-show="currentOrder.transactOrgHandlers">
+              <span class="goods-span">{{currentOrder.transactOrgHandlers}}</span>
             </oms-row>
             <oms-row :span="span" label="收货人联系电话">
               <span class="goods-span">{{currentOrder.consigneePhone}}</span>
