@@ -156,6 +156,9 @@
               {{ getOrderStatus(currentOrder) }}
               <order-push-status :msg="currentOrder.pushMessage" :status="currentOrder.pushStatus"/>
             </oms-row>
+            <oms-row label="交接时间" v-show="currentOrder.handoverTime">
+              {{currentOrder.handoverTime|time}}
+            </oms-row>
             <oms-row v-show="currentOrder.erpStatus === '5'" label="取消原因">
               <span class="goods-span">{{currentOrder.cancelReason}}</span>
             </oms-row>
