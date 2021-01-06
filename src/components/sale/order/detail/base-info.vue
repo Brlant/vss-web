@@ -135,6 +135,9 @@
             <oms-row :span="span" label="收货人联系电话">
               <span class="goods-span">{{currentOrder.consigneePhone}}</span>
             </oms-row>
+            <oms-row label="交接时间" v-show="currentOrder.handoverTime">
+              {{currentOrder.handoverTime|time}}
+            </oms-row>
             <oms-row :span="span" label="运输条件">
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationCondition"></dict>
             </oms-row>
