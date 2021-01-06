@@ -164,9 +164,9 @@ $leftWidth: 200px;
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-show="showContent.isShowOtherContent" label="实际收货人">
+<!--            <el-form-item v-show="showContent.isShowOtherContent" label="实际收货人">
               <oms-input v-model="form.actualConsignee" :maxlength="50" placeholder="请输入实际收货人" type="text"></oms-input>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item label="退货单位仓库地址" prop="orgAddress">
               <el-select v-model="form.orgAddress" :clearable="true" filterable placeholder="请选择退货单位仓库地址"
                          @change="transportationAddressChange">

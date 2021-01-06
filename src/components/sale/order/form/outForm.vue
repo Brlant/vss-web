@@ -149,9 +149,9 @@ $leftWidth: 240px;
                 </el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-show="showContent.isShowOtherContent" label="实际收货人">
+<!--            <el-form-item v-show="showContent.isShowOtherContent" label="实际收货人">
               <oms-input v-model="form.actualConsignee" :maxlength="50" placeholder="请输入实际收货人" type="text"></oms-input>
-            </el-form-item>
+            </el-form-item>-->
             <el-form-item v-show="showContent.isShowOtherContent" label="收货人联系电话">
               <oms-input v-model="form.consigneePhone" :maxlength="50" placeholder="请输入收货人联系电话" type="text"></oms-input>
             </el-form-item>
