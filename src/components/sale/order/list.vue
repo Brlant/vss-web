@@ -217,15 +217,32 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <order-push-search v-model="searchCondition.pushStatus"/>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="3" label="">
-                <el-button native-type="submit" type="primary" @click="searchInOrder">查询</el-button>
-                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+              <oms-form-row :span="6" label="发货地址">
+                <el-select v-model="searchCondition.addressId" :clearable="true" filterable placeholder="请选择退货单位仓库地址">
+                  <el-option v-for="address in addressList" :key="address.id" :label="address.name" :value="address.id">
+                    <div style="overflow: hidden">
+                      <span class="pull-left" style="clear: right">{{ address.name }}</span>
+                    </div>
+                  </el-option>
+                </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="8">
+              <order-push-search v-model="searchCondition.pushStatus"/>
+            </el-col>
           </el-row>
+          <el-col :span="8">
+          </el-col>
+          <el-col :span="8">
+          </el-col>
+            <el-row>
+              <el-col :span="8">
+                <oms-form-row :span="6" label="">
+                  <el-button native-type="submit" type="primary" @click="searchInOrder">查询</el-button>
+                  <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                </oms-form-row>
+              </el-col>
+            </el-row>
         </el-form>
       </div>
 
@@ -371,7 +388,7 @@
 import utils from '@/tools/utils';
 import showForm from './show.order.out.vue';
 import addForm from './form/outForm.vue';
-import {BaseInfo, erpOrder, Vaccine} from '@/resources';
+import {Address, BaseInfo, erpOrder, Vaccine} from '@/resources';
 import OrderMixin from '@/mixins/orderMixin';
 import reviewOrder from '@/components/purchase/scanReview/review.vue';
 
@@ -404,7 +421,8 @@ export default {
         deleteFlag: false,
         expectedStartTime: '',
         expectedEndTime: '',
-        pushStatus: ''
+        pushStatus: '',
+        addressId:''
       },
       searchCondition: {
         searchType: 1,
@@ -419,7 +437,8 @@ export default {
         thirdPartyNumber: '',
         expectedStartTime: '',
         expectedEndTime: '',
-        pushStatus: ''
+        pushStatus: '',
+        addressId:''
       },
       createdTime: '',
       expectedTime: '',
@@ -437,7 +456,8 @@ export default {
       action: '',
       user: {},
       state: '',
-      goodesList: []
+      goodesList: [],
+      addressList:[]
     };
   },
   mixins: [OrderMixin],
@@ -448,6 +468,8 @@ export default {
       this.currentOrderId = orderId;
       this.showDetail = true;
     }
+    // 查询仓库地址
+    this.searchAddress();
   },
   computed: {
     transportationMeansList: function () {
@@ -472,6 +494,14 @@ export default {
     }
   },
   methods: {
+    searchAddress() {
+      Address.queryAddress(null, {
+        deleteFlag: false,
+        auditedStatus: '1', status: 0
+      }).then(res => {
+        this.addressList = res.data || [];
+      });
+    },
     reviewOrder(item) {
       this.action = 'edit';
       this.showReviewCode = true;
@@ -517,7 +547,8 @@ export default {
         orgAreaCode: '',
         expectedStartTime: '',
         expectedEndTime: '',
-        pushStatus: ''
+        pushStatus: '',
+        addressId:''
       };
       this.createdTime = '';
       this.expectedTime = '';
