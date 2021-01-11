@@ -297,7 +297,7 @@ export default {
   },
   methods: {
     closeForm(item) {
-      this.$confirm('确认关闭页面?', '', {
+      this.$confirm('信息未保存，是否关闭?', '', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
         type: 'warning'
