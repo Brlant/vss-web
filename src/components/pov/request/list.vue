@@ -217,7 +217,7 @@
         </div>
       </div>
     </div>
-    <page-right :css="{'width':'1000px','padding':0}" :show="showRight" @right-close="resetRightBox">
+    <page-right :css="{'width':'1000px','padding':0}" :show="showRight" @right-close="closeForm">
       <add-form :currentOrder="currentOrder" :index="index" @change="onSubmit" @close="resetRightBox"></add-form>
     </page-right>
   </div>
@@ -296,6 +296,17 @@ export default {
     }
   },
   methods: {
+    closeForm(item) {
+      this.$confirm('确认关闭页面?', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.showRight = false
+      }).catch(error => {
+
+      });
+    },
     scrollLoadingData(event) {
       this.$scrollLoadingData(event);
     },

@@ -159,11 +159,11 @@
       <!--</div>-->
     </div>
 
-    <page-right :css="{'width':'1000px','padding':0}" :show="showRight" @right-close="resetRightBox">
+    <page-right :css="{'width':'1000px','padding':0}" :show="showRight" @right-close="closeForm">
       <allot-form :TotalAllocationList="allocationList" :currentItem="currentItem" :status="status"
                   @change="change" @close="resetRightBox" @refresh="refresh" @updateItem="showPart"></allot-form>
     </page-right>
-    <page-right :css="{'width':'700px','padding':0}" :show="showEditGoodsRight" @right-close="resetRightBox">
+    <page-right :css="{'width':'700px','padding':0}" :show="showEditGoodsRight" @right-close="closeForm">
       <edit-goods :currentItem="currentItem" :show="showEditGoodsRight" @close="resetRightBox"
                   @refresh="refresh"></edit-goods>
     </page-right>
@@ -230,6 +230,18 @@ export default {
       this.defaultIndex = -1;
       this.purchase = {};
       this.vaccineType = '';
+    },
+    closeForm(item) {
+      this.$confirm('确认关闭页面?', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.showRight = false;
+        this.showEditGoodsRight = false;
+      }).catch(error => {
+
+      });
     },
     refresh() {
       this.resetRightBox();

@@ -237,12 +237,12 @@
                 partClass="pr-no-animation" @right-close="resetRightBox">
       <show-form :currentItem="currentItem" @close="resetRightBox"></show-form>
     </page-right>
-    <page-right :css="{'width':'1000px','padding':0}" :show="showRight" @right-close="resetRightBox">
+    <page-right :css="{'width':'1000px','padding':0}" :show="showRight" @right-close="closeForm">
       <add-form :currentOrder="currentItem" :index="index" @change="onSubmit" @close="resetRightBox"></add-form>
     </page-right>
-    <page-right :css="{'width':'1000px','padding':0}" :show="showEditPart" @right-close="resetRightBox">
-      <edit-form :currentItem="currentItem" :showEditPart="showEditPart" @change="onSubmit"
-                 @close="resetRightBox"></edit-form>
+    <page-right :css="{'width':'1000px','padding':0}" :show="showEditPart" @right-close="closeForm">
+      <edit-form :currentItem="currentItem" :showEditPart="showEditPart" @change="resetRightBox"
+                 @close="closeForm"></edit-form>
     </page-right>
   </div>
 </template>
@@ -441,6 +441,18 @@ export default {
     onSubmit() {
       this.getDemandList(1);
       this.showRight = false;
+    },
+    closeForm(item) {
+      this.$confirm('确认关闭页面?', '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        this.showRight = false;
+        this.showEditPart = false;
+      }).catch(error => {
+
+      });
     },
     resetRightBox(para) {
       this.index = -1;
