@@ -104,7 +104,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="9">
-              <oms-form-row :isRequire="true" :span="5" label="货主疫苗">
+              <oms-form-row :span="5" label="货主疫苗">
                 <el-select v-model="searchWord.orgGoodsId" :clearable="true" :remote-method="filterOrgGoods" filterable
                            placeholder="请输入名称或编号搜索货主疫苗"
                            popper-class="good-selects" remote
