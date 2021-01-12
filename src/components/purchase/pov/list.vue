@@ -95,7 +95,7 @@
                 <oms-input v-model="searchWord.orgAreaCode" placeholder="请输入单位区域代码" type="text"></oms-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
+            <el-col :span="7">
               <oms-form-row :span="7" label="疫苗种类">
                 <el-select v-model="searchWord.goodsType" placeholder="请选择疫苗种类" type="text">
                   <el-option v-for="item in vaccineSignList" :key="item.key" :label="item.label"
@@ -103,8 +103,35 @@
                 </el-select>
               </oms-form-row>
             </el-col>
+            <el-col :span="9">
+              <oms-form-row :isRequire="true" :span="5" label="货主疫苗">
+                <el-select v-model="searchWord.orgGoodsId" :clearable="true" :remote-method="filterOrgGoods" filterable
+                           placeholder="请输入名称或编号搜索货主疫苗"
+                           popper-class="good-selects" remote
+                           @click.native.once="filterOrgGoods('')">
+                  <el-option v-for="org in orgGoods" :key="org.id" :label="org.goodsName"
+                             :value="org.id">
+                    <div style="overflow: hidden">
+                      <span class="pull-left">{{ org.goodsName }}<el-tag v-show="!org.status" style="float: none"
+                                                                         type="danger">停用</el-tag></span>
+                    </div>
+                    <div style="overflow: hidden">
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.goodsNo">货主货品编号:</span>{{ org.goodsNo }}
+                      </span>
+                      <span class="select-other-info pull-left"><span
+                        v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
+                      </span>
+                    </div>
+                  </el-option>
+                </el-select>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="14"></el-col>
             <el-col :span="10">
-              <oms-form-row :span="1" label="">
+              <oms-form-row :span="3" label="">
                 <el-button native-type="submit" type="primary" @click="searchInOrder">查询</el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
                 <el-button :plain="true" type="success" @click="exportExcel">导出EXCEL</el-button>
@@ -127,7 +154,8 @@
         </el-col>
         <el-col :span="11">
           <div class="order-list-status order-list-status-right container clearfix">
-            <div v-for="(item,key) in assignType" v-show="key > 3" :class="{'active':key==activeStatus}" class="status-item"
+            <div v-for="(item,key) in assignType" v-show="key > 3" :class="{'active':key==activeStatus}"
+                 class="status-item"
                  style="width: 115px" @click="checkStatus(item, key)">
               <div :class="['b_color_'+key]" class="status-bg"></div>
               <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span class="status-num">
@@ -247,7 +275,7 @@
   </div>
 </template>
 <script>
-import {BaseInfo, demandAssignment, procurementCollect, pullSignal} from '@/resources';
+import {BaseInfo, demandAssignment, http, procurementCollect, pullSignal} from '@/resources';
 import utils from '../../../tools/utils';
 import showForm from './detail/index.vue';
 import addForm from '../request/form';
@@ -276,7 +304,8 @@ export default {
         demandEndTime: '',
         orgAreaCode: '',
         id: '',
-        goodsType: ''
+        goodsType: '',
+        orgGoodsId:''
       },
       searchWord: {
         povId: '',
@@ -284,7 +313,8 @@ export default {
         demandEndTime: '',
         orgAreaCode: '',
         id: '',
-        goodsType: ''
+        goodsType: '',
+        orgGoodsId:''
       },
       demandTime: '',
       pager: {
@@ -298,7 +328,8 @@ export default {
       isCheckAll: false,
       orgList: [],
       isSearch: false,
-      index: -1
+      index: -1,
+      orgGoods: []
     };
   },
   computed: {
@@ -338,6 +369,17 @@ export default {
     }
   },
   methods: {
+    filterOrgGoods(query) {
+      let orgId = this.$store.state.user.userCompanyAddress;
+      let params = Object.assign({}, {
+        deleteFlag: false,
+        orgId: orgId,
+        keyWord: query
+      });
+      http.get('/erp-stock/goods', {params}).then(res => {
+        this.orgGoods = res.data.list;
+      });
+    },
     handleSizeChange(val) {
       this.pager.pageSize = val;
       window.localStorage.setItem('currentPageSize', val);
@@ -491,8 +533,8 @@ export default {
         demandEndTime: '',
         orgAreaCode: '',
         id: '',
-        goodsType: ''
-
+        goodsType: '',
+        orgGoodsId:''
       };
       this.demandTime = '';
       this.isCheckAll = false;
