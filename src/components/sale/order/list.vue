@@ -221,7 +221,8 @@
                 <el-select v-model="searchCondition.addressId" :clearable="true" filterable placeholder="请选择退货单位仓库地址">
                   <el-option v-for="address in addressList" :key="address.id" :label="address.name" :value="address.id">
                     <div style="overflow: hidden">
-                      <span class="pull-left" style="clear: right">{{ address.name }}</span>
+                      <span class="pull-left">{{ address.name }}</span>
+                      <span class="pull-right" style="color: #999">{{ getWarehouseAdress(address) }}</span>
                     </div>
                   </el-option>
                 </el-select>
@@ -457,7 +458,8 @@ export default {
       user: {},
       state: '',
       goodesList: [],
-      addressList:[]
+      addressList:[],
+      warehouseTypeList: this.$store.state.warehouseType
     };
   },
   mixins: [OrderMixin],
@@ -494,6 +496,12 @@ export default {
     }
   },
   methods: {
+    getWarehouseAdress: function (item) { // 得到仓库地址
+      if (!item) {
+        return;
+      }
+      return item.detail + `（${this.warehouseTypeList[item.warehouseType].label}）`;
+    },
     searchAddress() {
       Address.queryAddress(null, {
         deleteFlag: false,
