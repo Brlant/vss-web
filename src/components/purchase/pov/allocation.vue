@@ -40,7 +40,7 @@
           <el-col :span="status === 0 ? 4 : 6">货主疫苗</el-col>
           <el-col :span="status === 0 ? 4 : 6">供货单位</el-col>
           <el-col :span="status === 0 ? 2 : 4">需求数</el-col>
-          <el-col :span="status === 0 ? 2 : 4">库存数</el-col>
+          <el-col :span="status === 0 ? 2 : 4">可用库存数</el-col>
           <el-col v-show="status === 0" :span="3">调配前库存差额</el-col>
           <el-col v-show="status === 0" :span="3">调配后库存差额</el-col>
           <el-col v-show="status === 0" :span="2">状态</el-col>
