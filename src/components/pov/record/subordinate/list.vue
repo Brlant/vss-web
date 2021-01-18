@@ -245,7 +245,9 @@ export default {
       this.loadingData = true;
       this.$http.get('/injection-task/subordinate', {params}).then(res => {
         this.CDCs = res.data.list;
-        this.pager.count = res.data.count;
+        if (res.data.list.length) {
+          this.pager.count = this.pager.currentPage * this.pager.pageSize + (res.data.list.length < this.pager.pageSize ? 0: 1);
+        }
         this.loadingData = false;
       });
     },
