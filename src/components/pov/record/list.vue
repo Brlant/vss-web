@@ -171,10 +171,10 @@
           </div>
         </div>
       </div>
-      <div v-show="detailList.length && !loadingData" class="text-center">
+      <div v-show="pager.count>pager.pageSize && !loadingData" class="text-center">
         <el-pagination
           :current-page="pager.currentPage"
-          :page-sizes="[10,30,50,100]" :total="pager.count" layout="sizes, prev, pager, next, jumper"
+          :page-sizes="[15,30,50,100]" :total="pager.count" layout="sizes, prev, pager, next, jumper"
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange">
         </el-pagination>
@@ -215,7 +215,7 @@ export default {
       pager: {
         currentPage: 1,
         count: 0,
-        pageSize: 10
+        pageSize: 15
       },
       doing: false,
       batchNumberList: []

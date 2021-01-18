@@ -183,8 +183,9 @@
     <div v-show="pager.count>pager.pageSize && !loadingData" class="text-center">
       <el-pagination
         :current-page="pager.currentPage"
-        :pageSize="pager.pageSize" :total="pager.count" layout="sizes, prev, pager, next, jumper, total"
-        @current-change="queryList">>
+        :page-sizes="[pager.pageSize,30,50,100]" :total="pager.count" layout="sizes, prev, pager, next, jumper"
+        @size-change="handleSizeChange"
+        @current-change="handleCurrentChange">
       </el-pagination>
     </div>
 
@@ -244,6 +245,13 @@ export default {
   },
   computed: {},
   methods: {
+    handleSizeChange(val) {
+      this.pager.pageSize = val;
+      this.queryList(1);
+    },
+    handleCurrentChange(val) {
+      this.queryList(val);
+    },
     queryBatchNumbers(query) {
       /*
               if (!this.searchCondition.vaccineId) {
@@ -342,7 +350,9 @@ export default {
       this.loadingData = true;
       inoculateTask.query(params).then(res => {
         this.taskList = res.data.list;
-        this.pager.count = res.data.count;
+        if (res.data.list.length) {
+          this.pager.count = this.pager.currentPage * this.pager.pageSize + (res.data.list.length < this.pager.pageSize ? 0: 1);
+        }
         this.loadingData = false;
       });
       this.queryStatusNum(params);
