@@ -138,7 +138,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="6">
-              <oms-form-row :span="6" label="">
+              <oms-form-row :span="2" label="">
                 <el-button :disabled="loadingData" type="primary" @click="search">
                   查询
                 </el-button>
