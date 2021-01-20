@@ -139,6 +139,9 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row :span="6" label="">
+                <el-button :disabled="loadingData" type="primary" @click="search">
+                  查询
+                </el-button>
                 <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
                 <el-button :disabled="isLoading" :plain="true" type="success" @click="exportFile">
                   导出
@@ -148,6 +151,46 @@
           </el-row>
         </el-form>
       </div>
+      <el-table ref="reportTable" v-loading="loadingData" :data="dataList"
+                :header-row-class-name="'headerClass'" :maxHeight="getHeight" border class="header-list">
+        <el-table-column :sortable="true" label="日期" prop="dateStr" width="130"></el-table-column>
+        <el-table-column label="单据类型" prop="bizTypeStr"></el-table-column>
+        <el-table-column label="入库数(支、瓶、袋)" prop="inCount" width="120"></el-table-column>
+        <el-table-column label="出库数/使用数(支、瓶、袋)" prop="outCount" width="150"></el-table-column>
+        <el-table-column label="库存数(支、瓶、袋)" prop="stockCount" width="120"></el-table-column>
+        <el-table-column label="生产厂家" prop="factoryName" width="150"></el-table-column>
+        <el-table-column label="疫苗" prop="vaccineName" width="200"></el-table-column>
+        <el-table-column label="疫苗种类" prop="vaccineType">
+          <template slot-scope="scope">
+            <span><dict :dict-key="'' + scope.row.vaccineType" dict-group="orderGoodsType"></dict></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="规格" prop="specification"></el-table-column>
+        <el-table-column label="剂型" prop="dosageForm">
+          <template slot-scope="scope">
+            <span><dict :dict-key="'' + scope.row.dosageForm" dict-group="dosageForm"></dict></span>
+          </template>
+        </el-table-column>
+        <el-table-column label="来源单位" prop="sourceOrgName" width="150"></el-table-column>
+        <el-table-column label="去向单位" prop="directOrgName" width="150"></el-table-column>
+        <el-table-column label="批号" prop="batchNumber"></el-table-column>
+        <el-table-column label="生产日期" prop="productionDate">
+          <template slot-scope="scope">
+            <span>{{ scope.row.productionDate|date }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="效期" prop="expirationDate">
+          <template slot-scope="scope">
+            <span>{{ scope.row.expirationDate|date }}</span>
+          </template>
+        </el-table-column>
+        <el-table-column label="批准文号" prop="approveNumber"></el-table-column>
+        <el-table-column label="批签发号" prop="batchReleaseNumber"></el-table-column>
+        <el-table-column label="通关单号" prop="customsFormNumber"></el-table-column>
+        <el-table-column label="本单位经手人" prop="orgHandler"></el-table-column>
+        <el-table-column label="对方单位经手人" prop="otherOrgHandler"></el-table-column>
+        <el-table-column label="备注" prop="remark"></el-table-column>
+      </el-table>
     </div>
   </div>
 </template>
@@ -179,7 +222,8 @@ export default {
         endTime: ''
       },
       bizDateAry: '',
-      isLoading: false
+      isLoading: false,
+      dataList: []
     };
   },
   computed: {
@@ -211,6 +255,26 @@ export default {
     }
   },
   methods: {
+    search: function () {// 搜索
+      if (!this.bizDateAry) {
+        this.$notify.info("请选择业务日期");
+        return;
+      }
+      if (!this.searchWord.orgGoodsIdList || this.searchWord.orgGoodsIdList < 1) {
+        this.$notify.info("请选择需要查询的疫苗");
+        return;
+      }
+      let startTime = this.$formatAryTime(this.bizDateAry, 0);
+      let endTime = this.$formatAryTime(this.bizDateAry, 1);
+      this.searchWord.startTime = startTime ? startTime + ' ' + '00:00:00' : '';
+      this.searchWord.endTime = endTime ? endTime + ' ' + '23:59:59' : '';
+      let params = Object.assign({}, this.searchWord);
+      this.loadingData = true;
+      this.$http.get('/erp-statement/sz-warehouse-detail', {params}).then(res => {
+        this.dataList = res.data;
+        this.loadingData = false;
+      });
+    },
     filterOrgGoods(query) {
       let params = Object.assign({}, {
         keyWord: query
@@ -295,6 +359,7 @@ export default {
         endTime: ''
       };
       this.bizDateAry = '';
+      this.dataList=[];
     },
     formatTime: function (date) {
       return date ? this.$moment(date).format('YYYY-MM-DD') : '';
