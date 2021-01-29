@@ -42,8 +42,8 @@
             <oms-row :span="span" label="物流商">
               {{currentOrder.logisticsProviderName}}
             </oms-row>
-            <oms-row :span="span" label="实际收货人" v-show="currentOrder.transactOrgHandlers">
-              {{currentOrder.transactOrgHandlers}}
+            <oms-row :span="span" label="实际收货人" v-show="currentOrder.actualConsignee">
+              {{currentOrder.actualConsignee}}
             </oms-row>
             <el-row v-show="currentOrder.remark" :span="span">
               <oms-row :span="4" label="备注">{{ currentOrder.remark }}</oms-row>
