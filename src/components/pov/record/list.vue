@@ -269,7 +269,7 @@ export default {
       this.loadingData = true;
       this.$http.get('/injection-task/injection-task-query', {params}).then(res => {
         this.CDCs = res.data.list;
-        if (res.data.list.length) {
+        if (res.data.list.length>=0) {
           this.pager.count = this.pager.currentPage * this.pager.pageSize + (res.data.list.length < this.pager.pageSize ? 0: 1);
         }
         this.loadingData = false;
