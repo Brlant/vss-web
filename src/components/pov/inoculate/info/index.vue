@@ -124,9 +124,10 @@
     </div>
     <div v-show="pager.count>pager.pageSize && !loadingData" class="text-center">
       <el-pagination
-        :current-page="pager.currentPage"
-        :pageSize="pager.pageSize" :total="pager.count" layout="prev, pager, next"
-        @current-change="queryList">
+        layout="sizes, prev, pager, next, jumper"
+        :total="pager.count" :page-sizes="[pager.pageSize,50,100]" @size-change="handleSizeChange"
+        @current-change="handleCurrentChange"
+        :current-page="pager.currentPage">
       </el-pagination>
     </div>
 
@@ -164,10 +165,17 @@ export default {
     };
   },
   mounted() {
-    this.queryList();
+    this.queryList(1);
   },
   computed: {},
   methods: {
+    handleSizeChange(val) {
+      this.pager.pageSize = val;
+      this.queryList(1);
+    },
+    handleCurrentChange(val) {
+      this.queryList(val);
+    },
     searchInOrder: function () {// 搜索
       this.searchCondition.createStartTime = this.$formatAryTime(this.expectedTime, 0);
       this.searchCondition.createEndTime = this.$formatAryTime(this.expectedTime, 1);
@@ -221,7 +229,7 @@ export default {
     },
     formChange() {
       this.resetRightBox();
-      this.queryList();
+      this.queryList(1);
     },
     queryList: function (pageNo) {
       this.pager.currentPage = pageNo;
@@ -232,7 +240,9 @@ export default {
       this.loadingData = true;
       inoculateInfo.query(params).then(res => {
         this.dataList = res.data.list;
-        this.pager.count = res.data.count;
+        if (res.data.list.length>=0) {
+          this.pager.count = this.pager.currentPage * this.pager.pageSize + (res.data.list.length < this.pager.pageSize ? 0: 1);
+        }
         this.loadingData = false;
       });
     }
