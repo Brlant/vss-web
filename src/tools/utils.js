@@ -241,6 +241,20 @@ export default {
     return parseFloat(v);
   },
   /**
+   * 保留指定位数小数
+   * @param val
+   * @returns {string}
+   */
+  formatNumber(val, several) {
+    let num = '';
+    if (typeof val === 'string') {
+      num = val;
+    } else if (typeof val === 'number') {
+      num = val.toFixed(several).toString();
+    }
+    return num;
+  },
+  /**
    * 录入完成后，输入模式失去焦点后对录入进行判断并强制更改，并对小数点进行0补全
    * @param th
    */

@@ -63,47 +63,47 @@
         <el-table-column :sortable="true" label="期末库存" prop="endStockCount"></el-table-column>
         <el-table-column v-if="type === 2" :sortable="true" label="单价" prop="price">
           <template slot-scope="scope">
-            <span>￥{{scope.row.price}}</span>
+            <span>￥{{ scope.row.price }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="type === 2" :sortable="true" label="期前金额" prop="restStockMoney">
           <template slot-scope="scope">
-            <span>￥{{scope.row.restStockMoney}}</span>
+            <span>￥{{ scope.row.restStockMoney }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="type === 2" :sortable="true" label="进苗金额" prop="purchaseMoney">
           <template slot-scope="scope">
-            <span>￥{{scope.row.purchaseMoney}}</span>
+            <span>￥{{ scope.row.purchaseMoney }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="type === 2" :sortable="true" label="使用金额" prop="injectionMoney">
           <template slot-scope="scope">
-            <span>￥{{scope.row.injectionMoney}}</span>
+            <span>￥{{ scope.row.injectionMoney }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="type === 2" :sortable="true" label="期末金额" prop="endStockMoney">
           <template slot-scope="scope">
-            <span>￥{{scope.row.endStockMoney}}</span>
+            <span>￥{{ scope.row.endStockMoney }}</span>
           </template>
         </el-table-column>
         <el-table-column :sortable="true" label="退货数量" prop="returnCount">
           <template slot-scope="scope">
-            <span>{{scope.row.returnCount}}</span>
+            <span>{{ scope.row.returnCount }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="type === 2" :sortable="true" label="退货金额" prop="returnMoney">
           <template slot-scope="scope">
-            <span>￥{{scope.row.returnMoney}}</span>
+            <span>￥{{ scope.row.returnMoney }}</span>
           </template>
         </el-table-column>
         <el-table-column :sortable="true" label="报废数量" prop="scrapCount">
           <template slot-scope="scope">
-            <span>{{scope.row.scrapCount}}</span>
+            <span>{{ scope.row.scrapCount }}</span>
           </template>
         </el-table-column>
         <el-table-column v-if="type === 2" :sortable="true" label="报废金额" prop="scrapMoney">
           <template slot-scope="scope">
-            <span>￥{{scope.row.scrapMoney}}</span>
+            <span>￥{{ scope.row.scrapMoney }}</span>
           </template>
         </el-table-column>
       </el-table>
@@ -193,7 +193,7 @@ export default {
         });
       });
     },
-    getSummaries(param) {
+    getSummaries: function (param) {
       const {columns, data} = param;
       const sums = [];
       columns.forEach((column, index) => {
@@ -223,6 +223,9 @@ export default {
       if (this.type === 2) {
         sums.forEach((i, index) => {
           if (index > 7 && index !== 12 && index !== 14) {
+            if (i != null) {
+              i = utils.formatNumber(i, 2);
+            }
             sums[index] = '￥' + i;
           }
         });
