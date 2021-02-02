@@ -144,6 +144,7 @@
         <el-table-column :sortable="true" label="区县" prop="area" width="100"></el-table-column>
         <el-table-column :sortable="true" label="关联单位" min-width="100" prop="customerCode"></el-table-column>
         <el-table-column :sortable="true" label="供/收货单位名称" min-width="180" prop="factoryName"></el-table-column>
+        <el-table-column :sortable="true" label="供/收货单位地址" min-width="150" prop="address"></el-table-column>
         <el-table-column :sortable="true" label="产品名称" min-width="100" prop="orgGoodsName"></el-table-column>
         <el-table-column :sortable="true" label="批号" prop="batchNumber" width="90"></el-table-column>
         <el-table-column :sortable="true" label="有效期至" min-width="120" prop="expirationDate"></el-table-column>
