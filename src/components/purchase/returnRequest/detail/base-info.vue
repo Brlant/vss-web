@@ -278,6 +278,7 @@ export default {
   watch: {
     currentOrder(val) {
       if (!val.id) return;
+      this.attachmentList=[];
       this.searchWarehouses();
       this.filterLogisticsCenter();
       this.queryAttachmentList();
