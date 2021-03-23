@@ -179,7 +179,7 @@ $leftWidth: 200px;
               <oms-input v-model="form.remark" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
                          type="textarea"></oms-input>
             </el-form-item>
-            <el-form-item label="附件" v-show="[0,1,4].indexOf(form.status)!==-1&&formType==='pov'">
+            <el-form-item label="附件" v-show="(form.id===null||[0,1,4].indexOf(form.status)!==-1)&&formType==='pov'">
               <oms-upload :fileList="attachmentList" :formData="{ objectId: form.id, objectType: 'returnApplicationFile'}"
                           @change="changeFiles"></oms-upload>
             </el-form-item>
@@ -384,7 +384,6 @@ export default {
       }
     };
     return {
-      formType: this.$route.meta.type,
       attachmentList: [],
       loading: false,
       idNotify: true,
@@ -492,6 +491,9 @@ export default {
     };
   },
   computed: {
+    formType(){
+      return this.$route.meta.type;
+    },
     bizTypeList() {
       return this.$getDict('bizOutType');
     },
