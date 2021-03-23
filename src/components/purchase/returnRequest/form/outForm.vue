@@ -548,11 +548,13 @@ export default {
       this.searchProduct();
       this.filterOrg();
       if (val === 2) {
+        this.form.fileIdList=[];
         this.editOrderInfo();
       } else {
         this.resetForm();
         this.form.state = '';
         this.form.id = null;
+        this.form.fileIdList = [];
         // 设默认值
         this.setDefaultValue();
         this.filterAddress();
@@ -972,7 +974,7 @@ export default {
           });
           return false;
         }
-        if (!saveData.id&&this.attachmentList.length === 0) {
+        if (!saveData.id&&this.form.fileIdList.length === 0) {
           this.$confirm('未上传附件，是否仍新增退货申请？', '', {
             confirmButtonText: '确认',
             cancelButtonText: '取消',
