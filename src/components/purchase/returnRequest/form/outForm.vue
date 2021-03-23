@@ -179,6 +179,10 @@ $leftWidth: 200px;
               <oms-input v-model="form.remark" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
                          type="textarea"></oms-input>
             </el-form-item>
+            <el-form-item label="附件" v-show="[0,1,4].indexOf(form.status)!==-1&&formType==='pov'">
+              <oms-upload :fileList="attachmentList" :formData="{ objectId: form.id, objectType: 'returnApplicationFile'}"
+                          @change="changeFiles"></oms-upload>
+            </el-form-item>
             <el-form-item label-width="160px">
               <el-button type="primary" @click="index++">添加疫苗</el-button>
             </el-form-item>
@@ -337,7 +341,7 @@ $leftWidth: 200px;
 </template>
 
 <script>
-import {Address, cerpAction, http, returnRequest} from '@/resources';
+import {Address, cerpAction, http, OmsAttachment, returnRequest} from '@/resources';
 import utils from '@/tools/utils';
 import batchNumberPart from './batchNumber';
 import OrderMixin from '@/mixins/orderMixin';
@@ -380,6 +384,8 @@ export default {
       }
     };
     return {
+      formType: this.$route.meta.type,
+      attachmentList: [],
       loading: false,
       idNotify: true,
       product: {
@@ -416,7 +422,8 @@ export default {
         'demandTime': '',
         'detailDtoList': [],
         'remark': '',
-        returnReason: ''
+        returnReason: '',
+        fileIdList:[]
       },
       rules: {
         goodsType: [
@@ -527,6 +534,7 @@ export default {
       });
     },
     defaultIndex(val) {
+      this.attachmentList=[];
       this.formCopy = {};
       this.isStorageData = false;
       this.index = 0;
@@ -554,6 +562,19 @@ export default {
     this.currentPartName = this.productListSet[0].name;
   },
   methods: {
+    queryAttachmentList: function () {// 附件管理
+      if (!this.form.id) return;
+      OmsAttachment.queryOneAttachmentList(this.form.id, 'returnApplicationFile').then(res => {
+        this.attachmentList = res.data;
+      });
+    },
+    changeFiles: function (fileList) {
+      let ids = [];
+      fileList.forEach(file => {
+        ids.push(file.attachmentId);
+      });
+      this.form.fileIdList = ids;
+    },
     changeVaccineType() {
       this.clearForm();
     },
@@ -626,6 +647,8 @@ export default {
         this.$nextTick(() => {
           this.isStorageData = false;
         });
+        // 查询附件
+        this.queryAttachmentList();
       });
     },
     changeNumber() {
@@ -947,60 +970,75 @@ export default {
           });
           return false;
         }
-        saveData.detailDtoList.forEach(item => {
-          item.price = item.unitPrice;
-          item.applyCount = item.amount;
-          !item.combinationFlag && (item.combinationFlag = item.isCombination);
-          delete item.fixInfo;
-          delete item.mainOrgId;
-          delete item.isCombination;
-          delete item.proportion;
-        });
-        saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
-        this.doing = true;
-        if (saveData.id) {
-          returnRequest.update(saveData.id, saveData).then(res => {
-            this.$notify({
-              duration: 2000,
-              message: '编辑退货申请成功',
-              type: 'success'
-            });
-            self.$emit('change');
-            this.doing = false;
-            this.$emit('close');
-            this.resetForm();
+        if (!saveData.id&&this.attachmentList.length === 0) {
+          this.$confirm('未上传附件，是否仍新增退货申请？', '', {
+            confirmButtonText: '确认',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(() => {
+            this.saveForm(saveData);
           }).catch(error => {
-            this.doing = false;
-            this.$notify({
-              duration: 2000,
-              title: '编辑退货申请失败',
-              message: error.response && error.response.data && error.response.data.msg || '网络异常',
-              type: 'error'
-            });
+            return false;
           });
-        } else {
-          returnRequest.save(saveData).then(res => {
-            this.$notify({
-              duration: 2000,
-              message: '新增退货申请成功',
-              type: 'success'
-            });
-            window.localStorage.removeItem(this.saveKey);
-            self.$emit('change', res.data);
-            this.doing = false;
-            this.$emit('close');
-            this.resetForm();
-          }).catch(error => {
-            this.doing = false;
-            this.$notify({
-              duration: 2000,
-              title: '新增退货申请失败',
-              message: error.response && error.response.data && error.response.data.msg || '网络异常',
-              type: 'error'
-            });
-          });
+        }else {
+          this.saveForm(saveData);
         }
+      })
+    },
+    saveForm(saveData){
+      saveData.detailDtoList.forEach(item => {
+        item.price = item.unitPrice;
+        item.applyCount = item.amount;
+        !item.combinationFlag && (item.combinationFlag = item.isCombination);
+        delete item.fixInfo;
+        delete item.mainOrgId;
+        delete item.isCombination;
+        delete item.proportion;
       });
+      saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
+      this.doing = true;
+      if (saveData.id) {
+        returnRequest.update(saveData.id, saveData).then(res => {
+          this.$notify({
+            duration: 2000,
+            message: '编辑退货申请成功',
+            type: 'success'
+          });
+          this.$emit('change');
+          this.doing = false;
+          this.$emit('close');
+          this.resetForm();
+        }).catch(error => {
+          this.doing = false;
+          this.$notify({
+            duration: 2000,
+            title: '编辑退货申请失败',
+            message: error.response && error.response.data && error.response.data.msg || '网络异常',
+            type: 'error'
+          });
+        });
+      } else {
+        returnRequest.save(saveData).then(res => {
+          this.$notify({
+            duration: 2000,
+            message: '新增退货申请成功',
+            type: 'success'
+          });
+          window.localStorage.removeItem(this.saveKey);
+          this.$emit('change', res.data);
+          this.doing = false;
+          this.$emit('close');
+          this.resetForm();
+        }).catch(error => {
+          this.doing = false;
+          this.$notify({
+            duration: 2000,
+            title: '新增退货申请失败',
+            message: error.response && error.response.data && error.response.data.msg || '网络异常',
+            type: 'error'
+          });
+        });
+      }
     }
   }
 };

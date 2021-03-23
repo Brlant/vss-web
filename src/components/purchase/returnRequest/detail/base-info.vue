@@ -22,25 +22,25 @@
         <el-row v-show=" currentOrder.bizType !== '2-2' " style="margin-bottom:0;position: relative">
           <el-col :span="12">
             <oms-row :span="span" label="退货申请单号">
-              {{currentOrder.id}}
+              {{ currentOrder.id }}
             </oms-row>
             <oms-row :span="span" label="退货单位">
-              {{currentOrder.povName}}
+              {{ currentOrder.povName }}
             </oms-row>
             <oms-row :span="span" label="供货单位">
-              {{currentOrder.cdcName}}
+              {{ currentOrder.cdcName }}
             </oms-row>
             <oms-row :span="8" label="预计退货日期">
-              <span class="goods-span">{{currentOrder.demandTime | date}}</span>
+              <span class="goods-span">{{ currentOrder.demandTime | date }}</span>
             </oms-row>
             <oms-row :span="10" label="退货单位仓库地址">
-              <span class="goods-span">{{currentOrder.warehouseAddress}}</span>
+              <span class="goods-span">{{ currentOrder.warehouseAddress }}</span>
             </oms-row>
             <oms-row v-show="currentOrder.orderNo" :span="10" label="关联采购退货订单">
-              {{currentOrder.orderNo}}
+              {{ currentOrder.orderNo }}
             </oms-row>
             <oms-row v-show="currentOrder.orgOrderNo" :span="11" label="关联疾控销售退货订单">
-              {{currentOrder.orgOrderNo}}
+              {{ currentOrder.orgOrderNo }}
             </oms-row>
             <oms-row :span="span" label="是否合格">
               <span v-show="currentOrder.qualityFlag" class="goods-span">合格</span>
@@ -65,37 +65,52 @@
               <dict :dict-group="'transportationCondition'" :dict-key="currentOrder.transportationConditionId"></dict>
             </oms-row>
             <oms-row label="申请人">
-              <span class="goods-span">{{currentOrder.applyManName}}</span>
+              <span class="goods-span">{{ currentOrder.applyManName }}</span>
             </oms-row>
             <oms-row label="申请时间">
-              <span class="goods-span">{{currentOrder.applyTime | time}}</span>
+              <span class="goods-span">{{ currentOrder.applyTime | time }}</span>
             </oms-row>
 
             <div v-if="pageType === 'pov'">
               <oms-row v-show="currentOrder.auditManName" label="审批人">
-                {{currentOrder.auditManName}}
+                {{ currentOrder.auditManName }}
               </oms-row>
               <oms-row v-show="currentOrder.auditTime" label="审批时间">
-                {{currentOrder.auditTime | time}}
+                {{ currentOrder.auditTime | time }}
               </oms-row>
               <oms-row v-show="currentOrder.orgAuditManName" label="上级单位审批人">
-                {{currentOrder.orgAuditManName}}
+                {{ currentOrder.orgAuditManName }}
               </oms-row>
               <oms-row v-show="currentOrder.orgAuditTime" label="上级单位审批时间">
-                {{currentOrder.orgAuditTime | time}}
+                {{ currentOrder.orgAuditTime | time }}
               </oms-row>
             </div>
             <div v-else>
               <oms-row v-show="currentOrder.orgAuditManName" label="审批人">
-                {{currentOrder.orgAuditManName}}
+                {{ currentOrder.orgAuditManName }}
               </oms-row>
               <oms-row v-show="currentOrder.orgAuditTime" label="审批时间">
-                {{currentOrder.orgAuditTime | time}}
+                {{ currentOrder.orgAuditTime | time }}
               </oms-row>
             </div>
 
             <oms-row v-show="currentOrder.erpStatus === '3'" label="取消原因">
-              <span class="goods-span">{{currentOrder.cancelReason}}</span>
+              <span class="goods-span">{{ currentOrder.cancelReason }}</span>
+            </oms-row>
+          </el-col>
+        </el-row>
+
+        <el-row v-show="[0,1,4].indexOf(currentOrder.status)!==-1">
+          <el-col :span="24">
+            <oms-row label="附件" :span="4" v-show="formType==='pov'">
+              <oms-upload :fileList="attachmentList"
+                          :formData="{ objectId: currentOrder.id, objectType: 'returnApplicationFile'}"
+                          @change="changeFiles"></oms-upload>
+            </oms-row>
+            <oms-row label="附件" :span="4" v-show="formType==='cdc'">
+              <attachment-lists :attachmentIdList="attachmentList" :objectId="currentOrder.id"
+                                :objectType="'returnApplicationFile'"
+                                :permission="'show'"></attachment-lists>
             </oms-row>
           </el-col>
         </el-row>
@@ -125,7 +140,7 @@
           </thead>
           <tbody>
           <tr v-for="(item,index) in currentOrder.detailDtoList" v-if="item.orgGoodsDto">
-            <td width="10">{{index + 1}}</td>
+            <td width="10">{{ index + 1 }}</td>
             <td width="80">
               <el-tooltip v-if="$formatPhotoUrl(item)" class="item" effect="light"
                           placement="right" popperClass="el-tooltip">
@@ -143,7 +158,7 @@
               <div>
                 <el-tooltip :content="`货主货品编号:${item.orgGoodsDto.goodsNo} 货主疫苗ID:${item.orgGoodsId}`" class="item"
                             effect="dark" placement="right">
-                  <span style="font-size: 14px;line-height: 20px">{{item.goodsName}}</span>
+                  <span style="font-size: 14px;line-height: 20px">{{ item.goodsName }}</span>
                 </el-tooltip>
               </div>
               <div>
@@ -157,7 +172,7 @@
                 </el-tooltip>
               </div>
               <div>
-                批号：{{item.batchNumber || '无' }}
+                批号：{{ item.batchNumber || '无' }}
                 <goods-status-tag :form="currentOrder" :item="item"/>
               </div>
             </td>
@@ -170,19 +185,19 @@
               <div>{{ item.expirationDate | date }}</div>
             </td>
             <td class="text-center" width="70px">
-              {{item.applyCount}}
+              {{ item.applyCount }}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
             <td class="text-center" width="80px">
-              <span v-if="item.price">￥{{item.price | formatMoney}}</span>
+              <span v-if="item.price">￥{{ item.price | formatMoney }}</span>
               <span v-if="!item.price">-</span>
             </td>
             <td class="text-center" width="80px">
-              <span v-if="item.applyMoney">￥{{item.applyMoney | formatMoney}}</span>
+              <span v-if="item.applyMoney">￥{{ item.applyMoney | formatMoney }}</span>
               <span v-if="!item.applyMoney">-</span>
             </td>
             <td class="text-center" width="80px">
-              {{item.actualCount}}
+              {{ item.actualCount }}
               <dict :dict-group="'measurementUnit'" :dict-key="item.orgGoodsDto.goodsDto.measurementUnit"></dict>
             </td>
           </tr>
@@ -192,8 +207,9 @@
             </td>
             <td align="right" colspan="2">
               <span v-show="currentOrder.totalAmount"
-                    style="font-weight:600;">合计金额: ¥  {{ currentOrder.totalAmount | formatMoney
-              }}</span>
+                    style="font-weight:600;">合计金额: ¥  {{
+                  currentOrder.totalAmount | formatMoney
+                }}</span>
             </td>
           </tr>
           </tbody>
@@ -204,9 +220,13 @@
 </template>
 <script>
 import utils from '@/tools/utils';
-import {Address, LogisticsCenter} from '@/resources';
+import {Address, OmsAttachment, LogisticsCenter} from '@/resources';
+import attachmentLists from '@/components/common/attachmentList.vue';
 
 export default {
+  components: {
+    attachmentLists
+  },
   props: {
     currentOrder: {
       type: Object,
@@ -219,7 +239,9 @@ export default {
     return {
       span: 8,
       warehouses: [],
-      LogisticsCenter: []
+      LogisticsCenter: [],
+      attachmentList: [],
+      formType: this.$route.meta.type
     };
   },
   computed: {
@@ -258,10 +280,23 @@ export default {
       if (!val.id) return;
       this.searchWarehouses();
       this.filterLogisticsCenter();
+      this.queryAttachmentList();
     }
   },
   methods: {
-
+    queryAttachmentList: function () {// 附件管理
+      if (!this.currentOrder.id) return;
+      OmsAttachment.queryOneAttachmentList(this.currentOrder.id, 'returnApplicationFile').then(res => {
+        this.attachmentList = res.data;
+      });
+    },
+    changeFiles: function (fileList) {
+      let ids = [];
+      fileList.forEach(file => {
+        ids.push(file.attachmentId);
+      });
+      this.form.fileIdList = ids;
+    },
     searchWarehouses() {
       if (!this.currentOrder.customerId) {
         this.warehouses = [];
