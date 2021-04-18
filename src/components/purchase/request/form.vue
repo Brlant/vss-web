@@ -300,6 +300,7 @@ import {Address, BaseInfo, cerpAction, http, pullSignal, VaccineRights} from '@/
 import utils from '@/tools/utils';
 import materialPart from '@/components/sale/order/material.vue';
 import addGoodsMixin from '@/mixins/addGoodsMixin';
+import moment from 'dayjs';
 
 export default {
   name: 'addForm',
@@ -315,7 +316,7 @@ export default {
       warehouseTypeList: this.$store.state.warehouseType,
       pickerOptions0: {
         disabledDate(time) {
-          return new Date(time).getTime() < Date.now();
+          return time.getTime() < moment().subtract(1, 'days');
         }
       },
       loading: false,
