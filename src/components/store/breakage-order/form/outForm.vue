@@ -192,7 +192,7 @@ $leftWidth: 200px;
               <oms-input v-model="form.breakageReason" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
                          type="textarea"></oms-input>
             </el-form-item>
-            <el-form-item label="附件"  prop="attachment" required>
+            <el-form-item label="附件" required>
               <oms-upload :fileList="attachmentList" accept="picture" :formData="{ objectId: form.id, objectType: 'breakageOrderFile'}"
                           @change="changeFiles"></oms-upload>
             </el-form-item>
@@ -420,7 +420,6 @@ export default {
       searchProductList: [],
       filterProductList: [],
       attachmentList: [],
-      fileIdList:[],
       form: {
         goodsType: '',
         'orgId': '',
@@ -444,7 +443,9 @@ export default {
         'expectedTime': '',
         'detailDtoList': [],
         'remark': '',
-        breakageReason: ''
+        breakageReason: '',
+        fileIdList:[],
+        fileType:'breakageOrderFile'
       },
       rules: {
         goodsType: [
@@ -628,7 +629,7 @@ export default {
   methods: {
     queryAttachmentList: function () {// 附件管理
       if (!this.form.id) return;
-      OmsAttachment.queryOneAttachmentList(this.form.id, 'returnApplicationFile').then(res => {
+      OmsAttachment.queryOneAttachmentList(this.form.id, 'breakageOrderFile').then(res => {
         this.attachmentList = res.data;
       });
     },
@@ -966,6 +967,7 @@ export default {
       this.accessoryList = [];
       this.batchNumbers = [];
       this.editItemProduct = {};
+      this.form.fileIdList=[];
     },
     remove: function (item) { // 删除疫苗
       this.deleteItem(item);
@@ -1010,7 +1012,7 @@ export default {
       }
     },
     onSubmit: function () {// 提交表单
-      if (this.attachmentList.length === 0){
+      if (this.form.fileIdList.length === 0){
         this.$notify({
           duration: 2000,
           message: '请添加附件',
