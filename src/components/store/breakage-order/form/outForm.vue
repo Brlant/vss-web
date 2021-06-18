@@ -192,7 +192,10 @@ $leftWidth: 200px;
               <oms-input v-model="form.breakageReason" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
                          type="textarea"></oms-input>
             </el-form-item>
-
+            <el-form-item label="附件"  prop="attachment" required>
+              <oms-upload :fileList="attachmentList" accept="picture" :formData="{ objectId: form.id, objectType: 'breakageOrderFile'}"
+                          @change="changeFiles"></oms-upload>
+            </el-form-item>
             <el-form-item label-width="160px">
               <el-button type="primary" @click="index++">添加疫苗</el-button>
             </el-form-item>
@@ -357,7 +360,7 @@ $leftWidth: 200px;
 </template>
 
 <script>
-import {Address, cerpAction, erpOrder, http, InWork} from '@/resources';
+import {Address, cerpAction, erpOrder, http, InWork,OmsAttachment} from '@/resources';
 import utils from '@/tools/utils';
 import materialPart from '../material.vue';
 import batchNumberPart from './batchNumber';
@@ -416,6 +419,8 @@ export default {
       accessoryList: [], // 组合疫苗列表
       searchProductList: [],
       filterProductList: [],
+      attachmentList: [],
+      fileIdList:[],
       form: {
         goodsType: '',
         'orgId': '',
@@ -593,6 +598,7 @@ export default {
     },
     defaultIndex(val) {
       if (!val) return;
+      this.attachmentList=[];
       // 清空表单
       this.resetForm();
       this.form.state = '';
@@ -620,6 +626,19 @@ export default {
     this.currentPartName = this.productListSet[0].name;
   },
   methods: {
+    queryAttachmentList: function () {// 附件管理
+      if (!this.form.id) return;
+      OmsAttachment.queryOneAttachmentList(this.form.id, 'returnApplicationFile').then(res => {
+        this.attachmentList = res.data;
+      });
+    },
+    changeFiles: function (fileList) {
+      let ids = [];
+      fileList.forEach(file => {
+        ids.push(file.attachmentId);
+      });
+      this.form.fileIdList = ids;
+    },
     changeVaccineType(val) {
       this.resetProductForm();
       this.form.detailDtoList = [];
@@ -666,6 +685,8 @@ export default {
 
         this.filterAddress(true);
         this.searchWarehouses();
+        // 查询附件
+        this.queryAttachmentList();
       });
     },
     formatPrice() {// 格式化单价，保留两位小数
@@ -989,6 +1010,14 @@ export default {
       }
     },
     onSubmit: function () {// 提交表单
+      if (this.attachmentList.length === 0){
+        this.$notify({
+          duration: 2000,
+          message: '请添加附件',
+          type: 'warning'
+        });
+        return false;
+      }
       if (!this.checkHasOrderNotAdded(this.product)) return;
       let self = this;
       this.$refs['orderAddForm'].validate((valid) => {
