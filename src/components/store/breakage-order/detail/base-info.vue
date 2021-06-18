@@ -87,7 +87,21 @@
         <el-row v-show="currentOrder.breakageReason">
           <oms-row :span="4" label="备注">{{ currentOrder.breakageReason }}</oms-row>
         </el-row>
-
+        <el-row>
+          <el-col :span="24">
+            <oms-row label="附件" :span="4" v-show="['0','1','2'].includes(currentOrder.state)">
+              <oms-upload :fileList="attachmentList"
+                          accept="picture"
+                          :formData="{ objectId: currentOrder.id, objectType: 'breakageOrderFile'}"
+                          @change="changeFiles"></oms-upload>
+            </oms-row>
+            <oms-row label="附件" :span="4" v-show="['4','5'].includes(currentOrder.state)">
+              <attachment-lists :attachmentIdList="attachmentList" :objectId="currentOrder.id"
+                                :objectType="'breakageOrderFile'"
+                                :permission="'show'"></attachment-lists>
+            </oms-row>
+          </el-col>
+        </el-row>
       </div>
 
       <!--<hr class="hr"/>-->
@@ -191,12 +205,13 @@
 </template>
 <script>
 import utils from '@/tools/utils';
-import {Address, LogisticsCenter} from '@/resources';
+import {Address, LogisticsCenter, OmsAttachment} from '@/resources';
 import materialPart from '../material.vue';
 import undo from '@/components/store/breakage-order/form/undo';
+import attachmentLists from '@/components/common/attachmentList.vue';
 
 export default {
-  components: {materialPart, undo},
+  components: {materialPart, undo,attachmentLists},
   props: {
     currentOrder: {
       type: Object,
@@ -212,6 +227,7 @@ export default {
       span: 8,
       warehouses: [],
       LogisticsCenter: [],
+      attachmentList: [],
       warehouseTypeList: this.$store.state.warehouseType,
       rules: {
         transportationMeansId: [
@@ -276,6 +292,7 @@ export default {
         this.searchWarehouses();
         this.filterAddress();
       }
+      this.queryAttachmentList();
     },
     isCheck(val) {
       if (val) {
@@ -284,6 +301,19 @@ export default {
     }
   },
   methods: {
+    queryAttachmentList: function () {// 附件管理
+      if (!this.currentOrder.id) return;
+      OmsAttachment.queryOneAttachmentList(this.currentOrder.id, 'breakageOrderFile').then(res => {
+        this.attachmentList = res.data;
+      });
+    },
+    changeFiles: function (fileList) {
+      let ids = [];
+      fileList.forEach(file => {
+        ids.push(file.attachmentId);
+      });
+      this.currentOrder.fileIdList = ids;
+    },
     showUndo(item) {
       this.$refs.undo.form = Object.assign({}, this.$refs.undo.form, {
         orderId: item.orderId,

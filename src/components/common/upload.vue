@@ -28,7 +28,7 @@
 </template>
 
 <script>
-import {OmsAttachment} from '../../resources';
+import {OmsAttachment} from '@/resources';
 import UploadList from '@/components/common/upload.file.list.vue';
 import OmsElUpload from './upload/src/index.vue';
 
@@ -53,6 +53,7 @@ export default {
       type: Boolean,
       default: true
     },
+    accept: String,
     multiple: {
       type: Boolean,
       default: true
@@ -101,6 +102,7 @@ export default {
       // 将附件从列表中移除
       let index = fileList.indexOf(file);
       fileList.splice(index, 0);
+      if (!file.attachmentId)return;
       OmsAttachment.delete(file.attachmentId).then(() => {
         this.$notify.success({
           duration: 2000,
@@ -129,13 +131,29 @@ export default {
         return false;
       }
       // 如果上传的是图片类型文件，则进行过滤
-      if (this.type === 'picture') {
+      if (this.type === 'picture'||this.accept==='picture') {
         if (file.type === 'image/jpg' || file.type === 'image/jpeg' || file.type === 'image/png') {
 
         } else {
           this.$notify.error({
             duration: 2000,
             message: '请上传文件格式为JPG/JPEG/PNG的图片!'
+          });
+          return false;
+        }
+      }
+      if (this.accept) {
+        let fileType = file.name.substring(file.name.lastIndexOf('.') + 1);
+        fileType = fileType.toLocaleLowerCase();
+        if (this.accept === 'xlsx' && fileType !== this.accept) {
+          this.$notify.info({
+            message: '请选择excel类型文件'
+          });
+          return false;
+        }
+        if (this.accept === 'txt' && fileType !== this.accept) {
+          this.$notify.info({
+            message: '请选择txt类型文件'
           });
           return false;
         }
