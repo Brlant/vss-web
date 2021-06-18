@@ -670,6 +670,9 @@ export default {
       this.form.orgAddress = '';
       this.searchProductList = [];
       this.filterProductList = [];
+      // 清空附件列表
+      this.attachmentList=[];
+      this.form.fileIdList=[];
       this.resetProductForm();
     },
     editOrderInfo() {
@@ -967,7 +970,6 @@ export default {
       this.accessoryList = [];
       this.batchNumbers = [];
       this.editItemProduct = {};
-      this.form.fileIdList=[];
     },
     remove: function (item) { // 删除疫苗
       this.deleteItem(item);
