@@ -629,8 +629,14 @@ export default {
   methods: {
     queryAttachmentList: function () {// 附件管理
       if (!this.form.id) return;
+      if (!this.form.fileIdList){
+        this.form.fileIdList=[];
+      }
       OmsAttachment.queryOneAttachmentList(this.form.id, 'breakageOrderFile').then(res => {
         this.attachmentList = res.data;
+        this.attachmentList.forEach(val=>{
+          this.form.fileIdList.push(val.attachmentId);
+        })
       });
     },
     changeFiles: function (fileList) {
