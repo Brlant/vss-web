@@ -163,6 +163,7 @@ export default {
               });
             }
           }
+          data.color='#87CEFA';
           this.option.series.push(data);
         });
       },
