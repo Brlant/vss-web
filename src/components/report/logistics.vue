@@ -150,6 +150,12 @@
         <el-table-column :sortable="true" label="有效期至" min-width="120" prop="expirationDate"></el-table-column>
         <el-table-column :sortable="true" label="计量单位" prop="measurementUnit" width="100"></el-table-column>
         <el-table-column :sortable="true" label="数量" prop="count" width="80"></el-table-column>
+        <el-table-column :sortable="true" label="单价" prop="price" width="80">
+          <template slot-scope="scope">
+            <span v-if="scope.row.price">￥{{ scope.row.price | formatMoney }}</span>
+            <span v-if="!scope.row.price">0</span>
+          </template>
+        </el-table-column>
         <el-table-column :sortable="true" label="合格/不合格" prop="goodsStatus" width="120"></el-table-column>
         <el-table-column :sortable="true" label="订单备注项" prop="remark" width="120"></el-table-column>
       </el-table>
