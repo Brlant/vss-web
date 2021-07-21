@@ -43,9 +43,16 @@
           </el-row>
         </el-form>
       </div>
-      <el-table ref="reportTable" v-loading="loadingData" :data="reportList" :header-row-class-name="'headerClass'" :maxHeight="getHeight"
+      <el-table ref="reportTable" v-loading="loadingData" :data="reportList" :header-row-class-name="'headerClass'"
+                :maxHeight="getHeight"
                 border class="header-list">
         <el-table-column :sortable="true" label="疫苗名称" min-width="100" prop="goodsName"></el-table-column>
+        <el-table-column :sortable="true" label="采购单价" prop="unitPrice" width="100">
+          <template slot-scope="scope">
+            <span v-if="scope.row.goodsPrice">￥{{ scope.row.goodsPrice | formatMoney }}</span>
+            <span v-if="!scope.row.goodsPrice">0</span>
+          </template>
+        </el-table-column>
         <el-table-column :sortable="true" label="期前库存" prop="restStockCount"></el-table-column>
         <el-table-column :sortable="true" label="进苗数量" prop="purchaseCount"></el-table-column>
         <el-table-column :sortable="true" label="发苗数量" prop="saleCount"></el-table-column>
