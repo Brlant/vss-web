@@ -483,7 +483,7 @@ export default {
           this.$notify.success({
             duration: 2000,
             title: '成功',
-            message: this.form.orgName + '的付款作业申请的复核未通过'
+            message: this.form.orgName + '的付款作业申请的复核通过成功'
           });
           this.$emit('change', this.form);
           this.$emit('right-close');
