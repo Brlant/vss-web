@@ -149,7 +149,7 @@
     left: 0;
   }
 
-  .main-nav-scrollbar /deep/ .el-scrollbar__wrap {
+  .main-nav-scrollbar ::v-deep .el-scrollbar__wrap {
     overflow: hidden;
     overflow-y: auto;
   }
