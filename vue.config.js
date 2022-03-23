@@ -1,7 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const CompressionWebpackPlugin = require('compression-webpack-plugin');
-const SentryWebpackPlugin = require('@sentry/webpack-plugin');
 
 function resolve(dir) {
   return path.join(__dirname, '..', dir);
@@ -38,7 +37,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'https://dev-vss.cdcerp.cn/',
+        target: 'https://hw-test-vss.cdcerp.cn',
         changOrigin: true
       }
     }

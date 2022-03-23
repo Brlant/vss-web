@@ -518,11 +518,7 @@ export const route = [
 ];
 
 export const basicRoutes = [
-  {
-    path: '/resetpsw',
-    component: () => import('./components/resetpsw.vue'),
-    meta: {}
-  },
+  {path: '/resetpsw', component: () => import('./components/resetpsw.vue'),},
   {path: '/404', component: () => import('./components/error_404.vue')},
   {path: '/500', component: () => import('./components/error_500.vue')},
   {path: '/login', component: () => import('./components/login.vue')},
