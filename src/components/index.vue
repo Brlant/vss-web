@@ -102,6 +102,7 @@ export default {
     transitionName: 'slide-left',
     toRoute: {},
     loading: true,
+    needCheck: false,
     isPermission: false
   }),
   computed: {
@@ -110,6 +111,15 @@ export default {
     },
     bodyLeft: function () {
       return this.$store.state.bodySize['left'];
+    },
+    updatePassFlag() {
+      return this.$store.state.user['updatePassFlag'];
+    },
+    days() {
+      return this.$store.state.user['passwordRule'];
+    },
+    checkPwd: function () {
+      return this.needCheck && this.updatePassFlag;
     }
   },
   beforeRouteEnter(to, form, next) {
@@ -125,6 +135,11 @@ export default {
   watch: {
     $route() {
       this.$store.commit('initBottomLoading', false);
+    },
+    checkPwd(val) {
+      if (val) {
+        setTimeout(this.showTip, 200);
+      }
     }
   },
   mounted: function () {
@@ -136,8 +151,36 @@ export default {
       this.setBodyHeight();
     });
     this.setBodyHeight();
+
+    this.needCheck = true;
+    // 监听后退和地址栏变化
+    window.addEventListener('popstate', (e) => {
+      // 当用户手动后退或者修改地址栏的时候，重新触法一次密码校验
+      let hash = e.currentTarget.location.hash;
+      // 定义那些页面不需要安全提示
+      let ext = hash.indexOf('login') !== -1 || hash.indexOf('resetpsw') !== -1 || hash.indexOf('forget') !== -1;
+      if (ext) {
+        console.log("popstate.location.hash", hash);
+        return;
+      }
+
+      this.needCheck = true;
+    });
   },
   methods: {
+    // 显示安全提示
+    showTip() {
+      // 如果需要修改密码，给出提示：您当前登录密码使用已超过xx天，为保证您的账号安全，请立即修改。
+      this.$alert('您当前登录密码使用已超过' + this.days + '天，为保证您的账号安全，请立即修改。', '安全提示', {
+        confirmButtonText: '去修改', center: true, showClose: false
+      }).then(() => {
+        this.$router.replace("/resetpsw")
+      }).catch(err => {
+        console.log("加载alert异常", err)
+      });
+
+      this.needCheck = false;
+    },
     queryRoles() {
       cerpAccess.bindMunicipal().then(() => {
         this.loading = false;

@@ -52,7 +52,7 @@
 .inline-block-count {
   float: left;
 
-  & /deep/ .el-input {
+  & ::v-deep .el-input {
     max-width: 300px;
   }
 }
