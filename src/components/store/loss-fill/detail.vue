@@ -14,30 +14,32 @@ $leftWidth: 220px;
   }
 }
 
+.left-actions {
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  right: 0;
+}
+
 </style>
 
 <template>
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title">报损详情</h2>
+        <h2 class="clearfix right-title">损耗详情</h2>
         <ul>
           <li v-for="item in pageSets" class="list-style" v-bind:class="{ 'active' : index==item.key}"
               @click="showPart(item)"><span>{{ item.name }}</span>
           </li>
-          <li class="text-center order-btn" style="margin-top: 40px">
+        </ul>
+        <ul class="left-actions">
+          <li class="text-center order-btn">
             <perm v-show="currentOrder.state === '0' "
                   label="breakage-order-confirm">
               <el-button type="primary" @click="checkPass">确认订单</el-button>
             </perm>
           </li>
-
-          <!--<li class="text-center order-btn" style="margin-top: 10px">-->
-          <!--<perm label="breakage-order-audit"-->
-          <!--v-show="currentOrder.state === '1' ">-->
-          <!--<el-button type="primary" @click="review">审单通过</el-button>-->
-          <!--</perm>-->
-          <!--</li>-->
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'"
                   label="breakage-order-cancel">
@@ -50,66 +52,34 @@ $leftWidth: 220px;
               <el-button plain type="danger" @click="deleteOrder">删除订单</el-button>
             </perm>
           </li>
-          <li class="text-center order-btn" style="margin-top: 10px">
-            <perm
-              v-show="currentOrder.state > 0" :label="'breakage-order-export-scrap-stock' ">
-              <el-button :loading="printing" plain style="width: 200px;padding: 10px 10px" type="primary"
-                         @click="exportScrapStockInfo">
-                {{printing ? '正在导出' : '导出待报废库存登记表'}}
-              </el-button>
-            </perm>
-          </li>
-          <li class="text-center order-btn" style="margin-top: 10px">
-            <perm
-              v-show="currentOrder.state > 0" :label="'breakage-order-export-scrap-stock-transport' ">
-              <el-button :loading="printingTransport" plain style="width: 200px; padding: 10px 10px"
-                         type="primary" @click="exportScrapStockTransportInfo">
-                {{printingTransport ? '正在导出' : '导出待报废疫苗转运单'}}
-              </el-button>
-            </perm>
-          </li>
-          <li class="text-center order-btn" style="margin-top: 10px">
-            <perm
-              v-show="currentOrder.state > 0" :label="'breakage-order-export-scrap-stock-tag' ">
-              <el-button :loading="printingTag" plain style="width: 200px;padding: 10px 10px"
-                         type="primary" @click="exportScarpVaccineTag">
-                {{printingTag ? '正在导出' : '导出待报废疫苗专用标签'}}
-              </el-button>
-            </perm>
-          </li>
         </ul>
       </div>
       <div class="content-right content-padding">
         <h3>{{ title }}</h3>
         <basic-info v-show="index === 0" :currentOrder="currentOrder" :index="index" :isCheck="isCheck"
                     :vaccineType="vaccineType" @checkPass="checkPass"></basic-info>
-        <receipt v-show="index === 1" :currentOrder="currentOrder" :index="index"></receipt>
-        <log v-show="index === 2" :currentOrder="currentOrder" :defaultIndex="2" :index="index"></log>
-        <order-attachment v-show="index === 3" :currentOrder="currentOrder" :index="index"></order-attachment>
-        <relevance-code v-show="index === 8" :currentOrder="currentOrder" :index="index" type="1"></relevance-code>
-        <relevance-code-review v-show="index === 9" :currentOrder="currentOrder" :index="index"
-                               type="1"></relevance-code-review>
-        <cancel-order v-show="index === 0" ref="cancelPart" :orderId="orderId" @close="$emit('close')"
-                      @refreshOrder="$emit('refreshOrder')"></cancel-order>
-        <order-push-log v-show="index === 15" :currentOrder="currentOrder" :index="index"></order-push-log>
-        <customer-feedback v-show="index === 12" :currentOrder="currentOrder" :index="index"
-                           :orderId="currentOrder.id"/>
+        <div style="margin-top: 50px">
+          <cancel-order v-show="index === 0" ref="cancelPart" :orderId="orderId" @close="$emit('close')"
+                        @refreshOrder="$emit('refreshOrder')"></cancel-order>
+        </div>
+        <log v-show="index === 1" :currentOrder="currentOrder" :defaultIndex="1" :index="index"></log>
       </div>
     </div>
   </div>
 </template>
 <script>
 import basicInfo from './detail/base-info.vue';
+import CancelOrder from '@/components/common/order/cancel-order.vue';
 import log from '@/components/common/order.log.vue';
-import receipt from './detail/receipt.vue';
-import {erpOrder, http, InWork} from '@/resources';
+import {erpOrder, http} from '@/resources';
 import orderAttachment from './breakage-order.attachment.vue';
 import relevanceCode from '@/components/common/order/relevance.code.vue';
 import utils from '@/tools/utils';
 import OrderPushLog from '@/components/common/order/order-push-log';
 
 export default {
-  components: {basicInfo, log, receipt, orderAttachment, relevanceCode, OrderPushLog},
+  name: 'detail',
+  components: {basicInfo, log, orderAttachment, relevanceCode, OrderPushLog, CancelOrder},
   props: {
     orderId: {
       type: String
@@ -138,24 +108,8 @@ export default {
   computed: {
     pageSets() {
       let menu = [];
-      let perms = this.$store.state.permissions || [];
-      menu.push({name: '报损详情', key: 0});
-      if (this.state === '4' && this.currentOrder.customerChannel) {
-        menu.push({name: '收货详情', key: 1});
-      }
-      if (perms.includes('erp-order-document-watch')) {
-        menu.push({name: '附件管理', key: 3});
-      }
-      let state = this.state;
-      if (state > 2) {
-        // menu.push({name: '关联追溯码', key: 8});
-        menu.push({name: '复核追溯码', key: 9});
-      }
-      menu.push({name: '操作日志', key: 2});
-      menu.push({name: '推送日志', key: 15});
-      if (perms.includes('sales-order-upload-data')) {
-        menu.push({name: '反馈信息', key: 12});
-      }
+      menu.push({name: '损耗信息', key: 0});
+      menu.push({name: '操作日志', key: 1});
       return menu;
     }
   },
@@ -199,9 +153,8 @@ export default {
     queryOrderDetail() {
       if (!this.orderId) return false;
       this.currentOrder = {};
-      InWork.queryOrderDetail(this.orderId).then(res => {
-        res.data.state = res.data.erpStatus;
-        this.currentOrder = res.data;
+      http.get(`/erp-order/${this.orderId}`).then(res => {
+        this.currentOrder = this.transDetailData(res.data);
       });
     },
     showPart(item) {
@@ -215,7 +168,7 @@ export default {
       });
     },
     checkPass() {
-      http.put(`/erp-order/${this.orderId}`, this.currentOrder).then(() => {
+      http.put(`/erp-order/${this.orderId}/confirm`, this.currentOrder).then(() => {
         this.$notify.success({
           message: '确认订单成功'
         });
@@ -276,8 +229,36 @@ export default {
         message: '请选择取消订单原因',
         type: 'warning'
       });
-    }
-  }
+    },
+    transDetailData(data) {
+      return {
+        id: data.id,
+        orderNo: data.orderNo,
+        orgName: data.orgName,
+        customerChannel: data.customerChannel,
+        orgId: data.orgId,
+        breakageReason: data.breakageReason,
+        state: data.erpStatus,
+        // detailDtoList需要做一个转换
+        detailDtoList: data.detailDtoList.map(ddl => ({
+          "amount": ddl.amount, //损耗人份数量
+          "wastage": ddl.wastage, //损耗人份数量
+          "orgGoodsId": ddl.orgGoodsId, //货主货品id
+          "orgGoodsName": ddl.goodsName, //货主货品名称
+          "specificationsId": "",
+          specificationName: ddl.orgGoodsDto.goodsDto.specifications,//规格名称
+          goodsType: ddl.vaccineType,//货品类型
+          productName: ddl.orgGoodsDto.name,//产品名称
+          photoUrl: ddl.orgGoodsDto.photoUrl,
+          "batchNumberId": ddl.batchNumberId, //批号id
+          "batchNumber": ddl.batchNumber, //批号
+          "expirationDate": ddl.expiryDate, //有效期
+          "code": ddl.code, //追溯码
+          "multiPersonAgingId": ddl.multiPersonAgingId, //多人份剂次id
+          "stockId": ddl.stockId //库存id
+        })),
+      }
+    },
+  },
 };
 </script>
-

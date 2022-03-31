@@ -93,12 +93,11 @@ $leftWidth: 200px;
   }
 }
 
-.total-wastage  {
-    float: right;
-    right: 150px;
-    position: fixed;
-    font-size: 20px;
-    padding: 10px;
+.total-wastage {
+  position: absolute;
+  right: 150px;
+  font-size: 20px;
+  padding: 10px;
 }
 
 </style>
@@ -113,19 +112,19 @@ $leftWidth: 200px;
               @click="setIndexValue(item.key)"><span>{{ item.name }}</span>
           </li>
           <li class="text-center" style="margin-top:40px;position:absolute;bottom:30px;left:0;right:0;">
-            <el-button :disabled="doing" type="success" @click="onSubmit">保存订单</el-button>
+            <el-button :disabled="disabled" type="success" @click="saveOrder">保存订单</el-button>
           </li>
         </ul>
       </div>
       <div class="content-right min-gutter">
         <h3>{{ currentPartName }}</h3>
-        <el-form ref="orderAddForm" :model="form" :rules="rules" label-width="120px" onsubmit="return false"
-                 @submit.prevent="onSubmit">
-          <el-form-item v-if="isSelfBreakage" label="损耗原因" prop="breakageReason">
+        <el-form ref="orderAddForm" :model="form" :rules="rules" label-width="100px" onsubmit="return false"
+                 @submit.prevent="saveOrder">
+          <el-form-item v-if="isthisBreakage" label="损耗原因" prop="breakageReason">
             <oms-input v-model="form.breakageReason" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入损耗原因"
                        type="textarea"></oms-input>
           </el-form-item>
-          <el-form-item v-if="!isSelfBreakage" label="损耗原因" prop="breakageReason">
+          <el-form-item v-if="!isthisBreakage" label="损耗原因" prop="breakageReason">
             <el-select v-model="form.breakageReason" placeholder="请选择损耗原因" type="text">
               <el-option v-for="item in breakageReasons" :key="item.key" :label="item.label"
                          :value="item.label"></el-option>
@@ -133,7 +132,7 @@ $leftWidth: 200px;
           </el-form-item>
           <el-form-item label="附件" required>
             <oms-upload :fileList="attachmentList" accept="picture"
-                        :formData="{ objectId: form.id, objectType: 'breakageOrderFile'}"
+                        :formData="{ objectId: form.id, objectType: 'erpOrderFile'}"
                         @change="changeFiles"></oms-upload>
           </el-form-item>
           <el-form-item label="追溯码" prop="code">
@@ -141,66 +140,92 @@ $leftWidth: 200px;
               <el-col :span="8">
                 <oms-input v-model="form.code" placeholder="请输入追溯码"></oms-input>
               </el-col>
-              <el-col :span="6" offset="1">
+              <el-col :span="6" :offset="1">
                 <el-button type="primary" @click="confirmAdd">确认添加</el-button>
               </el-col>
             </el-row>
-            <el-row>
-              <el-col>
-                <el-table :data="form.codeDetails" size="mini">
-                  <el-table-column type="index"></el-table-column>
-                  <el-table-column label="追溯码" prop="code"></el-table-column>
-                  <el-table-column label="疫苗">
-                    <template v-slot="{ row, $index }">
-
-                      <el-popover trigger="hover" placement="top">
-                        <div>产品名称：{{ row.platformGoodsName }}</div>
-                        <div>货品名称：{{ row.goodsName }}</div>
-                        <div>疫苗规格：{{ row.specification }}</div>
-                        <div slot="reference" class="name-wrapper">
-                          <el-tag size="mini">{{ row.goodsName }}</el-tag>
-                        </div>
-                      </el-popover>
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="类型" prop="vaccineType"></el-table-column>
-                  <el-table-column label="批号" prop="batchNumber"></el-table-column>
-                  <el-table-column label="有效期">
-                    <template v-slot="{ row, $index }">
-                      {{ row.expiryDate | date }}
-                    </template>
-                  </el-table-column>
-                  <el-table-column label="损耗人份" prop="wastageInput">
-                    <template v-slot="{ row, $index }">
-                      <el-form-item
-                        style="margin:30px 0"
-                        :prop="`codeDetails.${$index}.wastageInput`"
-                        :rules="[
+          </el-form-item>
+          <el-form-item>
+            <el-table :data="form.detailDtoList" size="mini">
+              <el-table-column>
+                <template v-slot="{row}">
+                  <el-tooltip v-if="row.photoUrl" class="item" effect="light"
+                              placement="right" popperClass="el-tooltip">
+                    <compressed-img :src="row.photoUrl +'?image&action=resize:h_80,w_80,m_2' "
+                                    class="product-img"/>
+                    <compressed-img slot="content" :src="row.photoUrl +'?image&action=resize:h_200,m_2' "
+                                    class="product-img"/>
+                  </el-tooltip>
+                  <el-tooltip v-else class="item" effect="light" placement="right" popperClass="el-tooltip">
+                    <img :src="'../../../../static/img/userpic.png'" class="product-img">
+                    <img slot="content" :src="'../../../../static/img/userpic.png'" class="product-img">
+                  </el-tooltip>
+                </template>
+              </el-table-column>
+              <el-table-column label="追溯码" prop="code"></el-table-column>
+              <el-table-column label="疫苗">
+                <template v-slot="{ row, $index }">
+                  <div>
+                    <el-tooltip :content="`产品名称:${row.productName}`" class="row"
+                                effect="dark" placement="right">
+                      <span style="font-size: 14px;line-height: 20px">{{ row.productName }}</span>
+                    </el-tooltip>
+                  </div>
+                  <div>
+                    <el-tooltip :content="`货品名称:${row.orgGoodsName}`" class="row"
+                                effect="dark"
+                                placement="right">
+                      <span style="font-size: 12px;color:#999">{{ row.orgGoodsName }}</span>
+                    </el-tooltip>
+                  </div>
+                  <div style="display: flex;justify-content: space-between;align-rows: center">
+                    <el-tooltip class="row" :content="`疫苗规格:${row.orgGoodsName}`" effect="dark" placement="right">
+                      <span style="font-size: 12px;">{{ row.specificationName }}</span>
+                    </el-tooltip>
+                  </div>
+                </template>
+              </el-table-column>
+              <el-table-column label="类型">
+                <template v-slot="{ row, $index }">
+                  {{ row.goodsType === '1' ? '免疫规划疫苗' : '非免疫规划疫苗' }}
+                </template>
+              </el-table-column>
+              <el-table-column label="批号" prop="batchNumber"></el-table-column>
+              <el-table-column label="有效期">
+                <template v-slot="{ row, $index }">
+                  {{ row.expirationDate | date }}
+                </template>
+              </el-table-column>
+              <el-table-column label="损耗人份" prop="amount" fixed="right" align="center">
+                <template v-slot="{ row, $index }">
+                  <el-form-item
+                    style="margin:30px 0"
+                    :prop="`detailDtoList.${$index}.amount`"
+                    :rules="[
                                   { required: true, message: '请输入损耗人份' },
                                   { type: 'number', min: 1,max: row.wastage, message: `请输入1-${row.wastage}之间的数字` },
                                   ]">
-                        <oms-input v-model.number="row.wastageInput"></oms-input>
-                      </el-form-item>
-                    </template>
-                  </el-table-column>
-                  <el-table-column>
-                    <template v-slot="{ $index }">
-                      <div style="margin:30px 0">
-                        <el-button
-                          type="danger"
-                          @click="handleDelete($index)">删除
-                        </el-button>
-                      </div>
-                    </template>
-                  </el-table-column>
-                  <template slot="append">
-                    <div class="total-wastage">
-                      <total-count :list="form.codeDetails" property="wastageInput" title="合计人份"></total-count>
-                    </div>
-                  </template>
-                </el-table>
-              </el-col>
-            </el-row>
+                    <oms-input v-model.number="row.amount"></oms-input>
+                  </el-form-item>
+                </template>
+              </el-table-column>
+              <el-table-column fixed="right" width="60" align="center">
+                <template v-slot="{ $index }">
+                  <el-button type="danger"
+                             icon="el-icon-close"
+                             circle
+                             size="small"
+                             style="padding: 5px"
+                             @click="handleDelete($index)"
+                  ></el-button>
+                </template>
+              </el-table-column>
+              <template slot="append">
+                <div class="total-wastage">
+                  <total-count :list="form.detailDtoList" property="amount" title="合计人份"></total-count>
+                </div>
+              </template>
+            </el-table>
           </el-form-item>
         </el-form>
       </div>
@@ -209,7 +234,7 @@ $leftWidth: 200px;
 </template>
 
 <script>
-import {Address, erpOrder, http, InWork, OmsAttachment} from '@/resources';
+import {erpOrder, InWork, OmsAttachment} from '@/resources';
 import utils from '@/tools/utils';
 import materialPart from '../material.vue';
 import OrderMixin from '@/mixins/orderMixin';
@@ -233,9 +258,7 @@ export default {
       default: 0
     },
     orderId: String,
-    vaccineType: String
   },
-
   data() {
     let checkOrderNumber = (rule, value, callback) => {
       if (value === '') {
@@ -256,72 +279,27 @@ export default {
       // 附件
       attachmentList: [],
       form: {
-        goodsType: '',
-        orgId: '',
-        customerId: '',
-        bizType: '2-5',
-        code: '',
-        type: this.type,
-        logisticsProviderName: '',
-        customerChannel: '0',
-        transportationMeansId: '',
-        transportationAddress: '',
-        logisticsCentreId: '',
-        transportationCondition: '',
-        importedFlag: false,
-        orgRelation: '',
-        orgAddress: '',
-        qualifiedFlag: true,
-        sameBatchNumber: false,
-        actualConsignee: '',
-        consigneePhone: '',
-        thirdPartyNumber: '',
-        expectedTime: '',
-        detailDtoList: [],
-        remark: '',
-        breakageReason: '',
-        fileIdList: [],
-        fileType: 'breakageOrderFile',
-        codeDetails: [{
-          "id": "a8jMD7AuzhWvH1HO0Si", //库存id
-          "stockNo": "6WvQnqmSxP8nCLc62Yw",
-          "availableCount": 3,
-          "createTime": 1611290622000,
-          "batchNumberId": "6lRfB6vgoySqnF6txda", //批号id
-          "batchNumber": "201908072", //批号
-          "orgId": "HfdIwerZoC8OOTmwLuI", //单位id
-          "orgName": "上海市长宁区华阳社区卫生服务中心", //单位名称
-          "orgCode": "3101050101", //单位编码
-          "areaCode": "310105", //区域编码
-          "factoryId": "51ImQqKspTuMZVCNFGl", //生产厂商id
-          "factoryName": "北京北生研生物制品有限公司", //厂商名称
-          "orgGoodsId": "mkd0E7qWh36oIs831tr", //货主货品id
-          "platformGoodsName": "口服I型III型脊髓灰质炎减毒活疫苗（人二倍体细胞）",
-          "goodsName": "口服I型III型脊髓灰质炎减毒活疫苗（人二倍体细胞）", //货品名称
-          "undeterminedCount": 0,
-          "unqualifiedBizCount": 0,
-          "unqualifiedCount": 0,
-          "qualifiedCount": 5,
-          "transitCount": 0,
-          "expiryDate": 1640966400000, //有效期
-          "nearTermDays": null,
-          "warehouseId": null,
-          "logisticsCentreId": null,
-          "qualifiedBizServings": 32,
-          "qualifiedActualServings": 50,
-          "showFlag": null,
-          "orgIdList": [],
-          "remark": null,
-          "vaccineType": "1", //货品类型
-          "orgGoodsCode": "1110025", //货主货品编码
-          "goodsGenericName": "口服I型III型脊髓灰质炎减毒活疫苗(人二倍体细胞)", //货主货品名称
-          "specification": "每瓶1.0ml（10人份）", //规格
-          "orgGoodsStatus": true,
-          "wastage": 100, //可损耗人份（剂次）
-          "wastageInput": '', //输入的可损耗人份（剂次） 必须小于wastage
-          "multiPersonAgingId": "d1ZIbNWkh5RIruf1iBD", //多人份剂次id
-          "code": "81892566218981686585" //追溯码
-        },],
+        id: '',
+        customerChannel: '',
+        "orgId": "", //单位id
+        "bizType": "2-5", //订单类型（该处固定）
+        "type": "1", //出入库类型（该处固定）
+        "detailDtoList": [
+          // {
+          //   "amount": 1, //损耗人份数量
+          //   "orgGoodsId": "ZRnv8eWxjiNRGoTGqhs", //货主货品名称
+          //   "specificationsId": "",
+          //   "orgGoodsName": "wyc001", //货主货品名称
+          //   "batchNumberId": "l2IB03Y0laOA1sBMmuX", //批号id
+          //   "batchNumber": "20220330", //批号
+          //   "expirationDate": 1773763200000, //有效期
+          //   "code": "16486106640410000001", //追溯码
+          //   "multiPersonAgingId": "202203301141", //多人份剂次id
+          //   "stockId": "AijTTt75zlEUiiz8owv" //库存id
+          // }
+        ], //货品列表
+        "breakageReason": "", //损耗原因
+        "fileIdList": [], //文件id集合
       },
       rules: {
         breakageReason: [
@@ -334,9 +312,6 @@ export default {
         thirdPartyNumber: [
           {required: true, message: '请输入去向订单编号', trigger: 'blur'},
           {validator: checkOrderNumber}
-        ],
-        code: [
-          {required: true, message: '请输入追溯码', trigger: 'blur'}
         ],
       },
       orderGoodsRules: {
@@ -368,7 +343,7 @@ export default {
       relationList: [],
       LogisticsCenterAddressList: [],
       LogisticsCenter: [],
-      doing: false,
+      disabled: false,
       isSupplierOrOrg: false,
       saveKey: 'outOrderForm',
       showContent: {
@@ -384,39 +359,14 @@ export default {
       requestTime: '',
       editItemProduct: {},
       isHasBatchNumberInfo: false,
-      formCopy: {},
       warehouseTypeList: this.$store.state.warehouseType
     };
   },
   computed: {
-    bizTypeList() {
-      return this.$getDict('bizOutType');
-    },
-    transportationMeansList() {
-      return this.$getDict('outTransportMeans');
-    },
-    transportationConditionList() {
-      return this.$getDict('transportationCondition');
-    },
-    shipmentPackingUnit() {
-      return this.$getDict('shipmentPackingUnit');
-    },
-    measurementUnitList() {
-      return this.$getDict('measurementUnit');
-    },
-    orgRelationList() {
-      return this.$getDict('orgRelation');
-    },
-    breakageOrgType() { // 单位类型 0疾控 1pov
-      return this.$store.state.breakageOrgType;
-    },
     breakageReasons() { // 损耗原因
       return this.$getDict('breakageReason');
     },
-    breakageType() { // 损耗方式
-      return this.$getDict('breakageType');
-    },
-    isSelfBreakage() { // pov自行损耗
+    isthisBreakage() { // pov自行损耗
       return this.form.customerChannel !== '1';
     },
     isEntrustWarehouse() {
@@ -428,9 +378,6 @@ export default {
       });
       return status === '0';
     },
-    // totalWastageInput() {
-    //   return this.codeDetails.map(item => item.wastageInput).reduce((a, b) => a + b);
-    // }
   },
   watch: {
     index: function () {
@@ -446,30 +393,26 @@ export default {
       // 清空表单
       this.resetForm();
       this.form.state = '';
-      this.form.id = null;
-      this.formCopy = {};
+      this.form.id = '';
       this.index = 0;
       let user = this.$store.state.user;
       this.form.orgId = user.userCompanyAddress;
-      this.checkLicence(this.form.orgId);
       if (val === 2) {
         this.editOrderInfo();
-      } else {
-        this.filterAddress();
       }
     },
   },
-
   mounted: function () {
     this.currentPartName = this.productListSet[0].name;
   },
   methods: {
-    queryAttachmentList: function () {// 附件管理
+    // 附件管理
+    queryAttachmentList() {
       if (!this.form.id) return;
       if (!this.form.fileIdList) {
         this.form.fileIdList = [];
       }
-      OmsAttachment.queryOneAttachmentList(this.form.id, 'breakageOrderFile').then(res => {
+      OmsAttachment.queryOneAttachmentList(this.form.id, 'erpOrderFile').then(res => {
         this.attachmentList = res.data;
         this.attachmentList.forEach(val => {
           this.form.fileIdList.push(val.attachmentId);
@@ -482,10 +425,6 @@ export default {
         ids.push(file.attachmentId);
       });
       this.form.fileIdList = ids;
-    },
-    changeVaccineType(val) {
-      this.resetProductForm();
-      this.form.detailDtoList = [];
     },
     filterAddressLabel(item) {
       let name = item.name ? '【' + item.name + '】' : '';
@@ -509,194 +448,100 @@ export default {
       this.form.transportationMeansId = '';
       this.form.transportationAddress = '';
       this.form.transportationCondition = '';
-      this.form.orgAddress = '';
       this.filterProductList = [];
       // 清空附件列表
       this.attachmentList = [];
       this.form.fileIdList = [];
-      this.resetProductForm();
     },
     editOrderInfo() {
       if (!this.orderId) return;
-      // 查询供货单位
-      this.queryOnCDCs();
       InWork.queryOrderDetail(this.orderId).then(res => {
-        res.data.detailDtoList.forEach(f => {
-          f.orgGoodsName = f.name;
-          f.no = f.batchNumber;
-        });
-        this.form = res.data;
-        this.formCopy = JSON.parse(JSON.stringify(res.data));
-
-        this.filterAddress(true);
-        this.searchWarehouses();
+        this.detail2FormData(res.data);
         // 查询附件
         this.queryAttachmentList();
       });
     },
-    formatPrice() {// 格式化单价，保留两位小数
-      this.product.unitPrice = utils.autoformatDecimalPoint(this.product.unitPrice);
+    detail2FormData(data) {
+      this.form.id = data.id;
+      this.form.customerChannel = data.customerChannel;
+      this.form.orgId = data.orgId;
+      this.form.breakageReason = data.breakageReason;
+      this.form.detailDtoList = data.detailDtoList.map(ddl => ({
+        "amount": ddl.amount, //损耗人份数量
+        "wastage": ddl.wastage, //损耗人份数量
+        "orgGoodsId": ddl.orgGoodsId, //货主货品id
+        "orgGoodsName": ddl.goodsName, //货主货品名称
+        "specificationsId": "",
+        specificationName: ddl.orgGoodsDto.goodsDto.specifications,//规格名称
+        goodsType: ddl.vaccineType,//货品类型
+        productName: ddl.orgGoodsDto.name,//产品名称
+        photoUrl: ddl.orgGoodsDto.photoUrl,
+        "batchNumberId": ddl.batchNumberId, //批号id
+        "batchNumber": ddl.batchNumber, //批号
+        "expirationDate": ddl.expiryDate, //有效期
+        "code": ddl.code, //追溯码
+        "multiPersonAgingId": ddl.multiPersonAgingId, //多人份剂次id
+        "stockId": ddl.stockId //库存id
+      }));
+    },
+    code2FormData(ddl) {
+      const detailDto = {
+        "amount": '', //损耗人份数量
+        "wastage": ddl.wastage, //最大可损耗人份数量
+        "orgGoodsId": ddl.orgGoodsId, //货主货品id
+        "orgGoodsName": ddl.goodsName, //货主货品名称
+        "specificationsId": "",
+        specificationName: ddl.specification,//规格名称
+        goodsType: ddl.vaccineType,//货品类型
+        productName: ddl.platformGoodsName,//产品名称
+        "batchNumberId": ddl.batchNumberId, //批号id
+        "batchNumber": ddl.batchNumber, //批号
+        "expirationDate": ddl.expiryDate, //有效期
+        "code": ddl.code, //追溯码
+        "multiPersonAgingId": ddl.multiPersonAgingId, //多人份剂次id
+        "stockId": ddl.id, //库存id
+        photoUrl: ddl.photoUrl
+      }
+
+      this.form.detailDtoList.push(detailDto);
     },
     setIndexValue: function (value) {// 左侧显示页切换
       this.index = value;
-    },
-    qualifiedFlagChange() { // 改变是否合格
-      this.resetProductForm();
-      this.form.detailDtoList = [];
-    },
-    customerChannelChange() { // 改变损耗方式
-      this.form.customerId = '';
-      this.form.remark = '';
-      this.warehouses = [];
-      this.form.transportationAddress = '';
-      this.queryOnCDCs();
-      this.searchWarehouses();
-    },
-    transportationMeansIdChange(val) { // 改变运输方式
-      this.warehouses = [];
-      this.form.transportationAddress = '';
-      this.form.transportationCondition = '';
-      if (val !== '0') return;
-      this.searchWarehouses();
-    },
-    customerIdChange() { // 改变去向单位
-      this.warehouses = [];
-      this.form.transportationAddress = '';
-      this.searchWarehouses();
-    },
-    searchWarehouses() { // 查询收货地址
-      let orgId = this.isSelfBreakage ? this.$store.state.user.userCompanyAddress : this.form.customerId;
-      if (!orgId) return;
-      Address.queryAddress(orgId, {
-        deleteFlag: false, orgId: orgId, auditedStatus: '1', status: 0
-      }).then(res => {
-        this.warehouses = res.data || [];
-      });
-    },
-    filterAddress(isStorageData) {
-      Address.queryAddress(this.form.orgId, {
-        deleteFlag: false,
-        orgId: this.form.orgId,
-        auditedStatus: '1',
-        status: 0
-      }).then(res => {
-        this.LogisticsCenterAddressList = res.data;
-        if (isStorageData) return;
-        let defaultStore = res.data.filter(item => item.default);
-        this.form.orgAddress = defaultStore.length ? defaultStore[0].id : '';
-        this.transportationAddressChange(this.form.orgAddress);
-      });
-    },
-    checkLicence: function (val) {// 检查货主/单位证照是否过期
-      if (!val) return;
-      http.get('/order-licence/org/' + val + '/overdue').then(res => {
-        if (!res.data.length) return;
-        let msg = '';
-        res.data.forEach(item => {
-          msg += '"' + item.name + '",';
-        });
-        msg = msg.substring(0, msg.length - 1);
-        this.$notify({
-          duration: 2000,
-          title: '证照信息过期',
-          message: msg + '证照信息已过期,无法创建订单',
-          type: 'error'
-        });
-      });
-    },
-    setIsHasBatchNumberInfo(val) {
-      this.isHasBatchNumberInfo = val;
     },
     // 确认添加追溯码
     confirmAdd() {
       if (!this.form.code) {
         this.$notify.warning('请先输入追溯码');
-        return false;
+        return;
+      }
+
+      const exist = this.form.detailDtoList.some(cd => cd.code === this.form.code);
+      if (exist) {
+        this.$notify.warning('追溯码已存在，请勿重复添加！');
+        return
       }
 
       // 调用接口查询追溯码情况
       this.$http.get('/erp-stock/query-wastage-by-code', {params: {code: this.form.code}})
         .then(res => {
-          let data = {
-            ...res.data,
-            wastageInput: ''
-          };
-          this.form.codeDetails.push(data);
+          this.code2FormData(res.data);
         })
         .catch(err => {
-          // 码使用情况 提示文案
-          // 未开瓶 此货品未开瓶使用
-          // 已使用完毕 该货品已使用完毕
-          // 已扫码 该货品在损耗清单内
-          // 校验货主 该码非本单位货品
-          console.log({...err})
-          // this.$message.warning(err.messages)
-          const mockData = {
-            "id": "a8jMD7AuzhWvH1HO0Si", //库存id
-            "stockNo": "6WvQnqmSxP8nCLc62Yw",
-            "availableCount": 3,
-            "createTime": 1611290622000,
-            "batchNumberId": "6lRfB6vgoySqnF6txda", //批号id
-            "batchNumber": "201908072", //批号
-            "orgId": "HfdIwerZoC8OOTmwLuI", //单位id
-            "orgName": "上海市长宁区华阳社区卫生服务中心", //单位名称
-            "orgCode": "3101050101", //单位编码
-            "areaCode": "310105", //区域编码
-            "factoryId": "51ImQqKspTuMZVCNFGl", //生产厂商id
-            "factoryName": "北京北生研生物制品有限公司", //厂商名称
-            "orgGoodsId": "mkd0E7qWh36oIs831tr", //货主货品id
-            "platformGoodsName": "口服I型III型脊髓灰质炎减毒活疫苗（人二倍体细胞）",
-            "goodsName": "口服I型III型脊髓灰质炎减毒活疫苗（人二倍体细胞）", //货品名称
-            "undeterminedCount": 0,
-            "unqualifiedBizCount": 0,
-            "unqualifiedCount": 0,
-            "qualifiedCount": 5,
-            "transitCount": 0,
-            "expiryDate": 1640966400000, //有效期
-            "nearTermDays": null,
-            "warehouseId": null,
-            "logisticsCentreId": null,
-            "qualifiedBizServings": 32,
-            "qualifiedActualServings": 50,
-            "showFlag": null,
-            "orgIdList": [],
-            "remark": null,
-            "vaccineType": "1", //货品类型
-            "orgGoodsCode": "1110025", //货主货品编码
-            "goodsGenericName": "口服I型III型脊髓灰质炎减毒活疫苗(人二倍体细胞)", //货主货品名称
-            "specification": "每瓶1.0ml（10人份）", //规格
-            "orgGoodsStatus": true,
-            "wastage": Number.parseInt(this.form.code), //可损耗人份（剂次）
-            "wastageInput": '', //输入的可损耗人份（剂次） 必须小于wastage
-            "multiPersonAgingId": "d1ZIbNWkh5RIruf1iBD", //多人份剂次id
-            "code": this.form.code //追溯码
-          };
-
-          this.form.codeDetails.push(mockData);
+          const {msg} = err.response.data;
+          this.$notify.warning(msg);
         })
     },
-    resetProductForm() {
-      this.product = {
-        'amount': null,
-        'entrustment': false,
-        'measurementUnit': '',
-        'orgGoodsId': '',
-        'packingCount': null,
-        'specificationsId': '',
-        'fixInfo': {
-          'goodsDto': {}
-        },
-        'unitPrice': null
-      };
-
-      this.accessoryList = [];
-      this.batchNumbers = [];
-      this.editItemProduct = {};
-    },
     handleDelete(index) {
-      this.form.codeDetails.splice(index, 1)
+      this.$confirm('确定要删除当前行吗？', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(()=>{
+        this.form.detailDtoList.splice(index, 1);
+      })
     },
-    onSubmit: function () {// 提交表单
+    // 保存订单
+    saveOrder() {
       if (this.form.fileIdList.length === 0) {
         this.$notify({
           duration: 2000,
@@ -705,51 +550,36 @@ export default {
         });
         return false;
       }
-      if (!this.checkHasOrderNotAdded(this.product)) return;
-      let self = this;
+
       this.$refs['orderAddForm'].validate((valid) => {
-        if (!valid || this.doing) {
+        if (!valid || this.disabled) {
           this.index = 0;
           return false;
         }
-        let saveData = JSON.parse(JSON.stringify(self.form));
-        if (saveData.detailDtoList.length === 0) {
+
+        if (this.form.detailDtoList.length === 0) {
           this.$notify({
             duration: 2000,
-            message: '请添加订单产品',
+            message: '请输入追溯码并确认添加',
             type: 'warning'
           });
           return false;
         }
-        saveData.detailDtoList.forEach(item => {
-          !item.combinationFlag && (item.combinationFlag = item.isCombination);
-          delete item.fixInfo;
-          delete item.mainOrgId;
-          delete item.isCombination;
-          delete item.proportion;
-          delete item.orgGoodsDto;
-        });
-        saveData.detailDtoList = this.mergeSameOrgGoodsIdAndBatchNumberWhenOut(saveData.detailDtoList);
-        let orgId = this.$store.state.user.userCompanyAddress;
 
-        // 没有去向单位id, 默认设置自己
-        if (!saveData.customerId) {
-          saveData.customerId = this.$store.state.user.userCompanyAddress;
-        }
-        this.doing = true;
-        if (saveData.id) {
-          erpOrder.updateOrder(saveData.id, saveData).then(res => {
+        this.disabled = true;
+        if (this.form.id) {
+          erpOrder.updateOrder(this.form.id, this.form).then(res => {
             this.$notify({
               duration: 2000,
               message: '编辑损耗成功',
               type: 'success'
             });
-            self.$emit('change');
-            this.doing = false;
+            this.$emit('change');
+            this.disabled = false;
             this.$emit('close');
             this.resetForm();
           }).catch(error => {
-            this.doing = false;
+            this.disabled = false;
             this.$notify({
               duration: 2000,
               title: '编辑损耗失败',
@@ -758,19 +588,19 @@ export default {
             });
           });
         } else {
-          erpOrder.save(saveData).then(res => {
+          erpOrder.save(this.form).then(res => {
             this.$notify({
               duration: 2000,
               message: '新增损耗成功',
               type: 'success'
             });
             window.localStorage.removeItem(this.saveKey);
-            self.$emit('change', res.data);
-            this.doing = false;
+            this.$emit('change', res.data);
+            this.disabled = false;
             this.$emit('close');
             this.resetForm();
           }).catch(error => {
-            this.doing = false;
+            this.disabled = false;
             this.$notify({
               duration: 2000,
               title: '新增损耗失败',

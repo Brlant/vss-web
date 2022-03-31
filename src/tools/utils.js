@@ -483,3 +483,20 @@ export const deepCopy = function (source) {
   }
   return sourceCopy;
 };
+
+export const getUrlParams = (url) => {
+  if (!url) {
+    return {}
+  }
+
+  const urlParams = {};
+  const beginIndex = url.indexOf("?")
+  if (beginIndex != -1) {
+    const params = url.substring(beginIndex + 1).split("&");
+    for (const str of params) {
+      urlParams[str.split("=")[0]] = str.split("=")[1];
+    }
+  }
+
+  return urlParams;
+}
