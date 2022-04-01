@@ -252,6 +252,11 @@ export const route = [
             path: '/store/loss/fill/:id',
             component: () => import('./components/store/loss-fill/loss-fill-list.vue'),
             meta: {moduleId: 'store', title: '损耗填报', perm: 'wastage-order'}
+          },
+          {
+            path: '/store/wastage/report/vss',
+            component: () => import('./components/store/wastage-report/wastage-report-vss'),
+            meta: {moduleId: 'store', title: '损耗报表（vss）', perm: 'wastage-report-vss'}
           }
         ]
       },
