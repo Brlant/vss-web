@@ -244,9 +244,14 @@ export const route = [
             meta: {moduleId: 'purchase', title: '调拨出库', perm: 'allocating-out-order-manager'}
           },
           {
-            path: '/store/bad/:id',
+            path: '/store/bad/out/:id',
             component: () => import('./components/store/breakage-order/list.vue'),
             meta: {moduleId: 'store', title: '报损出库', perm: 'breakage-order'}
+          },
+          {
+            path: '/store/loss/fill/:id',
+            component: () => import('./components/store/loss-fill/loss-fill-list.vue'),
+            meta: {moduleId: 'store', title: '损耗填报', perm: 'wastage-order'}
           }
         ]
       },
