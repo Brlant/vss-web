@@ -160,29 +160,23 @@
       <add-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" type="1" @change="onSubmit"
                 @close="resetRightBox"></add-form>
     </page-right>
-    <page-right :css="{'width':'800px','padding':0}" :show="showScanRight" @right-close="resetRightBox">
-      <scan-code :orderId="currentOrderId" :show="showScanRight" @change="onSubmit" @close="resetRightBox"></scan-code>
-    </page-right>
   </div>
 </template>
 
 <script>
 import utils from '@/tools/utils';
-import detail from './detail.vue';
-import addForm from './form/add-form.vue';
-import {BaseInfo} from '@/resources';
+import detail from './loss-fill-detail.vue';
+import addForm from './loss-fill-form.vue';
 import OrderMixin from '@/mixins/orderMixin';
-import scanCode from './form/scan-code';
 
 export default {
   components: {
-    detail, addForm, scanCode
+    detail, addForm
   },
   data: function () {
     return {
       loadingData: true,
       showItemRight: false,
-      showScanRight: false,
       showPart: false,
       showDetail: false,
       showSearch: false,
@@ -248,17 +242,6 @@ export default {
       this.showDetail = true;
     }
   },
-  computed: {
-    transportationMeansList: function () {
-      return this.$getDict('outTransportMeans');
-    },
-    bizInTypes: function () {
-      return this.$getDict('bizOutType');
-    },
-    breakageOrgType() {
-      return this.$store.state.breakageOrgType;
-    }
-  },
   watch: {
     filters: {
       handler: function () {
@@ -273,10 +256,6 @@ export default {
       this.currentOrderId = item.id;
       this.showItemRight = true;
       this.defaultIndex = 2;
-    },
-    scan(item) {
-      this.currentOrderId = item.id;
-      this.showScanRight = true;
     },
     showPartItem(item) {
       this.currentOrderId = item.id;
@@ -337,7 +316,6 @@ export default {
       this.defaultIndex = 0;
       this.action = '';
       this.showPart = false;
-      this.showScanRight = false;
       // this.getOrderList(this.pager.currentPage);
       this.$router.push('list');
     },
@@ -371,36 +349,12 @@ export default {
           this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
         }
         this.loadingData = false;
-      }).catch(err=>{
-        debugger
-      });
+      })
 
       this.queryStatusNum(param);
     },
     refreshOrder() {
       this.getOrderList(this.pager.currentPage);
-    },
-    filterOrg: function (query) {// 过滤供货商
-      let orgId = this.$store.state.user['userCompanyAddress'];
-      if (!orgId) return;
-      let params = {
-        keyWord: query,
-        relation: '0'
-      };
-      BaseInfo.queryOrgByValidReation(orgId, params).then(res => {
-        this.orgList = res.data;
-      });
-    },
-    filterLogistics: function (query) {// 过滤物流提供方
-      let orgId = this.searchCondition.orgId;
-      if (!orgId) {
-        this.searchCondition.logisticsProvider = '';
-        this.logisticsList = [];
-        return;
-      }
-      BaseInfo.queryOrgByValidReation(orgId, {keyWord: query, relation: '3'}).then(res => {
-        this.logisticsList = res.data;
-      });
     },
     filterListColor: function (index) {// 过滤左边列表边角颜色
       let status = -1;
@@ -411,12 +365,6 @@ export default {
       }
       return status;
     },
-    orgChange: function () {
-      this.searchCondition.transactOrgId = '';
-      this.orgList = [];
-      this.filterOrg();
-      this.filterLogistics();
-    },
     queryStatusNum: function (params) {
       this.$http.get('/erp-order/count', {params}).then(res => {
         let data = res.data;
@@ -424,30 +372,6 @@ export default {
         this.lossFillType[4].num = this.obtionStatusNum(data['out-complete']);
         this.lossFillType[5].num = this.obtionStatusNum(data['out-cancel']);
       });
-    },
-    getTimeTitle: function (item) {
-      let title = '';
-      switch (item.transportationMeansId) {
-        case '0': {
-          title = '预计送货：';
-          if (item.bizType === '2-1') {
-            title = '预计出库：';
-          }
-          break;
-        }
-        case '1': {
-          title = '预计提货：';
-          break;
-        }
-        case '2': {
-          title = '预计发货：';
-          break;
-        }
-      }
-      if (item.bizType === '2-2') {
-        title = '';
-      }
-      return title;
     },
     obtionStatusNum: function (num) {
       if (typeof num !== 'number') {
@@ -465,31 +389,6 @@ export default {
       this.activeStatus = key;
       this.filters.state = item.state;
     },
-    advancedQuery: function () {
-      this.showSearch = !this.showSearch;
-    },
-    formatTime: function (date) {
-      return date ? this.$moment(date).format('YYYY-MM-DD') : '';
-    },
-    transformReturnOrder(item) {
-      this.$confirm('是否转换成销售退货订单', '', {
-        confirmButtonText: '确定',
-        cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        this.$http.put(`/erp-order/${item.id}/conversion`).then(() => {
-          this.$notify.success({
-            message: '转换成功'
-          });
-          this.getOrderList(this.pager.currentPage);
-        }).catch(error => {
-          this.$notify.error({
-            message: error.response && error.response.data && error.response.data.msg || '转换失败'
-          });
-        });
-      }).catch(() => {
-      });
-    }
   }
 };
 </script>

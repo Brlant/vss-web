@@ -1,5 +1,5 @@
 <style lang="scss" scoped>
-@import "../../../../assets/mixins.scss";
+@import "../../../assets/mixins";
 
 $leftWidth: 200px;
 
@@ -236,13 +236,12 @@ $leftWidth: 200px;
 <script>
 import {erpOrder, InWork, OmsAttachment} from '@/resources';
 import utils from '@/tools/utils';
-import materialPart from '../material.vue';
 import OrderMixin from '@/mixins/orderMixin';
 
 export default {
   name: 'addForm',
   loading: false,
-  components: {materialPart},
+  components: {},
   mixins: [OrderMixin],
   props: {
     type: {
