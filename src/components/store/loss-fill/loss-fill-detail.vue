@@ -192,7 +192,7 @@ import {erpOrder, http, OmsAttachment} from '@/resources';
 import attachmentList from '@/components/common/attachmentList.vue';
 
 export default {
-  name: 'detail',
+  name: 'loss-fill-detail',
   components: {orderLog, cancelOrder, attachmentList},
   props: {
     orderId: {

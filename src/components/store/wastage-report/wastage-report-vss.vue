@@ -13,13 +13,13 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row :span="6" label="货主订单号">
-                <el-input v-model="queryParams.orderNo" placeholder="请输入货主订单号"></el-input>
+                <el-input v-model="params.orderNo" placeholder="请输入货主订单号"></el-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row :span="5" label="货主疫苗">
-                <el-select v-model="queryParams.orgGoodsId" :clearable="true" :remote-method="filterOrgGoods" filterable
-                           placeholder="请输入名称或编号搜索货主疫苗"
+                <el-select v-model="params.orgGoodsId" :clearable="true" :remote-method="filterOrgGoods" filterable
+                           placeholder="请输入名称/编号"
                            popper-class="good-selects" remote
                            @click.native.once="filterOrgGoods('')">
                   <el-option v-for="item in orgGoods" :key="item.orgGoodsDto.id"
@@ -49,13 +49,13 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row :span="6" label="追溯码">
-                <oms-input v-model="queryParams.code"></oms-input>
+                <oms-input v-model="params.code"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row :span="6" label="生产厂家">
-                <el-select v-model="queryParams.factoryId" :clearable="true" :remote-method="filterFactory" filterable
-                           placeholder="请输入名称生产单位"
+                <el-select v-model="params.factoryId" :clearable="true" :remote-method="filterFactory" filterable
+                           placeholder="请输入名称/系统代码"
                            popperClass="good-selects" remote
                            @click.native.once="filterFactory('')">
                   <el-option v-for="org in factories" :key="org.id" :label="org.name" :value="org.id">
@@ -111,14 +111,18 @@
         <el-table-column :sortable="true" label="有效期至" prop="expirationDate"></el-table-column>
         <el-table-column :sortable="true" label="损耗人份" prop="amount"></el-table-column>
         <el-table-column :sortable="true" label="损耗时间" prop="createTime"></el-table-column>
-        <el-table-column :sortable="true" label="生产厂家" prop=" factoryName"></el-table-column>
-        <el-table-column :sortable="true" label="状态" prop="status"></el-table-column>
+        <el-table-column :sortable="true" label="生产厂家" prop="factoryName"></el-table-column>
+        <el-table-column :sortable="true" label="状态" prop="status" align="center">
+          <template v-slot="{row}">
+            <el-tag :type="getTagTypeByStatus(row.status)">{{ getOrderStatus(row.status) }}</el-tag>
+          </template>
+        </el-table-column>
       </el-table>
       <div v-show="reportList.length" class="text-center">
         <el-pagination
-          :current-page="pager.pageNo" :page-sizes="[10,20,50,100]"
-          :pageSize="pager.pageSize"
-          :total="pager.count" layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+          :current-page="params.pageNo" :page-sizes="[10,20,50,100]"
+          :pageSize="params.pageSize"
+          :total="totalCount" layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
           @current-change="handleCurrentChange">
         </el-pagination>
       </div>
@@ -139,7 +143,7 @@ export default {
     return {
       showSearch: true,
       // 列表和导出的查询参数
-      queryParams: {
+      params: {
         // 货主订单号
         orderNo: '',
         // 货主疫苗
@@ -161,11 +165,7 @@ export default {
       orgGoods: [],
       isLoading: false,
       loadingData: false,
-      pager: {
-        pageNo: 1,
-        count: 0,
-        pageSize: parseInt(window.localStorage.getItem('currentPageSize'), 10) || 10
-      }
+      totalCount: 0,
     }
   },
   computed: {
@@ -174,14 +174,26 @@ export default {
     }
   },
   methods: {
+    getTagTypeByStatus(status) {
+      if (status == 0) {
+        return '';
+      }
+      if (status == 4) {
+        return 'success';
+      }
+      if (status == 5) {
+        return 'danger';
+      }
+    },
+    getOrderStatus(status) {
+      return utils.lossFillType[status].title;
+    },
     exportFile() {
-      this.queryParams.createStartTime = this.$formatAryTime(this.createTimes, 0);
-      this.queryParams.createEndTime = this.$formatAryTime(this.createTimes, 1);
-      let params = Object.assign(this.pager, this.queryParams);
+      this.params.createStartTime = this.$formatAryTime(this.createTimes, 0);
+      this.params.createEndTime = this.$formatAryTime(this.createTimes, 1);
       this.isLoading = true;
       this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/wastage-report-vss'});
-      // todo 接口地址待确认
-      this.$http.get('/erp-statement/wastage-report/export', {params}).then(res => {
+      this.$http.get('/erp-statement/wastage-report/export', {params: this.params}).then(res => {
         utils.download(res.data.path, '损耗报表');
         this.isLoading = false;
         this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/wastage-report-vss'});
@@ -194,13 +206,12 @@ export default {
       });
     },
     search() {
-      this.queryParams.createStartTime = this.$formatAryTime(this.createTimes, 0);
-      this.queryParams.createEndTime = this.$formatAryTime(this.createTimes, 1);
-      let params = Object.assign(this.pager, this.queryParams);
+      this.params.createStartTime = this.$formatAryTime(this.createTimes, 0);
+      this.params.createEndTime = this.$formatAryTime(this.createTimes, 1);
       this.loadingData = true;
-      this.$http.get('/erp-statement/wastage-report', {params}).then(res => {
+      this.$http.get('/erp-statement/wastage-report', {params: this.params}).then(res => {
         this.reportList = res.data.list;
-        this.pager.count = res.data.count;
+        this.totalCount = res.data.count;
         this.loadingData = false;
         this.setFixedHeight();
       });
@@ -224,17 +235,21 @@ export default {
         this.orgGoods = res.data.list;
       });
     },
-    handleCurrentChange(val) {
-      this.getCurrentList(val);
+    handleCurrentChange(pageNo) {
+      this.params.pageNo = pageNo;
+      this.search()
     },
-    handleSizeChange(val) {
-      this.pager.pageSize = val;
-      window.localStorage.setItem('currentPageSize', val);
+    handleSizeChange(pageSize) {
+      this.params.pageSize = pageSize;
+      window.localStorage.setItem('currentPageSize', pageSize);
       this.search();
     },
 
     getSummaries(param) {
       const {columns, data} = param;
+
+      if (data.length == 0) return [];
+
       const sums = [];
       columns.forEach((column, index) => {
         if (index === 0) {
@@ -253,8 +268,9 @@ export default {
       return sums;
     },
     resetSearchForm() {
-      this.queryParams = {};
+      this.params = {};
       this.createTimes = [];
+      this.totalCount = 0;
       this.search();
     }
   },

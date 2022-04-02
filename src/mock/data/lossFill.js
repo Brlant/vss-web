@@ -1,5 +1,5 @@
 // 损耗填报的模拟数据
-import {getUrlParams} from '@/tools/utils'
+import {getUrlParams, getUrlPathId} from '@/tools/utils'
 import Mock from 'mockjs'
 
 
@@ -7,29 +7,31 @@ const {mock,Random} = Mock;
 
 export default {
   pageList: (options) => {
+    const urlParams = getUrlParams(options.url);
+    debugger
     return mock({
-      "pageNo|1-10": 1, //页码
-      "pageSize": 20, //页大小
-      "count|1-1000": 3, //数量
+      "pageNo|1-10": urlParams.pageNo, //页码
+      "pageSize": urlParams.pageSize, //页大小
+      "count|1-50": 3, //数量
       "start": 0,
       "first": 1,
       "last": 1,
       "firstPage": true,
       "lastPage": true,
-      "list|1-10": [
+      "list|5-20": [
         {
-          "id": "7hcOhmMAEDbaXjMMvAm",
-          orgAreaName:`${Random.province()}-${Random.city()}-${Random.county()}`,
-          "state": "0",
+          "id": "@id",
+          orgAreaName:'@city',
+          'state': urlParams.state,
           "type": "1",
           "bizType": "2-5",
-          "orderNo": "SH31011599922030003",
+          "orderNo": "@id",
           "orgId": "YboR6jynvMP6cm1nONN",
-          "orgName": null,
+          "orgName": '@cname',
           "transactOrgId": null,
           "transactOrgName": null,
           "thirdPartyNumber": null,
-          "createTime": 1648059294000,
+          "createTime": '@date',
           "createdBy": "wifu2vlTIWrqQPWOhO8",
           "expectedTime": null,
           "expectedStartTime": null,
@@ -295,10 +297,10 @@ export default {
   detail(options){
     return mock({
       "receiptDetailList": null,
-      "id": "7hcOhmMAEDbaXjMMvAm", //订单id
+      "id": getUrlPathId(options.url), //订单id
       "orderNo": "SH31011599922030003", //订单编号
       "orgId": "YboR6jynvMP6cm1nONN", //单位id
-      "orgName": null,
+      "orgName": '@cname',
       "type": "1", //出入库类型（该处固定）
       "bizType": "2-5", //订单类型（该处固定）
       "bizTypeName": null,
@@ -679,17 +681,20 @@ export default {
     })
   },
   orderCount: (options) => {
+    const urlParams = getUrlParams(options.url);
+    debugger
     return mock({
       'out-pend-confirm|0-20': 1,
       'out-complete|0-10': 2,
       'out-cancel|0-5': 3
     })
   },
-  'codeDetail': (options) => {
+  codeDetail: (options) => {
     const urlParams = getUrlParams(options.url);
+    debugger
     return mock({
       "data": {
-        "id": "a8jMD7AuzhWvH1HO0Si", //库存id
+        "id": urlParams.id, //库存id
         "stockNo": "6WvQnqmSxP8nCLc62Yw",
         "availableCount|1-5": 3,
         "createTime": '@now',

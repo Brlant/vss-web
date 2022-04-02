@@ -500,3 +500,17 @@ export const getUrlParams = (url) => {
 
   return urlParams;
 }
+
+export const getUrlPathId = (url) => {
+  if (!url) {
+    return ''
+  }
+
+  const urlParams = {};
+  const beginIndex = url.lastIndexOf("/")
+  if (beginIndex == -1) {
+    return ''
+  }
+
+  return url.substring(beginIndex+1);
+}

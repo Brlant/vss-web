@@ -239,7 +239,7 @@ import utils from '@/tools/utils';
 import OrderMixin from '@/mixins/orderMixin';
 
 export default {
-  name: 'addForm',
+  name: 'loss-fill-detail',
   loading: false,
   components: {},
   mixins: [OrderMixin],

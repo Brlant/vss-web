@@ -22,22 +22,23 @@
           <el-row>
             <el-col :span="8">
               <oms-form-row :span="6" label="货主订单号">
-                <oms-input v-model="searchCondition.orderNo" placeholder="请输入货主订单号" type="text"></oms-input>
+                <oms-input v-model="params.orderNo" placeholder="请输入货主订单号" type="text"></oms-input>
               </oms-form-row>
             </el-col>
             <el-col :span="8">
               <oms-form-row :span="6" label="货主疫苗">
-                <el-select v-model="searchCondition.orgGoodsId" :clearable="true" :remote-method="searchProduct" filterable
+                <el-select v-model="params.orgGoodsId" :clearable="true" :remote-method="searchProduct"
+                           filterable
                            placeholder="请输入名称或编号搜索货主疫苗" popper-class="good-selects" remote
                            @click.native.once="searchProduct('')">
                   <el-option v-for="org in goodesList" :key="org.id" :label="org.goodsName"
                              :value="org.id">
                     <div style="overflow: hidden">
-                      <span class="pull-left">{{org.goodsName}}</span>
+                      <span class="pull-left">{{ org.goodsName }}</span>
                     </div>
                     <div style="overflow: hidden">
                       <span class="select-other-info pull-left"><span
-                        v-show="org.goodsNo">货主货品编号:</span>{{org.goodsNo}}
+                        v-show="org.goodsNo">货主货品编号:</span>{{ org.goodsNo }}
                       </span>
                       <span class="select-other-info pull-left"><span
                         v-show="org.saleFirmName">供货单位:</span>{{ org.saleFirmName }}
@@ -51,7 +52,7 @@
               <oms-form-row :span="6" label="下单时间">
                 <el-col :span="24">
                   <el-date-picker
-                    v-model="createdTime"
+                    v-model="createdTimes"
                     format="yyyy-MM-dd"
                     placeholder="请选择" type="daterange">
                   </el-date-picker>
@@ -77,7 +78,8 @@
              class="status-item"
              @click="changeStatus(item,key)">
           <div :class="['b_color_'+key]" class="status-bg"></div>
-          <div><i v-if="key===activeStatus" class="el-icon-caret-right"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          <div><i v-if="key===activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span
+            class="status-num">{{ item.num }}</span>
           </div>
         </div>
       </div>
@@ -87,7 +89,7 @@
           <el-col :span="4">所属区域</el-col>
           <el-col :span="5">损耗时间</el-col>
           <el-col :span="2">状态</el-col>
-          <el-col v-if="filters.state === 0 " :span="5" class="opera-btn">操作</el-col>
+          <el-col v-if="params.state === 0 " :span="5" class="opera-btn">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -102,33 +104,33 @@
           </el-col>
         </el-row>
         <div v-else class="order-list-body flex-list-dom">
-          <div v-for="item in lossList" :class="['status-'+filterListColor(item.state),{'active':currentOrderId===item.id}]" class="order-list-item"
+          <div v-for="item in lossList"
+               :class="['status-'+filterListColor(item.state),{'active':currentOrderId===item.id}]"
+               class="order-list-item"
                @click.prevent="showItem(item)">
             <el-row>
               <el-col :span="8">
                 <div class="f-grey">
-                  {{item.orderNo }}
+                  {{ item.orderNo }}
                 </div>
                 <div>
-                  {{item.orgName }}
+                  {{ item.orgName }}
                 </div>
               </el-col>
               <el-col :span="4">
                 <div>
-                  {{item.orgAreaName}}
+                  {{ item.orgAreaName }}
                 </div>
               </el-col>
               <el-col :span="5">
-                <div>{{item.createTime | minute }}</div>
-                <!--<div>预计出库：{{ item.expectedTime | date }}</div>-->
+                <div>{{ item.createTime | minute }}</div>
               </el-col>
               <el-col :span="2">
                 <div class="vertical-center">
-                  {{getOrderStatus(item)}}
-                  <order-push-status :msg="item.pushMessage" :status="item.pushStatus"/>
+                  <el-tag :type="getTagTypeByStatus(item.state)">{{ getOrderStatus(item.state) }}</el-tag>
                 </div>
               </el-col>
-              <el-col v-show="filters.state === '0'" :span="5" class="opera-btn">
+              <el-col v-show="params.state === '0'" :span="5" class="opera-btn">
                 <perm label="breakage-order-edit">
                   <span @click.stop.prevent="editOrder(item)">
                     <a class="btn-circle" href="#" @click.prevent=""><i
@@ -144,34 +146,34 @@
         </div>
       </div>
     </div>
-    <div v-show="pager.count>pager.pageSize && !loadingData" class="text-center">
+    <div v-show="params.count>params.pageSize && !loadingData" class="text-center">
       <el-cu-pagination
-        :current-page="pager.currentPage"
-        :pageSize="pager.pageSize" :total="pager.count" layout="prev, pager, next"
+        :current-page="params.pageNo"
+        :pageSize="params.pageSize" :total="totalCount" layout="prev, pager, next"
         @current-change="getOrderList">
       </el-cu-pagination>
     </div>
     <page-right :css="{'width':'1000px','padding':0}" :show="showDetail" class="order-detail-info specific-part-z-index"
                 partClass="pr-no-animation" @right-close="resetRightBox">
-      <detail :orderId="currentOrderId" :state="state" @close="resetRightBox"
-                 @refreshOrder="refreshOrder"></detail>
+      <loss-fill-detail :orderId="currentOrderId" :state="state" @close="resetRightBox"
+              @refreshOrder="getOrderList"></loss-fill-detail>
     </page-right>
     <page-right :css="{'width':'1000px','padding':0}" :show="showItemRight" @right-close="beforeCloseConfirm">
-      <add-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" type="1" @change="onSubmit"
-                @close="resetRightBox"></add-form>
+      <loss-fill-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" type="1" @change="onSubmit"
+                @close="resetRightBox"></loss-fill-form>
     </page-right>
   </div>
 </template>
 
 <script>
 import utils from '@/tools/utils';
-import detail from './loss-fill-detail.vue';
-import addForm from './loss-fill-form.vue';
+import lossFillDetail from './loss-fill-detail.vue';
+import lossFillForm from './loss-fill-form.vue';
 import OrderMixin from '@/mixins/orderMixin';
 
 export default {
   components: {
-    detail, addForm
+    lossFillDetail, lossFillForm
   },
   data: function () {
     return {
@@ -181,25 +183,11 @@ export default {
       showDetail: false,
       showSearch: false,
       lossList: [],
-      filters: {
+      params: {
         type: 1,
         state: '0',
-        orderNo: '',
-        logisticsProviderName: '',
-        createStartTime: '',
-        createEndTime: '',
         bizType: '2-5',
-        transportationMeansId: '',
-        transactOrgId: '',
-        thirdPartyNumber: '',
-        orgGoodsId: '',
-        orgAreaCode: '',
         deleteFlag: false,
-        expectedStartTime: '',
-        expectedEndTime: '',
-        pushStatus: ''
-      },
-      searchCondition: {
         searchType: 1,
         orderNo: '',
         logisticsProviderName: '',
@@ -212,20 +200,18 @@ export default {
         thirdPartyNumber: '',
         expectedStartTime: '',
         expectedEndTime: '',
-        pushStatus: ''
+        pushStatus: '',
+        pageNo:1,
+        pageSize:20
       },
-      createdTime: '',
-      expectedTime: '',
+      totalCount:0,
+      createdTimes: [],
+      expectedTimes: [],
       lossFillType: utils.lossFillType,
       activeStatus: '0',
       currentOrderId: '',
       orgList: [], // 来源单位列表
       logisticsList: [], // 物流商列表
-      pager: {
-        currentPage: 1,
-        count: 0,
-        pageSize: 20
-      },
       defaultIndex: 0, // 添加订单默认选中第一个tab
       action: '',
       user: {},
@@ -242,15 +228,18 @@ export default {
       this.showDetail = true;
     }
   },
-  watch: {
-    filters: {
-      handler: function () {
-        this.getOrderList(1);
-      },
-      deep: true
-    }
-  },
   methods: {
+    getTagTypeByStatus(status) {
+      if (status == 0) {
+        return '';
+      }
+      if (status == 4) {
+        return 'success';
+      }
+      if (status == 5) {
+        return 'danger';
+      }
+    },
     editOrder(item) {
       this.action = 'edit';
       this.currentOrderId = item.id;
@@ -261,42 +250,20 @@ export default {
       this.currentOrderId = item.id;
       this.showPart = true;
     },
-    getOrderStatus: function (order) {
-      let state = '';
-      for (let key in this.lossFillType) {
-        if (order.state === this.lossFillType[key].state) {
-          state = this.lossFillType[key].title;
-        }
-      }
-      return state;
+    getOrderStatus: function (state) {
+      return this.lossFillType[state].title;
     },
-    searchInOrder: function () {// 搜索
-      this.searchCondition.createStartTime = this.$formatAryTime(this.createdTime, 0);
-      this.searchCondition.createEndTime = this.$formatAryTime(this.createdTime, 1);
-      this.searchCondition.expectedStartTime = this.$formatAryTime(this.expectedTime, 0);
-      this.searchCondition.expectedEndTime = this.$formatAryTime(this.expectedTime, 1);
-      Object.assign(this.filters, this.searchCondition);
+    searchInOrder: function () {
+      this.params.createStartTime = this.$formatAryTime(this.createdTime, 0);
+      this.params.createEndTime = this.$formatAryTime(this.createdTime, 1);
+      this.params.expectedStartTime = this.$formatAryTime(this.expectedTimes, 0);
+      this.params.expectedEndTime = this.$formatAryTime(this.expectedTimes, 1);
+      this.getOrderList();
     },
-    resetSearchForm: function () {// 重置表单
-      let temp = {
-        searchType: '',
-        orderNo: '',
-        logisticsProviderName: '',
-        createStartTime: '',
-        createEndTime: '',
-        transportationMeansId: '',
-        transactOrgId: '',
-        thirdPartyNumber: '',
-        orgGoodsId: '',
-        orgAreaCode: '',
-        expectedStartTime: '',
-        expectedEndTime: '',
-        pushStatus: ''
-      };
-      this.createdTime = '';
-      this.expectedTime = '';
-      Object.assign(this.searchCondition, temp);
-      Object.assign(this.filters, temp);
+    resetSearchForm: function () {
+      this.params = {};
+      this.createdTimes = [];
+      this.expectedTimes = [];
     },
     searchProduct(keyWord) {
       let orgId = this.$store.state.user.userCompanyAddress;
@@ -305,6 +272,7 @@ export default {
         orgId: orgId,
         keyWord: keyWord
       });
+
       // 查询即时库存
       this.$http.get('/erp-stock/goods-list', {params}).then(res => {
         this.goodesList = res.data.list;
@@ -316,7 +284,6 @@ export default {
       this.defaultIndex = 0;
       this.action = '';
       this.showPart = false;
-      // this.getOrderList(this.pager.currentPage);
       this.$router.push('list');
     },
     add: function () {
@@ -328,35 +295,26 @@ export default {
       this.currentOrderId = '';
       this.getOrderList(1);
     },
-    getOrderList: function (pageNo) {
-      if (pageNo === 1) {
-        this.pager.count = 0;
-      }
-
-      this.pager.currentPage = pageNo;
-      let param = {};
+    getOrderList() {
       this.loadingData = true;
-      param = Object.assign({}, this.filters, {
-        pageNo: pageNo,
-        pageSize: this.pager.pageSize
-      });
       // 明细查询
-      param.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
-      this.$http.get('/erp-order', {params: param}).then(res => {
+      this.params.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
+
+      this.$http.get('/erp-order', {params: this.params}).then(res => {
         this.lossList = res.data.list;
-//          this.pager.count = res.data.count;
-        if (this.lossList.length === this.pager.pageSize) {
-          this.pager.count = this.pager.currentPage * this.pager.pageSize + 1;
-        }
+        this.params.count = res.data.count;
         this.loadingData = false;
       })
 
-      this.queryStatusNum(param);
+      this.$http.get('/erp-order/count', {params: this.params}).then(res => {
+        let data = res.data;
+        this.lossFillType[0].num =data['out-pend-confirm'];
+        this.lossFillType[4].num =data['out-complete'];
+        this.lossFillType[5].num =data['out-cancel'];
+      });
     },
-    refreshOrder() {
-      this.getOrderList(this.pager.currentPage);
-    },
-    filterListColor: function (index) {// 过滤左边列表边角颜色
+    // 过滤左边列表边角颜色
+    filterListColor: function (index) {
       let status = -1;
       for (let key in this.lossFillType) {
         if (this.lossFillType[key].state === index) {
@@ -365,29 +323,16 @@ export default {
       }
       return status;
     },
-    queryStatusNum: function (params) {
-      this.$http.get('/erp-order/count', {params}).then(res => {
-        let data = res.data;
-        this.lossFillType[0].num = this.obtionStatusNum(data['out-pend-confirm']);
-        this.lossFillType[4].num = this.obtionStatusNum(data['out-complete']);
-        this.lossFillType[5].num = this.obtionStatusNum(data['out-cancel']);
-      });
-    },
-    obtionStatusNum: function (num) {
-      if (typeof num !== 'number') {
-        return 0;
-      }
-      return num;
-    },
     showItem: function (order) {
       this.currentOrderId = order.id;
       this.state = order.state;
       this.showDetail = true;
       this.$router.push(`${order.id}`);
     },
-    changeStatus: function (item, key) {// 订单分类改变
+    changeStatus: function (item, key) {
       this.activeStatus = key;
-      this.filters.state = item.state;
+      this.params.state = item.state;
+      this.getOrderList();
     },
   }
 };
