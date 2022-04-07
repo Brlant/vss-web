@@ -18,8 +18,7 @@ import omsCostTime from './components/common/timeCost.vue';
 import App from './components/App.vue';
 
 // 引入mock
-import './mock'
-
+// import './mock'
 import {initViewPort} from '@dtop/dtop-web-common';
 // 初始化视口宽度
 initViewPort(router);

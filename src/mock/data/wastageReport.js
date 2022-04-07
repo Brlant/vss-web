@@ -17,7 +17,7 @@ export default {
           'code': '@natural',
           'orgGoodsName|4-10': '@cword',
           'batchNumber': '@natural',
-          'expirationDate': '@date',
+          'expiryDate': '@date',
           'amount|1-99': 3,
           'createTime': '@date',
           'factoryName|3-9': '@cword',

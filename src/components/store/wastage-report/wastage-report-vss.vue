@@ -108,9 +108,17 @@
         <el-table-column :sortable="true" label="追溯码" prop="code"></el-table-column>
         <el-table-column :sortable="true" label="疫苗名称" prop="orgGoodsName"></el-table-column>
         <el-table-column :sortable="true" label="批号" prop="batchNumber"></el-table-column>
-        <el-table-column :sortable="true" label="有效期至" prop="expirationDate"></el-table-column>
+        <el-table-column :sortable="true" label="有效期至">
+          <template v-slot="{row}">
+            {{ row.expiryDate | date}}
+          </template>
+        </el-table-column>
         <el-table-column :sortable="true" label="损耗人份" prop="amount"></el-table-column>
-        <el-table-column :sortable="true" label="损耗时间" prop="createTime"></el-table-column>
+        <el-table-column :sortable="true" label="损耗时间">
+          <template v-slot="{row}">
+           {{ row.createTime | date}}
+          </template>
+        </el-table-column>
         <el-table-column :sortable="true" label="生产厂家" prop="factoryName"></el-table-column>
         <el-table-column :sortable="true" label="状态" prop="status" align="center">
           <template v-slot="{row}">
@@ -182,11 +190,14 @@ export default {
         return 'success';
       }
       if (status == 5) {
-        return 'danger';
+        return 'info';
       }
+
+      return 'danger'
     },
     getOrderStatus(status) {
-      return utils.lossFillType[status].title;
+      const lfType = utils.lossFillType[status] || {};
+      return lfType.title || '未知';
     },
     exportFile() {
       this.params.createStartTime = this.$formatAryTime(this.createTimes, 0);
