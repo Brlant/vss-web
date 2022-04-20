@@ -360,7 +360,7 @@ export const route = [
           {
             path: '/store/wastage/report/vss',
             component: () => import('./components/store/wastage-report/wastage-report-vss'),
-            meta: {moduleId: 'store', title: '损耗报表（vss）', perm: 'wastage-report-vss'}
+            meta: {moduleId: 'store', title: '损耗报表', perm: 'wastage-report-vss'}
           },
           {
             path: '/report/purchase',
