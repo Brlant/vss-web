@@ -244,9 +244,14 @@ export const route = [
             meta: {moduleId: 'purchase', title: '调拨出库', perm: 'allocating-out-order-manager'}
           },
           {
-            path: '/store/bad/:id',
+            path: '/store/bad/out/:id',
             component: () => import('./components/store/breakage-order/list.vue'),
             meta: {moduleId: 'store', title: '报损出库', perm: 'breakage-order'}
+          },
+          {
+            path: '/store/loss/fill/:id',
+            component: () => import('./components/store/loss-fill/loss-fill-list.vue'),
+            meta: {moduleId: 'store', title: '损耗填报', perm: 'wastage-order'}
           }
         ]
       },
@@ -352,6 +357,11 @@ export const route = [
         component: () => import('./components/common/parent-route.vue'),
         meta: {moduleId: 'report', title: '报表管理', icon: 'report', perm: 'report-form-manager'},
         children: [
+          {
+            path: '/store/wastage/report/vss',
+            component: () => import('./components/store/wastage-report/wastage-report-vss'),
+            meta: {moduleId: 'store', title: '损耗报表', perm: 'wastage-report-vss'}
+          },
           {
             path: '/report/purchase',
             component: () => import('./components/report/purchase.vue'),
