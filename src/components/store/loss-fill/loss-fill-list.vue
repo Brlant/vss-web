@@ -5,7 +5,7 @@
       <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <perm label="breakage-order-add">
+            <perm label="wastage-order-add">
                     <a class="btn-circle" href="#" @click.prevent=""><i
                       class="el-icon-t-plus"></i> </a>添加
             </perm>
@@ -131,7 +131,7 @@
                 </div>
               </el-col>
               <el-col v-show="params.state === '0'" :span="5" class="opera-btn">
-                <perm label="breakage-order-edit">
+                <perm label="wastage-order-edit">
                   <span @click.stop.prevent="editOrder(item)">
                     <a class="btn-circle" href="#" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
@@ -158,6 +158,7 @@
       <loss-fill-detail :orderId="currentOrderId" :state="state" @close="resetRightBox"
               @refreshOrder="getOrderList"></loss-fill-detail>
     </page-right>
+
     <page-right :css="{'width':'1000px','padding':0}" :show="showItemRight" @right-close="beforeCloseConfirm">
       <loss-fill-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" type="1" @change="onSubmit"
                 @close="resetRightBox"></loss-fill-form>
@@ -254,16 +255,19 @@ export default {
       return this.lossFillType[state].title;
     },
     searchInOrder: function () {
-      this.params.createStartTime = this.$formatAryTime(this.createdTime, 0);
-      this.params.createEndTime = this.$formatAryTime(this.createdTime, 1);
+      this.params.createStartTime = this.$formatAryTime(this.createdTimes, 0);
+      this.params.createEndTime = this.$formatAryTime(this.createdTimes, 1);
       this.params.expectedStartTime = this.$formatAryTime(this.expectedTimes, 0);
       this.params.expectedEndTime = this.$formatAryTime(this.expectedTimes, 1);
       this.getOrderList();
     },
     resetSearchForm: function () {
-      this.params = {};
+      // this.params = {};
+      this.params.orderNo=''
+      this.params.orgGoodsId=''
       this.createdTimes = [];
       this.expectedTimes = [];
+      this.getOrderList();
     },
     searchProduct(keyWord) {
       let orgId = this.$store.state.user.userCompanyAddress;

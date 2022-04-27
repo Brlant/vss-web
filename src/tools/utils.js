@@ -80,8 +80,7 @@ export default {
   lossFillType: {
     0: {'title': '待确认', state: '0', num: ''},
     4: {'title': '已完成', state: '4', num: ''},
-    5: {'title': '已取消', state: '5', num: ''},
-    11: {'title': '已删除', state: '11', num: ''}
+    5: {'title': '已取消', state: '5', num: ''}
   },
   outReturnOrderType: {
     0: {'title': '待确认', state: '0', num: ''},

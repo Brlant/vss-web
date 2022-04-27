@@ -54,22 +54,22 @@ $leftWidth: 220px;
         <ul class="left-actions">
           <li class="text-center order-btn">
             <perm v-show="currentOrder.state === '0' "
-                  label="breakage-order-confirm">
+                  label="wastage-order-confirm">
               <el-button type="primary" @click="confirmOrder">确认订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'"
-                  label="breakage-order-cancel">
+                  label="wastage-order-cancel">
               <el-button plain type="warning" @click="cancel">取消订单</el-button>
             </perm>
           </li>
-          <li class="text-center order-btn" style="margin-top: 10px">
-            <perm v-show="currentOrder.state === '0'"
-                  label="breakage-order-cancel">
-              <el-button plain type="danger" @click="deleteOrder">删除订单</el-button>
-            </perm>
-          </li>
+<!--          <li class="text-center order-btn" style="margin-top: 10px">-->
+<!--            <perm v-show="currentOrder.state === '0'"-->
+<!--                  label="wastage-order-cancel">-->
+<!--              <el-button plain type="danger" @click="deleteOrder">删除订单</el-button>-->
+<!--            </perm>-->
+<!--          </li>-->
         </ul>
       </div>
       <div class="content-right content-padding">
@@ -95,15 +95,22 @@ $leftWidth: 220px;
                   <oms-row :span="span" label="报损原因">{{ currentOrder.breakageReason }}</oms-row>
                 </el-col>
               </el-row>
+
+              <el-row v-if="currentOrder.state === '5'">
+                <el-col :span="12">
+                  <oms-row :span="span" label="取消原因">{{ currentOrder.cancelReason }}</oms-row>
+                </el-col>
+              </el-row>
+
               <el-row>
                 <el-col :span="24">
-                  <oms-row label="附件" :span="4" v-show="['0','1','2'].includes(currentOrder.state)">
+                  <oms-row label="附件" :span="4" v-show="['1','2'].includes(currentOrder.state)">
                     <oms-upload :fileList="attachmentList"
                                 accept="picture"
                                 :formData="{ objectId: currentOrder.id, objectType: 'erpOrderFile'}"
                                 @change="changeFiles"></oms-upload>
                   </oms-row>
-                  <oms-row label="附件" :span="4" v-show="['4','5'].includes(currentOrder.state)">
+                  <oms-row label="附件" :span="4" v-show="['0','4','5'].includes(currentOrder.state)">
                     <attachment-list :attachmentIdList="attachmentList" :objectId="currentOrder.id"
                                      :objectType="'erpOrderFile'"
                                      :permission="'show'"></attachment-list>
@@ -111,6 +118,7 @@ $leftWidth: 220px;
                 </el-col>
               </el-row>
             </div>
+
 
             <div class="table-product">
               <el-table :data="currentOrder.detailDtoList" size="mini">
@@ -294,6 +302,7 @@ export default {
         customerChannel: data.customerChannel,
         orgId: data.orgId,
         breakageReason: data.breakageReason,
+        cancelReason: data.cancelReason,
         state: data.erpStatus,
         // detailDtoList需要做一个转换
         detailDtoList: data.detailDtoList.map(ddl => ({
@@ -304,8 +313,8 @@ export default {
           "specificationsId": "",
           specificationName: ddl.orgGoodsDto.goodsDto.specifications,//规格名称
           goodsType: ddl.vaccineType,//货品类型
-          productName: ddl.orgGoodsDto.name,//产品名称
-          photoUrl: ddl.orgGoodsDto.photoUrl,
+          productName: ddl.orgGoodsDto.goodsDto.name,//产品名称
+          photoUrl: ddl.orgGoodsDto.goodsDto.photo,
           "batchNumberId": ddl.batchNumberId, //批号id
           "batchNumber": ddl.batchNumber, //批号
           "expirationDate": ddl.expiryDate, //有效期
@@ -318,7 +327,9 @@ export default {
     queryAttachmentList: function () {// 附件管理
       if (!this.currentOrder.id) return;
       OmsAttachment.queryOneAttachmentList(this.currentOrder.id, 'erpOrderFile').then(res => {
+        console.info(res)
         this.attachmentList = res.data;
+
       });
     },
     changeFiles: function (fileList) {
