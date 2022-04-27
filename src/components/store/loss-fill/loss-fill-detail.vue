@@ -302,6 +302,7 @@ export default {
         customerChannel: data.customerChannel,
         orgId: data.orgId,
         breakageReason: data.breakageReason,
+        cancelReason: data.cancelReason,
         state: data.erpStatus,
         // detailDtoList需要做一个转换
         detailDtoList: data.detailDtoList.map(ddl => ({
