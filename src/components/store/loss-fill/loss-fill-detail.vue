@@ -104,13 +104,13 @@ $leftWidth: 220px;
 
               <el-row>
                 <el-col :span="24">
-                  <oms-row label="附件" :span="4" v-show="['0','1','2'].includes(currentOrder.state)">
+                  <oms-row label="附件" :span="4" v-show="['1','2'].includes(currentOrder.state)">
                     <oms-upload :fileList="attachmentList"
                                 accept="picture"
                                 :formData="{ objectId: currentOrder.id, objectType: 'erpOrderFile'}"
                                 @change="changeFiles"></oms-upload>
                   </oms-row>
-                  <oms-row label="附件" :span="4" v-show="['4','5'].includes(currentOrder.state)">
+                  <oms-row label="附件" :span="4" v-show="['0','4','5'].includes(currentOrder.state)">
                     <attachment-list :attachmentIdList="attachmentList" :objectId="currentOrder.id"
                                      :objectType="'erpOrderFile'"
                                      :permission="'show'"></attachment-list>
@@ -327,7 +327,9 @@ export default {
     queryAttachmentList: function () {// 附件管理
       if (!this.currentOrder.id) return;
       OmsAttachment.queryOneAttachmentList(this.currentOrder.id, 'erpOrderFile').then(res => {
+        console.info(res)
         this.attachmentList = res.data;
+
       });
     },
     changeFiles: function (fileList) {
