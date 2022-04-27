@@ -64,12 +64,12 @@ $leftWidth: 220px;
               <el-button plain type="warning" @click="cancel">取消订单</el-button>
             </perm>
           </li>
-          <li class="text-center order-btn" style="margin-top: 10px">
-            <perm v-show="currentOrder.state === '0'"
-                  label="breakage-order-cancel">
-              <el-button plain type="danger" @click="deleteOrder">删除订单</el-button>
-            </perm>
-          </li>
+<!--          <li class="text-center order-btn" style="margin-top: 10px">-->
+<!--            <perm v-show="currentOrder.state === '0'"-->
+<!--                  label="breakage-order-cancel">-->
+<!--              <el-button plain type="danger" @click="deleteOrder">删除订单</el-button>-->
+<!--            </perm>-->
+<!--          </li>-->
         </ul>
       </div>
       <div class="content-right content-padding">
@@ -96,7 +96,7 @@ $leftWidth: 220px;
                 </el-col>
               </el-row>
 
-              <el-row v-if="currentOrder.state === 5">
+              <el-row v-if="currentOrder.state === '5'">
                 <el-col :span="12">
                   <oms-row :span="span" label="取消原因">{{ currentOrder.cancelReason }}</oms-row>
                 </el-col>
