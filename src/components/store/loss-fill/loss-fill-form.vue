@@ -135,7 +135,7 @@ $leftWidth: 200px;
                         :formData="{ objectId: form.id, objectType: 'erpOrderFile'}"
                         @change="changeFiles"></oms-upload>
           </el-form-item>
-          <el-form-item label="追溯码" prop="code">
+          <el-form-item label="追溯码" prop="code" required>
             <el-row>
               <el-col :span="8">
                 <oms-input v-model="form.code" placeholder="请输入追溯码"></oms-input>

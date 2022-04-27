@@ -95,6 +95,13 @@ $leftWidth: 220px;
                   <oms-row :span="span" label="报损原因">{{ currentOrder.breakageReason }}</oms-row>
                 </el-col>
               </el-row>
+
+              <el-row v-if="currentOrder.state === 5">
+                <el-col :span="12">
+                  <oms-row :span="span" label="取消原因">{{ currentOrder.cancelReason }}</oms-row>
+                </el-col>
+              </el-row>
+
               <el-row>
                 <el-col :span="24">
                   <oms-row label="附件" :span="4" v-show="['0','1','2'].includes(currentOrder.state)">
@@ -111,13 +118,7 @@ $leftWidth: 220px;
                 </el-col>
               </el-row>
             </div>
-            <div v-if="currentOrder.state === 5">
-              <el-row>
-                <el-col :span="12">
-                  <oms-row :span="span" label="取消原因">{{ currentOrder.cancelReason }}</oms-row>
-                </el-col>
-              </el-row>
-            </div>
+
 
             <div class="table-product">
               <el-table :data="currentOrder.detailDtoList" size="mini">
