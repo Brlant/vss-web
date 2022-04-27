@@ -158,6 +158,7 @@
       <loss-fill-detail :orderId="currentOrderId" :state="state" @close="resetRightBox"
               @refreshOrder="getOrderList"></loss-fill-detail>
     </page-right>
+
     <page-right :css="{'width':'1000px','padding':0}" :show="showItemRight" @right-close="beforeCloseConfirm">
       <loss-fill-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" type="1" @change="onSubmit"
                 @close="resetRightBox"></loss-fill-form>
@@ -261,9 +262,12 @@ export default {
       this.getOrderList();
     },
     resetSearchForm: function () {
-      this.params = {};
+      // this.params = {};
+      this.params.orderNo=''
+      this.params.orgGoodsId=''
       this.createdTimes = [];
       this.expectedTimes = [];
+      this.getOrderList();
     },
     searchProduct(keyWord) {
       let orgId = this.$store.state.user.userCompanyAddress;

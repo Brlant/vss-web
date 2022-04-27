@@ -413,6 +413,7 @@ export default {
       }
       OmsAttachment.queryOneAttachmentList(this.form.id, 'erpOrderFile').then(res => {
         this.attachmentList = res.data;
+        // console.log('res.data:',res.data)
         this.attachmentList.forEach(val => {
           this.form.fileIdList.push(val.attachmentId);
         })
