@@ -254,8 +254,8 @@ export default {
       return this.lossFillType[state].title;
     },
     searchInOrder: function () {
-      this.params.createStartTime = this.$formatAryTime(this.createdTime, 0);
-      this.params.createEndTime = this.$formatAryTime(this.createdTime, 1);
+      this.params.createStartTime = this.$formatAryTime(this.createdTimes, 0);
+      this.params.createEndTime = this.$formatAryTime(this.createdTimes, 1);
       this.params.expectedStartTime = this.$formatAryTime(this.expectedTimes, 0);
       this.params.expectedEndTime = this.$formatAryTime(this.expectedTimes, 1);
       this.getOrderList();

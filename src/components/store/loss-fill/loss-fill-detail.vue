@@ -111,6 +111,13 @@ $leftWidth: 220px;
                 </el-col>
               </el-row>
             </div>
+            <div v-if="currentOrder.state === 5">
+              <el-row>
+                <el-col :span="12">
+                  <oms-row :span="span" label="取消原因">{{ currentOrder.cancelReason }}</oms-row>
+                </el-col>
+              </el-row>
+            </div>
 
             <div class="table-product">
               <el-table :data="currentOrder.detailDtoList" size="mini">
@@ -304,8 +311,8 @@ export default {
           "specificationsId": "",
           specificationName: ddl.orgGoodsDto.goodsDto.specifications,//规格名称
           goodsType: ddl.vaccineType,//货品类型
-          productName: ddl.orgGoodsDto.name,//产品名称
-          photoUrl: ddl.orgGoodsDto.photoUrl,
+          productName: ddl.orgGoodsDto.goodsDto.name,//产品名称
+          photoUrl: ddl.orgGoodsDto.goodsDto.photo,
           "batchNumberId": ddl.batchNumberId, //批号id
           "batchNumber": ddl.batchNumber, //批号
           "expirationDate": ddl.expiryDate, //有效期
