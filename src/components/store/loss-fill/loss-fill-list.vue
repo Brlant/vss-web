@@ -263,8 +263,10 @@ export default {
     },
     resetSearchForm: function () {
       // this.params = {};
-      this.params.orderNo=''
-      this.params.orgGoodsId=''
+      this.params.orderNo='';
+      this.params.orgGoodsId='';
+      this.params.createStartTime = '';
+      this.params.createEndTime = '';
       this.createdTimes = [];
       this.expectedTimes = [];
       this.getOrderList();
