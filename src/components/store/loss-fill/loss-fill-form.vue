@@ -135,10 +135,10 @@ $leftWidth: 200px;
                         :formData="{ objectId: form.id, objectType: 'erpOrderFile'}"
                         @change="changeFiles"></oms-upload>
           </el-form-item>
-          <el-form-item label="追溯码" prop="code" required>
+          <el-form-item label="追溯码" prop="code">
             <el-row>
               <el-col :span="8">
-                <oms-input v-model="form.code" placeholder="请输入追溯码"></oms-input>
+                <oms-input v-model="form.code" placeholder="请输入要损耗的追溯码"></oms-input>
               </el-col>
               <el-col :span="6" :offset="1">
                 <el-button type="primary" @click="confirmAdd">确认添加</el-button>
