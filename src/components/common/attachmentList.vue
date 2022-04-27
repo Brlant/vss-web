@@ -205,6 +205,7 @@ export default {
       if (!this.object.objectId) return;
       OmsAttachment.queryOneAttachmentList(this.object.objectId, this.object.objectType).then(res => {
         this.attachmentList = res.data;
+        // console.log('attachmentList:',res.data.attachmentStoragePath)
       });
     },
     handlePreview(file) {

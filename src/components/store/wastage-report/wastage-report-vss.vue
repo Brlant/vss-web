@@ -279,10 +279,11 @@ export default {
       return sums;
     },
     resetSearchForm() {
-      this.params = {};
-      this.createTimes = [];
-      this.totalCount = 0;
-      this.search();
+      let _this = this
+      _this.params = {};
+      _this.createTimes = [];
+      _this.totalCount = 0;
+      _this.search();
     }
   },
   mounted() {
