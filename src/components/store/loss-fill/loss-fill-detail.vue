@@ -54,19 +54,19 @@ $leftWidth: 220px;
         <ul class="left-actions">
           <li class="text-center order-btn">
             <perm v-show="currentOrder.state === '0' "
-                  label="breakage-order-confirm">
+                  label="wastage-order-confirm">
               <el-button type="primary" @click="confirmOrder">确认订单</el-button>
             </perm>
           </li>
           <li class="text-center order-btn" style="margin-top: 10px">
             <perm v-show="currentOrder.state === '0' || currentOrder.state === '1' || currentOrder.state === '2'"
-                  label="breakage-order-cancel">
+                  label="wastage-order-cancel">
               <el-button plain type="warning" @click="cancel">取消订单</el-button>
             </perm>
           </li>
 <!--          <li class="text-center order-btn" style="margin-top: 10px">-->
 <!--            <perm v-show="currentOrder.state === '0'"-->
-<!--                  label="breakage-order-cancel">-->
+<!--                  label="wastage-order-cancel">-->
 <!--              <el-button plain type="danger" @click="deleteOrder">删除订单</el-button>-->
 <!--            </perm>-->
 <!--          </li>-->

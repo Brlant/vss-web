@@ -84,11 +84,11 @@
             </el-col>
             <el-col :span="8">
               <oms-form-row :span="6" label="">
-                <perm label="purchasing-detail-form-export">
                   <el-button :disabled="loadingData" type="primary" @click="search">
                     查询
                   </el-button>
                   <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <perm label="wastage-report-export-vss">
                   <el-button :disabled="isLoading" :plain="true" type="success" @click="exportFile">
                     导出Excel
                   </el-button>

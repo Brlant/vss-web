@@ -5,7 +5,7 @@
       <div :class="{up:!showSearch}" class="opera-btn-group">
         <div class="opera-icon">
           <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="add">
-            <perm label="breakage-order-add">
+            <perm label="wastage-order-add">
                     <a class="btn-circle" href="#" @click.prevent=""><i
                       class="el-icon-t-plus"></i> </a>添加
             </perm>
@@ -131,7 +131,7 @@
                 </div>
               </el-col>
               <el-col v-show="params.state === '0'" :span="5" class="opera-btn">
-                <perm label="breakage-order-edit">
+                <perm label="wastage-order-edit">
                   <span @click.stop.prevent="editOrder(item)">
                     <a class="btn-circle" href="#" @click.prevent=""><i
                       class="el-icon-t-edit"></i></a>
