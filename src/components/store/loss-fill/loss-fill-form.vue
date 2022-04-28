@@ -470,12 +470,12 @@ export default {
         "amount": ddl.amount, //损耗人份数量
         "wastage": ddl.wastage, //损耗人份数量
         "orgGoodsId": ddl.orgGoodsId, //货主货品id
-        "orgGoodsName": ddl.goodsName, //货主货品名称
+        "orgGoodsName": ddl.orgGoodsDto.name, //货主货品名称
         "specificationsId": "",
         specificationName: ddl.orgGoodsDto.goodsDto.specifications,//规格名称
         goodsType: ddl.vaccineType,//货品类型
-        productName: ddl.orgGoodsDto.name,//产品名称
-        photoUrl: ddl.orgGoodsDto.photoUrl,
+        productName: ddl.orgGoodsDto.goodsDto.name,//产品名称
+        photoUrl: ddl.orgGoodsDto.goodsDto.photoUrl,
         "batchNumberId": ddl.batchNumberId, //批号id
         "batchNumber": ddl.batchNumber, //批号
         "expirationDate": ddl.expiryDate, //有效期
