@@ -78,8 +78,9 @@
         <td v-show="isShowbatch" align="left">{{ product.expiryDate | date }}</td>
         <td align="left">
           {{product.amount}}
-          <dict v-if="product.orgGoodsDto.goodsDto" :dict-group="'measurementUnit'"
+          <dict v-if="product.orgGoodsDto.goodsDto && orderItem.bizType !== '2-5'" :dict-group="'measurementUnit'"
                 :dict-key="product.orgGoodsDto.goodsDto.measurementUnit"></dict>
+          <span v-if="orderItem.bizType === '2-5'">人份</span>
         </td>
         <td align="left">
           <span v-if="product.unitPrice">￥{{product.unitPrice}}</span>
