@@ -365,7 +365,7 @@ export const route = [
           {
             path: '/report/trace-code',
             component: () => import('./components/report/TraceCodeReport'),
-            meta: {moduleId: 'store', title: '追溯码报表', perm: 'trace-code-report'}
+            meta: {moduleId: 'store', title: '追溯码报表', perm: 'trace-code-report-vss'}
           },
           {
             path: '/report/purchase',

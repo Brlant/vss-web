@@ -244,7 +244,7 @@ a:focus {
       <div>
         <div class="top-logo">
           <router-link class="a-link" to='/'><img :src="logo_pic" class="logo_pic" @click="activeId=''">
-            <span :style="'color:'+skin.color" class="logo-span">{{$store.state.sysTitle}}</span>
+            <span :style="'color:'+skin.color" class="logo-span">{{ $store.state.sysTitle }}</span>
           </router-link>
         </div>
         <div class="top-right">
@@ -261,12 +261,12 @@ a:focus {
               </el-dropdown-menu>
             </el-dropdown>-->
             <span>
-              <span class="org-title">{{orgName}}</span>
+              <span class="org-title">{{ orgName }}</span>
             </span>
             <el-dropdown trigger="click">
               <div class="el-dropdown-link top-right-item">
                 <compressed-img v-if="user.userIcon" :src="user.userIcon+'?image&action=resize:w_50,h_50,m_2'"/>
-                <img v-else src="/static/img/logo_user_default.png">{{user.userName}}
+                <img v-else src="/static/img/logo_user_default.png">{{ user.userName }}
                 <i class="el-icon-caret-bottom"></i>
               </div>
               <el-dropdown-menu slot="dropdown" class="top-right-user-dropdown">
@@ -276,16 +276,17 @@ a:focus {
                       <oms-upload-picture :photoUrl="user.userIcon" class="user-img"></oms-upload-picture>
                     </div>
                     <div>
-                      <div class="menu-usr-part-user">{{user.userName}}</div>
-                      <div class="menu-usr-part-phone">{{user.userAccount}}</div>
+                      <div class="menu-usr-part-user">{{ user.userName }}</div>
+                      <div class="menu-usr-part-phone">{{ user.userAccount }}</div>
                     </div>
                   </div>
-                  <div class="last-login">上次登录时间:{{user.userLastLoginTime | time}}</div>
+                  <div class="last-login">上次登录时间:{{ user.userLastLoginTime | time }}</div>
                   <div v-if="weChatInfo.nickname" class="wechat-info">
                     <img v-if="weChatInfo.avatarUrl" :src="weChatInfo.avatarUrl" class="weChat-img">
                     <img v-else class="weChat-img" src="/static/img/logo_user_default.png"/>
                     <span v-if="weChatInfo.nickname"
-                          class="wechat-nick">微信：{{weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
+                          class="wechat-nick">微信：{{
+                        weChatInfo.nickname ? weChatInfo.nickname.substr(0, 3) : ''
                       }}<span v-if="weChatInfo.nickname && weChatInfo.nickname.length > 3">...</span></span>
                     <a v-if="weChatInfo.nickname" class="btn-wechat" href="#" @click.stop.prevent="unbind">(解绑)</a>
                   </div>
@@ -312,19 +313,19 @@ a:focus {
             <el-submenu v-if="item.children.length>0" :index="item.path">
               <template slot="title">
                 <i :class="'el-icon-t-'+item.meta.icon"></i>
-                <span slot="title">{{item.meta.title}}</span>
+                <span slot="title">{{ item.meta.title }}</span>
               </template>
               <el-menu-item v-for="child in item.children" :key="child.path" :index="child.path">
-                {{child.meta.title}}
+                {{ child.meta.title }}
               </el-menu-item>
             </el-submenu>
             <el-menu-item v-else-if="item.path" :index="item.path">
               <i :class="'el-icon-t-'+item.meta.icon"></i>
-              <span slot="title">{{item.meta.title}}</span>
+              <span slot="title">{{ item.meta.title }}</span>
             </el-menu-item>
             <el-menu-item v-else="!item.path" :index="item.path" @click="$router.push('/')">
               <i :class="'el-icon-t-'+item.meta.icon"></i>
-              <span slot="title">{{item.meta.title}}</span>
+              <span slot="title">{{ item.meta.title }}</span>
             </el-menu-item>
           </template>
         </el-menu>
@@ -389,7 +390,7 @@ export default {
       return this.$route.path;
     },
     orgName() {
-      return this.$store.state.orgName;
+      return this.$store.state.org && this.$store.state.org.name;
     },
     weChatInfo() {
       return this.$store.state.weChatInfo;

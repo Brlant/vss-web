@@ -5,8 +5,10 @@ Vue.use(Vuex);
 
 //  需要维护的状态
 const state = {
-  uploadUrl: 'https:// jsonplaceholder.typicode.com/posts/',
+  uploadUrl: 'https://jsonplaceholder.typicode.com/posts/',
   user: {},
+  org:{},
+  orgCode: '',//登录用户所属机构
   dict: {},
   permissions: [],
   allMenuList: {}, // 所有菜单
@@ -109,15 +111,12 @@ const mutations = {
     state.bodySize.left = isSmall ? '64px' : '230px';
     window.localStorage.setItem('bodyLeft', state.bodySize.left);
   },
-  initOrgName(state, data) {
-    state.orgName = data;
+  initOrg(state, data) {
+    state.org = data;
   },
   setBodyHeight(state, data) {
     state.bodyHeight = data.height;
     state.windowSize = data.window;
-  },
-  initOrgLevel(state, data) {
-    state.orgLevel = data;
   },
   initPrint(state, data) {
     data.text = data.text ? data.text : '拼命导出中';
