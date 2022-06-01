@@ -359,8 +359,13 @@ export const route = [
         children: [
           {
             path: '/store/wastage/report/vss',
-            component: () => import('./components/store/wastage-report/wastage-report-vss'),
+            component: () => import('./components/report/LossReport'),
             meta: {moduleId: 'store', title: '损耗报表', perm: 'wastage-report-vss'}
+          },
+          {
+            path: '/store/wastage/report/vss',
+            component: () => import('./components/report/LossReport'),
+            meta: {moduleId: 'store', title: '追溯码报表', perm: 'wastage-report-vss'}
           },
           {
             path: '/report/purchase',
