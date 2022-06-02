@@ -331,7 +331,6 @@ export default {
       loadingData: false,
       totalCount: 0,
       injectionOrgs: [],//所有的接种单位
-      hasPov: false,
       povOrgId: '',
       orgAreas: []
     }
@@ -340,23 +339,30 @@ export default {
     getHeight: function () {
       return parseInt(this.$store.state.bodyHeight, 10) - 140 + this.fixedHeight + (this.showSearch ? 0 : 140);
     },
+    areaCodeDict() {
+      return this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
+    },
     currOrg() {
       return this.$store.state.org;
     },
-    areaCodeDict() {
-      return this.$getDict('areaCode');
+    hasPov() {
+      const types = this.currOrg.orgRelationTypeList;
+      if (!types) return false;
+      return this.areaCodeDict.length > 0 && types.includes('POV');
     }
+
   },
   watch: {
-    currOrg(val) {
-      if (!val) return;
-      this.hasPov = val.orgRelationTypeList.includes('POV');
-      if (!this.hasPov) {
+    hasPov(val) {
+      if (this.hasPov) {
         // 如果是接种单位的话，保存单位编码，过滤接种单位
-        this.povOrgId = val.id;
-        this.params.orgAreaCode = val.orgAreaCode;
+        this.povOrgId = this.currOrg.id;
+        this.params.orgAreaCode = this.currOrg.orgAreaCode;
         // 当前是接种单位登录的，取当前单位所在区域
-        this.orgAreas = this.areaCodeDict.filter(item => item.value === val.orgAreaCode);
+        console.log(this.areaCodeDict);
+        this.orgAreas = this.areaCodeDict.filter(item => item.value === this.currOrg.orgAreaCode);
+        console.log(this.currOrg.orgAreaCode);
+        console.log(this.orgAreas);
       } else {
         // 默认取字典数据
         this.orgAreas = this.areaCodeDict;
@@ -373,7 +379,7 @@ export default {
       this.params.purchasingStorageTime2 = this.$formatAryTime(this.createTimes, 1);
       this.isLoading = true;
       this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/wastage-report-vss'});
-      this.$http.get('/v1/pt/trace-code/report/export', {params: this.params}).then(res => {
+      this.$http.get('/trace-code/report/export', {params: this.params}).then(res => {
         utils.download(res.data.path, '追溯码报表');
         this.isLoading = false;
         this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/wastage-report-vss'});
@@ -390,7 +396,7 @@ export default {
       this.params.purchasingStorageTime1 = this.$formatAryTime(this.createTimes, 0);
       this.params.purchasingStorageTime2 = this.$formatAryTime(this.createTimes, 1);
       this.loadingData = true;
-      this.$http.get('/v1/pt/trace-code/report', {params: this.params})
+      this.$http.get('/trace-code/report', {params: this.params})
         .then(res => {
           this.list = res.data.list;
           this.totalCount = res.data.count;
