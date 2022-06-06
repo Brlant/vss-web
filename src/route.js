@@ -360,12 +360,12 @@ export const route = [
           {
             path: '/report/loss',
             component: () => import('./components/report/LossReport'),
-            meta: {moduleId: 'store', title: '损耗报表', perm: 'wastage-report-vss'}
+            meta: {moduleId: 'report', title: '损耗报表', perm: 'wastage-report-vss'}
           },
           {
             path: '/report/trace-code',
             component: () => import('./components/report/TraceCodeReport'),
-            meta: {moduleId: 'store', title: '追溯码报表', perm: 'trace-code-report-vss'}
+            meta: {moduleId: 'report', title: '追溯码使用情况报表', perm: 'trace-code-report-vss'}
           },
           {
             path: '/report/purchase',

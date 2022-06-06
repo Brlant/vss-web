@@ -482,18 +482,31 @@ export default {
     exportFile() {
       this.timesHandle();
       this.isLoading = true;
-      this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/wastage-report-vss'});
-      this.$http.get('/trace-code/report/export', {params: this.params}).then(res => {
-        utils.download(res.data.path, '追溯码报表');
-        this.isLoading = false;
-        this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/wastage-report-vss'});
-      }).catch(error => {
-        this.isLoading = false;
-        this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/wastage-report-vss'});
-        this.$notify.error({
-          message: error.response && error.response.data && error.response.data.msg || '导出失败'
+      this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/trace-code'});
+      this.$http.get('/trace-code/report/export', {params: this.params})
+        .then(res => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/trace-code'});
+
+          const url = res.data;
+          if (!url){
+            this.$notify.error({
+              message: '导出失败'
+            });
+
+            return;
+          }
+
+          utils.download(url, '追溯码使用情况');
+
+        })
+        .catch(error => {
+          this.isLoading = false;
+          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/trace-code'});
+          this.$notify.error({
+            message: error.response && error.response.data && error.response.data.msg || '导出失败'
+          });
         });
-      });
     },
     search() {
       this.timesHandle();
