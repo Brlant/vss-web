@@ -11,8 +11,8 @@
         </div>
         <el-form class="advanced-query-form">
           <el-row>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="所属区">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="所属区">
                 <el-select v-model="params.orgAreaCode" :clearable="true" filterable
                            placeholder="支持搜索区域名称">
                   <el-option v-for="item in orgAreas" :key="item.value"
@@ -22,8 +22,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="接种单位">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="接种单位">
                 <el-select v-model="params.factoryId" :clearable="true" :remote-method="filterInjectionOrgs" filterable
                            placeholder="请输入名称/系统代码"
                            popperClass="good-selects" remote
@@ -41,23 +41,25 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="采购入库单号">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="采购入库单号">
                 <el-input v-model="params.orderNo" placeholder="请输入采购入库单号"></el-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="销售出库单号">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="销售出库单号">
                 <el-input v-model="params.orderThirdPartyNumber" placeholder="请输入销售出库单号"></el-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="追溯码">
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <oms-form-row :span="8" label="追溯码">
                 <el-input v-model="params.traceCode" placeholder="请输入追溯码"></el-input>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="货主货品名称">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="货主货品名称">
                 <el-select v-model="params.orgGoodsId" :clearable="true" :remote-method="filterOrgGoods" filterable
                            placeholder="请输入名称/编号"
                            popper-class="good-selects" remote
@@ -87,8 +89,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="货品主档名称">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="货品主档名称">
                 <el-select v-model="params.goodsCode" :clearable="true" :remote-method="searchProduct" filterable
                            placeholder="请输入名称或编号搜索"
                            popper-class="good-selects" remote
@@ -115,8 +117,18 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="是否接种完">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="批号">
+                <el-input v-model="params.batchNumber" :clearable="true" filterable
+                          placeholder="请输入批号">
+                </el-input>
+              </oms-form-row>
+            </el-col>
+
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <oms-form-row :span="8" label="是否接种完">
                 <el-select v-model="params.injection" placeholder="请选择">
                   <el-option v-for="item in whetherOptions" :key="item.value"
                              :label="item.label"
@@ -125,15 +137,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="批号">
-                <el-input v-model="params.batchNumber" :clearable="true" filterable
-                          placeholder="请输入批号">
-                </el-input>
-              </oms-form-row>
-            </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="是否剩余处置人份">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="是否剩余处置人份">
                 <el-select v-model="params.disposalOfRemainingDoses" placeholder="请选择">
                   <el-option v-for="item in whetherOptions" :key="item.value"
                              :label="item.label"
@@ -142,8 +147,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="是否有报损">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="是否有报损">
                 <el-select v-model="params.reportedLoss" placeholder="请选择">
                   <el-option v-for="item in whetherOptions" :key="item.value"
                              :label="item.label"
@@ -152,8 +157,8 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="是否有损耗">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="是否有损耗">
                 <el-select v-model="params.loss" placeholder="请选择">
                   <el-option v-for="item in whetherOptions" :key="item.value"
                              :label="item.label"
@@ -162,19 +167,23 @@
                 </el-select>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="接种单位入库时间">
-                <el-col :span="24">
-                  <el-date-picker
-                    v-model="createTimes"
-                    format="yyyy-MM-dd"
-                    placeholder="请选择" type="daterange">
-                  </el-date-picker>
-                </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="6">
+              <oms-form-row :span="8" label="接种单位入库时间">
+                <el-date-picker title="范围查询（最长可选择一年）,默认半年"
+                                v-model="purchasingStorageTimes"
+                                type="daterange"
+                                unlink-panels
+                                range-separator="至"
+                                start-placeholder="开始日期"
+                                end-placeholder="结束日期"
+                                :picker-options="pickerOptions">
+                </el-date-picker>
               </oms-form-row>
             </el-col>
-            <el-col :span="8">
-              <oms-form-row :span="6" label="">
+            <el-col :span="6">
+              <oms-form-row :span="8" label="">
                 <el-button :disabled="loadingData" type="primary" @click="search">
                   查询
                 </el-button>
@@ -189,76 +198,76 @@
           </el-row>
         </el-form>
       </div>
-      <el-table ref="reportTable" v-loading="loadingData" :data="list" :header-row-class-name="'headerClass'"
-                :maxHeight="getHeight"
-                :summary-method="getSummaries" border
-                border class="header-list" show-summary>
-        <el-table-column label="序号" type="index"></el-table-column>
-        <el-table-column :sortable="true" label="追溯码" prop="traceCode">
+      <el-table ref="reportTable" v-loading="loadingData"
+                :data="list" border class="header-list"
+                max-height="400">
+        <el-table-column label="序号" type="index" :index="serialGen" fixed></el-table-column>
+        <el-table-column :sortable="true" label="追溯码" prop="traceCode" width="180" fixed>
         </el-table-column>
-        <el-table-column :sortable="false" label="所属区">
+        <el-table-column label="所属区">
           <template v-slot="{row,$index}">
             <dict :dict-group="'areaCode'" :dict-key="row.orgAreaCode"></dict>
           </template>
         </el-table-column>
-        <el-table-column :sortable="false" label="接种单位编码" prop="orgCode"></el-table-column>
-        <el-table-column :sortable="false" label="接种单位名称" prop="orgName"></el-table-column>
-        <el-table-column :sortable="false" label="生产企业" prop="goodsFactoryName"></el-table-column>
-        <el-table-column :sortable="false" label="产品编码" prop="orgGoodsNumber"></el-table-column>
-        <el-table-column :sortable="false" label="产品名称" prop="orgGoodsName"></el-table-column>
-        <el-table-column :sortable="false" label="采购入库单号" prop="orderNo"></el-table-column>
+        <el-table-column label="接种单位编码" prop="orgManufacturerCode" min-width="100"></el-table-column>
+        <el-table-column label="接种单位名称" prop="orgName" min-width="150"></el-table-column>
+        <el-table-column label="生产企业" prop="goodsFactoryName" min-width="120"></el-table-column>
+        <el-table-column label="产品编码" prop="orgGoodsNumber" min-width="100"></el-table-column>
+        <el-table-column label="产品名称" prop="orgGoodsName" min-width="100"></el-table-column>
+        <el-table-column label="采购入库单号" prop="orderNo" min-width="180"></el-table-column>
 
-        <el-table-column :sortable="false" label="销售出库单号" prop="orderThirdPartyNumber"></el-table-column>
-        <el-table-column :sortable="false" label="批号" prop="batchNumber"></el-table-column>
-        <el-table-column :sortable="false" label="生产日期">
+        <el-table-column label="销售出库单号" prop="orderThirdPartyNumber"
+                         min-width="180"></el-table-column>
+        <el-table-column label="批号" prop="batchNumber" min-width="100"></el-table-column>
+        <el-table-column label="生产日期" min-width="100">
           <template v-slot="{row}">
             {{ row.batchNumberProductionDate | date }}
           </template>
         </el-table-column>
-        <el-table-column :sortable="false" label="有效期至">
+        <el-table-column label="有效期至" min-width="100">
 
           <template v-slot="{row}">
-            {{ row.batchNumberExpirationDate | time }}
+            {{ row.batchNumberExpirationDate | date }}
           </template>
         </el-table-column>
-        <el-table-column :sortable="false" label="单码支数" prop="minTagUnitCount"></el-table-column>
-        <el-table-column :sortable="false" label="单码可用人份数" prop="singleCodeAvailablePersons"></el-table-column>
-        <el-table-column :sortable="false" label="已注射剂次" prop="injectedTimes"></el-table-column>
-        <el-table-column :sortable="false" label="已退货人份" prop="returnedPersons"></el-table-column>
-        <el-table-column :sortable="false" label="已报损人份" prop="reportedPersons"></el-table-column>
-        <el-table-column :sortable="false" label="已损耗人份" prop="lossPersons"></el-table-column>
-        <el-table-column :sortable="false" label="尚未处置人份" prop="notDisposedPersons"></el-table-column>
-        <el-table-column :sortable="false" label="采购入库时间">
+        <el-table-column label="单码支数" prop="minTagUnitCount" min-width="100"></el-table-column>
+        <el-table-column label="单码可用人份数" prop="singleCodeAvailablePersons" min-width="110"></el-table-column>
+        <el-table-column label="已注射剂次" prop="injectedTimes" min-width="100"></el-table-column>
+        <el-table-column label="已退货人份" prop="returnedPersons" min-width="100"></el-table-column>
+        <el-table-column label="已报损人份" prop="reportedPersons" min-width="100"></el-table-column>
+        <el-table-column label="已损耗人份" prop="lossPersons" min-width="100"></el-table-column>
+        <el-table-column label="尚未处置人份" prop="notDisposedPersons" min-width="100"></el-table-column>
+        <el-table-column label="采购入库时间" min-width="150">
           <template v-slot="{row}">
             {{ row.purchasingStorageTime | time }}
           </template>
         </el-table-column>
-        <el-table-column :sortable="false" label="首次注射时间">
+        <el-table-column label="首次注射时间" min-width="150">
           <template v-slot="{row}">
             {{ row.firstInjectionTime | time }}
           </template>
         </el-table-column>
-        <el-table-column :sortable="false" label="末次注射时间">
+        <el-table-column label="末次注射时间" min-width="150">
           <template v-slot="{row}">
             {{ row.lastInjectionTime | time }}
           </template>
         </el-table-column>
-        <el-table-column :sortable="false" label="退货时间">
+        <el-table-column label="退货时间" min-width="150">
           <template v-slot="{row}">
             {{ row.returnTime | time }}
           </template>
         </el-table-column>
-        <el-table-column :sortable="false" label="报损时间">
+        <el-table-column label="报损时间" min-width="150">
           <template v-slot="{row}">
             {{ row.lossReportingTime | time }}
           </template>
         </el-table-column>
-        <el-table-column :sortable="false" label="损耗时间" prop="orgName">
+        <el-table-column label="损耗时间" prop="orgName" min-width="150">
           <template v-slot="{row}">
             {{ row.lossTime | time }}
           </template>
         </el-table-column>
-        <el-table-column :sortable="true" label="最后更新时间">
+        <el-table-column :sortable="true" label="最后更新时间" min-width="150">
           <template v-slot="{row}">
             {{ row.lastUpdateTime | time }}
           </template>
@@ -283,6 +292,7 @@ import ReportMixin from '@/mixins/reportMixin'
 import utils from '@/tools/utils'
 
 export default {
+
   mixins: [ReportMixin],
   data() {
     return {
@@ -314,13 +324,95 @@ export default {
         // 12)	是否有损耗（已损耗人份不等于0）：下拉选择。枚举：全部/是/否，默认：全部
         loss: '',
         // 13)	接种单位入库时间：范围查询（最长可选择一年），精确到天，查询条件包头不包尾。默认：半年，开始时间往前推6月，月初，结束时间取本月末。
-        purchasingStorageTime: '',
+        purchasingStorageTime1: '',
+        purchasingStorageTime2: '',
         pageNo: 1,
         pageSize: 20,
       },
       detailList: [], // 货主
-      createTimes: [],
+      // 默认半年，即180天
+      purchasingStorageTimes: [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()],
       list: [],
+      minDate: '',
+      pickerOptions: {
+        onPick: ({maxDate, minDate}) => {
+          this.minDate = minDate;
+          if (maxDate) {
+            this.search();
+          }
+          console.log(minDate, maxDate)
+        },
+        disabledDate: (date) => {
+          // 只能选择一年内的日期，不可超过一年，也不能选择未来的日期
+          const year = 365 * 3600 * 1000 * 24;
+          const now = Date.now();
+          const time = date.getTime();
+
+          let disabled = time > now;
+          if (!disabled && this.minDate) {
+            const minTime = this.minDate.getTime() - year;
+            let maxTime = this.minDate.getTime() + year;
+            if (maxTime > now) {
+              maxTime = now;
+            }
+
+            disabled = time < minTime || time > maxTime;
+          }
+
+          return disabled;
+        },
+        shortcuts: [{
+          text: '最近一周',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近三个月',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近半年',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
+            picker.$emit('pick', [start, end]);
+          }
+        }, {
+          text: '最近一年',
+          onClick(picker) {
+            const end = new Date();
+            const start = new Date();
+            start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
+            picker.$emit('pick', [start, end]);
+          }
+        },
+          {
+            text: '去年',
+            onClick(picker) {
+              const today = new Date();
+              const year = today.getFullYear() - 1;
+              const start = new Date(year, 0, 1);
+              const end = new Date(year, 11, 31);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+      },
       whetherOptions: [
         {value: '', label: '全部'},
         {value: '1', label: '是'},
@@ -336,9 +428,6 @@ export default {
     }
   },
   computed: {
-    getHeight: function () {
-      return parseInt(this.$store.state.bodyHeight, 10) - 140 + this.fixedHeight + (this.showSearch ? 0 : 140);
-    },
     areaCodeDict() {
       return this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
     },
@@ -349,8 +438,7 @@ export default {
       const types = this.currOrg.orgRelationTypeList;
       if (!types) return false;
       return this.areaCodeDict.length > 0 && types.includes('POV');
-    }
-
+    },
   },
   watch: {
     hasPov(val) {
@@ -370,13 +458,29 @@ export default {
     },
     povOrgId(val) {
       this.filterInjectionOrgs();
+    },
+    purchasingStorageTimes(val) {
+      console.log('purchasingStorageTimes change :', val)
+      if (!val) {
+        this.minDate = '';
+        this.params.purchasingStorageTime1 = '';
+        this.params.purchasingStorageTime2 = '';
+        this.search();
+      }
     }
   },
   methods: {
+    // 序号从1开始，翻页不重置
+    serialGen(index) {
+      const {pageNo, pageSize} = this.params;
+      return index + 1 + (pageNo - 1) * pageSize;
+    },
+    timesHandle() {
+      this.params.purchasingStorageTime1 = this.$formatAryTime(this.purchasingStorageTimes, 0);
+      this.params.purchasingStorageTime2 = this.$formatAryTime(this.purchasingStorageTimes, 1);
+    },
     exportFile() {
-      this.params.purchasingStorageTime = this.createTimes.toString();
-      this.params.purchasingStorageTime1 = this.$formatAryTime(this.createTimes, 0);
-      this.params.purchasingStorageTime2 = this.$formatAryTime(this.createTimes, 1);
+      this.timesHandle();
       this.isLoading = true;
       this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/wastage-report-vss'});
       this.$http.get('/trace-code/report/export', {params: this.params}).then(res => {
@@ -392,9 +496,7 @@ export default {
       });
     },
     search() {
-      this.params.purchasingStorageTime = this.createTimes.toString();
-      this.params.purchasingStorageTime1 = this.$formatAryTime(this.createTimes, 0);
-      this.params.purchasingStorageTime2 = this.$formatAryTime(this.createTimes, 1);
+      this.timesHandle();
       this.loadingData = true;
       this.$http.get('/trace-code/report', {params: this.params})
         .then(res => {
@@ -454,32 +556,9 @@ export default {
       window.localStorage.setItem('currentPageSize', pageSize);
       this.search();
     },
-
-    getSummaries(param) {
-      const {columns, data} = param;
-
-      if (data.length == 0) return [];
-
-      const sums = [];
-      columns.forEach((column, index) => {
-        if (index === 0) {
-          sums[index] = '合计';
-          return;
-        }
-
-        if (column.property === 'amount') {
-          sums[index] = data.map(item => item.amount).reduce((sum, n) => sum + n);
-          return;
-        }
-
-        sums[index] = '';
-      });
-
-      return sums;
-    },
     resetSearchForm() {
       this.params = {};
-      this.createTimes = [];
+      this.purchasingStorageTimes = [];
       this.totalCount = 0;
       this.search();
     },
