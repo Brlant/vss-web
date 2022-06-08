@@ -368,6 +368,11 @@ export const route = [
             meta: {moduleId: 'report', title: '追溯码使用情况报表', perm: 'trace-code-report-vss'}
           },
           {
+            path: '/report/trace-code-download',
+            component: () => import('./components/report/TraceCodeDownload'),
+            meta: {moduleId: 'report', title: '我的下载', perm: 'trace-code-download-vss'}
+          },
+          {
             path: '/report/purchase',
             component: () => import('./components/report/purchase.vue'),
             meta: {moduleId: 'report', title: '采购明细表', perm: 'purchasing-detail-form-manager'}

@@ -340,7 +340,6 @@ export default {
           if (maxDate) {
             this.search();
           }
-          console.log(minDate, maxDate)
         },
         disabledDate: (date) => {
           // 只能选择一年内的日期，不可超过一年，也不能选择未来的日期
@@ -460,7 +459,6 @@ export default {
       this.filterInjectionOrgs();
     },
     purchasingStorageTimes(val) {
-      console.log('purchasingStorageTimes change :', val)
       if (!val) {
         this.minDate = '';
         this.params.purchasingStorageTime1 = '';
@@ -570,8 +568,39 @@ export default {
       this.search();
     },
     resetSearchForm() {
-      this.params = {};
-      this.purchasingStorageTimes = [];
+      this.params = {
+        //  1)	所属区：根据字典表，获取区下拉列表。a.	接种单位登录，默认：本区，不可切换
+        orgAreaCode: '',
+        //  2)	接种单位：根据所属区，过滤区下接种单位。模糊搜索、可多选。若不选所属区域，则可选择所有接种单位。
+        orgCode: '',
+        //  3)	采购入库单号：接种单位采购入库单号，精确查询
+        orderNo: '',
+        //  4)	销售出库单号：疾控销售出库单号，精确查询
+        orderThirdPartyNumber: '',
+        //  5)	追溯码：精确查询
+        traceCode: '',
+        //  6)	货主货品名称：模糊搜索、可多选。与接种单位联动。只可选择该接种单位下货品。
+        orgGoodsNumber: '',
+        //  7)	货品主档名称：模糊搜索、可多选。
+        goodsCode: '',
+        //  8)	是否接种完（单码可用人份数=已注射剂次）：下拉选择。枚举：全部/是/否，默认：全部
+        injection: '',
+        //  9)	批号：精确查询。
+        batchNumber: '',
+        // 10)	是否剩余处置人份(尚未处置人份是否为0)：下拉选择。枚举：全部/是/否，默认：全部
+        disposalOfRemainingDoses: '',
+        // 11)	是否有报损（已报损人份不等于0）：下拉选择。枚举：全部/是/否，默认：全部
+        reportedLoss: '',
+        // 12)	是否有损耗（已损耗人份不等于0）：下拉选择。枚举：全部/是/否，默认：全部
+        loss: '',
+        // 13)	接种单位入库时间：范围查询（最长可选择一年），精确到天，查询条件包头不包尾。默认：半年，开始时间往前推6月，月初，结束时间取本月末。
+        purchasingStorageTime1: '',
+        purchasingStorageTime2: '',
+        pageNo: 1,
+        pageSize: 20,
+      };
+      // 默认是半年，重置后恢复默认值
+      this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
       this.totalCount = 0;
       this.search();
     },
