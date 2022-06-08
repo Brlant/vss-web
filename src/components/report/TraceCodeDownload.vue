@@ -391,7 +391,7 @@ export default {
     },
     download(id, fileUrl, fileName) {
       utils.download(fileUrl, fileName);
-      this.$http.put('/trace-code/download/' + id, {fileUrl, fileName});
+      this.$http.put('/trace-code/download/' + id, {fileUrl, fileName,downloadStatus:1,taskStatus:2});
     },
     del(id, fileName) {
       this.$http.delete('/trace-code/download/' + id, {params: {fileName}})
