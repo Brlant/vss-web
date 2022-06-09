@@ -3,7 +3,7 @@
     <div v-if="!noticeList.length" class="no-info">
       暂无公告
     </div>
-    <el-row v-for="(item, index) in noticeList" v-else="" :key="item.noticeId" :class="formatRowClass(item)" :gutter="15"
+    <el-row v-for="(item, index) in noticeList" v-else :key="item.noticeId" :class="formatRowClass(item)" :gutter="15"
             class="list-item list-item--pointer"
             type="flex"
             @click.native="openDetail(item.noticeId)">

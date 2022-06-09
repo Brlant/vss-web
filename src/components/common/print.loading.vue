@@ -1,4 +1,4 @@
-<style scoped="">
+<style scoped>
 .print-dialog {
   position: fixed;
   top: 90px;

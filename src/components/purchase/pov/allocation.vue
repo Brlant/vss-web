@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 
 .align-word {
   letter-spacing: 1em;
@@ -58,7 +58,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
+        <div v-else class="order-list-body flex-list-dom">
           <el-row v-for="item in allocationList" :key="item.orgGoodsId" :class="[{'active':currentItemId==item.orgGoodsId}]"
                   class="order-list-item order-list-item-bg" @click.prevent="showPart(item)">
             <el-col :span="status === 0 ? 4 : 6" class="R pt">

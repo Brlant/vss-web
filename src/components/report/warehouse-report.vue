@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 
 .el-table__body-wrapper, .el-table__footer-wrapper, .el-table__header-wrapper {
   width: auto;

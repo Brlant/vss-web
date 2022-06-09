@@ -92,7 +92,7 @@
             <div v-if="!currentOrder.id">
               <div class="empty-info">暂无信息</div>
             </div>
-            <div v-else="">
+            <div v-else>
               <h2 class="clearfix">
               <span class="pull-right">
                 <el-button-group>

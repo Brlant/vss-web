@@ -18,7 +18,7 @@
     <div v-if="!licenceList.length" class="no-info">
       暂无证照过期厂商
     </div>
-    <el-row v-for="(item, index) in licenceList" v-else="" :key="item.id" :class="formatRowClass(item)" :gutter="15"
+    <el-row v-for="(item, index) in licenceList" v-else :key="item.id" :class="formatRowClass(item)" :gutter="15"
             class="list-item"
             type="flex">
       <el-col :span="8">

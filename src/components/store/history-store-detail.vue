@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 @import "../../assets/mixins";
 
 .content-part {
@@ -82,7 +82,7 @@
               </div>
             </td>
           </tr>
-          <tr v-for="i in storeDetails" v-else="" :key="i.id" class="tr-ntd-bg">
+          <tr v-for="i in storeDetails" v-else :key="i.id" class="tr-ntd-bg">
             <td>
               <div>
                 {{ i.warehouseName }}

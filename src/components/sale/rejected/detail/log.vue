@@ -6,7 +6,7 @@
     <div v-else-if="orderLogList.length === 0" class="empty-info">
       暂无操作日志信息
     </div>
-    <bg-box v-for="log in orderLogList" v-else="" :key="log.id" :title="log.actionTitle">
+    <bg-box v-for="log in orderLogList" v-else :key="log.id" :title="log.actionTitle">
       <p>操作人:{{log.operatorName}} <span class="ml-15">操作时间:{{log.operateTime | time}} </span></p>
     </bg-box>
   </div>

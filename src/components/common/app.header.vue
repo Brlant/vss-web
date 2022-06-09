@@ -323,7 +323,7 @@ a:focus {
               <i :class="'el-icon-t-'+item.meta.icon"></i>
               <span slot="title">{{ item.meta.title }}</span>
             </el-menu-item>
-            <el-menu-item v-else="!item.path" :index="item.path" @click="$router.push('/')">
+            <el-menu-item v-else :index="item.path" @click="$router.push('/')">
               <i :class="'el-icon-t-'+item.meta.icon"></i>
               <span slot="title">{{ item.meta.title }}</span>
             </el-menu-item>

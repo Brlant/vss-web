@@ -132,7 +132,7 @@ $leftWidth: 240px;
               @click="changeProduct(item, key)">
             <div class="title">
               <span v-if="item.orgGoodsDto">{{ item.orgGoodsDto.goodsDto.name }}</span>
-              <span v-else="">{{ item.name }}</span>
+              <span v-else>{{ item.name }}</span>
             </div>
             <div v-if="item.orgGoodsDto" class="count">
               应收数量: {{item.amount}}

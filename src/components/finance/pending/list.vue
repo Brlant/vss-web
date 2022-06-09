@@ -114,7 +114,7 @@
           <div v-if="!currentItem.id">
             <div class="empty-info">暂无信息</div>
           </div>
-          <div v-else="" :style="'height:'+bodyHeight   + 'px'" class="d-table-col-wrap">
+          <div v-else :style="'height:'+bodyHeight   + 'px'" class="d-table-col-wrap">
             <div class="content-body clearfix">
               <oms-row :label="`${titleAry[type][1]}方`" :span="3">
                 {{currentItem[type ===1 ? 'cdcName' :'povName']}}
