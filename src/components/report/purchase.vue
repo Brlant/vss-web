@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 
 .loading-ht {
   height: 300px;

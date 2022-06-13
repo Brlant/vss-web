@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 
 .align-word {
   letter-spacing: 1em;
@@ -49,7 +49,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
+        <div v-else class="order-list-body flex-list-dom">
           <div v-for="item in allocationList" :class="['status-'+filterListColor(item.status),{'active':currentItemId==item.id}]"
                class="order-list-item">
             <el-row>

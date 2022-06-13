@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 @import '../../../assets/mixins';
 
 .product-code-list {
@@ -99,7 +99,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body">
+        <div v-else class="order-list-body">
           <div v-for="item in traceCodes" class="order-list-item order-list-item-bg"
                style="margin-left: 0;margin-right: 0">
             <el-row>

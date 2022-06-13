@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 
 .page-right-part {
   box-sizing: content-box;
@@ -194,7 +194,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
+        <div v-else class="order-list-body flex-list-dom">
           <div v-for="item in billList" :class="['status-'+filterListColor(item.status),{'active':currentId===item.id}]"
                class="order-list-item"
                @click.stop="showItem(item)">

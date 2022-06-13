@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 .content-part {
   .content-right {
     > h3 {
@@ -53,7 +53,7 @@
         <div v-if="loadingData">
           <oms-loading :loading="loadingData"></oms-loading>
         </div>
-        <div v-else="">
+        <div v-else>
           <el-row>
             <el-col :span="12">
               <div class="qp-box">

@@ -3,7 +3,7 @@
     <div v-if="!orderList.length" class="no-info">
       暂无异常订单
     </div>
-    <el-row v-for="(item, index) in orderList" v-else="" :key="item.id" :gutter="15" class="list-item list-item--pointer"
+    <el-row v-for="(item, index) in orderList" v-else :key="item.id" :gutter="15" class="list-item list-item--pointer"
             type="flex" @click.native="goToOrderUrl(item)">
       <el-col :span="4">
         {{ item.createTime | date}}

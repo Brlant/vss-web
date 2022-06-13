@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 .flex-col {
   display: flex;
   align-items: center;
@@ -99,7 +99,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
+        <div v-else class="order-list-body flex-list-dom">
           <div v-for="item in dataList" :class="[{'active':currentItem.multiPersonAgingId===item.multiPersonAgingId}]" class="order-list-item order-list-item-bg"
                @click="showItem(item)">
             <el-row>

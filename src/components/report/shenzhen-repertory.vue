@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 
 .opera-btn-group {
   margin: 10px 0;

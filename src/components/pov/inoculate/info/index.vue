@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 
 </style>
 <template>
@@ -77,7 +77,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
+        <div v-else class="order-list-body flex-list-dom">
           <div v-for="item in dataList" :class="[{'active':currentItem.id===item.id}]" class="order-list-item order-list-item-bg"
                @click.prevent="showItem(item)">
             <el-row>

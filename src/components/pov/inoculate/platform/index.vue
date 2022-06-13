@@ -269,7 +269,7 @@ $font-size-base: 20px;
                 <i class="el-icon-success"></i>
                   <span>追溯码校验成功</span>
               </span>
-                <span v-else="">
+                <span v-else>
                 <i class="el-icon-error"></i>
                   <span>{{errorDetail.title}}</span>
                 </span>

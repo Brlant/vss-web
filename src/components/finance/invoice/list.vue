@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 @import "../../../assets/mixins";
 
 .btn-color {
@@ -96,7 +96,7 @@
             </div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body flex-list-dom">
+        <div v-else class="order-list-body flex-list-dom">
           <div v-for="item in invoices" :class="[{'active':currentId==item.id}]"
                class="order-list-item order-list-item-bg" @click="showDetailPart(item)">
             <el-row>
