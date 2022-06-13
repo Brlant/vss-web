@@ -14,7 +14,7 @@
       name="file"
     >
       <img v-if="imageUrl" slot="trigger" :src="imageUrl" class="avatar">
-      <i v-else="" slot="trigger" class="el-icon-plus avatar-uploader-icon"></i>
+      <i v-else slot="trigger" class="el-icon-plus avatar-uploader-icon"></i>
     </oms-el-upload>
   </div>
 </template>

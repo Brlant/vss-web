@@ -307,7 +307,7 @@ $leftWidth: 200px;
                 <td>
                   <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
                   <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
-                  <span v-else="">{{ product.specifications }}</span>
+                  <span v-else>{{ product.specifications }}</span>
                 </td>
                 <td>
                   <span v-show="Number(product.unitPrice)">¥{{product.unitPrice | formatMoney}}</span>

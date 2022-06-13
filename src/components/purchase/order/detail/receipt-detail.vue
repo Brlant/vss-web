@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 $table-background-color: #dfe6ec;
 $table-background-color-tint: #eee;
 .product-detail-list {

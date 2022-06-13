@@ -49,7 +49,7 @@
           <oms-loading :loading="loading"></oms-loading>
         </el-col>
       </el-row>
-      <el-row v-else="">
+      <el-row v-else>
         <el-col :span="11">
           <oms-row label="要货申请编号">
             {{currentOrder.id }}

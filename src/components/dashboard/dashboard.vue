@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 
 .home-btn-banner {
 
@@ -45,4 +45,3 @@ export default {
 };
 
 </script>
-

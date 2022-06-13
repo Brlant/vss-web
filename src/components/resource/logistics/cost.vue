@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 .costs {
   font-size: 16px;
 
@@ -33,7 +33,7 @@
                 <oms-loading :loading="loadingData"></oms-loading>
               </el-col>
             </el-row>
-            <div v-else="">
+            <div v-else>
               <div style="overflow: hidden">
                 <perm label="cerp-logistics-cost-add">
                   <span v-if="cost.id===''" class="pull-right cursor-span" style="margin-left: 10px"
@@ -65,7 +65,7 @@
                 <oms-loading :loading="loadingData"></oms-loading>
               </el-col>
             </el-row>
-            <div v-else="">
+            <div v-else>
               <div style="overflow: hidden">
                 <perm label="cerp-logistics-cost-add">
                   <span v-if="secondCost.id===''" class="pull-right cursor-span" style="margin-left: 10px"

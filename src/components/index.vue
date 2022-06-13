@@ -201,7 +201,7 @@ export default {
     },
     queryBaseInfo(data) {
       BaseInfo.queryBaseInfo(data.userCompanyAddress).then(res => {
-        this.$store.commit('initOrgName', res.data.orgDto.name);
+        this.$store.commit('initOrg', res.data.orgDto);
         window.localStorage.setItem('logisticsCentreId', res.data.orgDto.defaultCentreId || '');
       });
     },
