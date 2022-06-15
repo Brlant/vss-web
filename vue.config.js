@@ -28,6 +28,13 @@ if (process.env.NODE_ENV === 'production') {
   }));
 }
 
+const targets = {
+  local: 'http://localhost:8081',
+  ldw: 'http://192.168.5.201:8081',
+  ldw2: 'http://vss-ldm.vaiwan.com',
+  hw: 'https://hw-test-vss.cdcerp.cn',
+};
+
 module.exports = {
   devServer: {
     open: true,
@@ -37,8 +44,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        // target: 'https://hw-test-vss.cdcerp.cn',
-        target: 'http://localhost:8081',
+        target: targets.local,
         changOrigin: true
       }
     }
