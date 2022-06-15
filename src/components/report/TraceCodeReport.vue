@@ -24,7 +24,8 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row :span="8" label="接种单位">
-                <el-select v-model="params.factoryId" :clearable="true" :remote-method="filterInjectionOrgs" filterable
+                <el-select v-model="params.orgManufacturerCode" :clearable="true" :remote-method="filterInjectionOrgs"
+                           filterable
                            placeholder="请输入名称/系统代码"
                            popperClass="good-selects" remote
                            @click.native.once="filterInjectionOrgs('')">
@@ -187,7 +188,7 @@
                 <el-button :disabled="loadingData" type="primary" @click="search">
                   查询
                 </el-button>
-                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <el-button @click="resetSearchForm">重置</el-button>
                 <perm label="wastage-report-export-vss" class="ml-15">
                   <el-button :disabled="isLoading" plain type="success" @click="exportFile">
                     导出Excel
@@ -302,7 +303,7 @@ export default {
         //  1)	所属区：根据字典表，获取区下拉列表。a.	接种单位登录，默认：本区，不可切换
         orgAreaCode: '',
         //  2)	接种单位：根据所属区，过滤区下接种单位。模糊搜索、可多选。若不选所属区域，则可选择所有接种单位。
-        orgCode: '',
+        orgManufacturerCode: '',
         //  3)	采购入库单号：接种单位采购入库单号，精确查询
         orderNo: '',
         //  4)	销售出库单号：疾控销售出库单号，精确查询
@@ -337,22 +338,19 @@ export default {
       pickerOptions: {
         onPick: ({maxDate, minDate}) => {
           this.minDate = minDate;
-          if (maxDate) {
-            this.search();
-          }
         },
         disabledDate: (date) => {
           // 只能选择一年内的日期，不可超过一年，也不能选择未来的日期
           const year = 365 * 3600 * 1000 * 24;
-          const now = Date.now();
+          const max = Date.now() + 24 * 60 * 60 * 1000;
           const time = date.getTime();
 
-          let disabled = time > now;
+          let disabled = time > max;
           if (!disabled && this.minDate) {
             const minTime = this.minDate.getTime() - year;
             let maxTime = this.minDate.getTime() + year;
-            if (maxTime > now) {
-              maxTime = now;
+            if (maxTime > max) {
+              maxTime = max;
             }
 
             disabled = time < minTime || time > maxTime;
@@ -446,10 +444,10 @@ export default {
         this.povOrgId = this.currOrg.id;
         this.params.orgAreaCode = this.currOrg.orgAreaCode;
         // 当前是接种单位登录的，取当前单位所在区域
-        console.log(this.areaCodeDict);
+        // console.log(this.areaCodeDict);
         this.orgAreas = this.areaCodeDict.filter(item => item.value === this.currOrg.orgAreaCode);
-        console.log(this.currOrg.orgAreaCode);
-        console.log(this.orgAreas);
+        // console.log(this.currOrg.orgAreaCode);
+        // console.log(this.orgAreas);
       } else {
         // 默认取字典数据
         this.orgAreas = this.areaCodeDict;
@@ -460,11 +458,11 @@ export default {
     },
     purchasingStorageTimes(val) {
       if (!val) {
-        this.minDate = '';
-        this.params.purchasingStorageTime1 = '';
-        this.params.purchasingStorageTime2 = '';
+        this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
+      } else {
         this.search();
       }
+
     }
   },
   methods: {
@@ -485,18 +483,13 @@ export default {
         .then(res => {
           this.isLoading = false;
           this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/trace-code'});
-
-          const url = res.data;
-          if (!url){
-            this.$notify.error({
-              message: '导出失败'
-            });
-
-            return;
+          if (!res.data) {
+            // 如果超过5s获取不到结果就等异步处理完再去我的下载里面手动下载
+            this.$notify.success('异步导出处理中，请稍后去【我的下载】查看');
+          } else {
+            // utils.download(res.data,'追溯码使用情况');
+            utils.download(res.data);
           }
-
-          utils.download(url, '追溯码使用情况');
-
         })
         .catch(error => {
           this.isLoading = false;
@@ -568,6 +561,9 @@ export default {
       this.search();
     },
     resetSearchForm() {
+
+      this.totalCount = 0;
+
       this.params = {
         //  1)	所属区：根据字典表，获取区下拉列表。a.	接种单位登录，默认：本区，不可切换
         orgAreaCode: '',
@@ -593,16 +589,12 @@ export default {
         reportedLoss: '',
         // 12)	是否有损耗（已损耗人份不等于0）：下拉选择。枚举：全部/是/否，默认：全部
         loss: '',
-        // 13)	接种单位入库时间：范围查询（最长可选择一年），精确到天，查询条件包头不包尾。默认：半年，开始时间往前推6月，月初，结束时间取本月末。
-        purchasingStorageTime1: '',
-        purchasingStorageTime2: '',
         pageNo: 1,
         pageSize: 20,
       };
-      // 默认是半年，重置后恢复默认值
+
+      // 这个会触发监听
       this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
-      this.totalCount = 0;
-      this.search();
     },
   },
   mounted() {
