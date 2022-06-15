@@ -62,12 +62,12 @@
           </el-row>
           <el-row>
 
-            <el-col :span="8" offset="6">
+            <el-col :span="8" :offset="6">
               <oms-form-row :span="8" label="">
                 <el-button :disabled="loadingData" type="primary" @click="search">
                   查询
                 </el-button>
-                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <el-button @click="resetSearchForm">重置</el-button>
               </oms-form-row>
             </el-col>
           </el-row>
@@ -84,13 +84,13 @@
           </template>
         </el-table-column>
 
-        <el-table-column label="创建时间" min-width="150">
+        <el-table-column :sortable="true" prop="createTime" label="创建时间" min-width="150">
           <template v-slot="{row}">
             {{ row.createTime | time }}
           </template>
         </el-table-column>
 
-        <el-table-column label="完成时间" min-width="150">
+        <el-table-column :sortable="true" prop="completeTime" label="完成时间" min-width="150">
           <template v-slot="{row}">
             {{ row.completeTime | time }}
           </template>
@@ -107,12 +107,14 @@
         <el-table-column label="操作" width="200" align="center">
           <template v-slot="{row}">
             <el-row :gutter="15">
-              <el-col :span="6" offset="3">
+              <el-col :span="6" :offset="3">
                 <perm label="trace-code-download-download">
-                  <el-button type="success" plain @click="download(row.id,row.fileUrl,row.fileName)">下载</el-button>
+                  <el-button v-if="row.taskStatus == 2" type="success" plain
+                             @click="download(row.id)">下载
+                  </el-button>
                 </perm>
               </el-col>
-              <el-col :span="6" offset="3">
+              <el-col :span="6" :offset="3">
                 <perm label="trace-code-download-del">
                   <el-button type="danger" plain @click="del(row.id,row.fileName)">删除</el-button>
                 </perm>
@@ -168,81 +170,13 @@ export default {
       pickerOptions: {
         onPick: ({maxDate, minDate}) => {
           this.minDate = minDate;
-          if (maxDate) {
-            this.search();
-          }
-          console.log(minDate, maxDate)
         },
         disabledDate: (date) => {
           // 只能选择一年内的日期，不可超过一年，也不能选择未来的日期
-          // const year = 365 * 3600 * 1000 * 24;
-          const now = Date.now();
+          const max = Date.now() + 24 * 60 * 60 * 1000;
           const time = date.getTime();
-
-          // let disabled = time > now;
-          // if (!disabled && this.minDate) {
-          //   const minTime = this.minDate.getTime() - year;
-          //   let maxTime = this.minDate.getTime() + year;
-          //   if (maxTime > now) {
-          //     maxTime = now;
-          //   }
-          //
-          //   disabled = time < minTime || time > maxTime;
-          // }
-
-          return time > now;
+          return time > max;
         },
-        shortcuts: [{
-          text: '最近一周',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近三个月',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近半年',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 180);
-            picker.$emit('pick', [start, end]);
-          }
-        }, {
-          text: '最近一年',
-          onClick(picker) {
-            const end = new Date();
-            const start = new Date();
-            start.setTime(start.getTime() - 3600 * 1000 * 24 * 365);
-            picker.$emit('pick', [start, end]);
-          }
-        },
-          {
-            text: '去年',
-            onClick(picker) {
-              const today = new Date();
-              const year = today.getFullYear() - 1;
-              const start = new Date(year, 0, 1);
-              const end = new Date(year, 11, 31);
-              picker.$emit('pick', [start, end]);
-            }
-          }]
       },
       whetherOptions: [
         {value: '', label: '全部'},
@@ -300,22 +234,6 @@ export default {
     povOrgId(val) {
       this.filterInjectionOrgs();
     },
-    createTimes(val) {
-      if (!val) {
-        this.minDate = '';
-        this.params.createTime1 = '';
-        this.params.createTime2 = '';
-        this.search();
-      }
-    },
-    completeTimes(val) {
-      if (!val) {
-        this.minDate = '';
-        this.params.completeTime1 = '';
-        this.params.completeTime2 = '';
-        this.search();
-      }
-    }
   },
   methods: {
     // 序号从1开始，翻页不重置
@@ -326,37 +244,8 @@ export default {
     timesHandle() {
       this.params.createTime1 = this.$formatAryTime(this.createTimes, 0);
       this.params.createTime2 = this.$formatAryTime(this.createTimes, 1);
-      this.params.completeTime1 = this.$formatAryTime(this.completeTimes, 1);
+      this.params.completeTime1 = this.$formatAryTime(this.completeTimes, 0);
       this.params.completeTime2 = this.$formatAryTime(this.completeTimes, 1);
-    },
-    exportFile() {
-      this.timesHandle();
-      this.isLoading = true;
-      this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/trace-code'});
-      this.$http.get('/trace-code/report/export', {params: this.params})
-        .then(res => {
-          this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/trace-code'});
-
-          const url = res.data;
-          if (!url) {
-            this.$notify.error({
-              message: '导出失败'
-            });
-
-            return;
-          }
-
-          utils.download(url, '追溯码使用情况');
-
-        })
-        .catch(error => {
-          this.isLoading = false;
-          this.$store.commit('initPrint', {isPrinting: false, moduleId: '/report/trace-code'});
-          this.$notify.error({
-            message: error.response && error.response.data && error.response.data.msg || '导出失败'
-          });
-        });
     },
     search() {
       this.timesHandle();
@@ -384,17 +273,39 @@ export default {
       this.search();
     },
     resetSearchForm() {
-      this.params = {};
+      this.params = {
+        // 任务类型
+        taskType: '',
+        // 状态：全部/待处理/处理中/已完成   默认：全部，即''
+        taskStatus: '',
+        // 创建时间与完成时间的范围筛选
+        createTime1: '',
+        createTime2: '',
+        completeTime1: '',
+        completeTime2: '',
+        pageNo: 1,
+        pageSize: 20,
+      };
       this.createTimes = [];
+      this.completeTimes = [];
       this.totalCount = 0;
       this.search();
     },
-    download(id, fileUrl, fileName) {
-      utils.download(fileUrl, fileName);
-      this.$http.put('/trace-code/download/' + id, {fileUrl, fileName,downloadStatus:1,taskStatus:2});
+    download(id) {
+      this.$http.put(`/trace-code/download/download/${id}`)
+        .then(res => {
+          const {fileUrl} = res.data;
+          utils.download(fileUrl);
+        })
+        .catch(err => {
+          console.error({...err});
+        });
     },
     del(id, fileName) {
-      this.$http.delete('/trace-code/download/' + id, {params: {fileName}})
+      let index = this.list.findIndex(item => item.id === id);
+      this.list.splice(index, 1);
+
+      this.$http.delete(`/trace-code/download/${id}?fileName=${fileName || ''}`)
         .then(res => {
           this.$notify.success('删除成功');
         });
