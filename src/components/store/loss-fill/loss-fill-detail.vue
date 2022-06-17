@@ -312,7 +312,7 @@ export default {
           "orgGoodsName": ddl.goodsName, //货主货品名称
           "specificationsId": "",
           specificationName: ddl.orgGoodsDto.goodsDto.specifications,//规格名称
-          goodsType: ddl.vaccineType,//货品类型
+          goodsType: ddl.orgGoodsDto.goodsVaccineSign,//货品类型
           productName: ddl.orgGoodsDto.goodsDto.name,//产品名称
           photoUrl: ddl.orgGoodsDto.goodsDto.photo,
           "batchNumberId": ddl.batchNumberId, //批号id
