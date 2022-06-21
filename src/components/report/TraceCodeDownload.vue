@@ -64,7 +64,7 @@
 
             <el-col :span="8" :offset="6">
               <oms-form-row :span="8" label="">
-                <el-button :disabled="loadingData" type="primary" @click="search">
+                <el-button :disabled="loadingData" type="primary" @click="query">
                   查询
                 </el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
@@ -173,16 +173,11 @@ export default {
         },
         disabledDate: (date) => {
           // 只能选择一年内的日期，不可超过一年，也不能选择未来的日期
-          const max = Date.now() + 24 * 60 * 60 * 1000;
+          const max = Date.now();
           const time = date.getTime();
           return time > max;
         },
       },
-      whetherOptions: [
-        {value: '', label: '全部'},
-        {value: '1', label: '是'},
-        {value: '0', label: '否'},
-      ],
       taskTypes: [
         {value: '', label: '全部'},
         {value: '1', label: '追溯码使用情况表'},
@@ -197,43 +192,12 @@ export default {
       isLoading: false,
       loadingData: false,
       totalCount: 0,
-      injectionOrgs: [],//所有的接种单位
-      povOrgId: '',
       orgAreas: []
     }
   },
   computed: {
-    areaCodeDict() {
-      return this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
-    },
-    currOrg() {
-      return this.$store.state.org;
-    },
-    hasPov() {
-      const types = this.currOrg.orgRelationTypeList;
-      if (!types) return false;
-      return this.areaCodeDict.length > 0 && types.includes('POV');
-    },
   },
   watch: {
-    hasPov(val) {
-      if (this.hasPov) {
-        // 如果是接种单位的话，保存单位编码，过滤接种单位
-        this.povOrgId = this.currOrg.id;
-        this.params.orgAreaCode = this.currOrg.orgAreaCode;
-        // 当前是接种单位登录的，取当前单位所在区域
-        console.log(this.areaCodeDict);
-        this.orgAreas = this.areaCodeDict.filter(item => item.value === this.currOrg.orgAreaCode);
-        console.log(this.currOrg.orgAreaCode);
-        console.log(this.orgAreas);
-      } else {
-        // 默认取字典数据
-        this.orgAreas = this.areaCodeDict;
-      }
-    },
-    povOrgId(val) {
-      this.filterInjectionOrgs();
-    },
   },
   methods: {
     // 序号从1开始，翻页不重置
@@ -242,10 +206,14 @@ export default {
       return index + 1 + (pageNo - 1) * pageSize;
     },
     timesHandle() {
-      this.params.createTime1 = this.$formatAryTime(this.createTimes, 0);
-      this.params.createTime2 = this.$formatAryTime(this.createTimes, 1);
-      this.params.completeTime1 = this.$formatAryTime(this.completeTimes, 0);
-      this.params.completeTime2 = this.$formatAryTime(this.completeTimes, 1);
+      this.params.createTime1 = this.$formatAryTime(this.createTimes, 0) + ' 00:00:00';
+      this.params.createTime2 = this.$formatAryTime(this.createTimes, 1) + ' 23:59:59';
+      this.params.completeTime1 = this.$formatAryTime(this.completeTimes, 0) + ' 00:00:00';
+      this.params.completeTime2 = this.$formatAryTime(this.completeTimes, 1) + ' 23:59:59';
+    },
+    query(){
+      this.params.pageNo = 1;
+      this.search();
     },
     search() {
       this.timesHandle();
