@@ -206,10 +206,21 @@ export default {
       return index + 1 + (pageNo - 1) * pageSize;
     },
     timesHandle() {
-      this.params.createTime1 = this.$formatAryTime(this.createTimes, 0) + ' 00:00:00';
-      this.params.createTime2 = this.$formatAryTime(this.createTimes, 1) + ' 23:59:59';
-      this.params.completeTime1 = this.$formatAryTime(this.completeTimes, 0) + ' 00:00:00';
-      this.params.completeTime2 = this.$formatAryTime(this.completeTimes, 1) + ' 23:59:59';
+      if (this.createTimes.length == 2){
+        this.params.createTime1 = this.$formatAryTime(this.createTimes, 0) + ' 00:00:00';
+        this.params.createTime2 = this.$formatAryTime(this.createTimes, 1) + ' 23:59:59';
+      }else {
+        this.params.createTime1 = '';
+        this.params.createTime2 = '';
+      }
+
+      if (this.createTimes.length == 2){
+        this.params.completeTime1 = this.$formatAryTime(this.completeTimes, 0) + ' 00:00:00';
+        this.params.completeTime2 = this.$formatAryTime(this.completeTimes, 1) + ' 23:59:59';
+      }else {
+        this.params.completeTime2 = '';
+        this.params.completeTime2 = '';
+      }
     },
     query(){
       this.params.pageNo = 1;

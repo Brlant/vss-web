@@ -469,8 +469,13 @@ export default {
       return index + 1 + (pageNo - 1) * pageSize;
     },
     timesHandle() {
-      this.params.purchasingStorageTime1 = this.$formatAryTime(this.purchasingStorageTimes, 0) + ' 00:00:00';
-      this.params.purchasingStorageTime2 = this.$formatAryTime(this.purchasingStorageTimes, 1) + ' 23:59:59';
+      if (this.purchasingStorageTimes.length == 2){
+        this.params.purchasingStorageTime1 = this.$formatAryTime(this.purchasingStorageTimes, 0) + ' 00:00:00';
+        this.params.purchasingStorageTime1 = this.$formatAryTime(this.purchasingStorageTimes, 1) + ' 23:59:59';
+      }else {
+        this.params.createTime1 = '';
+        this.params.createTime2 = '';
+      }
     },
     exportFile() {
       this.timesHandle();
