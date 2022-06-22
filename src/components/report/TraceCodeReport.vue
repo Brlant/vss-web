@@ -13,7 +13,8 @@
           <el-row>
             <el-col :span="6">
               <oms-form-row :span="8" label="所属区">
-                <el-select v-model="params.orgAreaCode" :clearable="!hasPov" filterable
+                <el-select v-model="params.orgAreaCode"
+                           :clearable="orgAreas.length>0" filterable
                            placeholder="支持搜索区域名称">
                   <el-option v-for="item in orgAreas" :key="item.value"
                              :label="item.label"
@@ -24,12 +25,10 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row :span="8" label="接种单位">
-                <el-select v-model="params.orgManufacturerCode" :clearable="!hasPov"
-                           :remote-method="filterInjectionOrgs"
-                           filterable
-                           placeholder="请输入名称/系统代码"
-                           popperClass="good-selects" remote
-                           @click.native.once="filterInjectionOrgs('')">
+                <el-select v-model="params.orgManufacturerCode"
+                           :clearable="injectionOrgs.length>0" filterable
+                           placeholder="请输入单位名称"
+                           popperClass="good-selects">
                   <el-option v-for="org in injectionOrgs" :key="org.id" :label="org.name" :value="org.manufacturerCode">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{ org.name }}</span>
@@ -62,9 +61,11 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row :span="8" label="货主货品名称">
-                <el-select v-model="params.orgGoodsNumber" :clearable="true" :remote-method="filterOrgGoods" filterable
+                <el-select v-model="params.orgGoodsNumber"
+                           remote :remote-method="filterOrgGoods"
+                           :clearable="orgGoods.length>0" filterable
                            placeholder="请输入名称/编号"
-                           popper-class="good-selects" remote
+                           popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')">
                   <el-option v-for="item in orgGoods" :key="item.orgGoodsDto.id"
                              :label="item.orgGoodsDto.name"
@@ -289,7 +290,7 @@
 </template>
 
 <script>
-import {BaseInfo, Vaccine} from '@/resources'
+import {Vaccine} from '@/resources'
 import ReportMixin from '@/mixins/reportMixin'
 import utils from '@/tools/utils'
 
@@ -421,34 +422,32 @@ export default {
       loadingData: false,
       totalCount: 0,
       injectionOrgs: [],//所有的接种单位
-      manufacturerCode: ''
+      manufacturerCode: '',
+      orgAreas: [],
     }
   },
   computed: {
-    orgAreas() {
-      const areas = this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
-      if (!this.hasPov) {
-        return areas;
-      }
-
-      return areas.filter(item => item.value === this.currOrg.orgAreaCode);
+    areaCodes() {
+      return this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
     },
     currOrg() {
       return this.$store.state.org;
     },
     hasPov() {
-      return this.currOrg.orgRelationTypeList && this.currOrg.orgRelationTypeList.includes('POV');
+      return this.areaCodes && this.currOrg.orgRelationTypeList && this.currOrg.orgRelationTypeList.includes('POV');
     },
   },
   watch: {
     hasPov(val) {
       if (this.hasPov) {
+        this.orgAreas = this.areaCodes.filter(item => item.value === this.currOrg.orgAreaCode);
         // 如果是接种单位的话，保存单位编码，过滤接种单位
         this.manufacturerCode = this.currOrg.manufacturerCode;
         this.params.orgAreaCode = this.currOrg.orgAreaCode;
-        // 显示当前接种单位
-        this.filterInjectionOrgs("")
         this.params.orgManufacturerCode = this.manufacturerCode;
+      } else {
+        this.orgAreas = this.areaCodes;
+        this.filterInjectionOrgs('');
       }
 
       this.search();
@@ -549,12 +548,16 @@ export default {
         ]
       };
 
-      this.$http.post('/queryOrgList',params).then(res => {
+      this.$http.post('/queryOrgList', params).then(res => {
         this.injectionOrgs = res.data.map(item => ({
           id: item.id,
           name: item.name,
           manufacturerCode: item.manufacturerCode
         }));
+
+        if (this.injectionOrgs.length == 1) {
+          this.params.orgManufacturerCode = this.injectionOrgs[0].manufacturerCode;
+        }
       });
     },
     filterOrgGoods(keyWord) {
