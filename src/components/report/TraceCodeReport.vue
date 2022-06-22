@@ -13,9 +13,10 @@
           <el-row>
             <el-col :span="6">
               <oms-form-row :span="8" label="所属区">
-                <el-select v-model="params.orgAreaCode" :clearable="!hasPov" filterable
+                <el-select v-model="params.orgAreaCode"
+                           :clearable="!hasPov" filterable
                            placeholder="支持搜索区域名称">
-                  <el-option v-for="item in orgAreas" :key="item.value"
+                  <el-option v-for="item in areaCodes" :key="item.value"
                              :label="item.label"
                              :value="item.value">
                   </el-option>
@@ -24,13 +25,11 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row :span="8" label="接种单位">
-                <el-select v-model="params.orgManufacturerCode" :clearable="!hasPov"
-                           :remote-method="filterInjectionOrgs"
-                           filterable
-                           placeholder="请输入名称/系统代码"
-                           popperClass="good-selects" remote
-                           @click.native.once="filterInjectionOrgs('')">
-                  <el-option v-for="org in injectionOrgs" :key="org.id" :label="org.name" :value="org.id">
+                <el-select v-model="params.orgManufacturerCode"
+                           :clearable="injectionOrgs.length>0" filterable
+                           placeholder="请输入单位名称"
+                           popperClass="good-selects">
+                  <el-option v-for="org in injectionOrgs" :key="org.id" :label="org.name" :value="org.manufacturerCode">
                     <div style="overflow: hidden">
                       <span class="pull-left" style="clear: right">{{ org.name }}</span>
                     </div>
@@ -62,13 +61,15 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row :span="8" label="货主货品名称">
-                <el-select v-model="params.orgGoodsNumber" :clearable="true" :remote-method="filterOrgGoods" filterable
+                <el-select v-model="params.orgGoodsNumber"
+                           remote :remote-method="filterOrgGoods"
+                           :clearable="orgGoods.length>0" filterable
                            placeholder="请输入名称/编号"
-                           popper-class="good-selects" remote
+                           popper-class="good-selects"
                            @click.native.once="filterOrgGoods('')">
                   <el-option v-for="item in orgGoods" :key="item.orgGoodsDto.id"
                              :label="item.orgGoodsDto.name"
-                             :value="item.orgGoodsDto.code">
+                             :value="item.orgGoodsDto.goodsNo">
                     <div style="overflow: hidden">
                       <span class="pull-left">{{ item.orgGoodsDto.name }}<el-tag v-show="!item.orgGoodsDto.status"
                                                                                  style="float: none"
@@ -289,7 +290,7 @@
 </template>
 
 <script>
-import {BaseInfo, Vaccine} from '@/resources'
+import {Vaccine} from '@/resources'
 import ReportMixin from '@/mixins/reportMixin'
 import utils from '@/tools/utils'
 
@@ -421,45 +422,43 @@ export default {
       loadingData: false,
       totalCount: 0,
       injectionOrgs: [],//所有的接种单位
-      povOrgId: '',
-      orgAreas: []
     }
   },
   computed: {
-    areaCodeDict() {
-      return this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
+    areaCodes() {
+      let acs = this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
+      if (this.hasPov) {
+        return acs.filter(item => item.value === this.currOrg.orgAreaCode);
+      }
+
+      return acs;
     },
     currOrg() {
       return this.$store.state.org;
     },
     hasPov() {
-      const types = this.currOrg.orgRelationTypeList;
-      if (!types) return false;
-      return this.areaCodeDict.length > 0 && types.includes('POV');
+      return this.currOrg.orgRelationTypeList && this.currOrg.orgRelationTypeList.includes('POV');
     },
+    manufacturerCode() {
+      return !this.hasPov ? '' : this.currOrg.manufacturerCode;
+    },
+    searchEnable() {
+      return this.areaCodes.length > 0;
+    }
   },
   watch: {
-    hasPov(val) {
-      if (this.hasPov) {
-        // 如果是接种单位的话，保存单位编码，过滤接种单位
-        this.povOrgId = this.currOrg.id;
-        this.params.orgAreaCode = this.currOrg.orgAreaCode;
-        // 当前是接种单位登录的，取当前单位所在区域
-        this.orgAreas = this.areaCodeDict.filter(item => item.value === this.currOrg.orgAreaCode);
-        // 显示当前接种单位
-        this.filterInjectionOrgs("")
-      } else {
-        // 默认取字典数据
-        this.orgAreas = this.areaCodeDict;
-        this.search();
-      }
-    },
     purchasingStorageTimes(val) {
       if (!val) {
         this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
       } else {
         this.query();
       }
+    },
+    "params.orgAreaCode": function (val) {
+      this.filterInjectionOrgs('');
+    },
+    "params.orgManufacturerCode": function (val) {
+      this.search();
     }
   },
   methods: {
@@ -469,10 +468,10 @@ export default {
       return index + 1 + (pageNo - 1) * pageSize;
     },
     timesHandle() {
-      if (this.purchasingStorageTimes.length == 2){
+      if (this.purchasingStorageTimes.length == 2) {
         this.params.purchasingStorageTime1 = this.$formatAryTime(this.purchasingStorageTimes, 0) + ' 00:00:00';
-        this.params.purchasingStorageTime1 = this.$formatAryTime(this.purchasingStorageTimes, 1) + ' 23:59:59';
-      }else {
+        this.params.purchasingStorageTime2 = this.$formatAryTime(this.purchasingStorageTimes, 1) + ' 23:59:59';
+      } else {
         this.params.createTime1 = '';
         this.params.createTime2 = '';
       }
@@ -501,7 +500,7 @@ export default {
           });
         });
     },
-    query(){
+    query() {
       this.params.pageNo = 1;
       this.search();
     },
@@ -527,9 +526,9 @@ export default {
       let params = {
         keyWord: keyword,
         // 根据所属区，过滤区下接种单位。模糊搜索、可多选。若不选所属区域，则可选择所有接种单位。
-        code: this.currOrg.orgAreaCode,
-        //接种单位登录，默认：本单位，不可切换,povOrgId只有接种单位登录才有值
-        id: this.povOrgId,
+        orgAreaCode: this.params.orgAreaCode,
+        //接种单位登录，默认：本单位，不可切换,manufacturerCode只有接种单位登录才有值
+        manufacturerCode: this.manufacturerCode,
         orgRelationTypeList: [
           'POV',
           'POV-1',
@@ -541,21 +540,21 @@ export default {
         ]
       };
 
-      BaseInfo.queryByOrgRelationTypeList(params).then(res => {
-        this.injectionOrgs = res.data.list.map(item => ({
+      this.params.orgManufacturerCode = '';
+      this.$http.post('/queryOrgList', params).then(res => {
+        this.injectionOrgs = res.data.map(item => ({
           id: item.id,
           name: item.name,
           manufacturerCode: item.manufacturerCode
         }));
 
-        if (!this.params.orgManufacturerCode) {
-          this.params.orgManufacturerCode = this.povOrgId;
-          this.search();
+        if (this.injectionOrgs.length == 1) {
+          this.params.orgManufacturerCode = this.injectionOrgs[0].manufacturerCode;
         }
       });
     },
     filterOrgGoods(keyWord) {
-      Vaccine.query({keyWord, orgId: this.povOrgId}).then(res => {
+      Vaccine.query({keyWord, orgId: this.manufacturerCode}).then(res => {
         this.orgGoods = res.data.list;
       });
     },
@@ -615,6 +614,14 @@ export default {
     },
   },
   mounted() {
+    this.$nextTick(() => {
+      if (this.hasPov) {
+        this.params.orgAreaCode = this.currOrg.orgAreaCode;
+        this.params.orgManufacturerCode = this.manufacturerCode;
+      }
+      this.filterInjectionOrgs('');
+      this.search();
+    })
   }
 }
 </script>
