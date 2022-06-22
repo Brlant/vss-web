@@ -437,8 +437,7 @@ export default {
       return this.$store.state.org;
     },
     hasPov() {
-      const types = this.currOrg.orgRelationTypeList || [];
-      return types.includes('POV');
+      return this.currOrg.orgRelationTypeList && this.currOrg.orgRelationTypeList.includes('POV');
     },
   },
   watch: {
