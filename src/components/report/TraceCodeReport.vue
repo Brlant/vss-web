@@ -14,9 +14,9 @@
             <el-col :span="6">
               <oms-form-row :span="8" label="所属区">
                 <el-select v-model="params.orgAreaCode"
-                           :clearable="orgAreas.length>0" filterable
+                           :clearable="!hasPov" filterable
                            placeholder="支持搜索区域名称">
-                  <el-option v-for="item in orgAreas" :key="item.value"
+                  <el-option v-for="item in areaCodes" :key="item.value"
                              :label="item.label"
                              :value="item.value">
                   </el-option>
@@ -422,36 +422,31 @@ export default {
       loadingData: false,
       totalCount: 0,
       injectionOrgs: [],//所有的接种单位
-      manufacturerCode: '',
-      orgAreas: [],
     }
   },
   computed: {
     areaCodes() {
-      return this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
+      let acs = this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
+      if (this.hasPov) {
+        return acs.filter(item => item.value === this.currOrg.orgAreaCode);
+      }
+
+      return acs;
     },
     currOrg() {
       return this.$store.state.org;
     },
     hasPov() {
-      return this.areaCodes && this.currOrg.orgRelationTypeList && this.currOrg.orgRelationTypeList.includes('POV');
+      return this.currOrg.orgRelationTypeList && this.currOrg.orgRelationTypeList.includes('POV');
     },
+    manufacturerCode() {
+      return !this.hasPov ? '' : this.currOrg.manufacturerCode;
+    },
+    searchEnable() {
+      return this.areaCodes.length > 0;
+    }
   },
   watch: {
-    hasPov(val) {
-      if (this.hasPov) {
-        this.orgAreas = this.areaCodes.filter(item => item.value === this.currOrg.orgAreaCode);
-        // 如果是接种单位的话，保存单位编码，过滤接种单位
-        this.manufacturerCode = this.currOrg.manufacturerCode;
-        this.params.orgAreaCode = this.currOrg.orgAreaCode;
-        this.params.orgManufacturerCode = this.manufacturerCode;
-      } else {
-        this.orgAreas = this.areaCodes;
-        this.filterInjectionOrgs('');
-      }
-
-      this.search();
-    },
     purchasingStorageTimes(val) {
       if (!val) {
         this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
@@ -460,16 +455,13 @@ export default {
       }
     },
     "params.orgAreaCode": function (val) {
-      this.params.orgManufacturerCode = '';
       this.filterInjectionOrgs('');
     },
     "params.orgManufacturerCode": function (val) {
-      if (!val) return;
       this.search();
     }
   },
   methods: {
-
     // 序号从1开始，翻页不重置
     serialGen(index) {
       const {pageNo, pageSize} = this.params;
@@ -478,7 +470,7 @@ export default {
     timesHandle() {
       if (this.purchasingStorageTimes.length == 2) {
         this.params.purchasingStorageTime1 = this.$formatAryTime(this.purchasingStorageTimes, 0) + ' 00:00:00';
-        this.params.purchasingStorageTime1 = this.$formatAryTime(this.purchasingStorageTimes, 1) + ' 23:59:59';
+        this.params.purchasingStorageTime2 = this.$formatAryTime(this.purchasingStorageTimes, 1) + ' 23:59:59';
       } else {
         this.params.createTime1 = '';
         this.params.createTime2 = '';
@@ -548,6 +540,7 @@ export default {
         ]
       };
 
+      this.params.orgManufacturerCode = '';
       this.$http.post('/queryOrgList', params).then(res => {
         this.injectionOrgs = res.data.map(item => ({
           id: item.id,
@@ -621,6 +614,14 @@ export default {
     },
   },
   mounted() {
+    this.$nextTick(() => {
+      if (this.hasPov) {
+        this.params.orgAreaCode = this.currOrg.orgAreaCode;
+        this.params.orgManufacturerCode = this.manufacturerCode;
+      }
+      this.filterInjectionOrgs('');
+      this.search();
+    })
   }
 }
 </script>
