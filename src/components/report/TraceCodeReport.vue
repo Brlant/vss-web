@@ -554,7 +554,7 @@ export default {
       });
     },
     filterOrgGoods(keyWord) {
-      Vaccine.query({keyWord, orgId: this.manufacturerCode}).then(res => {
+      Vaccine.query({keyWord, manufacturerCode: this.params.orgManufacturerCode}).then(res => {
         this.orgGoods = res.data.list;
       });
     },
@@ -617,7 +617,7 @@ export default {
     this.$nextTick(() => {
       if (this.hasPov) {
         this.params.orgAreaCode = this.currOrg.orgAreaCode;
-        this.params.orgManufacturerCode = this.manufacturerCode;
+        this.params.orgManufacturerCode = this.currOrg.manufacturerCode;
       }
       this.filterInjectionOrgs('');
       this.search();
