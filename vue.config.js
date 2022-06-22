@@ -37,7 +37,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: 'https://hw-test-vss.cdcerp.cn',
+        target:'https://sh-vss.cdcerp.cn/',
         changOrigin: true
       }
     }
