@@ -157,9 +157,10 @@
 
       <el-pagination
         :current-page="params.pageNo"
-        :pageSize="params.pageSize"
+        :page-size="params.pageSize"
         :total="params.count"
         layout="total,prev, pager, next, jumper"
+        @size-change="handleSizeChange"
         @current-change="getOrderList">
       </el-pagination>
     </div>
@@ -241,6 +242,11 @@ export default {
     }
   },
   methods: {
+    handleSizeChange(val) {
+      console.log('==================',val)
+      this.params.pageNo = val;
+      this.getMaPage(1);
+    },
     getTagTypeByStatus(status) {
       if (status == 0) {
         return '';
@@ -312,8 +318,9 @@ export default {
       this.currentOrderId = '';
       this.getOrderList(1);
     },
-    getOrderList() {
+    getOrderList(val) {
       this.loadingData = true;
+      this.params.pageNo= val
       // 明细查询
       this.params.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
 
