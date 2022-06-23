@@ -147,11 +147,22 @@
       </div>
     </div>
     <div v-show="params.count>params.pageSize && !loadingData" class="text-center">
-      <el-cu-pagination
+<!--      <el-pagination-->
+<!--        :current-page="pager.pageNo"-->
+<!--        :pageSize="pager.pageSize"-->
+<!--        :total="pager.count"-->
+<!--        layout="total,prev, pager, next, jumper"-->
+<!--        @current-change="getOrderList">-->
+<!--      </el-pagination>-->
+
+      <el-pagination
         :current-page="params.pageNo"
-        :pageSize="params.pageSize" :total="totalCount" layout="prev, pager, next"
+        :page-size="params.pageSize"
+        :total="params.count"
+        layout="total,prev, pager, next, jumper"
+        @size-change="handleSizeChange"
         @current-change="getOrderList">
-      </el-cu-pagination>
+      </el-pagination>
     </div>
     <page-right :css="{'width':'1000px','padding':0}" :show="showDetail" class="order-detail-info specific-part-z-index"
                 partClass="pr-no-animation" @right-close="resetRightBox">
@@ -185,6 +196,7 @@ export default {
       showSearch: false,
       lossList: [],
       params: {
+        count:0,
         type: 1,
         state: '0',
         bizType: '2-5',
@@ -230,6 +242,11 @@ export default {
     }
   },
   methods: {
+    handleSizeChange(val) {
+      console.log('==================',val)
+      this.params.pageNo = val;
+      this.getMaPage(1);
+    },
     getTagTypeByStatus(status) {
       if (status == 0) {
         return '';
@@ -301,8 +318,9 @@ export default {
       this.currentOrderId = '';
       this.getOrderList(1);
     },
-    getOrderList() {
+    getOrderList(val) {
       this.loadingData = true;
+      this.params.pageNo= val
       // 明细查询
       this.params.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
 
