@@ -180,7 +180,7 @@ export default {
       },
       taskTypes: [
         {value: '', label: '全部'},
-        {value: '1', label: '追溯码使用情况表'},
+        {value: '0', label: '追溯码使用情况表'},
       ],
       taskStatusList: [
         {value: '', label: '全部'},
