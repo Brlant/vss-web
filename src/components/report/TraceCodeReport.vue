@@ -459,6 +459,12 @@ export default {
     },
     "params.orgManufacturerCode": function (val) {
       this.search();
+    },
+    hasPov(val) {
+      if (val) {
+        this.params.orgAreaCode = this.currOrg.orgAreaCode;
+        this.params.orgManufacturerCode = this.currOrg.manufacturerCode;
+      }
     }
   },
   methods: {
@@ -501,6 +507,10 @@ export default {
         });
     },
     query() {
+      if (!this.searchEnable) {
+        return
+      }
+
       this.params.pageNo = 1;
       this.search();
     },
@@ -550,6 +560,10 @@ export default {
 
         if (this.injectionOrgs.length == 1) {
           this.params.orgManufacturerCode = this.injectionOrgs[0].manufacturerCode;
+        }
+
+        if (!this.params.orgManufacturerCode) {
+          this.query();
         }
       });
     },
@@ -620,7 +634,6 @@ export default {
         this.params.orgManufacturerCode = this.currOrg.manufacturerCode;
       }
       this.filterInjectionOrgs('');
-      this.search();
     })
   }
 }
