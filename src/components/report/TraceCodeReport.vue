@@ -290,7 +290,7 @@
 </template>
 
 <script>
-import {Vaccine} from '@/resources'
+import {BaseInfo, Vaccine} from '@/resources'
 import ReportMixin from '@/mixins/reportMixin'
 import utils from '@/tools/utils'
 
@@ -449,7 +449,8 @@ export default {
   watch: {
     purchasingStorageTimes(val) {
       if (!val) {
-        this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
+        // this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
+        this.purchasingStorageTimes = [];
       } else {
         this.query();
       }
@@ -547,14 +548,27 @@ export default {
           'POV-4',
           'POV-5',
           'POV-6',
-        ]
+        ],
+        pageNo: 1,
+        pageSize: 100
       };
 
       this.params.orgManufacturerCode = '';
-      this.$http.post('/queryOrgList', params).then(res => {
-        this.injectionOrgs = res.data.map(item => ({
+      BaseInfo.queryByOrgRelationTypeList(params).then(res => {
+        this.injectionOrgs = res.data.list.filter(item => {
+          let flag = true;
+          if (this.params.orgAreaCode) {
+            flag = item.orgAreaCode == this.params.orgAreaCode;
+          }
+          if (this.manufacturerCode) {
+            flag = flag && item.manufacturerCode == this.manufacturerCode;
+          }
+
+          return flag;
+        }).map(item => ({
           id: item.id,
           name: item.name,
+          orgAreaCode: item.orgAreaCode,
           manufacturerCode: item.manufacturerCode
         }));
 
@@ -624,7 +638,7 @@ export default {
       }
 
       // 这个会触发监听
-      this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
+      // this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
     },
   },
   mounted() {
