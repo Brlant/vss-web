@@ -448,8 +448,7 @@ export default {
   watch: {
     purchasingStorageTimes(val) {
       if (!val) {
-        // this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
-        this.purchasingStorageTimes = [];
+        this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
       } else {
         this.query();
       }
@@ -478,8 +477,8 @@ export default {
         this.params.purchasingStorageTime1 = this.$formatAryTime(this.purchasingStorageTimes, 0) + ' 00:00:00';
         this.params.purchasingStorageTime2 = this.$formatAryTime(this.purchasingStorageTimes, 1) + ' 23:59:59';
       } else {
-        this.params.createTime1 = '';
-        this.params.createTime2 = '';
+        this.params.purchasingStorageTime1 = '';
+        this.params.purchasingStorageTime2 = '';
       }
     },
     exportFile() {
@@ -637,7 +636,7 @@ export default {
       }
 
       // 这个会触发监听
-      // this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
+      this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
     },
   },
   mounted() {
