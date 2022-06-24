@@ -550,7 +550,7 @@ export default {
           'POV-6',
         ],
         pageNo: 1,
-        pageSize: 100
+        pageSize: 100000
       };
 
       this.params.orgManufacturerCode = '';
