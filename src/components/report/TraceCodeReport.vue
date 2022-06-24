@@ -61,7 +61,7 @@
             </el-col>
             <el-col :span="6">
               <oms-form-row :span="8" label="货主货品名称">
-                <el-select v-model="params.orgGoodsNumber"
+                <el-select v-model="params.orgGoodsId"
                            remote :remote-method="filterOrgGoods"
                            :clearable="orgGoods.length>0" filterable
                            placeholder="请输入名称/编号"
@@ -191,7 +191,7 @@
                   查询
                 </el-button>
                 <el-button @click="resetSearchForm">重置</el-button>
-                <perm label="wastage-report-export-vss" class="ml-15">
+                <perm label="trace-code-report-export" class="ml-15">
                   <el-button :disabled="isLoading" plain type="success" @click="exportFile">
                     导出Excel
                   </el-button>
@@ -215,10 +215,9 @@
         <el-table-column label="接种单位编码" prop="orgManufacturerCode" min-width="100"></el-table-column>
         <el-table-column label="接种单位名称" prop="orgName" min-width="150"></el-table-column>
         <el-table-column label="生产企业" prop="goodsFactoryName" min-width="120"></el-table-column>
-        <el-table-column label="产品编码" prop="orgGoodsNumber" min-width="100"></el-table-column>
-        <el-table-column label="产品名称" prop="orgGoodsName" min-width="100"></el-table-column>
+        <el-table-column label="产品编码" prop="goodsCode" min-width="100"></el-table-column>
+        <el-table-column label="产品名称" prop="goodsName" min-width="100"></el-table-column>
         <el-table-column label="采购入库单号" prop="orderNo" min-width="180"></el-table-column>
-
         <el-table-column label="销售出库单号" prop="orderThirdPartyNumber"
                          min-width="180"></el-table-column>
         <el-table-column label="批号" prop="batchNumber" min-width="100"></el-table-column>
@@ -313,7 +312,7 @@ export default {
         //  5)	追溯码：精确查询
         traceCode: '',
         //  6)	货主货品名称：模糊搜索、可多选。与接种单位联动。只可选择该接种单位下货品。
-        orgGoodsNumber: '',
+        orgGoodsId: '',
         //  7)	货品主档名称：模糊搜索、可多选。
         goodsCode: '',
         //  8)	是否接种完（单码可用人份数=已注射剂次）：下拉选择。枚举：全部/是/否，默认：全部
@@ -615,7 +614,7 @@ export default {
       //  5)	追溯码：精确查询
       this.params.traceCode = '';
       //  6)	货主货品名称：模糊搜索、可多选。与接种单位联动。只可选择该接种单位下货品。
-      this.params.orgGoodsNumber = '';
+      this.params.orgGoodsId = '';
       //  7)	货品主档名称：模糊搜索、可多选。
       this.params.goodsCode = '';
       //  8)	是否接种完（单码可用人份数=已注射剂次）：下拉选择。枚举：全部/是/否，默认：全部
