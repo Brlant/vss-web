@@ -214,7 +214,7 @@ export default {
         this.params.createTime2 = '';
       }
 
-      if (this.createTimes.length == 2){
+      if (this.completeTime2.length == 2){
         this.params.completeTime1 = this.$formatAryTime(this.completeTimes, 0) + ' 00:00:00';
         this.params.completeTime2 = this.$formatAryTime(this.completeTimes, 1) + ' 23:59:59';
       }else {
