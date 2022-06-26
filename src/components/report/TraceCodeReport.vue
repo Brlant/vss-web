@@ -421,6 +421,8 @@ export default {
       loadingData: false,
       totalCount: 0,
       injectionOrgs: [],//所有的接种单位
+      // 提取单位的代码，方便按代码获取单位的id
+      orgs:{}
     }
   },
   computed: {
@@ -454,15 +456,19 @@ export default {
       }
     },
     "params.orgAreaCode": function (val) {
+      if (!val) return;
       this.filterInjectionOrgs('');
     },
     "params.orgManufacturerCode": function (val) {
+      if (!val) return;
+      this.params.orgGoodsId = '';
       this.search();
     },
     hasPov(val) {
       if (val) {
         this.params.orgAreaCode = this.currOrg.orgAreaCode;
         this.params.orgManufacturerCode = this.currOrg.manufacturerCode;
+        this.orgs[this.currOrg.manufacturerCode] = this.currOrg
       }
     }
   },
@@ -570,6 +576,14 @@ export default {
           manufacturerCode: item.manufacturerCode
         }));
 
+        this.injectionOrgs.forEach(item=>{
+          this.orgs[item.manufacturerCode] = {
+            id: item.id,
+            name: item.name,
+            orgAreaCode: item.orgAreaCode,
+            manufacturerCode: item.manufacturerCode
+          };
+        })
         if (this.injectionOrgs.length == 1) {
           this.params.orgManufacturerCode = this.injectionOrgs[0].manufacturerCode;
         }
@@ -580,7 +594,8 @@ export default {
       });
     },
     filterOrgGoods(keyWord) {
-      Vaccine.query({keyWord, manufacturerCode: this.params.orgManufacturerCode}).then(res => {
+      const orgId = this.orgs[this.params.orgManufacturerCode].id;
+      Vaccine.query({keyWord, orgId}).then(res => {
         this.orgGoods = res.data.list;
       });
     },
