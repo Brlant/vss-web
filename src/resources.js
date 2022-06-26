@@ -6,8 +6,8 @@ import * as Sentry from '@sentry/browser';
 
 export const http = axios.create({
   baseURL: process.env.VUE_APP_API,
-  // 请求超时改成1分钟
-  timeout: 60 * 1000,
+  // 请求超时改成10秒
+  timeout: 10000,
   withCredentials: true
 });
 
