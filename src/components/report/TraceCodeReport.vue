@@ -69,7 +69,7 @@
                            @click.native.once="filterOrgGoods('')">
                   <el-option v-for="item in orgGoods" :key="item.orgGoodsDto.id"
                              :label="item.orgGoodsDto.name"
-                             :value="item.orgGoodsDto.goodsNo">
+                             :value="item.orgGoodsDto.id">
                     <div style="overflow: hidden">
                       <span class="pull-left">{{ item.orgGoodsDto.name }}<el-tag v-show="!item.orgGoodsDto.status"
                                                                                  style="float: none"
