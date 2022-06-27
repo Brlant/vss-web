@@ -358,9 +358,19 @@ export const route = [
         meta: {moduleId: 'report', title: '报表管理', icon: 'report', perm: 'report-form-manager'},
         children: [
           {
-            path: '/store/wastage/report/vss',
-            component: () => import('./components/store/wastage-report/wastage-report-vss'),
-            meta: {moduleId: 'store', title: '损耗报表', perm: 'wastage-report-vss'}
+            path: '/report/loss',
+            component: () => import('./components/report/LossReport'),
+            meta: {moduleId: 'report', title: '损耗报表', perm: 'wastage-report-vss'}
+          },
+          {
+            path: '/report/trace-code',
+            component: () => import('./components/report/TraceCodeReport'),
+            meta: {moduleId: 'report', title: '追溯码使用情况报表', perm: 'trace-code-report-vss'}
+          },
+          {
+            path: '/report/trace-code-download',
+            component: () => import('./components/report/TraceCodeDownload'),
+            meta: {moduleId: 'report', title: '我的下载', perm: 'trace-code-download-vss'}
           },
           {
             path: '/report/purchase',

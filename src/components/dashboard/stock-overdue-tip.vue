@@ -25,7 +25,7 @@
     <div v-if="!stockList.length" class="no-info">
       暂无效期疫苗
     </div>
-    <el-row v-for="(item, index) in stockList" v-else="" :key="item.id" :class="formatStockRowClass(item)" :gutter="15"
+    <el-row v-for="(item, index) in stockList" v-else :key="item.id" :class="formatStockRowClass(item)" :gutter="15"
             class="list-item"
             type="flex">
       <el-col :span="8" class="R">

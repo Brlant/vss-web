@@ -1,4 +1,4 @@
-<style scoped="">
+<style scoped>
 .oms-row {
   margin-bottom: 10px;
 }
@@ -8,7 +8,7 @@
     <div v-if="!currentOrder.id">
       <oms-loading :loading="!currentOrder.id"></oms-loading>
     </div>
-    <div v-else="" class="page-main-body padding">
+    <div v-else class="page-main-body padding">
 
       <el-row style="margin-bottom: 0">
         <oms-row :span="4" label="货主订单号">{{ currentOrder.orderNo }}</oms-row>

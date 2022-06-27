@@ -6,7 +6,8 @@ import * as Sentry from '@sentry/browser';
 
 export const http = axios.create({
   baseURL: process.env.VUE_APP_API,
-  timeout: 30000,
+  // 请求超时改成10秒
+  timeout: 10000,
   withCredentials: true
 });
 
@@ -78,6 +79,7 @@ http.interceptors.request.use(function (config) {
 });
 
 http.interceptors.response.use(response => {
+  // debugger
   if (isNewReturnType(response.data)) {
     switch (response.data.code) {
       case 200 :
@@ -106,11 +108,13 @@ http.interceptors.response.use(response => {
   let notice = window.localStorage.getItem(noticeTipKey);
   let response = error.response;
 
+  // debugger
   if (notice === '1' && response && response.status !== 401) {
     return Promise.reject(error);
   } else {
     window.localStorage.setItem(noticeTipKey, '1');
   }
+
   if (!response || response.status === 500) {
     Notification.warning({
       message: '服务器太久没有响应, 请重试',

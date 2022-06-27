@@ -120,15 +120,15 @@ $leftWidth: 200px;
         <h3>{{ currentPartName }}</h3>
         <el-form ref="orderAddForm" :model="form" :rules="rules" label-width="100px" onsubmit="return false"
                  @submit.prevent="saveOrder">
-          <el-form-item v-if="isthisBreakage" label="损耗原因" prop="breakageReason">
-            <oms-input v-model="form.breakageReason" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入损耗原因"
+          <el-form-item label="损耗原因" prop="breakageReason">
+            <oms-input v-if="selfLoss" v-model="form.breakageReason" :autosize="{ minRows: 2, maxRows: 5}"
+                       placeholder="请输入损耗原因"
                        type="textarea"></oms-input>
-          </el-form-item>
-          <el-form-item v-if="!isthisBreakage" label="损耗原因" prop="breakageReason">
-            <el-select v-model="form.breakageReason" placeholder="请选择损耗原因" type="text">
+            <el-select v-else v-model="form.breakageReason" placeholder="请选择损耗原因" type="text">
               <el-option v-for="item in breakageReasons" :key="item.key" :label="item.label"
                          :value="item.label"></el-option>
             </el-select>
+
           </el-form-item>
           <el-form-item label="附件" required>
             <oms-upload :fileList="attachmentList" accept="picture"
@@ -365,7 +365,7 @@ export default {
     breakageReasons() { // 损耗原因
       return this.$getDict('breakageReason');
     },
-    isthisBreakage() { // pov自行损耗
+    selfLoss() { // pov自行损耗
       return this.form.customerChannel !== '1';
     },
     isEntrustWarehouse() {

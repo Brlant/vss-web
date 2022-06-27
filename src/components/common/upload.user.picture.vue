@@ -15,7 +15,7 @@
       name="file"
     >
       <img v-if="imageUrl" slot="trigger" :src="imageUrl" class="avatar-user">
-      <img v-else="" slot="trigger" class="avatar-user" src="/static/img/logo_user_default.png">
+      <img v-else slot="trigger" class="avatar-user" src="/static/img/logo_user_default.png">
     </oms-el-upload>
   </div>
 </template>
@@ -136,4 +136,3 @@ export default {
   }
 };
 </script>
-

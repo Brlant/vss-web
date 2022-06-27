@@ -2,7 +2,7 @@
   <div v-if="loadingData">
     <oms-loading :loading="loadingData"></oms-loading>
   </div>
-  <div v-else="">
+  <div v-else>
     <attachment-show :attachmentRight="attachmentRight" :currentOrder="currentOrder" :orderAttachment="attachmentList"
                      label="报损附件" objectType="breakageOrder"
                      @refreshAttachment="queryAttachmentList"></attachment-show>

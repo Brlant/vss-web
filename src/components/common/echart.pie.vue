@@ -1,4 +1,4 @@
-<style scoped="">
+<style scoped>
 .echarts2 {
   height: 100px;
   width: 100px;

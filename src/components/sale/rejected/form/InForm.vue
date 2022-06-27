@@ -316,7 +316,7 @@ $leftWidth: 220px;
                 <td>
                   <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
                   <span v-else-if="product.fixInfo">{{ product.fixInfo.goodsDto.specifications }}</span>
-                  <span v-else="">{{ product.specifications }}</span>
+                  <span v-else>{{ product.specifications }}</span>
                 </td>
                 <td>
                   {{ product.batchNumber ? product.batchNumber : '无' }}

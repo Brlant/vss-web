@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 @import "../assets/login.scss";
 
 .el-icon-t-wx_icon {

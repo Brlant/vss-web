@@ -208,7 +208,7 @@
           <div v-if="!currentItem.id">
             <div class="empty-info">暂无信息</div>
           </div>
-          <div v-else="" :style="'height:'+bodyHeight   + 'px'" class="d-table-col-wrap">
+          <div v-else :style="'height:'+bodyHeight   + 'px'" class="d-table-col-wrap">
             <div class="content-body clearfix">
               <el-row>
                 <el-col :span="15">

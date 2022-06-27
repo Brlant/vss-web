@@ -1,4 +1,4 @@
-<style lang="scss" scoped="">
+<style lang="scss" scoped>
 
 .oms-row {
   margin-bottom: 8px;
@@ -17,7 +17,7 @@
     <div v-if="!currentOrder.id">
       <oms-loading :loading="!currentOrder.id"></oms-loading>
     </div>
-    <div v-else="" class="page-main-body padding">
+    <div v-else class="page-main-body padding">
       <div>
         <el-row v-show=" currentOrder.bizType !== '2-2' " style="margin-bottom:0;position: relative">
           <el-col :span="12">

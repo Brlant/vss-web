@@ -14,7 +14,7 @@
             <div class="empty-type-info mini">暂无信息</div>
           </el-col>
         </el-row>
-        <div v-else="" class="order-list-body">
+        <div v-else class="order-list-body">
           <div v-for="item in logList" class="order-list-item order-list-item-bg flex-list-dom"
                style="margin-left: 0;margin-right: 0">
             <el-row>

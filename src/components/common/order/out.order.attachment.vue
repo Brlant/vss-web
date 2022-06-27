@@ -2,7 +2,7 @@
   <div v-if="loadingData">
     <oms-loading :loading="loadingData"></oms-loading>
   </div>
-  <div v-else="">
+  <div v-else>
     <attachment-show :attachmentRight="attachmentRight" :currentOrder="currentOrder" :orderAttachment="accessory.followDocuments"
                      label="随货同行单" objectType="followDocument"
                      @refreshAttachment="queryAttachmentList"></attachment-show>
