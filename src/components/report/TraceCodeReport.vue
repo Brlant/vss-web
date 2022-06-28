@@ -185,18 +185,16 @@
                 </el-date-picker>
               </oms-form-row>
             </el-col>
-            <el-col :span="6">
-              <oms-form-row :span="8" label="">
-                <el-button :disabled="loadingData" type="primary" @click="query">
-                  查询
+            <el-col :span="12" :offset="2">
+              <el-button :disabled="loadingData" type="primary" @click="query">
+                查询
+              </el-button>
+              <el-button @click="resetSearchForm">重置</el-button>
+              <perm label="trace-code-report-export" class="ml-15">
+                <el-button :disabled="isLoading" plain type="success" @click="exportFile">
+                  导出Excel
                 </el-button>
-                <el-button @click="resetSearchForm">重置</el-button>
-                <perm label="trace-code-report-export" class="ml-15">
-                  <el-button :disabled="isLoading" plain type="success" @click="exportFile">
-                    导出Excel
-                  </el-button>
-                </perm>
-              </oms-form-row>
+              </perm>
             </el-col>
           </el-row>
         </el-form>
@@ -337,7 +335,7 @@ export default {
       list: [],
       minDate: '',
       pickerOptions: {
-        onPick: ({maxDate, minDate}) => {
+        onPick: ({ minDate}) => {
           this.minDate = minDate;
         },
         disabledDate: (date) => {
@@ -530,7 +528,7 @@ export default {
           this.loadingData = false;
           this.setFixedHeight();
         })
-        .catch(err => {
+        .catch(() => {
           this.list = [];
           this.totalCount = 0;
           this.loadingData = false;
