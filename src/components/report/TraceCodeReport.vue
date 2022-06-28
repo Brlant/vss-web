@@ -185,7 +185,7 @@
                 </el-date-picker>
               </oms-form-row>
             </el-col>
-            <el-col :span="12" :offset="2">
+            <el-col :span="16" :offset="2">
               <el-button :disabled="loadingData" type="primary" @click="query">
                 查询
               </el-button>
@@ -335,7 +335,7 @@ export default {
       list: [],
       minDate: '',
       pickerOptions: {
-        onPick: ({ minDate}) => {
+        onPick: ({minDate}) => {
           this.minDate = minDate;
         },
         disabledDate: (date) => {
@@ -420,7 +420,7 @@ export default {
       totalCount: 0,
       injectionOrgs: [],//所有的接种单位
       // 提取单位的代码，方便按代码获取单位的id
-      orgs:{}
+      orgs: {}
     }
   },
   computed: {
@@ -574,7 +574,7 @@ export default {
           manufacturerCode: item.manufacturerCode
         }));
 
-        this.injectionOrgs.forEach(item=>{
+        this.injectionOrgs.forEach(item => {
           this.orgs[item.manufacturerCode] = {
             id: item.id,
             name: item.name,
