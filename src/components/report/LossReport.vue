@@ -48,7 +48,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row :span="6" label="追溯码">
+              <oms-form-row :span="6" label="追溯码" placeholder="请输入追溯码">
                 <oms-input v-model="params.code"></oms-input>
               </oms-form-row>
             </el-col>
@@ -120,6 +120,7 @@
           </template>
         </el-table-column>
         <el-table-column :sortable="true" label="生产厂家" prop="factoryName"></el-table-column>
+        <el-table-column :sortable="true" label="损耗原因" prop="wastageReason"></el-table-column>
         <el-table-column :sortable="true" label="状态" prop="status" align="center">
           <template v-slot="{row}">
             <el-tag :type="getTagTypeByStatus(row.status)">{{ getOrderStatus(row.status) }}</el-tag>
@@ -279,11 +280,10 @@ export default {
       return sums;
     },
     resetSearchForm() {
-      let _this = this
-      _this.params = {};
-      _this.createTimes = [];
-      _this.totalCount = 0;
-      _this.search();
+      this.params = {};
+      this.createTimes = [];
+      this.totalCount = 0;
+      this.search();
     }
   },
   mounted() {

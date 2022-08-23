@@ -429,7 +429,6 @@ export default {
       if (this.hasPov) {
         return acs.filter(item => item.value === this.currOrg.orgAreaCode);
       }
-
       return acs;
     },
     currOrg() {

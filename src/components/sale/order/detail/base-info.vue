@@ -103,6 +103,24 @@
             <oms-input v-model="currentOrder.logisticsProviderName" placeholder="请输入物流商"></oms-input>
           </el-form-item>
           <material-part v-if="vaccineType === '1'" @changeRemark="changeRemark"></material-part>
+          <el-row>
+            <el-form-item  label="物料列表" >
+              <el-table
+                stripe :data="currentOrder.materialList"
+                border class="header-list" width="100%" >
+                <el-table-column label="名称" align="center">
+                  <template slot-scope="scope">
+                    <span>{{scope.row.name}}</span>
+                  </template>
+                </el-table-column>
+                <el-table-column label="数量" align="center" >
+                  <template slot-scope="scope">
+                    <span>{{scope.row.number}}</span>
+                  </template>
+                </el-table-column>
+              </el-table>
+            </el-form-item>
+          </el-row>
           <el-form-item class="clearfix" label="备注">
             <oms-input v-model="currentOrder.remark" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
                        type="textarea"></oms-input>
