@@ -184,7 +184,33 @@ $leftWidth: 240px;
                 value-format="timestamp">
               </el-date-picker>
             </el-form-item>
-            <material-part v-if="vaccineType === '1'" @changeRemark="changeRemark"></material-part>
+            <el-row>
+              <material-part v-if="vaccineType === '1'" @changeRemark="changeRemark"></material-part>
+            </el-row>
+            <el-row>
+              <el-form-item  label="物料列表" >
+                <el-table
+                  stripe :data="form.materialList"
+                  border class="header-list" width="100%" >
+                  <el-table-column label="名称" align="center">
+                    <template slot-scope="scope">
+                      <span>{{scope.row.name}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column label="数量" align="center" >
+                    <template slot-scope="scope">
+                      <span>{{scope.row.number}}</span>
+                    </template>
+                  </el-table-column>
+                  <el-table-column align="center">
+                    <template slot-scope="scope" >
+                      <el-tag  @click.prevent="delData(scope.row)" type="success" size="small" style="cursor:pointer">移除</el-tag>
+                    </template>
+                  </el-table-column>
+                </el-table>
+              </el-form-item>
+            </el-row>
+
             <el-form-item class="clearfix" label="备注">
               <oms-input v-model="form.remark" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
                          type="textarea"></oms-input>
@@ -403,6 +429,7 @@ export default {
       }
     };
     return {
+      // materialList:[],//物料列表
       loading: false,
       idNotify: true,
       product: {
@@ -436,6 +463,7 @@ export default {
         orgAddress: '',
         sameBatchNumber: false,
         actualConsignee: '',
+        materialList:[],//物料列表
         'consigneePhone': '',
         'thirdPartyNumber': '',
         'expectedTime': '',
@@ -623,6 +651,7 @@ export default {
       this.$refs['orderAddForm'].resetFields();
       this.$refs['orderGoodsAddForm'].resetFields();
       this.form.actualConsignee = '';
+      this.form.materialList=[],//物料列表
       this.form.consigneePhone = '';
       this.form.logisticsProviderName = '';
       this.form.remark = '';
@@ -636,6 +665,7 @@ export default {
     editOrderInfo() {
       if (!this.orderId) return;
       InWork.queryOrderDetail(this.orderId).then(res => {
+        console.log(res.data)
 //          this.currentOrder = res.data;
         this.resetForm();
         // 2.0变化
@@ -671,13 +701,64 @@ export default {
         });
       });
     },
+    /**
+     * @description 添加物料列表
+     * @param form.count
+     * @param form.name
+     * @return materialList
+     * **/
     changeRemark(form) {
-      if (!this.form.remark) {
-        this.form.remark = form.count + form.name;
-      } else {
-        this.form.remark += '，' + form.count + form.name;
+      if(this.form.materialList.length > 0){
+        let exist = false; //判断是否存在
+        this.form.materialList.map((item,index)=>{
+          if(item.name == form.name){
+            exist = true
+            this.$confirm('请勿重复添加物料信息', '', {
+              confirmButtonText: '确定',
+              showCancelButton: false,
+              type: 'warning'
+            })
+          }
+        })
+        if(!exist){
+          this.form.materialList.push({
+            name: form.name,
+            number:form.count,
+          })
+        }
+      }else{
+        this.form.materialList.push({
+          name: form.name,
+          number:form.count,
+        })
       }
+      console.log('列表',this.form.materialList)
+      // if (!this.form.remark) {
+      //   this.form.remark = form.count + form.name;
+      // } else {
+      //   this.form.remark += '，' + form.count + form.name;
+      // }
     },
+    moduleList(){
+
+    },
+    /**
+     * @description 删除物料列表
+     * @param form.count
+     * @param form.name
+     * @return materialList
+     * **/
+    delData(row){
+      this.$confirm('是否删除物料 "' + row.name + '"?','', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(res=>{
+        console.log(row.name)
+        this.form.materialList.splice(this.form.materialList.indexOf(row.name), 1)
+      })
+    },
+
     changeNumber() {
       this.product.amount = this.changeTotalNumber(this.product.amount, this.product.fixInfo.goodsDto.smallPacking);
     },

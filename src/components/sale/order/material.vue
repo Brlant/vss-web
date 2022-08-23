@@ -14,18 +14,18 @@
 </style>
 <template>
   <div class="material">
-    <el-form-item class="pull-left" label="物料数量">
-      <oms-input v-model.number="form.count" :min="0" size="mini" type="number">
-        <el-select slot="append" v-model="form.name" :remoteMethod="queryMaterials" clearable filterable placeholder="请输入名称搜索物料"
-                   remote>
-          <el-option v-for="item in materials" :key="item.id" :label="item.name" :value="item.name">
-          </el-option>
-        </el-select>
-      </oms-input>
-    </el-form-item>
-    <el-form-item class="pull-left" label-width="20px">
-      <el-button type="primary" @click="add">加入备注</el-button>
-    </el-form-item>
+      <el-form-item class="pull-left" label="物料数量">
+        <oms-input v-model.number="form.count" :min="0" size="mini" type="number">
+          <el-select slot="append" v-model="form.name" :remoteMethod="queryMaterials" clearable filterable placeholder="请输入名称搜索物料"
+                     remote>
+            <el-option v-for="item in materials" :key="item.id" :label="item.name" :value="item.name">
+            </el-option>
+          </el-select>
+        </oms-input>
+      </el-form-item>
+      <el-form-item class="pull-left" label-width="20px">
+        <el-button type="primary" @click="add">加入物料列表</el-button>
+      </el-form-item>
   </div>
 </template>
 <script>
@@ -43,7 +43,12 @@ export default {
         count: '',
         materialUnit: ''
       },
-      materials: []
+      materials: [],
+
+      tableData: [],
+      rowName: '',
+      rowNum: '',
+      idNum: 0
     };
   },
   computed: {
@@ -80,6 +85,7 @@ export default {
       }
     },
     add() {
+
       if (!this.form.count) {
         this.$notify.info({
           message: '请输入物料数量'
