@@ -147,6 +147,7 @@ export default {
   methods: {
     resetRightBox: function () {
       this.showPart = false;
+      this.form = {}
     },
     getMaPage(pageNo) { // 得到波次列表
       this.pager.currentPage = pageNo;

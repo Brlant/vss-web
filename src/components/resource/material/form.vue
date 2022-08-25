@@ -108,6 +108,9 @@ $leftWidth: 220px;
             <el-form-item label="物料名称" prop="name">
               <oms-input v-model="form.name" placeholder="请输入物料名称"></oms-input>
             </el-form-item>
+            <el-form-item label="物料编码" prop="materialCode">
+              <oms-input v-model="form.materialCode" placeholder="请输入物料编码"></oms-input>
+            </el-form-item>
             <el-form-item label="选择物料描述" prop="parameters">
               <oms-input v-model="form.parameters" placeholder="请输入物料描述"></oms-input>
             </el-form-item>
@@ -125,28 +128,46 @@ export default {
     formItem: Object
   },
   data() {
+    let checkMaterialCode = (rule, value, callback) => {
+      if (value === '') {
+        callback();
+      } else {
+        let re = /^\d*$/;
+        if (!re.test(value) || value.length > 35) {
+          callback(new Error('请输入正确的物料编码(只能为数字并且最大不能超过35位)'));
+        } else {
+          callback();
+        }
+      }
+    };
     return {
       form: {
         name: '',
-        parameters: ''
+        parameters: '',
+        materialCode:''
       },
       rules: {
         name: {required: true, message: '请输入物料名称', trigger: 'blur'},
-        parameters: {required: true, message: '请输入物料描述', trigger: 'blur'}
+        parameters: {required: true, message: '请输入物料描述', trigger: 'blur'},
+        materialCode: [
+          {required: true, message: '请输入物料编码', trigger: 'blur'},
+          {validator: checkMaterialCode, trigger: 'blur'}
+        ]
       },
       doing: false,
       title: '添加物料'
     };
   },
   watch: {
-    formItem(val) {
+    formItem:function (val) {
       if (val.id) {
-        Object.assign(this.form, val);
         this.title = '编辑物料';
+        this.form = Object.assign(this.form, val);
       } else {
         this.form = {
           name: '',
-          parameters: ''
+          parameters: '',
+          materialCode: '',
         };
         this.title = '添加物料';
       }
@@ -170,7 +191,7 @@ export default {
           }).catch(error => {
             this.doing = false;
             this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '编辑物料失败'
+              message: error.response.data ||  '编辑物料失败'
             });
           });
         } else {
@@ -181,10 +202,12 @@ export default {
             this.doing = false;
             this.$refs['d-form'].resetFields();
             this.$emit('refresh');
+
           }).catch(error => {
+            console.log(error)
             this.doing = false;
             this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '添加物料失败'
+              message:error.response.data || '添加物料失败'
             });
           });
         }

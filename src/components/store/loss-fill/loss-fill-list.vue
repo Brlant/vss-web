@@ -59,6 +59,11 @@
                 </el-col>
               </oms-form-row>
             </el-col>
+            <el-col :span="8">
+              <oms-form-row :span="6" label="追溯码">
+                <oms-input  placeholder="请输入追溯码" type="text" v-model="params.code"></oms-input>
+              </oms-form-row>
+            </el-col>
           </el-row>
           <el-row>
             <el-col :span="8">
@@ -209,6 +214,7 @@ export default {
         transportationMeansId: '',
         transactOrgId: '',
         orgGoodsId: '',
+        code:'',//追溯码
         orgAreaCode: '',
         thirdPartyNumber: '',
         expectedStartTime: '',
@@ -282,6 +288,7 @@ export default {
       // this.params = {};
       this.params.orderNo='';
       this.params.orgGoodsId='';
+      this.params.code='';
       this.params.createStartTime = '';
       this.params.createEndTime = '';
       this.createdTimes = [];
