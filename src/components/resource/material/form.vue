@@ -191,7 +191,7 @@ export default {
           }).catch(error => {
             this.doing = false;
             this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '编辑物料失败'
+              message: error.response.data ||  '编辑物料失败'
             });
           });
         } else {
@@ -202,10 +202,12 @@ export default {
             this.doing = false;
             this.$refs['d-form'].resetFields();
             this.$emit('refresh');
+
           }).catch(error => {
+            console.log(error)
             this.doing = false;
             this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '添加物料失败'
+              message:error.response.data || '添加物料失败'
             });
           });
         }
