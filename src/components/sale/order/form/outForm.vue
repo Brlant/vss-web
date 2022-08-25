@@ -204,7 +204,7 @@ $leftWidth: 240px;
                   </el-table-column>
                   <el-table-column align="center">
                     <template slot-scope="scope" >
-                      <el-tag  @click.prevent="delData(scope.row)" type="success" size="small" style="cursor:pointer">移除</el-tag>
+                      <el-tag  @click.prevent="delData(scope.$index,scope.row)" type="success" size="small" style="cursor:pointer">移除</el-tag>
                     </template>
                   </el-table-column>
                 </el-table>
@@ -742,7 +742,7 @@ export default {
      * @param form.name
      * @return materialList
      * **/
-    delData(row){
+    delData(col,row){
       this.$confirm('是否删除物料 "' + row.name + '"?','', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -751,7 +751,8 @@ export default {
         let itemForm = this.form.materialList
         itemForm.forEach((item)=>{
           if(item.name === row.name){
-            this.form.materialList.splice(this.form.materialList.indexOf(row.name), 1)
+            console.log(col)
+            this.form.materialList.splice(col, 1)
           }
         })
       })
