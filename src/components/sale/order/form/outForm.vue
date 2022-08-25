@@ -188,7 +188,7 @@ $leftWidth: 240px;
               <material-part v-if="vaccineType === '1'" @changeRemark="changeRemark"></material-part>
             </el-row>
             <el-row>
-              <el-form-item  label="物料列表" >
+              <el-form-item  label="物料列表"  v-if="vaccineType === '1'">
                 <el-table
                   stripe :data="form.materialList"
                   border class="header-list" width="100%" >
