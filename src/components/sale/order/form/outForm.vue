@@ -732,12 +732,6 @@ export default {
           number:form.count,
         })
       }
-      console.log('列表',this.form.materialList)
-      // if (!this.form.remark) {
-      //   this.form.remark = form.count + form.name;
-      // } else {
-      //   this.form.remark += '，' + form.count + form.name;
-      // }
     },
     moduleList(){
 
@@ -754,8 +748,12 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(res=>{
-        console.log(row.name)
-        this.form.materialList.splice(this.form.materialList.indexOf(row.name), 1)
+        let itemForm = this.form.materialList
+        itemForm.forEach((item)=>{
+          if(item.name === row.name){
+            this.form.materialList.splice(this.form.materialList.indexOf(row.name), 1)
+          }
+        })
       })
     },
 
