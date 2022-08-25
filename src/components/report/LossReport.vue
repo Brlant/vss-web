@@ -120,7 +120,7 @@
           </template>
         </el-table-column>
         <el-table-column :sortable="true" label="生产厂家" prop="factoryName"></el-table-column>
-        <el-table-column :sortable="true" label="损耗原因" prop="wastageReason"></el-table-column>
+        <el-table-column :sortable="true" label="损耗原因" prop="breakageReason"></el-table-column>
         <el-table-column :sortable="true" label="状态" prop="status" align="center">
           <template v-slot="{row}">
             <el-tag :type="getTagTypeByStatus(row.status)">{{ getOrderStatus(row.status) }}</el-tag>

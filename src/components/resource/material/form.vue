@@ -159,10 +159,10 @@ export default {
     };
   },
   watch: {
-    formItem(val) {
+    formItem:function (val) {
       if (val.id) {
-        Object.assign(this.form, val);
         this.title = '编辑物料';
+        this.form = Object.assign(this.form, val);
       } else {
         this.form = {
           name: '',
