@@ -732,6 +732,11 @@ export default {
           number:form.count,
         })
       }
+      if (!this.form.remark) {
+        this.form.remark = form.count + form.name;
+        } else {
+        this.form.remark += '，' + form.count + form.name;
+      }
     },
     moduleList(){
 
