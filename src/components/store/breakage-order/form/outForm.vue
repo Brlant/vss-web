@@ -178,17 +178,17 @@ $leftWidth: 200px;
                               format="yyyy-MM-dd" placeholder="请选择预计送货时间" value-format="timestamp">
               </el-date-picker>
             </el-form-item>
-            <el-form-item v-if="isSelfBreakage" label="报损原因" prop="remark">
-              <oms-input v-model="form.remark" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
-                         type="textarea"></oms-input>
-            </el-form-item>
-            <el-form-item v-if="!isSelfBreakage" label="报损原因" prop="remark">
+<!--            <el-form-item v-if="isSelfBreakage" label="报损原因" prop="remark">-->
+<!--              <oms-input v-model="form.remark" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"-->
+<!--                         type="textarea"></oms-input>-->
+<!--            </el-form-item>-->
+            <el-form-item  label="报损原因" prop="remark">
               <el-select v-model="form.remark" placeholder="请选择报损原因" type="text">
                 <el-option v-for="item in breakageReason" :key="item.key" :label="item.label"
-                           :value="item.label"></el-option>
+                           :value="item.key"></el-option>
               </el-select>
             </el-form-item>
-            <el-form-item v-if="!isSelfBreakage" label="备注">
+            <el-form-item  label="备注">
               <oms-input v-model="form.breakageReason" :autosize="{ minRows: 2, maxRows: 5}" placeholder="请输入备注信息"
                          type="textarea"></oms-input>
             </el-form-item>
@@ -571,7 +571,7 @@ export default {
       return this.$store.state.breakageOrgType;
     },
     breakageReason() { // 报损原因
-      return this.$getDict('breakageReason');
+      return this.$getDict('exWarehouseReason');
     },
     breakageType() { // 报损方式
       return this.$getDict('breakageType');
