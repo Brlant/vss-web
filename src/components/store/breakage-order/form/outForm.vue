@@ -183,7 +183,7 @@ $leftWidth: 200px;
 <!--                         type="textarea"></oms-input>-->
 <!--            </el-form-item>-->
             <el-form-item  label="报损原因" prop="remark">
-              <el-select v-model="form.remark" placeholder="请选择报损原因" type="text">
+              <el-select v-model="form.remark" placeholder="请选择报损原因" clearable filterable>
                 <el-option v-for="item in breakageReason" :key="item.key" :label="item.label"
                            :value="item.key"></el-option>
               </el-select>
@@ -487,7 +487,7 @@ export default {
           {required: true, message: '请选择报损方式', trigger: 'change'}
         ],
         remark: [
-          {required: true, message: '请输入报损原因', trigger: ['change', 'blur']}
+          {required: true, message: '请输入报损原因', trigger: 'change'}
         ]
       },
       orderGoodsRules: {
