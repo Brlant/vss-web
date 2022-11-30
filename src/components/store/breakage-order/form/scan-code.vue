@@ -82,6 +82,7 @@ $leftWidth: 0;
       <el-row class="mt-10">
         <el-button :disable="doing" :loading="doing" type="primary" @click="submit">{{!doing ? '复核追溯码' : '正在复核'}}
         </el-button>
+        <el-button type="primary" @click="batchRemove" plain>批量移除追溯码</el-button>
       </el-row>
     </div>
   </div>
@@ -136,6 +137,27 @@ export default {
           message: error.response && error.response.data && error.response.data.msg || '复核不通过'
         });
       });
+    },
+    /**
+     * 批量移除追溯码
+     * **/
+    batchRemove(){
+      let codeList = this.form.number.split(/[\n,\s，]/g).filter(i => i);
+      if(codeList.length){
+        this.$confirm("确认要全部清空?", "提示", {type: "warning"})
+          .then(async () => {
+            this.form.number = ''
+          })
+      }else {
+        this.$notify.info({
+          title: '提示',
+          message: '暂无追溯码数据',
+          duration: '2000',
+          onClose: function () {
+
+          }
+        });
+      }
     },
     reviewPass() {
       if (this.doing) return;
