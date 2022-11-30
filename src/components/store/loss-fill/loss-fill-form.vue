@@ -196,6 +196,21 @@ $leftWidth: 200px;
                   {{ row.expirationDate | date }}
                 </template>
               </el-table-column>
+              <!--请选择损耗时间-->
+              <el-table-column label="损耗时间" align="center" width="235px">
+                <template v-slot="{ row}">
+                  <el-form-item
+                    style="margin:30px 0"
+                    :rules="[{ required: true, message: '请选择损耗时间' }]">
+                    <el-date-picker
+                      format="yyyy-MM-dd HH:mm:ss"
+                      value-format="timestamp"
+                      type="datetime"
+                      v-model="row.breakageTime"
+                      placeholder="请选择损耗时间"/>
+                  </el-form-item>
+                </template>
+              </el-table-column>
               <el-table-column label="损耗人份" prop="amount" fixed="right" align="center">
                 <template v-slot="{ row, $index }">
                   <el-form-item
@@ -468,6 +483,7 @@ export default {
       this.form.breakageReason = data.breakageReason;
       console.info(data.detailDtoList);
       this.form.detailDtoList = data.detailDtoList.map(ddl => ({
+        "breakageTime":ddl.breakageTime,//损耗时间
         "amount": ddl.amount, //损耗人份数量
         "wastage": ddl.wastage, //损耗人份数量
         "orgGoodsId": ddl.orgGoodsId, //货主货品id
