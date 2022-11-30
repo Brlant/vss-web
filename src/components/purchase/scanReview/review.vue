@@ -33,6 +33,7 @@ $leftWidth: 0;
           <el-form-item>
             <el-button :disabled="doing" type="primary" @click="onSubmit">提交追溯码信息</el-button>
             <el-button :disabled="doing" type="success" @click="passReview">通过复核</el-button>
+            <el-button type="primary"  plain @click="batchRemove">批量移除追溯码</el-button>
           </el-form-item>
         </el-form>
         <div v-show="codeInfoList && codeInfoList.length" class="code-table-warp">
@@ -114,6 +115,27 @@ export default {
           message: error.response && error.response.data && error.response.data.msg || '复核失败'
         });
       });
+    },
+    /**
+     * 批量移除追溯码
+     * **/
+    batchRemove(){
+      let codeList = this.form.codeStr.split(/[\n,\s，]/g).filter(f => f);
+      if(codeList.length){
+        this.$confirm("确认要全部清空?", "提示", {type: "warning"})
+          .then(async () => {
+            this.form.codeStr = ''
+          })
+      }else {
+        this.$notify.info({
+          title: '提示',
+          message: '暂无追溯码数据',
+          duration: '2000',
+          onClose: function () {
+
+          }
+        });
+      }
     },
     deleteItem(item) {
       this.$http.delete(`/review-code/${item.logId}`).then(res => {
