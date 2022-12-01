@@ -176,6 +176,11 @@ $leftWidth: 220px;
                     {{ row.expirationDate | date }}
                   </template>
                 </el-table-column>
+                <el-table-column label="损耗时间">
+                  <template v-slot="{ row, $index }">
+                    {{ row.breakageTime | time }}
+                  </template>
+                </el-table-column>
                 <el-table-column label="损耗人份" prop="amount"/>
               </el-table>
               <div class="total-wastage">
@@ -306,6 +311,7 @@ export default {
         state: data.erpStatus,
         // detailDtoList需要做一个转换
         detailDtoList: data.detailDtoList.map(ddl => ({
+          "breakageTime":ddl.breakageTime,//损耗时间
           "amount": ddl.amount, //损耗人份数量
           "wastage": ddl.wastage, //损耗人份数量
           "orgGoodsId": ddl.orgGoodsId, //货主货品id
@@ -327,9 +333,7 @@ export default {
     queryAttachmentList: function () {// 附件管理
       if (!this.currentOrder.id) return;
       OmsAttachment.queryOneAttachmentList(this.currentOrder.id, 'erpOrderFile').then(res => {
-        console.info(res)
         this.attachmentList = res.data;
-
       });
     },
     changeFiles: function (fileList) {
