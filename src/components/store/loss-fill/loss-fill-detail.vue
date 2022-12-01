@@ -333,9 +333,7 @@ export default {
     queryAttachmentList: function () {// 附件管理
       if (!this.currentOrder.id) return;
       OmsAttachment.queryOneAttachmentList(this.currentOrder.id, 'erpOrderFile').then(res => {
-        console.info(res)
         this.attachmentList = res.data;
-
       });
     },
     changeFiles: function (fileList) {
