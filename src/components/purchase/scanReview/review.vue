@@ -33,7 +33,7 @@ $leftWidth: 0;
           <el-form-item>
             <el-button :disabled="doing" type="primary" @click="onSubmit">提交追溯码信息</el-button>
             <el-button :disabled="doing" type="success" @click="passReview">通过复核</el-button>
-            <el-button type="primary"  plain @click="batchRemove">批量移除追溯码</el-button>
+<!--            <el-button type="primary"  plain @click="batchRemove">批量移除追溯码</el-button>-->
           </el-form-item>
         </el-form>
         <div v-show="codeInfoList && codeInfoList.length" class="code-table-warp">
