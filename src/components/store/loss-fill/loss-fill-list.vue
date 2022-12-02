@@ -249,7 +249,6 @@ export default {
   },
   methods: {
     handleSizeChange(val) {
-      console.log('==================',val)
       this.params.pageNo = val;
       this.getMaPage(1);
     },
