@@ -198,9 +198,10 @@ $leftWidth: 200px;
               </el-table-column>
               <!--请选择损耗时间-->
               <el-table-column label="损耗时间" align="center" width="235px">
-                <template v-slot="{ row}">
+                <template v-slot="{ row, $index }">
                   <el-form-item
                     style="margin:30px 0"
+                    :prop="`detailDtoList.${$index}.breakageTime`"
                     :rules="[{ required: true, message: '请选择损耗时间' }]">
                     <el-date-picker
                       format="yyyy-MM-dd HH:mm:ss"
