@@ -82,7 +82,7 @@ $leftWidth: 0;
       <el-row class="mt-10">
         <el-button :disable="doing" :loading="doing" type="primary" @click="submit">{{!doing ? '复核追溯码' : '正在复核'}}
         </el-button>
-<!--        <el-button type="primary" @click="batchRemove" plain>批量移除追溯码</el-button>-->
+        <el-button type="primary" @click="batchRemove" plain>批量移除追溯码</el-button>
       </el-row>
     </div>
   </div>
