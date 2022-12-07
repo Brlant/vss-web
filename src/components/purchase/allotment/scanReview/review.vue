@@ -124,7 +124,7 @@ export default {
       if(codeList.length){
         this.$confirm("确认要全部清空?", "提示", {type: "warning"})
           .then(async () => {
-            this.form.number = ''
+            this.form.codeStr = ''
           })
       }else {
         this.$notify.info({
