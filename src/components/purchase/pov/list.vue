@@ -270,7 +270,7 @@
     </page-right>
     <page-right :css="{'width':'1000px','padding':0}" :show="showEditPart" @right-close="closeForm">
       <edit-form :currentItem="currentItem" :showEditPart="showEditPart" @change="resetRightBox"
-                 @close="closeForm"></edit-form>
+                 @close="resetRightBox"></edit-form>
     </page-right>
   </div>
 </template>
