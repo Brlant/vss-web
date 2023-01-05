@@ -34,7 +34,7 @@ const targets = {
   ldw2: 'http://vss-ldm.vaiwan.com',
   hw: 'https://hw-test-vss.cdcerp.cn',
   sh: 'https://sh-vss.cdcerp.cn',
-  xl: 'http://192.168.5.65:8081'
+  xl: 'http://192.168.5.58:8081'
 };
 
 module.exports = {
@@ -46,7 +46,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: targets.sh,
+        target: targets.xl,
         changOrigin: true
       }
     }

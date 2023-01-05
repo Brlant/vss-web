@@ -122,6 +122,7 @@ export default {
       if (!this.currentItem.orgGoodsId) return;
       this.$http.get(`vaccine-info/${this.currentItem.orgGoodsId}/goods-type`).then(res => {
         this.goodsList = res.data;
+        console.log(this.goodsList);
         this.form.orgGoodsId = this.currentItem.orgGoodsId;
       });
     },
