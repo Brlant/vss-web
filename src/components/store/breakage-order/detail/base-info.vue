@@ -82,7 +82,7 @@
           </el-col>
         </el-row>
         <el-row v-show="currentOrder.remark">
-          <oms-row :span="4" label="报损原因">{{ currentOrder.remark }}</oms-row>
+          <oms-row :span="4" label="报损原因">{{ formatRemark(currentOrder.remark) }}</oms-row>
         </el-row>
         <el-row v-show="currentOrder.breakageReason">
           <oms-row :span="4" label="备注">{{ currentOrder.breakageReason }}</oms-row>
@@ -270,6 +270,9 @@ export default {
     orgRelationList() {
       return this.$getDict('orgRelation');
     },
+    exWarehouseReason() { // 报损原因
+      return this.$getDict('exWarehouseReason');
+    },
     totalMoney: function () {
       let totalMoney = 0.00;
       if (!this.form.detailDtoList.length) return totalMoney;
@@ -402,6 +405,15 @@ export default {
         }
         this.$emit('checkPass');
       });
+    },
+    formatRemark(val){
+     if(val){
+       let reason=this.exWarehouseReason.filter(t=>t.key==val)[0]
+       if(reason){
+         return reason.label;
+       }
+       return val;
+     }
     }
   }
 };
