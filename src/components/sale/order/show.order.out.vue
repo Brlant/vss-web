@@ -131,10 +131,10 @@ export default {
       menu.push({name: '操作日志', key: 2});
 
       if (perms.includes(this.vaccineType === '1' ? 'sales-order-delivery-information' : 'second-vaccine-sales-order-delivery-information')) {
-        // 待收货，收货完成, 配送上门，显示配送信息
+        // 待收货，收货完成, 配送上门，显示实时配送信息
         if (this.currentOrder.state === '3' || this.currentOrder.state === '4') {
           if (this.currentOrder.transportationMeansId === '0') {
-            menu.push({name: '配送信息', key: 11});
+            menu.push({name: '实时配送信息', key: 11});
           }
         }
       }

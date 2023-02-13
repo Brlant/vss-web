@@ -20,10 +20,11 @@ export default {
   scanCodeRecordStatus: ['取消签核', '已签核'],
   requestType: {
     1: {'title': '待审批', status: 0, num: ''},
-    2: {'title': '待疾控处理', status: 1, num: ''},
-    3: {'title': '待生成订单', status: 2, num: ''},
-    4: {'title': '已分配', status: 4, num: ''},
-    5: {'title': '已取消', status: 3, num: ''}
+    2: {'title': '被疾控退回', status: 5, num: ''},
+    3: {'title': '待疾控处理', status: 1, num: ''},
+    4: {'title': '待生成订单', status: 2, num: ''},
+    5: {'title': '已分配', status: 4, num: ''},
+    6: {'title': '已取消', status: 3, num: ''}
   },
   inOrderLink: {
     1: {'title': '订单确认', state: '0', num: ''},
@@ -46,6 +47,11 @@ export default {
     4: {'title': '待生成采购汇总', status: 11, num: ''},
     5: {'title': '已生成采购汇总', status: 12, num: ''},
     6: {'title': '已取消采购', status: 13, num: ''}
+  },
+  transitTab: {
+    0: {'title': '未配送', status: 'NO', num: ''},
+    1: {'title': '配送中', status: 'RUNING', num: ''},
+    2: {'title': '已完成配送', status: 'OK', num: ''},
   },
   waveType: {
     0: {'title': '未分配', status: 0, num: ''},
