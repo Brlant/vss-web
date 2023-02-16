@@ -198,12 +198,13 @@ export default {
       });
     },
     queryWayBillPath(waybillInfos) {
-      this.$http.get(`/logistics-monitor/${this.currentOrder.id}/track/list`).then(res => {
+      // this.$http.get(`/logistics-monitor/${this.currentOrder.id}/track/list`).then(res => {
+      this.$http.get(`/trackByOrderNo/${this.currentOrder.id}`).then(res => {
         waybillInfos.forEach(i => {
-          let ary = res.data && res.data.filter(f => f.waybillNo === i.waybillNumber) || [];
-          i.points = ary.length && ary[0].logDtos.map(m => ({
-            lnglat: [m.trackLongitude, m.trackLatitude],
-            time: this.$moment(m.positioningTime).format('YYYY-MM-DD HH:mm:ss'),
+          let ary = res.data && res.data.filter(f => f.vssTmsOrder.tmsWaybillNumber === i.waybillNumber) || [];
+          i.points = ary.length && ary[0].trackDtoList.map(m => ({
+            lnglat: [m.longitude, m.latitude],
+            time: this.$moment(m.collectionTime).format('YYYY-MM-DD HH:mm:ss'),
             name: this.currentOrder.warehouseAddress
           })) || [];
         });
