@@ -61,7 +61,10 @@ export default {
         http.get(`/erp-order/track`, {params}).then(res => {
           let {code,data,msg} = res
           if(code == 200){
-            this.points = data.filter(f => f.longitude && f.latitude).map((m, index) => {
+            console.log(data.filter(f => f.longitude && f.latitude),'filter')
+            let filterData = data.filter(f => f.longitude && f.latitude)
+
+            this.points = filterData.map((m, index) => {
               return {
                 lnglat: [m.longitude, m.latitude],
                 time: this.$moment(m.collectionTime).format('YYYY-MM-DD HH:mm:ss'),

@@ -189,7 +189,7 @@
             </div>
         </div> 
         <!-- 实时轨迹弹窗 -->
-        <div class="trackShow">
+        <div class="trackShow" v-if="trackDialogVisible">
             <el-dialog
             :visible.sync="trackDialogVisible"
             width="30%"
@@ -400,16 +400,17 @@ import utils from '../../../tools/utils';
                 let params = Object.assign({}, this.filters);
                 // let params = {};
                 http.get(`/erp-order/tmsOrderCount`, {params}).then(res => {
-                    console.log(res.data,'res.data');
-                    console.log(res.data[0].NO,'res.count');
-                    // console.log(res.data[1].RUNING,'res.count2');
-                    // console.log(res.data[2].OK,'res.count3');
-                    let NOArr =  res.data.filter(item=>{ return item.NO})
-                    let RUNINGArr =  res.data.filter(item=>{ return item.RUNING})
-                    let OKArr =  res.data.filter(item=>{ return item.OK})
-                    this.transitTab[0].num = NOArr.length !=0?NOArr[0].NO:0
-                    this.transitTab[1].num = RUNINGArr.length !=0?RUNINGArr[0].RUNING:0
-                    this.transitTab[2].num =  OKArr.length !=0?OKArr[0].OK:0
+                    let NOArr = []
+                    let RUNINGArr = []
+                    let OKArr = []
+                    if(res.data.length !=0){
+                        NOArr = res.data.filter(item=>{ return item.NO})
+                        RUNINGArr =  res.data.filter(item=>{ return item.RUNING})
+                        OKArr = res.data.filter(item=>{ return item.OK})
+                    }
+                    this.transitTab[0].num = NOArr.length !=0 ? NOArr[0].NO : 0
+                    this.transitTab[1].num = RUNINGArr.length !=0 ? RUNINGArr[0].RUNING : 0
+                    this.transitTab[2].num = OKArr.length !=0 ? OKArr[0].OK : 0
                 });
             },
             checkStatus(item, key) {

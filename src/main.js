@@ -209,16 +209,12 @@ if (process.env.NODE_ENV === 'production') {
   });
 }
 
-window.$mapInit = function () {
-  if (window.AMap) return;
-  VueAMap.initAMapApiLoader({
-    key: '6c228c74ad098018b2e889b27a303a07',
-    plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.Geocoder'],
-    uiVersion: '1.0',
-    v: '1.4.4'
-
-  });
-};
+VueAMap.initAMapApiLoader({
+  key: '6c228c74ad098018b2e889b27a303a07',
+  plugin: ['AMap.Scale', 'AMap.OverView', 'AMap.ToolBar', 'AMap.MapType', 'AMap.Geocoder', 'AMap.MouseTool', 'AMap.PolyEditor'],
+  v: '1.4.6',
+  uiVersion: '1.0'
+});
 
 new Vue({
   router,
