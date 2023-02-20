@@ -154,7 +154,7 @@
                             </el-col>
                             <el-col :span="3" class="pt pl7">
                                 <span>
-                                    <dict :dict-key="''+item.goodsType" dict-group="vaccineType"></dict>
+                                    <dict :dict-key="''+item.goodsType" dict-group="orderGoodsType"></dict>
                                 </span>
                             </el-col>
                             <el-col :span="5" class="pt pl7">
