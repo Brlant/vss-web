@@ -153,7 +153,8 @@
                                 <span>{{ item.orderExpectedTime | date}}</span>
                             </el-col>
                             <el-col :span="3" class="pt pl7">
-                                <span>
+                                <span v-if="item.goodsType == null">其他</span>
+                                <span v-else>
                                     <dict :dict-key="''+item.goodsType" dict-group="orderGoodsType"></dict>
                                 </span>
                             </el-col>
@@ -388,31 +389,34 @@ import utils from '../../../tools/utils';
                     });
                     this.demandList = res.data.list;
                     this.pager.count = res.data.count;
-                    // this.queryCount();
+                    this.queryCount();
                 })
                 .catch(()=>{
                     this.loadingData = false;
                 })
             },
+            // tab切换数量
+            queryCount(){
+                let params = Object.assign({}, this.filters);
+                // let params = {};
+                http.get(`/erp-order/tmsOrderCount`, {params}).then(res => {
+                    console.log(res.data,'res.data');
+                    console.log(res.data[0].NO,'res.count');
+                    // console.log(res.data[1].RUNING,'res.count2');
+                    // console.log(res.data[2].OK,'res.count3');
+                    let NOArr =  res.data.filter(item=>{ return item.NO})
+                    let RUNINGArr =  res.data.filter(item=>{ return item.RUNING})
+                    let OKArr =  res.data.filter(item=>{ return item.OK})
+                    this.transitTab[0].num = NOArr.length !=0?NOArr[0].NO:0
+                    this.transitTab[1].num = RUNINGArr.length !=0?RUNINGArr[0].RUNING:0
+                    this.transitTab[2].num =  OKArr.length !=0?OKArr[0].OK:0
+                });
+            },
             checkStatus(item, key) {
                 this.activeStatus = key;
                 this.filters.status = item.status;
             },
-            // tab切换数量
-            // queryCount() {
-            //     let params = Object.assign({}, {
-            //         cdcId: this.user.userCompanyAddress
-            //     }, this.filters);
-            //     pullSignal.queryCount(params).then(res => {
-            //         this.assignType[0].num = res.data['audited'];
-            //         this.assignType[1].num = res.data['create-wave'];
-            //         this.assignType[2].num = res.data['assigned'];
-            //         this.assignType[3].num = res.data['cdc-canceled'];
-            //         this.assignType[4].num = res.data['procurement-pending-audit'];
-            //         this.assignType[5].num = res.data['procurement-audited'];
-            //         this.assignType[6].num = res.data['procurement-canceled'];
-            //     });
-            // },
+            
             // 重置表单
             resetSearchForm: function () {
                 let temp = {
