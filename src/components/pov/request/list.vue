@@ -369,6 +369,7 @@ export default {
       this.currentOrder = {};
       if (!this.currentItem.id) return;
       pullSignal.get(this.currentItem.id).then(res => {
+        // console.log('数据:',res.data)
         this.currentOrder = res.data;
       });
     },

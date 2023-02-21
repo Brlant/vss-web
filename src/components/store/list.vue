@@ -221,14 +221,16 @@
     </div>
 
     <page-right :css="{'width':'1000px','padding':0}" :show="showDetailPart" @right-close="resetRightBox">
-      <detail :currentItem="currentItem" @close="resetRightBox"></detail>
+<!--      <detail :currentItem="currentItem" @close="resetRightBox"></detail>-->
+      <detail :currentItem="currentItem" :perm="isBizServing?'cerp-stock-log-export':'cerp-stock-bizServing-log-export'"
+              @close="resetRightBox"></detail>
     </page-right>
   </div>
 </template>
 <script type="text/jsx">
 //  import order from '../../../tools/orderList';
 import {BaseInfo, erpStock, http} from '@/resources';
-import detail from './detail.vue';
+import detail from './detailList.vue';
 import utils from '@/tools/utils';
 import validMixin from '@/mixins/vaildMixin';
 
