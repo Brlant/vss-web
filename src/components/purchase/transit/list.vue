@@ -343,6 +343,10 @@ import utils from '../../../tools/utils';
                 if (this.demandTime instanceof Array && this.demandTime.length && this.demandTime[0]) {
                     this.searchWord.startDate = this.$formatAryTime(this.demandTime, 0);
                     this.searchWord.endDate = this.$formatAryTime(this.demandTime, 1);
+                } else {
+                    this.demandTime = []
+                    this.searchWord.startDate = ''
+                    this.searchWord.endDate = ''
                 }
                 Object.assign(this.filters, this.searchWord);
             },

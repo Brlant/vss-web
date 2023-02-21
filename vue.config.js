@@ -48,7 +48,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: targets.hp,
+        target: targets.un,
         changOrigin: true
       }
     }

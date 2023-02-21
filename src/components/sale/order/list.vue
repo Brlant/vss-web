@@ -109,12 +109,6 @@
                       class="el-icon-t-plus"></i> </a>添加
             </perm>
           </span>
-          <span class="pull-right cursor-span" style="margin-left: 10px" @click.prevent="test">
-            <!-- <perm :label="vaccineType === '1'?'sales-order-add': 'second-vaccine-sales-order-add' "> -->
-                    <a class="btn-circle" href="#" @click.prevent=""><i
-                      class="el-icon-t-plus"></i> </a>测试
-            <!-- </perm> -->
-          </span>
           <span class="pull-left switching-icon" @click="showSearch = !showSearch">
             <i class="el-icon-arrow-up"></i>
             <span v-show="showSearch">收起筛选</span>
@@ -502,22 +496,6 @@ export default {
     }
   },
   methods: {
-    test(){
-      let id = 'SO310105065021080008'
-      // this.$http.get(`/logistics-monitor/${this.currentOrder.id}/track/list`).then(res => {
-      this.$http.get(`/erp-order/trackByOrderNo/${id}`).then(res => {
-        console.log(res,'测试');
-        // waybillInfos.forEach(i => {
-        //   let ary = res.data && res.data.filter(f => f.waybillNo === i.waybillNumber) || [];
-        //   i.points = ary.length && ary[0].logDtos.map(m => ({
-        //     lnglat: [m.trackLongitude, m.trackLatitude],
-        //     time: this.$moment(m.positioningTime).format('YYYY-MM-DD HH:mm:ss'),
-        //     name: this.currentOrder.warehouseAddress
-        //   })) || [];
-        // });
-      }).catch(() => {
-      });
-    },
     getWarehouseAdress: function (item) { // 得到仓库地址
       if (!item) {
         return;
