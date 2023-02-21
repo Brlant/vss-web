@@ -143,10 +143,16 @@ export default {
     1: {'title': '已生成', status: 1, num: ''}
   },
   inventoryType: {
+    // 0: {'title': '所有', status: null, num: ''},
+    // 1: {'title': '待操作', status: 0, num: ''},
+    // 2: {'title': '正常', status: 1, num: ''},
+    // 3: {'title': '异常', status: 2, num: ''}
     0: {'title': '所有', status: null, num: ''},
     1: {'title': '待操作', status: 0, num: ''},
     2: {'title': '正常', status: 1, num: ''},
-    3: {'title': '异常', status: 2, num: ''}
+    3: {'title': '异常', status: 2, num: ''},
+    4: {'title': '已盘盈', status: 3, num: ''},
+    5: {'title': '已盘亏', status: 4, num: ''}
   },
   assginOutAndPovType: {
     0: {'title': '待确认', state: '0', num: ''},
