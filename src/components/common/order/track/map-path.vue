@@ -43,11 +43,13 @@ export default {
   watch: {
     points(val) {
       if (!val || val && !val.length) return;
-      console.log(val,'dayin2')
       this.drawPath(val);
     }
   },
   mounted() {
+     if (this.points.length>0){
+      this.drawPath(this.points);
+    }
     this.addMapTools();
   },
   methods: {

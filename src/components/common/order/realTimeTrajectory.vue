@@ -12,9 +12,9 @@
           <span>配送轨迹</span>
         </h2>
         <div>
-        <!-- <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane  :label="item.tmsWaybillNumber" :name="item.tmsWaybillNumber"></el-tab-pane>
-        </el-tabs> -->
+        <el-tabs type="card" v-model="waybillNumber" @tab-click="handleClick">
+            <el-tab-pane v-for="(item,index) in waybillInfos" :key="index"  :label="item.vssTmsOrder.tmsWaybillNumber" :name="item.vssTmsOrder.tmsWaybillNumber"></el-tab-pane>
+        </el-tabs>
         <div >
           <map-path :mapStyle="{height: '350px', width: '750px',margin: '0 auto'}"  :points="points"  :vid="waybillNumber"></map-path>
         </div>
@@ -36,32 +36,10 @@ export default {
   },
   data() {
     return {
-    //   activeName: 'second',
       loadingData: false,
       waybillInfos: [],
       waybillNumber:'',
-      points:[
-        // {
-        //     lnglat:[116.368904,39.913423],
-        //     name:'"浦东新区沪南公路5395号4号楼南墙外面底楼预防接种门诊"',
-        //     time:'"2023-02-20 17:20:12"'
-        // },
-        // {
-        //     lnglat:[116.382122,39.901176],
-        //     name:'"浦东新区沪南公路5395号4号楼南墙外面底楼预防接种门诊"',
-        //     time:'"2023-02-20 17:20:12"'
-        // },
-        // {
-        //     lnglat:[116.387271,39.912501],
-        //     name:'"浦东新区沪南公路5395号4号楼南墙外面底楼预防接种门诊"',
-        //     time:'"2023-02-20 17:20:12"'
-        // },
-        // {
-        //     lnglat:[116.398258,39.904600],
-        //     name:'"浦东新区沪南公路5395号4号楼南墙外面底楼预防接种门诊"',
-        //     time:'"2023-02-20 17:20:12"'
-        // },
-      ],   // 当前展示的轨迹
+      points:[],   // 当前展示的轨迹
       showIndex: -1,
     }
   },
@@ -75,11 +53,10 @@ export default {
   },
   methods: {
     queryWayBillPath() {
-      // this.$http.get(`/logistics-monitor/${this.currentOrder.id}/track/list`).then(res => {
       this.loadingData = true;
       this.$http.get(`/erp-order/trackByOrderNo/${this.currentOrder.orderNo}`).then(res => {
         this.loadingData = false;
-       
+        this.waybillInfos = res.data
         this.points = res.data.length && res.data[0].trackDtoList.map((m, index) => {
           return {
                 lnglat: [m.longitude, m.latitude],
@@ -92,19 +69,21 @@ export default {
           }else{
             this.waybillNumber = ''
           }
-          this.waybillInfos = res.data
-          // console.log(this.points,'points17')
-          // console.log(this.waybillInfos,'waybillInfos')
-          // console.log(this.waybillNumber,'waybillNumber')
       }).catch(() => {
         this.loadingData = false;
       });
     },
-    // //  运单号切换
-    // handleClick(tab, event) {
-    //     console.log(tab, event);
-
-    // }
+    //  运单号切换
+    handleClick(tab) {
+      this.waybillNumber = this.waybillInfos[tab.index].vssTmsOrder.tmsWaybillNumber
+      this.points = this.waybillInfos.length && this.waybillInfos[tab.index].trackDtoList.map((m, index) => {
+          return {
+                lnglat: [m.longitude, m.latitude],
+                time: this.$moment(m.collectionTime).format('YYYY-MM-DD HH:mm:ss'),
+                name: this.currentOrder.warehouseAddress
+              };
+          })|| [];
+    }
   }
 }
 </script>
