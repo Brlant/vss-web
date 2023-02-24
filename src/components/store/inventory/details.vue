@@ -5,7 +5,8 @@
         <div v-for="(item,key) in inventoryType" :class="{'active':key===activeStatus}"
              class="status-item" @click="checkStatus(item, key)">
           <div :class="['b_color_'+key]" class="status-bg"></div>
-          <div><i v-if="key===activeStatus" class="el-icon-caret-right"></i>{{item.title}}<span class="status-num">{{item.num}}</span>
+          <div><i v-if="key===activeStatus" class="el-icon-caret-right"></i>{{ item.title }}
+            <span class="status-num">{{ item.num }}</span>
           </div>
         </div>
         <div class="btn-group-right opera-btn">
@@ -25,11 +26,12 @@
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header">
-          <el-col :span="8">疫苗</el-col>
+          <el-col :span="7">疫苗</el-col>
           <el-col :span="5">批号</el-col>
           <el-col :span="4">数量</el-col>
           <el-col :span="4">盘点数量</el-col>
-          <el-col :span="3">状态</el-col>
+          <el-col :span="1">状态</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <oms-loading :loading="loadingData"></oms-loading>
@@ -38,11 +40,12 @@
           <div class="empty-info">暂无信息</div>
         </el-row>
         <div v-else class="order-list-body flex-list-dom">
-          <div v-for="item in inventories" :class="['status-'+ filterListColor(item.status),{'active':currentOrderId===item.id}]"
+          <div v-for="item in inventories"
+               :class="['status-'+ filterListColor(item.status),{'active':currentOrderId===item.id}]"
                class="order-list-item"
                @click.prevent="currentOrderId = item.id">
             <el-row>
-              <el-col :span="8">{{ item.orgGoodsName }}</el-col>
+              <el-col :span="7">{{ item.orgGoodsName }}</el-col>
               <el-col :span="5">{{ item.batchNumber }}</el-col>
               <el-col :span="4">
                 {{ item.inventoryCount }}
@@ -51,17 +54,35 @@
                 <!--/<dict :dict-group="'shipmentPackingUnit'" :dict-key="item.unit"></dict>)-->
               </el-col>
               <el-col :span="4">
-                <el-input v-show="isShow()" v-model.number="item.actualCount" @blur="onSubmit(item)">
+                <el-input v-show="isShow()" v-model.number="item.actualCount"
+                          :disabled="item.status===3||item.status===4" @blur="onSubmit(item)"
+                          @change="changeCount(item)">
                   <template slot="append">
                     <dict :dict-group="'measurementUnit'" :dict-key="item.goodsUnit"></dict>
                   </template>
                 </el-input>
                 <span v-show="!isShow()">{{ item.actualCount }}</span>
               </el-col>
-              <el-col :span="3" style="padding-top: 5px">
+              <el-col :span="1" style="padding-top: 5px">
                 <el-tag v-show="item.status === 0" type="warning">待操作</el-tag>
                 <el-tag v-show="item.status === 1" type="success">正常</el-tag>
                 <el-tag v-show="item.status === 2" type="danger">异常</el-tag>
+                <el-tag v-show="item.status === 3" type="success">已盘盈</el-tag>
+                <el-tag v-show="item.status === 4" type="danger">已盘亏</el-tag>
+              </el-col>
+              <el-col :span="3">
+<!--                <perm label="erp-stock-inventory-check">-->
+<!--                  <el-button v-show="item.status === 2" :disabled="item.checking" type="default"-->
+<!--                             @click.stop="check(item)">-->
+<!--                    {{ item.actualCount > item.inventoryCount ? '盘盈' : '盘亏' }}-->
+<!--                  </el-button>-->
+<!--                </perm>-->
+<!--                <perm label="erp-stock-inventory-check">-->
+                  <el-button v-show="item.status === 2" :disabled="item.checking" type="default"
+                             @click.stop="check(item)">
+                    {{ item.actualCount > item.inventoryCount ? '盘盈' : '盘亏' }}
+                  </el-button>
+<!--                </perm>-->
               </el-col>
             </el-row>
             <div class="order-list-item-bg"></div>
@@ -72,7 +93,8 @@
     <div v-show="inventories.length && !loadingData" class="text-center">
       <el-pagination :current-page="pager.currentPage" :page-size="20"
                      :page-sizes="[10,20,50,100]"
-                     :total="pager.count" layout="total, sizes, prev, pager, next, jumper" @size-change="handleSizeChange"
+                     :total="pager.count" layout="total, sizes, prev, pager, next, jumper"
+                     @size-change="handleSizeChange"
                      @current-change="handleCurrentChange">
       </el-pagination>
     </div>
@@ -115,6 +137,38 @@ export default {
     }
   },
   methods: {
+    check(item) {
+      if (!item) {
+        return;
+      }
+      this.$confirm(`确定进行${item.action}作业`, '', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
+      }).then(() => {
+        item.checking = true;
+        this.$http.post('/erp-order/inventory/create-order', {stockInventoryDetailId: item.id}).then(res => {
+          this.$notify.success({
+            message: item.action+"作业成功"
+          });
+          item.checking = false;
+          item.status = item.action === '盘盈' ? 3 : 4;
+        }).catch(error => {
+          item.checking=false;
+          this.$notify.error({
+            message: error.response && error.response.data && error.response.data.msg || item.action+'作业失败'
+          });
+        });
+      });
+    },
+    changeCount(item) {
+      if (item.actualCount > item.inventoryCount) {
+        item.action = '盘盈';
+      }
+      if (item.actualCount < item.inventoryCount) {
+        item.action = '盘亏';
+      }
+    },
     checkStatus(item, key) {
       this.activeStatus = key;
       this.filters.status = item.status;
@@ -140,9 +194,15 @@ export default {
         pageSize: this.pager.pageSize
       }, this.filters);
       this.loadingData = true;
+      this.inventories=[];
       Inventory.queryDetail(id, params).then(res => {
         this.loadingData = false;
-        this.inventories = res.data.list;
+        res.data.list.forEach(v => {
+          this.inventories.push(Object.assign({}, v, {action: '', checking: false}))
+        });
+        this.inventories.forEach(v => {
+          this.changeCount(v);
+        })
         this.pager.count = res.data.count;
       });
       this.queryStatusNum();
@@ -155,6 +215,8 @@ export default {
         this.inventoryType[1].num = res.data['no-operation'];
         this.inventoryType[2].num = res.data['normal'];
         this.inventoryType[3].num = res.data['exception'];
+        this.inventoryType[4].num = res.data['inventorySurplus'];
+        this.inventoryType[5].num = res.data['dishDeficientOutbound'];
       });
     },
     filterListColor: function (index) {// 过滤左边列表边角颜色
