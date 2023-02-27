@@ -255,8 +255,7 @@
                   <perm label="pull-signal-return">
                     <span v-show="filters.status === 1" @click.prevent="backDemand(item)">
                         <a class="btn-circle" href="#" @click.prevent=""><i
-                          class="el-icon-t-forbidden"></i></a>
-                          退回需求单
+                          class="el-icon-t-forbidden"></i></a>拒绝需求单
                     </span>
                   </perm>
                 </div>
