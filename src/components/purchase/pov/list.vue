@@ -564,6 +564,7 @@ export default {
             this.$notify.success({
               message: '已成功取消需求单'
             });
+            this.returnDialogVisible = false
             this.getDemandList(1);
           }).catch(error => {
             this.$notify.error({

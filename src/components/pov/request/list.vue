@@ -165,7 +165,7 @@
                     <oms-row v-show="currentOrder.remark" label="备注">
                       {{ currentOrder.remark }}
                     </oms-row>
-                    <oms-row v-show="currentOrder.status === 5 && currentOrder.remark" label="被退回原因">
+                    <oms-row v-show="currentOrder.status === 5 && currentOrder.reason" label="被退回原因">
                       {{ currentOrder.reason }}
                     </oms-row>
                   </el-col>
