@@ -389,8 +389,13 @@ import utils from '../../../tools/utils';
                             item.goodsName = item.goodsName.substring(0,item.goodsName.length-1)
                         }
                         item.goodsName = item.goodsName.split(',')
+                        // 删除多余的，
+                        item.goodsName = item.goodsName.filter(val=> {
+                            return val !='' && val !=' '
+                        })
                         // item.orderExpectedTime?this.changeTime(item.orderExpectedTime):''
                     });
+                    console.log(res.data.list,'res.data.list')
                     this.demandList = res.data.list;
                     this.pager.count = res.data.count;
                     this.queryCount();
