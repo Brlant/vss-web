@@ -44,9 +44,10 @@ export default {
     1: {'title': '待分配销售', status: 2, num: ''},
     2: {'title': '已分配销售', status: 4, num: ''},
     3: {'title': '已取消销售', status: 3, num: ''},
-    4: {'title': '待生成采购汇总', status: 11, num: ''},
-    5: {'title': '已生成采购汇总', status: 12, num: ''},
-    6: {'title': '已取消采购', status: 13, num: ''}
+    4: {'title': '已退回销售', status: 5, num: ''},
+    5: {'title': '待生成采购汇总', status: 11, num: ''},
+    6: {'title': '已生成采购汇总', status: 12, num: ''},
+    7: {'title': '已取消采购', status: 13, num: ''}
   },
   transitTab: {
     0: {'title': '未配送', status: 'NO', num: ''},

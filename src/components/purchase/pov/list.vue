@@ -177,7 +177,7 @@
       <el-row>
         <el-col :span="13">
           <div class="order-list-status container clearfix">
-            <div v-for="(item,key) in assignType" v-show="key < 4" :class="{'active':key==activeStatus}"
+            <div v-for="(item,key) in assignType" v-show="key < 5" :class="{'active':key==activeStatus}"
                  class="status-item" style="width: 115px" @click="checkStatus(item, key)">
               <div :class="['b_color_'+key]" class="status-bg"></div>
               <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span class="status-num">
@@ -187,7 +187,7 @@
         </el-col>
         <el-col :span="11">
           <div class="order-list-status order-list-status-right container clearfix">
-            <div v-for="(item,key) in assignType" v-show="key > 3" :class="{'active':key==activeStatus}"
+            <div v-for="(item,key) in assignType" v-show="key > 4" :class="{'active':key==activeStatus}"
                  class="status-item"
                  style="width: 115px" @click="checkStatus(item, key)">
               <div :class="['b_color_'+key]" class="status-bg"></div>
@@ -495,9 +495,10 @@ export default {
         this.assignType[1].num = res.data['create-wave'];
         this.assignType[2].num = res.data['assigned'];
         this.assignType[3].num = res.data['cdc-canceled'];
-        this.assignType[4].num = res.data['procurement-pending-audit'];
-        this.assignType[5].num = res.data['procurement-audited'];
-        this.assignType[6].num = res.data['procurement-canceled'];
+        this.assignType[4].num = res.data['pov-return'];
+        this.assignType[5].num = res.data['procurement-pending-audit'];
+        this.assignType[6].num = res.data['procurement-audited'];
+        this.assignType[7].num = res.data['procurement-canceled'];
       });
     },
     filterOrg: function (query) {// 过滤供货商
