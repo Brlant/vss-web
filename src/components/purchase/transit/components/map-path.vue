@@ -61,7 +61,6 @@ export default {
         http.get(`/erp-order/track`, {params}).then(res => {
           let {code,data,msg} = res
           if(code == 200){
-            console.log(data.filter(f => f.longitude && f.latitude),'filter')
             let filterData = data.filter(f => f.longitude && f.latitude)
 
             this.points = filterData.map((m, index) => {
@@ -72,8 +71,6 @@ export default {
               };
             });
             this.points.length && this.drawPath(this.points);
-          }else{
-            this.$message.warning(msg)
           }
         })
         .catch(err=>{
