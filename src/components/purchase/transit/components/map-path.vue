@@ -75,7 +75,9 @@ export default {
         })
         .catch(err=>{
           if(err && err.response && err.response.data && err.response.data.msg){
-            this.$message.warning(err.response.data.msg)
+            if(err.response.data.code != 400){
+              this.$message.warning(err.response.data.msg)
+            }
           }
         })
       },
