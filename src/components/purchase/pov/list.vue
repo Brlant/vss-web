@@ -18,7 +18,40 @@
     left: 0;
     top: 50%;
     transform: translateY(-50%);
+  } 
+}
+.returnTitle{
+  font-size: 18px;
+  margin-bottom: 5px;
+  i{
+    font-size: 22px;
+    margin-right: 8px;
   }
+}
+</style>
+<style lang="scss">
+.returnShow{
+  .el-dialog__wrapper {
+      text-align: center;
+      white-space: nowrap;
+      overflow: auto;
+      &:after {
+        content: "";
+        display: inline-block;
+        vertical-align: middle;
+        height: 100%;
+      }
+      .el-dialog {
+        margin: 30px auto !important;
+        display: inline-block;
+        vertical-align: middle;
+        text-align: left;
+        white-space: normal;
+        .el-dialog__header{
+          display: none !important;
+        }  
+      }
+}
 }
 </style>
 <template>
@@ -144,7 +177,7 @@
       <el-row>
         <el-col :span="13">
           <div class="order-list-status container clearfix">
-            <div v-for="(item,key) in assignType" v-show="key < 4" :class="{'active':key==activeStatus}"
+            <div v-for="(item,key) in assignType" v-show="key < 5" :class="{'active':key==activeStatus}"
                  class="status-item" style="width: 115px" @click="checkStatus(item, key)">
               <div :class="['b_color_'+key]" class="status-bg"></div>
               <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span class="status-num">
@@ -154,7 +187,7 @@
         </el-col>
         <el-col :span="11">
           <div class="order-list-status order-list-status-right container clearfix">
-            <div v-for="(item,key) in assignType" v-show="key > 3" :class="{'active':key==activeStatus}"
+            <div v-for="(item,key) in assignType" v-show="key > 4" :class="{'active':key==activeStatus}"
                  class="status-item"
                  style="width: 115px" @click="checkStatus(item, key)">
               <div :class="['b_color_'+key]" class="status-bg"></div>
@@ -219,6 +252,12 @@
                       class="el-icon-t-detail"></i></a>
                   查看详情
                   </span>
+                  <perm label="pull-signal-return">
+                    <span v-show="filters.status === 1" @click.prevent="backDemand(item)">
+                        <a class="btn-circle" href="#" @click.prevent=""><i
+                          class="el-icon-t-forbidden"></i></a>拒绝需求单
+                    </span>
+                  </perm>
                 </div>
                 <div>
                   <perm label="demand-assignment-update">
@@ -272,6 +311,28 @@
       <edit-form :currentItem="currentItem" :showEditPart="showEditPart" @change="resetRightBox"
                  @close="resetRightBox"></edit-form>
     </page-right>
+    <!-- 退回需求单弹窗 -->
+    <div class="returnShow">
+    <el-dialog
+      :visible.sync="returnDialogVisible"
+      width="30%"
+      :show-close="false"
+      >
+      <div >
+        <div class="returnTitle"><i class="el-icon-warning-outline"></i>是否退回“{{OrderNumber}}”的申请单?</div>
+        <el-input
+          type="textarea"
+          :rows="5"
+          placeholder="请输入退回原因"
+          v-model="reason">
+        </el-input>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="returnDialogVisible = false">取 消</el-button>
+        <el-button type="primary" @click="sureReturn">确 定</el-button>
+      </span>
+    </el-dialog>
+    </div>
   </div>
 </template>
 <script>
@@ -329,7 +390,10 @@ export default {
       orgList: [],
       isSearch: false,
       index: -1,
-      orgGoods: []
+      orgGoods: [],
+      returnDialogVisible:false,
+      OrderNumber:"",
+      reason:'',
     };
   },
   computed: {
@@ -431,9 +495,10 @@ export default {
         this.assignType[1].num = res.data['create-wave'];
         this.assignType[2].num = res.data['assigned'];
         this.assignType[3].num = res.data['cdc-canceled'];
-        this.assignType[4].num = res.data['procurement-pending-audit'];
-        this.assignType[5].num = res.data['procurement-audited'];
-        this.assignType[6].num = res.data['procurement-canceled'];
+        this.assignType[4].num = res.data['pov-return'];
+        this.assignType[5].num = res.data['procurement-pending-audit'];
+        this.assignType[6].num = res.data['procurement-audited'];
+        this.assignType[7].num = res.data['procurement-canceled'];
       });
     },
     filterOrg: function (query) {// 过滤供货商
@@ -483,6 +548,30 @@ export default {
     onSubmit() {
       this.getDemandList(1);
       this.showRight = false;
+    },
+    // 退回需求单
+    backDemand(item){
+      this.returnDialogVisible = true
+      this.reason = ''
+      this.OrderNumber = item.id
+    },
+    // 确认退回
+    sureReturn(){
+      if(this.reason == ''){
+        this.$message.warning('请填写退回原因')
+        return
+      }
+      this.$http.put(`/pull-signal/return/${this.OrderNumber}`,{reason:this.reason}).then(() => {
+            this.$notify.success({
+              message: '已成功取消需求单'
+            });
+            this.returnDialogVisible = false
+            this.getDemandList(1);
+          }).catch(error => {
+            this.$notify.error({
+              message: error.response && error.response.data && error.response.data.msg || '取消需求单失败'
+            });
+          });
     },
     closeForm(item) {
       this.$confirm('信息未保存，是否关闭?', '', {

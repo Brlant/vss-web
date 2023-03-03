@@ -60,7 +60,7 @@
               <a class="btn-circle" href="#" @click.prevent="searchType"><i
                 class="el-icon-t-search"></i> </a>
           </span>
-              要货申请单列表
+              <span v-if="activeStatus == 2">被退回</span>要货申请单列表
             </h2>
             <div v-show="showTypeSearch" class="search-left-box">
               <oms-input v-model="filters.keyWord" :showFocus="showTypeSearch" placeholder="请输入编号搜索"></oms-input>
@@ -98,16 +98,16 @@
               <h2 class="clearfix">
               <span class="pull-right">
                 <el-button-group>
-                   <perm label="pull-signal-add">
+                   <perm v-show="currentOrder.status != 5" label="pull-signal-add">
                         <el-button @click="addOrder()"><i
                           class="el-icon-t-reset"></i> 再次要货
                         </el-button>
                     </perm>
-                    <perm v-show="currentOrder.status === 0" label="pull-signal-audit">
+                    <perm v-show="currentOrder.status === 0 || currentOrder.status === 5" label="pull-signal-audit">
                       <el-button @click="audited()"><i
                         class="el-icon-t-verify"></i>审批</el-button>
                     </perm>
-                    <perm v-show="currentOrder.status === 0" label="pull-signal-edit">
+                    <perm v-show="currentOrder.status === 0 || currentOrder.status === 5" label="pull-signal-edit">
                       <el-button @click="editOrder()"><i
                         class="el-icon-t-edit"></i>编辑</el-button>
                     </perm>
@@ -116,7 +116,7 @@
                         <i class="el-icon-t-print"></i>{{printing ? '正在导出' : '导出'}}
                       </el-button>
                     </perm>
-                    <perm v-show="currentOrder.status === 0" label="pull-signal-cancel">
+                    <perm v-show="currentOrder.status === 0 || currentOrder.status === 5" label="pull-signal-cancel">
                       <el-button @click="cancel()"><i
                         class="el-icon-t-verify"></i>取消</el-button>
                     </perm>
@@ -160,7 +160,17 @@
                     </oms-row>
                   </el-col>
                 </el-row>
-                <oms-row v-show="currentOrder.remark" :span="3" label="备注">{{ currentOrder.remark }}</oms-row>
+                <el-row>
+                  <el-col :span="11">
+                    <oms-row v-show="currentOrder.remark" label="备注">
+                      {{ currentOrder.remark }}
+                    </oms-row>
+                    <oms-row v-show="currentOrder.status === 5 && currentOrder.reason" label="被退回原因">
+                      {{ currentOrder.reason }}
+                    </oms-row>
+                  </el-col>
+                </el-row>
+                <!-- <oms-row v-show="currentOrder.remark" :span="3" label="备注">{{ currentOrder.remark }}</oms-row> -->
               </div>
               <span style="font-size: 14px">【要货明细】</span>
               <table :class="{'table-hover':currentOrder.detailDtoList.length !== 0}" class="table "
@@ -359,10 +369,11 @@ export default {
       pullSignal.queryCount(params).then(res => {
         // this.requestType[0].num = res.data['all'];
         this.requestType[1].num = res.data['pending-audit'];
-        this.requestType[2].num = res.data['audited'];
-        this.requestType[3].num = res.data['create-wave'];
-        this.requestType[4].num = res.data['assigned'];
-        this.requestType[5].num = res.data['canceled'];
+        this.requestType[2].num = res.data['pov-return'];  // 被疾控退回
+        this.requestType[3].num = res.data['audited'];
+        this.requestType[4].num = res.data['create-wave'];
+        this.requestType[5].num = res.data['assigned'];
+        this.requestType[6].num = res.data['canceled'];
       });
     },
     getDetail: function () {

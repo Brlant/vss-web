@@ -69,7 +69,8 @@ $leftWidth: 180px;
                                type="1"></relevance-code-review>
         <cancel-order v-show="index === 0" ref="cancelPart" :orderId="orderId" @close="$emit('close')"
                       @refreshOrder="$emit('refreshOrder')"></cancel-order>
-        <waybill-info v-show="index === 11" :currentOrder="currentOrder" :index="index"></waybill-info>
+        <real-time-trajectory v-show="index === 18" :currentOrder="currentOrder" :index="index"></real-time-trajectory>
+        <waybill-info v-show="index=== 11" :currentOrder="currentOrder" :index="index"></waybill-info>
         <customer-feedback v-show="index === 12" :currentOrder="currentOrder" :index="index"
                            :orderId="currentOrder.id"/>
         <order-push-log v-show="index === 15" :currentOrder="currentOrder" :index="index"></order-push-log>
@@ -86,10 +87,11 @@ import orderAttachment from '@/components/common/order/out.order.attachment.vue'
 import relevanceCode from '@/components/common/order/relevance.code.vue';
 import customerFeedback from '@/components/common/order/customer-feedback.vue';
 import WaybillInfo from '@/components/common/order/waybillInfo';
+import realTimeTrajectory from '@/components/common/order/realTimeTrajectory';
 import OrderPushLog from '@/components/common/order/order-push-log';
 
 export default {
-  components: {basicInfo, log, receipt, orderAttachment, relevanceCode, customerFeedback, WaybillInfo, OrderPushLog},
+  components: {basicInfo, log, receipt, orderAttachment, relevanceCode, customerFeedback, WaybillInfo,realTimeTrajectory, OrderPushLog},
   props: {
     orderId: {
       type: String
@@ -131,10 +133,13 @@ export default {
       menu.push({name: '操作日志', key: 2});
 
       if (perms.includes(this.vaccineType === '1' ? 'sales-order-delivery-information' : 'second-vaccine-sales-order-delivery-information')) {
-        // 待收货，收货完成, 配送上门，显示配送信息
-        if (this.currentOrder.state === '3' || this.currentOrder.state === '4') {
-          if (this.currentOrder.transportationMeansId === '0') {
-            menu.push({name: '配送信息', key: 11});
+        // 配送上门  待收货，收货完成, ，显示实时配送信息
+        if (this.currentOrder.transportationMeansId === '0') {
+          if (this.currentOrder.state === '3') {
+            menu.push({name: '实时配送信息', key: 18});
+          }
+          if(this.currentOrder.state === '4'){
+            menu.push({name: '配送轨迹', key: 11}); 
           }
         }
       }

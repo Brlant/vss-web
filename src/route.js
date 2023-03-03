@@ -60,7 +60,12 @@ export const route = [
                 meta: {moduleId: 'pov', title: '采购汇总', perm: 'purchansing-assignment'}
               }
             ]
-          }
+          },
+          {
+            path: '/purchase/transit',
+            component: () => import('./components/purchase/transit/list.vue'),
+            meta: {moduleId: 'purchase', title: '在途疫苗跟踪', perm: 'transit-vaccine-manage'}
+          },
         ]
       },
       {
