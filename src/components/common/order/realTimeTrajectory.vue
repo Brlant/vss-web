@@ -77,7 +77,7 @@ export default {
     //  运单号切换
     handleClick(tab) {
       this.waybillNumber = this.waybillInfos[tab.index].vssTmsOrder.tmsWaybillNumber
-      this.points = this.waybillInfos.length && this.waybillInfos[tab.index].trackDtoList.map((m, index) => {
+      this.points = this.waybillInfos.length && this.waybillInfos[tab.index].trackDtoList && this.waybillInfos[tab.index].trackDtoList.map((m, index) => {
           return {
                 lnglat: [m.longitude, m.latitude],
                 time: this.$moment(m.collectionTime).format('YYYY-MM-DD HH:mm:ss'),
