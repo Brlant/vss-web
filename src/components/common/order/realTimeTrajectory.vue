@@ -46,6 +46,7 @@ export default {
   watch: {
     index(val) {
       this.waybillInfos = [];
+      this.points = []
       this.showIndex = -1;
       if (val !== 18) return;
       this.queryWayBillPath();
@@ -57,7 +58,7 @@ export default {
       this.$http.get(`/erp-order/trackByOrderNo/${this.currentOrder.orderNo}`).then(res => {
         this.loadingData = false;
         this.waybillInfos = res.data
-        this.points = res.data.length && res.data[0].trackDtoList.map((m, index) => {
+        this.points = res.data.length && res.data[0].trackDtoList && res.data[0].trackDtoList.map((m, index) => {
           return {
                 lnglat: [m.longitude, m.latitude],
                 time: this.$moment(m.collectionTime).format('YYYY-MM-DD HH:mm:ss'),
