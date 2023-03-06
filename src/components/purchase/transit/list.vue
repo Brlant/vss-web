@@ -376,7 +376,7 @@ import utils from '../../../tools/utils';
                 // }
                 // if (searchCondition.status === 3) searchCondition.cancelFlag = '0';
                 let params = Object.assign({
-                    pageNo: pageNo,
+                    pageNum: pageNo,
                     pageSize: this.pager.pageSize
                 }, searchCondition);
                 params.isShowDetail = !!JSON.parse(window.localStorage.getItem('isShowGoodsList'));
