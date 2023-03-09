@@ -236,7 +236,7 @@ export default {
       item.status = s === 0 ? 1 : 2;
     },
     onSubmit(item) {
-      if (!item.actualCount) return;
+      if (item.actualCount === null || item.actualCount === '') return;
       let obj = {
         id: item.id,
         actualCount: item.actualCount
