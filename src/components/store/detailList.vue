@@ -139,149 +139,149 @@ h2 {
             </el-table-column>
           </el-table-column>
         </el-table>
-<!--        <h2>库存流水</h2>-->
-<!--        <el-form class="advanced-query-form" onsubmit="return false">-->
-<!--          <el-row>-->
-<!--            <el-col :span="14">-->
-<!--              <oms-form-row :span="4" label="业务时间">-->
-<!--                <el-date-picker v-model="bizDateAry" :default-time="['00:00:00', '23:59:59']" placeholder="请选择日期"-->
-<!--                                type="datetimerange">-->
-<!--                </el-date-picker>-->
-<!--              </oms-form-row>-->
-<!--            </el-col>-->
-<!--            <el-col :span="10">-->
-<!--              <oms-form-row :span="4" label="业务编号">-->
-<!--                <el-input v-model="searchWord.orderNo" clearable size="mini" placeholder="订单号/受种者编码"></el-input>-->
-<!--              </oms-form-row>-->
-<!--            </el-col>-->
-<!--            <el-col :span="8">-->
-<!--              <oms-form-row :span="6" label="追溯码">-->
-<!--                <el-input v-model="searchWord.traceCode" clearable size="mini"></el-input>-->
-<!--              </oms-form-row>-->
-<!--            </el-col>-->
-<!--            <el-col :span="8">-->
-<!--              <oms-form-row :span="6" label="业务ID">-->
-<!--                <el-input v-model="searchWord.objectId" clearable size="mini"></el-input>-->
-<!--              </oms-form-row>-->
-<!--            </el-col>-->
-<!--            <el-col :span="8">-->
-<!--              <oms-form-row :span="2" label="">-->
-<!--                <el-button native-type="submit" type="primary" @click="searchStockLog">查询</el-button>-->
-<!--                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>-->
-<!--                <perm :label="perm">-->
-<!--                  <el-button :disabled="exportFlag" :plain="true" style="margin-left: 10px" type="success"-->
-<!--                             @click="exportFile">-->
-<!--                    {{ exportFlag ? '导出中' : '导出Excel' }}-->
-<!--                  </el-button>-->
-<!--                </perm>-->
-<!--              </oms-form-row>-->
-<!--            </el-col>-->
-<!--          </el-row>-->
-<!--        </el-form>-->
-<!--        <el-table :data="stockLogList" class="header-list store border-black" border-->
-<!--                  :header-row-class-name="'headerClass'" v-loading="loadingStockLog"-->
-<!--                  style="width: 100%">-->
+        <h2>库存流水</h2>
+        <el-form class="advanced-query-form" onsubmit="return false">
+          <el-row>
+            <el-col :span="14">
+              <oms-form-row :span="4" label="业务时间">
+                <el-date-picker v-model="bizDateAry" :default-time="['00:00:00', '23:59:59']" placeholder="请选择日期"
+                                type="datetimerange">
+                </el-date-picker>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="10">
+              <oms-form-row :span="4" label="业务编号">
+                <el-input v-model="searchWord.orderNo" clearable size="mini" placeholder="订单号/受种者编码"></el-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row :span="6" label="追溯码">
+                <el-input v-model="searchWord.traceCode" clearable size="mini"></el-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row :span="6" label="业务ID">
+                <el-input v-model="searchWord.objectId" clearable size="mini"></el-input>
+              </oms-form-row>
+            </el-col>
+            <el-col :span="8">
+              <oms-form-row :span="2" label="">
+                <el-button native-type="submit" type="primary" @click="searchStockLog">查询</el-button>
+                <el-button native-type="reset" @click="resetSearchForm">重置</el-button>
+                <perm :label="perm">
+                  <el-button :disabled="exportFlag" :plain="true" style="margin-left: 10px" type="success"
+                             @click="exportFile">
+                    {{ exportFlag ? '导出中' : '导出Excel' }}
+                  </el-button>
+                </perm>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+        </el-form>
+        <el-table :data="stockLogList" class="header-list store border-black" border
+                  :header-row-class-name="'headerClass'" v-loading="loadingStockLog"
+                  style="width: 100%">
 
-<!--          <el-table-column label="业务时间" prop="expiryDate" width="100">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span>{{ scope.row.createTime | time }}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column label="业务类型" prop="expiryDate">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span>{{ scope.row.actionType }}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column label="业务编号" prop="expiryDate">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span>-->
-<!--                <el-tooltip effect="dark" :content="'业务ID：'+scope.row.objectId" placement="right">-->
-<!--                  <span>{{ scope.row.orderNo }}</span>-->
-<!--                </el-tooltip>-->
-<!--              </span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
+          <el-table-column label="业务时间" prop="expiryDate" width="100">
+            <template slot-scope="scope">
+              <span>{{ scope.row.createTime | time }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="业务类型" prop="expiryDate">
+            <template slot-scope="scope">
+              <span>{{ scope.row.actionType }}</span>
+            </template>
+          </el-table-column>
+          <el-table-column label="业务编号" prop="expiryDate">
+            <template slot-scope="scope">
+              <span>
+                <el-tooltip effect="dark" :content="'业务ID：'+scope.row.objectId" placement="right">
+                  <span>{{ scope.row.orderNo }}</span>
+                </el-tooltip>
+              </span>
+            </template>
+          </el-table-column>
 
-<!--          <el-table-column align="center" label="业务库存">-->
-<!--            <el-table-column :render-header="formatLogHeader" label="人份剂次"-->
-<!--                             prop="qualifiedBizServings" width="50">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span>{{ formatNumber(scope.row.qualifiedBizServingsX) }}</span>-->
-<!--                <div class="font-color">{{ scope.row.qualifiedBizServings }}</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column :render-header="formatLogHeader" label="合格" prop="availableCount"-->
-<!--                             width="50">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span>{{ formatNumber(scope.row.availableCountX) }}</span>-->
-<!--                <div class="font-color">{{ scope.row.availableCount }}</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column :render-header="formatLogHeader" label="不合格" prop="unQualifiedBizCount" width="50">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span>{{ formatNumber(scope.row.unQualifiedBizCountX) }}</span>-->
-<!--                <div class="font-color">{{ scope.row.unQualifiedBizCount }}</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column :render-header="formatLogHeader" label="业务停销" prop="undeterminedActualCount"-->
-<!--                             width="50">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span>{{ formatNumber(scope.row.undeterminedActualCountX) }}</span>-->
-<!--                <div class="font-color">{{ scope.row.undeterminedActualCount }}</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column :render-header="formatLogHeader" label="入库在途" prop="inOrderTransitCount"-->
-<!--                             width="50">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span>{{ formatNumber(scope.row.inOrderTransitCountX) }}</span>-->
-<!--                <div class="font-color">{{ scope.row.inOrderTransitCount }}</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column align="center" label="实物库存">-->
-<!--            <el-table-column :render-header="formatLogHeader" label="人份剂次"-->
-<!--                             prop="qualifiedActualServings" width="50">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span>{{ formatNumber(scope.row.qualifiedActualServingsX) }}</span>-->
-<!--                <div class="font-color">{{ scope.row.qualifiedActualServings }}</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column :render-header="formatLogHeader" label="合格" prop="qualifiedActualCount"-->
-<!--                             width="50">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span>{{ formatNumber(scope.row.qualifiedActualCountX) }}</span>-->
-<!--                <div class="font-color">{{ scope.row.qualifiedActualCount }}</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column :render-header="formatLogHeader" label="不合格" prop="unqualifiedActualCount"-->
-<!--                             width="50">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span>{{ formatNumber(scope.row.unqualifiedActualCountX) }}</span>-->
-<!--                <div class="font-color">{{ scope.row.unqualifiedActualCount }}</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--            <el-table-column :render-header="formatLogHeader" label="出库库存" prop="transitCount"-->
-<!--                             width="50">-->
-<!--              <template slot-scope="scope">-->
-<!--                <span>{{ formatNumber(scope.row.transitCountX) }}</span>-->
-<!--                <div class="font-color">{{ scope.row.transitCount }}</div>-->
-<!--              </template>-->
-<!--            </el-table-column>-->
-<!--          </el-table-column>-->
-<!--          <el-table-column label="追溯码" prop="expiryDate" width="100">-->
-<!--            <template slot-scope="scope">-->
-<!--              <span>{{ scope.row.traceCode }}</span>-->
-<!--            </template>-->
-<!--          </el-table-column>-->
-<!--        </el-table>-->
-<!--        <div class="text-center" v-show="pager.count>0 && !loadingStockLog" style="padding-bottom: 20px">-->
-<!--          <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"-->
-<!--                         :page-sizes="[10,20,50,100]"-->
-<!--                         :total="pager.count" layout="total ,sizes, prev, pager, next, jumper"-->
-<!--                         @size-change="handleSizeChange"-->
-<!--                         @current-change="handleCurrentChange">-->
-<!--          </el-pagination>-->
-<!--        </div>-->
+          <el-table-column align="center" label="业务库存">
+            <el-table-column :render-header="formatLogHeader" label="人份剂次"
+                             prop="qualifiedBizServings" width="50">
+              <template slot-scope="scope">
+                <span>{{ formatNumber(scope.row.qualifiedBizServingsX) }}</span>
+                <div class="font-color">{{ scope.row.qualifiedBizServings }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="formatLogHeader" label="合格" prop="availableCount"
+                             width="50">
+              <template slot-scope="scope">
+                <span>{{ formatNumber(scope.row.availableCountX) }}</span>
+                <div class="font-color">{{ scope.row.availableCount }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="formatLogHeader" label="不合格" prop="unQualifiedBizCount" width="50">
+              <template slot-scope="scope">
+                <span>{{ formatNumber(scope.row.unQualifiedBizCountX) }}</span>
+                <div class="font-color">{{ scope.row.unQualifiedBizCount }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="formatLogHeader" label="业务停销" prop="undeterminedActualCount"
+                             width="50">
+              <template slot-scope="scope">
+                <span>{{ formatNumber(scope.row.undeterminedActualCountX) }}</span>
+                <div class="font-color">{{ scope.row.undeterminedActualCount }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="formatLogHeader" label="入库在途" prop="inOrderTransitCount"
+                             width="50">
+              <template slot-scope="scope">
+                <span>{{ formatNumber(scope.row.inOrderTransitCountX) }}</span>
+                <div class="font-color">{{ scope.row.inOrderTransitCount }}</div>
+              </template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column align="center" label="实物库存">
+            <el-table-column :render-header="formatLogHeader" label="人份剂次"
+                             prop="qualifiedActualServings" width="50">
+              <template slot-scope="scope">
+                <span>{{ formatNumber(scope.row.qualifiedActualServingsX) }}</span>
+                <div class="font-color">{{ scope.row.qualifiedActualServings }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="formatLogHeader" label="合格" prop="qualifiedActualCount"
+                             width="50">
+              <template slot-scope="scope">
+                <span>{{ formatNumber(scope.row.qualifiedActualCountX) }}</span>
+                <div class="font-color">{{ scope.row.qualifiedActualCount }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="formatLogHeader" label="不合格" prop="unqualifiedActualCount"
+                             width="50">
+              <template slot-scope="scope">
+                <span>{{ formatNumber(scope.row.unqualifiedActualCountX) }}</span>
+                <div class="font-color">{{ scope.row.unqualifiedActualCount }}</div>
+              </template>
+            </el-table-column>
+            <el-table-column :render-header="formatLogHeader" label="出库库存" prop="transitCount"
+                             width="50">
+              <template slot-scope="scope">
+                <span>{{ formatNumber(scope.row.transitCountX) }}</span>
+                <div class="font-color">{{ scope.row.transitCount }}</div>
+              </template>
+            </el-table-column>
+          </el-table-column>
+          <el-table-column label="追溯码" prop="expiryDate" width="100">
+            <template slot-scope="scope">
+              <span>{{ scope.row.traceCode }}</span>
+            </template>
+          </el-table-column>
+        </el-table>
+        <div class="text-center" v-show="pager.count>0 && !loadingStockLog" style="padding-bottom: 20px">
+          <el-pagination :current-page="pager.currentPage" :page-size="pager.pageSize"
+                         :page-sizes="[10,20,50,100]"
+                         :total="pager.count" layout="total ,sizes, prev, pager, next, jumper"
+                         @size-change="handleSizeChange"
+                         @current-change="handleCurrentChange">
+          </el-pagination>
+        </div>
       </div>
     </div>
   </div>
