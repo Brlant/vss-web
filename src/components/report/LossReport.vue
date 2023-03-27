@@ -83,6 +83,19 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
+              <oms-form-row :span="6" label="创建下单时间">
+                <el-col :span="24">
+                  <el-date-picker
+                    v-model="orderTimes"
+                    format="yyyy-MM-dd"
+                    placeholder="请选择" type="daterange">
+                  </el-date-picker>
+                </el-col>
+              </oms-form-row>
+            </el-col>
+          </el-row>
+          <el-row>
+            <el-col :span="8">
               <oms-form-row :span="6" label="">
                   <el-button :disabled="loadingData" type="primary" @click="search">
                     查询
@@ -115,6 +128,11 @@
         </el-table-column>
         <el-table-column :sortable="true" label="损耗人份" prop="amount"></el-table-column>
         <el-table-column :sortable="true" label="损耗时间">
+          <template v-slot="{row}">
+           {{ row.breakageTime | date}}
+          </template>
+        </el-table-column>
+        <el-table-column :sortable="true" label="创建下单时间">
           <template v-slot="{row}">
            {{ row.createTime | date}}
           </template>
@@ -169,6 +187,7 @@ export default {
         pageSize: 20,
       },
       createTimes: [],
+      orderTimes: [],  // 创建下单时间
       reportList: [],
       factories: [],
       orgGoods: [],
@@ -203,6 +222,8 @@ export default {
     exportFile() {
       this.params.createStartTime = this.$formatAryTime(this.createTimes, 0);
       this.params.createEndTime = this.$formatAryTime(this.createTimes, 1);
+      this.params.orderSrartTime = this.$formatAryTime(this.orderTimes, 0);
+      this.params.orderEndTime = this.$formatAryTime(this.orderTimes, 1);
       this.isLoading = true;
       this.$store.commit('initPrint', {isPrinting: true, moduleId: '/report/wastage-report-vss'});
       this.$http.get('/erp-statement/wastage-report/export', {params: this.params}).then(res => {
@@ -220,6 +241,8 @@ export default {
     search() {
       this.params.createStartTime = this.$formatAryTime(this.createTimes, 0);
       this.params.createEndTime = this.$formatAryTime(this.createTimes, 1);
+      this.params.orderSrartTime = this.$formatAryTime(this.orderTimes, 0);
+      this.params.orderEndTime = this.$formatAryTime(this.orderTimes, 1);
       this.loadingData = true;
       this.$http.get('/erp-statement/wastage-report', {params: this.params}).then(res => {
         this.reportList = res.data.list;
@@ -282,6 +305,7 @@ export default {
     resetSearchForm() {
       this.params = {};
       this.createTimes = [];
+      this.orderTimes = [];
       this.totalCount = 0;
       this.search();
     }
@@ -292,6 +316,10 @@ export default {
 }
 </script>
 
-<style scoped>
-
+<style lang="scss" scoped>
+ .app-body .el-date-editor--daterange.el-input__inner, 
+ .app-body .el-date-editor--timerange.el-input, 
+ .app-body .el-date-editor--timerange.el-input__inner {
+   max-width: 100%;
+ }
 </style>
