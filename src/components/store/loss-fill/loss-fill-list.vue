@@ -49,7 +49,7 @@
               </oms-form-row>
             </el-col>
             <el-col :span="8">
-              <oms-form-row :span="6" label="下单时间">
+              <oms-form-row :span="6" label="创建下单时间">
                 <el-col :span="24">
                   <el-date-picker
                     v-model="createdTimes"
@@ -92,7 +92,7 @@
         <el-row class="order-list-header">
           <el-col :span="8">货主/订单号</el-col>
           <el-col :span="4">所属区域</el-col>
-          <el-col :span="5">损耗时间</el-col>
+          <el-col :span="5">创建下单时间</el-col>
           <el-col :span="2">状态</el-col>
           <el-col v-if="params.state === 0 " :span="5" class="opera-btn">操作</el-col>
         </el-row>
