@@ -102,6 +102,49 @@
   }
 }
 </style>
+<style lang="scss">
+.batchShow{
+  .batchTitle {
+    color:#c00
+  }
+  .batchContent{
+    width: 100%;
+    max-height: 210px;
+    box-sizing: border-box;
+    padding: 5px;
+    overflow-x: hidden;
+    overflow-y: auto;
+    .abnormalLi{
+      width: 100%;
+      box-sizing: border-box;
+      margin-bottom: 10px;
+      .el-card__body{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        .name{
+          width: 60%;
+          box-sizing: border-box;
+          padding-right: 20px;
+        }
+        .price{
+          width: 20%;
+          text-align: center;
+        }
+        .label{
+          width: 20%;
+          text-align: right;
+          box-sizing: border-box;
+          padding-right: 10px;
+          text-align: right;
+          color: rgb(164, 172, 44);
+        }
+      }
+      
+    }
+  }
+}
+</style>
 <template>
   <div class="order-page">
     <div class="container">
@@ -295,6 +338,28 @@
       <order-form :orderId="orderId" :state="state" :vaccineType="vaccineType"
                   @close="resetRightBox" @refreshOrder="refreshOrder"></order-form>
     </page-right>
+    <!-- 批量生成采购订单校验弹窗 -->
+    <div class="batchShow">
+    <el-dialog
+      :visible.sync="batchDialogVisible"
+      width="30%"
+      :show-close="true"
+      >
+      <div >
+        <div class="batchTitle">检测到合同中存在未授权的疫苗信息，无法完成订单生成，请重新编辑合同疫苗内容后再尝试!</div>
+        <div class="batchContent">
+            <el-card shadow="always" class="abnormalLi" v-for="(item,index) in abnormalList" :key="index">
+              <div class="name">{{item.name}}</div>
+              <div class="price">￥{{item.price}}</div>
+              <div class="label">未授权采购</div>
+            </el-card>
+        </div>
+      </div>
+      <span slot="footer" class="dialog-footer">
+        <el-button @click="batchDialogVisible = false">关 闭</el-button>
+      </span>
+    </el-dialog>
+    </div>
   </div>
 </template>
 <script>
@@ -350,7 +415,9 @@ export default {
       },
       action: '',
       user: {},
-      purchase: {}
+      purchase: {},
+      batchDialogVisible:false,
+      abnormalList:[], // 无采购授权的疫苗列表
     };
   },
   mixins: [OrderMixin],
@@ -423,9 +490,23 @@ export default {
       });
     },
     createOrder: function (item) {
+      this.abnormalList = []
       if (!item) {
         return;
       }
+      this.$http.get(`/purchase-contract/${item.id}/authGoods`).then(res=>{
+        if(res.data.auth){
+          // 可以生产采购订单
+          this.normalOrder(item)
+        }else{
+          // 订单存在无采购授权的疫苗
+          this.batchDialogVisible = true
+          this.abnormalList = res.data.detailList
+        }
+      })
+    },
+    // 正常采购订单
+    normalOrder(item){
       let title = '';
       if (item.name) {
         title = '《' + item.name + '》';
