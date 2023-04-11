@@ -7,10 +7,10 @@
     width="500px">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="原因" prop="applicationReason">
-        <el-input v-model="form.applicationReason" type="textarea"></el-input>
+        <el-input v-model="form.applicationReason" type="textarea" :rows="1"></el-input>
       </el-form-item>
-      <el-form-item label="追溯码" prop="detailDtoList">
-        <div v-for="(item,index) in form.detailDtoList" :key="index">
+      <el-form-item label="追溯码" prop="traceCode">
+        <!-- <div v-for="(item,index) in form.detailDtoList" :key="index">
           <el-row style="padding-bottom: 4px">
             <el-col :span="20">
               <el-input v-model="item.code"></el-input>
@@ -22,8 +22,41 @@
                  style="font-size: 20px;color: red;cursor: pointer" @click="eddCode(index)"></i>
             </el-col>
           </el-row>
-        </div>
+        </div> -->
+        <el-input v-model="form.traceCode" type="textarea" :rows="5" placeholder="可以录入多个追溯码，追溯码之间可以通过逗号分隔、空格分隔、换行分隔"></el-input>
       </el-form-item>
+      <el-row style="margin-bottom:15px">
+        <el-col :span="6" :offset="3">
+          <el-button type="primary" @click="reviewTraceCode" :loading="doing">复核追溯码</el-button>
+        </el-col>
+        <el-col :span="6" :offset="1">
+          <el-button  type="primary" plain>批量移除追溯码</el-button>
+        </el-col>
+      </el-row>
+      <!-- 复核结果 -->
+      <el-row style="margin-bottom:5px">
+        <el-col :span="6" >复核结果</el-col>
+      </el-row>
+      <el-table :data="form.detailDtoList"
+      style="width: 100%;margin-bottom:15px">
+        <el-table-column
+        prop="code"
+        label="追溯码">
+        <template slot-scope="scope">
+          <span>{{scope.row.code}}</span>
+          <el-tag v-if="!scope.row.errorFlag" type="success">正常</el-tag>
+          <el-tag v-else type="danger">错误</el-tag>
+          <span v-if="scope.row.errorFlag">（错误信息: {{scope.row.exceptionResultTitle}}）</span>
+        </template>
+      </el-table-column>
+      <el-table-column
+      label="操作"
+      width="100">
+      <template slot-scope="scope">
+        <el-button type="danger" size="mini" @click="removeCode(scope.row)">删除</el-button>
+      </template>
+      </el-table-column>
+      </el-table>
       <el-form-item label="数量">
         <el-input-number v-model="form.cancelCount" :min="1"></el-input-number>
       </el-form-item>
@@ -76,16 +109,20 @@ export default {
     return {
       form: {
         applicationReason: '', //撤销原因
+        // TODO
+        traceCode:'', // 追溯码
         cancelCount: 1,//数量
-        detailDtoList: [{code: ''}],//追溯码
+        // 复核结果
+        detailDtoList: [],//追溯码
         fileIdList: [],//附件
         injectionTaskId: '',//订单明细id
         orderId: '',//订单id
       },
       rules: {
         applicationReason: [{required: true, message: '请输入原因', trigger: 'blur'}],
+        traceCode: [{required: true, message: '请输入追溯码', trigger: 'blur'}],
         fileIdList: [{required: true, message: '请选择文件'},],
-        detailDtoList: [{required: true, validator: checkCode, trigger: 'change'}],
+        // detailDtoList: [{required: true, validator: checkCode, trigger: 'change'}], 
       },
       doing: false,
       fileList: [],
@@ -106,8 +143,9 @@ export default {
       this.dialogVisible = false;
       this.form = {
         applicationReason: '', //撤销原因
+        traceCode:'', // 追溯码
         cancelCount: 0,//数量
-        detailDtoList: [{code: ''}],//追溯码
+        detailDtoList: [],//追溯码
         fileIdList: [],//附件
         injectionTaskId: '',//订单明细id
         orderId: '',//订单id
@@ -127,11 +165,53 @@ export default {
     show() {
       this.dialogVisible = true;
     },
+    // 复核追溯码
+    reviewTraceCode(){
+      if (this.doing) return;
+      let codeList = this.form.traceCode.split(/[\n,\s，]/g).filter(f => f);
+      if (!codeList.length) return this.$notify.info('请输入追溯码');
+      this.doing = true;
+      this.$http.post(`/erp-order/${this.form.orderId}/review`, codeList).then(res => {
+        // this.form.traceCode = '';
+        this.doing = false;
+        this.queryCodeList();
+      }).catch(error => {
+        this.doing = false;
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '提交失败'
+        });
+      });
+    },
+    queryCodeList() {
+      this.$http.get(`/erp-order/out/${this.form.orderId}/code`).then(res => {
+        res.data.errorCodeList.forEach(i => i.errorFlag = true);
+        this.form.detailDtoList = res.data.packageDtoList.concat(res.data.errorCodeList);
+      });
+    },
+    // 删除
+    removeCode(item){
+      this.$http.delete(`/review-code/${item.logId}`).then(res => {
+        this.queryCodeList();
+      });
+    },
     submit() {
       this.$refs.form.validate((valid) => {
         if (valid) {
+          // 复核结果列表不能为空(校验)
+          if(this.form.detailDtoList.length == 0){
+            this.$message.warning('请先复核追溯码')
+            return
+          }
+          let arg = {
+            applicationReason: this.form.applicationReason, //撤销原因
+            cancelCount: this.form.cancelCount,//数量
+            detailDtoList: this.form.detailDtoList,//追溯码
+            fileIdList: this.form.fileIdList,//附件
+            injectionTaskId: this.form.injectionTaskId,//订单明细id
+            orderId: this.form.orderId,//订单id
+          }
           this.doing = true;
-          demand.reportedUndo(this.form).then(res => {
+          demand.reportedUndo(arg).then(res => {
             this.doing = false;
             this.handleClose();
           }).catch(error => {
@@ -150,6 +230,10 @@ export default {
 };
 </script>
 
-<style scoped>
-
+<style  scoped>
+.el-form{
+  max-height: 620px !important;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
 </style>
