@@ -36,7 +36,7 @@ const targets = {
   sh: 'https://sh-vss.cdcerp.cn',
   sh_test: 'https://un-vss.cdcerp.cn/',
   xl: 'http://192.168.5.45:8081',
-  cjg:'http://192.168.5.26:8081',
+  cjg:'http://192.168.5.29:8081',
 };
 
 module.exports = {
@@ -48,7 +48,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: targets.sh_test,
+        target: targets.cjg,
         changOrigin: true
       }
     }
