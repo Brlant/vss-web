@@ -30,7 +30,7 @@
           <el-button type="primary" @click="reviewTraceCode" :loading="doing">复核追溯码</el-button>
         </el-col>
         <el-col :span="6" :offset="1">
-          <el-button  type="primary" plain>批量移除追溯码</el-button>
+          <el-button  type="primary" plain @click="batchRemove">批量移除追溯码</el-button>
         </el-col>
       </el-row>
       <!-- 复核结果 -->
@@ -171,7 +171,11 @@ export default {
       let codeList = this.form.traceCode.split(/[\n,\s，]/g).filter(f => f);
       if (!codeList.length) return this.$notify.info('请输入追溯码');
       this.doing = true;
-      this.$http.post(`/erp-order/${this.form.orderId}/review`, codeList).then(res => {
+      let arg = {
+        orderId:this.form.orderId,
+        codeList:codeList
+      }
+      this.$http.post(`/erp-breakage/review`, arg).then(res => {
         // this.form.traceCode = '';
         this.doing = false;
         this.queryCodeList();
@@ -187,6 +191,27 @@ export default {
         res.data.errorCodeList.forEach(i => i.errorFlag = true);
         this.form.detailDtoList = res.data.packageDtoList.concat(res.data.errorCodeList);
       });
+    },
+    /**
+     * 批量移除追溯码
+     * **/
+    batchRemove(){
+      let codeList = this.form.traceCode.split(/[\n,\s，]/g).filter(i => i);
+      if(codeList.length){
+        this.$confirm("确认要全部清空?", "提示", {type: "warning"})
+          .then(async () => {
+            this.form.traceCode = ''
+          })
+      }else {
+        this.$notify.info({
+          title: '提示',
+          message: '暂无追溯码数据',
+          duration: '2000',
+          onClose: function () {
+
+          }
+        });
+      }
     },
     // 删除
     removeCode(item){
