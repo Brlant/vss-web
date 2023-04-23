@@ -47,9 +47,14 @@
       </div>
       <div class="order-list clearfix" style="margin-top: 20px">
         <el-row class="order-list-header">
-          <el-col :span="8">创建人</el-col>
-          <el-col :span="8">创建时间</el-col>
-          <el-col :span="8">操作</el-col>
+          <el-col :span="3">创建人</el-col>
+          <el-col :span="3">创建时间</el-col>
+          <el-col :span="3">待盘点数量</el-col>
+          <el-col :span="3">正常</el-col>
+          <el-col :span="3">异常待处理</el-col>
+          <el-col :span="3">已盘盈</el-col>
+          <el-col :span="3">已盘亏</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <oms-loading :loading="loadingData"></oms-loading>
@@ -61,9 +66,14 @@
           <div v-for="item in inventories" :class="[{'active':currentOrderId===item.id}]"
                class="order-list-item order-list-item-bg" @click.prevent="showDetail(item)">
             <el-row>
-              <el-col :span="8" class="pt5">{{ item.creatorName }}</el-col>
-              <el-col :span="8" class="pt5">{{ item.createTime | minute }}</el-col>
-              <el-col :span="6" class="opera-btn">
+              <el-col :span="3" class="pt5">{{ item.creatorName }}</el-col>
+              <el-col :span="3" class="pt5">{{ item.createTime | minute }}</el-col>
+              <el-col :span="3" class="pt5">{{ item.noOperation }}</el-col>
+              <el-col :span="3" class="pt5">{{ item.normal}}</el-col>
+              <el-col :span="3" class="pt5">{{ item.exception }}</el-col>
+              <el-col :span="3" class="pt5">{{ item.inventorySurplus }}</el-col>
+              <el-col :span="3" class="pt5">{{ item.dishDeficientOutbound }}</el-col>
+              <el-col :span="3" class="opera-btn">
                 <perm label="erp-stock-inventory-delete">
                     <span @click.stop="deleteDetail(item)">
                        <a class="btn-circle" href="#" @click.prevent=""><i class="el-icon-t-delete"></i></a>删除
