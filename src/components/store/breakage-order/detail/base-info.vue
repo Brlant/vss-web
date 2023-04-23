@@ -200,7 +200,7 @@
         </table>
       </div>
     </div>
-    <undo ref="undo"></undo>
+    <undo ref="undo" @handleClose="handleClose" :showFlag.sync="showFlag" :orderId="currentOrderId" :injectionTaskId="currentInjectionTaskId"></undo>
   </div>
 </template>
 <script>
@@ -248,7 +248,10 @@ export default {
         remark: [
           {required: true, message: '请输入备注信息', trigger: 'blur'}
         ]
-      }
+      },
+      showFlag:false,
+      currentOrderId:'',
+      currentInjectionTaskId:'', 
     };
   },
   computed: {
@@ -304,6 +307,9 @@ export default {
     }
   },
   methods: {
+    handleClose(){
+      this.showFlag = false
+    },
     queryAttachmentList: function () {// 附件管理
       if (!this.currentOrder.id) return;
       OmsAttachment.queryOneAttachmentList(this.currentOrder.id, 'breakageOrderFile').then(res => {
@@ -318,12 +324,15 @@ export default {
       this.currentOrder.fileIdList = ids;
     },
     showUndo(item) {
-      this.$refs.undo.form = Object.assign({}, this.$refs.undo.form, {
-        orderId: item.orderId,
-        injectionTaskId: item.id,
-      });
-      this.$refs.undo.show();
-
+      // TODO
+      // this.$refs.undo.form = Object.assign({}, this.$refs.undo.form, {
+      //   orderId: item.orderId,
+      //   injectionTaskId: item.id,
+      // });
+      // this.$refs.undo.show();
+      this.currentOrderId = item.orderId
+      this.currentInjectionTaskId = item.id
+      this.showFlag = true
     },
     filterAddressLabel(item) {
       let name = item.name ? '【' + item.name + '】' : '';

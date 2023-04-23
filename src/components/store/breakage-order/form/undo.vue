@@ -88,6 +88,21 @@ export default {
   components: {
     OmsElUpload
   },
+  props:{
+    // 接受父级组件的显示标记，用于被watch
+    showFlag: {
+      type: Boolean,
+      default:false,
+    },
+    orderId: {
+      type: String,
+      default: ''
+    },
+    injectionTaskId: {
+      type: String,
+      default: ''
+    },
+  },
   data() {
     const checkCode = (rule, value, callback) => {
       if (value.length > 1) {
@@ -129,6 +144,23 @@ export default {
       dialogVisible: false
     };
   },
+  watch:{
+    showFlag(val){
+      if(val){
+        this.dialogVisible = val
+        this.form.orderId = this.orderId
+        this.form.injectionTaskId=this.injectionTaskId
+        this.queryCodeList()
+      }
+    },
+  },
+  // mounted(){
+  //   // 初始查询复核追溯码列表
+  //   this.$nextTick(()=>{
+  //     console.log(this.form.orderId,'mounted');
+  //     this.queryCodeList()
+  //   })
+  // },
   methods: {
     onPreview(file) {
       this.$store.commit('changeAttachment', {currentId: file.response.attachmentId, attachmentList: this.fileList});
@@ -140,7 +172,6 @@ export default {
       this.form.detailDtoList.splice(index, 1);
     },
     handleClose() {
-      this.dialogVisible = false;
       this.form = {
         applicationReason: '', //撤销原因
         traceCode:'', // 追溯码
@@ -154,6 +185,10 @@ export default {
       this.$nextTick(() => {
         this.$refs.form.clearValidate();
       });
+      this.dialogVisible = false;
+      console.log('111');
+      // 触发父组件关闭弹窗
+      this.$parent.handleClose();
     },
     handleAvatarSuccess(file) {
       this.form.fileIdList.push(file.attachmentId);
@@ -175,7 +210,7 @@ export default {
         orderId:this.form.orderId,
         codeList:codeList
       }
-      this.$http.post(`/erp-breakage/review`, arg).then(res => {
+      this.$http.post(`/erp-breakage/revokeBreakageReview`, arg).then(res => {
         // this.form.traceCode = '';
         this.doing = false;
         this.queryCodeList();
@@ -187,7 +222,7 @@ export default {
       });
     },
     queryCodeList() {
-      this.$http.get(`/erp-order/out/${this.form.orderId}/code`).then(res => {
+      this.$http.get(`/erp-order/break/${this.form.orderId}/code`).then(res => {
         res.data.errorCodeList.forEach(i => i.errorFlag = true);
         this.form.detailDtoList = res.data.packageDtoList.concat(res.data.errorCodeList);
       });
