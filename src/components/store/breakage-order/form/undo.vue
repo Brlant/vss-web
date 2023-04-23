@@ -150,7 +150,6 @@ export default {
         this.dialogVisible = val
         this.form.orderId = this.orderId
         this.form.injectionTaskId=this.injectionTaskId
-        this.queryCodeList()
       }
     },
   },
@@ -186,7 +185,6 @@ export default {
         this.$refs.form.clearValidate();
       });
       this.dialogVisible = false;
-      console.log('111');
       // 触发父组件关闭弹窗
       this.$parent.handleClose();
     },
