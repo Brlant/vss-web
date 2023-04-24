@@ -34,6 +34,7 @@ const targets = {
   ldw2: 'http://vss-ldm.vaiwan.com',
   hw: 'https://hw-test-vss.cdcerp.cn',
   sh: 'https://sh-vss.cdcerp.cn',
+  un: 'https://un-vss.cdcerp.cn',
   sh_test: 'https://un-vss.cdcerp.cn/',
   xl: 'http://192.168.5.45:8081',
   cjg:'http://192.168.5.29:8081',
