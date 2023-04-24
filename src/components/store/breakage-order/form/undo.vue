@@ -4,7 +4,7 @@
     :visible.sync="dialogVisible"
     append-to-body
     title="撤销"
-    width="500px">
+    width="650px">
     <el-form ref="form" :model="form" :rules="rules" label-width="80px">
       <el-form-item label="原因" prop="applicationReason">
         <el-input v-model="form.applicationReason" type="textarea" :rows="1"></el-input>
@@ -135,7 +135,7 @@ export default {
       },
       rules: {
         applicationReason: [{required: true, message: '请输入原因', trigger: 'blur'}],
-        traceCode: [{required: true, message: '请输入追溯码', trigger: 'blur'}],
+        // traceCode: [{required: true, message: '请输入追溯码', trigger: 'blur'}],
         fileIdList: [{required: true, message: '请选择文件'},],
         // detailDtoList: [{required: true, validator: checkCode, trigger: 'change'}], 
       },
