@@ -49,7 +49,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: targets.cjg,
+        target: targets.xl,
         changOrigin: true
       }
     }
