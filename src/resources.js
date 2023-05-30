@@ -510,6 +510,10 @@ export const erpOrder = resource('/erp-order', http, {
   cancel(orderId, obj) {
     return http.put(`/erp-order/${orderId}/cancel`, obj);
   },
+  // 查询未收货订单
+  queryNotSignedOrder: (params) => {
+    return http.get('/erp-order/queryNotSignedOrder', {params});
+  },
   // 查询异常
   queryOrderExcepiton: (params) => {
     return http.get('/erp-order/quality-exception', {params});
@@ -866,6 +870,9 @@ export const pullSignal = resource('/pull-signal', http, {
   },
   queryCDC(params) {
     return http.get('/pull-signal/cdc', {params});
+  },
+  queryNotFinishOrder(){
+    return http.get('/erp-order/queryNotFinishOrder');
   }
 });
 

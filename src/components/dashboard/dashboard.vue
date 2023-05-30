@@ -20,6 +20,8 @@
   <div class="container">
     <!--公告-->
     <notice/>
+    <!-- 未签收订单 -->
+    <unreceived-orders/>
     <!--异常的采购订单信息-->
     <purchase-order-exception/>
 
@@ -35,13 +37,14 @@
 </template>
 <script>
 import PurchaseOrderException from './purchase-order-exception';
+import UnreceivedOrders from './unreceived-orders';
 import DevDemand from './dev-demand';
 import StockOverdueTip from './stock-overdue-tip';
 import licence from './licence';
 import notice from './notice/notice';
 
 export default {
-  components: {PurchaseOrderException, DevDemand, StockOverdueTip, licence, notice}
+  components: {PurchaseOrderException,UnreceivedOrders, DevDemand, StockOverdueTip, licence, notice}
 };
 
 </script>

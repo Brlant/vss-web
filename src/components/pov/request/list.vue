@@ -425,6 +425,21 @@ export default {
       });
     },
     audited() {
+      pullSignal.queryNotFinishOrder().then(res=>{
+        if(res.data && res.data.length >0){
+          this.$confirm('您有未签收订单，需签收完成后才可订苗?', '', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(()=>{
+            this.approve()
+          })
+        }else{
+          this.approve()
+        }
+      })
+    },
+    approve(){
       this.$confirm('是否审核通过"' + this.currentOrder.id + '" 申请单?', '', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
