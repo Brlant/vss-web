@@ -514,22 +514,48 @@ export default {
       this.$confirm('确认按照采购合同' + title + '的信息批量生成采购订单?', '', {
         confirmButtonText: '确认',
         cancelButtonText: '取消',
-        type: 'warning'
-      }).then(() => {
-        PurchaseContract.batchCreateOrder(item.id).then(() => {
-          this.$notify.success({
-            duration: 2000,
-            title: '成功',
-            message: '批量生成采购订单成功'
+        type: 'warning',
+        beforeClose:(action,ctx,close)=>{
+          if(action !=='confirm'){
+            ctx.confirmButtonLoading = false;  // 防止点击确定loading转圈后关闭弹窗，再次打开后一直有loading转圈
+            close();
+            return
+          }
+          ctx.confirmButtonLoading = true;
+          PurchaseContract.batchCreateOrder(item.id).then(() => {
+            ctx.confirmButtonLoading = false;
+            close();
+            this.$notify.success({
+              duration: 2000,
+              title: '成功',
+              message: '批量生成采购订单成功'
+            });
+            this.getOrderList(1);
+          }).catch(error => {
+            ctx.confirmButtonLoading = false;
+            close();
+            this.$notify.error({
+              duration: 2000,
+              message: error.response && error.response.data && error.response.data.msg || '批量生成采购订单失败'
+            });
           });
-          this.getOrderList(1);
-        }).catch(error => {
-          this.$notify.error({
-            duration: 2000,
-            message: error.response && error.response.data && error.response.data.msg || '批量生成采购订单失败'
-          });
-        });
-      });
+        }
+      })
+      // .then(() => {
+      //   PurchaseContract.batchCreateOrder(item.id).then(() => {
+      //     this.$notify.success({
+      //       duration: 2000,
+      //       title: '成功',
+      //       message: '批量生成采购订单成功'
+      //     });
+      //     this.getOrderList(1);
+      //   }).catch(error => {
+      //     this.$notify.error({
+      //       duration: 2000,
+      //       message: error.response && error.response.data && error.response.data.msg || '批量生成采购订单失败'
+      //     });
+      //   });
+      // });
     },
     refreshOrder() {
       this.currentOrderId = '';
