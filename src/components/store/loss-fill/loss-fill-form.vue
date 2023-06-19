@@ -206,6 +206,7 @@ $leftWidth: 200px;
                     <el-date-picker
                       format="yyyy-MM-dd HH:mm:ss"
                       value-format="timestamp"
+                      :picker-options="pickerOptionsStart"
                       type="datetime"
                       v-model="row.breakageTime"
                       placeholder="请选择损耗时间"/>
@@ -289,6 +290,12 @@ export default {
     };
 
     return {
+      pickerOptionsStart:{
+        // 时间不能大于当前时间
+        disabledDate: (time) => {
+          return time.getTime() > Date.now()
+        }
+      },
       loading: false,
       filterProductList: [],
       // 附件
