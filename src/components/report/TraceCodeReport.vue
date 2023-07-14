@@ -420,13 +420,19 @@ export default {
       totalCount: 0,
       injectionOrgs: [],//所有的接种单位
       // 提取单位的代码，方便按代码获取单位的id
-      orgs: {}
+      orgs: {},
+      cunrrentOrg:'',  // 个人获取当前用户的关联单位信息
+      // 业务单位类型 0其他 1为接种单位 2区疾控 3市疾控
+      orgType : window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')).orgType  : '',
     }
   },
   computed: {
     areaCodes() {
       let acs = this.$getDict('areaCode').map(item => ({value: item.key, label: item.label}));
-      if (this.hasPov) {
+      if (this.orgType == 1) {
+        return acs.filter(item => item.value === this.currOrg.orgAreaCode);
+      }
+      if (this.orgType == 2) {
         return acs.filter(item => item.value === this.currOrg.orgAreaCode);
       }
       return acs;
@@ -467,7 +473,7 @@ export default {
         this.params.orgManufacturerCode = this.currOrg.manufacturerCode;
         this.orgs[this.currOrg.manufacturerCode] = this.currOrg
       }
-    }
+    },
   },
   methods: {
     // 序号从1开始，翻页不重置
@@ -534,61 +540,64 @@ export default {
         })
     },
     filterInjectionOrgs(keyword) { // 生产单位
-      // 只查接种单位，即orgRelationTypeList中带有pov的
-      let params = {
-        keyWord: keyword,
-        // 根据所属区，过滤区下接种单位。模糊搜索、可多选。若不选所属区域，则可选择所有接种单位。
-        orgAreaCode: this.params.orgAreaCode,
-        //接种单位登录，默认：本单位，不可切换,manufacturerCode只有接种单位登录才有值
-        manufacturerCode: this.manufacturerCode,
-        orgRelationTypeList: [
-          'POV',
-          'POV-1',
-          'POV-2',
-          'POV-3',
-          'POV-4',
-          'POV-5',
-          'POV-6',
-        ],
-        pageNo: 1,
-        pageSize: 100000
-      };
-
-      this.params.orgManufacturerCode = '';
-      BaseInfo.queryByOrgRelationTypeList(params).then(res => {
-        this.injectionOrgs = res.data.list.filter(item => {
-          let flag = true;
-          if (this.params.orgAreaCode) {
-            flag = item.orgAreaCode == this.params.orgAreaCode;
-          }
-          if (this.manufacturerCode) {
-            flag = flag && item.manufacturerCode == this.manufacturerCode;
-          }
-
-          return flag;
-        }).map(item => ({
-          id: item.id,
-          name: item.name,
-          orgAreaCode: item.orgAreaCode,
-          manufacturerCode: item.manufacturerCode
-        }));
-
-        this.injectionOrgs.forEach(item => {
-          this.orgs[item.manufacturerCode] = {
-            id: item.id,
-            name: item.name,
-            orgAreaCode: item.orgAreaCode,
-            manufacturerCode: item.manufacturerCode
+      return new Promise((resolve, reject) => {
+          // 只查接种单位，即orgRelationTypeList中带有pov的
+          let params = {
+            keyWord: keyword,
+            // 根据所属区，过滤区下接种单位。模糊搜索、可多选。若不选所属区域，则可选择所有接种单位。
+            orgAreaCode: this.params.orgAreaCode,
+            //接种单位登录，默认：本单位，不可切换,manufacturerCode只有接种单位登录才有值
+            manufacturerCode: this.manufacturerCode,
+            orgRelationTypeList: [
+              'POV',
+              'POV-1',
+              'POV-2',
+              'POV-3',
+              'POV-4',
+              'POV-5',
+              'POV-6',
+            ],
+            pageNo: 1,
+            pageSize: 100000
           };
-        })
-        if (this.injectionOrgs.length == 1) {
-          this.params.orgManufacturerCode = this.injectionOrgs[0].manufacturerCode;
-        }
+          this.params.orgManufacturerCode = '';
+          BaseInfo.queryByOrgRelationTypeList(params).then(res => {
+            this.injectionOrgs = res.data.list.filter(item => {
+              let flag = true;
+              if (this.params.orgAreaCode) {
+                flag = item.orgAreaCode == this.params.orgAreaCode;
+              }
+              if (this.manufacturerCode) {
+                flag = flag && item.manufacturerCode == this.manufacturerCode;
+              }
 
-        if (!this.params.orgManufacturerCode) {
-          this.query();
-        }
-      });
+              return flag;
+            }).map(item => ({
+              id: item.id,
+              name: item.name,
+              orgAreaCode: item.orgAreaCode,
+              manufacturerCode: item.manufacturerCode
+            }));
+
+            this.injectionOrgs.forEach(item => {
+              this.orgs[item.manufacturerCode] = {
+                id: item.id,
+                name: item.name,
+                orgAreaCode: item.orgAreaCode,
+                manufacturerCode: item.manufacturerCode
+              };
+            })
+            if (this.injectionOrgs.length == 1) {
+              this.params.orgManufacturerCode = this.injectionOrgs[0].manufacturerCode;
+            }
+
+            if (!this.params.orgManufacturerCode) {
+              this.query();
+            }
+            resolve()
+          });
+      })
+      
     },
     filterOrgGoods(keyWord) {
       const orgId = this.orgs[this.params.orgManufacturerCode].id;
@@ -650,16 +659,31 @@ export default {
       // 这个会触发监听
       this.purchasingStorageTimes = [new Date(Date.now() - 3600 * 1000 * 24 * 180), new Date()];
     },
+    // 获取用户组织关系
+    queryBaseInfo() {
+      return new Promise((resolve, reject) => {
+        let id =  window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')).userCompanyAddress  : ''
+        BaseInfo.queryBaseInfo(id).then(res => {
+          this.cunrrentOrg = res.data.orgDto
+          resolve()
+        });
+      })
+    },
   },
-  mounted() {
-    this.$nextTick(() => {
-      if (this.hasPov) {
-        this.params.orgAreaCode = this.currOrg.orgAreaCode;
-        this.params.orgManufacturerCode = this.currOrg.manufacturerCode;
+  async created(){
+    await this.queryBaseInfo()
+    await this.$nextTick(() => {
+      if (this.orgType == 1) {
+        this.params.orgAreaCode = this.cunrrentOrg.orgAreaCode;
+        this.params.orgManufacturerCode = this.cunrrentOrg.manufacturerCode;
       }
-      this.filterInjectionOrgs('');
+      if(this.orgType == 2){
+        this.params.orgAreaCode = this.cunrrentOrg.orgAreaCode;
+      }
+     
     })
-  }
+    await this.filterInjectionOrgs('');
+  },
 }
 </script>
 
