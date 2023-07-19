@@ -149,7 +149,7 @@ $leftWidth: 200px;
               </el-select>
             </el-form-item>
             <el-form-item label="运输条件" prop="transportationConditionId">
-              <el-select v-model="form.transportationConditionId" placeholder="请选择运输条件" type="text">
+              <el-select v-model="form.transportationConditionId" placeholder="请选择运输条件" type="text" @change="changeCondition">
                 <el-option v-for="item in transportationConditionList" :key="item.key" :label="item.label"
                            :value="item.key"></el-option>
               </el-select>
@@ -716,6 +716,31 @@ export default {
         this.form.warehouseId = defaultStore.length ? defaultStore[0].id : '';
       });
     },
+    // 运输条件改变
+    changeCondition:function(transportationConditionId){
+      this.form.transportationConditionId = transportationConditionId
+      this.$nextTick(function () {
+        this.product = {
+            'amount': null,
+            'entrustment': false,
+            'measurementUnit': '',
+            'orgGoodsId': '',
+            'packingCount': null,
+            'specificationsId': '',
+            'fixInfo': {
+              'goodsDto': {}
+            },
+            'unitPrice': null
+          };
+          this.$refs['orderGoodsAddForm'].resetFields();
+          this.accessoryList = [];
+          this.batchNumbers = [];
+          this.editItemProduct = {};
+          this.form.detailDtoList = [];
+          this.filterProductList = [];
+          this.searchProduct(); 
+      });
+    },
     searchProduct: function (query) {
       if (!this.form.cdcId || typeof this.form.goodsType !== 'number') {
         this.searchProductList = [];
@@ -725,7 +750,8 @@ export default {
       let params = {
         keyWord: query,
         factoryId: this.form.cdcId,
-        vaccineType: this.form.goodsType + 1
+        vaccineType: this.form.goodsType + 1,
+        storageType:this.form.transportationConditionId
       };
       let rTime = Date.now();
       this.requestTime = rTime;

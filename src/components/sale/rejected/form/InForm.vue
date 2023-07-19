@@ -165,7 +165,7 @@ $leftWidth: 220px;
             </el-form-item>
             <el-form-item v-show="showContent.isShowOtherContent" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
                           label="运输条件">
-              <el-select v-model="form.transportationCondition" placeholder="请选择运输条件" type="text">
+              <el-select v-model="form.transportationCondition" placeholder="请选择运输条件" type="text" @change="changeCondition">
                 <el-option v-for="item in transportationConditionList" :key="item.key" :label="item.label"
                            :value="item.key"></el-option>
               </el-select>
@@ -854,6 +854,31 @@ export default {
         });
       });
     },
+    // 运输条件改变
+    changeCondition:function(transportationCondition){
+      this.form.transportationCondition = transportationCondition
+      this.$nextTick(function () {
+        this.product = {
+            'amount': null,
+            'entrustment': false,
+            'measurementUnit': '',
+            'orgGoodsId': '',
+            'packingCount': null,
+            'specificationsId': '',
+            'fixInfo': {
+              'goodsDto': {}
+            },
+            'unitPrice': null
+          };
+          this.$refs['orderGoodsAddForm'].resetFields();
+          this.accessoryList = [];
+          this.batchNumbers = [];
+          this.editItemProduct = {};
+          this.form.detailDtoList = [];
+          this.filterProductList = [];
+          this.searchProduct(); 
+      });
+    },
     searchProduct: function (query) {
       if (!this.form.supplierId || !this.form.orgId || typeof this.form.goodsType !== 'number') {
         this.searchProductList = [];
@@ -864,7 +889,8 @@ export default {
         cdcId: this.form.orgId,
         povId: this.form.supplierId,
         vaccineType: this.form.goodsType + 1,
-        keyWord: query
+        keyWord: query,
+        storageType:this.form.transportationCondition
       };
       let rTime = Date.now();
       this.requestTime = rTime;

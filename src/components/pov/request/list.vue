@@ -153,7 +153,7 @@
                       {{currentOrder.auditTime | time}}
                     </oms-row>
                     <oms-row label="关联疾控销售订单">
-                      {{currentOrder.orderNo}}
+                      {{formatOrderNo(currentOrder.orderNoList)}}
                     </oms-row>
                     <oms-row label="需求单状态">
                       {{ formatStatus(currentOrder.status)}}
@@ -403,6 +403,9 @@ export default {
         }
       }
       return status;
+    },
+    formatOrderNo(val) {
+      return val?val.join('、'):''
     },
     cancel() {
       this.$confirm('是否取消"' + this.currentOrder.id + '" 申请单?', '', {

@@ -185,7 +185,7 @@ $leftWidth: 200px;
                          inactive-text="否" @change="clearForm"></el-switch>
             </el-form-item>
             <el-form-item label="运输条件" prop="transportationCondition">
-              <el-select v-model="form.transportationCondition" placeholder="请选择运输条件" type="text">
+              <el-select v-model="form.transportationCondition" placeholder="请选择运输条件" type="text" @change="changeCondition">
                 <el-option v-for="item in transportationConditionList" :key="item.key" :label="item.label"
                            :value="item.key"></el-option>
               </el-select>
@@ -874,6 +874,31 @@ export default {
         });
       });
     },
+    // 运输条件改变
+    changeCondition:function(transportationCondition){
+      this.form.transportationCondition = transportationCondition
+      this.$nextTick(function () {
+        this.product = {
+            'amount': null,
+            'entrustment': false,
+            'measurementUnit': '',
+            'orgGoodsId': '',
+            'packingCount': null,
+            'specificationsId': '',
+            'fixInfo': {
+              'goodsDto': {}
+            },
+            'unitPrice': null
+          };
+          this.$refs['orderGoodsAddForm'].resetFields();
+          this.accessoryList = [];
+          this.batchNumbers = [];
+          this.editItemProduct = {};
+          this.form.detailDtoList = [];
+          this.filterProductList = [];
+          this.searchProduct(); 
+      });
+    },
     searchProduct: function (query) {
       if (!this.form.customerId || typeof this.form.goodsType !== 'number') {
         this.searchProductList = [];
@@ -883,7 +908,8 @@ export default {
       let params = {
         keyWord: query,
         factoryId: this.form.customerId,
-        vaccineType: this.form.goodsType + 1
+        vaccineType: this.form.goodsType + 1,
+        storageType:this.form.transportationCondition
       };
       let rTime = Date.now();
       this.requestTime = rTime;

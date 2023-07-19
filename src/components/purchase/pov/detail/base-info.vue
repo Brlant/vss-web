@@ -84,8 +84,8 @@
             {{currentOrder.auditTime | time}}
           </oms-row>
           <oms-row label="关联疾控销售订单">
-            <a class="relation-no" href="#" @click.stop.prevent="goTo">
-              {{currentOrder.orderNo}}
+            <a v-for="(item,index) in currentOrder.orderNoList" :key="index" class="relation-no" href="#" @click.stop.prevent="goTo(item)">
+              {{item.orderNo}}<br>
             </a>
           </oms-row>
         </el-col>
@@ -159,9 +159,9 @@ export default {
     }
   },
   methods: {
-    goTo() {
+    goTo(val) {
       let url = this.currentOrder.goodsType === 0 ? '/sale/order/one/class/' : '/sale/order/two/class/';
-      this.$router.push(url + this.currentOrder.orderId);
+      this.$router.push(url + val.orderId);
     },
     getDetail: function () {
       this.currentOrder = {};
