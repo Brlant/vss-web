@@ -405,7 +405,16 @@ export default {
       return status;
     },
     formatOrderNo(val) {
-      return val?val.join('、'):''
+      if(!val || val.length == 0) return ''
+      let str = ''
+      for(let i=0;i<val.length;i++){
+        if(i == val.length-1){
+          str+=val[i].orderNo
+        }else{
+          str+=val[i].orderNo+'、'
+        }
+      }
+      return str
     },
     cancel() {
       this.$confirm('是否取消"' + this.currentOrder.id + '" 申请单?', '', {
