@@ -45,15 +45,22 @@
   export default {
     data: function () {
       return {
+        // 业务单位类型 0其他 1为接种单位 2区疾控 3市疾控
+        orgType : window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')).orgType  : '',
         orderList: []
       };
     },
     mounted() {
-      this.getOrderList();
+      if(this.orgType == 1){
+        this.getOrderList();
+      }
+      
     },
     watch: {
       level() {
-        this.getOrderList();
+        if(this.orgType == 1){
+          this.getOrderList();
+        } 
       }
     },
     methods: {
