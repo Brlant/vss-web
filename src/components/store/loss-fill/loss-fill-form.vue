@@ -290,10 +290,11 @@ export default {
     };
 
     return {
+      minTime:'',  // 禁止最小的时间
       pickerOptionsStart:{
         // 时间不能大于当前时间
         disabledDate: (time) => {
-          return time.getTime() > Date.now()
+          return time.getTime() > Date.now() || time.getTime()< this.minTime
         }
       },
       loading: false,
@@ -426,6 +427,7 @@ export default {
   },
   mounted: function () {
     this.currentPartName = this.productListSet[0].name;
+    this.disabledMinTime()
   },
   methods: {
     // 附件管理
@@ -440,6 +442,12 @@ export default {
         this.attachmentList.forEach(val => {
           this.form.fileIdList.push(val.attachmentId);
         })
+      });
+    },
+    // 根据接口返回控制禁止的最小时间 /erp-stock/queryLossTime
+    disabledMinTime(){
+      this.$http.get(`erp-stock/queryLossTime`).then(res => {
+        this.minTime = res.data.dateTime
       });
     },
     changeFiles: function (fileList) {
