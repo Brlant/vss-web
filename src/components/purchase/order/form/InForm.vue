@@ -163,7 +163,7 @@ $leftWidth: 240px;
             </el-form-item>
             <el-form-item v-show="showContent.isShowOtherContent" :prop=" showContent.isShowOtherContent?'transportationCondition':'' "
                           label="运输条件">
-              <el-select v-model="form.transportationCondition" placeholder="请选择运输条件" type="text">
+              <el-select v-model="form.transportationCondition" placeholder="请选择运输条件" type="text" @change="changeCondition">
                 <el-option v-for="item in transportationConditionList" :key="item.key" :label="item.label"
                            :value="item.key"></el-option>
               </el-select>
@@ -847,7 +847,8 @@ export default {
       let params = {
         vaccineType: this.vaccineType,
         keyWord: query,
-        factoryId: this.form.supplierId
+        factoryId: this.form.supplierId,
+        storageType:this.form.transportationCondition
       };
       let rTime = Date.now();
       this.requestTime = rTime;
@@ -879,6 +880,30 @@ export default {
         }
       });
       this.filterProductList = arr;
+    },
+    // 运输条件改变
+    changeCondition:function(transportationCondition){
+      this.form.transportationCondition = transportationCondition
+      this.$nextTick(function () {
+          this.product = {
+            'amount': null,
+            'entrustment': false,
+            'measurementUnit': '',
+            'orgGoodsId': '',
+            'packingCount': null,
+            'specificationsId': '',
+            'fixInfo': {
+              'goodsDto': {}
+            },
+            'unitPrice': null
+          };
+          this.$refs['orderGoodsAddForm'].resetFields();
+          this.product.orgGoodsId = '';
+          this.form.detailDtoList = [];
+          this.accessoryList = [];
+          this.editItemProduct = {};
+          this.searchProduct();
+      });
     },
     getGoodDetail: function (OrgGoodsId) {// 选疫苗
       if (!OrgGoodsId) {
@@ -917,6 +942,7 @@ export default {
         }
       });
       this.isCheckPackage(this.product.fixInfo.goodsDto.smallPacking);
+      console.log(this.product,'选疫苗');
     },
     addProduct: function () {// 疫苗加入到订单
       // 重置添加按钮点击状态
