@@ -32,13 +32,13 @@ const targets = {
   local: 'http://localhost:8081',
   ldw: 'http://192.168.5.201:8081',
   ldw2: 'http://vss-ldm.vaiwan.com',
-  hw: 'https://hw-test-vss.cdcerp.cn',
   sh: 'https://sh-vss.cdcerp.cn',
   un: 'https://un-vss.cdcerp.cn',
   sh_test: 'https://un-vss.cdcerp.cn/',
   xl: 'http://192.168.5.45:8081',
   cjg:'http://192.168.5.29:8081',
   yhh:'http://192.168.5.12:8081',
+  yj:'http://192.168.5.23:8081',
 };
 
 module.exports = {
@@ -50,7 +50,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: targets.yhh,
+        target: targets.un,
         changOrigin: true
       }
     }

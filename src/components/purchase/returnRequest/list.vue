@@ -360,10 +360,10 @@
       <add-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" type="1" @change="onSubmit"
                 @close="resetRightBox"></add-form>
     </page-right>
-    <page-right :css="{'width':'1000px','padding':0}" :show="showItemRight" @right-close="beforeCloseConfirm">
-      <add-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" type="1" @change="onSubmit"
-                @close="resetRightBox"></add-form>
-    </page-right>
+<!--    <page-right :css="{'width':'1000px','padding':0}" :show="showItemRight" @right-close="beforeCloseConfirm">-->
+<!--      <add-form :action="action" :defaultIndex="defaultIndex" :orderId="currentOrderId" type="1" @change="onSubmit"-->
+<!--                @close="resetRightBox"></add-form>-->
+<!--    </page-right>-->
     <page-right :css="{'width':'1000px','padding':0}" :show="showEditPart" @right-close="resetRightBox">
       <edit-count :currentItem="currentItem" :showEditPart="showEditPart" @change="onSubmit"
                   @close="resetRightBox"></edit-count>

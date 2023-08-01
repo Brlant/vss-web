@@ -428,22 +428,22 @@ export default {
       filterProductList: [],
       form: {
         goodsType: '',
-        'orgId': '',
-        'customerId': '',
-        'bizType': '1-1',
-        'type': this.type,
-        'logisticsProviderName': '',
-        'transportationCondition': '',
-        'transportationMeansId': '1',
-        'pickUpAddress': '',
-        'qualifiedFlag': true,
-        'orgRelation': '',
-        'logisticsCentreId': '',
-        'thirdPartyNumber': '',
-        'expectedTime': '',
-        'detailDtoList': [],
-        'supplierId': '',
-        'remark': '',
+        orgId: '',
+        customerId: '',
+        bizType: '1-1',
+        type: this.type,
+        logisticsProviderName: '',
+        transportationCondition: '',
+        transportationMeansId: '1',
+        pickUpAddress: '',
+        qualifiedFlag: true,
+        orgRelation: '',
+        logisticsCentreId: '',
+        thirdPartyNumber: '',
+        expectedTime: '',
+        detailDtoList: [],
+        supplierId: '',
+        remark: '',
         returnReason: '',
         transportationAddress: ''
       },
@@ -588,6 +588,12 @@ export default {
     },
     transportationMeansList: function (val) {
       this.currentTransportationMeans = val.slice();
+    },
+    'form.qualifiedFlag': (val) => {
+      if (val === false){
+        // 如果不合格，需要把运输条件重置成常温运输
+        this.form.transportationCondition = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
+      }
     }
   },
   mounted: function () {
@@ -876,7 +882,7 @@ export default {
           this.editItemProduct = {};
           this.form.detailDtoList = [];
           this.filterProductList = [];
-          this.searchProduct(); 
+          this.searchProduct();
       });
     },
     searchProduct: function (query) {
@@ -890,7 +896,7 @@ export default {
         povId: this.form.supplierId,
         vaccineType: this.form.goodsType + 1,
         keyWord: query,
-        storageType:this.form.transportationCondition
+        storageType: this.form.qualifiedFlag ? this.form.transportationCondition : ''
       };
       let rTime = Date.now();
       this.requestTime = rTime;

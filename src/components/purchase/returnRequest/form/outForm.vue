@@ -107,7 +107,7 @@ $leftWidth: 200px;
   <div>
     <div class="content-part">
       <div class="content-left">
-        <h2 class="clearfix right-title" style="padding: 0">{{ defaultIndex === 2 ? '编辑退货申请' : '新增退货申请'}}</h2>
+        <h2 class="clearfix right-title" style="padding: 0">{{ defaultIndex === 2 ? '编辑退货申请' : '新增退货申请' }}</h2>
         <ul>
           <li v-for="item in productListSet" class="list-style" v-bind:class="{ 'active' : index==item.key}"
               @click="setIndexValue(item.key)"><span>{{ item.name }}</span>
@@ -118,13 +118,13 @@ $leftWidth: 200px;
         </ul>
       </div>
       <div class="content-right min-gutter">
-        <h3>{{currentPartName}}</h3>
+        <h3>{{ currentPartName }}</h3>
         <el-form ref="orderAddForm" :model="form" :rules="rules" label-width="160px" onsubmit="return false"
                  style="padding-right: 20px" @submit.prevent="onSubmit">
           <div class="hide-content" v-bind:class="{'show-content' : index==0}">
             <el-form-item label="订单类型" prop="goodsType">
               <el-radio-group v-model.number="form.goodsType" @change="changeVaccineType">
-                <el-radio v-for="item in vaccineTypeList" :key="item.key" :label="item.key">{{item.label}}</el-radio>
+                <el-radio v-for="item in vaccineTypeList" :key="item.key" :label="item.key">{{ item.label }}</el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="供货单位" prop="cdcId">
@@ -132,11 +132,11 @@ $leftWidth: 200px;
                          placeholder="请输入名称搜索供货单位" popper-class="good-selects" @change="changeCustomerId">
                 <el-option v-for="org in orgList" :key="org.id" :label="org.name" :value="org.id">
                   <div style="overflow: hidden">
-                    <span class="pull-left" style="clear: right">{{org.name}}</span>
+                    <span class="pull-left" style="clear: right">{{ org.name }}</span>
                   </div>
                   <div style="overflow: hidden">
                   <span v-show="org.manufacturerCode" class="select-other-info pull-left">
-                    <span>系统代码:</span>{{org.manufacturerCode}}
+                    <span>系统代码:</span>{{ org.manufacturerCode }}
                   </span>
                   </div>
                 </el-option>
@@ -149,7 +149,8 @@ $leftWidth: 200px;
               </el-select>
             </el-form-item>
             <el-form-item label="运输条件" prop="transportationConditionId">
-              <el-select v-model="form.transportationConditionId" placeholder="请选择运输条件" type="text" @change="changeCondition">
+              <el-select v-model="form.transportationConditionId" placeholder="请选择运输条件" type="text"
+                         @change="changeCondition">
                 <el-option v-for="item in transportationConditionList" :key="item.key" :label="item.label"
                            :value="item.key"></el-option>
               </el-select>
@@ -180,7 +181,8 @@ $leftWidth: 200px;
                          type="textarea"></oms-input>
             </el-form-item>
             <el-form-item label="附件" v-show="(form.id===null||[0,1,4].indexOf(form.status)!==-1)&&formType==='pov'">
-              <oms-upload :fileList="attachmentList" :formData="{ objectId: form.id, objectType: 'returnApplicationFile'}"
+              <oms-upload :fileList="attachmentList"
+                          :formData="{ objectId: form.id, objectType: 'returnApplicationFile'}"
                           @change="changeFiles"></oms-upload>
             </el-form-item>
             <el-form-item label-width="160px">
@@ -192,7 +194,8 @@ $leftWidth: 200px;
             <div class="oms-form order-product-box">
               <el-form ref="orderGoodsAddForm" :model="product" :rules="orderGoodsRules" label-width="120px">
                 <el-form-item label="产品" prop="orgGoodsId">
-                  <el-select v-model="product.orgGoodsId" :clearable="true" :loading="loading" :no-data-text="noDataText"
+                  <el-select v-model="product.orgGoodsId" :clearable="true" :loading="loading"
+                             :no-data-text="noDataText"
                              :remote-method="searchProduct" filterable placeholder="请输入名称搜索产品"
                              popper-class="order-good-selects" remote
                              @change="getGoodDetail">
@@ -200,18 +203,19 @@ $leftWidth: 200px;
                                :label="item.orgGoodsDto.name"
                                :value="item.orgGoodsDto.id">
                       <div style="overflow: hidden">
-                        <span class="pull-left">{{item.orgGoodsDto.name}}</span>
-                        <el-tag v-show="item.list.length" class="pull-left" style="line-height: 22px;margin-left: 20px;height: 20px"
+                        <span class="pull-left">{{ item.orgGoodsDto.name }}</span>
+                        <el-tag v-show="item.list.length" class="pull-left"
+                                style="line-height: 22px;margin-left: 20px;height: 20px"
                                 type="success">
                           组合
                         </el-tag>
                         <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-right"><span
-                          v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{item.orgGoodsDto.goodsDto.specifications}}
+                          v-show="item.orgGoodsDto.goodsDto.specifications">规格:</span>{{ item.orgGoodsDto.goodsDto.specifications }}
                         </span>
                       </div>
                       <div style="overflow: hidden">
                         <span class="select-other-info pull-left"><span
-                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{item.orgGoodsDto.goodsNo}}
+                          v-show="item.orgGoodsDto.goodsNo">货主货品编号:</span>{{ item.orgGoodsDto.goodsNo }}
                         </span>
                         <!--<span class="select-other-info pull-left"><span-->
                         <!--v-show="item.orgGoodsDto.procurementPrice">采购价格 ￥{{ item.orgGoodsDto.procurementPrice-->
@@ -221,7 +225,9 @@ $leftWidth: 200px;
                           v-show="item.orgGoodsDto.salesFirmName">供货单位:</span>{{ item.orgGoodsDto.salesFirmName }}
                         </span>
                         <span v-if="item.orgGoodsDto.goodsDto" class="select-other-info pull-left">
-                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{ item.orgGoodsDto.goodsDto.factoryName }}
+                          <span v-show="item.orgGoodsDto.goodsDto.factoryName">生产单位:</span>{{
+                            item.orgGoodsDto.goodsDto.factoryName
+                          }}
                         </span>
                       </div>
                     </el-option>
@@ -236,7 +242,7 @@ $leftWidth: 200px;
                       <el-col :span="10">
                         <span v-show="accessoryList.length">【组合疫苗】</span>
                         <span v-for="acce in accessoryList" style="display: block;font-size: 12px">
-                       <span style="margin-right: 10px">{{acce.name}}</span>
+                       <span style="margin-right: 10px">{{ acce.name }}</span>
                        <span v-show="acce.procurementPrice"
                              style="margin-right: 10px">¥ {{ acce.procurementPrice | formatMoney }}</span>
                              <span v-show="acce.proportion" style="margin-right: 10px">比例 {{ acce.proportion }}</span>
@@ -288,7 +294,7 @@ $leftWidth: 200px;
                     <el-tag v-show="product.isCombination" :class="{ml15:product.isCombination}" style="font-size: 10px"
                             type="success">组合
                     </el-tag>
-                    <span>{{product.orgGoodsName}}</span>
+                    <span>{{ product.orgGoodsName }}</span>
                   </td>
                   <td>
                     <span v-if="product.orgGoodsDto">{{ product.orgGoodsDto.goodsDto.specifications }}</span>
@@ -300,10 +306,10 @@ $leftWidth: 200px;
                     <goods-status-tag :form="form" :item="product"/>
                   </td>
                   <td>
-                    <span v-show="Number(product.unitPrice)">¥ {{product.unitPrice | formatMoney}}</span>
+                    <span v-show="Number(product.unitPrice)">¥ {{ product.unitPrice | formatMoney }}</span>
                     <span v-if="!Number(product.unitPrice)">-</span>
                   </td>
-                  <td>{{product.amount}} <span v-show="product.measurementUnit">(<dict
+                  <td>{{ product.amount }} <span v-show="product.measurementUnit">(<dict
                     :dict-group="'measurementUnit'"
                     :dict-key="product.measurementUnit"></dict>)</span>
                   </td>
@@ -422,7 +428,7 @@ export default {
         'detailDtoList': [],
         'remark': '',
         returnReason: '',
-        fileIdList:[]
+        fileIdList: []
       },
       rules: {
         goodsType: [
@@ -491,7 +497,7 @@ export default {
     };
   },
   computed: {
-    formType(){
+    formType() {
       return this.$route.meta.type;
     },
     bizTypeList() {
@@ -536,7 +542,7 @@ export default {
       });
     },
     defaultIndex(val) {
-      this.attachmentList=[];
+      this.attachmentList = [];
       this.formCopy = {};
       this.isStorageData = false;
       this.index = 0;
@@ -548,7 +554,7 @@ export default {
       this.searchProduct();
       this.filterOrg();
       if (val === 2) {
-        this.form.fileIdList=[];
+        this.form.fileIdList = [];
         this.editOrderInfo();
       } else {
         this.resetForm();
@@ -621,6 +627,12 @@ export default {
       this.$refs['orderGoodsAddForm'].resetFields();
       this.form.detailDtoList = [];
       this.filterProductList = [];
+
+      // 判断是否合格
+      if (!this.form.qualityFlag) {
+        // 如果不合格，需要把运输条件重置成常温运输
+        this.form.transportationConditionId = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
+      }
     },
     editOrderInfo() {
       if (!this.orderId) return;
@@ -717,28 +729,28 @@ export default {
       });
     },
     // 运输条件改变
-    changeCondition:function(transportationConditionId){
+    changeCondition: function (transportationConditionId) {
       this.form.transportationConditionId = transportationConditionId
       this.$nextTick(function () {
         this.product = {
-            'amount': null,
-            'entrustment': false,
-            'measurementUnit': '',
-            'orgGoodsId': '',
-            'packingCount': null,
-            'specificationsId': '',
-            'fixInfo': {
-              'goodsDto': {}
-            },
-            'unitPrice': null
-          };
-          this.$refs['orderGoodsAddForm'].resetFields();
-          this.accessoryList = [];
-          this.batchNumbers = [];
-          this.editItemProduct = {};
-          this.form.detailDtoList = [];
-          this.filterProductList = [];
-          this.searchProduct(); 
+          'amount': null,
+          'entrustment': false,
+          'measurementUnit': '',
+          'orgGoodsId': '',
+          'packingCount': null,
+          'specificationsId': '',
+          'fixInfo': {
+            'goodsDto': {}
+          },
+          'unitPrice': null
+        };
+        this.$refs['orderGoodsAddForm'].resetFields();
+        this.accessoryList = [];
+        this.batchNumbers = [];
+        this.editItemProduct = {};
+        this.form.detailDtoList = [];
+        this.filterProductList = [];
+        this.searchProduct();
       });
     },
     searchProduct: function (query) {
@@ -751,7 +763,7 @@ export default {
         keyWord: query,
         factoryId: this.form.cdcId,
         vaccineType: this.form.goodsType + 1,
-        storageType:this.form.transportationConditionId
+        storageType: this.form.qualityFlag ? this.form.transportationConditionId : ''
       };
       let rTime = Date.now();
       this.requestTime = rTime;
@@ -1000,7 +1012,7 @@ export default {
           });
           return false;
         }
-        if (!saveData.id&&this.form.fileIdList.length === 0) {
+        if (!saveData.id && this.form.fileIdList.length === 0) {
           this.$confirm('未上传附件，是否仍新增退货申请？', '', {
             confirmButtonText: '确认',
             cancelButtonText: '取消',
@@ -1010,12 +1022,12 @@ export default {
           }).catch(error => {
             return false;
           });
-        }else {
+        } else {
           this.saveForm(saveData);
         }
       })
     },
-    saveForm(saveData){
+    saveForm(saveData) {
       saveData.detailDtoList.forEach(item => {
         item.price = item.unitPrice;
         item.applyCount = item.amount;

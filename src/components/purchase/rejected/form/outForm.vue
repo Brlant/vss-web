@@ -650,6 +650,12 @@ export default {
       this.$refs['orderGoodsAddForm'].resetFields();
       this.form.detailDtoList = [];
       this.filterProductList = [];
+
+      // 判断是否合格
+      if (!this.form.qualifiedFlag) {
+        // 如果不合格，需要把运输条件重置成常温运输,重置货品查询条件
+        this.form.transportationCondition = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
+      }
     },
     editOrderInfo() {
       if (!this.orderId) return;
@@ -896,7 +902,7 @@ export default {
           this.editItemProduct = {};
           this.form.detailDtoList = [];
           this.filterProductList = [];
-          this.searchProduct(); 
+          this.searchProduct();
       });
     },
     searchProduct: function (query) {
@@ -909,7 +915,7 @@ export default {
         keyWord: query,
         factoryId: this.form.customerId,
         vaccineType: this.form.goodsType + 1,
-        storageType:this.form.transportationCondition
+        storageType: this.form.qualifiedFlag ? this.form.transportationCondition : ''
       };
       let rTime = Date.now();
       this.requestTime = rTime;
