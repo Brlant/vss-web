@@ -589,7 +589,7 @@ export default {
     transportationMeansList: function (val) {
       this.currentTransportationMeans = val.slice();
     },
-    'form.qualifiedFlag': (val) => {
+    'form.qualifiedFlag': function (val) {
       if (val === false){
         // 如果不合格，需要把运输条件重置成常温运输
         this.form.transportationCondition = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
