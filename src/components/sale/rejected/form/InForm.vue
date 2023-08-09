@@ -590,10 +590,13 @@ export default {
       this.currentTransportationMeans = val.slice();
     },
     'form.qualifiedFlag': function (val) {
+      let transportationCondition = this.form.transportationCondition
       if (val === false){
         // 如果不合格，需要把运输条件重置成常温运输
-        this.form.transportationCondition = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
+        transportationCondition = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
       }
+
+      this.changeCondition(transportationCondition)
     }
   },
   mounted: function () {

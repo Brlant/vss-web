@@ -656,6 +656,8 @@ export default {
         // 如果不合格，需要把运输条件重置成常温运输,重置货品查询条件
         this.form.transportationCondition = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
       }
+
+      this.changeCondition(this.form.transportationCondition);
     },
     editOrderInfo() {
       if (!this.orderId) return;
