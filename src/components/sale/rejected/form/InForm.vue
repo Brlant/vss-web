@@ -607,20 +607,23 @@ export default {
     changeQualifiedFlag(val) {
       let text = val === true ? "合格" : "不合格";
       let transportationCondition = this.form.transportationCondition
-      this.$confirm('请确认调整该订单货品为全部"' + text + '"？', {
-        confirmButtonText: '是',
-        cancelButtonText: '否',
-        type: 'warning'
-      }).then(()=> {
-        if (val === false){
+      // 修改为"不合格"时增加弹窗提示
+      if(val === false) {
+        this.$confirm('请确认调整该订单货品为全部' + text + '？', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(()=> {
           // 如果不合格，需要把运输条件重置成常温运输
           transportationCondition = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
-        }
+          this.changeCondition(transportationCondition)
+        }).then(() => {
+        }).catch(()=> {
+          this.form.qualifiedFlag = val === true ? false : true;
+        });
+      } else {
         this.changeCondition(transportationCondition)
-      }).then(() => {
-      }).catch(()=> {
-        this.form.qualifiedFlag = val === true ? false : true;
-      });
+      }
     },
 
     changeVaccineType(val) {
