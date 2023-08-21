@@ -186,7 +186,7 @@ $leftWidth: 220px;
               </el-select>
             </el-form-item>
             <el-form-item label="是否合格">
-              <el-switch v-model="form.qualifiedFlag" active-color="#13ce66" active-text="是" inactive-color="#ff4949"
+              <el-switch @change="changeQualifiedFlag" v-model="form.qualifiedFlag" active-color="#13ce66" active-text="是" inactive-color="#ff4949"
                          inactive-text="否"></el-switch>
             </el-form-item>
             <el-form-item v-show="showContent.isShowOtherContent"
@@ -195,7 +195,7 @@ $leftWidth: 220px;
               <el-date-picker
                 v-model="form.expectedTime"
                 :picker-options="pickerOptions" format="yyyy-MM-dd"
-                placeholder="请选择预计入库时间" value-format="timestamp">
+                placeholder="请选择预计入库时间" value-format="timestamp" placement="bottom-start">
               </el-date-picker>
             </el-form-item>
             <el-form-item label="退货原因">
@@ -590,19 +590,42 @@ export default {
       this.currentTransportationMeans = val.slice();
     },
     'form.qualifiedFlag': function (val) {
-      let transportationCondition = this.form.transportationCondition
+      /*let transportationCondition = this.form.transportationCondition
       if (val === false){
         // 如果不合格，需要把运输条件重置成常温运输
         transportationCondition = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
       }
 
-      this.changeCondition(transportationCondition)
+      this.changeCondition(transportationCondition)*/
     }
   },
   mounted: function () {
     this.currentPartName = this.productListSet[0].name;
   },
   methods: {
+    // 改变是否合格
+    changeQualifiedFlag(val) {
+      let text = val === true ? "合格" : "不合格";
+      let transportationCondition = this.form.transportationCondition
+      // 修改为"不合格"时增加弹窗提示
+      if(val === false) {
+        this.$confirm('请确认调整该订单货品为全部' + text + '？', {
+          confirmButtonText: '是',
+          cancelButtonText: '否',
+          type: 'warning'
+        }).then(()=> {
+          // 如果不合格，需要把运输条件重置成常温运输
+          transportationCondition = this.transportationConditionList.filter(item => item.label == '常温运输').key || '1';
+          this.changeCondition(transportationCondition)
+        }).then(() => {
+        }).catch(()=> {
+          this.form.qualifiedFlag = val === true ? false : true;
+        });
+      } else {
+        this.changeCondition(transportationCondition)
+      }
+    },
+
     changeVaccineType(val) {
       this.product = {
         'amount': null,
@@ -867,7 +890,8 @@ export default {
     changeCondition:function(transportationCondition){
       this.form.transportationCondition = transportationCondition
       this.$nextTick(function () {
-        this.product = {
+        if (this.form.qualifiedFlag === true) {
+          this.product = {
             'amount': null,
             'entrustment': false,
             'measurementUnit': '',
@@ -885,7 +909,8 @@ export default {
           this.editItemProduct = {};
           this.form.detailDtoList = [];
           this.filterProductList = [];
-          this.searchProduct();
+        }
+        this.searchProduct();
       });
     },
     searchProduct: function (query) {
