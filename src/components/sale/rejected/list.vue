@@ -194,7 +194,7 @@
                   <el-date-picker
                     v-model="expectedTime"
                     format="yyyy-MM-dd"
-                    placeholder="请选择" type="daterange">
+                    placeholder="请选择" type="daterange" placement="bottom-start">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
@@ -205,7 +205,7 @@
                   <el-date-picker
                     v-model="createTimes"
                     format="yyyy-MM-dd"
-                    placeholder="请选择" type="daterange">
+                    placeholder="请选择" type="daterange" placement="bottom-start">
                   </el-date-picker>
                 </el-col>
               </oms-form-row>
