@@ -18,7 +18,7 @@
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-  } 
+  }
 }
 .returnTitle{
   font-size: 18px;
@@ -49,7 +49,7 @@
         white-space: normal;
         .el-dialog__header{
           display: none !important;
-        }  
+        }
       }
 }
 }
@@ -71,6 +71,19 @@
                 class="el-icon-t-wave"></i></a><span class="wave-title"> 生成销售汇总单</span></span>
             </perm>
          </span>
+          <span v-show="filters.status === 14" class="pull-right">
+            <perm class="opera-btn" label="demand-assignment-add">
+              <span style="cursor:pointer" @click="createDemand"><a class="btn-circle" href="#" @click.prevent=""><i
+                class="el-icon-t-wave"></i></a><span class="wave-title"> 疫苗分配</span></span>
+            </perm>
+         </span>
+          <span v-show="filters.status === 14" class="pull-right">
+            <perm class="opera-btn" label="demand-assignment-add">
+              <span style="cursor:pointer" @click="overBill"><a class="btn-circle" href="#" @click.prevent=""><i
+                class="el-icon-t-wave"></i></a><span class="wave-title"> 结束单据</span></span>
+            </perm>
+         </span>
+
           <span class="pull-right">
             <perm class="opera-btn" label="cargo-signal-add">
               <span style="cursor:pointer" @click="applyOrder"><a class="btn-circle" href="#" @click.prevent=""><i
@@ -177,7 +190,7 @@
       <el-row>
         <el-col :span="13">
           <div class="order-list-status container clearfix">
-            <div v-for="(item,key) in assignType" v-show="key < 5" :class="{'active':key==activeStatus}"
+            <div v-for="(item,key) in assignType" v-show="key < 6" :class="{'active':key==activeStatus}"
                  class="status-item" style="width: 115px" @click="checkStatus(item, key)">
               <div :class="['b_color_'+key]" class="status-bg"></div>
               <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span class="status-num">
@@ -187,7 +200,7 @@
         </el-col>
         <el-col :span="11">
           <div class="order-list-status order-list-status-right container clearfix">
-            <div v-for="(item,key) in assignType" v-show="key > 4" :class="{'active':key==activeStatus}"
+            <div v-for="(item,key) in assignType" v-show="key > 5" :class="{'active':key==activeStatus}"
                  class="status-item"
                  style="width: 115px" @click="checkStatus(item, key)">
               <div :class="['b_color_'+key]" class="status-bg"></div>
@@ -491,14 +504,24 @@ export default {
         cdcId: this.user.userCompanyAddress
       }, this.filters);
       pullSignal.queryCount(params).then(res => {
-        this.assignType[0].num = res.data['audited'];
-        this.assignType[1].num = res.data['create-wave'];
-        this.assignType[2].num = res.data['assigned'];
-        this.assignType[3].num = res.data['cdc-canceled'];
-        this.assignType[4].num = res.data['pov-return'];
-        this.assignType[5].num = res.data['procurement-pending-audit'];
-        this.assignType[6].num = res.data['procurement-audited'];
-        this.assignType[7].num = res.data['procurement-canceled'];
+        // 待生成销售汇总
+        this.assignType[0].num = res.data['audited'] || 0 ;
+        // 待分配销售
+        this.assignType[1].num = res.data['create-wave'] || 0 ;
+        // 已部分分配
+        this.assignType[2].num = res.data['part-assigned'] || 0 ;
+        // 已分配销售
+        this.assignType[3].num = res.data['assigned'] || 0 ;
+        // 已取消销售
+        this.assignType[4].num = res.data['cdc-canceled'] || 0 ;
+        // 已退回销售
+        this.assignType[5].num = res.data['pov-return'] || 0 ;
+        // 待生成采购汇总
+        this.assignType[6].num = res.data['procurement-pending-audit'] || 0 ;
+        // 已生成采购汇总
+        this.assignType[7].num = res.data['procurement-audited'] || 0 ;
+        // 已取消采购
+        this.assignType[8].num = res.data['procurement-canceled'] || 0 ;
       });
     },
     filterOrg: function (query) {// 过滤供货商
@@ -724,7 +747,62 @@ export default {
         });
       });
     },
+    /**
+     * 结束单据：
+     * 点击【结束单据】按钮，提示：“是否提前结束该单据”，
+     *  点击是，该要货需求单据也进入整体分配完成状态，不可再次进行分配。同原分配流程；
+     *  点击否，状态不变关闭弹窗。
+     */
+    overBill(){
+
+      if (!this.checkList.length) {
+        this.$notify.info({
+          message: '请选择申请单'
+        });
+        return;
+      }
+
+      this.$confirm('是否提前结束单据', '', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        let list = [];
+        this.checkList.forEach(i => !list.includes(i.id) && list.push(i.id));
+        demandAssignment.save({list}).then(res => {
+          this.$notify.success({
+            message: '生成销售汇总单成功'
+          });
+          this.$router.push({path: '/sale/allocation/pov', query: {id: res.data.id}});
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response && error.response.data && error.response.data.msg || '生成销售汇总单失败'
+          });
+        });
+      });
+
+    },
     createDemand() {
+      if (!this.checkList.length) {
+        this.$notify.info({
+          message: '请选择申请单'
+        });
+        return;
+      }
+      let list = [];
+      this.checkList.forEach(i => !list.includes(i.id) && list.push(i.id));
+      demandAssignment.save({list}).then(res => {
+        this.$notify.success({
+          message: '生成销售汇总单成功'
+        });
+        this.$router.push({path: '/sale/allocation/pov', query: {id: res.data.id}});
+      }).catch(error => {
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '生成销售汇总单失败'
+        });
+      });
+    },
+    createDemand2() {
       if (!this.checkList.length) {
         this.$notify.info({
           message: '请选择申请单'

@@ -60,31 +60,33 @@
         <th>单价</th>
         <th>申请数量</th>
         <th>申请金额</th>
-        <th>分配数量</th>
+        <th>库存数量</th>
+        <th>已分配数量</th>
+        <th>需求差额</th>
       </tr>
       </thead>
       <tbody>
       <tr v-for="(row,index) in orderItem.detailDtoList">
-        <td class="text-center" width="30">{{index+1}}</td>
+        <td class="text-center" width="30">{{ index + 1 }}</td>
         <td style="width: 400px">
-          <span>{{row.goodsName}}</span>
+          <span>{{ row.goodsName }}</span>
         </td>
-        <td v-if="row.specification" style="width: 100px">{{row.specification}}
+        <td v-if="row.specification" style="width: 100px">{{ row.specification }}
         </td>
         <td align="left">
-          <span v-if="row.price">￥{{row.price | formatMoney}}</span>
+          <span v-if="row.price">￥{{ row.price | formatMoney }}</span>
           <span v-if="!row.price">-</span>
         </td>
         <td align="left">
-          {{row.applyCount}}
+          {{ row.applyCount }}
         </td>
         <td align="left">
-          <span v-if="row.applyMoney">￥{{row.applyMoney | formatMoney}}</span>
+          <span v-if="row.applyMoney">￥{{ row.applyMoney | formatMoney }}</span>
           <span v-if="!row.applyMoney">-</span>
         </td>
-        <td>
-          {{row.actualCount}}
-        </td>
+        <td>{{ row.currentStock }}</td>
+        <td>{{ row.submittedCount }}</td>
+        <td style="color: red">{{ row.demandGap }}</td>
       </tr>
       </tbody>
     </table>
