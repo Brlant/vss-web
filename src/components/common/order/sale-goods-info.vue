@@ -86,7 +86,7 @@
         </td>
         <td>{{ row.currentStock }}</td>
         <td>{{ row.submittedCount }}</td>
-        <td style="color: red">{{ row.demandGap }}</td>
+        <td style="color: red">{{ row.applyCount- row.submittedCount }}</td>
       </tr>
       </tbody>
     </table>

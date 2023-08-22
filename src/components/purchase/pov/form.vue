@@ -166,7 +166,7 @@
                 <el-button :disabled="index === 0" plain @click="updateItem(--index)"><i
                   class="el-icon-d-arrow-left"></i>上一条
                 </el-button>
-                <el-button :disabled="index === TotalAllocationList.length - 1" plain @click="updateItem(++index)">
+                <el-button :disabled="index === totalAllocationList.length - 1" plain @click="updateItem(++index)">
                   <i class="el-icon-d-arrow-right"></i>下一条
                 </el-button>
                 <el-button plain @click="$emit('close')"><i class="el-icon-circle-close-outline"></i>关闭</el-button>
@@ -204,7 +204,7 @@ export default {
   props: {
     currentItem: Object,
     status: Number,
-    TotalAllocationList: Array
+    totalAllocationList: Array
   },
   data() {
     return {
@@ -219,7 +219,7 @@ export default {
   },
   watch: {
     currentItem(val) {
-      this.index = this.TotalAllocationList.indexOf(val);
+      this.index = this.totalAllocationList.indexOf(val);
       this.queryAllocationList();
     }
   },
@@ -252,7 +252,7 @@ export default {
       });
     },
     updateItem(index) {
-      this.$emit('updateItem', this.TotalAllocationList[index]);
+      this.$emit('updateItem', this.totalAllocationList[index]);
     },
     submit(item) {
       if (typeof item.actualCount !== 'number') return;
