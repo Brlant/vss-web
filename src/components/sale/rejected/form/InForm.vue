@@ -622,6 +622,7 @@ export default {
           this.form.qualifiedFlag = val === true ? false : true;
         });
       } else {
+        transportationCondition = this.transportationConditionList.filter(item => item.label == '冷藏运输').key || '0';
         this.changeCondition(transportationCondition)
       }
     },
