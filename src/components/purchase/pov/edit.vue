@@ -155,8 +155,8 @@ $leftWidth: 180px;
               {{row.repertoryCount}}
             </td>
             <td>
-              <!--<el-input v-model.number="row.actualCount"></el-input>-->
-              <input v-model.number="row.actualCount" :class="{error: row.isNoValid}" class="el-input__inner"
+              <!--<el-input v-model.number="row.submittedCount"></el-input>-->
+              <input v-model.number="row.submittedCount" :class="{error: row.isNoValid}" class="el-input__inner"
                      type="number" @blur="validPackage(row)"
                      @input="inputHandler(row)"/>
             </td>
@@ -201,7 +201,7 @@ export default {
         axios.spread((pre, next) => {
           pre.data.detailDtoList.forEach(i => {
             i.repertoryCount = this.getRepertoryCount(i, next);
-            i.isNoValid = i.actualCount > i.repertoryCount;
+            i.isNoValid = i.submittedCount > i.repertoryCount;
           });
           this.currentOrder = pre.data;
           this.loading = false;
@@ -218,25 +218,25 @@ export default {
       return count;
     },
     inputHandler(row) {
-      row.isNoValid = row.actualCount > row.repertoryCount;
+      row.isNoValid = row.submittedCount > row.repertoryCount;
     },
     validPackage(row) {
-      row.actualCount = row.actualCount || 0;
-      if (row.actualCount < 0) {
+      row.submittedCount = row.submittedCount || 0;
+      if (row.submittedCount < 0) {
         this.$notify.info({
           message: '分配数量不能小于0，请进行调整'
         });
         return;
       }
-      let newAmount = this.changeTotalNumber(row.actualCount, row.smallPackCount);
-      if (row.actualCount !== newAmount) {
-        this.$confirm(`疫苗"${row.goodsName}"数量${row.actualCount}不是最小包装的倍数，确认后会对后续操作产生严重影响！
-          选择“是”修改数量为${newAmount}，选择“否”确认数量${row.actualCount}`, '', {
+      let newAmount = this.changeTotalNumber(row.submittedCount, row.smallPackCount);
+      if (row.submittedCount !== newAmount) {
+        this.$confirm(`疫苗"${row.goodsName}"数量${row.submittedCount}不是最小包装的倍数，确认后会对后续操作产生严重影响！
+          选择“是”修改数量为${newAmount}，选择“否”确认数量${row.submittedCount}`, '', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning'
         }).then(res => {
-          row.actualCount = newAmount;
+          row.submittedCount = newAmount;
           this.saveValid(row);
         }).catch(() => {
           this.saveValid(row);
@@ -253,23 +253,23 @@ export default {
           let sameGoods = this.currentOrder.detailDtoList.filter(f => f.orgGoodsId === i.accessory);
           // 不存在或者大于一条，不做处理
           if (!sameGoods.length || sameGoods.length > 1) return;
-          sameGoods[0].actualCount = row.actualCount * i.proportion;
-          this.$notify.info({message: `组合疫苗:${sameGoods[0].goodsName}数量调整为${row.actualCount * i.proportion}`});
+          sameGoods[0].submittedCount = row.submittedCount * i.proportion;
+          this.$notify.info({message: `组合疫苗:${sameGoods[0].goodsName}数量调整为${row.submittedCount * i.proportion}`});
         });
       });
     },
     submit() {
-      // let valid = this.currentOrder.detailDtoList.some(s => s.actualCount > s.repertoryCount);
+      // let valid = this.currentOrder.detailDtoList.some(s => s.submittedCount > s.repertoryCount);
       // if (valid) {
       //   this.currentOrder.detailDtoList.forEach(i => {
-      //     i.isNoValid = i.actualCount > i.repertoryCount;
+      //     i.isNoValid = i.submittedCount > i.repertoryCount;
       //   });
       //   this.$notify.info({
       //     message: '存在分配数量大于可用库存的要货明细，请进行调整'
       //   });
       //   return;
       // }
-      // let valid = this.currentOrder.detailDtoList.some(s => s.actualCount % s.smallPackCount !== 0);
+      // let valid = this.currentOrder.detailDtoList.some(s => s.submittedCount % s.smallPackCount !== 0);
       // if (valid) {
       //   this.$notify.info({
       //     message: '存在分配数量不是散件倍数的明细，请进行调整'
@@ -279,7 +279,7 @@ export default {
       let ary = this.currentOrder.detailDtoList.map(m => {
         return {
           detailId: m.id,
-          count: m.actualCount
+          count: m.submittedCount
         };
       });
       this.doing = true;
