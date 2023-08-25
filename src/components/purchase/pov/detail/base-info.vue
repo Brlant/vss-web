@@ -129,7 +129,7 @@
 <!--          {{row.actualCount}}-->
 <!--        </td>-->
         <td >{{ row.submittedCount }}</td>
-        <td style="color: red">{{ row.applyCount- row.submittedCount }}</td>
+        <td style="color: red">{{ row.demandGap }}</td>
       </tr>
       <tr>
         <th class="text-right" colspan="6">

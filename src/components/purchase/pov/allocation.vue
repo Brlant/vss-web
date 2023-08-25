@@ -37,11 +37,11 @@
       </div>
       <div class="order-list clearfix ">
         <el-row class="order-list-header">
-          <el-col :span="status === 0 ? 3 : 3">货主疫苗</el-col>
-          <el-col :span="status === 0 ? 2 : 3">供货单位</el-col>
+          <el-col :span="status === 0 ? 3 : 5">货主疫苗</el-col>
+          <el-col :span="status === 0 ? 2 : 4">供货单位</el-col>
           <el-col :span="status === 0 ? 2 : 3">需求数</el-col>
           <el-col :span="status === 0 ? 2 : 3">已提交数量</el-col>
-          <el-col :span="status === 0 ? 2 : 3">分配数量</el-col>
+          <el-col v-show="status === 0" :span="status === 0 ? 2 : 3">分配数量</el-col>
           <el-col :span="status === 0 ? 2 : 3">需求差额</el-col>
           <el-col :span="status === 0 ? 2 : 3">可用库存数</el-col>
           <el-col v-show="status === 0" :span="2">调配前库存差额</el-col>
@@ -65,7 +65,7 @@
           <el-row v-for="item in allocationList" :key="item.orgGoodsId"
                   :class="[{'active':currentItemId==item.orgGoodsId}]"
                   class="order-list-item order-list-item-bg" @click.prevent="showPart(item)">
-            <el-col :span="status === 0 ? 3 : 3" class="R pt">
+            <el-col :span="status === 0 ? 3 : 5" class="R pt">
               <div>
                 <el-tooltip class="item" content="货主疫苗名称" effect="dark" placement="right">
                   <span style="font-size: 14px;line-height: 20px">{{ item.orgGoodsName }}</span>
@@ -82,7 +82,7 @@
                 </el-tooltip>
               </div>
             </el-col>
-            <el-col :span="status === 0 ? 2 : 3" class="pt">
+            <el-col :span="status === 0 ? 2 : 4" class="pt">
                 <span>
                   {{ item.saleFactory }}
                 </span>
@@ -99,7 +99,7 @@
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
             </el-col>
-            <el-col :span="status === 0 ? 2 : 3" class="pt">
+            <el-col v-show="status === 0" :span="status === 0 ? 2 : 3" class="pt">
                 <span>
                   {{ item.actualAmount }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
@@ -107,7 +107,7 @@
             </el-col>
             <el-col :span="status === 0 ? 2 : 3" class="pt">
                 <span>
-                  {{ item.requiredQuantity - item.submittedCount - item.actualAmount  }}
+                  {{ item.demandGap  }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
             </el-col>

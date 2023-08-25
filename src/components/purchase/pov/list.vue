@@ -305,7 +305,7 @@
                 </div>
               </el-col>
             </el-row>
-            <sale-goods-info :order-item="item"></sale-goods-info>
+            <sale-goods-info :status="activeStatus" :order-item="item"></sale-goods-info>
             <div class="order-list-item-bg"></div>
           </div>
         </div>

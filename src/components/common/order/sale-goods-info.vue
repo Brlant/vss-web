@@ -60,9 +60,10 @@
         <th>单价</th>
         <th>申请数量</th>
         <th>申请金额</th>
-        <th>库存数量</th>
-        <th>已分配数量</th>
-        <th>需求差额</th>
+        <th v-show="status == 2">库存数量</th>
+        <th v-show="status == 2">已分配数量</th>
+        <th v-show="status != 2">分配数量</th>
+        <th v-show="status == 2">需求差额</th>
       </tr>
       </thead>
       <tbody>
@@ -84,9 +85,9 @@
           <span v-if="row.applyMoney">￥{{ row.applyMoney | formatMoney }}</span>
           <span v-if="!row.applyMoney">-</span>
         </td>
-        <td>{{ row.currentStock }}</td>
+        <td v-show="status == 2">{{ row.currentStock }}</td>
         <td>{{ row.submittedCount }}</td>
-        <td style="color: red">{{ row.applyCount- row.submittedCount }}</td>
+        <td v-show="status == 2" style="color: red">{{ row.demandGap }}</td>
       </tr>
       </tbody>
     </table>
@@ -97,6 +98,7 @@ export default {
   name: 'SaleGoodsInfo',
   props: {
     orderItem: {},
+    status:String,
     showBatch: Boolean
   },
   computed: {
