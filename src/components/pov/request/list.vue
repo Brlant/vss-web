@@ -208,7 +208,7 @@
                     <span v-if="!row.applyMoney">-</span>
                   </td>
                   <td v-show="filters.status === 4">
-                    {{row.actualCount}}
+                    {{row.submittedCount}}
                   </td>
                 </tr>
                 <tr>
