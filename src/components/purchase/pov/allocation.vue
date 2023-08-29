@@ -37,14 +37,17 @@
       </div>
       <div class="order-list clearfix ">
         <el-row class="order-list-header">
-          <el-col :span="status === 0 ? 4 : 6">货主疫苗</el-col>
-          <el-col :span="status === 0 ? 4 : 6">供货单位</el-col>
-          <el-col :span="status === 0 ? 2 : 4">需求数</el-col>
-          <el-col :span="status === 0 ? 2 : 4">可用库存数</el-col>
-          <el-col v-show="status === 0" :span="3">调配前库存差额</el-col>
-          <el-col v-show="status === 0" :span="3">调配后库存差额</el-col>
+          <el-col :span="status === 0 ? 3 : 5">货主疫苗</el-col>
+          <el-col :span="status === 0 ? 2 : 4">供货单位</el-col>
+          <el-col :span="status === 0 ? 2 : 3">需求数</el-col>
+          <el-col :span="status === 0 ? 2 : 3">已提交数量</el-col>
+          <el-col v-show="status === 0" :span="status === 0 ? 2 : 3">分配数量</el-col>
+          <el-col :span="status === 0 ? 2 : 3">需求差额</el-col>
+          <el-col :span="status === 0 ? 2 : 3">可用库存数</el-col>
+          <el-col v-show="status === 0" :span="2">调配前库存差额</el-col>
+          <el-col v-show="status === 0" :span="2">调配后库存差额</el-col>
           <el-col v-show="status === 0" :span="2">状态</el-col>
-          <el-col :span="4">操作</el-col>
+          <el-col :span="3">操作</el-col>
         </el-row>
         <el-row v-if="loadingData">
           <el-col :span="24">
@@ -59,12 +62,13 @@
           </el-col>
         </el-row>
         <div v-else class="order-list-body flex-list-dom">
-          <el-row v-for="item in allocationList" :key="item.orgGoodsId" :class="[{'active':currentItemId==item.orgGoodsId}]"
+          <el-row v-for="item in allocationList" :key="item.orgGoodsId"
+                  :class="[{'active':currentItemId==item.orgGoodsId}]"
                   class="order-list-item order-list-item-bg" @click.prevent="showPart(item)">
-            <el-col :span="status === 0 ? 4 : 6" class="R pt">
+            <el-col :span="status === 0 ? 3 : 5" class="R pt">
               <div>
                 <el-tooltip class="item" content="货主疫苗名称" effect="dark" placement="right">
-                  <span style="font-size: 14px;line-height: 20px">{{item.orgGoodsName}}</span>
+                  <span style="font-size: 14px;line-height: 20px">{{ item.orgGoodsName }}</span>
                 </el-tooltip>
               </div>
               <div>
@@ -78,30 +82,48 @@
                 </el-tooltip>
               </div>
             </el-col>
-            <el-col :span="status === 0 ? 4 : 6" class="pt">
+            <el-col :span="status === 0 ? 2 : 4" class="pt">
                 <span>
                   {{ item.saleFactory }}
                 </span>
             </el-col>
-            <el-col :span="status === 0 ? 2 : 4" class="pt">
+            <el-col :span="status === 0 ? 2 : 3" class="pt">
                 <span>
                   {{ item.requiredQuantity }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
             </el-col>
-            <el-col :span="status === 0 ? 2 : 4" class="pt">
+            <el-col :span="status === 0 ? 2 : 3" class="pt">
+                <span>
+                  {{ item.submittedCount }}
+                  <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
+                </span>
+            </el-col>
+            <el-col v-show="status === 0" :span="status === 0 ? 2 : 3" class="pt">
+                <span>
+                  {{ item.actualAmount }}
+                  <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
+                </span>
+            </el-col>
+            <el-col :span="status === 0 ? 2 : 3" class="pt">
+                <span>
+                  {{ item.demandGap  }}
+                  <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
+                </span>
+            </el-col>
+            <el-col :span="status === 0 ? 2 : 3" class="pt">
                 <span>
                   {{ item.inventoryQuantity }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
             </el-col>
-            <el-col v-show="status === 0" :span="3" class="pt">
+            <el-col v-show="status === 0" :span="2" class="pt">
                 <span>
                   {{ item.balanceAmount }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
                 </span>
             </el-col>
-            <el-col v-show="status === 0" :span="3" class="pt">
+            <el-col v-show="status === 0" :span="2" class="pt">
                 <span>
                   {{ item.resultAmount }}
                   <dict :dict-group="'measurementUnit'" :dict-key="item.mixUnit"></dict>
@@ -117,7 +139,7 @@
                   库存不足
                 </span>
             </el-col>
-            <el-col :span="4" class="opera-btn">
+            <el-col :span="3" class="opera-btn">
               <div v-show="status === 0 " class="mb5">
                 <span @click.prevent="showPart(item)">
                   <a class="btn-circle" href="#" @click.prevent=""><i
@@ -160,7 +182,7 @@
     </div>
 
     <page-right :css="{'width':'1000px','padding':0}" :show="showRight" @right-close="closeForm">
-      <allot-form :TotalAllocationList="allocationList" :currentItem="currentItem" :status="status"
+      <allot-form :totalAllocationList="allocationList" :currentItem="currentItem" :status="status"
                   @change="change" @close="resetRightBox" @refresh="refresh" @updateItem="showPart"></allot-form>
     </page-right>
     <page-right :css="{'width':'700px','padding':0}" :show="showEditGoodsRight" @right-close="closeForm">
@@ -274,6 +296,8 @@ export default {
       this.allocationList.forEach(i => {
         if (i.orgGoodsId === item.orgGoodsId) {
           i.resultAmount = i.inventoryQuantity - count;
+          i.actualAmount = count;
+          i.demandGap = i.requiredQuantity - i.submittedCount - count;
         }
       });
     },

@@ -55,12 +55,12 @@
             <div v-loading="loadingData">
               <el-row class="mb-10">
                 <el-col :span="12">
-                  <oms-row :span="4" label="货主疫苗">{{currentItem.orgGoodsName}}</oms-row>
-                  <oms-row :span="4" label="生产单位">{{currentItem.productFactory}}</oms-row>
+                  <oms-row :span="4" label="货主疫苗">{{ currentItem.orgGoodsName }}</oms-row>
+                  <oms-row :span="4" label="生产单位">{{ currentItem.productFactory }}</oms-row>
                 </el-col>
                 <el-col :span="12">
-                  <oms-row :span="4" label="规格">{{currentItem.specification}}</oms-row>
-                  <oms-row :span="4" label="供货单位">{{currentItem.saleFactory}}</oms-row>
+                  <oms-row :span="4" label="规格">{{ currentItem.specification }}</oms-row>
+                  <oms-row :span="4" label="供货单位">{{ currentItem.saleFactory }}</oms-row>
                 </el-col>
               </el-row>
               <div class="order-list clearfix">
@@ -115,7 +115,7 @@
                       </el-col>
                       <el-col :span="4">{{ item.applyTime | minute }}</el-col>
                       <el-col :span="4">
-                        <span v-show="status === 1 ">{{item.actualCount}}</span>
+                        <span v-show="status === 1 ">{{ item.submittedCount }}</span>
                         <perm label="demand-assignment-update">
                           <el-input v-show="status === 0 " v-model.number="item.actualCount"
                                     @blur="submit(item)">
@@ -151,7 +151,7 @@
                       <el-col :span="5">
                         <el-tooltip class="item" content="库存数量减去已经分配的数量" effect="dark" placement="right">
                         <span style="font-size: 16px">调配后库存差额 <span>
-                          {{ currentItem.resultAmount}}
+                          {{ currentItem.resultAmount }}
                          <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                         </span></span>
                         </el-tooltip>
@@ -166,7 +166,7 @@
                 <el-button :disabled="index === 0" plain @click="updateItem(--index)"><i
                   class="el-icon-d-arrow-left"></i>上一条
                 </el-button>
-                <el-button :disabled="index === TotalAllocationList.length - 1" plain @click="updateItem(++index)">
+                <el-button :disabled="index === totalAllocationList.length - 1" plain @click="updateItem(++index)">
                   <i class="el-icon-d-arrow-right"></i>下一条
                 </el-button>
                 <el-button plain @click="$emit('close')"><i class="el-icon-circle-close-outline"></i>关闭</el-button>
@@ -177,17 +177,17 @@
       </div>
     </div>
     <el-dialog :visible.sync="showEditGoodsRight" append-to-body title="修改要货品种" width="500px">
-      <oms-row :span="6" class="mb-10" label="要货单位">{{currentGoodsItem.povName}}</oms-row>
+      <oms-row :span="6" class="mb-10" label="要货单位">{{ currentGoodsItem.povName }}</oms-row>
       <el-row class="mb-10">
         <el-col :span="12">
-          <oms-row :span="12" label="现有库存">{{currentGoodsItem.currentStock}}</oms-row>
+          <oms-row :span="12" label="现有库存">{{ currentGoodsItem.currentStock }}</oms-row>
         </el-col>
         <el-col :span="12">
-          <oms-row :span="12" label="需求数">{{currentGoodsItem.applyCount}}</oms-row>
+          <oms-row :span="12" label="需求数">{{ currentGoodsItem.applyCount }}</oms-row>
         </el-col>
       </el-row>
-      <oms-row :span="6" class="mb-10" label="要货时间">{{currentGoodsItem.applyTime | time}}</oms-row>
-      <oms-row :span="6" class="mb-10" label="分配数量">{{currentGoodsItem.actualCount}}</oms-row>
+      <oms-row :span="6" class="mb-10" label="要货时间">{{ currentGoodsItem.applyTime | time }}</oms-row>
+      <oms-row :span="6" class="mb-10" label="分配数量">{{ currentGoodsItem.submittedCount }}</oms-row>
       <edit-goods :currentItem="currentGoodsItem" :show="showEditGoodsRight" class="is-no-fix"
                   @refresh="refresh"></edit-goods>
     </el-dialog>
@@ -204,7 +204,7 @@ export default {
   props: {
     currentItem: Object,
     status: Number,
-    TotalAllocationList: Array
+    totalAllocationList: Array
   },
   data() {
     return {
@@ -219,7 +219,7 @@ export default {
   },
   watch: {
     currentItem(val) {
-      this.index = this.TotalAllocationList.indexOf(val);
+      this.index = this.totalAllocationList.indexOf(val);
       this.queryAllocationList();
     }
   },
@@ -247,12 +247,21 @@ export default {
       });
       params.idArray = ary;
       demandAssignment.assignmentGoods(params).then(res => {
-        this.allocationList = res.data;
+
+        if (this.status == 0) {
+          this.allocationList = res.data.map(item => {
+            item.actualCount = item.actualCount > 0 ? item.actualCount : item.applyCount - item.submittedCount
+            return item
+          })
+        } else {
+          this.allocationList = res.data;
+        }
+
         this.loadingData = false;
       });
     },
     updateItem(index) {
-      this.$emit('updateItem', this.TotalAllocationList[index]);
+      this.$emit('updateItem', this.totalAllocationList[index]);
     },
     submit(item) {
       if (typeof item.actualCount !== 'number') return;

@@ -96,12 +96,13 @@
     <table class="table table-hover" style="margin-top: 10px">
       <thead>
       <tr>
-        <th>疫苗名称</th>
+        <th width="auto">疫苗名称</th>
         <th>规格</th>
         <th>单价</th>
-        <th>申请数量</th>
-        <th>申请金额</th>
-        <th>分配数量</th>
+        <th width="48">申请数量</th>
+        <th width="48">申请金额</th>
+        <th width="40">已分配数量</th>
+        <th width="48">需求差额</th>
       </tr>
       </thead>
       <tbody>
@@ -124,9 +125,11 @@
           <span v-if="row.applyMoney">￥{{row.applyMoney | formatMoney}}</span>
           <span v-if="!row.applyMoney">-</span>
         </td>
-        <td>
-          {{row.actualCount}}
-        </td>
+<!--        <td>-->
+<!--          {{row.actualCount}}-->
+<!--        </td>-->
+        <td >{{ row.submittedCount }}</td>
+        <td style="color: red">{{ row.demandGap }}</td>
       </tr>
       <tr>
         <th class="text-right" colspan="6">
