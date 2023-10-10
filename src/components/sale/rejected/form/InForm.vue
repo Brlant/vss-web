@@ -925,7 +925,7 @@ export default {
         povId: this.form.supplierId,
         vaccineType: this.form.goodsType + 1,
         keyWord: query,
-        storageType: this.form.qualifiedFlag ? this.form.transportationCondition : ''
+        transportationCondition: this.form.qualifiedFlag ? this.form.transportationCondition : ''
       };
       let rTime = Date.now();
       this.requestTime = rTime;

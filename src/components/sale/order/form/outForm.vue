@@ -987,7 +987,7 @@ export default {
         povId: this.form.customerId,
         vaccineType: this.vaccineType,
         keyWord: query,
-        storageType:this.form.transportationCondition
+        transportationCondition:this.form.transportationCondition
       };
       let rTime = Date.now();
       this.requestTime = rTime;

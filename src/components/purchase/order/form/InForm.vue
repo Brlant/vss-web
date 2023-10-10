@@ -848,7 +848,8 @@ export default {
         vaccineType: this.vaccineType,
         keyWord: query,
         factoryId: this.form.supplierId,
-        storageType:this.form.transportationCondition
+        //字段修改storageType ----》 transportationCondition
+        transportationCondition:this.form.transportationCondition
       };
       let rTime = Date.now();
       this.requestTime = rTime;
