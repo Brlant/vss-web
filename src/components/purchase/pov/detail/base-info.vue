@@ -102,7 +102,8 @@
         <th width="48">申请数量</th>
         <th width="48">申请金额</th>
         <th width="40">已分配数量</th>
-        <th width="48">需求差额</th>
+<!--      需求差额修 改为 未分配数量 -->
+        <th width="48">未分配数量</th>
       </tr>
       </thead>
       <tbody>
