@@ -42,7 +42,7 @@
           <el-col :span="status === 0 ? 2 : 3">需求数</el-col>
           <el-col :span="status === 0 ? 2 : 3">已提交数量</el-col>
           <el-col v-show="status === 0" :span="status === 0 ? 2 : 3">分配数量</el-col>
-          <el-col :span="status === 0 ? 2 : 3">需求差额</el-col>
+          <el-col :span="status === 0 ? 2 : 3">未分配数量</el-col>
           <el-col :span="status === 0 ? 2 : 3">可用库存数</el-col>
           <el-col v-show="status === 0" :span="2">调配前库存差额</el-col>
           <el-col v-show="status === 0" :span="2">调配后库存差额</el-col>
