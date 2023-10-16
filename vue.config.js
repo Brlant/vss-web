@@ -41,7 +41,7 @@ const targets = {
   yj:'http://192.168.5.23:8081',
 };
 
-const proxyTarget = targets.xl;
+const proxyTarget = targets.un;
 
 module.exports = {
   devServer: {

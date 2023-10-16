@@ -63,7 +63,7 @@
         <th v-show="status == 2">库存数量</th>
         <th v-show="status == 2">已分配数量</th>
         <th v-show="status != 2">分配数量</th>
-        <th v-show="status == 2">需求差额</th>
+        <th v-show="status == 2">未分配数量</th>
       </tr>
       </thead>
       <tbody>
