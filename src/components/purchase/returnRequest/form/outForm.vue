@@ -765,7 +765,7 @@ export default {
         keyWord: query,
         factoryId: this.form.cdcId,
         vaccineType: this.form.goodsType + 1,
-        storageType: this.form.qualityFlag ? this.form.transportationConditionId : ''
+        transportationCondition: this.form.qualityFlag ? this.form.transportationConditionId : ''
       };
       let rTime = Date.now();
       this.requestTime = rTime;
