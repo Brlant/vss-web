@@ -143,9 +143,10 @@ export default {
       this.doing = true;
       axios.all(this.batchNumbers.map(m => {
         let params = {
-          goodsId: m.goodsId
+          goodsId: m.goodsId,
+          orgGoodsId:m.orgGoodsId
         };
-        return this.$http.get('/batch-number', {params});
+        return this.$http.get('/erp-stock/getBatchNumberByCondition', {params});
       })).then(
         axios.spread((...args) => {
           this.batchNumbers.forEach((i, index) => {

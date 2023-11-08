@@ -300,7 +300,11 @@ export default {
       let a = this.$moment();
       let b = this.$moment(item.expiryDate);
       let days = b.diff(a, 'days');
-      return a < b ? days > 90 ? 2 : 1 : 0;
+      let nearExpirationDate = 0
+      if(item.nearTermDays){
+        nearExpirationDate = item.nearTermDays
+      }
+      return a < b ? days >= nearExpirationDate ? 2 : 1 : 0;
     },
     getBatches() { // 得到波次列表
       this.totalInfo = {};

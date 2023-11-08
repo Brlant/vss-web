@@ -39,6 +39,7 @@ const targets = {
   cjg:'http://192.168.5.29:8081',
   yhh:'http://192.168.5.12:8081',
   yj:'http://192.168.5.23:8081',
+  wh:'http://192.168.5.35:8081',
 };
 
 module.exports = {
@@ -50,7 +51,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: targets.un,
+        target: targets.wh,
         changOrigin: true
       }
     }

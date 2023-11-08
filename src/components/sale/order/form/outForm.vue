@@ -295,6 +295,7 @@ $leftWidth: 240px;
                   <batch-number-part ref="batchNumberPart" :editItemProduct="editItemProduct" :form="form"
                                      :formCopy="formCopy"
                                      :product="product"
+                                     :accessoryList="accessoryList"
                                      :productList="filterProductList"
                                      @setIsHasBatchNumberInfo="setIsHasBatchNumberInfo"></batch-number-part>
 
