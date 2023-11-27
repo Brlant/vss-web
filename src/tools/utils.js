@@ -24,7 +24,8 @@ export default {
     3: {'title': '待疾控处理', status: 1, num: ''},
     4: {'title': '待生成订单', status: 2, num: ''},
     5: {'title': '已分配', status: 4, num: ''},
-    6: {'title': '已取消', status: 3, num: ''}
+    6: {'title': '已部分分配', status: 6, num: ''},
+    7: {'title': '已取消', status: 3, num: ''}
   },
   inOrderLink: {
     1: {'title': '订单确认', state: '0', num: ''},
@@ -39,16 +40,17 @@ export default {
     10: {'title': '已拒收', state: '8', num: ''},
     11: {'title': '异常', state: '6', num: ''}
   },
-  assignType: {
-    0: {'title': '待生成销售汇总', status: 1, num: ''},
-    1: {'title': '待分配销售', status: 2, num: ''},
-    2: {'title': '已分配销售', status: 4, num: ''},
-    3: {'title': '已取消销售', status: 3, num: ''},
-    4: {'title': '已退回销售', status: 5, num: ''},
-    5: {'title': '待生成采购汇总', status: 11, num: ''},
-    6: {'title': '已生成采购汇总', status: 12, num: ''},
-    7: {'title': '已取消采购', status: 13, num: ''}
-  },
+  assignType: [
+    {title: '待生成销售汇总', status: 1, num: ''},
+    {title: '待分配销售', status: 2, num: ''},
+    {title: '已部分分配', status: 6, num: ''},
+    {title: '已分配销售', status: 4, num: ''},
+    {title: '已取消销售', status: 3, num: ''},
+    {title: '已退回销售', status: 5, num: ''},
+    {title: '待生成采购汇总', status: 11, num: ''},
+    {title: '已生成采购汇总', status: 12, num: ''},
+    {title: '已取消采购', status: 13, num: ''}
+  ],
   transitTab: {
     0: {'title': '未配送', status: 'NO', num: ''},
     1: {'title': '配送中', status: 'RUNING', num: ''},
@@ -525,5 +527,5 @@ export const getUrlPathId = (url) => {
     return ''
   }
 
-  return url.substring(beginIndex+1);
+  return url.substring(beginIndex + 1);
 }

@@ -41,6 +41,8 @@ const targets = {
   yj:'http://192.168.5.23:8081',
 };
 
+const proxyTarget = targets.un;
+
 module.exports = {
   devServer: {
     open: true,
@@ -50,7 +52,7 @@ module.exports = {
     disableHostCheck: true,
     proxy: {
       '/api': {
-        target: targets.un,
+        target: proxyTarget,
         changOrigin: true
       }
     }

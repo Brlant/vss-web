@@ -208,7 +208,7 @@
                     <span v-if="!row.applyMoney">-</span>
                   </td>
                   <td v-show="filters.status === 4">
-                    {{row.actualCount}}
+                    {{row.submittedCount}}
                   </td>
                 </tr>
                 <tr>
@@ -373,7 +373,9 @@ export default {
         this.requestType[3].num = res.data['audited'];
         this.requestType[4].num = res.data['create-wave'];
         this.requestType[5].num = res.data['assigned'];
-        this.requestType[6].num = res.data['canceled'];
+        this.requestType[6].num = res.data['part-assigned'];
+        this.requestType[7].num = res.data['canceled'];
+
       });
     },
     getDetail: function () {
@@ -457,7 +459,7 @@ export default {
         })
       } else {
         this.approve()
-      }  
+      }
     },
     approve(){
       this.$confirm('是否审核通过"' + this.currentOrder.id + '" 申请单?', '', {
