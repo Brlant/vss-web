@@ -11,7 +11,7 @@
 <template>
   <div v-loading="doing">
     <div v-show="!isHasBatchNumberInfo">
-      <div v-for="item in batchNumbers" class="product-list-detail">
+      <div v-for="(item,index) in batchNumbers" :key="index" class="product-list-detail">
         <h3 class="goods-title">
           <span class="pull-left">批号信息({{item.orgGoodsName}}<el-tag v-show="!item.isMainly">组合</el-tag>)</span>
           <span v-if="product.unitPrice" class="pull-right">单价: ¥{{product.unitPrice}}</span>
@@ -30,7 +30,7 @@
           </tr>
           </thead>
           <tbody>
-          <tr v-for=" batchNumber in item.lots">
+          <tr v-for=" batchNumber in item.lots" :key="batchNumber.id">
             <td>
               <el-checkbox v-model="batchNumber.isChecked" :disabled="batchNumber.disabled"></el-checkbox>
             </td>
@@ -73,6 +73,12 @@ export default {
     form: {},
     product: {},
     productList: {
+      type: Array,
+      default() {
+        return [];
+      }
+    },
+    accessoryList:{
       type: Array,
       default() {
         return [];
@@ -247,6 +253,7 @@ export default {
      * @param item
      */
     isChangeValue(item, product) {
+      debugger;
       if (product.isMainly) {
         item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
       }
@@ -258,6 +265,45 @@ export default {
       }
       item.isChecked = item.productCount > 0;
       this.autoSelectBatchWhenIsCombination(item, product);
+      /*if (product.isMainly) {
+        if(this.accessoryList.length !=0){  // 组合疫苗
+          let obj = {
+            orgGoodsId:'',
+            number:'',
+            orgGoodsName: '',
+            list:[]
+          }
+          this.batchNumbers.forEach(item=>{
+            if(item.isMainly){ // 主疫苗
+              obj.orgGoodsId = item.orgGoodsId
+              obj.orgGoodsName = item.orgGoodsName
+              obj.number = item.lots.reduce((sum,cur)=>{
+                let lineSum = cur.productCount?Number(cur.productCount):0
+                return sum + lineSum;
+              },0)
+            }else{  // 组合疫苗
+              let tempObj = {}
+              tempObj.accessoryOrgGoodsId = item.orgGoodsId,
+              tempObj.orgGoodsName = item.orgGoodsName
+              tempObj.number =  item.lots.reduce((sum,cur)=>{
+                let lineTemp = cur.productCount?Number(cur.productCount):0
+                return sum + lineTemp;
+              },0)
+              obj.list.push(tempObj)
+            }
+          })
+          this.$http.post('/erp-stock/goods/combinationCheck',obj).then(res=>{
+            if(!res.data.combinationCheckStatus){
+              this.$alert(`根据组合货品的比例以及该货品的最小包装，建议【${obj.orgGoodsName}】的采购数量为【${res.data.goodsSuggestNumber}】；【${obj.list[0].orgGoodsName}】的采购数量为【${res.data.combinationSuggestNumber}】；请确认采购数量，确认后会对后续操作产生严重影响!`, '提示', {
+                confirmButtonText: '确定',
+                type: 'warning',
+                callback: action => {
+                }
+              })
+            }
+          })
+        }
+      }*/
     },
     /**
      * 自动选出组合疫苗的批号
@@ -300,7 +346,7 @@ export default {
           }
         });
         // 查出近效期的批号
-        let effectiveList = i.lots.filter(fl => fl.inEffectiveFlag);
+        let effectiveList = i.lots.filter(fl => fl.inEffectiveFlag !=2);
         if (!effectiveList.length) {
           this.selectBatch(i.lots, 0, 0, comTotalCount);
         } else {
