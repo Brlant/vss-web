@@ -253,6 +253,7 @@ export default {
      * @param item
      */
     isChangeValue(item, product) {
+      debugger;
       if (product.isMainly) {
         item.productCount = this.changeTotalNumber(item.productCount, this.product.fixInfo.goodsDto.smallPacking);
       }
@@ -264,7 +265,7 @@ export default {
       }
       item.isChecked = item.productCount > 0;
       this.autoSelectBatchWhenIsCombination(item, product);
-      if (product.isMainly) {
+      /*if (product.isMainly) {
         if(this.accessoryList.length !=0){  // 组合疫苗
           let obj = {
             orgGoodsId:'',
@@ -302,7 +303,7 @@ export default {
             }
           })
         }
-      } 
+      }*/
     },
     /**
      * 自动选出组合疫苗的批号
