@@ -18,40 +18,45 @@
     left: 0;
     top: 50%;
     transform: translateY(-50%);
-  } 
+  }
 }
-.returnTitle{
+
+.returnTitle {
   font-size: 18px;
   margin-bottom: 5px;
-  i{
+
+  i {
     font-size: 22px;
     margin-right: 8px;
   }
 }
 </style>
 <style lang="scss">
-.returnShow{
+.returnShow {
   .el-dialog__wrapper {
-      text-align: center;
-      white-space: nowrap;
-      overflow: auto;
-      &:after {
-        content: "";
-        display: inline-block;
-        vertical-align: middle;
-        height: 100%;
+    text-align: center;
+    white-space: nowrap;
+    overflow: auto;
+
+    &:after {
+      content: "";
+      display: inline-block;
+      vertical-align: middle;
+      height: 100%;
+    }
+
+    .el-dialog {
+      margin: 30px auto !important;
+      display: inline-block;
+      vertical-align: middle;
+      text-align: left;
+      white-space: normal;
+
+      .el-dialog__header {
+        display: none !important;
       }
-      .el-dialog {
-        margin: 30px auto !important;
-        display: inline-block;
-        vertical-align: middle;
-        text-align: left;
-        white-space: normal;
-        .el-dialog__header{
-          display: none !important;
-        }  
-      }
-}
+    }
+  }
 }
 </style>
 <template>
@@ -71,6 +76,19 @@
                 class="el-icon-t-wave"></i></a><span class="wave-title"> 生成销售汇总单</span></span>
             </perm>
          </span>
+          <span v-show="filters.status === 6" class="pull-right">
+            <perm class="opera-btn" label="demand-assignment-add">
+              <span style="cursor:pointer" @click="createDemand"><a class="btn-circle" href="#" @click.prevent=""><i
+                class="el-icon-t-wave"></i></a><span class="wave-title"> 疫苗分配</span></span>
+            </perm>
+         </span>
+          <span v-show="filters.status === 6" class="pull-right">
+            <perm class="opera-btn" label="demand-assignment-add">
+              <span style="cursor:pointer" @click="overBill"><a class="btn-circle" href="#" @click.prevent=""><i
+                class="el-icon-t-wave"></i></a><span class="wave-title"> 结束单据</span></span>
+            </perm>
+         </span>
+
           <span class="pull-right">
             <perm class="opera-btn" label="cargo-signal-add">
               <span style="cursor:pointer" @click="applyOrder"><a class="btn-circle" href="#" @click.prevent=""><i
@@ -177,7 +195,7 @@
       <el-row>
         <el-col :span="13">
           <div class="order-list-status container clearfix">
-            <div v-for="(item,key) in assignType" v-show="key < 5" :class="{'active':key==activeStatus}"
+            <div v-for="(item,key) in assignType" v-show="key < 6" :class="{'active':key==activeStatus}"
                  class="status-item" style="width: 115px" @click="checkStatus(item, key)">
               <div :class="['b_color_'+key]" class="status-bg"></div>
               <div><i v-if="key==activeStatus" class="el-icon-caret-right"></i>{{ item.title }}<span class="status-num">
@@ -187,7 +205,7 @@
         </el-col>
         <el-col :span="11">
           <div class="order-list-status order-list-status-right container clearfix">
-            <div v-for="(item,key) in assignType" v-show="key > 4" :class="{'active':key==activeStatus}"
+            <div v-for="(item,key) in assignType" v-show="key > 5" :class="{'active':key==activeStatus}"
                  class="status-item"
                  style="width: 115px" @click="checkStatus(item, key)">
               <div :class="['b_color_'+key]" class="status-bg"></div>
@@ -200,7 +218,8 @@
       <div class="order-list clearfix " style="margin-top: 20px">
         <el-row class="order-list-header">
           <el-col :span="5">
-            <el-checkbox v-show="filters.status === 1 || filters.status === 11" v-model="isCheckAll" @change="checkAll">
+            <el-checkbox v-show="filters.status === 1 || filters.status === 6 || filters.status === 11"
+                         v-model="isCheckAll" @change="checkAll">
             </el-checkbox>
             要货申请编号/疫苗种类
           </el-col>
@@ -225,8 +244,10 @@
           <div v-for="item in demandList" :class="['status-'+activeStatus,{'active':currentItemId==item.id}]"
                class="order-list-item">
             <el-row>
-              <el-col :class="{'special-col': filters.status === 1 || filters.status === 11}" :span="5" class="R pt10">
-                <div v-show="filters.status === 1 || filters.status === 11" class="el-checkbox-warp"
+              <el-col :class="{'special-col': filters.status === 1 || filters.status === 6 || filters.status === 11}"
+                      :span="5" class="R pt10">
+                <div v-show="filters.status === 1 || filters.status === 6 || filters.status === 11"
+                     class="el-checkbox-warp"
                      @click.stop.prevent="checkItem(item)">
                   <el-checkbox v-model="item.isChecked"></el-checkbox>
                 </div>
@@ -284,7 +305,7 @@
                 </div>
               </el-col>
             </el-row>
-            <sale-goods-info :order-item="item"></sale-goods-info>
+            <sale-goods-info :status="activeStatus" :order-item="item"></sale-goods-info>
             <div class="order-list-item-bg"></div>
           </div>
         </div>
@@ -313,25 +334,25 @@
     </page-right>
     <!-- 退回需求单弹窗 -->
     <div class="returnShow">
-    <el-dialog
-      :visible.sync="returnDialogVisible"
-      width="30%"
-      :show-close="false"
+      <el-dialog
+        :visible.sync="returnDialogVisible"
+        width="30%"
+        :show-close="false"
       >
-      <div >
-        <div class="returnTitle"><i class="el-icon-warning-outline"></i>是否退回“{{OrderNumber}}”的申请单?</div>
-        <el-input
-          type="textarea"
-          :rows="5"
-          placeholder="请输入退回原因"
-          v-model="reason">
-        </el-input>
-      </div>
-      <span slot="footer" class="dialog-footer">
+        <div>
+          <div class="returnTitle"><i class="el-icon-warning-outline"></i>是否退回“{{ OrderNumber }}”的申请单?</div>
+          <el-input
+            type="textarea"
+            :rows="5"
+            placeholder="请输入退回原因"
+            v-model="reason">
+          </el-input>
+        </div>
+        <span slot="footer" class="dialog-footer">
         <el-button @click="returnDialogVisible = false">取 消</el-button>
         <el-button type="primary" @click="sureReturn">确 定</el-button>
       </span>
-    </el-dialog>
+      </el-dialog>
     </div>
   </div>
 </template>
@@ -366,7 +387,7 @@ export default {
         orgAreaCode: '',
         id: '',
         goodsType: '',
-        orgGoodsId:''
+        orgGoodsId: ''
       },
       searchWord: {
         povId: '',
@@ -375,7 +396,7 @@ export default {
         orgAreaCode: '',
         id: '',
         goodsType: '',
-        orgGoodsId:''
+        orgGoodsId: ''
       },
       demandTime: '',
       pager: {
@@ -391,9 +412,9 @@ export default {
       isSearch: false,
       index: -1,
       orgGoods: [],
-      returnDialogVisible:false,
-      OrderNumber:"",
-      reason:'',
+      returnDialogVisible: false,
+      OrderNumber: "",
+      reason: '',
     };
   },
   computed: {
@@ -491,14 +512,24 @@ export default {
         cdcId: this.user.userCompanyAddress
       }, this.filters);
       pullSignal.queryCount(params).then(res => {
-        this.assignType[0].num = res.data['audited'];
-        this.assignType[1].num = res.data['create-wave'];
-        this.assignType[2].num = res.data['assigned'];
-        this.assignType[3].num = res.data['cdc-canceled'];
-        this.assignType[4].num = res.data['pov-return'];
-        this.assignType[5].num = res.data['procurement-pending-audit'];
-        this.assignType[6].num = res.data['procurement-audited'];
-        this.assignType[7].num = res.data['procurement-canceled'];
+        // 待生成销售汇总
+        this.assignType[0].num = res.data['audited'] || 0;
+        // 待分配销售
+        this.assignType[1].num = res.data['create-wave'] || 0;
+        // 已部分分配
+        this.assignType[2].num = res.data['part-assigned'] || 0;
+        // 已分配销售
+        this.assignType[3].num = res.data['assigned'] || 0;
+        // 已取消销售
+        this.assignType[4].num = res.data['cdc-canceled'] || 0;
+        // 已退回销售
+        this.assignType[5].num = res.data['pov-return'] || 0;
+        // 待生成采购汇总
+        this.assignType[6].num = res.data['procurement-pending-audit'] || 0;
+        // 已生成采购汇总
+        this.assignType[7].num = res.data['procurement-audited'] || 0;
+        // 已取消采购
+        this.assignType[8].num = res.data['procurement-canceled'] || 0;
       });
     },
     filterOrg: function (query) {// 过滤供货商
@@ -550,28 +581,28 @@ export default {
       this.showRight = false;
     },
     // 退回需求单
-    backDemand(item){
+    backDemand(item) {
       this.returnDialogVisible = true
       this.reason = ''
       this.OrderNumber = item.id
     },
     // 确认退回
-    sureReturn(){
-      if(this.reason == ''){
+    sureReturn() {
+      if (this.reason == '') {
         this.$message.warning('请填写退回原因')
         return
       }
-      this.$http.put(`/pull-signal/return/${this.OrderNumber}`,{reason:this.reason}).then(() => {
-            this.$notify.success({
-              message: '已成功取消需求单'
-            });
-            this.returnDialogVisible = false
-            this.getDemandList(1);
-          }).catch(error => {
-            this.$notify.error({
-              message: error.response && error.response.data && error.response.data.msg || '取消需求单失败'
-            });
-          });
+      this.$http.put(`/pull-signal/return/${this.OrderNumber}`, {reason: this.reason}).then(() => {
+        this.$notify.success({
+          message: '已成功取消需求单'
+        });
+        this.returnDialogVisible = false
+        this.getDemandList(1);
+      }).catch(error => {
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '取消需求单失败'
+        });
+      });
     },
     closeForm(item) {
       this.$confirm('信息未保存，是否关闭?', '', {
@@ -623,7 +654,7 @@ export default {
         orgAreaCode: '',
         id: '',
         goodsType: '',
-        orgGoodsId:''
+        orgGoodsId: ''
       };
       this.demandTime = '';
       this.isCheckAll = false;
@@ -724,7 +755,63 @@ export default {
         });
       });
     },
+    /**
+     * 结束单据：
+     * 点击【结束单据】按钮，提示：“是否提前结束该单据”，
+     *  点击是，该要货需求单据也进入整体分配完成状态，不可再次进行分配。同原分配流程；
+     *  点击否，状态不变关闭弹窗。
+     */
+    overBill() {
+
+      if (!this.checkList.length) {
+        this.$notify.info({
+          message: '请选择申请单'
+        });
+        return;
+      }
+
+      this.$confirm('是否提前结束单据', '', {
+        confirmButtonText: '是',
+        cancelButtonText: '否',
+        type: 'warning'
+      }).then(() => {
+        let list = [];
+        this.checkList.forEach(i => !list.includes(i.id) && list.push(i.id));
+        demandAssignment.save({list, overBill: true}).then(res => {
+          this.$notify.success({
+            message: '结束单据成功'
+          });
+
+          this.getDemandList(1);
+        }).catch(error => {
+          this.$notify.error({
+            message: error.response && error.response.data && error.response.data.msg || '生成销售汇总单失败'
+          });
+        });
+      });
+
+    },
     createDemand() {
+      if (!this.checkList.length) {
+        this.$notify.info({
+          message: '请选择申请单'
+        });
+        return;
+      }
+      let list = [];
+      this.checkList.forEach(i => !list.includes(i.id) && list.push(i.id));
+      demandAssignment.save({list}).then(res => {
+        this.$notify.success({
+          message: '生成销售汇总单成功'
+        });
+        this.$router.push({path: '/sale/allocation/pov', query: {id: res.data.id}});
+      }).catch(error => {
+        this.$notify.error({
+          message: error.response && error.response.data && error.response.data.msg || '生成销售汇总单失败'
+        });
+      });
+    },
+    createDemand2() {
       if (!this.checkList.length) {
         this.$notify.info({
           message: '请选择申请单'
