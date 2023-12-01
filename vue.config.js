@@ -38,10 +38,10 @@ const targets = {
   xl: 'http://192.168.5.45:8081',
   cjg:'http://192.168.5.29:8081',
   yhh:'http://192.168.5.12:8081',
-  yj:'http://192.168.5.23:8081',
+  yj:'http://192.168.5.13:8081',
 };
 
-const proxyTarget = targets.un;
+const proxyTarget = targets.yj;
 
 module.exports = {
   devServer: {
