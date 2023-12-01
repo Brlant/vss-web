@@ -117,8 +117,9 @@
                       <el-col :span="4">
                         <span v-show="status === 1 ">{{ item.submittedCount }}</span>
                         <perm label="demand-assignment-update">
-                          <el-input v-show="status === 0 " v-model.number="item.actualCount"
-                                    @blur="submit(item)">
+                          <el-input v-show="status === 0 " v-model="item.actualCount"
+                                    @blur="submit(item)"
+                                    oninput="value = value.replace(/[^\d]/g, '');if(value.length>9) value=value.slice(0,9)">
                             <template slot="append">
                               <dict :dict-group="'measurementUnit'" :dict-key="currentItem.mixUnit"></dict>
                             </template>
@@ -187,7 +188,7 @@
         </el-col>
       </el-row>
       <oms-row :span="6" class="mb-10" label="要货时间">{{ currentGoodsItem.applyTime | time }}</oms-row>
-      <oms-row :span="6" class="mb-10" label="分配数量">{{ currentGoodsItem.submittedCount }}</oms-row>
+      <oms-row :span="6" class="mb-10" label="分配数量">{{ currentGoodsItem.actualCount }}</oms-row>
       <edit-goods :currentItem="currentGoodsItem" :show="showEditGoodsRight" class="is-no-fix"
                   @refresh="refresh"></edit-goods>
     </el-dialog>
@@ -263,17 +264,22 @@ export default {
       this.$emit('updateItem', this.totalAllocationList[index]);
     },
     submit(item) {
-      if (typeof item.actualCount !== 'number') return;
-      if (item.actualCount < 0) {
+      let actualCount = Number.parseInt(item.actualCount);
+      if (isNaN(actualCount)){
+        return
+      }
+
+      if (actualCount < 0) {
         this.$notify.info({
           message: '分配数量不能小于0，请进行调整'
         });
         return;
       }
-      let newAmount = this.changeTotalNumber(item.actualCount, this.currentItem.smallPackCount);
-      if (item.actualCount !== newAmount) {
-        this.$confirm(`疫苗"${this.currentItem.goodsName}"数量${item.actualCount}不是最小包装的倍数，确认后会对后续操作产生严重影响！
-          选择“是”修改数量为${newAmount}，选择“否”确认数量${item.actualCount}`, '', {
+
+      let newAmount = this.changeTotalNumber(actualCount, this.currentItem.smallPackCount);
+      if (actualCount !== newAmount) {
+        this.$confirm(`疫苗"${this.currentItem.goodsName}"数量${actualCount}不是最小包装的倍数，确认后会对后续操作产生严重影响！
+          选择“是”修改数量为${newAmount}，选择“否”确认数量${actualCount}`, '', {
           confirmButtonText: '是',
           cancelButtonText: '否',
           type: 'warning'
