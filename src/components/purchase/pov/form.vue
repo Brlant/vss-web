@@ -117,7 +117,7 @@
                       <el-col :span="4">
                         <span v-show="status === 1 ">{{ item.submittedCount }}</span>
                         <perm label="demand-assignment-update">
-                          <el-input v-show="status === 0 " v-model="item.actualCount"
+                          <el-input v-show="status === 0 " v-model.number="item.actualCount"
                                     @blur="submit(item)"
                                     oninput="value = value.replace(/[^\d]/g, '');if(value.length>9) value=value.slice(0,9)">
                             <template slot="append">
