@@ -86,7 +86,8 @@
           <span v-if="!row.applyMoney">-</span>
         </td>
         <td v-show="status == 2">{{ row.currentStock }}</td>
-        <td>{{ row.submittedCount }}</td>
+        <td v-show="status == 2">{{ row.submittedCount }}</td>
+        <td v-show="status != 2">{{row.actualCount}}</td>
         <td v-show="status == 2" style="color: red">{{ row.demandGap }}</td>
       </tr>
       </tbody>
