@@ -247,16 +247,15 @@ export default {
       });
       params.idArray = ary;
       demandAssignment.assignmentGoods(params).then(res => {
-
-        if (this.status == 0) {
-          this.allocationList = res.data.map(item => {
-            item.actualCount = item.actualCount > 0 ? item.actualCount : item.applyCount - item.submittedCount
-            return item
-          })
-        } else {
-          this.allocationList = res.data;
-        }
-
+        // if (this.status == 0) {
+        //   this.allocationList = res.data.map(item => {
+        //     item.actualCount = item.actualCount > 0 ? item.actualCount : item.applyCount - item.submittedCount
+        //     return item
+        //   })
+        // } else {
+        //   this.allocationList = res.data;
+        // }
+        this.allocationList = res.data;
         this.loadingData = false;
       });
     },
