@@ -44,7 +44,7 @@
         <div style="padding:0 20px">
           <!--账号密码登录-->
           <el-form v-show="loginStyle===0" ref="loginForm" :model="user" :rules="rules" label-position="top" label-width="80px"
-                   onsubmit="return false" @submit.prevent="onSubmit">
+                   onsubmit="return false" @submit.prevent="done">
             <el-form-item v-if="needCode" label="系统代码" prop="orgCode">
               <!--<oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>-->
               <tn-input-auto-complete v-model="user.orgCode" :list="orgCodeList" placeholder="请输入业务单位编号"/>
@@ -71,7 +71,7 @@
 
             <el-form-item label-width="80px">
               <el-button :loading="loading" native-type="submit" style="display:block;width:100%;" type="primary"
-                         @click="onSubmit">
+                         @click="done">
                 {{btnString}}
               </el-button>
             </el-form-item>
@@ -136,8 +136,8 @@
               background="#ccc"
               successText="验证通过"
               progressBarBg="#67c23a"
-              @passcallback="handlePass"
-              @passfail="handleFail"
+              @passcallback="passHandler"
+              @passfail="failHandler"
             >
             </drag-verify>
 
@@ -151,7 +151,7 @@
 </template>
 
 <script>
-import {Auth, cerpAction,http} from '../resources';
+import {Auth, cerpAction, http} from '@/resources';
 import AppFooter from './common/app.footer.vue';
 import {base64} from '@dtop/dtop-web-common';
 import dragVerify from "vue-drag-verify2";
@@ -162,10 +162,10 @@ export default {
     dragVerify
   },
   name: 'login',
-  data: () => {
+  data() {
     let orgCodeList = JSON.parse(window.localStorage.getItem('orgCodeList')) || [];
     let needCode = !!orgCodeList.length;
-    return ({
+    return {
       // 登录方式：0-账号密码登录，1-手机验证码登录
       loginStyle: 0,
       user: {
@@ -209,7 +209,7 @@ export default {
               } else {
                 if (!/^1[0-9]{10}$/.test(value)) {
                   callback(new Error('请输入正确的手机号'));
-                }else {
+                } else {
                   callback();
                 }
               }
@@ -226,8 +226,8 @@ export default {
       maxTimes: 60,
       leftTime: 0,
       smsBtnText: '获取验证码',
-      isPassing:false,
-    });
+      isPassing: false,
+    };
   },
   computed: {
     // smsBtnDisabled() {
@@ -283,10 +283,10 @@ export default {
     changeLoginStyle(loginStyle) {
       this.loginStyle = loginStyle;
     },
-    sendSMS: function () {
+    sendSMS() {
       this.leftTime = this.maxTimes;
       this.setTimer();
-      http.post('/sendSms', {phone: this.user1.phone}).then(response => {// 验证
+      http.post('/sendSms', {phone: this.user.username}).then(response => {// 验证
         this.$notify.info({
           message: '发送成功'
         });
@@ -296,7 +296,7 @@ export default {
         });
       });
     },
-    setTimer: function () {
+    setTimer() {
       if (this.leftTime > 0) {
         this.leftTime = this.leftTime - 1;
         this.smsBtnText = this.leftTime + 's';
@@ -308,12 +308,49 @@ export default {
       }
     },
     // 二次验证登录
-    handlePass() {
-      console.log('验证成功')
-    },
+    passHandler() {
+      // console.log('滑动验证成功')
+      if (!this.user.validateCode) {
+        this.resetDragVerify();
+        this.$message({
+          message: '请输入短信验证码',
+          type: 'warning'
+        });
 
+        return;
+      }
+
+      this.loading = true;
+      let user = {
+        phone: this.user.username,
+        validateCode: this.user.validateCode,
+        type: this.user.type
+      };
+
+      Auth.secondaryCertificateLogin(user).then(response => {
+        let userId = window.localStorage.getItem('userId');
+        this.$store.commit('initUser', response.data);
+        this.$store.commit('initCode', this.user.orgCode);
+        this.$emit('login');
+        this.queryWeChat();
+      }).catch(error => {
+        this.resetDragVerify();
+        let data = error.response.data;
+        this.$notify.error({
+          message: data.msg || '无法登录'
+        });
+
+        this.loading = false;
+
+        let code = data.code;
+        if (code === 602) {
+          this.loginStyle = 0;
+          this.user.validateCode = ''
+        }
+      })
+    },
     // 验证失败
-    handleFail() {
+    failHandler() {
       this.resetDragVerify();
     },
     // 还原至未验证通过状态
@@ -323,9 +360,13 @@ export default {
     },
     goBack() {
       this.loginStyle = 0;
-      this.user1 = {
-        validateCode:null,
-      }
+
+      this.user.validateCode = '';
+      this.btnString = '登录';
+      this.leftTime = 0;
+      this.smsBtnText = '获取验证码';
+      this.loading = false;
+
       this.$refs.phoneForm.resetFields();
       this.$refs.dragVerify.reset();
     },
@@ -344,22 +385,21 @@ export default {
           delete userCopy.password;
           Auth.login(userCopy).then(response => {
             if (!response.data) return;
+
+            let data = response.data;
+            if (data.secondaryCertificateFlag) {
+              this.loginStyle = 1;
+
+              this.loading = false;
+              this.btnString = '登录';
+              this.smsBtnText = '获取验证码';
+
+              return;
+            }
+
             let userId = window.localStorage.getItem('userId');
             this.$store.commit('initUser', response.data);
             this.$store.commit('initCode', this.user.orgCode);
-            // this.$nextTick(function () {
-            //   if (userId === response.data.userId) {
-            //     let lastUrl = window.localStorage.getItem('lastUrl');
-            //     if (lastUrl && lastUrl.indexOf('/login') === -1 && lastUrl.indexOf('/logout') === -1) {
-            //       window.localStorage.removeItem('lastUrl');
-            //       window.location.href = lastUrl;
-            //       return lastUrl;
-            //     }
-            //   } else {
-            //     this.$router.replace('/');
-            //   }
-            //   this.$router.replace('/');
-            // });
             this.$emit('login');
             this.queryWeChat();
           }, error => {
@@ -390,14 +430,14 @@ export default {
         }
       });
     },
-    getCode: function () {
+    getCode() {
       this.showCode = true;
       this.codeUrl = process.env.VUE_APP_API + '/foundation/CAPTCHA?' + Math.random();
     },
     isFocusIndex() {
       this.isFocus = 2;
     },
-    trim: function (str) {
+    trim(str) {
       return (str + '').replace(/(^\s*)|(\s*$)/g, '');
     },
     queryWeChat() {
@@ -420,7 +460,7 @@ export default {
       }, 100);
     }
   },
-  mounted: function () {
+  mounted() {
     // 清空权限列表
     this.$store.commit('initPermissions', []);
     this.isFocusIndex();
