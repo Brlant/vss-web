@@ -30,7 +30,7 @@ if (process.env.NODE_ENV === 'production') {
 
 const targets = {
   local: 'http://localhost:8081',
-  ldw: 'http://192.168.5.201:8081',
+  ldm: 'http://192.168.1.12:8081',
   ldw2: 'http://vss-ldm.vaiwan.com',
   sh: 'https://sh-vss.cdcerp.cn',
   un: 'https://un-vss.cdcerp.cn',
@@ -38,10 +38,10 @@ const targets = {
   xl: 'http://192.168.5.45:8081',
   cjg:'http://192.168.5.29:8081',
   yhh:'http://192.168.5.12:8081',
-  yj:'http://192.168.5.13:8081',
+  yj:'http://192.168.1.34:8081',
 };
 
-const proxyTarget = targets.yj;
+const proxyTarget = targets.ldm;
 
 module.exports = {
   devServer: {

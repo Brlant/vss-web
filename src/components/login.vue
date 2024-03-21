@@ -4,6 +4,7 @@
 .el-icon-t-wx_icon {
   color: #fff;
 }
+
 .login-style {
   margin-bottom: 20px;
 
@@ -15,12 +16,15 @@
     font-size: 16px;
   }
 }
+
 .flex {
   display: flex;
+
   .cursor {
     cursor: pointer;
   }
 }
+
 .title {
   margin: 0px auto 30px auto;
   text-align: center;
@@ -33,17 +37,18 @@
       <div class="bg-logo"></div>
       <img class="img-logo" src="../assets/img/logo-login.png">
       <div class="logo-part-s clearfix">
-        <div class="m-logo">{{$store.state.sysTitle}}</div>
+        <div class="m-logo">{{ $store.state.sysTitle }}</div>
       </div>
       <el-card class="box-card ">
-<!--        <div class="login-style">-->
-<!--          <el-button v-show="loginStyle === 0" class="btn" type="text" @click="changeLoginStyle(1)">用短信验证码登录</el-button>-->
-<!--          <el-button v-show="loginStyle === 1" class="btn" type="text" @click="changeLoginStyle(0)">用短信验证码登录</el-button>-->
-<!--        </div>-->
+        <!--        <div class="login-style">-->
+        <!--          <el-button v-show="loginStyle === 0" class="btn" type="text" @click="changeLoginStyle(1)">用短信验证码登录</el-button>-->
+        <!--          <el-button v-show="loginStyle === 1" class="btn" type="text" @click="changeLoginStyle(0)">用短信验证码登录</el-button>-->
+        <!--        </div>-->
 
         <div style="padding:0 20px">
           <!--账号密码登录-->
-          <el-form v-show="loginStyle===0" ref="loginForm" :model="user" :rules="rules" label-position="top" label-width="80px"
+          <el-form v-show="loginStyle===0" ref="loginForm" :model="user" :rules="rules" label-position="top"
+                   label-width="80px"
                    onsubmit="return false" @submit.prevent="done">
             <el-form-item v-if="needCode" label="系统代码" prop="orgCode">
               <!--<oms-input v-model="user.orgCode" :showFocus="isFocus === 1"></oms-input>-->
@@ -54,8 +59,8 @@
                          @blur="check()"></oms-input>
             </el-form-item>
             <el-form-item label="密码" prop="password" style="position:relative">
-<!--              <oms-input v-model="user.password" :showFocus="isFocus === 3" placeholder="请输入密码"-->
-<!--                         type="password"></oms-input>-->
+              <!--              <oms-input v-model="user.password" :showFocus="isFocus === 3" placeholder="请输入密码"-->
+              <!--                         type="password"></oms-input>-->
               <el-input placeholder="请输入密码" v-model="user.password" :autofocus="isFocus === 3" show-password></el-input>
               <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>
             </el-form-item>
@@ -72,7 +77,7 @@
             <el-form-item label-width="80px">
               <el-button :loading="loading" native-type="submit" style="display:block;width:100%;" type="primary"
                          @click="done">
-                {{btnString}}
+                {{ btnString }}
               </el-button>
             </el-form-item>
             <!--<el-form-item label-width="80px">-->
@@ -83,32 +88,32 @@
             <!--</el-form-item>-->
           </el-form>
           <!--手机验证码登录-->
-<!--          <el-form v-show="loginStyle===1" class="login-form" label-position="top" ref="phoneForm" label-width="80px"-->
-<!--                   :model="user1" :rules="rules1"-->
-<!--                   onsubmit="return false">-->
-<!--            <el-form-item label="手机号" prop="phone">-->
-<!--              <oms-input v-model="user1.phone" placeholder="请输入手机号"></oms-input>-->
-<!--            </el-form-item>-->
-<!--            <el-form-item label="短信验证码" prop="validateCode">-->
-<!--              <div style="display:flex">-->
-<!--                <div style="width:300px;margin-right:50px">-->
-<!--                  <el-input v-model="user1.validateCode" placeholder="请输入短信验证码"></el-input>-->
-<!--                </div>-->
-<!--                <div style="line-height:0;">-->
-<!--                  <el-button :disabled="smsBtnDisabled" @click="sendSMS">{{ smsBtnText }}</el-button>-->
-<!--                </div>-->
-<!--              </div>-->
-<!--            </el-form-item>-->
+          <!--          <el-form v-show="loginStyle===1" class="login-form" label-position="top" ref="phoneForm" label-width="80px"-->
+          <!--                   :model="user1" :rules="rules1"-->
+          <!--                   onsubmit="return false">-->
+          <!--            <el-form-item label="手机号" prop="phone">-->
+          <!--              <oms-input v-model="user1.phone" placeholder="请输入手机号"></oms-input>-->
+          <!--            </el-form-item>-->
+          <!--            <el-form-item label="短信验证码" prop="validateCode">-->
+          <!--              <div style="display:flex">-->
+          <!--                <div style="width:300px;margin-right:50px">-->
+          <!--                  <el-input v-model="user1.validateCode" placeholder="请输入短信验证码"></el-input>-->
+          <!--                </div>-->
+          <!--                <div style="line-height:0;">-->
+          <!--                  <el-button :disabled="smsBtnDisabled" @click="sendSMS">{{ smsBtnText }}</el-button>-->
+          <!--                </div>-->
+          <!--              </div>-->
+          <!--            </el-form-item>-->
 
-<!--            <el-form-item label-width="80px">-->
-<!--              <el-button type="primary" @click="phoneFormSubmit" style="display:block;width:100%;" native-type="submit">-->
-<!--                {{ btnString }} <i class="el-icon-loading" v-show="loading"></i></el-button>-->
-<!--            </el-form-item>-->
-<!--          </el-form>-->
+          <!--            <el-form-item label-width="80px">-->
+          <!--              <el-button type="primary" @click="phoneFormSubmit" style="display:block;width:100%;" native-type="submit">-->
+          <!--                {{ btnString }} <i class="el-icon-loading" v-show="loading"></i></el-button>-->
+          <!--            </el-form-item>-->
+          <!--          </el-form>-->
 
           <!--        二次认证登录-->
           <el-form v-show="loginStyle===1" class="login-form" label-position="top" ref="phoneForm" label-width="80px"
-                   :model="user1" :rules="rules1"
+                   :model="user" :rules="rules1"
                    onsubmit="return false">
             <div class="flex">
               <i class="el-icon-arrow-left cursor" @click="goBack"></i>
@@ -117,10 +122,13 @@
             <el-form-item label="短信验证码" prop="validateCode">
               <div style="display:flex">
                 <div style="width:300px;margin-right:50px">
-                  <el-input v-model="user1.validateCode" placeholder="请输入短信验证码"></el-input>
+                  <el-input v-model="user.validateCode" placeholder="请输入短信验证码"></el-input>
                 </div>
                 <div style="line-height:0;">
-                  <el-button :disabled="smsBtnDisabled" style="width: 110px" @click="sendSMS">{{ smsBtnText }}</el-button>
+                  <el-button :disabled="smsBtnDisabled" style="width: 110px" @click="sendSMS">{{
+                      smsBtnText
+                    }}
+                  </el-button>
                 </div>
               </div>
             </el-form-item>
@@ -169,6 +177,7 @@ export default {
       // 登录方式：0-账号密码登录，1-手机验证码登录
       loginStyle: 0,
       user: {
+        enableSecondaryCertificateConfig: 1,
         username: window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')).userAccount : '',
         password: '',
         validateCode: '',
@@ -322,6 +331,7 @@ export default {
 
       this.loading = true;
       let user = {
+        orgCode: this.user.orgCode,
         phone: this.user.username,
         validateCode: this.user.validateCode,
         type: this.user.type
@@ -368,9 +378,9 @@ export default {
       this.loading = false;
 
       this.$refs.phoneForm.resetFields();
-      this.$refs.dragVerify.reset();
+      this.resetDragVerify();
     },
-    onSubmit(){
+    onSubmit() {
       this.loginStyle = 1;
     },
     done() {
