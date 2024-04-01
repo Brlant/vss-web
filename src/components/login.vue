@@ -61,7 +61,8 @@
             <el-form-item label="密码" prop="password" style="position:relative">
               <!--              <oms-input v-model="user.password" :showFocus="isFocus === 3" placeholder="请输入密码"-->
               <!--                         type="password"></oms-input>-->
-              <el-input placeholder="请输入密码" v-model="user.password" :autofocus="isFocus === 3" show-password></el-input>
+              <el-input placeholder="请输入密码" v-model="user.password" :autofocus="isFocus === 3"
+                        show-password></el-input>
               <router-link style="position: absolute;top:-35px;right:0;" to="/forget">激活账号/忘记密码?</router-link>
             </el-form-item>
             <el-form-item v-show="showCode" label="验证码">
@@ -113,16 +114,16 @@
 
           <!--        二次认证登录-->
           <el-form v-show="loginStyle===1" class="login-form" label-position="top" ref="phoneForm" label-width="80px"
-                   :model="user" :rules="rules1"
+                   :model="user" :rules="rules"
                    onsubmit="return false">
             <div class="flex">
               <i class="el-icon-arrow-left cursor" @click="goBack"></i>
               <h3 class="title">二次认证</h3>
             </div>
-            <el-form-item label="短信验证码" prop="validateCode">
+            <el-form-item label="短信验证码" prop="smsValidateCode">
               <div style="display:flex">
                 <div style="width:300px;margin-right:50px">
-                  <el-input v-model="user.validateCode" placeholder="请输入短信验证码"></el-input>
+                  <el-input v-model="user.smsValidateCode" placeholder="请输入短信验证码"></el-input>
                 </div>
                 <div style="line-height:0;">
                   <el-button :disabled="smsBtnDisabled" style="width: 110px" @click="sendSMS">{{
@@ -181,6 +182,7 @@ export default {
         username: window.localStorage.getItem('user') ? JSON.parse(window.localStorage.getItem('user')).userAccount : '',
         password: '',
         validateCode: '',
+        smsValidateCode: '',
         type: 1,
         orgCode: window.localStorage.getItem('orgCode') ? JSON.parse(window.localStorage.getItem('orgCode')) : ''
       },
@@ -199,7 +201,10 @@ export default {
         ],
         password: [
           {required: true, message: '请输入密码', trigger: 'blur'}
-        ]
+        ],
+        smsValidateCode: [
+          {required: true, message: '请输入短信验证码', trigger: 'blur'}
+        ],
       },
       needCode,
       orgCodeList,
@@ -293,6 +298,8 @@ export default {
       this.loginStyle = loginStyle;
     },
     sendSMS() {
+      this.user.smsValidateCode = ''
+
       this.leftTime = this.maxTimes;
       this.setTimer();
       http.post('/sendSms', {phone: this.user.username}).then(response => {// 验证
@@ -318,46 +325,52 @@ export default {
     },
     // 二次验证登录
     passHandler() {
-      // console.log('滑动验证成功')
-      if (!this.user.validateCode) {
-        this.resetDragVerify();
-        this.$message({
-          message: '请输入短信验证码',
-          type: 'warning'
-        });
-
-        return;
-      }
-
-      this.loading = true;
-      let user = {
-        orgCode: this.user.orgCode,
-        phone: this.user.username,
-        validateCode: this.user.validateCode,
-        type: this.user.type
-      };
-
-      Auth.secondaryCertificateLogin(user).then(response => {
-        let userId = window.localStorage.getItem('userId');
-        this.$store.commit('initUser', response.data);
-        this.$store.commit('initCode', this.user.orgCode);
-        this.$emit('login');
-        this.queryWeChat();
-      }).catch(error => {
-        this.resetDragVerify();
-        let data = error.response.data;
-        this.$notify.error({
-          message: data.msg || '无法登录'
-        });
-
-        this.loading = false;
-
-        let code = data.code;
-        if (code === 602) {
-          this.loginStyle = 0;
-          this.user.validateCode = ''
+      this.$refs['phoneForm'].validate((valid) => {
+        if (!valid) {
+          this.resetDragVerify();
+          return
         }
-      })
+        // console.log('滑动验证成功')
+        // if (!this.user.validateCode) {
+        //   this.resetDragVerify();
+        //   this.$message({
+        //     message: '请输入短信验证码',
+        //     type: 'warning'
+        //   });
+        //
+        //   return;
+        // }
+
+        this.loading = true;
+        let user = {
+          orgCode: this.user.orgCode,
+          phone: this.user.username,
+          validateCode: this.user.smsValidateCode,
+          type: this.user.type
+        };
+
+        Auth.secondaryCertificateLogin(user).then(response => {
+          let userId = window.localStorage.getItem('userId');
+          this.$store.commit('initUser', response.data);
+          this.$store.commit('initCode', this.user.orgCode);
+          this.$emit('login');
+          this.queryWeChat();
+        }).catch(error => {
+          this.resetDragVerify();
+          let data = error.response.data;
+          this.$notify.error({
+            message: data.msg || '无法登录'
+          });
+
+          this.loading = false;
+
+          let code = data.code;
+          if (code === 602) {
+            this.loginStyle = 0;
+            this.user.smsValidateCode = ''
+          }
+        })
+      });
     },
     // 验证失败
     failHandler() {
@@ -371,7 +384,7 @@ export default {
     goBack() {
       this.loginStyle = 0;
 
-      this.user.validateCode = '';
+      this.user.smsValidateCode = '';
       this.btnString = '登录';
       this.leftTime = 0;
       this.smsBtnText = '获取验证码';

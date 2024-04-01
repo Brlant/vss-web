@@ -170,6 +170,15 @@ export default {
   methods: {
     // 显示安全提示
     showTip() {
+      // 当用户手动后退或者修改地址栏的时候，重新触法一次密码校验
+      let path = this.$route.path;
+      let ext = path.indexOf('login') !== -1 || path.indexOf('resetpsw') !== -1 || path.indexOf('forget') !== -1;
+      if (ext) {
+        // 以上几种情况都直接返回，不需要安全提示
+        return;
+      }
+
+
       // 如果需要修改密码，给出提示：您当前登录密码使用已超过xx天，为保证您的账号安全，请立即修改。
       this.$alert('您当前登录密码使用已超过' + this.days + '天，为保证您的账号安全，请立即修改。', '安全提示', {
         confirmButtonText: '去修改', center: true, showClose: false
