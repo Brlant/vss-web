@@ -4,3 +4,4 @@
 - 然后执行 npm run dev  运行项目
 - 菜单配置在voss-web里面
 - 本地代理在vue.config.js中修改
+国控生物-合肥分公司
